@@ -123,6 +123,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_DEVSTS_OFFSET
+value|0x059a
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_LINK_STATUS_OFFSET
 value|0x01a2
 end_define
@@ -291,7 +298,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_USMEMMISS
+name|XEON_USMEMMISS_OFFSET
 value|0x0070
 end_define
 
@@ -314,6 +321,20 @@ define|#
 directive|define
 name|XEON_WCCNTRL_OFFSET
 value|0x00e0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_UNCERRSTS_OFFSET
+value|0x014c
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_CORERRSTS_OFFSET
+value|0x0158
 end_define
 
 begin_define
@@ -347,259 +368,259 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_MW_COUNT
+name|ATOM_MW_COUNT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DB_COUNT
+name|ATOM_DB_COUNT
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DB_MSIX_VECTOR_COUNT
+name|ATOM_DB_MSIX_VECTOR_COUNT
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DB_MSIX_VECTOR_SHIFT
+name|ATOM_DB_MSIX_VECTOR_SHIFT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_SPAD_COUNT
+name|ATOM_SPAD_COUNT
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PCICMD_OFFSET
+name|ATOM_PCICMD_OFFSET
 value|0xb004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MBAR23_OFFSET
+name|ATOM_MBAR23_OFFSET
 value|0xb018
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MBAR45_OFFSET
+name|ATOM_MBAR45_OFFSET
 value|0xb020
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DEVCTRL_OFFSET
+name|ATOM_DEVCTRL_OFFSET
 value|0xb048
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_LINK_STATUS_OFFSET
+name|ATOM_LINK_STATUS_OFFSET
 value|0xb052
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_ERRCORSTS_OFFSET
+name|ATOM_ERRCORSTS_OFFSET
 value|0xb110
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_SBAR2XLAT_OFFSET
+name|ATOM_SBAR2XLAT_OFFSET
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_SBAR4XLAT_OFFSET
+name|ATOM_SBAR4XLAT_OFFSET
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PDOORBELL_OFFSET
+name|ATOM_PDOORBELL_OFFSET
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PDBMSK_OFFSET
+name|ATOM_PDBMSK_OFFSET
 value|0x0028
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_NTBCNTL_OFFSET
+name|ATOM_NTBCNTL_OFFSET
 value|0x0060
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_EBDF_OFFSET
+name|ATOM_EBDF_OFFSET
 value|0x0064
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_SPAD_OFFSET
+name|ATOM_SPAD_OFFSET
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_SPADSEMA_OFFSET
+name|ATOM_SPADSEMA_OFFSET
 value|0x00c0
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_STKYSPAD_OFFSET
+name|ATOM_STKYSPAD_OFFSET
 value|0x00c4
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PBAR2XLAT_OFFSET
+name|ATOM_PBAR2XLAT_OFFSET
 value|0x8008
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PBAR4XLAT_OFFSET
+name|ATOM_PBAR4XLAT_OFFSET
 value|0x8010
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_B2B_DOORBELL_OFFSET
+name|ATOM_B2B_DOORBELL_OFFSET
 value|0x8020
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_B2B_SPAD_OFFSET
+name|ATOM_B2B_SPAD_OFFSET
 value|0x8080
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_B2B_SPADSEMA_OFFSET
+name|ATOM_B2B_SPADSEMA_OFFSET
 value|0x80c0
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_B2B_STKYSPAD_OFFSET
+name|ATOM_B2B_STKYSPAD_OFFSET
 value|0x80c4
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MODPHY_PCSREG4
+name|ATOM_MODPHY_PCSREG4
 value|0x1c004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MODPHY_PCSREG6
+name|ATOM_MODPHY_PCSREG6
 value|0x1c006
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_IP_BASE
+name|ATOM_IP_BASE
 value|0xc000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DESKEWSTS_OFFSET
-value|(SOC_IP_BASE + 0x3024)
+name|ATOM_DESKEWSTS_OFFSET
+value|(ATOM_IP_BASE + 0x3024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_LTSSMERRSTS0_OFFSET
-value|(SOC_IP_BASE + 0x3180)
+name|ATOM_LTSSMERRSTS0_OFFSET
+value|(ATOM_IP_BASE + 0x3180)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_LTSSMSTATEJMP_OFFSET
-value|(SOC_IP_BASE + 0x3040)
+name|ATOM_LTSSMSTATEJMP_OFFSET
+value|(ATOM_IP_BASE + 0x3040)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_IBSTERRRCRVSTS0_OFFSET
-value|(SOC_IP_BASE + 0x3324)
+name|ATOM_IBSTERRRCRVSTS0_OFFSET
+value|(ATOM_IP_BASE + 0x3324)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DESKEWSTS_DBERR
+name|ATOM_DESKEWSTS_DBERR
 value|(1<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_LTSSMERRSTS0_UNEXPECTEDEI
+name|ATOM_LTSSMERRSTS0_UNEXPECTEDEI
 value|(1<< 20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_LTSSMSTATEJMP_FORCEDETECT
+name|ATOM_LTSSMSTATEJMP_FORCEDETECT
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_IBIST_ERR_OFLOW
+name|ATOM_IBIST_ERR_OFLOW
 value|0x7fff7fff
 end_define
 
@@ -662,7 +683,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_CNTL_LINK_DOWN
+name|ATOM_CNTL_LINK_DOWN
 value|(1<< 16)
 end_define
 
@@ -746,57 +767,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_PPD_INIT_LINK
+name|ATOM_PPD_INIT_LINK
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PPD_CONN_TYPE
+name|ATOM_PPD_CONN_TYPE
 value|0x0300
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PPD_DEV_TYPE
+name|ATOM_PPD_DEV_TYPE
 value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_CONN_TRANSPARENT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_CONN_B2B
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_CONN_RP
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_DEV_DSD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_DEV_USD
-value|0
 end_define
 
 begin_comment

@@ -2680,7 +2680,7 @@ expr_stmt|;
 operator|*
 name|imprint
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 return|return
 literal|0

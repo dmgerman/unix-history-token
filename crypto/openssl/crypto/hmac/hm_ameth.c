@@ -148,7 +148,7 @@ operator|*
 operator|)
 name|arg2
 operator|=
-name|NID_sha1
+name|NID_sha256
 expr_stmt|;
 return|return
 literal|1

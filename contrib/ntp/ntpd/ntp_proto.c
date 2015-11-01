@@ -115,7 +115,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((x) ? (y) == AUTH_OK : (y) == AUTH_OK || \ 			    (y) == AUTH_NONE)
+value|((x) ? (y) == AUTH_OK \ 			     : (y) == AUTH_OK || (y) == AUTH_NONE)
 end_define
 
 begin_define
@@ -161,6 +161,35 @@ end_define
 begin_comment
 comment|/* crypto_NAK */
 end_comment
+
+begin_comment
+comment|/*  * Set up Kiss Code values  */
+end_comment
+
+begin_enum
+enum|enum
+name|kiss_codes
+block|{
+name|NOKISS
+block|,
+comment|/* No Kiss Code */
+name|RATEKISS
+block|,
+comment|/* Rate limit Kiss Code */
+name|DENYKISS
+block|,
+comment|/* Deny Kiss */
+name|RSTRKISS
+block|,
+comment|/* Restricted Kiss */
+name|XKISS
+block|,
+comment|/* Experimental Kiss */
+name|UNKNOWNKISS
+comment|/* Unknown Kiss Code */
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * traffic shaping parameters  */
@@ -803,6 +832,26 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|int
+name|kiss_code_check
+parameter_list|(
+name|u_char
+name|hisleap
+parameter_list|,
+name|u_char
+name|hisstratum
+parameter_list|,
+name|u_char
+name|hismode
+parameter_list|,
+name|u_int32
+name|refid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|double
 name|root_distance
 parameter_list|(
@@ -1057,6 +1106,149 @@ block|}
 endif|#
 directive|endif
 comment|/* LEAP_SMEAR */
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Kiss Code check  */
+end_comment
+
+begin_function
+name|int
+name|kiss_code_check
+parameter_list|(
+name|u_char
+name|hisleap
+parameter_list|,
+name|u_char
+name|hisstratum
+parameter_list|,
+name|u_char
+name|hismode
+parameter_list|,
+name|u_int32
+name|refid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|hismode
+operator|==
+name|MODE_SERVER
+operator|&&
+name|hisleap
+operator|==
+name|LEAP_NOTINSYNC
+operator|&&
+name|hisstratum
+operator|==
+name|STRATUM_UNSPEC
+condition|)
+block|{
+if|if
+condition|(
+name|memcmp
+argument_list|(
+operator|&
+name|refid
+argument_list|,
+literal|"RATE"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|RATEKISS
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|memcmp
+argument_list|(
+operator|&
+name|refid
+argument_list|,
+literal|"DENY"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|DENYKISS
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|memcmp
+argument_list|(
+operator|&
+name|refid
+argument_list|,
+literal|"RSTR"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|RSTRKISS
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|memcmp
+argument_list|(
+operator|&
+name|refid
+argument_list|,
+literal|"X"
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|XKISS
+operator|)
+return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|UNKNOWNKISS
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|NOKISS
+operator|)
+return|;
 block|}
 block|}
 end_function
@@ -1663,6 +1855,12 @@ name|u_short
 name|restrict_mask
 decl_stmt|;
 comment|/* restrict bits */
+name|int
+name|kissCode
+init|=
+name|NOKISS
+decl_stmt|;
+comment|/* Kiss Code */
 name|int
 name|has_mac
 decl_stmt|;
@@ -3262,7 +3460,7 @@ operator|)
 operator|&&
 name|sys_authenticate
 operator|)
-operator||
+operator|||
 operator|(
 name|restrict_mask
 operator|&
@@ -3796,6 +3994,43 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+comment|/* [Bug 2941] 			 * If we got here, the packet isn't part of an 			 * existing association, it isn't correctly 			 * authenticated, and it didn't meet either of 			 * the previous two special cases so we should 			 * just drop it on the floor.  For example, 			 * crypto-NAKs (is_authentic == AUTH_CRYPTO) 			 * will make it this far.  This is just 			 * debug-printed and not logged to avoid log 			 * flooding. 			 */
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"receive: at %ld refusing to mobilize passive association"
+literal|" with unknown peer %s mode %d keyid %08x len %d auth %d\n"
+operator|,
+name|current_time
+operator|,
+name|stoa
+argument_list|(
+operator|&
+name|rbufp
+operator|->
+name|recv_srcadr
+argument_list|)
+operator|,
+name|hismode
+operator|,
+name|skeyid
+operator|,
+operator|(
+name|authlen
+operator|+
+name|has_mac
+operator|)
+operator|,
+name|is_authentic
+operator|)
+argument_list|)
+expr_stmt|;
+name|sys_declined
+operator|++
+expr_stmt|;
+return|return;
 block|}
 comment|/* 		 * Do not respond if synchronized and if stratum is 		 * below the floor or at or above the ceiling. Note, 		 * this allows an unsynchronized peer to synchronize to 		 * us. It would be very strange if he did and then was 		 * nipped, but that could only happen if we were 		 * operating at the top end of the range.  It also means 		 * we will spin an ephemeral association in response to 		 * MODE_ACTIVE KoDs, which will time out eventually. 		 */
 if|if
@@ -4108,7 +4343,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Check for bogus packet in basic mode. If found, switch to 	 * interleaved mode and resynchronize, but only after confirming 	 * the packet is not bogus in symmetric interleaved mode. 	 */
+comment|/* 	 * Check for bogus packet in basic mode. If found, switch to 	 * interleaved mode and resynchronize, but only after confirming 	 * the packet is not bogus in symmetric interleaved mode. 	 * 	 * This could also mean somebody is forging packets claiming to 	 * be from us, attempting to cause our server to KoD us. 	 */
 block|}
 elseif|else
 if|if
@@ -4147,6 +4382,21 @@ operator||=
 name|TEST2
 expr_stmt|;
 comment|/* bogus */
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receive: Unexpected origin timestamp from %s"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4186,6 +4436,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+comment|/* Bogus packet, we are done */
 block|}
 else|else
 block|{
@@ -4276,6 +4528,8 @@ operator||=
 name|TEST2
 expr_stmt|;
 comment|/* bogus */
+return|return;
+comment|/* Bogus packet, we are done */
 block|}
 comment|/* 	 * If this is a crypto_NAK, the server cannot authenticate a 	 * client packet. The server might have just changed keys. Clear 	 * the association and restart the protocol. 	 */
 if|if
@@ -4487,6 +4741,23 @@ operator|=
 name|p_xmt
 expr_stmt|;
 comment|/* 	 * Set the peer ppoll to the maximum of the packet ppoll and the 	 * peer minpoll. If a kiss-o'-death, set the peer minpoll to 	 * this maximum and advance the headway to give the sender some 	 * headroom. Very intricate. 	 */
+comment|/* 	 * Check for any kiss codes. Note this is only used when a server 	 * responds to a packet request 	 */
+name|kissCode
+operator|=
+name|kiss_code_check
+argument_list|(
+name|hisleap
+argument_list|,
+name|hisstratum
+argument_list|,
+name|hismode
+argument_list|,
+name|pkt
+operator|->
+name|refid
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check to see if this is a RATE Kiss Code 	 * Currently this kiss code will accept whatever poll 	 * rate that the server sends 	 */
 name|peer
 operator|->
 name|ppoll
@@ -4504,31 +4775,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hismode
+name|kissCode
 operator|==
-name|MODE_SERVER
-operator|&&
-name|hisleap
-operator|==
-name|LEAP_NOTINSYNC
-operator|&&
-name|hisstratum
-operator|==
-name|STRATUM_UNSPEC
-operator|&&
-name|memcmp
-argument_list|(
-operator|&
-name|pkt
-operator|->
-name|refid
-argument_list|,
-literal|"RATE"
-argument_list|,
-literal|4
-argument_list|)
-operator|==
-literal|0
+name|RATEKISS
 condition|)
 block|{
 name|peer
@@ -4536,6 +4785,7 @@ operator|->
 name|selbroken
 operator|++
 expr_stmt|;
+comment|/* Increment the KoD count */
 name|report_event
 argument_list|(
 name|PEVNT_RATE
@@ -4602,6 +4852,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 comment|/* kiss-o'-death */
+block|}
+if|if
+condition|(
+name|kissCode
+operator|!=
+name|NOKISS
+condition|)
+block|{
+name|peer
+operator|->
+name|selbroken
+operator|++
+expr_stmt|;
+comment|/* Increment the KoD count */
+return|return;
+comment|/* Drop any other kiss code packets */
 block|}
 comment|/* 	 * That was hard and I am sweaty, but the packet is squeaky 	 * clean. Get on with real work. 	 */
 name|peer
@@ -5437,8 +5703,8 @@ condition|(
 name|pleap
 operator|==
 name|LEAP_NOTINSYNC
-operator|||
 comment|/* test 6 */
+operator|||
 name|pstratum
 operator|<
 name|sys_floor
@@ -9641,7 +9907,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now, vote outlyers off the island by select jitter weighted 	 * by root distance. Continue voting as long as there are more 	 * than sys_minclock survivors and the select jitter of the peer 	 * with the worst metric is greater than the minimum peer 	 * jitter. Stop if we are about to discard a TRUE or PREFER 	 * peer, who of course have the immunity idol. 	 */
+comment|/* 	 * Now, vote outliers off the island by select jitter weighted 	 * by root distance. Continue voting as long as there are more 	 * than sys_minclock survivors and the select jitter of the peer 	 * with the worst metric is greater than the minimum peer 	 * jitter. Stop if we are about to discard a TRUE or PREFER 	 * peer, who of course have the immunity idol. 	 */
 while|while
 condition|(
 literal|1
@@ -13461,7 +13727,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to start pool DNS %s %m"
+literal|"unable to start pool DNS %s: %m"
 argument_list|,
 name|pool
 operator|->

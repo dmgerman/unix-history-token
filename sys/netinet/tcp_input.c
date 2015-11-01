@@ -600,6 +600,44 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
+name|tcp_do_rfc6675_pipe
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|do_pipe
+argument_list|,
+name|CTLFLAG_VNET
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|tcp_do_rfc6675_pipe
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use calculated pipe/in-flight bytes per RFC 6675"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|tcp_do_rfc3042
 argument_list|)
 operator|=
@@ -679,43 +717,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|experimental
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Experimental TCP extensions"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 operator|=
-literal|1
+literal|10
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp_experimental
+name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|initcwnd10
+name|initcwnd_segments
 argument_list|,
 name|CTLFLAG_VNET
 operator||
@@ -724,12 +744,12 @@ argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable RFC 6928 (Increasing initial CWND to 10)"
+literal|"Slow-start flight size (initial congestion window) in number of segments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1974,7 +1994,7 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
+comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * Support for user specified value for initial flight size. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
 if|if
 condition|(
 name|tp
@@ -1995,7 +2015,7 @@ comment|/* SYN(-ACK) lost */
 elseif|else
 if|if
 condition|(
-name|V_tcp_do_initcwnd10
+name|V_tcp_initcwnd_segments
 condition|)
 name|tp
 operator|->
@@ -2003,7 +2023,7 @@ name|snd_cwnd
 operator|=
 name|min
 argument_list|(
-literal|10
+name|V_tcp_initcwnd_segments
 operator|*
 name|tp
 operator|->
@@ -2017,7 +2037,9 @@ name|tp
 operator|->
 name|t_maxseg
 argument_list|,
-literal|14600
+name|V_tcp_initcwnd_segments
+operator|*
+literal|1460
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10398,6 +10420,16 @@ operator|->
 name|th_ack
 argument_list|)
 expr_stmt|;
+else|else
+comment|/* 			 * Reset the value so that previous (valid) value 			 * from the last ack with SACK doesn't get used. 			 */
+name|tp
+operator|->
+name|sackhint
+operator|.
+name|sacked_bytes
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -10544,6 +10576,18 @@ name|int
 name|awnd
 decl_stmt|;
 comment|/* 						 * Compute the amount of data in flight first. 						 * We can inject new data into the pipe iff  						 * we have less than 1/2 the original window's 						 * worth of data in flight. 						 */
+if|if
+condition|(
+name|V_tcp_do_rfc6675_pipe
+condition|)
+name|awnd
+operator|=
+name|tcp_compute_pipe
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|else
 name|awnd
 operator|=
 operator|(
@@ -15462,6 +15506,42 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|tcp_compute_pipe
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|tp
+operator|->
+name|snd_max
+operator|-
+name|tp
+operator|->
+name|snd_una
+operator|+
+name|tp
+operator|->
+name|sackhint
+operator|.
+name|sack_bytes_rexmit
+operator|-
+name|tp
+operator|->
+name|sackhint
+operator|.
+name|sacked_bytes
+operator|)
+return|;
 block|}
 end_function
 

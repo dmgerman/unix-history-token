@@ -14,14 +14,26 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"unity.h"
 end_include
+
+begin_function_decl
+name|void
+name|test_KnownMode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_UnknownMode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -73,7 +85,6 @@ name|MODE
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//	EXPECT_STREQ("mode#100", modetoa(MODE));
 block|}
 end_function
 

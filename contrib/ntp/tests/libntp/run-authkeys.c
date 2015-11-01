@@ -42,6 +42,30 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +94,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddTrustedKeys
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +104,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddUntrustedKey
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +114,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_HaveKeyCorrect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +124,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_HaveKeyIncorrect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +134,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddWithAuthUseKey
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,7 +144,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_EmptyKey
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -118,10 +154,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -134,6 +181,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -163,12 +211,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"authkeys.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"authkeys.c"
@@ -178,42 +220,42 @@ name|RUN_TEST
 argument_list|(
 name|test_AddTrustedKeys
 argument_list|,
-literal|71
+literal|24
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddUntrustedKey
 argument_list|,
-literal|82
+literal|25
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_HaveKeyCorrect
 argument_list|,
-literal|90
+literal|26
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_HaveKeyIncorrect
 argument_list|,
-literal|99
+literal|27
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddWithAuthUseKey
 argument_list|,
-literal|106
+literal|28
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_EmptyKey
 argument_list|,
-literal|113
+literal|29
 argument_list|)
 expr_stmt|;
 return|return

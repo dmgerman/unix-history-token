@@ -42,6 +42,36 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_fp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -67,8 +97,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
-name|resetTest
+name|test_AdditionLR
 parameter_list|(
 name|void
 parameter_list|)
@@ -78,16 +109,10 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|test_AdditionLR
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|test_AdditionRL
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -95,7 +120,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SubtractionLR
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -103,7 +130,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SubtractionRL
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -111,7 +140,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Negation
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -119,7 +150,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Absolute
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -127,7 +160,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_FDF_RoundTrip
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -135,7 +170,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SignedRelOps
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -143,7 +180,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_UnsignedRelOps
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -151,10 +190,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -167,6 +217,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -196,12 +247,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"lfpfunc.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"lfpfunc.c"
@@ -211,63 +256,63 @@ name|RUN_TEST
 argument_list|(
 name|test_AdditionLR
 argument_list|,
-literal|320
+literal|50
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AdditionRL
 argument_list|,
-literal|339
+literal|51
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SubtractionLR
 argument_list|,
-literal|358
+literal|52
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SubtractionRL
 argument_list|,
-literal|373
+literal|53
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_Negation
 argument_list|,
-literal|391
+literal|54
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_Absolute
 argument_list|,
-literal|412
+literal|55
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_FDF_RoundTrip
 argument_list|,
-literal|447
+literal|56
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SignedRelOps
 argument_list|,
-literal|479
+literal|57
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_UnsignedRelOps
 argument_list|,
-literal|522
+literal|58
 argument_list|)
 expr_stmt|;
 return|return

@@ -1818,29 +1818,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Does subject name match issuer ? */
-if|if
-condition|(
-operator|!
-name|X509_NAME_cmp
-argument_list|(
-name|X509_get_subject_name
-argument_list|(
-name|x
-argument_list|)
-argument_list|,
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-argument_list|)
-condition|)
-name|x
-operator|->
-name|ex_flags
-operator||=
-name|EXFLAG_SI
-expr_stmt|;
 comment|/* V1 should mean no extensions ... */
 if|if
 condition|(
@@ -2279,6 +2256,16 @@ operator||=
 name|XKU_DVCS
 expr_stmt|;
 break|break;
+case|case
+name|NID_anyExtendedKeyUsage
+case|:
+name|x
+operator|->
+name|ex_xkusage
+operator||=
+name|XKU_ANYEKU
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|sk_ASN1_OBJECT_pop_free
@@ -2375,6 +2362,51 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Does subject name match issuer ? */
+if|if
+condition|(
+operator|!
+name|X509_NAME_cmp
+argument_list|(
+name|X509_get_subject_name
+argument_list|(
+name|x
+argument_list|)
+argument_list|,
+name|X509_get_issuer_name
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|x
+operator|->
+name|ex_flags
+operator||=
+name|EXFLAG_SI
+expr_stmt|;
+comment|/* If SKID matches AKID also indicate self signed */
+if|if
+condition|(
+name|X509_check_akid
+argument_list|(
+name|x
+argument_list|,
+name|x
+operator|->
+name|akid
+argument_list|)
+operator|==
+name|X509_V_OK
+condition|)
+name|x
+operator|->
+name|ex_flags
+operator||=
+name|EXFLAG_SS
+expr_stmt|;
+block|}
 name|x
 operator|->
 name|altname
@@ -2847,7 +2879,7 @@ argument_list|(
 name|x
 argument_list|)
 return|;
-comment|/* We need to do digital signatures with it */
+comment|/* We need to do digital signatures or key agreement */
 if|if
 condition|(
 name|ku_reject
@@ -2855,6 +2887,8 @@ argument_list|(
 name|x
 argument_list|,
 name|KU_DIGITAL_SIGNATURE
+operator||
+name|KU_KEY_AGREEMENT
 argument_list|)
 condition|)
 return|return
@@ -2878,6 +2912,18 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Key usage needed for TLS/SSL server: digital signature, encipherment or  * key agreement. The ssl code can check this more thoroughly for individual  * key types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KU_TLS
+define|\
+value|KU_DIGITAL_SIGNATURE|KU_KEY_ENCIPHERMENT|KU_KEY_AGREEMENT
+end_define
 
 begin_function
 specifier|static
@@ -2934,16 +2980,13 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Now as for keyUsage: we'll at least need to sign OR encipher */
 if|if
 condition|(
 name|ku_reject
 argument_list|(
 name|x
 argument_list|,
-name|KU_DIGITAL_SIGNATURE
-operator||
-name|KU_KEY_ENCIPHERMENT
+name|KU_TLS
 argument_list|)
 condition|)
 return|return

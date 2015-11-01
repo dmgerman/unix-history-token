@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"asn1_locl.h"
+file|<openssl/asn1t.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/asn1t.h>
+file|"asn1_locl.h"
 end_include
 
 begin_include
@@ -1389,6 +1389,10 @@ argument_list|,
 argument|X509_CRL
 argument_list|)
 name|IMPLEMENT_ASN1_FUNCTIONS
+argument_list|(
+argument|X509_REVOKED
+argument_list|)
+name|IMPLEMENT_ASN1_DUP_FUNCTION
 argument_list|(
 argument|X509_REVOKED
 argument_list|)

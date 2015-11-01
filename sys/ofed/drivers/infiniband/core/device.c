@@ -2944,7 +2944,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|ibcore
 argument_list|,
-name|linuxapi
+name|linuxkpi
 argument_list|,
 literal|1
 argument_list|,

@@ -9242,7 +9242,7 @@ literal|1
 argument_list|,
 name|size
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -9897,7 +9897,7 @@ literal|1
 argument_list|,
 name|IWN_RBUF_SIZE
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10659,7 +10659,7 @@ literal|1
 argument_list|,
 name|MCLBYTES
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -33075,9 +33075,9 @@ name|sc
 operator|->
 name|sc_cap_off
 operator|+
-literal|0x10
+name|PCIER_LINK_CTL
 argument_list|,
-literal|1
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
@@ -33086,7 +33086,7 @@ operator|!
 operator|(
 name|reg
 operator|&
-literal|0x1
+name|PCIEM_LINK_CTL_ASPMC_L0S
 operator|)
 condition|)
 comment|/* L0s Entry disabled. */
@@ -43692,9 +43692,9 @@ name|sc
 operator|->
 name|sc_cap_off
 operator|+
-literal|0x10
+name|PCIER_LINK_CTL
 argument_list|,
-literal|1
+literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Workaround for HW instability in PCIe L0->L0s->L1 transition. */
@@ -43702,7 +43702,7 @@ if|if
 condition|(
 name|reg
 operator|&
-literal|0x02
+name|PCIEM_LINK_CTL_ASPMC_L1
 condition|)
 comment|/* L1 Entry enabled. */
 name|IWN_SETBITS

@@ -1239,11 +1239,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCR_T1SZ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< TCR_T1SZ_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCR_T0SZ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< TCR_T0SZ_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCR_TxSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)<< TCR_T1SZ_SHIFT) | ((x)<< TCR_T0SZ_SHIFT))
+value|(TCR_T1SZ(x) | TCR_T0SZ(x))
 end_define
 
 begin_comment

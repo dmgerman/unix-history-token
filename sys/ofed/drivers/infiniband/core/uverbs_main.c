@@ -5569,11 +5569,15 @@ name|buf
 argument_list|,
 literal|"%d\n"
 argument_list|,
+name|atomic_read
+argument_list|(
+operator|&
 name|dev
 operator|->
 name|ref
 operator|.
-name|count
+name|refcount
+argument_list|)
 argument_list|)
 return|;
 block|}

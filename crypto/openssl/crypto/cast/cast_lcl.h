@@ -220,6 +220,27 @@ parameter_list|)
 value|(_lrotl(a,n))
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PEDANTIC
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ROTL
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|((((a)<<(n))&0xffffffffL)|((a)>>((32-(n))&31)))
+end_define
+
 begin_else
 else|#
 directive|else

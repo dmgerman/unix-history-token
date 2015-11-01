@@ -2426,7 +2426,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Set some defaults to preserve compability */
+comment|/* Set some defaults to preserve compatibility. */
 if|if
 condition|(
 name|xi
@@ -4795,7 +4795,7 @@ operator|&
 name|xi
 argument_list|)
 expr_stmt|;
-comment|/* 		 * compability layer: auto-create table if not exists 		 */
+comment|/* 		 * Compatibility layer: auto-create table if not exists. 		 */
 if|if
 condition|(
 name|xi
@@ -7037,7 +7037,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * we're running `ipfw -n` 			 * Compability layer: try to guess key type 			 * before failing. 			 */
+comment|/* 			 * We're running `ipfw -n` 			 * Compatibility layer: try to guess key type 			 * before failing. 			 */
 if|if
 condition|(
 name|guess_key_type
@@ -7109,7 +7109,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Table does not exist 		 * Compability layer: try to guess key type before failing. 		 */
+comment|/* 		 * Table does not exist 		 * Compatibility layer: try to guess key type before failing. 		 */
 if|if
 condition|(
 name|guess_key_type

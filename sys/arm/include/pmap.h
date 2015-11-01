@@ -1152,16 +1152,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|pmap_dmap_iscurrent
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Definitions for MMU domains  */
 end_comment

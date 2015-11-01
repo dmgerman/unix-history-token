@@ -1125,6 +1125,11 @@ parameter_list|,
 name|struct
 name|otus_data
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_bpf_params
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2959,6 +2964,8 @@ argument_list|,
 name|m
 argument_list|,
 name|bf
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -3145,7 +3152,6 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* 	 * XXX TODO: support TX bpf params 	 */
 if|if
 condition|(
 name|otus_tx
@@ -3157,6 +3163,8 @@ argument_list|,
 name|m
 argument_list|,
 name|bf
+argument_list|,
+name|params
 argument_list|)
 operator|!=
 literal|0
@@ -6296,6 +6304,11 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -7805,14 +7818,19 @@ name|tail
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Discard error frames. */
+comment|/* Discard error frames; don't discard BAD_RA (eg monitor mode); let net80211 do that */
 if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|(
 name|tail
 operator|->
 name|error
+operator|&
+operator|~
+name|AR_RX_ERROR_BAD_RA
+operator|)
 operator|!=
 literal|0
 argument_list|)
@@ -7943,6 +7961,7 @@ operator|+
 name|AR_PLCP_HDR_LEN
 operator|)
 expr_stmt|;
+comment|/* 	 * TODO: I see> 2KiB buffers in this path; is it A-MSDU or something? 	 */
 name|m
 operator|=
 name|m_get2
@@ -7969,9 +7988,11 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: failed m_get2()\n"
+literal|"%s: failed m_get2() (mlen=%d)\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|mlen
 argument_list|)
 expr_stmt|;
 name|counter_u64_add
@@ -7983,6 +8004,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* Finalize mbuf. */
 name|memcpy
@@ -9991,7 +10013,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX TODO: support tx bpf parameters for configuration!  */
+comment|/*  * XXX TODO: support tx bpf parameters for configuration!  *  * Relevant pieces:  *  * ac = params->ibp_pri& 3;  * rate = params->ibp_rate0;  * params->ibp_flags& IEEE80211_BPF_NOACK  * params->ibp_flags& IEEE80211_BPF_RTS  * params->ibp_flags& IEEE80211_BPF_CTS  * tx->rts_ntries = params->ibp_try1;  * tx->data_ntries = params->ibp_try0;  */
 end_comment
 
 begin_function
@@ -10018,6 +10040,12 @@ name|struct
 name|otus_data
 modifier|*
 name|data
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_bpf_params
+modifier|*
+name|params
 parameter_list|)
 block|{
 name|struct
@@ -10247,6 +10275,26 @@ block|}
 comment|/* Pickup a rate index. */
 if|if
 condition|(
+name|params
+operator|!=
+name|NULL
+condition|)
+block|{
+name|rate
+operator|=
+name|otus_rate_to_hw_rate
+argument_list|(
+name|sc
+argument_list|,
+name|params
+operator|->
+name|ibp_rate0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|IEEE80211_IS_MULTICAST
 argument_list|(
 name|wh
@@ -10341,6 +10389,7 @@ argument_list|(
 name|qid
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: params for NOACK, ACK, RTS, CTS, etc 	 */
 if|if
 condition|(
 name|IEEE80211_IS_MULTICAST
@@ -10608,16 +10657,15 @@ name|m
 argument_list|,
 name|data
 argument_list|,
+name|le16toh
+argument_list|(
 name|head
 operator|->
 name|len
+argument_list|)
 argument_list|,
-name|head
-operator|->
 name|macctl
 argument_list|,
-name|head
-operator|->
 name|phyctl
 argument_list|,
 operator|(
@@ -11418,7 +11466,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3b2c
+name|AR_MAC_REG_TID_CFACK_CFEND_RATE
 argument_list|,
 literal|0x19000000
 argument_list|)
@@ -11428,7 +11476,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3b38
+name|AR_MAC_REG_TXOP_DURATION
 argument_list|,
 literal|0x201
 argument_list|)
@@ -11456,30 +11504,14 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3b9c
+name|AR_MAC_REG_AMPDU_FACTOR
 argument_list|,
 literal|0x10000a
 argument_list|)
 expr_stmt|;
 comment|/* Filter any control frames, BAR is bit 24. */
-name|otus_write
-argument_list|(
-name|sc
-argument_list|,
-literal|0x1c368c
-argument_list|,
-literal|0x0500ffff
-argument_list|)
-expr_stmt|;
-name|otus_write
-argument_list|(
-name|sc
-argument_list|,
-literal|0x1c3c40
-argument_list|,
-literal|0x1
-argument_list|)
-expr_stmt|;
+comment|//	otus_write(sc, AR_MAC_REG_FRAMETYPE_FILTER, 0x0500ffff);
+comment|//	otus_write(sc, AR_MAC_REG_RX_CONTROL, 0x1);
 name|otus_write
 argument_list|(
 name|sc
@@ -11511,7 +11543,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3694
+name|AR_MAC_REG_ACK_TPC
 argument_list|,
 literal|0x4003c1e
 argument_list|)
@@ -11521,7 +11553,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d0100
+name|AR_GPIO_REG_PORT_TYPE
 argument_list|,
 literal|0x3
 argument_list|)
@@ -11530,7 +11562,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d0104
+name|AR_GPIO_REG_PORT_DATA
 argument_list|,
 literal|0x3
 argument_list|)
@@ -11549,7 +11581,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3c50
+name|AR_MAC_REG_AMPDU_RX_THRESH
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -11558,7 +11590,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3680
+name|AR_MAC_REG_MISC_680
 argument_list|,
 literal|0xf00008
 argument_list|)
@@ -11568,7 +11600,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c362c
+name|AR_MAC_REG_RX_TIMEOUT
 argument_list|,
 literal|0
 argument_list|)
@@ -11598,7 +11630,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4008
+name|AR_PWR_REG_CLOCK_SEL
 argument_list|,
 literal|0x73
 argument_list|)
@@ -11608,7 +11640,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3d7c
+name|AR_MAC_REG_TXRX_MPI
 argument_list|,
 literal|0x110011
 argument_list|)
@@ -11617,7 +11649,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3bb0
+name|AR_MAC_REG_FCS_SELECT
 argument_list|,
 literal|0x4
 argument_list|)
@@ -11636,7 +11668,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3678
+name|AR_MAC_REG_ENCRYPTION
 argument_list|,
 literal|0x78
 argument_list|)
@@ -12637,7 +12669,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4014
+name|AR_PWR_REG_PLL_ADDAC
 argument_list|,
 literal|0x5163
 argument_list|)
@@ -12647,7 +12679,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4014
+name|AR_PWR_REG_PLL_ADDAC
 argument_list|,
 literal|0x5143
 argument_list|)
@@ -13302,7 +13334,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4004
+name|AR_PWR_REG_RESET
 argument_list|,
 name|sc
 operator|->
@@ -13333,7 +13365,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4004
+name|AR_PWR_REG_RESET
 argument_list|,
 literal|0
 argument_list|)
@@ -14816,9 +14848,174 @@ block|else 			state = AR_LED1_ON;
 comment|/* 5GHz=>Blue. */
 block|} else {
 comment|/* Scanning, blink LED. */
-block|state ^= AR_LED0_ON | AR_LED1_ON; 		if (IEEE80211_IS_CHAN_2GHZ(sc->sc_curchan)) 			state&= ~AR_LED1_ON; 		else 			state&= ~AR_LED0_ON; 	} 	if (state != sc->led_state) { 		otus_write(sc, 0x1d0104, state); 		if (otus_write_barrier(sc) == 0) 			sc->led_state = state; 	}
+block|state ^= AR_LED0_ON | AR_LED1_ON; 		if (IEEE80211_IS_CHAN_2GHZ(sc->sc_curchan)) 			state&= ~AR_LED1_ON; 		else 			state&= ~AR_LED0_ON; 	} 	if (state != sc->led_state) { 		otus_write(sc, AR_GPIO_REG_PORT_DATA, state); 		if (otus_write_barrier(sc) == 0) 			sc->led_state = state; 	}
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * TODO:  *  * + If in monitor mode, set BSSID to all zeros, else the node BSSID.  * + Handle STA + monitor (eg tcpdump/promisc/radiotap) as well as  *   pure monitor mode.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|otus_set_operating_mode
+parameter_list|(
+name|struct
+name|otus_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_ic
+decl_stmt|;
+name|uint32_t
+name|rx_ctrl
+decl_stmt|;
+name|uint32_t
+name|frm_filt
+decl_stmt|;
+name|uint32_t
+name|cam_mode
+decl_stmt|;
+name|uint32_t
+name|rx_sniffer
+decl_stmt|;
+name|OTUS_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* XXX TODO: too many magic constants */
+name|rx_ctrl
+operator|=
+literal|0x1
+expr_stmt|;
+comment|/* Filter any control frames, BAR is bit 24. */
+name|frm_filt
+operator|=
+literal|0x0500ffff
+expr_stmt|;
+name|cam_mode
+operator|=
+literal|0x0f000002
+expr_stmt|;
+comment|/* XXX STA */
+name|rx_sniffer
+operator|=
+literal|0x20000000
+expr_stmt|;
+switch|switch
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+condition|)
+block|{
+case|case
+name|IEEE80211_M_STA
+case|:
+name|cam_mode
+operator|=
+literal|0x0f000002
+expr_stmt|;
+comment|/* XXX STA */
+name|rx_ctrl
+operator|=
+literal|0x1
+expr_stmt|;
+name|frm_filt
+operator|=
+literal|0x0500ffff
+expr_stmt|;
+name|rx_sniffer
+operator|=
+literal|0x20000000
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_MONITOR
+case|:
+name|cam_mode
+operator|=
+literal|0x0f000002
+expr_stmt|;
+comment|/* XXX STA */
+name|rx_ctrl
+operator|=
+literal|0x1
+expr_stmt|;
+name|frm_filt
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|rx_sniffer
+operator|=
+literal|0x20000001
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+name|otus_write
+argument_list|(
+name|sc
+argument_list|,
+name|AR_MAC_REG_SNIFFER
+argument_list|,
+name|rx_sniffer
+argument_list|)
+expr_stmt|;
+name|otus_write
+argument_list|(
+name|sc
+argument_list|,
+name|AR_MAC_REG_CAM_MODE
+argument_list|,
+name|cam_mode
+argument_list|)
+expr_stmt|;
+name|otus_write
+argument_list|(
+name|sc
+argument_list|,
+name|AR_MAC_REG_FRAMETYPE_FILTER
+argument_list|,
+name|frm_filt
+argument_list|)
+expr_stmt|;
+name|otus_write
+argument_list|(
+name|sc
+argument_list|,
+name|AR_MAC_REG_RX_CONTROL
+argument_list|,
+name|cam_mode
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|otus_write_barrier
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -14908,93 +15105,10 @@ operator|->
 name|ic_macaddr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|switch (ic->ic_opmode) {
-ifdef|#
-directive|ifdef
-name|notyet
-ifndef|#
-directive|ifndef
-name|IEEE80211_STA_ONLY
-block|case IEEE80211_M_HOSTAP: 		otus_write(sc, 0x1c3700, 0x0f0000a1); 		otus_write(sc, 0x1c3c40, 0x1); 		break; 	case IEEE80211_M_IBSS: 		otus_write(sc, 0x1c3700, 0x0f000000); 		otus_write(sc, 0x1c3c40, 0x1); 		break;
-endif|#
-directive|endif
-endif|#
-directive|endif
-block|case IEEE80211_M_STA: 		otus_write(sc, 0x1c3700, 0x0f000002); 		otus_write(sc, 0x1c3c40, 0x1); 		break; 	default: 		break; 	}
-endif|#
-directive|endif
-switch|switch
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-condition|)
-block|{
-case|case
-name|IEEE80211_M_STA
-case|:
-name|otus_write
-argument_list|(
-name|sc
-argument_list|,
-literal|0x1c3700
-argument_list|,
-literal|0x0f000002
-argument_list|)
-expr_stmt|;
-name|otus_write
-argument_list|(
-name|sc
-argument_list|,
-literal|0x1c3c40
-argument_list|,
-literal|0x1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IEEE80211_M_MONITOR
-case|:
-name|otus_write
-argument_list|(
-name|sc
-argument_list|,
-literal|0x1c368c
-argument_list|,
-literal|0xffffffff
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-comment|/* XXX ic_opmode? */
-name|otus_write
-argument_list|(
-name|sc
-argument_list|,
-name|AR_MAC_REG_SNIFFER
-argument_list|,
-operator|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_MONITOR
-operator|)
-condition|?
-literal|0x2000001
-else|:
-literal|0x2000000
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|otus_write_barrier
+name|otus_set_operating_mode
 argument_list|(
 name|sc
 argument_list|)
@@ -15051,7 +15165,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3d30
+name|AR_MAC_REG_DMA_TRIGGER
 argument_list|,
 literal|0x100
 argument_list|)
@@ -15180,7 +15294,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3d30
+name|AR_MAC_REG_DMA_TRIGGER
 argument_list|,
 literal|0
 argument_list|)

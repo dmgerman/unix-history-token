@@ -1831,6 +1831,16 @@ operator|&
 name|ic_list_mtx
 argument_list|)
 expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_restart_task
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The VAP is responsible for setting and clearing 	 * the VIMAGE context. 	 */
 while|while
 condition|(

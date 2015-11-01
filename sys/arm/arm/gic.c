@@ -2779,13 +2779,28 @@ argument_list|)
 expr_stmt|;
 name|next_irq
 label|:
-comment|//      arm_irq_memory_barrier(irq); /* XXX */
-comment|//      irq_active_reg = gic_c_read_4(sc, GICC_IAR);
-comment|//      irq = irq_active_reg& 0x3FF;
+name|arm_irq_memory_barrier
+argument_list|(
+name|irq
+argument_list|)
+expr_stmt|;
+name|irq_active_reg
+operator|=
+name|gic_c_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|GICC_IAR
+argument_list|)
+expr_stmt|;
+name|irq
+operator|=
+name|irq_active_reg
+operator|&
+literal|0x3FF
+expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|&&
 name|irq
 operator|<
 name|sc
@@ -4268,12 +4283,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -4365,6 +4374,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_function
 specifier|static

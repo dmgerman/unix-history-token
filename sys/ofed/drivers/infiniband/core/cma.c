@@ -12987,11 +12987,6 @@ decl_stmt|,
 modifier|*
 name|cur_addr
 decl_stmt|;
-name|struct
-name|hlist_node
-modifier|*
-name|node
-decl_stmt|;
 name|addr
 operator|=
 operator|(
@@ -13013,8 +13008,6 @@ expr_stmt|;
 name|hlist_for_each_entry
 argument_list|(
 argument|cur_id
-argument_list|,
-argument|node
 argument_list|,
 argument|&bind_list->owners
 argument_list|,

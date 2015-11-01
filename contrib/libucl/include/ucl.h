@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2013, Vsevolod Stakhov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *       * Redistributions of source code must retain the above copyright  *         notice, this list of conditions and the following disclaimer.  *       * Redistributions in binary form must reproduce the above copyright  *         notice, this list of conditions and the following disclaimer in the  *         documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2013-2015, Vsevolod Stakhov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *       * Redistributions of source code must retain the above copyright  *         notice, this list of conditions and the following disclaimer.  *       * Redistributions in binary form must reproduce the above copyright  *         notice, this list of conditions and the following disclaimer in the  *         documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -281,7 +281,13 @@ name|UCL_EMIT_CONFIG
 block|,
 comment|/**< Emit human readable config format */
 name|UCL_EMIT_YAML
+block|,
 comment|/**< Emit embedded YAML format */
+name|UCL_EMIT_MSGPACK
+block|,
+comment|/**< Emit msgpack output */
+name|UCL_EMIT_MAX
+comment|/**< Unsupported emitter type */
 block|}
 name|ucl_emitter_t
 typedef|;
@@ -290,6 +296,11 @@ typedef|typedef
 enum|enum
 name|ucl_parser_flags
 block|{
+name|UCL_PARSER_DEFAULT
+init|=
+literal|0x0
+block|,
+comment|/**< No special flags */
 name|UCL_PARSER_KEY_LOWERCASE
 init|=
 literal|0x1
@@ -317,6 +328,11 @@ typedef|typedef
 enum|enum
 name|ucl_string_flags
 block|{
+name|UCL_STRING_RAW
+init|=
+literal|0x0
+block|,
+comment|/**< Treat string as is */
 name|UCL_STRING_ESCAPE
 init|=
 literal|0x1
@@ -377,36 +393,113 @@ name|ucl_object_flags
 block|{
 name|UCL_OBJECT_ALLOCATED_KEY
 init|=
-literal|0x1
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
 block|,
 comment|/**< An object has key allocated internally */
 name|UCL_OBJECT_ALLOCATED_VALUE
 init|=
-literal|0x2
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
 block|,
 comment|/**< An object has a string value allocated internally */
 name|UCL_OBJECT_NEED_KEY_ESCAPE
 init|=
-literal|0x4
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
 block|,
 comment|/**< The key of an object need to be escaped on output */
 name|UCL_OBJECT_EPHEMERAL
 init|=
-literal|0x8
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
 block|,
 comment|/**< Temporary object that does not need to be freed really */
 name|UCL_OBJECT_MULTILINE
 init|=
-literal|0x10
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
 block|,
 comment|/**< String should be displayed as multiline string */
 name|UCL_OBJECT_MULTIVALUE
 init|=
-literal|0x20
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,
 comment|/**< Object is a key with multiple values */
+name|UCL_OBJECT_INHERITED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+block|,
+comment|/**< Object has been inherited from another */
+name|UCL_OBJECT_BINARY
+init|=
+operator|(
+literal|1
+operator|<<
+literal|7
+operator|)
+comment|/**< Object contains raw binary data */
 block|}
 name|ucl_object_flags_t
 typedef|;
+comment|/**  * Duplicate policy types  */
+enum|enum
+name|ucl_duplicate_strategy
+block|{
+name|UCL_DUPLICATE_APPEND
+init|=
+literal|0
+block|,
+comment|/**< Default policy to merge based on priorities */
+name|UCL_DUPLICATE_MERGE
+block|,
+comment|/**< Merge new object with old one */
+name|UCL_DUPLICATE_REWRITE
+block|,
+comment|/**< Rewrite old keys */
+name|UCL_DUPLICATE_ERROR
+comment|/**< Stop parsing on duplicate found */
+block|}
+enum|;
+comment|/**  * Input format type  */
+enum|enum
+name|ucl_parse_type
+block|{
+name|UCL_PARSE_UCL
+init|=
+literal|0
+block|,
+comment|/**< Default ucl format */
+name|UCL_PARSE_MSGPACK
+block|,
+comment|/**< Message pack input format */
+name|UCL_PARSE_CSEXP
+comment|/**< Canonical S-expressions */
+block|}
+enum|;
 comment|/**  * UCL object structure. Please mention that the most of fields should not be touched by  * UCL users. In future, this structure may be converted to private one.  */
 typedef|typedef
 struct|struct
@@ -992,6 +1085,21 @@ name|int
 name|index
 parameter_list|)
 function_decl|;
+comment|/**  * Return the index of `elt` in the array `top`  * @param top object to get a key from (must be of type UCL_ARRAY)  * @param elt element to find index of (must NOT be NULL)  * @return index of `elt` in the array `top or (unsigned int)-1 if `elt` is not found  */
+name|UCL_EXTERN
+name|unsigned
+name|int
+name|ucl_array_index_of
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|,
+name|ucl_object_t
+modifier|*
+name|elt
+parameter_list|)
+function_decl|;
 comment|/**  * Replace an element in an array with a different element, returning the object  * that was replaced. This object is not released, caller must unref the  * returned object when it is no longer needed.  * @param top destination object (must be of type UCL_ARRAY)  * @param elt element to append (must NOT be NULL)  * @param index array index in destination to overwrite with elt  * @return object that was replaced or NULL if index is not found  */
 name|ucl_object_t
 modifier|*
@@ -1202,6 +1310,26 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
+comment|/**  * Return object identified by a key in the specified object, if the first key is  * not found then look for the next one. This process is repeated unless  * the next argument in the list is not NULL. So, `ucl_object_find_any_key(obj, key, NULL)`  * is equal to `ucl_object_find_key(obj, key)`  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param ... list of alternative keys to search (NULL terminated)  * @return object matching the specified key or NULL if key was not found  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_object_find_any_key
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|key
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
 comment|/**  * Return object identified by a fixed size key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param klen length of a key  * @return object matching the specified key or NULL if key was not found  */
 name|UCL_EXTERN
 specifier|const
@@ -1239,6 +1367,27 @@ specifier|const
 name|char
 modifier|*
 name|path
+parameter_list|)
+function_decl|;
+comment|/**  * Return object identified by object notation string using arbitrary delimiter  * @param obj object to search in  * @param path dot.notation.path to the path to lookup. May use numeric .index on arrays  * @param sep the sepatorator to use in place of . (incase keys have . in them)  * @return object matched the specified path or NULL if path is not found  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_lookup_path_char
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|char
+name|sep
 parameter_list|)
 function_decl|;
 comment|/**  * Returns a key of an object as a NULL terminated string  * @param obj CL object  * @return key or NULL if there is no key  */
@@ -1333,10 +1482,12 @@ parameter_list|(
 specifier|const
 name|ucl_object_t
 modifier|*
+modifier|*
 name|o1
 parameter_list|,
 specifier|const
 name|ucl_object_t
+modifier|*
 modifier|*
 name|o2
 parameter_list|)
@@ -1472,6 +1623,38 @@ modifier|*
 name|ud
 parameter_list|)
 function_decl|;
+comment|/**  * Context dependent macro handler for a parser  * @param data the content of macro  * @param len the length of content  * @param arguments arguments object  * @param context previously parsed context  * @param ud opaque user data  * @param err error pointer  * @return true if macro has been parsed  */
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|ucl_context_macro_handler
+function_decl|)
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|arguments
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|context
+parameter_list|,
+name|void
+modifier|*
+name|ud
+parameter_list|)
+function_decl|;
 comment|/* Opaque parser */
 struct_decl|struct
 name|ucl_parser
@@ -1485,6 +1668,20 @@ name|ucl_parser_new
 parameter_list|(
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+comment|/**  * Sets the default priority for the parser applied to chunks that does not  * specify priority explicitly  * @param parser parser object  * @param prio default priority (0 .. 16)  * @return true if parser's default priority was set  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_set_default_priority
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+name|unsigned
+name|prio
 parameter_list|)
 function_decl|;
 comment|/**  * Register new handler for a macro  * @param parser parser object  * @param macro macro name (without leading dot)  * @param handler handler (it is called immediately after macro is parsed)  * @param ud opaque user data for a handler  */
@@ -1503,6 +1700,29 @@ modifier|*
 name|macro
 parameter_list|,
 name|ucl_macro_handler
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|ud
+parameter_list|)
+function_decl|;
+comment|/**  * Register new context dependent handler for a macro  * @param parser parser object  * @param macro macro name (without leading dot)  * @param handler handler (it is called immediately after macro is parsed)  * @param ud opaque user data for a handler  */
+name|UCL_EXTERN
+name|void
+name|ucl_parser_register_context_macro
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|macro
+parameter_list|,
+name|ucl_context_macro_handler
 name|handler
 parameter_list|,
 name|void
@@ -1628,6 +1848,37 @@ name|unsigned
 name|priority
 parameter_list|)
 function_decl|;
+comment|/**  * Full version of ucl_add_chunk with priority and duplicate strategy  * @param parser parser structure  * @param data the pointer to the beginning of a chunk  * @param len the length of a chunk  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @param strat duplicates merging strategy  * @param parse_type input format  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_chunk_full
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|unsigned
+name|priority
+parameter_list|,
+name|enum
+name|ucl_duplicate_strategy
+name|strat
+parameter_list|,
+name|enum
+name|ucl_parse_type
+name|parse_type
+parameter_list|)
+function_decl|;
 comment|/**  * Load ucl object from a string  * @param parser parser structure  * @param data the pointer to the string  * @param len the length of the string, if `len` is 0 then `data` must be zero-terminated string  * @return true if string has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
@@ -1647,6 +1898,28 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+comment|/**  * Load ucl object from a string  * @param parser parser structure  * @param data the pointer to the string  * @param len the length of the string, if `len` is 0 then `data` must be zero-terminated string  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if string has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_string_priority
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|unsigned
+name|priority
+parameter_list|)
+function_decl|;
 comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
@@ -1663,6 +1936,25 @@ modifier|*
 name|filename
 parameter_list|)
 function_decl|;
+comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_file_priority
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|unsigned
+name|priority
+parameter_list|)
+function_decl|;
 comment|/**  * Load and add data from a file descriptor  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
@@ -1677,6 +1969,38 @@ name|int
 name|fd
 parameter_list|)
 function_decl|;
+comment|/**  * Load and add data from a file descriptor  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_fd_priority
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|unsigned
+name|priority
+parameter_list|)
+function_decl|;
+comment|/**  * Provide a UCL_ARRAY of paths to search for include files. The object is  * copied so caller must unref the object.  * @param parser parser structure  * @param paths UCL_ARRAY of paths to search  * @return true if the path search array was replaced in the parser  */
+name|UCL_EXTERN
+name|bool
+name|ucl_set_include_path
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+name|ucl_object_t
+modifier|*
+name|paths
+parameter_list|)
+function_decl|;
 comment|/**  * Get a top object for a parser (refcount is increased)  * @param parser parser structure  * @param err if *err is NULL it is set to parser error  * @return top parser object or NULL  */
 name|UCL_EXTERN
 name|ucl_object_t
@@ -1689,12 +2013,45 @@ modifier|*
 name|parser
 parameter_list|)
 function_decl|;
-comment|/**  * Get the error string if failing  * @param parser parser object  */
+comment|/**  * Get the error string if parsing has been failed  * @param parser parser object  * @return error description  */
 name|UCL_EXTERN
 specifier|const
 name|char
 modifier|*
 name|ucl_parser_get_error
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|)
+function_decl|;
+comment|/**  * Get the code of the last error  * @param parser parser object  * @return error code  */
+name|UCL_EXTERN
+name|int
+name|ucl_parser_get_error_code
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|)
+function_decl|;
+comment|/**  * Get the current column number within parser  * @param parser parser object  * @return current column number  */
+name|UCL_EXTERN
+name|unsigned
+name|ucl_parser_get_column
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|)
+function_decl|;
+comment|/**  * Get the current line number within parser  * @param parser parser object  * @return current line number  */
+name|UCL_EXTERN
+name|unsigned
+name|ucl_parser_get_linenum
 parameter_list|(
 name|struct
 name|ucl_parser
@@ -2031,6 +2388,27 @@ parameter_list|,
 name|enum
 name|ucl_emitter
 name|emit_type
+parameter_list|)
+function_decl|;
+comment|/**  * Emit object to a string that can contain `\0` inside  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @param len the resulting length  * @return dump of an object (must be freed after using) or NULL in case of error  */
+name|UCL_EXTERN
+name|unsigned
+name|char
+modifier|*
+name|ucl_object_emit_len
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+name|enum
+name|ucl_emitter
+name|emit_type
+parameter_list|,
+name|size_t
+modifier|*
+name|len
 parameter_list|)
 function_decl|;
 comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @param emitter a set of emitter functions  * @return dump of an object (must be freed after using) or NULL in case of error  */

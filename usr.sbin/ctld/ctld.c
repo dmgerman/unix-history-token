@@ -9985,7 +9985,7 @@ expr_stmt|;
 comment|/* 			 * XXX: Uncomment after fixing the root cause. 			 * 			 * cumulated_error++; 			 */
 block|}
 block|}
-comment|/* 	 * Go through the new portals, opening the sockets as neccessary. 	 */
+comment|/* 	 * Go through the new portals, opening the sockets as necessary. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|newpg

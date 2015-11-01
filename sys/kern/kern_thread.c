@@ -1115,7 +1115,7 @@ literal|16
 operator|-
 literal|1
 argument_list|,
-literal|0
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 name|tidhashtbl

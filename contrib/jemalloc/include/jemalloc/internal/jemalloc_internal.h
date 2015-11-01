@@ -1111,6 +1111,15 @@ define|#
 directive|define
 name|PAGE_MASK
 value|((size_t)(PAGE - 1))
+comment|/* Return the page base address for the page containing address a. */
+define|#
+directive|define
+name|PAGE_ADDR2BASE
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((void *)((uintptr_t)(a)& ~PAGE_MASK))
 comment|/* Return the smallest pagesize multiple that is>= s. */
 define|#
 directive|define

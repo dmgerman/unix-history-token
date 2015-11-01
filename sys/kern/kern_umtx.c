@@ -4153,7 +4153,9 @@ name|KERN_SUCCESS
 condition|)
 block|{
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 block|}
 if|if
@@ -16870,6 +16872,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|do_sem_wake
 argument_list|(
 name|td
@@ -16878,6 +16881,7 @@ name|uap
 operator|->
 name|obj
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -16904,6 +16908,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|do_wake2_umutex
 argument_list|(
 name|td
@@ -16916,6 +16921,7 @@ name|uap
 operator|->
 name|val
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -17031,6 +17037,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|do_sem2_wake
 argument_list|(
 name|td
@@ -17039,6 +17046,7 @@ name|uap
 operator|->
 name|obj
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -17066,68 +17074,126 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|_umtx_op_func
 name|op_table
 index|[]
 init|=
 block|{
+index|[
+name|UMTX_OP_RESERVED0
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_RESERVED0 */
+index|[
+name|UMTX_OP_RESERVED1
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_RESERVED1 */
+index|[
+name|UMTX_OP_WAIT
+index|]
+operator|=
 name|__umtx_op_wait
 block|,
-comment|/* UMTX_OP_WAIT */
+index|[
+name|UMTX_OP_WAKE
+index|]
+operator|=
 name|__umtx_op_wake
 block|,
-comment|/* UMTX_OP_WAKE */
+index|[
+name|UMTX_OP_MUTEX_TRYLOCK
+index|]
+operator|=
 name|__umtx_op_trylock_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_TRYLOCK */
+index|[
+name|UMTX_OP_MUTEX_LOCK
+index|]
+operator|=
 name|__umtx_op_lock_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_LOCK */
+index|[
+name|UMTX_OP_MUTEX_UNLOCK
+index|]
+operator|=
 name|__umtx_op_unlock_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_UNLOCK */
+index|[
+name|UMTX_OP_SET_CEILING
+index|]
+operator|=
 name|__umtx_op_set_ceiling
 block|,
-comment|/* UMTX_OP_SET_CEILING */
+index|[
+name|UMTX_OP_CV_WAIT
+index|]
+operator|=
 name|__umtx_op_cv_wait
 block|,
-comment|/* UMTX_OP_CV_WAIT*/
+index|[
+name|UMTX_OP_CV_SIGNAL
+index|]
+operator|=
 name|__umtx_op_cv_signal
 block|,
-comment|/* UMTX_OP_CV_SIGNAL */
+index|[
+name|UMTX_OP_CV_BROADCAST
+index|]
+operator|=
 name|__umtx_op_cv_broadcast
 block|,
-comment|/* UMTX_OP_CV_BROADCAST */
+index|[
+name|UMTX_OP_WAIT_UINT
+index|]
+operator|=
 name|__umtx_op_wait_uint
 block|,
-comment|/* UMTX_OP_WAIT_UINT */
+index|[
+name|UMTX_OP_RW_RDLOCK
+index|]
+operator|=
 name|__umtx_op_rw_rdlock
 block|,
-comment|/* UMTX_OP_RW_RDLOCK */
+index|[
+name|UMTX_OP_RW_WRLOCK
+index|]
+operator|=
 name|__umtx_op_rw_wrlock
 block|,
-comment|/* UMTX_OP_RW_WRLOCK */
+index|[
+name|UMTX_OP_RW_UNLOCK
+index|]
+operator|=
 name|__umtx_op_rw_unlock
 block|,
-comment|/* UMTX_OP_RW_UNLOCK */
+index|[
+name|UMTX_OP_WAIT_UINT_PRIVATE
+index|]
+operator|=
 name|__umtx_op_wait_uint_private
 block|,
-comment|/* UMTX_OP_WAIT_UINT_PRIVATE */
+index|[
+name|UMTX_OP_WAKE_PRIVATE
+index|]
+operator|=
 name|__umtx_op_wake_private
 block|,
-comment|/* UMTX_OP_WAKE_PRIVATE */
+index|[
+name|UMTX_OP_MUTEX_WAIT
+index|]
+operator|=
 name|__umtx_op_wait_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_WAIT */
+index|[
+name|UMTX_OP_MUTEX_WAKE
+index|]
+operator|=
 name|__umtx_op_wake_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_WAKE */
 if|#
 directive|if
 name|defined
@@ -17139,35 +17205,58 @@ name|defined
 argument_list|(
 name|COMPAT_FREEBSD10
 argument_list|)
+index|[
+name|UMTX_OP_SEM_WAIT
+index|]
+operator|=
 name|__umtx_op_sem_wait
 block|,
-comment|/* UMTX_OP_SEM_WAIT */
+index|[
+name|UMTX_OP_SEM_WAKE
+index|]
+operator|=
 name|__umtx_op_sem_wake
 block|,
-comment|/* UMTX_OP_SEM_WAKE */
 else|#
 directive|else
+index|[
+name|UMTX_OP_SEM_WAIT
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_SEM_WAIT */
+index|[
+name|UMTX_OP_SEM_WAKE
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_SEM_WAKE */
 endif|#
 directive|endif
+index|[
+name|UMTX_OP_NWAKE_PRIVATE
+index|]
+operator|=
 name|__umtx_op_nwake_private
 block|,
-comment|/* UMTX_OP_NWAKE_PRIVATE */
+index|[
+name|UMTX_OP_MUTEX_WAKE2
+index|]
+operator|=
 name|__umtx_op_wake2_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_WAKE2 */
+index|[
+name|UMTX_OP_SEM2_WAIT
+index|]
+operator|=
 name|__umtx_op_sem2_wait
 block|,
-comment|/* UMTX_OP_SEM2_WAIT */
+index|[
+name|UMTX_OP_SEM2_WAKE
+index|]
+operator|=
 name|__umtx_op_sem2_wake
-block|,
-comment|/* UMTX_OP_SEM2_WAKE */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -17195,7 +17284,10 @@ name|uap
 operator|->
 name|op
 operator|<
-name|UMTX_OP_MAX
+name|nitems
+argument_list|(
+name|op_table
+argument_list|)
 condition|)
 return|return
 call|(
@@ -18588,68 +18680,126 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|_umtx_op_func
 name|op_table_compat32
 index|[]
 init|=
 block|{
+index|[
+name|UMTX_OP_RESERVED0
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_RESERVED0 */
+index|[
+name|UMTX_OP_RESERVED1
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_RESERVED1 */
+index|[
+name|UMTX_OP_WAIT
+index|]
+operator|=
 name|__umtx_op_wait_compat32
 block|,
-comment|/* UMTX_OP_WAIT */
+index|[
+name|UMTX_OP_WAKE
+index|]
+operator|=
 name|__umtx_op_wake
 block|,
-comment|/* UMTX_OP_WAKE */
+index|[
+name|UMTX_OP_MUTEX_LOCK
+index|]
+operator|=
 name|__umtx_op_trylock_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_LOCK */
+index|[
+name|UMTX_OP_MUTEX_TRYLOCK
+index|]
+operator|=
 name|__umtx_op_lock_umutex_compat32
 block|,
-comment|/* UMTX_OP_MUTEX_TRYLOCK */
+index|[
+name|UMTX_OP_MUTEX_UNLOCK
+index|]
+operator|=
 name|__umtx_op_unlock_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_UNLOCK	*/
+index|[
+name|UMTX_OP_SET_CEILING
+index|]
+operator|=
 name|__umtx_op_set_ceiling
 block|,
-comment|/* UMTX_OP_SET_CEILING */
+index|[
+name|UMTX_OP_CV_WAIT
+index|]
+operator|=
 name|__umtx_op_cv_wait_compat32
 block|,
-comment|/* UMTX_OP_CV_WAIT*/
+index|[
+name|UMTX_OP_CV_SIGNAL
+index|]
+operator|=
 name|__umtx_op_cv_signal
 block|,
-comment|/* UMTX_OP_CV_SIGNAL */
+index|[
+name|UMTX_OP_CV_BROADCAST
+index|]
+operator|=
 name|__umtx_op_cv_broadcast
 block|,
-comment|/* UMTX_OP_CV_BROADCAST */
+index|[
+name|UMTX_OP_WAIT_UINT
+index|]
+operator|=
 name|__umtx_op_wait_compat32
 block|,
-comment|/* UMTX_OP_WAIT_UINT */
+index|[
+name|UMTX_OP_RW_RDLOCK
+index|]
+operator|=
 name|__umtx_op_rw_rdlock_compat32
 block|,
-comment|/* UMTX_OP_RW_RDLOCK */
+index|[
+name|UMTX_OP_RW_WRLOCK
+index|]
+operator|=
 name|__umtx_op_rw_wrlock_compat32
 block|,
-comment|/* UMTX_OP_RW_WRLOCK */
+index|[
+name|UMTX_OP_RW_UNLOCK
+index|]
+operator|=
 name|__umtx_op_rw_unlock
 block|,
-comment|/* UMTX_OP_RW_UNLOCK */
+index|[
+name|UMTX_OP_WAIT_UINT_PRIVATE
+index|]
+operator|=
 name|__umtx_op_wait_uint_private_compat32
 block|,
-comment|/* UMTX_OP_WAIT_UINT_PRIVATE */
+index|[
+name|UMTX_OP_WAKE_PRIVATE
+index|]
+operator|=
 name|__umtx_op_wake_private
 block|,
-comment|/* UMTX_OP_WAKE_PRIVATE */
+index|[
+name|UMTX_OP_MUTEX_WAIT
+index|]
+operator|=
 name|__umtx_op_wait_umutex_compat32
 block|,
-comment|/* UMTX_OP_MUTEX_WAIT */
+index|[
+name|UMTX_OP_MUTEX_WAKE
+index|]
+operator|=
 name|__umtx_op_wake_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_WAKE */
 if|#
 directive|if
 name|defined
@@ -18661,35 +18811,58 @@ name|defined
 argument_list|(
 name|COMPAT_FREEBSD10
 argument_list|)
+index|[
+name|UMTX_OP_SEM_WAIT
+index|]
+operator|=
 name|__umtx_op_sem_wait_compat32
 block|,
-comment|/* UMTX_OP_SEM_WAIT */
+index|[
+name|UMTX_OP_SEM_WAKE
+index|]
+operator|=
 name|__umtx_op_sem_wake
 block|,
-comment|/* UMTX_OP_SEM_WAKE */
 else|#
 directive|else
+index|[
+name|UMTX_OP_SEM_WAIT
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_SEM_WAIT */
+index|[
+name|UMTX_OP_SEM_WAKE
+index|]
+operator|=
 name|__umtx_op_unimpl
 block|,
-comment|/* UMTX_OP_SEM_WAKE */
 endif|#
 directive|endif
+index|[
+name|UMTX_OP_NWAKE_PRIVATE
+index|]
+operator|=
 name|__umtx_op_nwake_private32
 block|,
-comment|/* UMTX_OP_NWAKE_PRIVATE */
+index|[
+name|UMTX_OP_MUTEX_WAKE2
+index|]
+operator|=
 name|__umtx_op_wake2_umutex
 block|,
-comment|/* UMTX_OP_MUTEX_WAKE2 */
+index|[
+name|UMTX_OP_SEM2_WAIT
+index|]
+operator|=
 name|__umtx_op_sem2_wait_compat32
 block|,
-comment|/* UMTX_OP_SEM2_WAIT */
+index|[
+name|UMTX_OP_SEM2_WAKE
+index|]
+operator|=
 name|__umtx_op_sem2_wake
-block|,
-comment|/* UMTX_OP_SEM2_WAKE */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -18717,8 +18890,12 @@ name|uap
 operator|->
 name|op
 operator|<
-name|UMTX_OP_MAX
+name|nitems
+argument_list|(
+name|op_table_compat32
+argument_list|)
 condition|)
+block|{
 return|return
 call|(
 modifier|*
@@ -18740,6 +18917,7 @@ operator|)
 name|uap
 argument_list|)
 return|;
+block|}
 return|return
 operator|(
 name|EINVAL

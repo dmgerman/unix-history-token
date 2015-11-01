@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -64,7 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// (1<< 30)
+comment|/* (1<< 30) */
 end_comment
 
 begin_decl_stmt
@@ -103,7 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// slightly more than 0.0005
+comment|/* slightly more than 0.0005 */
 end_comment
 
 begin_decl_stmt
@@ -117,8 +111,107 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// slightly less than 0.0005
+comment|/* slightly less than 0.0005 */
 end_comment
+
+begin_function_decl
+name|void
+name|test_PositiveInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_NegativeInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_PositiveIntegerWithFraction
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_NegativeIntegerWithFraction
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_RoundingDownToInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_RoundingMiddleToInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_RoundingUpToInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SingleDecimal
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_MillisecondsRoundingUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_MillisecondsRoundingDown
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_UnsignedInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -131,12 +224,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|200
+block|}
 block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// exact 200.0000000000
+comment|/* exact 200.0000000000 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"200.0000000000"
@@ -187,13 +282,15 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 operator|-
 literal|100
+block|}
 block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// -100
+comment|/* -100 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"-100.0000000000"
@@ -234,12 +331,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|200
+block|}
 block|,
 name|ONE_FOURTH
 block|}
 decl_stmt|;
-comment|// 200.25
+comment|/* 200.25 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"200.2500000000"
@@ -280,13 +379,15 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 operator|-
 literal|100
+block|}
 block|,
 name|ONE_FOURTH
 block|}
 decl_stmt|;
-comment|// -99.75
+comment|/* -99.75 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"-99.7500000000"
@@ -327,12 +428,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|10
+block|}
 block|,
 name|ONE_FOURTH
 block|}
 decl_stmt|;
-comment|// 10.25
+comment|/* 10.25 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"10"
@@ -373,12 +476,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|10
+block|}
 block|,
 name|HALF
 block|}
 decl_stmt|;
-comment|// 10.5
+comment|/* 10.5 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"11"
@@ -419,12 +524,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|5
+block|}
 block|,
 name|THREE_FOURTH
 block|}
 decl_stmt|;
-comment|// 5.75
+comment|/* 5.75 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"6"
@@ -465,12 +572,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|8
+block|}
 block|,
 name|ONE_FOURTH
 block|}
 decl_stmt|;
-comment|// 8.25
+comment|/* 8.25 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"8.3"
@@ -511,12 +620,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|1
+block|}
 block|,
 name|HALF_PROMILLE_UP
 block|}
 decl_stmt|;
-comment|//slightly more than 1.0005
+comment|/* slightly more than 1.0005 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"1.0"
@@ -570,12 +681,14 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|1
+block|}
 block|,
 name|HALF_PROMILLE_DOWN
 block|}
 decl_stmt|;
-comment|// slightly less than 1.0005
+comment|/* slightly less than 1.0005 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"1.0"
@@ -629,7 +742,9 @@ name|l_fp
 name|test
 init|=
 block|{
+block|{
 literal|3000000000UL
+block|}
 block|,
 literal|0
 block|}

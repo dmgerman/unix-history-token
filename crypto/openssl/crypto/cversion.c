@@ -59,11 +59,23 @@ block|{
 ifdef|#
 directive|ifdef
 name|DATE
+ifdef|#
+directive|ifdef
+name|OPENSSL_USE_BUILD_DATE
 return|return
 operator|(
 name|DATE
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|"built on: reproducible build, date unspecified"
+operator|)
+return|;
+endif|#
+directive|endif
 else|#
 directive|else
 return|return

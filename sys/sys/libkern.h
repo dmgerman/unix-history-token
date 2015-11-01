@@ -715,6 +715,27 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_INLINE_FFSLL
+end_ifndef
+
+begin_function_decl
+name|int
+name|ffsll
+parameter_list|(
+name|long
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_INLINE_FLS
 end_ifndef
 

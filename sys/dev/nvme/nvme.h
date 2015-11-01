@@ -2581,6 +2581,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint32_t
+name|nvme_ns_get_stripesize
+parameter_list|(
+name|struct
+name|nvme_namespace
+modifier|*
+name|ns
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|nvme_ns_bio_process
 parameter_list|(

@@ -3982,8 +3982,6 @@ name|iicbus_get_addr
 argument_list|(
 name|dev
 argument_list|)
-operator|<<
-literal|1
 expr_stmt|;
 name|sc
 operator|->

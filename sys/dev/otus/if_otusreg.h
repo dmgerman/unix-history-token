@@ -119,6 +119,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_MAC_REG_DMA_TRIGGER
+value|(AR_MAC_REG_BASE + 0xd30)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_REG_MAC_ADDR_L
 value|(AR_MAC_REG_BASE + 0x610)
 end_define
@@ -156,6 +163,13 @@ define|#
 directive|define
 name|AR_MAC_REG_GROUP_HASH_TBL_H
 value|(AR_MAC_REG_BASE + 0x628)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_RX_TIMEOUT
+value|(AR_MAC_REG_BASE + 0x62c)
 end_define
 
 begin_define
@@ -217,8 +231,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_MAC_REG_ENCRYPTION
+value|(AR_MAC_REG_BASE + 0x678)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_MISC_680
+value|(AR_MAC_REG_BASE + 0x680)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_FRAMETYPE_FILTER
+value|(AR_MAC_REG_BASE + 0x68c)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_REG_ACK_EXTENSION
 value|(AR_MAC_REG_BASE + 0x690)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_ACK_TPC
+value|(AR_MAC_REG_BASE + 0x694)
 end_define
 
 begin_define
@@ -247,6 +289,13 @@ define|#
 directive|define
 name|AR_MAC_REG_SLOT_TIME
 value|(AR_MAC_REG_BASE + 0x6f0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_CAM_MODE
+value|(AR_MAC_REG_BASE + 0x700)
 end_define
 
 begin_define
@@ -308,9 +357,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_MAC_REG_TID_CFACK_CFEND_RATE
+value|(AR_MAC_REG_BASE + 0xb2c)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_REG_TXOP_NOT_ENOUGH_INDICATION
 define|\
 value|(AR_MAC_REG_BASE + 0xb30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_TXOP_DURATION
+value|(AR_MAC_REG_BASE + 0xb38)
 end_define
 
 begin_define
@@ -330,6 +393,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_MAC_REG_AMPDU_FACTOR
+value|(AR_MAC_REG_BASE + 0xb9c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_FCS_SELECT
+value|(AR_MAC_REG_BASE + 0xbb0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_RX_CONTROL
+value|(AR_MAC_REG_BASE + 0xc40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_AMPDU_RX_THRESH
+value|(AR_MAC_REG_BASE + 0xc50)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_REG_OFDM_PHY_ERRORS
 value|(AR_MAC_REG_BASE + 0xcb4)
 end_define
@@ -339,6 +430,13 @@ define|#
 directive|define
 name|AR_MAC_REG_CCK_PHY_ERRORS
 value|(AR_MAC_REG_BASE + 0xcb8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_REG_TXRX_MPI
+value|(AR_MAC_REG_BASE + 0xd7c)
 end_define
 
 begin_define
@@ -692,6 +790,99 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)<< 5)
+end_define
+
+begin_comment
+comment|/*  * Random number generator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_RAND_REG_BASE
+value|0x1d0000
+end_define
+
+begin_comment
+comment|/*  * GPIO.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_REG_BASE
+value|0x1d0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_REG_PORT_TYPE
+value|(AR_GPIO_REG_BASE + 0x000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_REG_PORT_DATA
+value|(AR_GPIO_REG_BASE + 0x004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_PORT_LED_0
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_PORT_LED_1
+value|2
+end_define
+
+begin_comment
+comment|/* WPS Button GPIO for TP-Link TL-WN821N */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_PORT_WPS_BUTTON_PRESSED
+value|4
+end_define
+
+begin_comment
+comment|/*  * Power Management.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PWR_REG_BASE
+value|0x1d4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PWR_REG_RESET
+value|(AR_PWR_REG_BASE + 0x004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PWR_REG_CLOCK_SEL
+value|(AR_PWR_REG_BASE + 0x008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PWR_REG_PLL_ADDAC
+value|(AR_PWR_REG_BASE + 0x014)
 end_define
 
 begin_comment

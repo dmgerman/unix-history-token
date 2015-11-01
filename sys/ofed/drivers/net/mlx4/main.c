@@ -20544,7 +20544,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|mlx4
 argument_list|,
-name|linuxapi
+name|linuxkpi
 argument_list|,
 literal|1
 argument_list|,

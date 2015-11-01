@@ -9026,7 +9026,7 @@ argument_list|,
 name|tmp2
 argument_list|)
 expr_stmt|;
-comment|/*-      * tmp[i]< 2^127 - 2^69 + 17*2^122      *        = 2^126 - 2^122 - 2^6 - 2^2 - 1      *< 2^127      */
+comment|/*-          * tmp[i]< 2^127 - 2^69 + 17*2^122          *        = 2^126 - 2^122 - 2^6 - 2^2 - 1          *< 2^127          */
 name|felem_reduce
 argument_list|(
 name|y_out

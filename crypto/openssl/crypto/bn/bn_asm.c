@@ -2665,15 +2665,15 @@ begin_comment
 comment|/*  * sqr_add_c2(a,i,c0,c1,c2) -- c+=2*a[i]*a[j] for three word number  * c=(c2,c1,c0)  */
 end_comment
 
-begin_comment
-comment|/*  * Keep in mind that carrying into high part of multiplication result  * can not overflow, because it cannot be all-ones.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|BN_LLONG
 end_ifdef
+
+begin_comment
+comment|/*  * Keep in mind that additions to multiplication result can not  * overflow, because its high half cannot be all-ones.  */
+end_comment
 
 begin_define
 define|#
@@ -2690,8 +2690,9 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-define|\
-value|t=(BN_ULLONG)a*b; \         t1=(BN_ULONG)Lw(t); \         t2=(BN_ULONG)Hw(t); \         c0=(c0+t1)&BN_MASK2; if ((c0)< t1) t2++; \         c1=(c1+t2)&BN_MASK2; if ((c1)< t2) c2++;
+value|do {    \         BN_ULONG hi;                            \         BN_ULLONG t = (BN_ULLONG)(a)*(b);       \         t += c0;
+comment|/* no carry */
+value|\         c0 = (BN_ULONG)Lw(t);                   \         hi = (BN_ULONG)Hw(t);                   \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         } while(0)
 end_define
 
 begin_define
@@ -2709,8 +2710,11 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-define|\
-value|t=(BN_ULLONG)a*b; \         tt=(t+t)&BN_MASK; \         if (tt< t) c2++; \         t1=(BN_ULONG)Lw(tt); \         t2=(BN_ULONG)Hw(tt); \         c0=(c0+t1)&BN_MASK2;  \         if ((c0< t1)&& (((++t2)&BN_MASK2) == 0)) c2++; \         c1=(c1+t2)&BN_MASK2; if ((c1)< t2) c2++;
+value|do {    \         BN_ULONG hi;                            \         BN_ULLONG t = (BN_ULLONG)(a)*(b);       \         BN_ULLONG tt = t+c0;
+comment|/* no carry */
+value|\         c0 = (BN_ULONG)Lw(tt);                  \         hi = (BN_ULONG)Hw(tt);                  \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         t += c0;
+comment|/* no carry */
+value|\         c0 = (BN_ULONG)Lw(t);                   \         hi = (BN_ULONG)Hw(t);                   \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         } while(0)
 end_define
 
 begin_define
@@ -2728,8 +2732,9 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-define|\
-value|t=(BN_ULLONG)a[i]*a[i]; \         t1=(BN_ULONG)Lw(t); \         t2=(BN_ULONG)Hw(t); \         c0=(c0+t1)&BN_MASK2; if ((c0)< t1) t2++; \         c1=(c1+t2)&BN_MASK2; if ((c1)< t2) c2++;
+value|do {    \         BN_ULONG hi;                            \         BN_ULLONG t = (BN_ULLONG)a[i]*a[i];     \         t += c0;
+comment|/* no carry */
+value|\         c0 = (BN_ULONG)Lw(t);                   \         hi = (BN_ULONG)Hw(t);                   \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         } while(0)
 end_define
 
 begin_define
@@ -2762,6 +2767,10 @@ name|BN_UMULT_LOHI
 argument_list|)
 end_elif
 
+begin_comment
+comment|/*  * Keep in mind that additions to hi can not overflow, because  * the high word of a multiplication result cannot be all-ones.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2777,7 +2786,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{       \         BN_ULONG ta=(a),tb=(b);         \         BN_UMULT_LOHI(t1,t2,ta,tb);     \         c0 += t1; t2 += (c0<t1)?1:0;    \         c1 += t2; c2 += (c1<t2)?1:0;    \         }
+value|do {    \         BN_ULONG ta = (a), tb = (b);            \         BN_ULONG lo, hi;                        \         BN_UMULT_LOHI(lo,hi,ta,tb);             \         c0 += lo; hi += (c0<lo)?1:0;            \         c1 += hi; c2 += (c1<hi)?1:0;            \         } while(0)
 end_define
 
 begin_define
@@ -2795,7 +2804,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{      \         BN_ULONG ta=(a),tb=(b),t0;      \         BN_UMULT_LOHI(t0,t1,ta,tb);     \         c0 += t0; t2 = t1+((c0<t0)?1:0);\         c1 += t2; c2 += (c1<t2)?1:0;    \         c0 += t0; t1 += (c0<t0)?1:0;    \         c1 += t1; c2 += (c1<t1)?1:0;    \         }
+value|do {    \         BN_ULONG ta = (a), tb = (b);            \         BN_ULONG lo, hi, tt;                    \         BN_UMULT_LOHI(lo,hi,ta,tb);             \         c0 += lo; tt = hi+((c0<lo)?1:0);        \         c1 += tt; c2 += (c1<tt)?1:0;            \         c0 += lo; hi += (c0<lo)?1:0;            \         c1 += hi; c2 += (c1<hi)?1:0;            \         } while(0)
 end_define
 
 begin_define
@@ -2813,7 +2822,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{       \         BN_ULONG ta=(a)[i];             \         BN_UMULT_LOHI(t1,t2,ta,ta);     \         c0 += t1; t2 += (c0<t1)?1:0;    \         c1 += t2; c2 += (c1<t2)?1:0;    \         }
+value|do {    \         BN_ULONG ta = (a)[i];                   \         BN_ULONG lo, hi;                        \         BN_UMULT_LOHI(lo,hi,ta,ta);             \         c0 += lo; hi += (c0<lo)?1:0;            \         c1 += hi; c2 += (c1<hi)?1:0;            \         } while(0)
 end_define
 
 begin_define
@@ -2846,6 +2855,10 @@ name|BN_UMULT_HIGH
 argument_list|)
 end_elif
 
+begin_comment
+comment|/*  * Keep in mind that additions to hi can not overflow, because  * the high word of a multiplication result cannot be all-ones.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2861,7 +2874,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{       \         BN_ULONG ta=(a),tb=(b);         \         t1 = ta * tb;                   \         t2 = BN_UMULT_HIGH(ta,tb);      \         c0 += t1; t2 += (c0<t1)?1:0;    \         c1 += t2; c2 += (c1<t2)?1:0;    \         }
+value|do {    \         BN_ULONG ta = (a), tb = (b);            \         BN_ULONG lo = ta * tb;                  \         BN_ULONG hi = BN_UMULT_HIGH(ta,tb);     \         c0 += lo; hi += (c0<lo)?1:0;            \         c1 += hi; c2 += (c1<hi)?1:0;            \         } while(0)
 end_define
 
 begin_define
@@ -2879,7 +2892,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{      \         BN_ULONG ta=(a),tb=(b),t0;      \         t1 = BN_UMULT_HIGH(ta,tb);      \         t0 = ta * tb;                   \         c0 += t0; t2 = t1+((c0<t0)?1:0);\         c1 += t2; c2 += (c1<t2)?1:0;    \         c0 += t0; t1 += (c0<t0)?1:0;    \         c1 += t1; c2 += (c1<t1)?1:0;    \         }
+value|do {    \         BN_ULONG ta = (a), tb = (b), tt;        \         BN_ULONG lo = ta * tb;                  \         BN_ULONG hi = BN_UMULT_HIGH(ta,tb);     \         c0 += lo; tt = hi + ((c0<lo)?1:0);      \         c1 += tt; c2 += (c1<tt)?1:0;            \         c0 += lo; hi += (c0<lo)?1:0;            \         c1 += hi; c2 += (c1<hi)?1:0;            \         } while(0)
 end_define
 
 begin_define
@@ -2897,7 +2910,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{       \         BN_ULONG ta=(a)[i];             \         t1 = ta * ta;                   \         t2 = BN_UMULT_HIGH(ta,ta);      \         c0 += t1; t2 += (c0<t1)?1:0;    \         c1 += t2; c2 += (c1<t2)?1:0;    \         }
+value|do {    \         BN_ULONG ta = (a)[i];                   \         BN_ULONG lo = ta * ta;                  \         BN_ULONG hi = BN_UMULT_HIGH(ta,ta);     \         c0 += lo; hi += (c0<lo)?1:0;            \         c1 += hi; c2 += (c1<hi)?1:0;            \         } while(0)
 end_define
 
 begin_define
@@ -2930,6 +2943,10 @@ begin_comment
 comment|/* !BN_LLONG */
 end_comment
 
+begin_comment
+comment|/*  * Keep in mind that additions to hi can not overflow, because  * the high word of a multiplication result cannot be all-ones.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2945,8 +2962,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-define|\
-value|t1=LBITS(a); t2=HBITS(a); \         bl=LBITS(b); bh=HBITS(b); \         mul64(t1,t2,bl,bh); \         c0=(c0+t1)&BN_MASK2; if ((c0)< t1) t2++; \         c1=(c1+t2)&BN_MASK2; if ((c1)< t2) c2++;
+value|do {    \         BN_ULONG lo = LBITS(a), hi = HBITS(a);  \         BN_ULONG bl = LBITS(b), bh = HBITS(b);  \         mul64(lo,hi,bl,bh);                     \         c0 = (c0+lo)&BN_MASK2; if (c0<lo) hi++; \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         } while(0)
 end_define
 
 begin_define
@@ -2964,8 +2980,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-define|\
-value|t1=LBITS(a); t2=HBITS(a); \         bl=LBITS(b); bh=HBITS(b); \         mul64(t1,t2,bl,bh); \         if (t2& BN_TBIT) c2++; \         t2=(t2+t2)&BN_MASK2; \         if (t1& BN_TBIT) t2++; \         t1=(t1+t1)&BN_MASK2; \         c0=(c0+t1)&BN_MASK2;  \         if ((c0< t1)&& (((++t2)&BN_MASK2) == 0)) c2++; \         c1=(c1+t2)&BN_MASK2; if ((c1)< t2) c2++;
+value|do {    \         BN_ULONG tt;                            \         BN_ULONG lo = LBITS(a), hi = HBITS(a);  \         BN_ULONG bl = LBITS(b), bh = HBITS(b);  \         mul64(lo,hi,bl,bh);                     \         tt = hi;                                \         c0 = (c0+lo)&BN_MASK2; if (c0<lo) tt++; \         c1 = (c1+tt)&BN_MASK2; if (c1<tt) c2++; \         c0 = (c0+lo)&BN_MASK2; if (c0<lo) hi++; \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         } while(0)
 end_define
 
 begin_define
@@ -2983,8 +2998,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-define|\
-value|sqr64(t1,t2,(a)[i]); \         c0=(c0+t1)&BN_MASK2; if ((c0)< t1) t2++; \         c1=(c1+t2)&BN_MASK2; if ((c1)< t2) c2++;
+value|do {    \         BN_ULONG lo, hi;                        \         sqr64(lo,hi,(a)[i]);                    \         c0 = (c0+lo)&BN_MASK2; if (c0<lo) hi++; \         c1 = (c1+hi)&BN_MASK2; if (c1<hi) c2++; \         } while(0)
 end_define
 
 begin_define
@@ -3034,26 +3048,6 @@ modifier|*
 name|b
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|BN_LLONG
-name|BN_ULLONG
-name|t
-decl_stmt|;
-else|#
-directive|else
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
-endif|#
-directive|endif
-name|BN_ULONG
-name|t1
-decl_stmt|,
-name|t2
-decl_stmt|;
 name|BN_ULONG
 name|c1
 decl_stmt|,
@@ -4477,26 +4471,6 @@ modifier|*
 name|b
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|BN_LLONG
-name|BN_ULLONG
-name|t
-decl_stmt|;
-else|#
-directive|else
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
-endif|#
-directive|endif
-name|BN_ULONG
-name|t1
-decl_stmt|,
-name|t2
-decl_stmt|;
 name|BN_ULONG
 name|c1
 decl_stmt|,
@@ -4917,28 +4891,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|BN_LLONG
-name|BN_ULLONG
-name|t
-decl_stmt|,
-name|tt
-decl_stmt|;
-else|#
-directive|else
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
-endif|#
-directive|endif
-name|BN_ULONG
-name|t1
-decl_stmt|,
-name|t2
-decl_stmt|;
 name|BN_ULONG
 name|c1
 decl_stmt|,
@@ -5667,28 +5619,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|BN_LLONG
-name|BN_ULLONG
-name|t
-decl_stmt|,
-name|tt
-decl_stmt|;
-else|#
-directive|else
-name|BN_ULONG
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|;
-endif|#
-directive|endif
-name|BN_ULONG
-name|t1
-decl_stmt|,
-name|t2
-decl_stmt|;
 name|BN_ULONG
 name|c1
 decl_stmt|,

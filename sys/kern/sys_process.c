@@ -293,7 +293,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* LWP name. */
-name|int
+name|pid_t
 name|pl_child_pid
 decl_stmt|;
 comment|/* New child pid */
@@ -2986,7 +2986,45 @@ block|{
 case|case
 name|PT_TRACE_ME
 case|:
-comment|/* Always legal. */
+comment|/* 		 * Always legal, when there is a parent process which 		 * could trace us.  Otherwise, reject. 		 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
+name|p
+operator|->
+name|p_pptr
+operator|==
+name|initproc
+condition|)
+block|{
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 break|break;
 case|case
 name|PT_ATTACH
@@ -2995,14 +3033,10 @@ comment|/* Self */
 if|if
 condition|(
 name|p
-operator|->
-name|p_pid
 operator|==
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_pid
 condition|)
 block|{
 name|error

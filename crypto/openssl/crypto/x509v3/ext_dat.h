@@ -140,6 +140,14 @@ name|v3_asid
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|X509V3_EXT_METHOD
+name|v3_ct_scts
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This table will be searched using OBJ_bsearch so it *must* kept in order  * of the ext_nid values.  */
 end_comment
@@ -328,6 +336,18 @@ index|]
 block|,
 operator|&
 name|v3_freshest_crl
+block|,
+operator|&
+name|v3_ct_scts
+index|[
+literal|0
+index|]
+block|,
+operator|&
+name|v3_ct_scts
+index|[
+literal|1
+index|]
 block|, }
 decl_stmt|;
 end_decl_stmt

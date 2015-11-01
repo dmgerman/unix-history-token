@@ -347,13 +347,6 @@ name|UMTX_OP_SEM2_WAKE
 value|24
 end_define
 
-begin_define
-define|#
-directive|define
-name|UMTX_OP_MAX
-value|25
-end_define
-
 begin_comment
 comment|/* Flags for UMTX_OP_CV_WAIT */
 end_comment

@@ -8730,13 +8730,11 @@ modifier|*
 name|discard
 decl_stmt|;
 name|int
-name|rv
-decl_stmt|,
 name|e
-decl_stmt|;
-name|unsigned
-name|int
+decl_stmt|,
 name|i
+decl_stmt|,
+name|rv
 decl_stmt|;
 for|for
 control|(
@@ -8746,20 +8744,17 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+call|(
+name|int
+call|)
+argument_list|(
+name|nitems
 argument_list|(
 name|dtab
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|dtab
-index|[
-literal|0
-index|]
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -9210,7 +9205,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do {	 				\ 	unsigned int i;						\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
+value|do {	 				\ 	int i;							\ 	for (i = 0; i< (int)(nitems(x) - 1); i++)		\ 		x[i].mdata = (void *)y;				\ } while (0)
 name|rv
 operator|=
 name|compat_getstate

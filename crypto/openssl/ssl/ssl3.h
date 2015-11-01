@@ -154,24 +154,48 @@ name|SSL3_CK_EDH_DSS_DES_40_CBC_SHA
 value|0x03000011
 define|#
 directive|define
+name|SSL3_CK_DHE_DSS_DES_40_CBC_SHA
+value|SSL3_CK_EDH_DSS_DES_40_CBC_SHA
+define|#
+directive|define
 name|SSL3_CK_EDH_DSS_DES_64_CBC_SHA
 value|0x03000012
+define|#
+directive|define
+name|SSL3_CK_DHE_DSS_DES_64_CBC_SHA
+value|SSL3_CK_EDH_DSS_DES_64_CBC_SHA
 define|#
 directive|define
 name|SSL3_CK_EDH_DSS_DES_192_CBC3_SHA
 value|0x03000013
 define|#
 directive|define
+name|SSL3_CK_DHE_DSS_DES_192_CBC3_SHA
+value|SSL3_CK_EDH_DSS_DES_192_CBC3_SHA
+define|#
+directive|define
 name|SSL3_CK_EDH_RSA_DES_40_CBC_SHA
 value|0x03000014
+define|#
+directive|define
+name|SSL3_CK_DHE_RSA_DES_40_CBC_SHA
+value|SSL3_CK_EDH_RSA_DES_40_CBC_SHA
 define|#
 directive|define
 name|SSL3_CK_EDH_RSA_DES_64_CBC_SHA
 value|0x03000015
 define|#
 directive|define
+name|SSL3_CK_DHE_RSA_DES_64_CBC_SHA
+value|SSL3_CK_EDH_RSA_DES_64_CBC_SHA
+define|#
+directive|define
 name|SSL3_CK_EDH_RSA_DES_192_CBC3_SHA
 value|0x03000016
+define|#
+directive|define
+name|SSL3_CK_DHE_RSA_DES_192_CBC3_SHA
+value|SSL3_CK_EDH_RSA_DES_192_CBC3_SHA
 define|#
 directive|define
 name|SSL3_CK_ADH_RC4_40_MD5
@@ -338,6 +362,31 @@ name|SSL3_TXT_DH_RSA_DES_192_CBC3_SHA
 value|"DH-RSA-DES-CBC3-SHA"
 define|#
 directive|define
+name|SSL3_TXT_DHE_DSS_DES_40_CBC_SHA
+value|"EXP-DHE-DSS-DES-CBC-SHA"
+define|#
+directive|define
+name|SSL3_TXT_DHE_DSS_DES_64_CBC_SHA
+value|"DHE-DSS-DES-CBC-SHA"
+define|#
+directive|define
+name|SSL3_TXT_DHE_DSS_DES_192_CBC3_SHA
+value|"DHE-DSS-DES-CBC3-SHA"
+define|#
+directive|define
+name|SSL3_TXT_DHE_RSA_DES_40_CBC_SHA
+value|"EXP-DHE-RSA-DES-CBC-SHA"
+define|#
+directive|define
+name|SSL3_TXT_DHE_RSA_DES_64_CBC_SHA
+value|"DHE-RSA-DES-CBC-SHA"
+define|#
+directive|define
+name|SSL3_TXT_DHE_RSA_DES_192_CBC3_SHA
+value|"DHE-RSA-DES-CBC3-SHA"
+comment|/*  * This next block of six "EDH" labels is for backward compatibility with  * older versions of OpenSSL.  New code should use the six "DHE" labels above  * instead:  */
+define|#
+directive|define
 name|SSL3_TXT_EDH_DSS_DES_40_CBC_SHA
 value|"EXP-EDH-DSS-DES-CBC-SHA"
 define|#
@@ -477,6 +526,10 @@ define|#
 directive|define
 name|SSL3_RT_HEADER_LENGTH
 value|5
+define|#
+directive|define
+name|SSL3_HM_HEADER_LENGTH
+value|4
 ifndef|#
 directive|ifndef
 name|SSL3_ALIGN_PAYLOAD
@@ -612,6 +665,56 @@ define|#
 directive|define
 name|TLS1_RT_HEARTBEAT
 value|24
+comment|/* Pseudo content types to indicate additional parameters */
+define|#
+directive|define
+name|TLS1_RT_CRYPTO
+value|0x1000
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_PREMASTER
+value|(TLS1_RT_CRYPTO | 0x1)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_CLIENT_RANDOM
+value|(TLS1_RT_CRYPTO | 0x2)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_SERVER_RANDOM
+value|(TLS1_RT_CRYPTO | 0x3)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_MASTER
+value|(TLS1_RT_CRYPTO | 0x4)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_READ
+value|0x0000
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_WRITE
+value|0x0100
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_MAC
+value|(TLS1_RT_CRYPTO | 0x5)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_KEY
+value|(TLS1_RT_CRYPTO | 0x6)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_IV
+value|(TLS1_RT_CRYPTO | 0x7)
+define|#
+directive|define
+name|TLS1_RT_CRYPTO_FIXED_IV
+value|(TLS1_RT_CRYPTO | 0x8)
+comment|/* Pseudo content type for SSL/TLS header info */
+define|#
+directive|define
+name|SSL3_RT_HEADER
+value|0x100
 define|#
 directive|define
 name|SSL3_AL_WARNING
@@ -833,7 +936,7 @@ define|#
 directive|define
 name|SSL3_FLAGS_CCS_OK
 value|0x0080
-comment|/*  * SSL3_FLAGS_SGC_RESTART_DONE is set when we restart a handshake because of  * MS SGC and so prevents us from restarting the handshake in a loop. It's  * reset on a renegotiation, so effectively limits the client to one restart  * per negotiation. This limits the possibility of a DDoS attack where the  * client handshakes in a loop using SGC to restart. Servers which permit  * renegotiation can still be effected, but we can't prevent that.  */
+comment|/* SSL3_FLAGS_SGC_RESTART_DONE is no longer used */
 define|#
 directive|define
 name|SSL3_FLAGS_SGC_RESTART_DONE
@@ -1226,9 +1329,19 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* !OPENSSL_NO_EC */
+comment|/*      * ALPN information (we are in the process of transitioning from NPN to      * ALPN.)      */
+comment|/*      * In a server these point to the selected ALPN protocol after the      * ClientHello has been processed. In a client these contain the protocol      * that the server selected once the ServerHello has been processed.      */
+name|unsigned
+name|char
+modifier|*
+name|alpn_selected
+decl_stmt|;
+name|unsigned
+name|alpn_selected_len
+decl_stmt|;
 endif|#
 directive|endif
-comment|/* !OPENSSL_NO_TLSEXT */
+comment|/* OPENSSL_NO_TLSEXT */
 block|}
 name|SSL3_STATE
 typedef|;
@@ -1440,6 +1553,10 @@ define|#
 directive|define
 name|SSL3_ST_SR_CLNT_HELLO_C
 value|(0x112|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SR_CLNT_HELLO_D
+value|(0x115|SSL_ST_ACCEPT)
 comment|/* write to client */
 define|#
 directive|define

@@ -782,6 +782,23 @@ decl_stmt|;
 name|int
 name|traced
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_FORKING
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"fork() did not clear TDP_FORKING upon completion"
+operator|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|td

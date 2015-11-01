@@ -1978,12 +1978,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED29
+name|TDP_FORKING
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Thread is being created through fork() */
 end_comment
 
 begin_define

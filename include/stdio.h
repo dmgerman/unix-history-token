@@ -370,6 +370,10 @@ name|__mbstate_t
 name|_mbstate
 decl_stmt|;
 comment|/* multibyte conversion state */
+name|int
+name|_flags2
+decl_stmt|;
+comment|/* additional flags */
 block|}
 struct|;
 end_struct
@@ -518,6 +522,11 @@ directive|define
 name|__SIGN
 value|0x8000
 comment|/* ignore this file in _fwalk */
+define|#
+directive|define
+name|__S2OAP
+value|0x0001
+comment|/* O_APPEND mode is set */
 comment|/*  * The following three definitions are for ANSI C, which took them  * from System V, which brilliantly took internal interface macros and  * made them official arguments to setvbuf(), without renaming them.  * Hence, these ugly _IOxxx names are *supposed* to appear in user code.  *  * Although numbered as their counterparts above, the implementation  * does not rely on this.  */
 define|#
 directive|define
