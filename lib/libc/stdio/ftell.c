@@ -394,9 +394,8 @@ operator|->
 name|_p
 operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* 		 * Writing.  Any buffered characters cause the 		 * position to be greater than that in the 		 * underlying object. 		 */
+operator|&&
+operator|(
 name|n
 operator|=
 name|fp
@@ -408,14 +407,14 @@ operator|->
 name|_bf
 operator|.
 name|_base
-expr_stmt|;
-if|if
-condition|(
-name|n
+operator|)
 operator|>
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/* 		 * Writing.  Any buffered characters cause the 		 * position to be greater than that in the 		 * underlying object. 		 */
+if|if
+condition|(
 operator|(
 name|fp
 operator|->
@@ -430,7 +429,6 @@ operator|->
 name|_flags2
 operator|&
 name|__S2OAP
-operator|)
 operator|)
 condition|)
 block|{
