@@ -1506,7 +1506,7 @@ break|break;
 case|case
 name|EL_SIGNAL
 case|:
-comment|/* int * */
+comment|/* int */
 case|case
 name|EL_EDITMODE
 case|:
@@ -1529,7 +1529,6 @@ argument_list|(
 name|ap
 argument_list|,
 name|int
-operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
