@@ -534,6 +534,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -624,11 +629,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Found register:"
+literal|"register<"
 argument_list|)
 expr_stmt|;
 for|for
@@ -646,7 +656,17 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|"%s%x"
+argument_list|,
+operator|(
+name|i
+operator|==
+literal|0
+operator|)
+condition|?
+literal|""
+else|:
+literal|" "
 argument_list|,
 name|reg
 index|[
@@ -656,9 +676,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
+literal|">\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Set the device to start it later */
 name|cpu_list
 index|[
