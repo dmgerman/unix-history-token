@@ -542,13 +542,6 @@ argument_list|(
 literal|"couldn't create the PCI dma tag !"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The PCI bus can only address 64MB. However, due to the way our 	 * implementation of busdma works, busdma can't tell if a device 	 * is a PCI device or not. So defaults to the PCI dma tag, which 	 * restrict the DMA'able memory to the first 64MB, and explicitely 	 * create less restrictive tags for non-PCI devices. 	 */
-name|arm_root_dma_tag
-operator|=
-name|sc
-operator|->
-name|sc_dmat
-expr_stmt|;
 comment|/* 	 * Initialize the bus space tags. 	 */
 name|ixp425_io_bs_init
 argument_list|(
@@ -1529,6 +1522,38 @@ end_function
 
 begin_function
 specifier|static
+name|bus_dma_tag_t
+name|ixppcib_get_dma_tag
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+name|struct
+name|ixppcib_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|sc
+operator|->
+name|sc_dmat
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|ixppcib_conf_setup
 parameter_list|(
@@ -2066,7 +2091,13 @@ argument_list|,
 name|ixppcib_release_resource
 argument_list|)
 block|,
-comment|/* DEVMETHOD(bus_get_dma_tag,		ixppcib_get_dma_tag), */
+name|DEVMETHOD
+argument_list|(
+name|bus_get_dma_tag
+argument_list|,
+name|ixppcib_get_dma_tag
+argument_list|)
+block|,
 comment|/* pcib interface */
 name|DEVMETHOD
 argument_list|(
