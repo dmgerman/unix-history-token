@@ -6762,6 +6762,9 @@ name|notesz
 decl_stmt|,
 name|coresize
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|GZIO
 name|boolean_t
 name|compress
 decl_stmt|;
@@ -6775,6 +6778,8 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|hdr
 operator|=
 name|NULL
