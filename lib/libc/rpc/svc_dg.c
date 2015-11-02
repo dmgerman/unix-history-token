@@ -2515,15 +2515,6 @@ operator|.
 name|maxlen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xprt
-operator|->
-name|xp_tp
-condition|)
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|xprt
