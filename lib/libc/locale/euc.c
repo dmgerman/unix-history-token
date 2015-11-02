@@ -1985,6 +1985,10 @@ name|ch
 operator|=
 name|wc
 expr_stmt|;
+name|errno
+operator|=
+name|EILSEQ
+expr_stmt|;
 return|return
 operator|(
 operator|(
