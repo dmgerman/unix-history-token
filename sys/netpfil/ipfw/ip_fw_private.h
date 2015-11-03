@@ -3092,6 +3092,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ipfw_export_obj_ntlv
+parameter_list|(
+name|struct
+name|named_object
+modifier|*
+name|no
+parameter_list|,
+name|ipfw_obj_ntlv
+modifier|*
+name|ntlv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ipfw_init_obj_rewriter
 parameter_list|(
 name|void

@@ -411,6 +411,8 @@ block|,
 name|TOK_UNLOCK
 block|,
 name|TOK_VLIST
+block|,
+name|TOK_OLIST
 block|, }
 enum|;
 end_enum
