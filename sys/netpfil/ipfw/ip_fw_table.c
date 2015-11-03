@@ -14645,6 +14645,20 @@ argument_list|,
 name|ti
 argument_list|)
 expr_stmt|;
+comment|/* Calculate real number of dynamic objects */
+name|ci
+operator|->
+name|object_opcodes
+operator|=
+call|(
+name|uint16_t
+call|)
+argument_list|(
+name|pidx
+operator|-
+name|oib
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -14753,14 +14767,6 @@ name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
-expr_stmt|;
-name|pidx_last
-operator|=
-name|pidx_first
-operator|+
-name|ci
-operator|->
-name|object_opcodes
 expr_stmt|;
 name|error
 operator|=
@@ -14873,10 +14879,19 @@ condition|)
 goto|goto
 name|free
 goto|;
+comment|/* 	 * Note that ref_rule_objects() might have updated ci->object_opcodes 	 * to reflect actual number of object opcodes. 	 */
 comment|/* Perform rule rewrite */
 name|p
 operator|=
 name|pidx_first
+expr_stmt|;
+name|pidx_last
+operator|=
+name|pidx_first
+operator|+
+name|ci
+operator|->
+name|object_opcodes
 expr_stmt|;
 for|for
 control|(
