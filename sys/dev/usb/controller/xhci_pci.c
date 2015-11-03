@@ -333,9 +333,9 @@ name|xhci_driver
 argument_list|,
 name|xhci_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -405,6 +405,14 @@ literal|"ASMedia ASM1042 USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x11421b21
+case|:
+return|return
+operator|(
+literal|"ASMedia ASM1042A USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x0f358086
 case|:
 return|return
@@ -437,6 +445,14 @@ case|:
 return|return
 operator|(
 literal|"Intel Wildcat Point USB 3.0 controller"
+operator|)
+return|;
+case|case
+literal|0x9cb18086
+case|:
+return|return
+operator|(
+literal|"Broadwell Integrated PCH-LP chipset USB 3.0 controller"
 operator|)
 return|;
 case|case
@@ -852,7 +868,6 @@ operator|->
 name|sc_io_res
 argument_list|)
 expr_stmt|;
-comment|/* check for USB 3.0 controllers which don't support 64-bit DMA */
 switch|switch
 condition|(
 name|pci_get_devid
@@ -865,6 +880,11 @@ case|case
 literal|0x01941033
 case|:
 comment|/* NEC uPD720200 USB 3.0 controller */
+case|case
+literal|0x00141912
+case|:
+comment|/* NEC uPD720201 USB 3.0 controller */
+comment|/* Don't use 64-bit DMA on these controllers. */
 name|usedma32
 operator|=
 literal|1
@@ -878,6 +898,45 @@ comment|/* Fresco Logic host doesn't support MSI. */
 name|usemsi
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|0x0f358086
+case|:
+comment|/* BayTrail */
+case|case
+literal|0x9c318086
+case|:
+comment|/* Panther Point */
+case|case
+literal|0x1e318086
+case|:
+comment|/* Panther Point */
+case|case
+literal|0x8c318086
+case|:
+comment|/* Lynx Point */
+case|case
+literal|0x8cb18086
+case|:
+comment|/* Wildcat Point */
+case|case
+literal|0x9cb18086
+case|:
+comment|/* Broadwell Mobile Integrated */
+comment|/* 		 * On Intel chipsets, reroute ports from EHCI to XHCI 		 * controller and use a different IMOD value. 		 */
+name|sc
+operator|->
+name|sc_port_route
+operator|=
+operator|&
+name|xhci_pci_port_route
+expr_stmt|;
+name|sc
+operator|->
+name|sc_imod_default
+operator|=
+name|XHCI_IMOD_DEFAULT_LP
 expr_stmt|;
 break|break;
 block|}
@@ -1251,52 +1310,6 @@ else|else
 goto|goto
 name|error
 goto|;
-block|}
-comment|/* On Intel chipsets reroute ports from EHCI to XHCI controller. */
-switch|switch
-condition|(
-name|pci_get_devid
-argument_list|(
-name|self
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0x0f358086
-case|:
-comment|/* BayTrail */
-case|case
-literal|0x9c318086
-case|:
-comment|/* Panther Point */
-case|case
-literal|0x1e318086
-case|:
-comment|/* Panther Point */
-case|case
-literal|0x8c318086
-case|:
-comment|/* Lynx Point */
-case|case
-literal|0x8cb18086
-case|:
-comment|/* Wildcat Point */
-name|sc
-operator|->
-name|sc_port_route
-operator|=
-operator|&
-name|xhci_pci_port_route
-expr_stmt|;
-name|sc
-operator|->
-name|sc_imod_default
-operator|=
-name|XHCI_IMOD_DEFAULT_LP
-expr_stmt|;
-break|break;
-default|default:
-break|break;
 block|}
 name|xhci_pci_take_controller
 argument_list|(
