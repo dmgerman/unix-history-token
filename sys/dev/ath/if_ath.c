@@ -12286,7 +12286,7 @@ block|}
 block|}
 name|nextfrag
 label|:
-comment|/* 	 * Pass the frame to the h/w for transmission. 	 * Fragmented frames have each frag chained together 	 * with m_nextpkt.  We know there are sufficient ath_buf's 	 * to send all the frags because of work done by 	 * ath_txfrag_setup.  We leave m_nextpkt set while 	 * calling ath_tx_start so it can use it to extend the 	 * the tx duration to cover the subsequent frag and 	 * so it can reclaim all the mbufs in case of an error; 	 * ath_tx_start clears m_nextpkt once it commits to 	 * handing the frame to the hardware. 	 * 	 * Note: if this fails, then the mbufs are freed but 	 * not the node reference. 	 */
+comment|/* 	 * Pass the frame to the h/w for transmission. 	 * Fragmented frames have each frag chained together 	 * with m_nextpkt.  We know there are sufficient ath_buf's 	 * to send all the frags because of work done by 	 * ath_txfrag_setup.  We leave m_nextpkt set while 	 * calling ath_tx_start so it can use it to extend the 	 * the tx duration to cover the subsequent frag and 	 * so it can reclaim all the mbufs in case of an error; 	 * ath_tx_start clears m_nextpkt once it commits to 	 * handing the frame to the hardware. 	 * 	 * Note: if this fails, then the mbufs are freed but 	 * not the node reference. 	 * 	 * So, we now have to free the node reference ourselves here 	 * and return OK up to the stack. 	 */
 name|next
 operator|=
 name|m
@@ -12364,9 +12364,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX: And free the node/return OK; ath_tx_start() may have 		 *      modified the buffer.  We currently have no way to 		 *      signify that the mbuf was freed but there was an error. 		 */
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
-name|ENOBUFS
+literal|0
 expr_stmt|;
 goto|goto
 name|finish
