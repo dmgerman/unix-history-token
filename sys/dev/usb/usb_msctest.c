@@ -2801,6 +2801,7 @@ operator|)
 name|cmd_len
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -2965,6 +2966,7 @@ name|data_len
 argument_list|,
 operator|(
 specifier|const
+name|unsigned
 name|char
 operator|*
 operator|)

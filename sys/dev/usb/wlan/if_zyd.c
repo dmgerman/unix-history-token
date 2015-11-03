@@ -4060,6 +4060,7 @@ operator|->
 name|olen
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -4095,6 +4096,11 @@ literal|"unexpected IORD notification %*D\n"
 argument_list|,
 name|datalen
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|cmd
 operator|->
 name|data
@@ -4497,6 +4503,11 @@ name|rq
 argument_list|,
 name|ilen
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|idata
 argument_list|,
 literal|":"
