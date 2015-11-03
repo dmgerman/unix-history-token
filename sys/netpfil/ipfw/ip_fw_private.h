@@ -3336,6 +3336,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ipfw_check_object_name_generic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* In ip_fw_table.c */
 end_comment
