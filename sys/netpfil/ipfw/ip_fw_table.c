@@ -14596,31 +14596,6 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-name|found
-operator|=
-name|pidx
-operator|-
-name|oib
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|found
-operator|==
-name|ci
-operator|->
-name|object_opcodes
-argument_list|,
-operator|(
-literal|"refcount inconsistency: found: %d total: %d"
-operator|,
-name|found
-operator|,
-name|ci
-operator|->
-name|object_opcodes
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Perform auto-creation for non-existing objects */
 if|if
 condition|(
