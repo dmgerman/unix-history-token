@@ -4177,7 +4177,7 @@ index|[
 name|i
 index|]
 operator|.
-name|host
+name|pci
 expr_stmt|;
 name|sc
 operator|->
@@ -4192,7 +4192,7 @@ index|[
 name|i
 index|]
 operator|.
-name|host
+name|pci
 operator|+
 name|sc
 operator|->
@@ -4204,6 +4204,8 @@ name|i
 index|]
 operator|.
 name|size
+operator|-
+literal|1
 expr_stmt|;
 name|sc
 operator|->
@@ -4290,7 +4292,7 @@ index|[
 name|i
 index|]
 operator|.
-name|host
+name|pci
 expr_stmt|;
 name|sc
 operator|->
@@ -4305,7 +4307,7 @@ index|[
 name|i
 index|]
 operator|.
-name|host
+name|pci
 operator|+
 name|sc
 operator|->
@@ -4317,6 +4319,8 @@ name|i
 index|]
 operator|.
 name|size
+operator|-
+literal|1
 expr_stmt|;
 name|sc
 operator|->
