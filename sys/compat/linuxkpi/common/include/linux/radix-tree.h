@@ -15,6 +15,12 @@ directive|define
 name|_LINUX_RADIX_TREE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
 begin_define
 define|#
 directive|define

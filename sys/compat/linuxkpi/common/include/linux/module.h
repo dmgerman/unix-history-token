@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/sysfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/moduleparam.h>
 end_include
 

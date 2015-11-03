@@ -15,6 +15,24 @@ directive|define
 name|_NET_IF_INET6_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/types.h>
+end_include
+
 begin_function
 specifier|static
 specifier|inline

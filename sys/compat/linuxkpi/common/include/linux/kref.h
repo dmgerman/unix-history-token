@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/compiler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/atomic.h>
 end_include
 

@@ -11,6 +11,12 @@ directive|define
 name|_LINUX_JHASH_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<asm/types.h>
+end_include
+
 begin_comment
 comment|/* jhash.h: Jenkins hash support.  *  * Copyright (C) 1996 Bob Jenkins (bob_jenkins@burtleburtle.net)  *  * http://burtleburtle.net/bob/hash/  *  * These are the credits from Bob's sources:  *  * lookup2.c, by Bob Jenkins, December 1996, Public Domain.  * hash(), hash2(), hash3, and mix() are externally useful functions.  * Routines to test the hash are included if SELF_TEST is defined.  * You can use this free for any purpose.  It has no warranty.  *  * Copyright (C) 2003 David S. Miller (davem@redhat.com)  *  * I've modified Bob's hash to be useful in the Linux kernel, and  * any bugs present are surely my fault.  -DaveM  *  * $FreeBSD$  */
 end_comment

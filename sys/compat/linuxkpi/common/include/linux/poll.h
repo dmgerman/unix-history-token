@@ -27,6 +27,18 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/file.h>
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -43,7 +55,7 @@ name|void
 name|poll_wait
 parameter_list|(
 name|struct
-name|file
+name|linux_file
 modifier|*
 name|filp
 parameter_list|,

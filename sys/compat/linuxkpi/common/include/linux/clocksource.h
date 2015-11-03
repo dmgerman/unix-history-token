@@ -15,6 +15,12 @@ directive|define
 name|_LINUX_CLOCKSOURCE_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<asm/types.h>
+end_include
+
 begin_comment
 comment|/* clocksource cycle base type */
 end_comment
