@@ -1841,6 +1841,10 @@ sizeof|sizeof
 argument_list|(
 name|off_t
 argument_list|)
+operator|||
+name|oldsize
+operator|==
+name|OFF_MAX
 condition|)
 block|{
 name|errno
@@ -2061,6 +2065,10 @@ operator|)
 name|newsize
 operator|>=
 name|SIZE_T_MAX
+operator|||
+name|newsize
+operator|==
+name|OFF_MAX
 condition|)
 block|{
 name|errno
