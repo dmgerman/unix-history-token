@@ -1731,15 +1731,7 @@ expr_stmt|;
 else|else
 name|xo_emit
 argument_list|(
-literal|"{:address/%*s}"
-argument_list|,
-literal|32
-operator|-
-literal|3
-operator|*
-name|sdl
-operator|->
-name|sdl_alen
+literal|"{:address/%-17.17s} "
 argument_list|,
 name|routename
 argument_list|(
