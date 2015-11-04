@@ -1417,7 +1417,7 @@ name|Wflag
 condition|)
 name|xo_emit
 argument_list|(
-literal|"{etk:name/%s}{e:flags/0x%x}{d:/%7.7s}"
+literal|"{etk:name/%s}{e:flags/0x%x}{d:/%-7.7s}"
 argument_list|,
 name|name
 argument_list|,
@@ -1431,7 +1431,7 @@ expr_stmt|;
 else|else
 name|xo_emit
 argument_list|(
-literal|"{etk:name/%s}{e:flags/0x%x}{d:/%5.5s}"
+literal|"{etk:name/%s}{e:flags/0x%x}{d:/%-5.5s}"
 argument_list|,
 name|name
 argument_list|,
