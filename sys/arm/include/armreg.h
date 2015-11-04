@@ -2619,7 +2619,7 @@ value|0x010
 end_define
 
 begin_comment
-comment|/* Permission Fault (L2) */
+comment|/* TLB Conflict Abort */
 end_comment
 
 begin_define
