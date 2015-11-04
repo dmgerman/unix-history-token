@@ -4868,7 +4868,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 define|\
-value|struct vattr va;						\ 	int error, osize, ooffset, noffset;				\ 									\ 	osize = ooffset = noffset = 0;					\ 	if (!VN_KNLIST_EMPTY((ap)->a_vp)) {				\ 		error = VOP_GETATTR((ap)->a_vp,&va, (ap)->a_cred);	\ 		if (error)						\ 			return (error);					\ 		ooffset = (ap)->a_uio->uio_offset;			\ 		osize = va.va_size;					\ 	}
+value|struct vattr va;						\ 	int error;							\ 	off_t osize, ooffset, noffset;					\ 									\ 	osize = ooffset = noffset = 0;					\ 	if (!VN_KNLIST_EMPTY((ap)->a_vp)) {				\ 		error = VOP_GETATTR((ap)->a_vp,&va, (ap)->a_cred);	\ 		if (error)						\ 			return (error);					\ 		ooffset = (ap)->a_uio->uio_offset;			\ 		osize = (off_t)va.va_size;				\ 	}
 end_define
 
 begin_define
