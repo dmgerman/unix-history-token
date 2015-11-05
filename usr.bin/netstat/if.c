@@ -1099,6 +1099,19 @@ literal|5
 decl_stmt|,
 name|ifn_len
 decl_stmt|;
+name|u_int
+name|has_ipv6
+init|=
+literal|0
+decl_stmt|,
+name|net_len
+init|=
+literal|13
+decl_stmt|,
+name|addr_len
+init|=
+literal|17
+decl_stmt|;
 if|if
 condition|(
 name|interval
@@ -1229,7 +1242,40 @@ argument_list|,
 name|ifn_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|has_ipv6
+operator|=
+literal|1
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|has_ipv6
+condition|)
+block|{
+name|net_len
+operator|=
+literal|24
+expr_stmt|;
+name|addr_len
+operator|=
+literal|39
+expr_stmt|;
+block|}
+else|else
+name|net_len
+operator|=
+literal|18
+expr_stmt|;
 block|}
 name|xo_open_list
 argument_list|(
@@ -1255,12 +1301,20 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|" {T:/%5.5s} {T:/%-13.13s} {T:/%-17.17s} {T:/%8.8s} "
+literal|" {T:/%5.5s} {T:/%-*.*s} {T:/%-*.*s} {T:/%8.8s} "
 literal|"{T:/%5.5s} {T:/%5.5s}"
 argument_list|,
 literal|"Mtu"
 argument_list|,
+name|net_len
+argument_list|,
+name|net_len
+argument_list|,
 literal|"Network"
+argument_list|,
+name|addr_len
+argument_list|,
+name|addr_len
 argument_list|,
 literal|"Address"
 argument_list|,
@@ -1560,14 +1614,22 @@ name|AF_UNSPEC
 case|:
 name|xo_emit
 argument_list|(
-literal|"{:network/%-13.13s} "
+literal|"{:network/%-*.*s} "
+argument_list|,
+name|net_len
+argument_list|,
+name|net_len
 argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:address/%-15.15s} "
+literal|"{:address/%-*.*s} "
+argument_list|,
+name|addr_len
+argument_list|,
+name|addr_len
 argument_list|,
 literal|"none"
 argument_list|)
@@ -1592,7 +1654,9 @@ condition|)
 block|{
 name|xo_emit
 argument_list|(
-literal|"{t:network/%-13s} "
+literal|"{t:network/%-*s} "
+argument_list|,
+name|net_len
 argument_list|,
 name|netname
 argument_list|(
@@ -1608,7 +1672,9 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{t:address/%-17s} "
+literal|"{t:address/%-*s} "
+argument_list|,
+name|addr_len
 argument_list|,
 name|routename
 argument_list|(
@@ -1625,7 +1691,11 @@ else|else
 block|{
 name|xo_emit
 argument_list|(
-literal|"{t:network/%-13.13s} "
+literal|"{t:network/%-*.*s} "
+argument_list|,
+name|net_len
+argument_list|,
+name|net_len
 argument_list|,
 name|netname
 argument_list|(
@@ -1641,7 +1711,11 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{t:address/%-17.17s} "
+literal|"{t:address/%-*.*s} "
+argument_list|,
+name|addr_len
+argument_list|,
+name|addr_len
 argument_list|,
 name|routename
 argument_list|(
@@ -1698,7 +1772,11 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{t:network/%-13.13s} "
+literal|"{t:network/%-*.*s} "
+argument_list|,
+name|net_len
+argument_list|,
+name|net_len
 argument_list|,
 name|linknum
 argument_list|)
@@ -1731,7 +1809,11 @@ expr_stmt|;
 else|else
 name|xo_emit
 argument_list|(
-literal|"{:address/%-17.17s} "
+literal|"{:address/%-*.*s} "
+argument_list|,
+name|addr_len
+argument_list|,
+name|addr_len
 argument_list|,
 name|routename
 argument_list|(
