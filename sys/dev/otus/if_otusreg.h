@@ -6660,10 +6660,6 @@ name|task
 name|tx_task
 decl_stmt|;
 name|struct
-name|task
-name|wme_update_task
-decl_stmt|;
-name|struct
 name|timeout_task
 name|scan_to
 decl_stmt|;
