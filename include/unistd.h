@@ -2064,7 +2064,7 @@ operator|*
 argument_list|,
 operator|...
 argument_list|)
-name|__sentinel
+name|__null_sentinel
 decl_stmt|;
 end_decl_stmt
 
@@ -2099,7 +2099,7 @@ operator|*
 argument_list|,
 operator|...
 argument_list|)
-name|__sentinel
+name|__null_sentinel
 decl_stmt|;
 end_decl_stmt
 
