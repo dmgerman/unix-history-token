@@ -2260,6 +2260,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|device_t
+name|pci_find_pcie_root_port
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pci_get_max_read_req
 parameter_list|(
