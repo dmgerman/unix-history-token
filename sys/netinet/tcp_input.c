@@ -614,7 +614,7 @@ name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|do_pipe
+name|rfc6675_pipe
 argument_list|,
 name|CTLFLAG_VNET
 operator||
