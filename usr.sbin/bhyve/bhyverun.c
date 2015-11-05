@@ -993,11 +993,19 @@ argument_list|,
 name|newcpu
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|error
-operator|==
+operator|!=
 literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"could not activate CPU %d"
+argument_list|,
+name|newcpu
 argument_list|)
 expr_stmt|;
 name|CPU_SET_ATOMIC
