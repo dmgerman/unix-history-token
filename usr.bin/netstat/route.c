@@ -2632,25 +2632,6 @@ name|error
 decl_stmt|,
 name|f
 decl_stmt|;
-comment|/* XXX: sa->sa_len doesn't match sizeof(struct sockaddr_dl) */
-if|if
-condition|(
-name|sa
-operator|->
-name|sa_family
-operator|==
-name|AF_LINK
-condition|)
-name|sa
-operator|->
-name|sa_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_dl
-argument_list|)
-expr_stmt|;
 name|f
 operator|=
 operator|(
