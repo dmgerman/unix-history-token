@@ -303,26 +303,6 @@ operator|.
 name|pcb_rip
 argument_list|)
 expr_stmt|;
-name|amd64_supply_fxsave
-argument_list|(
-name|current_regcache
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|(
-expr|struct
-name|fpusave
-operator|*
-operator|)
-operator|(
-operator|&
-name|pcb
-operator|+
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
