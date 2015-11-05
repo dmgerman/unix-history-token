@@ -1315,7 +1315,7 @@ name|dflag
 condition|)
 name|xo_emit
 argument_list|(
-literal|" {T:/%s}"
+literal|" {T:/%5.5s}"
 argument_list|,
 literal|"Drop"
 argument_list|)
