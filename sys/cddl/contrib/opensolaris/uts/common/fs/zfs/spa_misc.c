@@ -6684,7 +6684,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|zfs_panic_recover
+name|panic
 argument_list|(
 literal|"dva_get_dsize_sync(): bad DVA %llu:%llu"
 argument_list|,
