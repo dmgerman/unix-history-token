@@ -231,6 +231,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_MAC_SNIFFER_DEFAULTS
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_SNIFFER_ENABLE_PROMISC
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_MAC_REG_ENCRYPTION
 value|(AR_MAC_REG_BASE + 0x678)
 end_define
@@ -296,6 +310,41 @@ define|#
 directive|define
 name|AR_MAC_REG_CAM_MODE
 value|(AR_MAC_REG_BASE + 0x700)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_CAM_DEFAULTS
+value|(0xf<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_CAM_IBSS
+value|0xe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_CAM_AP
+value|0xa1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_CAM_STA
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_CAM_AP_WDS
+value|0x3
 end_define
 
 begin_define
@@ -409,6 +458,41 @@ define|#
 directive|define
 name|AR_MAC_REG_RX_CONTROL
 value|(AR_MAC_REG_BASE + 0xc40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_RX_CTRL_DEAGG
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_RX_CTRL_SHORT_FILTER
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_RX_CTRL_SA_DA_SEARCH
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_RX_CTRL_PASS_TO_HOST
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_MAC_RX_CTRL_ACK_IN_SNIFFER
+value|(1<< 30)
 end_define
 
 begin_define
