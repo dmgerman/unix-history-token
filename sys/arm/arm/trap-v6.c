@@ -2114,7 +2114,6 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Alignment faults are always fatal if they occur in any but user mode. 	 * 	 * XXX The old trap code handles pcb fault even for alignment traps. 	 * Unfortunately, we don't known why and if is this need. 	 */
 if|if
 condition|(
 operator|!
@@ -2142,21 +2141,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Got alignment fault with pcb_onfault set"
-literal|", please report this issue\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|tf
 operator|->
 name|tf_r0
 operator|=
 name|EFAULT
 expr_stmt|;
-empty_stmt|;
 name|tf
 operator|->
 name|tf_pc
@@ -2199,7 +2189,7 @@ name|ksig
 operator|->
 name|code
 operator|=
-literal|0
+name|BUS_ADRALN
 expr_stmt|;
 name|ksig
 operator|->
