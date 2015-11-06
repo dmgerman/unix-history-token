@@ -540,7 +540,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* LWP name */
-name|int
+name|pid_t
 name|pl_child_pid
 decl_stmt|;
 comment|/* New child pid */
