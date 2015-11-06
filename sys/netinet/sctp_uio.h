@@ -358,6 +358,7 @@ decl_stmt|;
 name|uint32_t
 name|sinfo_timetolive
 decl_stmt|;
+comment|/* should have been sinfo_pr_value */
 name|uint32_t
 name|sinfo_tsn
 decl_stmt|;
@@ -397,6 +398,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sinfo_pr_value
+value|sinfo_timetolive
+end_define
 
 begin_define
 define|#
