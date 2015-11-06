@@ -1803,13 +1803,17 @@ literal|0
 condition|)
 name|xo_emit
 argument_list|(
-literal|"{P:                  }"
+literal|"{P:/%*s} "
+argument_list|,
+name|addr_len
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 else|else
 name|xo_emit
 argument_list|(
-literal|"{:address/%-*.*s} "
+literal|"{t:address/%-*.*s} "
 argument_list|,
 name|addr_len
 argument_list|,
