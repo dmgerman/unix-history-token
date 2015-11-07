@@ -106,7 +106,7 @@ name|c
 argument_list|,
 name|_CTYPE_A
 operator||
-name|_CTYPE_D
+name|_CTYPE_N
 argument_list|)
 operator|)
 return|;
@@ -378,7 +378,7 @@ name|__sbistype
 argument_list|(
 name|c
 argument_list|,
-name|_CTYPE_D
+name|_CTYPE_N
 argument_list|)
 operator|)
 return|;

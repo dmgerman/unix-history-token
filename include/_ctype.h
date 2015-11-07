@@ -184,6 +184,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_CTYPE_N
+value|0x00400000L
+end_define
+
+begin_comment
+comment|/* Number (superset of digit) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_CTYPE_SW0
 value|0x20000000L
 end_define

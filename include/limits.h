@@ -219,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|COLL_WEIGHTS_MAX
-value|0
+value|10
 end_define
 
 begin_comment
