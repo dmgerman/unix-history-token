@@ -1045,7 +1045,7 @@ decl_stmt|;
 name|int
 name|nb
 decl_stmt|;
-name|int
+name|wchar_t
 name|lv
 decl_stmt|;
 comment|/* lowest legal value */
