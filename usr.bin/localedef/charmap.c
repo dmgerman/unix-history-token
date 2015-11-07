@@ -209,28 +209,12 @@ begin_comment
 comment|/*  * Array of POSIX specific portable characters.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|push
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|ignored
-literal|"-Wdiscarded-qualifiers"
-end_pragma
-
 begin_struct
 specifier|static
 specifier|const
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -918,14 +902,6 @@ block|}
 struct|;
 end_struct
 
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|pop
-end_pragma
-
 begin_function
 specifier|static
 name|int
@@ -1087,6 +1063,7 @@ specifier|static
 name|void
 name|add_charmap_impl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|sym
@@ -1290,6 +1267,7 @@ begin_function
 name|void
 name|add_charmap
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|sym
@@ -1654,6 +1632,7 @@ begin_function
 name|void
 name|add_charmap_char
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

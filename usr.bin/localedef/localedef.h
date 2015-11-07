@@ -333,6 +333,7 @@ begin_function_decl
 name|void
 name|add_charmap
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -379,6 +380,7 @@ begin_function_decl
 name|void
 name|add_charmap_char
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
