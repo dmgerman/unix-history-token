@@ -2794,7 +2794,7 @@ name|_nbits
 operator|=
 literal|8
 expr_stmt|;
-name|snprint
+name|snprintf
 argument_list|(
 name|_encoding_buffer
 argument_list|,
