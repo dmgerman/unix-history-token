@@ -558,7 +558,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_HANDLER_ARGS
-value|struct sysctl_oid *oidp, void *arg1,	\ 	intptr_t arg2, struct sysctl_req *req
+value|struct sysctl_oid *oidp, void *arg1,	\ 	intmax_t arg2, struct sysctl_req *req
 end_define
 
 begin_comment
@@ -750,7 +750,7 @@ name|void
 modifier|*
 name|oid_arg1
 decl_stmt|;
-name|intptr_t
+name|intmax_t
 name|oid_arg2
 decl_stmt|;
 specifier|const
@@ -1402,7 +1402,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_S8_PTR
-value|((unsigned *)NULL)
+value|((int8_t *)NULL)
 end_define
 
 begin_define
@@ -1461,7 +1461,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_U8_PTR
-value|((unsigned *)NULL)
+value|((uint8_t *)NULL)
 end_define
 
 begin_define
@@ -1520,7 +1520,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_S16_PTR
-value|((unsigned *)NULL)
+value|((int16_t *)NULL)
 end_define
 
 begin_define
@@ -1579,7 +1579,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_U16_PTR
-value|((unsigned *)NULL)
+value|((uint16_t *)NULL)
 end_define
 
 begin_define
@@ -1638,7 +1638,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_S32_PTR
-value|((unsigned *)NULL)
+value|((int32_t *)NULL)
 end_define
 
 begin_define
@@ -1697,7 +1697,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_U32_PTR
-value|((unsigned *)NULL)
+value|((uint32_t *)NULL)
 end_define
 
 begin_define
@@ -1756,7 +1756,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_S64_PTR
-value|((unsigned *)NULL)
+value|((int64_t *)NULL)
 end_define
 
 begin_define
@@ -1815,7 +1815,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_U64_PTR
-value|((unsigned *)NULL)
+value|((uint64_t *)NULL)
 end_define
 
 begin_define
