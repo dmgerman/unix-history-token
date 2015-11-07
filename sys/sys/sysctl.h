@@ -4429,7 +4429,7 @@ name|void
 modifier|*
 name|arg1
 parameter_list|,
-name|intptr_t
+name|intmax_t
 name|arg2
 parameter_list|,
 name|int
