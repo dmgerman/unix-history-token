@@ -130,6 +130,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bsd
 init|=
