@@ -1197,7 +1197,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ata_set_rmii
+name|ate_set_rmii
 parameter_list|(
 name|struct
 name|ate_softc
