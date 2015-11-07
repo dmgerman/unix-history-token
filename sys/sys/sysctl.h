@@ -3003,6 +3003,17 @@ begin_comment
 comment|/* process current working directory */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_NFDS
+value|43
+end_define
+
+begin_comment
+comment|/* number of open file descriptors */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
