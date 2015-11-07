@@ -24508,6 +24508,15 @@ name|mrk_modifier
 operator|=
 name|SYNC_ALL
 expr_stmt|;
+name|m
+operator|->
+name|mrk_vphdl
+operator|=
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+expr_stmt|;
 name|isp_put_marker_24xx
 argument_list|(
 name|isp
