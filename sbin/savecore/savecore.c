@@ -3999,6 +3999,10 @@ condition|(
 name|checkfor
 condition|)
 block|{
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"No dump exists\n"
@@ -4010,6 +4014,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|verbose
+condition|)
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -4032,6 +4040,11 @@ name|nerr
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -4039,7 +4052,17 @@ argument_list|,
 literal|"unsaved dumps found but not saved"
 argument_list|)
 expr_stmt|;
-else|else
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|verbose
+condition|)
 name|syslog
 argument_list|(
 name|LOG_WARNING
