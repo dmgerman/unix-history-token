@@ -1881,6 +1881,11 @@ name|encryption
 operator|)
 condition|)
 block|{
+name|ng_btsocket_l2cap_timeout
+argument_list|(
+name|pcb
+argument_list|)
+expr_stmt|;
 name|pcb
 operator|->
 name|state
@@ -3132,6 +3137,11 @@ operator|->
 name|need_encrypt
 condition|)
 block|{
+name|ng_btsocket_l2cap_untimeout
+argument_list|(
+name|pcb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcb
@@ -3184,6 +3194,13 @@ operator|->
 name|so_error
 operator|=
 name|EPERM
+expr_stmt|;
+name|ng_btsocket_l2cap_send_l2ca_discon_req
+argument_list|(
+literal|0
+argument_list|,
+name|pcb
+argument_list|)
 expr_stmt|;
 name|pcb
 operator|->
@@ -12775,6 +12792,9 @@ name|NG_BTSOCKET_L2CAP_CONNECTING
 case|:
 case|case
 name|NG_BTSOCKET_L2CAP_CONFIGURING
+case|:
+case|case
+name|NG_BTSOCKET_L2CAP_W4_ENC_CHANGE
 case|:
 comment|/* Send disconnect request with "zero" token */
 if|if
