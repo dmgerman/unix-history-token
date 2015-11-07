@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_at91.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -6373,6 +6379,32 @@ name|clock
 operator|<<
 literal|10
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AT91_MACB_USE_RMII
+name|sc
+operator|->
+name|use_rmii
+operator|=
+name|USRIO_RMII
+expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|use_rmii
+operator|=
+name|read_4
+argument_list|(
+name|sc
+argument_list|,
+name|EMAC_USRIO
+argument_list|)
+operator|&
+name|USRIO_RMII
+expr_stmt|;
+endif|#
+directive|endif
 name|write_4
 argument_list|(
 name|sc
@@ -6391,6 +6423,10 @@ argument_list|,
 name|EMAC_USRIO
 argument_list|,
 name|USRIO_CLOCK
+operator||
+name|sc
+operator|->
+name|use_rmii
 argument_list|)
 expr_stmt|;
 comment|//enable clock
