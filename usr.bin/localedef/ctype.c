@@ -804,7 +804,7 @@ begin_function
 name|void
 name|add_ctype_range
 parameter_list|(
-name|int
+name|wchar_t
 name|end
 parameter_list|)
 block|{

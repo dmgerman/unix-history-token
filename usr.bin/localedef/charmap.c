@@ -1102,6 +1102,9 @@ condition|(
 operator|(
 name|wc
 operator|!=
+operator|(
+name|wchar_t
+operator|)
 operator|-
 literal|1
 operator|)
@@ -1345,6 +1348,9 @@ name|cm
 operator|->
 name|wc
 operator|==
+operator|(
+name|wchar_t
+operator|)
 operator|-
 literal|1
 operator|)
@@ -1753,6 +1759,9 @@ name|n
 operator|->
 name|wc
 operator|!=
+operator|(
+name|wchar_t
+operator|)
 operator|-
 literal|1
 condition|)

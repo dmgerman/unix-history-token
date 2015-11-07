@@ -780,7 +780,7 @@ begin_function_decl
 name|void
 name|add_ctype_range
 parameter_list|(
-name|int
+name|wchar_t
 parameter_list|)
 function_decl|;
 end_function_decl
