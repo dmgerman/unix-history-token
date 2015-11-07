@@ -110,6 +110,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|appendarglist
+parameter_list|(
+name|struct
+name|arglist
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_union_decl
 union_decl|union
 name|node

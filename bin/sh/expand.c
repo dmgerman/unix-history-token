@@ -587,21 +587,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|appendarglist
-parameter_list|(
-name|struct
-name|arglist
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|collate_range_cmp
 parameter_list|(
@@ -661,7 +646,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|appendarglist
 parameter_list|(

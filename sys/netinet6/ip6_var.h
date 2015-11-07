@@ -141,6 +141,26 @@ value|(*(struct mbuf **)&((ip6af)->ip6af_m))
 end_define
 
 begin_comment
+comment|/*  * IP6 reinjecting structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip6_direct_ctx
+block|{
+name|uint32_t
+name|ip6dc_nxt
+decl_stmt|;
+comment|/* next header to process */
+name|uint32_t
+name|ip6dc_off
+decl_stmt|;
+comment|/* offset to next header */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Structure attached to inpcb.in6p_moptions and  * passed to ip6_output when IPv6 multicast options are in use.  * This structure is lazy-allocated.  */
 end_comment
 
@@ -1373,6 +1393,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|ip6_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ip6_direct_input
 parameter_list|(
 name|struct
 name|mbuf

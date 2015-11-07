@@ -959,16 +959,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Default tag, as most drivers provide no parent tag. */
-end_comment
-
-begin_decl_stmt
-name|bus_dma_tag_t
-name|arm_root_dma_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * ----------------------------------------------------------------------------  * Begin block of code useful to transplant to other implementations.  */
 end_comment
 
@@ -1608,15 +1598,6 @@ operator|*
 name|dmat
 operator|=
 name|NULL
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|parent
-condition|)
-name|parent
-operator|=
-name|arm_root_dma_tag
 expr_stmt|;
 name|newtag
 operator|=

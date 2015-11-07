@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -92,24 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -134,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_media.h>
 end_include
 
@@ -153,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
 end_include
 
 begin_include
@@ -206,53 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* for DELAY */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
 end_include
 
 begin_include

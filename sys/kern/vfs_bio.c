@@ -14282,6 +14282,12 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* 			 * XXX This is here until the sleep path is diagnosed 			 * enough to work under very low memory conditions. 			 * 			 * There's an issue on low memory, 4BSD+non-preempt 			 * systems (eg MIPS routers with 32MB RAM) where buffer 			 * exhaustion occurs without sleeping for buffer 			 * reclaimation.  This just sticks in a loop and 			 * constantly attempts to allocate a buffer, which 			 * hits exhaustion and tries to wakeup bufdaemon. 			 * This never happens because we never yield. 			 * 			 * The real solution is to identify and fix these cases 			 * so we aren't effectively busy-waiting in a loop 			 * until the reclaimation path has cycles to run. 			 */
+name|kern_yield
+argument_list|(
+name|PRI_USER
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;

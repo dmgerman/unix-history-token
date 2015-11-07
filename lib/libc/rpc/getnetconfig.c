@@ -607,10 +607,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|nc_addr
-condition|)
 name|free
 argument_list|(
 name|nc_addr
@@ -1553,16 +1549,6 @@ name|q
 operator|->
 name|next
 expr_stmt|;
-if|if
-condition|(
-name|q
-operator|->
-name|ncp
-operator|->
-name|nc_lookups
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|q
@@ -2078,14 +2064,6 @@ name|nc_netid
 argument_list|)
 expr_stmt|;
 comment|/* holds all netconfigp's strings */
-if|if
-condition|(
-name|netconfigp
-operator|->
-name|nc_lookups
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|netconfigp
@@ -2516,15 +2494,6 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* tmp string */
-if|if
-condition|(
-name|ncp
-operator|->
-name|nc_lookups
-operator|!=
-name|NULL
-condition|)
-comment|/* from last visit */
 name|free
 argument_list|(
 name|ncp
@@ -2532,6 +2501,7 @@ operator|->
 name|nc_lookups
 argument_list|)
 expr_stmt|;
+comment|/* from last visit */
 name|ncp
 operator|->
 name|nc_lookups

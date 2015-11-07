@@ -33,19 +33,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|CACHE_LINE_SIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CACHE_LINE_SIZE
-value|32
-end_define
-
 begin_define
 define|#
 directive|define
@@ -94,28 +81,6 @@ decl_stmt|;
 comment|/* N.B. 12 LSBs hold the number of following 				   pages at consecutive addresses. */
 block|}
 name|PAGELIST_T
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|fragments_struct
-block|{
-name|char
-name|headbuf
-index|[
-name|CACHE_LINE_SIZE
-index|]
-decl_stmt|;
-name|char
-name|tailbuf
-index|[
-name|CACHE_LINE_SIZE
-index|]
-decl_stmt|;
-block|}
-name|FRAGMENTS_T
 typedef|;
 end_typedef
 

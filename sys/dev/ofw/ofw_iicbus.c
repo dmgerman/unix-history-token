@@ -583,7 +583,20 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		 * OFW uses 7-bit I2C address format (see ePAPR), 		 * but system expect 8-bit. 		 */
+comment|/* 		 * FreeBSD drivers expect I2C addresses to be expressed as 		 * 8-bit values.  Apple OFW data contains 8-bit values, but 		 * Linux FDT data contains 7-bit values, so shift them up to 		 * 8-bit format. 		 */
+ifdef|#
+directive|ifdef
+name|AIM
+name|dinfo
+operator|->
+name|opd_dinfo
+operator|.
+name|addr
+operator|=
+name|paddr
+expr_stmt|;
+else|#
+directive|else
 name|dinfo
 operator|->
 name|opd_dinfo
@@ -594,6 +607,8 @@ name|paddr
 operator|<<
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ofw_bus_gen_setup_devinfo

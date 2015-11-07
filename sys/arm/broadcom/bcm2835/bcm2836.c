@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|INT_PENDING_MASK
-value|0x01f
+value|0x011f
 end_define
 
 begin_define

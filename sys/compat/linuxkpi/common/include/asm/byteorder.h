@@ -421,11 +421,11 @@ specifier|inline
 name|void
 name|be16_add_cpu
 parameter_list|(
-name|u16
+name|uint16_t
 modifier|*
 name|var
 parameter_list|,
-name|u16
+name|uint16_t
 name|val
 parameter_list|)
 block|{

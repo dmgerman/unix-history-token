@@ -188,7 +188,27 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//Calback used by all services / bulk transfers
+comment|// service control options
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|VCHI_SERVICE_OPTION_MIN
+block|,
+name|VCHI_SERVICE_OPTION_TRACE
+block|,
+name|VCHI_SERVICE_OPTION_SYNCHRONOUS
+block|,
+name|VCHI_SERVICE_OPTION_MAX
+block|}
+name|VCHI_SERVICE_OPTION_T
+typedef|;
+end_typedef
+
+begin_comment
+comment|//Callback used by all services / bulk transfers
 end_comment
 
 begin_typedef

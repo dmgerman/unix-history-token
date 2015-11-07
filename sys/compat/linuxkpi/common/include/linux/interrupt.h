@@ -159,6 +159,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|_irq_handler
 parameter_list|(

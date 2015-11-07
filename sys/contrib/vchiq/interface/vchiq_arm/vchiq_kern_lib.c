@@ -19,6 +19,12 @@ directive|include
 file|"vchiq_arm.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vchiq_killable.h"
+end_include
+
 begin_comment
 comment|/* ---- Public Variables ------------------------------------------------- */
 end_comment

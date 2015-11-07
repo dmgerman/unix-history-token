@@ -1228,6 +1228,43 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MTAG_ABI_IPV6
+value|1444287380
+end_define
+
+begin_comment
+comment|/* IPv6 ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_TAG_DIRECT
+value|0
+end_define
+
+begin_comment
+comment|/* direct-dispatch IPv6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IPV6 level.  * First word of comment is data type; bool is stored in int.  */
 end_comment

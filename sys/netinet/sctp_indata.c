@@ -923,7 +923,7 @@ operator|&&
 operator|(
 name|seinfo
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|&
 name|SCTP_NEXT_MSG_AVAIL
 operator|)
@@ -940,7 +940,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sctp_rcvinfo
+name|sctp_nxtinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1269,7 +1269,7 @@ name|nxt_sid
 operator|=
 name|seinfo
 operator|->
-name|sreinfo_next_stream
+name|serinfo_next_stream
 expr_stmt|;
 name|nxtinfo
 operator|->
@@ -1281,7 +1281,7 @@ if|if
 condition|(
 name|seinfo
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|&
 name|SCTP_NEXT_MSG_IS_UNORDERED
 condition|)
@@ -1297,7 +1297,7 @@ if|if
 condition|(
 name|seinfo
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|&
 name|SCTP_NEXT_MSG_IS_NOTIFICATION
 condition|)
@@ -1313,7 +1313,7 @@ if|if
 condition|(
 name|seinfo
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|&
 name|SCTP_NEXT_MSG_ISCOMPLETE
 condition|)
@@ -1331,7 +1331,7 @@ name|nxt_ppid
 operator|=
 name|seinfo
 operator|->
-name|sreinfo_next_ppid
+name|serinfo_next_ppid
 expr_stmt|;
 name|nxtinfo
 operator|->
@@ -1339,7 +1339,7 @@ name|nxt_length
 operator|=
 name|seinfo
 operator|->
-name|sreinfo_next_length
+name|serinfo_next_length
 expr_stmt|;
 name|nxtinfo
 operator|->
@@ -1347,7 +1347,7 @@ name|nxt_assoc_id
 operator|=
 name|seinfo
 operator|->
-name|sreinfo_next_aid
+name|serinfo_next_aid
 expr_stmt|;
 name|cmh
 operator|=

@@ -2102,12 +2102,6 @@ operator|.
 name|maxlen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xprt
-operator|->
-name|xp_tp
-condition|)
 name|free
 argument_list|(
 name|xprt
@@ -2115,12 +2109,6 @@ operator|->
 name|xp_tp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xprt
-operator|->
-name|xp_netid
-condition|)
 name|free
 argument_list|(
 name|xprt

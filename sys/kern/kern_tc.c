@@ -7581,8 +7581,6 @@ name|pcount
 decl_stmt|;
 name|int
 name|foff
-decl_stmt|,
-name|fhard
 decl_stmt|;
 name|pps_seq_t
 modifier|*
@@ -7603,6 +7601,14 @@ decl_stmt|;
 name|ffcounter
 modifier|*
 name|ffcount
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+name|int
+name|fhard
 decl_stmt|;
 endif|#
 directive|endif
@@ -7693,6 +7699,9 @@ name|mode
 operator|&
 name|PPS_OFFSETASSERT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
 name|fhard
 operator|=
 name|pps
@@ -7701,6 +7710,8 @@ name|kcmode
 operator|&
 name|PPS_CAPTUREASSERT
 expr_stmt|;
+endif|#
+directive|endif
 name|pcount
 operator|=
 operator|&
@@ -7783,6 +7794,9 @@ name|mode
 operator|&
 name|PPS_OFFSETCLEAR
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
 name|fhard
 operator|=
 name|pps
@@ -7791,6 +7805,8 @@ name|kcmode
 operator|&
 name|PPS_CAPTURECLEAR
 expr_stmt|;
+endif|#
+directive|endif
 name|pcount
 operator|=
 operator|&

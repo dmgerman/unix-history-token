@@ -18,7 +18,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/notifier.h>
 end_include
 
 begin_enum

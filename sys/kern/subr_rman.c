@@ -4813,7 +4813,7 @@ name|NULL
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"    0x%lx-0x%lx "
+literal|"    0x%lx-0x%lx (RID=%d) "
 argument_list|,
 name|r
 operator|->
@@ -4822,6 +4822,10 @@ argument_list|,
 name|r
 operator|->
 name|r_end
+argument_list|,
+name|r
+operator|->
+name|r_rid
 argument_list|)
 expr_stmt|;
 if|if

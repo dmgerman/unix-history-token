@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|RCTL_DEFAULT_BUFSIZE
-value|4096
+value|128 * 1024
 end_define
 
 begin_function

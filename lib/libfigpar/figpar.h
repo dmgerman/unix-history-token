@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2014 Devin Teske<dteske@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002-2015 Devin Teske<dteske@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ end_comment
 
 begin_union
 union|union
-name|fp_cfgvalue
+name|figpar_cfgvalue
 block|{
 name|void
 modifier|*
@@ -69,68 +69,68 @@ end_comment
 
 begin_enum
 enum|enum
-name|fp_cfgtype
+name|figpar_cfgtype
 block|{
-name|FP_TYPE_NONE
+name|FIGPAR_TYPE_NONE
 init|=
 literal|0x0000
 block|,
-comment|/* for directives with no value */
-name|FP_TYPE_BOOL
+comment|/* directives with no value */
+name|FIGPAR_TYPE_BOOL
 init|=
 literal|0x0001
 block|,
 comment|/* boolean */
-name|FP_TYPE_INT
+name|FIGPAR_TYPE_INT
 init|=
 literal|0x0002
 block|,
 comment|/* signed 32 bit integer */
-name|FP_TYPE_UINT
+name|FIGPAR_TYPE_UINT
 init|=
 literal|0x0004
 block|,
 comment|/* unsigned 32 bit integer */
-name|FP_TYPE_STR
+name|FIGPAR_TYPE_STR
 init|=
 literal|0x0008
 block|,
 comment|/* string pointer */
-name|FP_TYPE_STRARRAY
+name|FIGPAR_TYPE_STRARRAY
 init|=
 literal|0x0010
 block|,
 comment|/* string array pointer */
-name|FP_TYPE_DATA1
+name|FIGPAR_TYPE_DATA1
 init|=
 literal|0x0020
 block|,
-comment|/* void data type-1 (whatever) */
-name|FP_TYPE_DATA2
+comment|/* void data type-1 (open) */
+name|FIGPAR_TYPE_DATA2
 init|=
 literal|0x0040
 block|,
-comment|/* void data type-2 (whatever) */
-name|FP_TYPE_DATA3
+comment|/* void data type-2 (open) */
+name|FIGPAR_TYPE_DATA3
 init|=
 literal|0x0080
 block|,
-comment|/* void data type-3 (whatever) */
-name|FP_TYPE_RESERVED1
+comment|/* void data type-3 (open) */
+name|FIGPAR_TYPE_RESERVED1
 init|=
 literal|0x0100
 block|,
-comment|/* reserved data type-1 (future) */
-name|FP_TYPE_RESERVED2
+comment|/* reserved data type-1 */
+name|FIGPAR_TYPE_RESERVED2
 init|=
 literal|0x0200
 block|,
-comment|/* reserved data type-2 (future) */
-name|FP_TYPE_RESERVED3
+comment|/* reserved data type-2 */
+name|FIGPAR_TYPE_RESERVED3
 init|=
 literal|0x0400
 block|,
-comment|/* reserved data type-3 (future) */
+comment|/* reserved data type-3 */
 block|}
 enum|;
 end_enum
@@ -142,7 +142,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FP_BREAK_ON_EQUALS
+name|FIGPAR_BREAK_ON_EQUALS
 value|0x0001
 end_define
 
@@ -153,7 +153,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FP_BREAK_ON_SEMICOLON
+name|FIGPAR_BREAK_ON_SEMICOLON
 value|0x0002
 end_define
 
@@ -164,7 +164,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FP_CASE_SENSITIVE
+name|FIGPAR_CASE_SENSITIVE
 value|0x0004
 end_define
 
@@ -175,7 +175,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FP_REQUIRE_EQUALS
+name|FIGPAR_REQUIRE_EQUALS
 value|0x0008
 end_define
 
@@ -186,7 +186,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FP_STRICT_EQUALS
+name|FIGPAR_STRICT_EQUALS
 value|0x0010
 end_define
 
@@ -200,10 +200,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|fp_config
+name|figpar_config
 block|{
 name|enum
-name|fp_cfgtype
+name|figpar_cfgtype
 name|type
 decl_stmt|;
 comment|/* Option value type */
@@ -214,7 +214,7 @@ name|directive
 decl_stmt|;
 comment|/* config file keyword */
 name|union
-name|fp_cfgvalue
+name|figpar_cfgvalue
 name|value
 decl_stmt|;
 comment|/* NB: set by action */
@@ -226,7 +226,7 @@ name|action
 function_decl|)
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 modifier|*
 name|option
 parameter_list|,
@@ -249,8 +249,8 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|struct
-name|fp_config
-name|fp_dummy_config
+name|figpar_config
+name|figpar_dummy_config
 decl_stmt|;
 end_decl_stmt
 
@@ -260,7 +260,7 @@ name|int
 name|parse_config
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 name|_options
 index|[]
 parameter_list|,
@@ -276,7 +276,7 @@ name|_unknown
 function_decl|)
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 modifier|*
 name|_option
 parameter_list|,
@@ -300,12 +300,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|fp_config
+name|figpar_config
 modifier|*
 name|get_config_option
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 name|_options
 index|[]
 parameter_list|,

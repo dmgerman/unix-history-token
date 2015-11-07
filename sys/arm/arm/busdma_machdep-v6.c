@@ -1897,12 +1897,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!parent) 		parent = arm_root_dma_tag;
-endif|#
-directive|endif
 comment|/* Basic sanity checking. */
 name|KASSERT
 argument_list|(

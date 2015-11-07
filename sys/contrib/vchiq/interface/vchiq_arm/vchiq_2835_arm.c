@@ -153,12 +153,33 @@ directive|include
 file|"vchiq_connected.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vchiq_killable.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|MAX_FRAGMENTS
 value|(VCHIQ_NUM_CURRENT_BULKS * 2)
 end_define
+
+begin_decl_stmt
+name|int
+name|g_cache_line_size
+init|=
+literal|32
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|g_fragment_size
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -215,7 +236,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|FRAGMENTS_T
+name|char
 modifier|*
 name|g_fragments_base
 decl_stmt|;
@@ -223,7 +244,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|FRAGMENTS_T
+name|char
 modifier|*
 name|g_free_fragments
 decl_stmt|;
@@ -394,14 +415,13 @@ name|dst
 decl_stmt|;
 name|dst
 operator|=
-name|pmap_mapdev
-argument_list|(
-name|VM_PAGE_TO_PHYS
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|pmap_quick_enter_page
 argument_list|(
 name|p
-argument_list|)
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -423,14 +443,12 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|pmap_unmapdev
+name|pmap_quick_remove_page
 argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 name|dst
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 return|return
@@ -472,14 +490,17 @@ operator|*
 name|VCHIQ_SLOT_SIZE
 argument_list|)
 expr_stmt|;
+name|g_fragment_size
+operator|=
+literal|2
+operator|*
+name|g_cache_line_size
+expr_stmt|;
 name|frag_mem_size
 operator|=
 name|PAGE_ALIGN
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|FRAGMENTS_T
-argument_list|)
+name|g_fragment_size
 operator|*
 name|MAX_FRAGMENTS
 argument_list|)
@@ -683,7 +704,7 @@ expr_stmt|;
 name|g_fragments_base
 operator|=
 operator|(
-name|FRAGMENTS_T
+name|char
 operator|*
 operator|)
 operator|(
@@ -720,7 +741,7 @@ control|)
 block|{
 operator|*
 operator|(
-name|FRAGMENTS_T
+name|char
 operator|*
 operator|*
 operator|)
@@ -728,20 +749,26 @@ operator|&
 name|g_fragments_base
 index|[
 name|i
+operator|*
+name|g_fragment_size
 index|]
 operator|=
 operator|&
 name|g_fragments_base
 index|[
+operator|(
 name|i
 operator|+
 literal|1
+operator|)
+operator|*
+name|g_fragment_size
 index|]
 expr_stmt|;
 block|}
 operator|*
 operator|(
-name|FRAGMENTS_T
+name|char
 operator|*
 operator|*
 operator|)
@@ -749,6 +776,8 @@ operator|&
 name|g_fragments_base
 index|[
 name|i
+operator|*
+name|g_fragment_size
 index|]
 operator|=
 name|NULL
@@ -1778,13 +1807,17 @@ name|vchiq_log_trace
 argument_list|(
 name|vchiq_arm_log_level
 argument_list|,
-literal|"create_pagelist - %x"
+literal|"create_pagelist - %x (%d bytes @%p)"
 argument_list|,
 operator|(
 name|unsigned
 name|int
 operator|)
 name|pagelist
+argument_list|,
+name|count
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -2098,7 +2131,7 @@ operator|->
 name|offset
 operator|&
 operator|(
-name|CACHE_LINE_SIZE
+name|g_cache_line_size
 operator|-
 literal|1
 operator|)
@@ -2116,7 +2149,7 @@ name|length
 operator|)
 operator|&
 operator|(
-name|CACHE_LINE_SIZE
+name|g_cache_line_size
 operator|-
 literal|1
 operator|)
@@ -2124,7 +2157,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|FRAGMENTS_T
+name|char
 modifier|*
 name|fragments
 decl_stmt|;
@@ -2166,10 +2199,6 @@ argument_list|)
 expr_stmt|;
 name|fragments
 operator|=
-operator|(
-name|FRAGMENTS_T
-operator|*
-operator|)
 name|g_free_fragments
 expr_stmt|;
 name|WARN_ON
@@ -2183,7 +2212,7 @@ name|g_free_fragments
 operator|=
 operator|*
 operator|(
-name|FRAGMENTS_T
+name|char
 operator|*
 operator|*
 operator|)
@@ -2206,6 +2235,8 @@ name|fragments
 operator|-
 name|g_fragments_base
 operator|)
+operator|/
+name|g_fragment_size
 expr_stmt|;
 block|}
 name|cpu_dcache_wbinv_range
@@ -2316,7 +2347,7 @@ name|vchiq_log_trace
 argument_list|(
 name|vchiq_arm_log_level
 argument_list|,
-literal|"free_pagelist - %x, %d"
+literal|"free_pagelist - %x, %d (%lu bytes @%p)"
 argument_list|,
 operator|(
 name|unsigned
@@ -2325,6 +2356,14 @@ operator|)
 name|pagelist
 argument_list|,
 name|actual
+argument_list|,
+name|pagelist
+operator|->
+name|length
+argument_list|,
+name|bi
+operator|->
+name|buf
 argument_list|)
 expr_stmt|;
 name|num_pages
@@ -2369,7 +2408,7 @@ operator|>=
 name|PAGELIST_READ_WITH_FRAGMENTS
 condition|)
 block|{
-name|FRAGMENTS_T
+name|char
 modifier|*
 name|fragments
 init|=
@@ -2382,6 +2421,8 @@ name|type
 operator|-
 name|PAGELIST_READ_WITH_FRAGMENTS
 operator|)
+operator|*
+name|g_fragment_size
 decl_stmt|;
 name|int
 name|head_bytes
@@ -2391,7 +2432,7 @@ decl_stmt|;
 name|head_bytes
 operator|=
 operator|(
-name|CACHE_LINE_SIZE
+name|g_cache_line_size
 operator|-
 name|pagelist
 operator|->
@@ -2399,7 +2440,7 @@ name|offset
 operator|)
 operator|&
 operator|(
-name|CACHE_LINE_SIZE
+name|g_cache_line_size
 operator|-
 literal|1
 operator|)
@@ -2415,7 +2456,7 @@ name|actual
 operator|)
 operator|&
 operator|(
-name|CACHE_LINE_SIZE
+name|g_cache_line_size
 operator|-
 literal|1
 operator|)
@@ -2457,8 +2498,6 @@ operator|->
 name|offset
 argument_list|,
 name|fragments
-operator|->
-name|headbuf
 argument_list|,
 name|head_bytes
 argument_list|)
@@ -2512,8 +2551,8 @@ operator|-
 name|tail_bytes
 argument_list|,
 name|fragments
-operator|->
-name|tailbuf
+operator|+
+name|g_cache_line_size
 argument_list|,
 name|tail_bytes
 argument_list|)
@@ -2527,7 +2566,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
-name|FRAGMENTS_T
+name|char
 operator|*
 operator|*
 operator|)
