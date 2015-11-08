@@ -236,14 +236,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RCTL_MAX_INBUFLEN
+name|RCTL_MAX_INBUFSIZE
 value|4 * 1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCTL_MAX_OUTBUFLEN
+name|RCTL_MAX_OUTBUFSIZE
 value|16 * 1024 * 1024
 end_define
 
@@ -266,7 +266,7 @@ name|unsigned
 name|int
 name|rctl_maxbufsize
 init|=
-name|RCTL_MAX_OUTBUFLEN
+name|RCTL_MAX_OUTBUFSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -5533,7 +5533,7 @@ if|if
 condition|(
 name|inbuflen
 operator|>
-name|RCTL_MAX_INBUFLEN
+name|RCTL_MAX_INBUFSIZE
 condition|)
 return|return
 operator|(
