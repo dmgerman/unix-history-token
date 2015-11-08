@@ -65,6 +65,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -138,13 +144,24 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|open_group_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|open_group_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FILE
 modifier|*
@@ -164,17 +181,13 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|==
-name|NULL
-condition|)
-name|err
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|fp
+operator|!=
+name|NULL
 argument_list|,
-literal|"failed to open stream"
+literal|"open_memstream failed"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -238,15 +251,26 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|simple_tests
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|simple_tests
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 specifier|const
@@ -295,31 +319,22 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|!=
-name|NULL
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|fp
+operator|==
+name|NULL
 argument_list|,
-literal|"did not fail to open stream"
+literal|"open_memstream did not fail"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errno
-operator|!=
-name|EINVAL
-condition|)
-name|err
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|errno
+operator|==
+name|EINVAL
 argument_list|,
-literal|"incorrect error for bad length pointer"
+literal|"open_memstream didn't fail with EINVAL"
 argument_list|)
 expr_stmt|;
 name|fp
@@ -332,31 +347,22 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|!=
-name|NULL
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|fp
+operator|==
+name|NULL
 argument_list|,
-literal|"did not fail to open stream"
+literal|"open_memstream did not fail"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errno
-operator|!=
-name|EINVAL
-condition|)
-name|err
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|errno
+operator|==
+name|EINVAL
 argument_list|,
-literal|"incorrect error for bad buffer pointer"
+literal|"open_memstream didn't fail with EINVAL"
 argument_list|)
 expr_stmt|;
 name|fp
@@ -370,17 +376,15 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|==
-name|NULL
-condition|)
-name|err
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|fp
+operator|!=
+name|NULL
 argument_list|,
-literal|"failed to open stream"
+literal|"open_memstream failed; errno=%d"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -661,15 +665,26 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|seek_tests
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|seek_tests
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FILE
 modifier|*
@@ -686,17 +701,15 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|==
-name|NULL
-condition|)
-name|err
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|fp
+operator|!=
+name|NULL
 argument_list|,
-literal|"failed to open stream"
+literal|"open_memstream failed: %d"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 define|#
@@ -709,7 +722,7 @@ name|whence
 parameter_list|,
 name|error
 parameter_list|)
-value|do {				\ 	errno = 0;							\ 	if (fseeko(fp, (offset), (whence)) == 0)			\ 		printf("fseeko(%s, %s) did not fail, set pos to %jd\n",	\ 		    __STRING(offset), __STRING(whence),			\ 		    (intmax_t)ftello(fp));				\ 	else if (errno != (error))					\ 		printf("fseeko(%s, %s) failed with %d rather than %s\n",\ 		    __STRING(offset), __STRING(whence),	errno,		\ 		    __STRING(error));					\ } while (0)
+value|do {			\ 	errno = 0;						\ 	ATF_REQUIRE_MSG(fseeko(fp, (offset), (whence)) != 0,	\ 	    "fseeko(%s, %s) did not fail, set pos to %jd\n",	\ 	    __STRING(offset), __STRING(whence),			\ 	    (intmax_t)ftello(fp));				\ 	ATF_REQUIRE_MSG(errno == (error),			\ 	    "fseeko(%s, %s) failed with %d rather than %s\n",	\ 	    __STRING(offset), __STRING(whence),	errno,		\ 	    __STRING(error));					\ } while (0)
 define|#
 directive|define
 name|SEEK_OK
@@ -720,7 +733,7 @@ name|whence
 parameter_list|,
 name|result
 parameter_list|)
-value|do {				\ 	if (fseeko(fp, (offset), (whence)) != 0)			\ 		printf("fseeko(%s, %s) failed: %s\n",			\ 		    __STRING(offset), __STRING(whence),	strerror(errno)); \ 	else if (ftello(fp) != (result))				\ 		printf("fseeko(%s, %s) seeked to %jd rather than %s\n",	\ 		    __STRING(offset), __STRING(whence),			\ 		    (intmax_t)ftello(fp), __STRING(result));		\ } while (0)
+value|do {			\ 	ATF_REQUIRE_MSG(fseeko(fp, (offset), (whence)) == 0,	\ 	    "fseeko(%s, %s) failed: %s",			\ 	    __STRING(offset), __STRING(whence), strerror(errno)); \ 	ATF_REQUIRE_MSG(ftello(fp) == (result),			\ 	    "fseeko(%s, %s) seeked to %jd rather than %s\n",	\ 	    __STRING(offset), __STRING(whence),			\ 	    (intmax_t)ftello(fp), __STRING(result));		\ } while (0)
 name|SEEK_FAIL
 argument_list|(
 operator|-
@@ -815,37 +828,46 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|ac
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|av
-parameter_list|)
+begin_macro
+name|ATF_TP_ADD_TCS
+argument_list|(
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
 block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|open_group_test
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|simple_tests
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|seek_tests
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

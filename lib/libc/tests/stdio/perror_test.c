@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -75,15 +69,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|cleanup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -95,20 +85,31 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|perror_test
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|perror_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
+name|buf
+index|[
+literal|512
+index|]
+decl_stmt|,
 name|lbuf
 index|[
 literal|512
@@ -121,38 +122,21 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|tmpfil
 argument_list|,
-name|_PATH_TMP
 literal|"perror.XXXXXXXX"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE
+argument_list|(
 name|mkstemp
 argument_list|(
 name|tmpfil
 argument_list|)
-operator|<
+operator|>=
 literal|0
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"mkstemp"
-argument_list|)
-expr_stmt|;
-name|atexit
-argument_list|(
-name|cleanup
 argument_list|)
 expr_stmt|;
 comment|/* Reopen stderr on a file descriptor other than 2. */
@@ -179,8 +163,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE
+argument_list|(
 name|freopen
 argument_list|(
 name|tmpfil
@@ -189,16 +173,8 @@ literal|"r+"
 argument_list|,
 name|stderr
 argument_list|)
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|tmpfil
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Test that perror() doesn't call strerror() (4.4BSD bug), 	 * the two ways of omitting a program name, and the formatting when 	 * a program name is specified. 	 */
@@ -209,7 +185,7 @@ argument_list|(
 name|ENOENT
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|strcmp
 argument_list|(
@@ -219,6 +195,10 @@ literal|"No such file or directory"
 argument_list|)
 operator|==
 literal|0
+argument_list|,
+literal|"message obtained was: %s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|errno
@@ -237,10 +217,10 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"test-perror"
+literal|"perror_test"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|strcmp
 argument_list|(
@@ -250,6 +230,10 @@ literal|"No such file or directory"
 argument_list|)
 operator|==
 literal|0
+argument_list|,
+literal|"message obtained was: %s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Read it back to check... 	 */
@@ -272,14 +256,14 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|s
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|strcmp
 argument_list|(
@@ -289,6 +273,10 @@ literal|"Operation not permitted\n"
 argument_list|)
 operator|==
 literal|0
+argument_list|,
+literal|"message obtained was: %s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|s
@@ -305,14 +293,14 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|s
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|strcmp
 argument_list|(
@@ -322,6 +310,10 @@ literal|"Operation not permitted\n"
 argument_list|)
 operator|==
 literal|0
+argument_list|,
+literal|"message obtained was: %s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|s
@@ -338,23 +330,27 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|s
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|strcmp
 argument_list|(
 name|s
 argument_list|,
-literal|"test-perror: Operation not permitted\n"
+literal|"perror_test: Operation not permitted\n"
 argument_list|)
 operator|==
 literal|0
+argument_list|,
+literal|"message obtained was: %s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|s
@@ -371,7 +367,7 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|s
 operator|==
@@ -383,34 +379,33 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
 argument_list|(
-literal|"ok 1 - perror()\n"
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|perror_test
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|cleanup
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|unlink
-argument_list|(
-name|tmpfil
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_block
 
 end_unit
 
