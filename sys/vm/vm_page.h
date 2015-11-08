@@ -509,6 +509,11 @@ name|vm_page
 name|vmd_marker
 decl_stmt|;
 comment|/* marker for pagedaemon private use */
+name|struct
+name|vm_page
+name|vmd_inacthead
+decl_stmt|;
+comment|/* marker for LRU-defeating insertions */
 block|}
 struct|;
 end_struct
