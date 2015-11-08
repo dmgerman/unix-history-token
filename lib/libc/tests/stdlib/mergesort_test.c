@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2004 Maxim Sobolev<sobomax@FreeBSD.org>  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Test for qsort() routine.  */
+comment|/*  * Test for mergesort() routine.  */
 end_comment
 
 begin_include
@@ -45,23 +45,30 @@ directive|include
 file|"test-sort.h"
 end_include
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|mergesort_test
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|mergesort_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
-name|i
-decl_stmt|,
-name|j
+name|sresvector
+index|[
+name|IVEC_LEN
+index|]
 decl_stmt|;
 name|int
 name|testvector
@@ -70,16 +77,10 @@ name|IVEC_LEN
 index|]
 decl_stmt|;
 name|int
-name|sresvector
-index|[
-name|IVEC_LEN
-index|]
+name|i
+decl_stmt|,
+name|j
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -123,8 +124,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* Sort using qsort(3) */
-name|qsort
+comment|/* Sort using mergesort(3) */
+name|mergesort
 argument_list|(
 name|testvector
 argument_list|,
@@ -163,7 +164,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|assert
+name|ATF_CHECK_MSG
 argument_list|(
 name|testvector
 index|[
@@ -174,21 +175,50 @@ name|sresvector
 index|[
 name|i
 index|]
+argument_list|,
+literal|"item at index %d didn't match: %d != %d"
+argument_list|,
+name|i
+argument_list|,
+name|testvector
+index|[
+name|i
+index|]
+argument_list|,
+name|sresvector
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
 argument_list|(
-literal|"ok 1 - qsort\n"
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|mergesort_test
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
