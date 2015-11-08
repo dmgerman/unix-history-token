@@ -1508,23 +1508,6 @@ begin_comment
 comment|/*  * Several encodings share a simplistic dual byte encoding.  In these  * forms, they all indicate that a two byte sequence is to be used if  * the first byte has its high bit set.  They all store this simple  * encoding as a 16-bit value, although a great many of the possible  * code points are not used in most character sets.  This gives a possible  * set of just over 32,000 valid code points.  *  * 0x00 - 0x7f		- 1 byte encoding  * 0x80 - 0x7fff	- illegal  * 0x8000 - 0xffff	- 2 byte encoding  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|push
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|ignored
-literal|"-Wcast-qual"
-end_pragma
-
 begin_function
 specifier|static
 name|int
@@ -1550,6 +1533,7 @@ name|c
 operator|=
 operator|*
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -1900,6 +1884,7 @@ name|c
 operator|=
 operator|*
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -2100,6 +2085,7 @@ name|c
 operator|=
 operator|*
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -2243,6 +2229,7 @@ name|c
 operator|=
 operator|*
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -2382,14 +2369,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|pop
-end_pragma
 
 begin_comment
 comment|/*  * EUC-CN encodes as follows:  *  * Code set 0 (ASCII):				0x21-0x7E  * Code set 1 (CNS 11643-1992 Plane 1):		0xA1A1-0xFEFE  * Code set 2:					unused  * Code set 3:					unused  */
