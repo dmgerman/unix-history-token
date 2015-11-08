@@ -1683,6 +1683,8 @@ name|arg1
 argument_list|,
 name|fib
 argument_list|)
+operator|&
+literal|0x7FFF
 argument_list|)
 expr_stmt|;
 break|break;
