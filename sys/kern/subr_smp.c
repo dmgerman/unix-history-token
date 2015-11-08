@@ -562,6 +562,55 @@ block|{
 name|cpu_mp_setmaxid
 argument_list|()
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mp_ncpus
+operator|>=
+literal|1
+argument_list|,
+operator|(
+literal|"%s: CPU count< 1"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|||
+name|mp_maxid
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: one CPU but mp_maxid is not zero"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mp_maxid
+operator|>=
+name|mp_ncpus
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"%s: counters out of sync: max %d, count %d"
+operator|,
+name|__func__
+operator|,
+name|mp_maxid
+operator|,
+name|mp_ncpus
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

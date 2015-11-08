@@ -1674,56 +1674,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * mp_maxid should be already set by calls to cpu_add(). 	 * Just sanity check its value here. 	 */
+comment|/* 	 * mp_ncpus and mp_maxid should be already set by calls to cpu_add(). 	 * If there were no calls to cpu_add() assume this is a UP system. 	 */
 if|if
 condition|(
 name|mp_ncpus
 operator|==
 literal|0
 condition|)
-name|KASSERT
-argument_list|(
-name|mp_maxid
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"%s: mp_ncpus is zero, but mp_maxid is not"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|mp_ncpus
-operator|==
-literal|1
-condition|)
-name|mp_maxid
 operator|=
-literal|0
-expr_stmt|;
-else|else
-name|KASSERT
-argument_list|(
-name|mp_maxid
-operator|>=
-name|mp_ncpus
-operator|-
 literal|1
-argument_list|,
-operator|(
-literal|"%s: counters out of sync: max %d, count %d"
-operator|,
-name|__func__
-operator|,
-name|mp_maxid
-operator|,
-name|mp_ncpus
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1744,46 +1704,10 @@ operator|&
 name|all_cpus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mp_ncpus
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * No CPUs were found, so this must be a UP system.  Setup 		 * the variables to represent a system with a single CPU 		 * with an id of 0. 		 */
-name|mp_ncpus
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* At least one CPU was found. */
-if|if
-condition|(
 name|mp_ncpus
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* 		 * One CPU was found, so this must be a UP system with 		 * an I/O APIC. 		 */
-name|mp_maxid
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* At least two CPUs were found. */
-return|return
-operator|(
+operator|>
 literal|1
 operator|)
 return|;
