@@ -92,11 +92,6 @@ name|char16_t
 name|c16
 decl_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 comment|/* Null wide character, internal state. */
 name|ATF_REQUIRE
 argument_list|(

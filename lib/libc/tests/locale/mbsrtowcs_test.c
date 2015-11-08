@@ -108,11 +108,6 @@ name|mbstate_t
 name|s
 decl_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 comment|/* Simple null terminated string. */
 name|memset
 argument_list|(

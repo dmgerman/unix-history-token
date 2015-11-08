@@ -106,11 +106,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 name|MB_CUR_MAX
