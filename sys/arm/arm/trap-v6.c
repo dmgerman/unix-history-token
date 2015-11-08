@@ -629,7 +629,7 @@ parameter_list|,
 name|u_int
 name|prefetch
 parameter_list|,
-name|u_int
+name|bool
 name|usermode
 parameter_list|)
 block|{
@@ -688,7 +688,7 @@ parameter_list|,
 name|u_int
 name|prefetch
 parameter_list|,
-name|u_int
+name|bool
 name|usermode
 parameter_list|,
 name|u_int
@@ -785,7 +785,7 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|,
-name|usermode
+name|rv
 decl_stmt|;
 name|uint32_t
 name|fsr
@@ -817,8 +817,8 @@ decl_stmt|;
 name|vm_prot_t
 name|ftype
 decl_stmt|;
-name|int
-name|rv
+name|bool
+name|usermode
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1795,7 +1795,7 @@ modifier|*
 name|ksig
 parameter_list|)
 block|{
-name|u_int
+name|bool
 name|usermode
 decl_stmt|;
 specifier|const
@@ -2104,7 +2104,7 @@ modifier|*
 name|ksig
 parameter_list|)
 block|{
-name|u_int
+name|bool
 name|usermode
 decl_stmt|;
 name|usermode

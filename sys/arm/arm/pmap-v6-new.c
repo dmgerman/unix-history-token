@@ -25520,7 +25520,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
-name|int
+name|bool
 name|usermode
 parameter_list|)
 block|{

@@ -729,7 +729,7 @@ name|uint32_t
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
