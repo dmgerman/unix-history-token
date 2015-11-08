@@ -737,25 +737,9 @@ decl_stmt|,
 name|writing
 decl_stmt|;
 comment|/* 	 * Assert that someone has locked this vmspace.  (Should be 	 * curthread but we can't assert that.)  This keeps the process 	 * from exiting out from under us until this operation completes. 	 */
-name|KASSERT
+name|PROC_ASSERT_HELD
 argument_list|(
 name|p
-operator|->
-name|p_lock
-operator|>=
-literal|1
-argument_list|,
-operator|(
-literal|"%s: process %p (pid %d) not held"
-operator|,
-name|__func__
-operator|,
-name|p
-operator|,
-name|p
-operator|->
-name|p_pid
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The map we want... 	 */
