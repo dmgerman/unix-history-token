@@ -6556,7 +6556,7 @@ name|cmd
 operator|->
 name|arg1
 operator|&
-literal|0x7FFFF
+literal|0x7FFF
 operator|)
 operator|>=
 name|rt_numfibs
@@ -6571,7 +6571,7 @@ name|cmd
 operator|->
 name|arg1
 operator|&
-literal|0x7FFFF
+literal|0x7FFF
 argument_list|)
 expr_stmt|;
 return|return
