@@ -183,23 +183,6 @@ block|}
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|push
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|ignored
-literal|"-Wcast-qual"
-end_pragma
-
 begin_function
 name|void
 name|reset_numeric_group
@@ -314,14 +297,6 @@ name|s
 expr_stmt|;
 block|}
 end_function
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|pop
-end_pragma
 
 begin_function
 name|void
