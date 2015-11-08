@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -63,18 +57,30 @@ directive|include
 file|<uchar.h>
 end_include
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|c16rtomb_test
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|c16rtomb_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|mbstate_t
 name|s
@@ -87,14 +93,9 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* 	 * C/POSIX locale. 	 */
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
+comment|/* C/POSIX locale. */
 comment|/* 	 * If the buffer argument is NULL, c16 is implicitly 0, 	 * c16rtomb() resets its internal state. 	 */
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -109,7 +110,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -149,7 +150,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -164,7 +165,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -190,7 +191,7 @@ literal|0xcc
 argument_list|)
 expr_stmt|;
 comment|/* Latin letter A, internal state. */
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -205,7 +206,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -246,7 +247,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -262,7 +263,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -313,7 +314,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -328,7 +329,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -347,14 +348,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|errno
 operator|==
 name|EILSEQ
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -368,8 +369,8 @@ operator|==
 literal|0xcc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ISO8859-1. 	 */
-name|assert
+comment|/* ISO8859-1. */
+name|ATF_REQUIRE
 argument_list|(
 name|strcmp
 argument_list|(
@@ -412,7 +413,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -431,14 +432,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|errno
 operator|==
 name|EILSEQ
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -452,8 +453,8 @@ operator|==
 literal|0xcc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ISO8859-15. 	 */
-name|assert
+comment|/* ISO8859-15. */
+name|ATF_REQUIRE
 argument_list|(
 name|strcmp
 argument_list|(
@@ -496,7 +497,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -511,7 +512,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -536,8 +537,8 @@ operator|==
 literal|0xcc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * UTF-8. 	 */
-name|assert
+comment|/* UTF-8. */
+name|ATF_REQUIRE
 argument_list|(
 name|strcmp
 argument_list|(
@@ -580,7 +581,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -595,7 +596,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -610,7 +611,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -694,7 +695,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -709,7 +710,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -729,14 +730,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|errno
 operator|==
 name|EILSEQ
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -776,7 +777,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|c16rtomb
 argument_list|(
@@ -795,14 +796,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|errno
 operator|==
 name|EILSEQ
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|(
 name|unsigned
@@ -816,13 +817,33 @@ operator|==
 literal|0xcc
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
 argument_list|(
-literal|"ok 1 - c16rtomb()\n"
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|c16rtomb_test
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|atf_no_error
+argument_list|()
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 end_unit
 

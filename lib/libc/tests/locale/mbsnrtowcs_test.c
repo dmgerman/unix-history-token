@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -69,18 +63,30 @@ directive|include
 file|<wchar.h>
 end_include
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|mbsnrtowcs_test
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|mbsnrtowcs_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 name|srcbuf
@@ -101,12 +107,7 @@ decl_stmt|;
 name|mbstate_t
 name|s
 decl_stmt|;
-comment|/* 	 * C/POSIX locale. 	 */
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
+comment|/* C/POSIX locale. */
 comment|/* Simple null terminated string. */
 name|memset
 argument_list|(
@@ -162,7 +163,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -197,7 +198,7 @@ operator|==
 literal|5
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|wcscmp
 argument_list|(
@@ -209,7 +210,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -219,7 +220,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -281,7 +282,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -316,7 +317,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|wmemcmp
 argument_list|(
@@ -330,7 +331,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -340,7 +341,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -404,7 +405,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -430,7 +431,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|wmemcmp
 argument_list|(
@@ -444,7 +445,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -454,7 +455,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -500,7 +501,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -563,7 +564,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -631,7 +632,7 @@ name|src
 operator|=
 name|srcbuf
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -665,7 +666,7 @@ operator|==
 literal|5
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|wcscmp
 argument_list|(
@@ -677,7 +678,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -687,7 +688,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -718,7 +719,7 @@ name|src
 operator|=
 name|srcbuf
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -798,7 +799,7 @@ name|dstbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -824,7 +825,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -834,7 +835,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -844,7 +845,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -906,7 +907,7 @@ name|dstbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -932,7 +933,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -942,7 +943,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -997,7 +998,7 @@ name|dstbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -1023,7 +1024,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -1033,7 +1034,7 @@ operator|==
 literal|0xcccc
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -1041,7 +1042,7 @@ name|srcbuf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Japanese (EUC) locale. 	 */
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|strcmp
 argument_list|(
@@ -1058,7 +1059,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|MB_CUR_MAX
 operator|>
@@ -1119,7 +1120,7 @@ name|dstbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -1154,7 +1155,7 @@ operator|==
 literal|5
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|dstbuf
 index|[
@@ -1199,7 +1200,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -1261,7 +1262,7 @@ name|dstbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -1296,7 +1297,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -1305,7 +1306,7 @@ operator|+
 literal|6
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 operator|!
 name|mbsinit
@@ -1315,7 +1316,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -1350,7 +1351,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
@@ -1359,7 +1360,7 @@ operator|+
 literal|7
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|mbsnrtowcs
 argument_list|(
@@ -1394,25 +1395,40 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|src
 operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
 argument_list|(
-literal|"ok 1 - mbsnrtowcs()\n"
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|mbsnrtowcs_test
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
