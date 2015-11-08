@@ -3208,6 +3208,21 @@ value|0x80000000
 end_define
 
 begin_comment
+comment|/* Bits for R92C_RXFLTMAP*. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_RXFLTMAP_SUBTYPE
+parameter_list|(
+name|subtype
+parameter_list|)
+define|\
+value|(1<< ((subtype)>> IEEE80211_FC0_SUBTYPE_SHIFT))
+end_define
+
+begin_comment
 comment|/*  * Baseband registers.  */
 end_comment
 
