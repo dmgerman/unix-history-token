@@ -709,6 +709,12 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fp
+operator|->
+name|_flags2
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|fp
