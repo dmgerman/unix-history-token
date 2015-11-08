@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stdint.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -40,7 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_struct_decl
@@ -419,6 +425,14 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_racct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
