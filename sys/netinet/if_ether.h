@@ -336,15 +336,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arp_ifinit2
+name|arp_announce_ifaddr
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
 parameter_list|,
 name|struct
-name|ifaddr
-modifier|*
+name|in_addr
+name|addr
 parameter_list|,
 name|u_char
 modifier|*
