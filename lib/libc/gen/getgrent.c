@@ -3518,9 +3518,6 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
-name|int
-name|rv
-decl_stmt|;
 name|assert
 argument_list|(
 name|uname
@@ -3541,8 +3538,9 @@ name|grpcnt
 operator|=
 literal|0
 expr_stmt|;
-name|rv
-operator|=
+operator|(
+name|void
+operator|)
 name|_nsdispatch
 argument_list|(
 name|NULL
