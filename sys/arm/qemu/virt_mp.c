@@ -187,7 +187,7 @@ name|mp_ncpus
 operator|=
 name|MIN
 argument_list|(
-name|ncpus
+name|mp_ncpus
 argument_list|,
 name|MAXCPU
 argument_list|)
