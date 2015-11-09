@@ -3597,8 +3597,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtsold [-adDfFm1] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] interfaces...\n"
+literal|"usage: rtsold [-dDfFm1] [-O script-name] "
+literal|"[-p pidfile] [-R script-name] interface ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3606,7 +3606,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtsold [-dDfFm1] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] -a\n"
+literal|"[-p pidfile] [-R script-name] -a\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -3616,7 +3616,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtsol [-dDF] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] interfaces...\n"
+literal|"[-p pidfile] [-R script-name] interface ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3624,7 +3624,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtsol [-dDF] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] -a\n"
+literal|"[-p pidfile] [-R script-name] -a\n"
 argument_list|)
 expr_stmt|;
 endif|#
