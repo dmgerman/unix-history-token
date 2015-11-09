@@ -237,7 +237,7 @@ modifier|*
 name|n
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|u_int32_t
@@ -1097,7 +1097,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|u_int32_t
