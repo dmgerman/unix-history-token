@@ -205,6 +205,9 @@ expr|struct
 name|attribute
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|arg2
 expr_stmt|;
 if|if
