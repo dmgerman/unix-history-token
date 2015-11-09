@@ -343,6 +343,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_ascii_init
+parameter_list|(
+name|struct
+name|xlocale_ctype
+modifier|*
+parameter_list|,
+name|_RuneLocale
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|size_t
