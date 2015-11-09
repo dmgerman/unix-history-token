@@ -1165,7 +1165,7 @@ name|isoLevel
 block|,
 literal|1
 block|,
-literal|3
+literal|2
 block|,
 literal|"ISO Level"
 block|}
@@ -1180,7 +1180,7 @@ name|isoLevel
 block|,
 literal|1
 block|,
-literal|3
+literal|2
 block|,
 literal|"ISO Level"
 block|}
@@ -4530,6 +4530,21 @@ argument_list|(
 literal|"Rename_filename called\n"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+literal|1
+operator|<=
+name|diskStructure
+operator|.
+name|isoLevel
+operator|&&
+name|diskStructure
+operator|.
+name|isoLevel
+operator|<=
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* TODO : A LOT of chanes regarding 8.3 filenames */
 if|if
 condition|(
@@ -6953,6 +6968,21 @@ name|int
 name|is_file
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+literal|1
+operator|<=
+name|diskStructure
+operator|.
+name|isoLevel
+operator|&&
+name|diskStructure
+operator|.
+name|isoLevel
+operator|<=
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* NEW */
 name|cd9660_filename_conversion_functor
 name|conversion_function
