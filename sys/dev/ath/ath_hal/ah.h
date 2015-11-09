@@ -2310,6 +2310,30 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+enum|enum
+block|{
+name|HAL_RESET_NORMAL
+init|=
+literal|0
+block|,
+comment|/* Do normal reset */
+name|HAL_RESET_BBPANIC
+init|=
+literal|1
+block|,
+comment|/* Reset because of BB panic */
+name|HAL_RESET_FORCE_COLD
+init|=
+literal|2
+block|,
+comment|/* Force full reset */
+block|}
+name|HAL_RESET_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
 name|uint8_t
@@ -3340,22 +3364,6 @@ name|HAL_GEN_TIMER_DOMAIN
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|HAL_RESET_NONE
-init|=
-literal|0x0
-block|,
-name|HAL_RESET_BBPANIC
-init|=
-literal|0x1
-block|, }
-name|HAL_RESET_TYPE
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * BT Co-existence definitions  */
 end_comment
@@ -4053,6 +4061,9 @@ modifier|*
 parameter_list|,
 name|HAL_BOOL
 name|bChannelChange
+parameter_list|,
+name|HAL_RESET_TYPE
+name|resetType
 parameter_list|,
 name|HAL_STATUS
 modifier|*

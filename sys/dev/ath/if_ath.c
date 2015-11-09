@@ -7772,6 +7772,8 @@ name|ic_curchan
 argument_list|,
 name|AH_FALSE
 argument_list|,
+name|HAL_RESET_NORMAL
+argument_list|,
 operator|&
 name|status
 argument_list|)
@@ -9727,6 +9729,8 @@ name|ic_curchan
 argument_list|,
 name|AH_FALSE
 argument_list|,
+name|HAL_RESET_NORMAL
+argument_list|,
 operator|&
 name|status
 argument_list|)
@@ -10782,6 +10786,8 @@ operator|->
 name|ic_curchan
 argument_list|,
 name|AH_TRUE
+argument_list|,
+name|HAL_RESET_NORMAL
 argument_list|,
 operator|&
 name|status
@@ -21163,6 +21169,8 @@ argument_list|,
 name|chan
 argument_list|,
 name|AH_TRUE
+argument_list|,
+name|HAL_RESET_NORMAL
 argument_list|,
 operator|&
 name|status
