@@ -808,7 +808,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Only single instance of ITS is supported, exitting...\n"
+literal|"Only single instance of ITS is supported, exiting...\n"
 argument_list|)
 expr_stmt|;
 return|return
