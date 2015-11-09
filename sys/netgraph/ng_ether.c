@@ -2103,6 +2103,12 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|iflladdr_event
