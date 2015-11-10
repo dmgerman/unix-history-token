@@ -790,7 +790,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *	pl310_read4 - read a 32-bit value from the PL310 registers  *	pl310_write4 - write a 32-bit value from the PL310 registers  *	@off: byte offset within the register set to read from  *	@val: the value to write into the register  *	  *  *	LOCKING:  *	None  *  *	RETURNS:  *	nothing in case of write function, if read function returns the value read.  */
+comment|/**  *	pl310_read4 - read a 32-bit value from the PL310 registers  *	pl310_write4 - write a 32-bit value from the PL310 registers  *	@off: byte offset within the register set to read from  *	@val: the value to write into the register  *  *  *	LOCKING:  *	None  *  *	RETURNS:  *	nothing in case of write function, if read function returns the value read.  */
 end_comment
 
 begin_function

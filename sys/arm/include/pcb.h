@@ -105,7 +105,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and ARM ABI require it 		 * to by aligned on 8 bytes. 		 */
+comment|/* 		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and ARM ABI require it 		 * to by aligned on 8 bytes. 		 */
 end_comment
 
 begin_comment
