@@ -712,7 +712,10 @@ begin_define
 define|#
 directive|define
 name|CP15_PAR
-value|p15, 0, r0, c7, c4,  0
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c7, c4,  0
 end_define
 
 begin_comment
