@@ -275,6 +275,15 @@ name|struct
 name|ieee80211vap
 name|vap
 decl_stmt|;
+name|struct
+name|r92c_tx_desc
+name|bcn_desc
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|bcn_mbuf
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*

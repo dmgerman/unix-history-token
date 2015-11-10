@@ -2968,6 +2968,42 @@ value|0x10
 end_define
 
 begin_comment
+comment|/* Bits for R92C_MBID_NUM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_MBID_TXBCN_RPT0
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_MBID_TXBCN_RPT1
+value|0x10
+end_define
+
+begin_comment
+comment|/* Bits for R92C_DUAL_TSF_RST. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_DUAL_TSF_RST0
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_DUAL_TSF_RST1
+value|0x02
+end_define
+
+begin_comment
 comment|/* Bits for R92C_APSD_CTRL. */
 end_comment
 
