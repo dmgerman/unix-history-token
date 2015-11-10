@@ -2687,7 +2687,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * There are some cases where the racct %cpu resource would grow 	 * beyond 100%. 	 * For example in racct_proc_exit() we add the process %cpu usage 	 * to the ucred racct containers.  If too many processes terminated 	 * in a short time span, the ucred %cpu resource could grow too much. 	 * Also, the 4BSD scheduler sometimes returns for a thread more than 	 * 100% cpu usage.  So we set a boundary here to 100%. 	 */
+comment|/* 	 * There are some cases where the racct %cpu resource would grow 	 * beyond 100% per core.  For example in racct_proc_exit() we add 	 * the process %cpu usage to the ucred racct containers.  If too 	 * many processes terminated in a short time span, the ucred %cpu 	 * resource could grow too much.  Also, the 4BSD scheduler sometimes 	 * returns for a thread more than 100% cpu usage. So we set a sane 	 * boundary here to 100% * the maxumum number of CPUs. 	 */
 if|if
 condition|(
 operator|(
@@ -2707,6 +2707,11 @@ operator|>
 literal|100
 operator|*
 literal|1000000
+operator|*
+operator|(
+name|int64_t
+operator|)
+name|MAXCPU
 operator|)
 condition|)
 name|racct
@@ -2719,6 +2724,11 @@ operator|=
 literal|100
 operator|*
 literal|1000000
+operator|*
+operator|(
+name|int64_t
+operator|)
+name|MAXCPU
 expr_stmt|;
 block|}
 end_function
