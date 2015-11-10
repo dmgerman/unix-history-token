@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -2795,42 +2801,52 @@ begin_comment
 comment|/*  * Macros for manipulating CPU interrupts  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|__inline
-name|u_int32_t
-name|__set_cpsr_c
-parameter_list|(
-name|u_int
-name|bic
-parameter_list|,
-name|u_int
-name|eor
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__unused__
-end_function_decl
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_define
+define|#
+directive|define
+name|__ARM_INTR_BITS
+value|(PSR_I | PSR_F)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__ARM_INTR_BITS
+value|(PSR_I | PSR_F | PSR_A)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
-name|__set_cpsr_c
+name|uint32_t
+name|__set_cpsr
 parameter_list|(
-name|u_int
+name|uint32_t
 name|bic
 parameter_list|,
-name|u_int
+name|uint32_t
 name|eor
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|tmp
 decl_stmt|,
 name|ret
@@ -2842,8 +2858,8 @@ literal|"bic	 %1, %0, %2\n"
 comment|/* Clear bits */
 literal|"eor	 %1, %1, %3\n"
 comment|/* XOR bits */
-literal|"msr     cpsr_c, %1\n"
-comment|/* Set the control field of CPSR */
+literal|"msr     cpsr_xc, %1\n"
+comment|/* Set the CPSR */
 operator|:
 literal|"=&r"
 operator|(
@@ -2876,64 +2892,85 @@ name|ret
 return|;
 end_return
 
-begin_define
-unit|}
-define|#
-directive|define
-name|ARM_CPSR_F32
-value|(1<< 6)
-end_define
-
-begin_comment
-comment|/* FIQ disable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARM_CPSR_I32
-value|(1<< 7)
-end_define
-
-begin_comment
-comment|/* IRQ disable */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_function
+unit|}  static
+name|__inline
+name|uint32_t
 name|disable_interrupts
 parameter_list|(
+name|uint32_t
 name|mask
 parameter_list|)
-define|\
-value|(__set_cpsr_c((mask)& (ARM_CPSR_I32 | ARM_CPSR_F32),		\ 		      (mask)& (ARM_CPSR_I32 | ARM_CPSR_F32)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|enable_interrupts
-parameter_list|(
+block|{
+return|return
+operator|(
+name|__set_cpsr
+argument_list|(
 name|mask
-parameter_list|)
-define|\
-value|(__set_cpsr_c((mask)& (ARM_CPSR_I32 | ARM_CPSR_F32), 0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|restore_interrupts
-parameter_list|(
-name|old_cpsr
-parameter_list|)
-define|\
-value|(__set_cpsr_c((ARM_CPSR_I32 | ARM_CPSR_F32),			\ 		      (old_cpsr)& (ARM_CPSR_I32 | ARM_CPSR_F32)))
-end_define
+operator|&
+name|__ARM_INTR_BITS
+argument_list|,
+name|mask
+operator|&
+name|__ARM_INTR_BITS
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
-unit|static
+specifier|static
+name|__inline
+name|uint32_t
+name|enable_interrupts
+parameter_list|(
+name|uint32_t
+name|mask
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__set_cpsr
+argument_list|(
+name|mask
+operator|&
+name|__ARM_INTR_BITS
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|restore_interrupts
+parameter_list|(
+name|uint32_t
+name|old_cpsr
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__set_cpsr
+argument_list|(
+name|__ARM_INTR_BITS
+argument_list|,
+name|old_cpsr
+operator|&
+name|__ARM_INTR_BITS
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|__inline
 name|register_t
 name|intr_disable
@@ -2941,21 +2978,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|register_t
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|disable_interrupts
-argument_list|(
-name|ARM_CPSR_I32
-operator||
-name|ARM_CPSR_F32
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|s
+name|disable_interrupts
+argument_list|(
+name|PSR_I
+operator||
+name|PSR_F
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2979,31 +3009,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Functions to manipulate the CPSR. */
-end_comment
-
-begin_function_decl
-name|u_int
-name|SetCPSR
-parameter_list|(
-name|u_int
-name|bic
-parameter_list|,
-name|u_int
-name|eor
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int
-name|GetCPSR
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_undef
+undef|#
+directive|undef
+name|__ARM_INTR_BITS
+end_undef
 
 begin_comment
 comment|/*  * Functions to manipulate cpu r13  * (in arm/arm32/setstack.S)  */
