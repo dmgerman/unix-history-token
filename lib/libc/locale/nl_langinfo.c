@@ -256,7 +256,7 @@ literal|0
 condition|)
 name|ret
 operator|=
-literal|"POSIX"
+literal|"US-ASCII"
 expr_stmt|;
 elseif|else
 if|if
