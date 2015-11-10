@@ -5587,6 +5587,30 @@ define|#
 directive|define
 name|R92C_TXDW1_QSEL_BE
 value|0x00
+comment|/* or 0x03 */
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_BK
+value|0x01
+comment|/* or 0x02 */
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_VI
+value|0x04
+comment|/* or 0x05 */
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_VO
+value|0x06
+comment|/* or 0x07 */
+define|#
+directive|define
+name|URTWN_MAX_TID
+value|8
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_BEACON
+value|0x10
 define|#
 directive|define
 name|R92C_TXDW1_QSEL_MGNT
