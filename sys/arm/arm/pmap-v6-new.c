@@ -25564,13 +25564,17 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * All L1 tables should always be mapped and present. 		 * However, we check only current one herein. For user mode, 		 * only permission abort from malicious user is not fatal. 		 */
+comment|/* 		 * All L1 tables should always be mapped and present. 		 * However, we check only current one herein. For user mode, 		 * only permission abort from malicious user is not fatal. 		 * And alignment abort as it may have higher priority. 		 */
 if|if
 condition|(
 operator|!
 name|usermode
 operator|||
 operator|(
+name|idx
+operator|!=
+name|FAULT_ALIGN
+operator|&&
 name|idx
 operator|!=
 name|FAULT_PERM_L2
@@ -25623,13 +25627,17 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * PT2MAP should be always mapped and present in current 		 * L1 table. However, only existing L2 tables are mapped 		 * in PT2MAP. For user mode, only L2 translation abort and 		 * permission abort from malicious user is not fatal. 		 */
+comment|/* 		 * PT2MAP should be always mapped and present in current 		 * L1 table. However, only existing L2 tables are mapped 		 * in PT2MAP. For user mode, only L2 translation abort and 		 * permission abort from malicious user is not fatal. 		 * And alignment abort as it may have higher priority. 		 */
 if|if
 condition|(
 operator|!
 name|usermode
 operator|||
 operator|(
+name|idx
+operator|!=
+name|FAULT_ALIGN
+operator|&&
 name|idx
 operator|!=
 name|FAULT_TRAN_L2
