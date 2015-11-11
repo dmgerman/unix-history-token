@@ -1215,14 +1215,10 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * For report target port groups.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|NUM_TARGET_PORT_GROUPS
+name|NUM_HA_SHELVES
 value|2
 end_define
 
