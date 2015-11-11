@@ -74,6 +74,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_DB_TOTAL_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_DB_LINK
 value|15
 end_define

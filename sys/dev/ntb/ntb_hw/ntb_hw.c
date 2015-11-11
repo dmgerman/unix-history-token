@@ -4536,9 +4536,7 @@ name|ntb
 operator|->
 name|db_vec_shift
 operator|=
-name|ntb
-operator|->
-name|db_count
+name|XEON_DB_TOTAL_SHIFT
 expr_stmt|;
 name|rc
 operator|=
