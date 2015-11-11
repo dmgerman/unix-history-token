@@ -258,7 +258,12 @@ begin_function_decl
 specifier|static
 name|void
 name|execute_the_co_test
-parameter_list|()
+parameter_list|(
+name|struct
+name|callout_run
+modifier|*
+name|rn
+parameter_list|)
 function_decl|;
 end_function_decl
 
