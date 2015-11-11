@@ -389,9 +389,9 @@ value|\ 	pushl	$0 ;
 comment|/* dummy trap type */
 value|\ 	pushal ;
 comment|/* 8 ints */
-value|\ 	pushl	%ds ;
+value|\ 	pushl	$0 ;
 comment|/* save data and extra segments ... */
-value|\ 	pushl	%es ;							\ 	pushl	%fs
+value|\ 	movw	%ds,(%esp) ;						\ 	pushl	$0 ;							\ 	movw	%es,(%esp) ;						\ 	pushl	$0 ;							\ 	movw	%fs,(%esp)
 end_define
 
 begin_define
