@@ -524,14 +524,14 @@ name|CTX_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_lock_spin(&(sc)->ctx_lock)
+value|mtx_lock(&(sc)->ctx_lock)
 define|#
 directive|define
 name|CTX_UNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_unlock_spin(&(sc)->ctx_lock)
+value|mtx_unlock(&(sc)->ctx_lock)
 define|#
 directive|define
 name|CTX_ASSERT
@@ -2524,7 +2524,7 @@ literal|"ntb ctx"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
