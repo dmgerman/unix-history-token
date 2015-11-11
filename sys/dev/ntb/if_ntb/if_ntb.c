@@ -516,6 +516,7 @@ decl_stmt|;
 name|bool
 name|client_ready
 decl_stmt|;
+specifier|volatile
 name|bool
 name|link_is_up
 decl_stmt|;
@@ -850,8 +851,8 @@ decl_stmt|;
 name|unsigned
 name|qp_count
 decl_stmt|;
-name|enum
-name|ntb_link_event
+specifier|volatile
+name|bool
 name|link_is_up
 decl_stmt|;
 name|struct
