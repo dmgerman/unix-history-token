@@ -3432,9 +3432,11 @@ name|qp_offset
 operator|=
 name|tx_size
 operator|*
+operator|(
 name|qp_num
 operator|/
 name|mw_count
+operator|)
 expr_stmt|;
 name|qp
 operator|->
@@ -6969,9 +6971,11 @@ name|virt_addr
 operator|+
 name|rx_size
 operator|*
+operator|(
 name|qp_num
 operator|/
 name|mw_count
+operator|)
 expr_stmt|;
 name|rx_size
 operator|-=
