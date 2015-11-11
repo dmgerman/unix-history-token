@@ -1592,6 +1592,46 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|unsigned
+name|g_ntb_hw_debug_level
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_ntb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug_level
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|g_ntb_hw_debug_level
+argument_list|,
+literal|0
+argument_list|,
+literal|"ntb_hw log level -- higher is more verbose"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|ntb_printf
+parameter_list|(
+name|lvl
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {				\ 	if ((lvl)<= g_ntb_hw_debug_level) {			\ 		device_printf(ntb->device, __VA_ARGS__);	\ 	}							\ } while (0)
+end_define
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|ntb_hw_info
 name|pci_ids
