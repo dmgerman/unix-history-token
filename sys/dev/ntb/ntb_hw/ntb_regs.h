@@ -116,7 +116,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_PCICMD_OFFSET
+name|XEON_SPCICMD_OFFSET
 value|0x0504
 end_define
 
@@ -410,7 +410,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATOM_PCICMD_OFFSET
+name|ATOM_SPCICMD_OFFSET
 value|0xb004
 end_define
 
@@ -875,24 +875,6 @@ define|#
 directive|define
 name|XEON_B2B_MIN_SIZE
 value|0x8000
-end_define
-
-begin_comment
-comment|/* XEON Shadowed MMIO Space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XEON_SHADOW_PDOORBELL_OFFSET
-value|0x60
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEON_SHADOW_SPAD_OFFSET
-value|0x80
 end_define
 
 begin_endif
