@@ -307,11 +307,10 @@ decl_stmt|;
 name|vm_paddr_t
 name|pbase
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|vbase
 decl_stmt|;
-name|u_long
+name|vm_size_t
 name|size
 decl_stmt|;
 comment|/* Configuration register offsets */
@@ -11379,8 +11378,7 @@ name|vm_paddr_t
 modifier|*
 name|base
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 modifier|*
 name|vbase
 parameter_list|,
@@ -11491,10 +11489,6 @@ condition|)
 operator|*
 name|vbase
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|bar
 operator|->
 name|vbase

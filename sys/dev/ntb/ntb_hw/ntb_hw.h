@@ -298,8 +298,7 @@ name|vm_paddr_t
 modifier|*
 name|base
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 modifier|*
 name|vbase
 parameter_list|,

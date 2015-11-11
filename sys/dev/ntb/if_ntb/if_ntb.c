@@ -507,8 +507,7 @@ name|struct
 name|mtx
 name|ntb_tx_free_q_lock
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|tx_mw
 decl_stmt|;
 name|bus_addr_t
@@ -571,8 +570,7 @@ name|struct
 name|task
 name|rxc_db_work
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|rx_buff
 decl_stmt|;
 name|ntb_q_idx_t
@@ -735,8 +733,7 @@ name|size_t
 name|xlat_align_size
 decl_stmt|;
 comment|/* Tx buff is off vbase / phys_addr */
-name|void
-modifier|*
+name|caddr_t
 name|vbase
 decl_stmt|;
 name|size_t
@@ -746,8 +743,7 @@ name|size_t
 name|buff_size
 decl_stmt|;
 comment|/* Rx buff is off virt_addr / dma_addr */
-name|void
-modifier|*
+name|caddr_t
 name|virt_addr
 decl_stmt|;
 name|bus_addr_t
@@ -2725,7 +2721,7 @@ name|mw
 operator|->
 name|virt_addr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mw
 operator|->
@@ -3326,10 +3322,6 @@ name|qp
 operator|->
 name|tx_mw
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|mw
 operator|->
 name|vbase
@@ -3388,10 +3380,6 @@ name|void
 operator|*
 operator|)
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|qp
 operator|->
 name|tx_mw
@@ -6857,10 +6845,6 @@ name|qp
 operator|->
 name|rx_buff
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|mw
 operator|->
 name|virt_addr
@@ -6888,10 +6872,6 @@ name|void
 operator|*
 operator|)
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|qp
 operator|->
 name|rx_buff
@@ -6971,10 +6951,6 @@ name|void
 operator|*
 operator|)
 operator|(
-operator|(
-name|uint8_t
-operator|*
-operator|)
 name|qp
 operator|->
 name|rx_buff
