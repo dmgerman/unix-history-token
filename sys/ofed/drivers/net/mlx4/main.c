@@ -3156,6 +3156,9 @@ name|dev_cap
 operator|->
 name|min_page_sz
 argument_list|,
+operator|(
+name|int
+operator|)
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -5578,6 +5581,9 @@ literal|"kernel PAGE_SIZE of %d, aborting.\n"
 argument_list|,
 name|page_size
 argument_list|,
+operator|(
+name|int
+operator|)
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -5627,6 +5633,9 @@ name|caps
 operator|.
 name|uar_page_size
 argument_list|,
+operator|(
+name|int
+operator|)
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
