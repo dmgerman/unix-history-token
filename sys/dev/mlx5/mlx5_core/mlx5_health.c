@@ -525,7 +525,8 @@ specifier|static
 name|void
 name|poll_health
 parameter_list|(
-name|uintptr_t
+name|unsigned
+name|long
 name|data
 parameter_list|)
 block|{
@@ -764,7 +765,8 @@ argument_list|,
 name|poll_health
 argument_list|,
 operator|(
-name|uintptr_t
+name|unsigned
+name|long
 operator|)
 name|dev
 argument_list|)
