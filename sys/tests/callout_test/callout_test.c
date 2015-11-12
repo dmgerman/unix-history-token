@@ -149,34 +149,11 @@ directive|include
 file|<tests/callout_test.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|cpu_spinwait
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|MALLOC_DEFINE
