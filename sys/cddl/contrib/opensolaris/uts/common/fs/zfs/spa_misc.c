@@ -364,7 +364,7 @@ name|OID_AUTO
 argument_list|,
 name|recover
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_recover
