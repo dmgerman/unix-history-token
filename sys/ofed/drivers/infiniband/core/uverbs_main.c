@@ -262,7 +262,7 @@ parameter_list|,
 name|olen
 parameter_list|)
 define|\
-value|do {							\ 		(udata)->ops    =&uverbs_copy_ex;		\ 		(udata)->inbuf  = (void __user *)(ibuf);	\ 		(udata)->outbuf = (void __user *)(obuf);	\ 		(udata)->inlen  = (ilen);			\ 		(udata)->outlen = (olen);			\ 	} while (0)
+value|do {							\ 		(udata)->ops    =&uverbs_copy_ex;		\ 		(udata)->inbuf  = (void __user *)(unsigned long)(ibuf);	\ 		(udata)->outbuf = (void __user *)(unsigned long)(obuf);	\ 		(udata)->inlen  = (ilen);			\ 		(udata)->outlen = (olen);			\ 	} while (0)
 end_define
 
 begin_decl_stmt
