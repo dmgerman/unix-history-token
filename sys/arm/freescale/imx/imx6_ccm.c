@@ -306,10 +306,10 @@ name|sc
 argument_list|,
 name|CCM_CCGR6
 argument_list|,
-literal|0x000000ff
+literal|0x000003ff
 argument_list|)
 expr_stmt|;
-comment|/* usdhc 1-4 */
+comment|/* usdhc 1-4, usboh3 */
 block|}
 end_function
 
