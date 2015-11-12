@@ -192,7 +192,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Ti OMAP4 General Purpose I/O (GPIO)"
+literal|"TI OMAP4 General Purpose I/O (GPIO)"
 argument_list|)
 expr_stmt|;
 return|return
