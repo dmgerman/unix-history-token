@@ -42,6 +42,10 @@ directive|include
 file|<machine/npx.h>
 end_include
 
+begin_comment
+comment|/*  * NB: The fields marked with (*) are used by kernel debuggers.  Their  * ABI should be preserved.  */
+end_comment
+
 begin_struct
 struct|struct
 name|pcb
@@ -49,21 +53,27 @@ block|{
 name|int
 name|pcb_edi
 decl_stmt|;
+comment|/* (*) */
 name|int
 name|pcb_esi
 decl_stmt|;
+comment|/* (*) */
 name|int
 name|pcb_ebp
 decl_stmt|;
+comment|/* (*) */
 name|int
 name|pcb_esp
 decl_stmt|;
+comment|/* (*) */
 name|int
 name|pcb_ebx
 decl_stmt|;
+comment|/* (*) */
 name|int
 name|pcb_eip
 decl_stmt|;
+comment|/* (*) */
 name|struct
 name|segment_descriptor
 name|pcb_fsd

@@ -185,6 +185,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* NB: Used by kernel debuggers. */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|u_long
+name|vm_maxuser_address
+init|=
+name|VM_MAXUSER_ADDRESS
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
