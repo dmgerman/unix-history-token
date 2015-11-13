@@ -153,7 +153,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -1868,7 +1868,7 @@ name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 name|isrp
 parameter_list|,
@@ -1878,7 +1878,7 @@ name|semap
 parameter_list|,
 name|uint16_t
 modifier|*
-name|mbp
+name|info
 parameter_list|)
 block|{
 name|uint16_t
@@ -1971,9 +1971,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 operator|*
-name|mbp
+name|info
 operator|=
 name|BXR2
 argument_list|(
@@ -1987,7 +1986,6 @@ name|OUTMAILBOX0
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1

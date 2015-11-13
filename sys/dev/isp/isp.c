@@ -27698,14 +27698,14 @@ name|ispsoftc_t
 modifier|*
 name|isp
 parameter_list|,
-name|uint32_t
+name|uint16_t
 name|isr
 parameter_list|,
 name|uint16_t
 name|sema
 parameter_list|,
 name|uint16_t
-name|mbox
+name|info
 parameter_list|)
 block|{
 name|XS_T
@@ -27759,7 +27759,7 @@ name|fmbox
 label|:
 if|if
 condition|(
-name|mbox
+name|info
 operator|&
 name|MBOX_COMMAND_COMPLETE
 condition|)
@@ -27790,7 +27790,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|mbox
+name|info
 expr_stmt|;
 for|for
 control|(
@@ -27880,7 +27880,7 @@ name|ISP_LOGWARN
 argument_list|,
 literal|"mailbox cmd (0x%x) with no waiters"
 argument_list|,
-name|mbox
+name|info
 argument_list|)
 expr_stmt|;
 block|}
@@ -27898,14 +27898,14 @@ name|isp_parse_async_fc
 argument_list|(
 name|isp
 argument_list|,
-name|mbox
+name|info
 argument_list|)
 else|:
 name|isp_parse_async
 argument_list|(
 name|isp
 argument_list|,
-name|mbox
+name|info
 argument_list|)
 expr_stmt|;
 if|if
@@ -27926,7 +27926,7 @@ argument_list|(
 name|isp
 argument_list|)
 operator|&&
-name|mbox
+name|info
 operator|!=
 name|ASYNC_RIOZIO_STALL
 operator|)
@@ -27977,11 +27977,14 @@ name|isp
 argument_list|,
 name|ISP_LOGINFO
 argument_list|,
-literal|"interrupt (ISR=%x SEMA=%x) when not ready"
+literal|"interrupt (ISR=%x SEMA=%x INFO=%x) "
+literal|"when not ready"
 argument_list|,
 name|isr
 argument_list|,
 name|sema
+argument_list|,
+name|info
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Thank you very much!  *Burrrp*! 		 */
@@ -28049,21 +28052,17 @@ name|isp
 argument_list|)
 operator|&&
 operator|(
-operator|(
 name|isr
-operator|&
-name|BIU2400_R2HST_ISTAT_MASK
-operator|)
 operator|==
-name|ISP2400R2HST_ATIO_RSPQ_UPDATE
+name|ISPR2HST_ATIO_UPDATE
 operator|||
-operator|(
 name|isr
-operator|&
-name|BIU2400_R2HST_ISTAT_MASK
-operator|)
 operator|==
-name|ISP2400R2HST_ATIO_RQST_UPDATE
+name|ISPR2HST_ATIO_RSPQ_UPDATE
+operator|||
+name|isr
+operator|==
+name|ISPR2HST_ATIO_UPDATE2
 operator|)
 condition|)
 block|{
@@ -28238,21 +28237,6 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Get the current Response Queue Out Pointer. 	 * 	 * If we're a 2300 or 2400, we can ask what hardware what it thinks. 	 */
-if|#
-directive|if
-literal|0
-block|if (IS_23XX(isp) || IS_24XX(isp)) { 		optr = ISP_READ(isp, isp->isp_respoutrp);
-comment|/* 		 * Debug: to be taken out eventually 		 */
-block|if (isp->isp_resodx != optr) { 			isp_prt(isp, ISP_LOGINFO, "isp_intr: hard optr=%x, soft optr %x", optr, isp->isp_resodx); 			isp->isp_resodx = optr; 		} 	} else
-endif|#
-directive|endif
-name|optr
-operator|=
-name|isp
-operator|->
-name|isp_resodx
-expr_stmt|;
 comment|/* 	 * You *must* read the Response Queue In Pointer 	 * prior to clearing the RISC interrupt. 	 * 	 * Debounce the 2300 if revision less than 2. 	 */
 if|if
 condition|(
@@ -28355,6 +28339,12 @@ name|isp_respinrp
 argument_list|)
 expr_stmt|;
 block|}
+name|optr
+operator|=
+name|isp
+operator|->
+name|isp_resodx
+expr_stmt|;
 if|if
 condition|(
 name|optr
@@ -28460,7 +28450,7 @@ argument_list|,
 name|BIU_SEMA
 argument_list|)
 expr_stmt|;
-name|mbox
+name|info
 operator|=
 name|ISP_READ
 argument_list|(
@@ -28478,7 +28468,7 @@ literal|0x3
 operator|)
 operator|&&
 operator|(
-name|mbox
+name|info
 operator|&
 literal|0x8000
 operator|)

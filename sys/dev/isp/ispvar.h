@@ -162,7 +162,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -354,10 +354,10 @@ name|isrp
 parameter_list|,
 name|semap
 parameter_list|,
-name|mbox0p
+name|info
 parameter_list|)
 define|\
-value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, mbox0p)
+value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, info)
 end_define
 
 begin_define
@@ -3222,7 +3222,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 parameter_list|,
 name|uint16_t
 parameter_list|,
