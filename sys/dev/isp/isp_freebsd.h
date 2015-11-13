@@ -856,28 +856,23 @@ begin_struct
 struct|struct
 name|isp_nexus
 block|{
+name|uint64_t
+name|lun
+decl_stmt|;
+comment|/* LUN for target */
+name|uint32_t
+name|tgt
+decl_stmt|;
+comment|/* TGT for target */
+name|uint8_t
+name|crnseed
+decl_stmt|;
+comment|/* next command reference number */
 name|struct
 name|isp_nexus
 modifier|*
 name|next
 decl_stmt|;
-name|uint32_t
-name|crnseed
-range|:
-literal|8
-decl_stmt|;
-comment|/* next command reference number */
-name|uint32_t
-name|tgt
-range|:
-literal|16
-decl_stmt|,
-comment|/* TGT for target */
-name|lun
-range|:
-literal|16
-decl_stmt|;
-comment|/* LUN for target */
 block|}
 struct|;
 end_struct

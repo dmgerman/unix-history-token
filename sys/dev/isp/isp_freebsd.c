@@ -7067,6 +7067,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|ISP_MAX_LUNS
+argument_list|(
+name|isp
+argument_list|)
+operator|>
+literal|0
+operator|&&
 name|lun
 operator|>=
 name|ISP_MAX_LUNS
@@ -7677,8 +7684,11 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"enabling lun %u\n"
+literal|"enabling lun %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -7751,8 +7761,11 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"enabling lun 0x%x on channel %d\n"
+literal|"enabling lun 0x%jx on channel %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|,
 name|bus
@@ -8656,8 +8669,11 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"disabling lun %u\n"
+literal|"disabling lun %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -13201,6 +13217,27 @@ name|ccb_h
 operator|.
 name|target_lun
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+if|if
+condition|(
+name|at
+operator|->
+name|at_scclun
+operator|>=
+literal|256
+condition|)
+name|at
+operator|->
+name|at_scclun
+operator||=
+literal|0x4000
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -14153,6 +14190,17 @@ name|aep
 operator|->
 name|at_scclun
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+name|lun
+operator|&=
+literal|0x3fff
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -15036,9 +15084,10 @@ block|{
 name|int
 name|cdbxlen
 decl_stmt|;
-name|uint16_t
+name|lun_id_t
 name|lun
-decl_stmt|,
+decl_stmt|;
+name|uint16_t
 name|chan
 decl_stmt|,
 name|nphdl
@@ -15151,6 +15200,27 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000700
+name|lun
+operator|=
+name|CAM_EXTLUN_BYTE_SWIZZLE
+argument_list|(
+name|be64dec
+argument_list|(
+name|aep
+operator|->
+name|at_cmnd
+operator|.
+name|fcp_cmnd_lun
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|lun
 operator|=
 operator|(
@@ -15162,6 +15232,8 @@ name|fcp_cmnd_lun
 index|[
 literal|0
 index|]
+operator|&
+literal|0x3f
 operator|<<
 literal|8
 operator|)
@@ -15175,6 +15247,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Find the N-port handle, and Virtual Port Index for this command. 	 * 	 * If we can't, we're somewhat in trouble because we can't actually respond w/o that information. 	 * We also, as a matter of course, need to know the WWN of the initiator too. 	 */
 if|if
 condition|(
@@ -15502,7 +15576,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"%s: [0x%x] no state pointer for lun %d or wildcard"
+literal|"%s: [0x%x] no state pointer for lun %jx or wildcard"
 argument_list|,
 name|__func__
 argument_list|,
@@ -15510,6 +15584,9 @@ name|aep
 operator|->
 name|at_rxid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -16246,7 +16323,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"ATIO7[0x%x] CDB=0x%x lun %d datalen %u"
+literal|"ATIO7[0x%x] CDB=0x%x lun %jx datalen %u"
 argument_list|,
 name|aep
 operator|->
@@ -16256,6 +16333,9 @@ name|atp
 operator|->
 name|cdb0
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|,
 name|atp
@@ -18025,7 +18105,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"%s: CTIO[%x] seq %u nc %d tag %x S_ID 0x%x lun %d sts %x flg %x resid %d %s"
+literal|"%s: CTIO[%x] seq %u nc %d tag %x S_ID 0x%x lun %x sts %x flg %x resid %d %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18432,6 +18512,17 @@ name|inp
 operator|->
 name|in_scclun
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+name|lun
+operator|&=
+literal|0x3fff
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -22402,7 +22493,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"command handle 0x%x for %d.%d.%d orphaned by loop down timeout"
+literal|"command handle 0x%x for %d.%d.%jx orphaned by loop down timeout"
 argument_list|,
 name|isp
 operator|->
@@ -22420,6 +22511,9 @@ argument_list|(
 name|xs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -23338,15 +23432,11 @@ operator|->
 name|ccb_h
 operator|.
 name|target_id
-operator|>
-operator|(
+operator|>=
 name|ISP_MAX_TARGETS
 argument_list|(
 name|isp
 argument_list|)
-operator|-
-literal|1
-operator|)
 condition|)
 block|{
 name|xpt_print
@@ -23372,20 +23462,23 @@ block|}
 elseif|else
 if|if
 condition|(
+name|ISP_MAX_LUNS
+argument_list|(
+name|isp
+argument_list|)
+operator|>
+literal|0
+operator|&&
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|target_lun
-operator|>
-operator|(
+operator|>=
 name|ISP_MAX_LUNS
 argument_list|(
 name|isp
 argument_list|)
-operator|-
-literal|1
-operator|)
 condition|)
 block|{
 name|xpt_print
@@ -23643,13 +23736,16 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d loop not seen yet @ %lu"
+literal|"%d.%jx loop not seen yet @ %lu"
 argument_list|,
 name|XS_TGT
 argument_list|(
 name|ccb
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|ccb
@@ -23671,13 +23767,16 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d downtime (%d)> lim (%d)"
+literal|"%d.%jx downtime (%d)> lim (%d)"
 argument_list|,
 name|XS_TGT
 argument_list|(
 name|ccb
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|ccb
@@ -23722,13 +23821,16 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d retry later"
+literal|"%d.%jx retry later"
 argument_list|,
 name|XS_TGT
 argument_list|(
 name|ccb
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|ccb
@@ -26679,6 +26781,15 @@ name|ISP_MAX_LUNS
 argument_list|(
 name|isp
 argument_list|)
+operator|==
+literal|0
+condition|?
+literal|255
+else|:
+name|ISP_MAX_LUNS
+argument_list|(
+name|isp
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -26765,6 +26876,19 @@ name|PIM_NOBUSRESET
 operator||
 name|PIM_UNMAPPED
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000700
+name|cpi
+operator|->
+name|hba_misc
+operator||=
+name|PIM_EXTLUNS
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|__FreeBSD_version
@@ -27218,13 +27342,16 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"target %d lun %d CAM status 0x%x SCSI status 0x%x"
+literal|"target %d lun %jx CAM status 0x%x SCSI status 0x%x"
 argument_list|,
 name|XS_TGT
 argument_list|(
 name|sccb
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|sccb
@@ -31687,12 +31814,13 @@ modifier|*
 name|cmd
 parameter_list|)
 block|{
+name|lun_id_t
+name|lun
+decl_stmt|;
 name|uint32_t
 name|chan
 decl_stmt|,
 name|tgt
-decl_stmt|,
-name|lun
 decl_stmt|;
 name|struct
 name|isp_fc

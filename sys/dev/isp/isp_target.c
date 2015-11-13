@@ -5039,6 +5039,19 @@ name|inp
 operator|->
 name|in_scclun
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+name|notify
+operator|.
+name|nt_lun
+operator|&=
+literal|0x3fff
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -7398,6 +7411,17 @@ name|aep
 operator|->
 name|at_scclun
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+name|lun
+operator|&=
+literal|0x3fff
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -7459,7 +7483,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"rejected ATIO2 for disabled lun %d"
+literal|"rejected ATIO2 for disabled lun %x"
 argument_list|,
 name|lun
 argument_list|)
@@ -7475,7 +7499,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"rejected ATIO2 for lun %d- command count overflow"
+literal|"rejected ATIO2 for lun %x- command count overflow"
 argument_list|,
 name|lun
 argument_list|)
@@ -7541,7 +7565,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Unknown ATIO2 status 0x%x from loopid %d for lun %d"
+literal|"Unknown ATIO2 status 0x%x from loopid %d for lun %x"
 argument_list|,
 name|aep
 operator|->
