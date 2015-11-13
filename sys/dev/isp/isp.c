@@ -10263,6 +10263,15 @@ name|mbs
 operator|.
 name|param
 index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|mbs
+operator|.
+name|param
+index|[
 literal|2
 index|]
 operator|=
@@ -12131,6 +12140,15 @@ operator|=
 name|MBOX_INIT_FIRMWARE
 expr_stmt|;
 block|}
+name|mbs
+operator|.
+name|param
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|mbs
 operator|.
 name|param
@@ -38228,9 +38246,9 @@ block|,
 comment|/* 0x47: GET PORT_DATABASE ENHANCED */
 name|ISP_FC_OPMAP
 argument_list|(
-literal|0xcd
+literal|0xcf
 argument_list|,
-literal|0x01
+literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x48: MBOX_INIT_FIRMWARE_MULTI_ID */
@@ -38424,9 +38442,9 @@ block|,
 comment|/* 0x5f: */
 name|ISP_FC_OPMAP
 argument_list|(
-literal|0xcd
+literal|0xcf
 argument_list|,
-literal|0x01
+literal|0x0f
 argument_list|)
 block|,
 comment|/* 0x60: MBOX_INIT_FIRMWARE */
