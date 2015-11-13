@@ -488,9 +488,9 @@ name|pc_netisr
 decl_stmt|;
 comment|/* netisr SWI cookie */
 name|int
-name|pc_dnweight
+name|pc_unused1
 decl_stmt|;
-comment|/* vm_page_dontneed() */
+comment|/* unused field */
 name|int
 name|pc_domain
 decl_stmt|;
