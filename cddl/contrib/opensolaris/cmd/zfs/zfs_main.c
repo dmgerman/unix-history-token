@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -3913,11 +3913,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|zpool_close
-argument_list|(
-name|zpool_handle
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|spa_version
@@ -3975,15 +3970,29 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
+name|zpool_handle
+argument_list|,
 name|msg
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|zpool_close
+argument_list|(
+name|zpool_handle
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
+name|zpool_close
+argument_list|(
+name|zpool_handle
+argument_list|)
+expr_stmt|;
 name|volsize
 operator|=
 name|zvol_volsize_to_reservation
