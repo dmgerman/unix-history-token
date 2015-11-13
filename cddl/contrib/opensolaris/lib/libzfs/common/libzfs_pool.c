@@ -17624,11 +17624,9 @@ block|{
 name|char
 modifier|*
 name|buf
-init|=
-name|NULL
 decl_stmt|;
 name|uint64_t
-name|bufsize
+name|buflen
 init|=
 name|HIS_BUF_LEN_DEF
 decl_stmt|;
@@ -17654,16 +17652,16 @@ name|err
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|buf
 operator|=
 name|malloc
 argument_list|(
-name|bufsize
+name|buflen
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
 operator|==
 name|NULL
 condition|)
@@ -17677,7 +17675,7 @@ block|{
 name|uint64_t
 name|bytes_read
 init|=
-name|bufsize
+name|buflen
 decl_stmt|;
 name|uint64_t
 name|leftover
@@ -17741,7 +17739,6 @@ name|off
 operator|-=
 name|leftover
 expr_stmt|;
-comment|/* 		 * If the history block is too big, double the buffer 		 * size and try again. 		 */
 if|if
 condition|(
 name|leftover
@@ -17749,6 +17746,11 @@ operator|==
 name|bytes_read
 condition|)
 block|{
+comment|/* 			 * no progress made, because buffer is not big enough 			 * to hold this record; resize and retry. 			 */
+name|buflen
+operator|*=
+literal|2
+expr_stmt|;
 name|free
 argument_list|(
 name|buf
@@ -17758,14 +17760,10 @@ name|buf
 operator|=
 name|NULL
 expr_stmt|;
-name|bufsize
-operator|<<=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bufsize
+name|buflen
 operator|>=
 name|HIS_BUF_LEN_MAX
 operator|)
@@ -17776,7 +17774,7 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-name|bufsize
+name|buflen
 argument_list|)
 operator|)
 operator|==
