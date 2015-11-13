@@ -150,34 +150,38 @@ comment|/*  * Feature flags for zfs send streams (flags in drr_versioninfo)  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_DEDUP
-value|(1<<0)
+value|(1<< 0)
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_DEDUPPROPS
-value|(1<<1)
+value|(1<< 1)
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_SA_SPILL
-value|(1<<2)
+value|(1<< 2)
 comment|/* flags #3 - #15 are reserved for incompatible closed-source implementations */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_EMBED_DATA
-value|(1<<16)
+value|(1<< 16)
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_EMBED_DATA_LZ4
-value|(1<<17)
+value|(1<< 17)
 comment|/* flag #18 is reserved for a Delphix feature */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_LARGE_BLOCKS
-value|(1<<19)
+value|(1<< 19)
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_RESUMING
+value|(1<< 20)
 comment|/*  * Mask of all supported backup features  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_MASK
-value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4 | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS)
+value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4 | \     DMU_BACKUP_FEATURE_RESUMING | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS)
 comment|/* Are all features in the given flag word currently supported? */
 define|#
 directive|define
@@ -186,6 +190,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(!((x)& ~DMU_BACKUP_FEATURE_MASK))
+typedef|typedef
+enum|enum
+name|dmu_send_resume_token_version
+block|{
+name|ZFS_SEND_RESUME_TOKEN_VERSION
+init|=
+literal|1
+block|}
+name|dmu_send_resume_token_version_t
+typedef|;
 comment|/*  * The drr_versioninfo field of the dmu_replay_record has the  * following layout:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  	|		reserved	|        feature-flags	    |C|S|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * The low order two bits indicate the header type: SUBSTREAM (0x1)  * or COMPOUNDSTREAM (0x2).  Using two bits for this is historical:  * this field used to be a version number, where the two version types  * were 1 and 2.  Using two bits for this allows earlier versions of  * the code to be able to recognize send streams that don't use any  * of the features indicated by feature flags.  */
 define|#
 directive|define
@@ -810,8 +824,7 @@ decl_stmt|;
 name|dmu_objset_stats_t
 name|zc_objset_stats
 decl_stmt|;
-name|struct
-name|drr_begin
+name|dmu_replay_record_t
 name|zc_begin_record
 decl_stmt|;
 name|zinject_record_t
@@ -832,13 +845,9 @@ decl_stmt|;
 name|uint8_t
 name|zc_simple
 decl_stmt|;
-name|uint8_t
-name|zc_pad
-index|[
-literal|3
-index|]
+name|boolean_t
+name|zc_resumable
 decl_stmt|;
-comment|/* alignment */
 name|uint64_t
 name|zc_sendobj
 decl_stmt|;

@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -259,6 +259,12 @@ name|dsa_last_data_object
 decl_stmt|;
 name|uint64_t
 name|dsa_last_data_offset
+decl_stmt|;
+name|uint64_t
+name|dsa_resume_object
+decl_stmt|;
+name|uint64_t
+name|dsa_resume_offset
 decl_stmt|;
 block|}
 name|dmu_sendarg_t

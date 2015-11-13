@@ -4914,7 +4914,7 @@ literal|0
 condition|)
 block|{
 name|boolean_t
-name|inconsistent
+name|need_destroy
 init|=
 name|DS_IS_INCONSISTENT
 argument_list|(
@@ -4924,6 +4924,21 @@ name|os
 argument_list|)
 argument_list|)
 decl_stmt|;
+comment|/* 		 * If the dataset is inconsistent because a resumable receive 		 * has failed, then do not destroy it. 		 */
+if|if
+condition|(
+name|dsl_dataset_has_resume_receive_state
+argument_list|(
+name|dmu_objset_ds
+argument_list|(
+name|os
+argument_list|)
+argument_list|)
+condition|)
+name|need_destroy
+operator|=
+name|B_FALSE
+expr_stmt|;
 name|dmu_objset_rele
 argument_list|(
 name|os
@@ -4933,7 +4948,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inconsistent
+name|need_destroy
 condition|)
 operator|(
 name|void

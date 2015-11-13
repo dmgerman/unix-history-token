@@ -1523,6 +1523,25 @@ argument_list|,
 literal|"MLSLABEL"
 argument_list|)
 expr_stmt|;
+name|zprop_register_string
+argument_list|(
+name|ZFS_PROP_RECEIVE_RESUME_TOKEN
+argument_list|,
+literal|"receive_resume_token"
+argument_list|,
+name|NULL
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
+argument_list|,
+literal|"<string token>"
+argument_list|,
+literal|"RESUMETOK"
+argument_list|)
+expr_stmt|;
 comment|/* readonly number properties */
 name|zprop_register_number
 argument_list|(
