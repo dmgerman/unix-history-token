@@ -4712,6 +4712,55 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICB2400_OPT2_ENA_ATIOMQ
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_IHA
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_QOS
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_IOCBS
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_IHR
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_VMS
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_TA
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICB2400_OPT2_TPRLIC
 value|0x00004000
 end_define
@@ -4803,7 +4852,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_75_OHM
+name|ICB2400_OPT3_NO_CTXDIS
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_ENA_ETH_RESP
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_ENA_ETH_ATIO
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_ENA_MFCF
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_SKIP_FOURGB
 value|0x00010000
 end_define
 
@@ -4852,8 +4929,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICB2400_OPT3_RATE_SIXTEENGB
+value|0x0000A000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICB2400_OPT3_ENA_OOF_XFRDY
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_NO_N2N_LOGI
+value|0x00000100
 end_define
 
 begin_define
@@ -5275,12 +5366,23 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|ICB2400_VPOPT_ENA_SNSLOGIN
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Enable SNS Login and SCR for Virtual Ports */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICB2400_VPOPT_TGT_DISABLE
 value|0x00000020
 end_define
 
 begin_comment
-comment|/* disable target mode */
+comment|/* Target Mode Disabled */
 end_comment
 
 begin_define
@@ -5291,7 +5393,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* enable initiator mode */
+comment|/* Initiator Mode Enabled */
 end_comment
 
 begin_define
@@ -5301,12 +5403,20 @@ name|ICB2400_VPOPT_ENABLED
 value|0x00000008
 end_define
 
+begin_comment
+comment|/* VP Enabled */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ICB2400_VPOPT_NOPLAY
 value|0x00000004
 end_define
+
+begin_comment
+comment|/* ID Not Acquired */
+end_comment
 
 begin_define
 define|#
@@ -5315,12 +5425,20 @@ name|ICB2400_VPOPT_PREVLOOP
 value|0x00000002
 end_define
 
+begin_comment
+comment|/* Previously Assigned ID */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ICB2400_VPOPT_HARD_ADDRESS
 value|0x00000001
 end_define
+
+begin_comment
+comment|/* Hard Assigned ID */
+end_comment
 
 begin_define
 define|#
@@ -5367,7 +5485,7 @@ parameter_list|(
 name|chan
 parameter_list|)
 define|\
-value|ICB2400_VPINFO_OFF + 			\     sizeof (isp_icb_2400_vpinfo_t) + ((chan - 1) * ICB2400_VPOPT_WRITE_SIZE)
+value|(ICB2400_VPINFO_OFF + 			\      sizeof (isp_icb_2400_vpinfo_t) + (chan * ICB2400_VPOPT_WRITE_SIZE))
 end_define
 
 begin_define
@@ -5401,6 +5519,28 @@ end_define
 
 begin_comment
 comment|/* Allow VP0 decoupling if firmware supports it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICB2400_VPGOPT_SUSP_FDISK
+value|0x10
+end_define
+
+begin_comment
+comment|/* Suspend FDISC for Enabled VPs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICB2400_VPGOPT_GEN_RIDA
+value|0x20
+end_define
+
+begin_comment
+comment|/* Generate RIDA if FLOGI Fails */
 end_comment
 
 begin_typedef
@@ -5587,7 +5727,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VP_MODIFY_VP
+name|VP_MODIFY
 value|0x00
 end_define
 
@@ -5596,6 +5736,20 @@ define|#
 directive|define
 name|VP_MODIFY_ENA
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP_MODIFY_OPT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP_RESUME
+value|0x03
 end_define
 
 begin_comment
