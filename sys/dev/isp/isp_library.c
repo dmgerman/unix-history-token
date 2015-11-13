@@ -8202,11 +8202,11 @@ argument_list|,
 operator|&
 name|src
 operator|->
-name|req_reserved1
+name|req_retry_delay
 argument_list|,
 name|dst
 operator|->
-name|req_reserved1
+name|req_retry_delay
 argument_list|)
 expr_stmt|;
 name|ISP_IOXGET_16

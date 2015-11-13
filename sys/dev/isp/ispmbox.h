@@ -3040,8 +3040,9 @@ name|uint16_t
 name|req_state_flags
 decl_stmt|;
 name|uint16_t
-name|req_reserved1
+name|req_retry_delay
 decl_stmt|;
+comment|/* aka Status Qualifier */
 name|uint16_t
 name|req_scsi_status
 decl_stmt|;
@@ -3072,8 +3073,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RQCS_CR
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Confirmation Request */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RQCS_RU
-value|0x800
+value|0x0800
 end_define
 
 begin_comment
@@ -3084,7 +3096,7 @@ begin_define
 define|#
 directive|define
 name|RQCS_RO
-value|0x400
+value|0x0400
 end_define
 
 begin_comment
@@ -3102,7 +3114,7 @@ begin_define
 define|#
 directive|define
 name|RQCS_SV
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
@@ -3113,7 +3125,7 @@ begin_define
 define|#
 directive|define
 name|RQCS_RV
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
