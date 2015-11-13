@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -689,6 +689,39 @@ name|int
 name|zfs_txg_timeout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Enable/disable the processing of the free_bpobj object.  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zfs_free_bpobj_enabled
+init|=
+name|B_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|free_bpobj_enabled
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_free_bpobj_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable free_bpobj processing"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* the order has to match pool_scan_type */
@@ -7512,6 +7545,8 @@ expr_stmt|;
 comment|/* 	 * First process the async destroys.  If we pause, don't do 	 * any scrubbing or resilvering.  This ensures that there are no 	 * async destroys while we are scanning, so the scan code doesn't 	 * have to worry about traversing it.  It is also faster to free the 	 * blocks than to scrub them. 	 */
 if|if
 condition|(
+name|zfs_free_bpobj_enabled
+operator|&&
 name|spa_version
 argument_list|(
 name|dp
