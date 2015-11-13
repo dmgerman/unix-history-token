@@ -3055,12 +3055,6 @@ argument_list|(
 name|os
 argument_list|)
 expr_stmt|;
-name|os
-operator|->
-name|os_evicting
-operator|=
-name|B_TRUE
-expr_stmt|;
 name|dmu_objset_evict_dbufs
 argument_list|(
 name|os
