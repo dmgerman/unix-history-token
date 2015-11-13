@@ -8350,7 +8350,7 @@ name|uint8_t
 name|in_status_subcode
 decl_stmt|;
 name|uint8_t
-name|in_reserved2
+name|in_fwhandle
 decl_stmt|;
 name|uint32_t
 name|in_rxid
@@ -8443,6 +8443,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN24XX_FLAG_N2N_PRLI
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN24XX_FLAG_PN_NN_VALID
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN24XX_LIP_RESET
 value|0x0E
 end_define
@@ -8496,6 +8510,20 @@ end_comment
 begin_comment
 comment|/*  * For f/w> 4.0.25, these offsets in the Immediate Notify contain  * the WWNN/WWPN if the ELS is PLOGI, PDISC or ADISC. The WWN is in  * Big Endian format.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IN24XX_PRLI_WWNN_OFF
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN24XX_PRLI_WWPN_OFF
+value|0x28
+end_define
 
 begin_define
 define|#
@@ -8904,7 +8932,7 @@ name|uint8_t
 name|na_status_subcode
 decl_stmt|;
 name|uint8_t
-name|na_reserved2
+name|na_fwhandle
 decl_stmt|;
 name|uint32_t
 name|na_rxid

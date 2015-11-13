@@ -6187,6 +6187,14 @@ name|in_status_subcode
 expr_stmt|;
 name|na
 operator|->
+name|na_fwhandle
+operator|=
+name|in
+operator|->
+name|in_fwhandle
+expr_stmt|;
+name|na
+operator|->
 name|na_rxid
 operator|=
 name|in
