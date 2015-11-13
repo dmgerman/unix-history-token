@@ -5125,7 +5125,9 @@ index|[
 name|checksum
 index|]
 operator|.
-name|ci_eck
+name|ci_flags
+operator|&
+name|ZCHECKSUM_FLAG_EMBEDDED
 condition|)
 block|{
 comment|/* 		 * zec checksums are necessarily destructive -- they modify 		 * the end of the write buffer to hold the verifier/checksum. 		 * Therefore, we must make a local copy in case the data is 		 * being written to multiple places in parallel. 		 */
@@ -6142,6 +6144,7 @@ operator|)
 return|;
 name|ASSERT
 argument_list|(
+operator|(
 name|zio_checksum_table
 index|[
 name|zp
@@ -6149,7 +6152,10 @@ operator|->
 name|zp_checksum
 index|]
 operator|.
-name|ci_dedup
+name|ci_flags
+operator|&
+name|ZCHECKSUM_FLAG_DEDUP
+operator|)
 operator|||
 name|zp
 operator|->
@@ -10088,7 +10094,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The zio_nop_write stage in the pipeline determines if allocating  * a new bp is necessary.  By leveraging a cryptographically secure checksum,  * such as SHA256, we can compare the checksums of the new data and the old  * to determine if allocating a new block is required.  The nopwrite  * feature can handle writes in either syncing or open context (i.e. zil  * writes) and as a result is mutually exclusive with dedup.  */
+comment|/*  * The zio_nop_write stage in the pipeline determines if allocating a  * new bp is necessary.  The nopwrite feature can handle writes in  * either syncing or open context (i.e. zil writes) and as a result is  * mutually exclusive with dedup.  *  * By leveraging a cryptographically secure checksum, such as SHA256, we  * can compare the checksums of the new data and the old to determine if  * allocating a new block is required.  Note that our requirements for  * cryptographic strength are fairly weak: there can't be any accidental  * hash collisions, but we don't need to be secure against intentional  * (malicious) collisions.  To trigger a nopwrite, you have to be able  * to write the file to begin with, and triggering an incorrect (hash  * collision) nopwrite is no worse than simply writing to the file.  * That said, there are no known attacks against the checksum algorithms  * used for nopwrite, assuming that the salt and the checksums  * themselves remain secret.  */
 end_comment
 
 begin_function
@@ -10190,6 +10196,7 @@ name|bp_orig
 argument_list|)
 operator|||
 operator|!
+operator|(
 name|zio_checksum_table
 index|[
 name|BP_GET_CHECKSUM
@@ -10198,7 +10205,10 @@ name|bp
 argument_list|)
 index|]
 operator|.
-name|ci_dedup
+name|ci_flags
+operator|&
+name|ZCHECKSUM_FLAG_NOPWRITE
+operator|)
 operator|||
 name|BP_GET_CHECKSUM
 argument_list|(
@@ -10268,7 +10278,9 @@ operator|->
 name|zp_checksum
 index|]
 operator|.
-name|ci_dedup
+name|ci_flags
+operator|&
+name|ZCHECKSUM_FLAG_NOPWRITE
 argument_list|)
 expr_stmt|;
 name|ASSERT3U
@@ -11853,6 +11865,7 @@ comment|/* 		 * If we're using a weak checksum, upgrade to a strong checksum 		 
 if|if
 condition|(
 operator|!
+operator|(
 name|zio_checksum_table
 index|[
 name|zp
@@ -11860,7 +11873,10 @@ operator|->
 name|zp_checksum
 index|]
 operator|.
-name|ci_dedup
+name|ci_flags
+operator|&
+name|ZCHECKSUM_FLAG_DEDUP
+operator|)
 condition|)
 block|{
 name|zp

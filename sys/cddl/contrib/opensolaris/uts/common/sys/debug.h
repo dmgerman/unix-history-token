@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -389,6 +389,38 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((void)0)
+endif|#
+directive|endif
+comment|/*  * Compile-time assertion. The condition 'x' must be constant.  */
+ifndef|#
+directive|ifndef
+name|CTASSERT
+define|#
+directive|define
+name|CTASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|_CTASSERT(x, __LINE__)
+define|#
+directive|define
+name|_CTASSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|__CTASSERT(x, y)
+define|#
+directive|define
+name|__CTASSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|typedef char __compile_time_assertion__ ## y [(x) ? 1 : -1]
 endif|#
 directive|endif
 ifdef|#

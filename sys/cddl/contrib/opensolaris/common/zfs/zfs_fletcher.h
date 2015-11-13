@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,6 +57,10 @@ modifier|*
 parameter_list|,
 name|uint64_t
 parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
 name|zio_cksum_t
 modifier|*
 parameter_list|)
@@ -65,6 +73,10 @@ name|void
 modifier|*
 parameter_list|,
 name|uint64_t
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 parameter_list|,
 name|zio_cksum_t
 modifier|*
@@ -79,6 +91,10 @@ modifier|*
 parameter_list|,
 name|uint64_t
 parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
 name|zio_cksum_t
 modifier|*
 parameter_list|)
@@ -91,6 +107,10 @@ name|void
 modifier|*
 parameter_list|,
 name|uint64_t
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 parameter_list|,
 name|zio_cksum_t
 modifier|*

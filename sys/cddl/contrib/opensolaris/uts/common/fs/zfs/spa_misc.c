@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"zfeature_common.h"
+file|<sys/zfeature.h>
 end_include
 
 begin_comment
@@ -1883,6 +1883,20 @@ argument_list|(
 operator|&
 name|spa
 operator|->
+name|spa_cksum_tmpls_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|mutex_init
+argument_list|(
+operator|&
+name|spa
+operator|->
 name|spa_scrub_lock
 argument_list|,
 name|NULL
@@ -2692,6 +2706,11 @@ name|t
 index|]
 argument_list|)
 expr_stmt|;
+name|zio_checksum_templates_free
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|cv_destroy
 argument_list|(
 operator|&
@@ -2786,6 +2805,14 @@ operator|&
 name|spa
 operator|->
 name|spa_props_lock
+argument_list|)
+expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_cksum_tmpls_lock
 argument_list|)
 expr_stmt|;
 name|mutex_destroy

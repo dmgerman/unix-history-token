@@ -846,6 +846,56 @@ argument_list|,
 name|large_blocks_deps
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_SHA512
+argument_list|,
+literal|"org.illumos:sha512"
+argument_list|,
+literal|"sha512"
+argument_list|,
+literal|"SHA-512/256 hash algorithm."
+argument_list|,
+name|ZFEATURE_FLAG_PER_DATASET
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_SKEIN
+argument_list|,
+literal|"org.illumos:skein"
+argument_list|,
+literal|"skein"
+argument_list|,
+literal|"Skein hash algorithm."
+argument_list|,
+name|ZFEATURE_FLAG_PER_DATASET
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_EDONR
+argument_list|,
+literal|"org.illumos:edonr"
+argument_list|,
+literal|"edonr"
+argument_list|,
+literal|"Edon-R hash algorithm."
+argument_list|,
+name|ZFEATURE_FLAG_PER_DATASET
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
