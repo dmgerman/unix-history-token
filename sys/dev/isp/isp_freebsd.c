@@ -192,18 +192,6 @@ comment|/* grace time before reporting device lost */
 end_comment
 
 begin_decl_stmt
-name|int
-name|isp_autoconfig
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* automatically attach/detach devices */
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -2614,6 +2602,16 @@ name|simqfrozen
 operator|=
 name|SIMQFRZ_LOOPDOWN
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000039
+name|xpt_hold_boot
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|xpt_freeze_simq
 argument_list|(
 name|fc
@@ -2734,6 +2732,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000039
+name|xpt_release_boot
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
@@ -27904,15 +27912,6 @@ argument_list|,
 name|chan
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|isp_autoconfig
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 comment|/* 	 * Allocate a CCB, create a wildcard path for this target and schedule a rescan. 	 */
 name|ccb
 operator|=
@@ -28028,15 +28027,6 @@ argument_list|,
 name|chan
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|isp_autoconfig
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 if|if
 condition|(
 name|xpt_create_path
@@ -33043,6 +33033,19 @@ name|PIM_NOBUSRESET
 operator||
 name|PIM_UNMAPPED
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000039
+name|cpi
+operator|->
+name|hba_misc
+operator||=
+name|PIM_NOSCAN
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * Because our loop ID can shift from time to time, 			 * make our initiator ID out of range of our bus. 			 */
 name|cpi
 operator|->
