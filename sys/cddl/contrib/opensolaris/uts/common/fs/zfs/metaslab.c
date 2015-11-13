@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -7392,8 +7392,8 @@ name|spa_dbgmsg
 argument_list|(
 name|spa
 argument_list|,
-literal|"condensing: txg %llu, msp[%llu] %p, "
-literal|"smp size %llu, segments %lu, forcing condense=%s"
+literal|"condensing: txg %llu, msp[%llu] %p, vdev id %llu, "
+literal|"spa %s, smp size %llu, segments %lu, forcing condense=%s"
 argument_list|,
 name|txg
 argument_list|,
@@ -7402,6 +7402,24 @@ operator|->
 name|ms_id
 argument_list|,
 name|msp
+argument_list|,
+name|msp
+operator|->
+name|ms_group
+operator|->
+name|mg_vd
+operator|->
+name|vdev_id
+argument_list|,
+name|msp
+operator|->
+name|ms_group
+operator|->
+name|mg_vd
+operator|->
+name|vdev_spa
+operator|->
+name|spa_name
 argument_list|,
 name|space_map_length
 argument_list|(
