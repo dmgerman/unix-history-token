@@ -16491,6 +16491,8 @@ literal|1
 decl_stmt|;
 comment|/* argv idx of first dataset arg */
 name|int
+name|i
+decl_stmt|,
 name|ret
 init|=
 literal|0
@@ -16630,9 +16632,8 @@ block|}
 comment|/* validate argument order:  prop=val args followed by dataset args */
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|1
 init|;
 name|i
@@ -16749,9 +16750,8 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|1
 init|;
 name|i
