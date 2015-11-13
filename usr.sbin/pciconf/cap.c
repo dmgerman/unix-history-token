@@ -2110,6 +2110,28 @@ argument_list|(
 literal|" FLR"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|&
+name|PCIEM_CTL_RELAXED_ORD_ENABLE
+condition|)
+name|printf
+argument_list|(
+literal|" RO"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|&
+name|PCIEM_CTL_NOSNOOP_ENABLE
+condition|)
+name|printf
+argument_list|(
+literal|" NS"
+argument_list|)
+expr_stmt|;
 name|cap
 operator|=
 name|read_config
