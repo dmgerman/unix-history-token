@@ -2222,6 +2222,7 @@ name|pending
 operator|=
 operator|!
 operator|!
+operator|(
 name|callout_stop
 argument_list|(
 operator|&
@@ -2229,6 +2230,9 @@ name|timeout_task
 operator|->
 name|c
 argument_list|)
+operator|>
+literal|0
+operator|)
 expr_stmt|;
 name|error
 operator|=

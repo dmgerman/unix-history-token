@@ -2316,6 +2316,8 @@ block|}
 if|if
 condition|(
 name|canceled
+operator|>
+literal|0
 condition|)
 name|LLE_REMREF
 argument_list|(

@@ -9089,6 +9089,8 @@ name|lle
 operator|->
 name|lle_timer
 argument_list|)
+operator|>
+literal|0
 condition|)
 name|LLE_REMREF
 argument_list|(
