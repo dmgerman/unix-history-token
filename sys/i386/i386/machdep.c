@@ -15870,6 +15870,13 @@ argument_list|)
 operator|-
 literal|8
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_gs
+operator|=
+name|rgs
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
