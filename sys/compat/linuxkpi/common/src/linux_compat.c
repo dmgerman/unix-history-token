@@ -4624,5 +4624,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * NOTE: Linux frequently uses "unsigned long" for pointer to integer  * conversion and vice versa, where in FreeBSD "uintptr_t" would be  * used. Assert these types have the same size, else some parts of the  * LinuxKPI may not work like expected:  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+expr|sizeof
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
