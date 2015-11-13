@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|GDB_NREGS
-value|14
+value|16
 end_define
 
 begin_define
