@@ -1247,6 +1247,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -1431,10 +1437,16 @@ comment|/* counting PMC modes */
 block|}
 name|pm_sc
 union|;
-name|uint32_t
+specifier|volatile
+name|cpuset_t
 name|pm_stalled
 decl_stmt|;
 comment|/* marks stalled sampling PMCs */
+specifier|volatile
+name|cpuset_t
+name|pm_cpustate
+decl_stmt|;
+comment|/* CPUs where PMC should be active */
 name|uint32_t
 name|pm_caps
 decl_stmt|;
