@@ -152,12 +152,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/am335x/hdmi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/videomode/videomode.h>
 end_include
 
