@@ -2754,10 +2754,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|name
-condition|)
 name|free
 argument_list|(
 name|name
@@ -3082,10 +3078,6 @@ operator|->
 name|port_id
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|name
-condition|)
 name|free
 argument_list|(
 name|name
