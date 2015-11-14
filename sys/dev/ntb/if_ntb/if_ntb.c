@@ -3987,8 +3987,6 @@ index|]
 expr_stmt|;
 name|clear_bit
 argument_list|(
-literal|1ull
-operator|<<
 name|qp
 operator|->
 name|qp_num
