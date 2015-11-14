@@ -2627,8 +2627,6 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|error
-decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* 	 * Check if it's a trunk interface first of all 	 * to avoid needless locking. 	 */
@@ -2718,8 +2716,6 @@ comment|/* VLAN_ARRAY */
 name|VLAN_UNLOCK
 argument_list|()
 expr_stmt|;
-name|error
-operator|=
 name|if_setlladdr
 argument_list|(
 name|ifv
@@ -2734,21 +2730,6 @@ argument_list|,
 name|ifp
 operator|->
 name|if_addrlen
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|EVENTHANDLER_INVOKE
-argument_list|(
-name|iflladdr_event
-argument_list|,
-name|ifv
-operator|->
-name|ifv_ifp
 argument_list|)
 expr_stmt|;
 name|VLAN_LOCK

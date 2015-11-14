@@ -3790,9 +3790,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 comment|/* Grab a local reference of the queue and remove it from the softc */
 name|LAGG_WLOCK
 argument_list|(
@@ -3853,10 +3850,6 @@ operator|->
 name|if_vnet
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 		 * Set the link layer address on the laggport interface. 		 * Note that if_setlladdr() or iflladdr_event handler 		 * may result in arp transmission / lltable updates. 		 */
 if|if
 condition|(
@@ -3866,8 +3859,6 @@ name|llq_type
 operator|==
 name|LAGG_LLQTYPE_PHYS
 condition|)
-name|error
-operator|=
 name|if_setlladdr
 argument_list|(
 name|ifp
@@ -3877,21 +3868,6 @@ operator|->
 name|llq_lladdr
 argument_list|,
 name|ETHER_ADDR_LEN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|printf
-argument_list|(
-literal|"%s: setlladdr failed on %s\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-operator|->
-name|if_xname
 argument_list|)
 expr_stmt|;
 else|else
