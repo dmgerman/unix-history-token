@@ -15346,6 +15346,10 @@ name|ps_samples
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|callchaindepth
+operator|=
+literal|1
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
@@ -15601,6 +15605,12 @@ expr_stmt|;
 name|done
 label|:
 comment|/* mark CPU as needing processing */
+if|if
+condition|(
+name|callchaindepth
+operator|!=
+name|PMC_SAMPLE_INUSE
+condition|)
 name|CPU_SET_ATOMIC
 argument_list|(
 name|cpu
@@ -15638,9 +15648,6 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|pmc
 modifier|*
@@ -15655,6 +15662,9 @@ name|struct
 name|pmc_sample
 modifier|*
 name|ps
+decl_stmt|,
+modifier|*
+name|ps_end
 decl_stmt|;
 name|struct
 name|pmc_samplebuffer
@@ -15709,29 +15719,20 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Iterate through all deferred callchain requests. 	 */
+comment|/* 	 * Iterate through all deferred callchain requests. 	 * Walk from the current read pointer to the current 	 * write pointer. 	 */
 name|ps
 operator|=
 name|psb
 operator|->
-name|ps_samples
+name|ps_read
 expr_stmt|;
-for|for
-control|(
-name|i
+name|ps_end
 operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|pmc_nsamples
-condition|;
-name|i
-operator|++
-operator|,
-name|ps
-operator|++
-control|)
+name|psb
+operator|->
+name|ps_write
+expr_stmt|;
+do|do
 block|{
 if|if
 condition|(
@@ -15741,7 +15742,9 @@ name|ps_nsamples
 operator|!=
 name|PMC_SAMPLE_INUSE
 condition|)
-continue|continue;
+goto|goto
+name|next
+goto|;
 if|if
 condition|(
 name|ps
@@ -15750,7 +15753,9 @@ name|ps_td
 operator|!=
 name|td
 condition|)
-continue|continue;
+goto|goto
+name|next
+goto|;
 name|KASSERT
 argument_list|(
 name|ps
@@ -15840,7 +15845,32 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
+name|next
+label|:
+comment|/* increment the pointer, modulo sample ring size */
+if|if
+condition|(
+operator|++
+name|ps
+operator|==
+name|psb
+operator|->
+name|ps_fence
+condition|)
+name|ps
+operator|=
+name|psb
+operator|->
+name|ps_samples
+expr_stmt|;
 block|}
+do|while
+condition|(
+name|ps
+operator|!=
+name|ps_end
+condition|)
+do|;
 name|KASSERT
 argument_list|(
 name|ncallchains
@@ -15875,6 +15905,15 @@ name|sched_unpin
 argument_list|()
 expr_stmt|;
 comment|/* Can migrate safely now. */
+comment|/* mark CPU as needing processing */
+name|CPU_SET_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|pmc_cpumask
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
