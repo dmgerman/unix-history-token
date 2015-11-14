@@ -370,6 +370,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Interesting values for PCI-express */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_pcie
+block|{
+name|uint8_t
+name|pcie_location
+decl_stmt|;
+comment|/* Offset of PCI-e capability registers. */
+name|uint8_t
+name|pcie_type
+decl_stmt|;
+comment|/* Device type. */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* config header information common to all header types */
 end_comment
 
@@ -509,6 +529,11 @@ name|pcicfg_ht
 name|ht
 decl_stmt|;
 comment|/* HyperTransport */
+name|struct
+name|pcicfg_pcie
+name|pcie
+decl_stmt|;
+comment|/* PCI Express */
 block|}
 name|pcicfgregs
 typedef|;
