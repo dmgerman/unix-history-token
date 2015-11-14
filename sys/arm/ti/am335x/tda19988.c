@@ -3503,7 +3503,11 @@ name|EVENTHANDLER_INVOKE
 argument_list|(
 name|hdmi_event
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|HDMI_EVENT_CONNECTED
 argument_list|)
 expr_stmt|;
 name|done

@@ -4066,6 +4066,12 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|device_t
+name|hdmi
+parameter_list|,
+name|int
+name|event
 parameter_list|)
 block|{
 name|struct
@@ -5093,7 +5099,7 @@ name|am335x_lcd_hdmi_event
 argument_list|,
 name|sc
 argument_list|,
-literal|0
+name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 return|return
