@@ -3545,7 +3545,7 @@ name|rnh
 argument_list|,
 name|fibnum
 argument_list|,
-name|AF_UNSPEC
+name|af
 argument_list|,
 name|arg
 argument_list|)
