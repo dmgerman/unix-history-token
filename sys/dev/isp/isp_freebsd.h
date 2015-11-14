@@ -3136,9 +3136,10 @@ begin_function_decl
 name|void
 name|isp_fcp_reset_crn
 parameter_list|(
-name|struct
-name|isp_fc
+name|ispsoftc_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|uint32_t
 parameter_list|,
