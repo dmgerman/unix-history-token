@@ -358,12 +358,6 @@ end_macro
 begin_block
 block|{
 comment|/* Let fmemopen allocate the buffer. */
-name|char
-name|str
-index|[]
-init|=
-literal|"A quick test"
-decl_stmt|;
 name|FILE
 modifier|*
 name|fp
@@ -373,8 +367,6 @@ name|pos
 decl_stmt|;
 name|size_t
 name|nofw
-decl_stmt|,
-name|nofr
 decl_stmt|,
 name|i
 decl_stmt|;

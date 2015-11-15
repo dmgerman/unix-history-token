@@ -464,10 +464,6 @@ end_macro
 
 begin_block
 block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 name|char
 modifier|*
 name|line
