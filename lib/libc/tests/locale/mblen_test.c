@@ -76,9 +76,6 @@ end_macro
 
 begin_block
 block|{
-name|size_t
-name|len
-decl_stmt|;
 name|char
 name|buf
 index|[

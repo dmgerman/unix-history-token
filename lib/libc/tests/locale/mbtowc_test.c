@@ -76,12 +76,6 @@ end_macro
 
 begin_block
 block|{
-name|size_t
-name|len
-decl_stmt|;
-name|wchar_t
-name|wc
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -89,6 +83,9 @@ name|MB_LEN_MAX
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|wchar_t
+name|wc
 decl_stmt|;
 comment|/* C/POSIX locale. */
 name|ATF_REQUIRE

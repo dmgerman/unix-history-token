@@ -91,9 +91,6 @@ block|{
 name|mbstate_t
 name|s
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|char
 name|buf
 index|[
