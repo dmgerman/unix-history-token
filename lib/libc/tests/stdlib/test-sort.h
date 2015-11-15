@@ -15,6 +15,18 @@ directive|define
 name|_TEST_SORT_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
 begin_function
 specifier|static
 name|int
@@ -57,7 +69,9 @@ operator|*
 name|ob
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -68,11 +82,15 @@ operator|*
 name|ob
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2756,7 +2774,7 @@ begin_define
 define|#
 directive|define
 name|IVEC_LEN
-value|(sizeof(initvector) / sizeof(initvector[0]))
+value|(nitems(initvector))
 end_define
 
 begin_endif
