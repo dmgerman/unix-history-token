@@ -941,7 +941,7 @@ expr_stmt|;
 comment|/* grouping == 2;3 */
 name|testfmt
 argument_list|(
-literal|"123,456,78.0625"
+literal|"1,23,45,678.0625"
 argument_list|,
 literal|"%'.4f"
 argument_list|,
@@ -950,7 +950,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"00123,456,78.0625"
+literal|"01,23,45,678.0625"
 argument_list|,
 literal|"%'017.4F"
 argument_list|,
@@ -959,7 +959,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|" 90,00"
+literal|" 9,000"
 argument_list|,
 literal|"%'6.0f"
 argument_list|,
@@ -968,7 +968,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"90,00.0"
+literal|"9,000.0"
 argument_list|,
 literal|"%'.1f"
 argument_list|,
