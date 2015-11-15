@@ -48,6 +48,7 @@ name|testcases
 index|[]
 init|=
 block|{
+block|{
 literal|""
 block|,
 literal|""
@@ -55,7 +56,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"a"
@@ -63,7 +66,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"b"
@@ -71,7 +76,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"A"
@@ -79,7 +86,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|"a"
@@ -87,7 +96,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|"aa"
@@ -95,7 +106,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a"
 block|,
 literal|"a"
@@ -103,7 +116,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a"
 block|,
 literal|"b"
@@ -111,7 +126,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*a*"
 block|,
 literal|"b"
@@ -119,7 +136,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*a*b*"
 block|,
 literal|"ab"
@@ -127,7 +146,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*b*"
 block|,
 literal|"qaqbq"
@@ -135,7 +156,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bb*"
 block|,
 literal|"qaqbqbbq"
@@ -143,7 +166,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bc*"
 block|,
 literal|"qaqbqbcq"
@@ -151,7 +176,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bb*"
 block|,
 literal|"qaqbqbb"
@@ -159,7 +186,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bc*"
 block|,
 literal|"qaqbqbc"
@@ -167,7 +196,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bb"
 block|,
 literal|"qaqbqbb"
@@ -175,7 +206,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bc"
 block|,
 literal|"qaqbqbc"
@@ -183,7 +216,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*bb"
 block|,
 literal|"qaqbqbbq"
@@ -191,7 +226,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*a*bc"
 block|,
 literal|"qaqbqbcq"
@@ -199,7 +236,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*a*a*a*a*a*a*a*a*a*a*"
 block|,
 literal|"aaaaaaaaa"
@@ -207,7 +246,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*a*a*a*a*a*a*a*a*a*a*"
 block|,
 literal|"aaaaaaaaaa"
@@ -215,7 +256,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a*a*a*a*a*a*a*a*a*a*"
 block|,
 literal|"aaaaaaaaaaa"
@@ -223,7 +266,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|".*.*.*.*.*.*.*.*.*.*"
 block|,
 literal|"........."
@@ -231,7 +276,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|".*.*.*.*.*.*.*.*.*.*"
 block|,
 literal|".........."
@@ -239,7 +286,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|".*.*.*.*.*.*.*.*.*.*"
 block|,
 literal|"..........."
@@ -247,7 +296,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*?*?*?*?*?*?*?*?*?*?*"
 block|,
 literal|"123456789"
@@ -255,7 +306,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"??????????*"
 block|,
 literal|"123456789"
@@ -263,7 +316,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*??????????"
 block|,
 literal|"123456789"
@@ -271,7 +326,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*?*?*?*?*?*?*?*?*?*?*"
 block|,
 literal|"1234567890"
@@ -279,7 +336,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"??????????*"
 block|,
 literal|"1234567890"
@@ -287,7 +346,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*??????????"
 block|,
 literal|"1234567890"
@@ -295,7 +356,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*?*?*?*?*?*?*?*?*?*?*"
 block|,
 literal|"12345678901"
@@ -303,7 +366,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"??????????*"
 block|,
 literal|"12345678901"
@@ -311,7 +376,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*??????????"
 block|,
 literal|"12345678901"
@@ -319,7 +386,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[x]"
 block|,
 literal|"x"
@@ -327,7 +396,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[*]"
 block|,
 literal|"*"
@@ -335,7 +406,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[?]"
 block|,
 literal|"?"
@@ -343,7 +416,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"["
 block|,
 literal|"["
@@ -351,7 +426,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[[]"
 block|,
 literal|"["
@@ -359,7 +436,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[[]"
 block|,
 literal|"x"
@@ -367,7 +446,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[*]"
 block|,
 literal|""
@@ -375,7 +456,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[*]"
 block|,
 literal|"x"
@@ -383,7 +466,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[?]"
 block|,
 literal|"x"
@@ -391,7 +476,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[*]*"
 block|,
 literal|"foo*foo"
@@ -399,7 +486,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[*]*"
 block|,
 literal|"foo"
@@ -407,7 +496,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|"0"
@@ -415,7 +506,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|"5"
@@ -423,7 +516,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|"9"
@@ -431,7 +526,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|"/"
@@ -439,7 +536,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|":"
@@ -447,7 +546,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|"*"
@@ -455,7 +556,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[!0-9]"
 block|,
 literal|"0"
@@ -463,7 +566,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[!0-9]"
 block|,
 literal|"5"
@@ -471,7 +576,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[!0-9]"
 block|,
 literal|"9"
@@ -479,7 +586,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"[!0-9]"
 block|,
 literal|"/"
@@ -487,7 +596,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[!0-9]"
 block|,
 literal|":"
@@ -495,7 +606,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[!0-9]"
 block|,
 literal|"*"
@@ -503,7 +616,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a0"
@@ -511,7 +626,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a5"
@@ -519,7 +636,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a9"
@@ -527,7 +646,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a/"
@@ -535,7 +656,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a:"
@@ -543,7 +666,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a*"
@@ -551,7 +676,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[!0-9]"
 block|,
 literal|"a0"
@@ -559,7 +686,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[!0-9]"
 block|,
 literal|"a5"
@@ -567,7 +696,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[!0-9]"
 block|,
 literal|"a9"
@@ -575,7 +706,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*[!0-9]"
 block|,
 literal|"a/"
@@ -583,7 +716,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[!0-9]"
 block|,
 literal|"a:"
@@ -591,7 +726,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[!0-9]"
 block|,
 literal|"a*"
@@ -599,7 +736,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a00"
@@ -607,7 +746,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a55"
@@ -615,7 +756,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a99"
@@ -623,7 +766,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a0a0"
@@ -631,7 +776,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a5a5"
@@ -639,7 +786,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*[0-9]"
 block|,
 literal|"a9a9"
@@ -647,7 +796,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\*"
 block|,
 literal|"*"
@@ -655,7 +806,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\?"
 block|,
 literal|"?"
@@ -663,7 +816,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\[x]"
 block|,
 literal|"[x]"
@@ -671,7 +826,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\["
 block|,
 literal|"["
@@ -679,7 +836,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\\\"
 block|,
 literal|"\\"
@@ -687,7 +846,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*\\**"
 block|,
 literal|"foo*foo"
@@ -695,7 +856,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*\\**"
 block|,
 literal|"foo"
@@ -703,7 +866,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*\\\\*"
 block|,
 literal|"foo\\foo"
@@ -711,7 +876,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*\\\\*"
 block|,
 literal|"foo"
@@ -719,7 +886,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\("
 block|,
 literal|"("
@@ -727,7 +896,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\a"
 block|,
 literal|"a"
@@ -735,7 +906,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\*"
 block|,
 literal|"a"
@@ -743,7 +916,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\?"
 block|,
 literal|"a"
@@ -751,7 +926,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\*"
 block|,
 literal|"\\*"
@@ -759,7 +936,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\?"
 block|,
 literal|"\\?"
@@ -767,7 +946,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\[x]"
 block|,
 literal|"\\[x]"
@@ -775,7 +956,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\[x]"
 block|,
 literal|"\\x"
@@ -783,7 +966,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\["
 block|,
 literal|"\\["
@@ -791,7 +976,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\("
 block|,
 literal|"\\("
@@ -799,7 +986,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\a"
 block|,
 literal|"\\a"
@@ -807,7 +996,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\"
 block|,
 literal|"\\"
@@ -815,7 +1006,9 @@ block|,
 literal|0
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\"
 block|,
 literal|""
@@ -823,7 +1016,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\*"
 block|,
 literal|"\\*"
@@ -831,7 +1026,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\?"
 block|,
 literal|"\\?"
@@ -839,7 +1036,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\"
 block|,
 literal|"\\"
@@ -847,7 +1046,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\\\\"
 block|,
 literal|"\\"
@@ -855,7 +1056,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"\\\\"
 block|,
 literal|"\\\\"
@@ -863,7 +1066,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*\\*"
 block|,
 literal|"foo\\foo"
@@ -871,7 +1076,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*\\*"
 block|,
 literal|"foo"
@@ -879,7 +1086,9 @@ block|,
 name|FNM_NOESCAPE
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|"."
@@ -887,7 +1096,9 @@ block|,
 name|FNM_PERIOD
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"?"
 block|,
 literal|"."
@@ -895,7 +1106,9 @@ block|,
 name|FNM_PERIOD
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|".*"
 block|,
 literal|"."
@@ -903,7 +1116,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|".*"
 block|,
 literal|".."
@@ -911,7 +1126,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|".*"
 block|,
 literal|".a"
@@ -919,7 +1136,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[0-9]"
 block|,
 literal|"."
@@ -927,7 +1146,9 @@ block|,
 name|FNM_PERIOD
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"a*"
 block|,
 literal|"a."
@@ -935,7 +1156,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a/a"
 block|,
 literal|"a/a"
@@ -943,7 +1166,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a/*"
 block|,
 literal|"a/a"
@@ -951,7 +1176,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*/a"
 block|,
 literal|"a/a"
@@ -959,7 +1186,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*/*"
 block|,
 literal|"a/a"
@@ -967,7 +1196,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a*b/*"
 block|,
 literal|"abbb/x"
@@ -975,7 +1206,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a*b/*"
 block|,
 literal|"abbb/.x"
@@ -983,7 +1216,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|"a/a"
@@ -991,7 +1226,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*/*"
 block|,
 literal|"a/a/a"
@@ -999,7 +1236,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"b/*"
 block|,
 literal|"b/.x"
@@ -1009,7 +1248,9 @@ operator||
 name|FNM_PERIOD
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"b*/*"
 block|,
 literal|"a/.x"
@@ -1019,7 +1260,9 @@ operator||
 name|FNM_PERIOD
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"b/.*"
 block|,
 literal|"b/.x"
@@ -1029,7 +1272,9 @@ operator||
 name|FNM_PERIOD
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"b*/.*"
 block|,
 literal|"b/.x"
@@ -1039,7 +1284,9 @@ operator||
 name|FNM_PERIOD
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"A"
@@ -1047,7 +1294,9 @@ block|,
 name|FNM_CASEFOLD
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"A"
 block|,
 literal|"a"
@@ -1055,7 +1304,9 @@ block|,
 name|FNM_CASEFOLD
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[a]"
 block|,
 literal|"A"
@@ -1063,7 +1314,9 @@ block|,
 name|FNM_CASEFOLD
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"[A]"
 block|,
 literal|"a"
@@ -1071,7 +1324,9 @@ block|,
 name|FNM_CASEFOLD
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"b"
@@ -1079,7 +1334,9 @@ block|,
 name|FNM_CASEFOLD
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"a/b"
@@ -1087,7 +1344,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|"a/b"
@@ -1095,7 +1354,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*b"
 block|,
 literal|"a/b"
@@ -1103,7 +1364,9 @@ block|,
 name|FNM_PATHNAME
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"a"
 block|,
 literal|"a/b"
@@ -1113,7 +1376,9 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|"a/b"
@@ -1123,7 +1388,9 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|".a/b"
@@ -1133,7 +1400,9 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*a"
 block|,
 literal|".a/b"
@@ -1143,7 +1412,9 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"*"
 block|,
 literal|".a/b"
@@ -1155,7 +1426,9 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"*a"
 block|,
 literal|".a/b"
@@ -1167,7 +1440,9 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 name|FNM_NOMATCH
+block|}
 block|,
+block|{
 literal|"a*b/*"
 block|,
 literal|"abbb/.x"
@@ -1177,6 +1452,7 @@ operator||
 name|FNM_PERIOD
 block|,
 name|FNM_NOMATCH
+block|}
 block|, }
 struct|;
 end_struct
