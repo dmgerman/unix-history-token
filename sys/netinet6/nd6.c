@@ -7127,6 +7127,11 @@ name|struct
 name|sockaddr_in6
 modifier|*
 name|dst
+parameter_list|,
+name|struct
+name|route
+modifier|*
+name|ro
 parameter_list|)
 block|{
 name|int
@@ -7315,7 +7320,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|NULL
+name|ro
 argument_list|)
 expr_stmt|;
 return|return
@@ -8235,6 +8240,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

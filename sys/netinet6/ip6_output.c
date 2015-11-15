@@ -3882,6 +3882,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4322,6 +4324,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
