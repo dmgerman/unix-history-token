@@ -125,13 +125,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|failures
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ftwflags
 decl_stmt|;
 end_decl_stmt

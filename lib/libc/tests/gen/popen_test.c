@@ -214,9 +214,6 @@ block|{
 name|FILE
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|fp2
 decl_stmt|;
 name|int
 name|i
@@ -358,9 +355,6 @@ block|{
 name|FILE
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|fp2
 decl_stmt|;
 specifier|const
 name|char
@@ -1185,9 +1179,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|fp2
 decl_stmt|;
 specifier|const
 name|char
