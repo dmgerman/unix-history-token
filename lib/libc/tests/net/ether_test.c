@@ -223,7 +223,7 @@ argument_list|)
 operator|!=
 literal|0
 argument_list|,
-literal|"ether_line succeeded unexpectedly"
+literal|"ether_line succeeded unexpectedly; errno=%d"
 argument_list|,
 name|errno
 argument_list|)
@@ -285,7 +285,7 @@ argument_list|)
 operator|!=
 literal|0
 argument_list|,
-literal|"ether_line succeeded unexpectedly"
+literal|"ether_line succeeded unexpectedly; errno=%d"
 argument_list|,
 name|errno
 argument_list|)
@@ -371,7 +371,7 @@ name|ep
 operator|!=
 name|NULL
 argument_list|,
-literal|"ether_aton_r failed"
+literal|"ether_aton_r failed; errno=%d"
 argument_list|,
 name|errno
 argument_list|)
