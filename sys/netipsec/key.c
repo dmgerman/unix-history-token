@@ -31753,7 +31753,7 @@ name|sadb_alg_ivlen
 operator|=
 name|ealgo
 operator|->
-name|blocksize
+name|ivsize
 expr_stmt|;
 name|alg
 operator|->
