@@ -1116,10 +1116,6 @@ name|EAI_AGAIN
 operator|||
 name|error
 operator|==
-name|EAI_NODATA
-operator|||
-name|error
-operator|==
 name|EAI_NONAME
 condition|)
 return|return
