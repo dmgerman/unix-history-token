@@ -185,7 +185,7 @@ name|inst_branch
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)& 0x0f000000) == 0x0a000000 || \ 				 ((ins)& 0x0fdffff0) == 0x079ff100 || \ 				 ((ins)& 0x0cf0f000) == 0x0490f000 || \ 				 ((ins)& 0x0ffffff0) == 0x012fff30 ||
+value|(((ins)& 0x0f000000) == 0x0a000000 || \ 				 ((ins)& 0x0fdffff0) == 0x079ff100 || \ 				 ((ins)& 0x0cd0f000) == 0x0490f000 || \ 				 ((ins)& 0x0ffffff0) == 0x012fff30 ||
 comment|/* blx */
 value|\ 				 ((ins)& 0x0de0f000) == 0x0080f000)
 end_define
@@ -259,7 +259,7 @@ parameter_list|(
 name|u_int
 name|insn
 parameter_list|,
-name|u_int
+name|db_addr_t
 name|pc
 parameter_list|)
 function_decl|;

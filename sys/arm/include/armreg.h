@@ -2619,7 +2619,7 @@ value|0x010
 end_define
 
 begin_comment
-comment|/* Permission Fault (L2) */
+comment|/* TLB Conflict Abort */
 end_comment
 
 begin_define
@@ -2824,6 +2824,38 @@ end_define
 begin_comment
 comment|/* Always condition */
 end_comment
+
+begin_comment
+comment|/* ARM register defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_REG_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_REG_NUM_PC
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_REG_NUM_LR
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_REG_NUM_SP
+value|13
+end_define
 
 begin_define
 define|#

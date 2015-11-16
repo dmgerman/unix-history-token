@@ -9242,7 +9242,7 @@ literal|1
 argument_list|,
 name|size
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -9897,7 +9897,7 @@ literal|1
 argument_list|,
 name|IWN_RBUF_SIZE
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10659,7 +10659,7 @@ literal|1
 argument_list|,
 name|MCLBYTES
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -25323,6 +25323,11 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|sc
@@ -25401,6 +25406,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|IWN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -25419,28 +25429,17 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-name|ENETDOWN
-return|;
-block|}
-comment|/* XXX? net80211 doesn't set this on xmit'ed raw frames? */
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|ni
-expr_stmt|;
-name|IWN_LOCK
+name|IWN_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENETDOWN
+operator|)
+return|;
+block|}
 comment|/* queue frame if we have to */
 if|if
 condition|(
@@ -25538,6 +25537,12 @@ name|sc_tx_timer
 operator|=
 literal|5
 expr_stmt|;
+else|else
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|IWN_UNLOCK
 argument_list|(
 name|sc
@@ -25557,7 +25562,9 @@ name|__func__
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -33075,9 +33082,9 @@ name|sc
 operator|->
 name|sc_cap_off
 operator|+
-literal|0x10
+name|PCIER_LINK_CTL
 argument_list|,
-literal|1
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
@@ -33086,7 +33093,7 @@ operator|!
 operator|(
 name|reg
 operator|&
-literal|0x1
+name|PCIEM_LINK_CTL_ASPMC_L0S
 operator|)
 condition|)
 comment|/* L0s Entry disabled. */
@@ -43692,9 +43699,9 @@ name|sc
 operator|->
 name|sc_cap_off
 operator|+
-literal|0x10
+name|PCIER_LINK_CTL
 argument_list|,
-literal|1
+literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Workaround for HW instability in PCIe L0->L0s->L1 transition. */
@@ -43702,7 +43709,7 @@ if|if
 condition|(
 name|reg
 operator|&
-literal|0x02
+name|PCIEM_LINK_CTL_ASPMC_L1
 condition|)
 comment|/* L1 Entry enabled. */
 name|IWN_SETBITS

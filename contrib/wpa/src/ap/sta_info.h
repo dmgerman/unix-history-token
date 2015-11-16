@@ -494,21 +494,14 @@ name|rsn_preauth_interface
 modifier|*
 name|preauth_iface
 decl_stmt|;
-name|struct
-name|hostapd_ssid
-modifier|*
-name|ssid
-decl_stmt|;
-comment|/* SSID selection based on (Re)AssocReq */
-name|struct
-name|hostapd_ssid
-modifier|*
-name|ssid_probe
-decl_stmt|;
-comment|/* SSID selection based on ProbeReq */
 name|int
 name|vlan_id
 decl_stmt|;
+comment|/* 0: none,>0: VID */
+name|int
+name|vlan_id_bound
+decl_stmt|;
+comment|/* updated by ap_sta_bind_vlan() */
 comment|/* PSKs from RADIUS authentication server */
 name|struct
 name|hostapd_sta_wpa_psk_short
@@ -617,6 +610,18 @@ decl_stmt|;
 name|int
 name|hs20_disassoc_timer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+name|struct
+name|wpabuf
+modifier|*
+name|mb_ies
+decl_stmt|;
+comment|/* MB IEs from (Re)Association Request */
+endif|#
+directive|endif
+comment|/* CONFIG_FST */
 name|struct
 name|os_reltime
 name|connected_time
@@ -1039,9 +1044,6 @@ name|struct
 name|sta_info
 modifier|*
 name|sta
-parameter_list|,
-name|int
-name|old_vlanid
 parameter_list|)
 function_decl|;
 end_function_decl

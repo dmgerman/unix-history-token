@@ -1890,12 +1890,6 @@ name|NULL
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|svcaddr
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|svcaddr

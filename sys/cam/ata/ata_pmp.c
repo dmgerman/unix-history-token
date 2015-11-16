@@ -634,19 +634,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ATPMP
-argument_list|,
-literal|"ata_pmp"
-argument_list|,
-literal|"ata_pmp buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void

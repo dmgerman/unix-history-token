@@ -6803,6 +6803,10 @@ name|void
 name|__user
 operator|*
 operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
 name|cmd
 operator|.
 name|response
@@ -7970,6 +7974,10 @@ operator|(
 name|void
 name|__user
 operator|*
+operator|)
+operator|(
+name|unsigned
+name|long
 operator|)
 name|cmd
 operator|->

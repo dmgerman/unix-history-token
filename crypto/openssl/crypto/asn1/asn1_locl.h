@@ -15,6 +15,40 @@ begin_comment
 comment|/* Internal ASN1 structures and functions: not for application use */
 end_comment
 
+begin_function_decl
+name|int
+name|asn1_utctime_to_tm
+parameter_list|(
+name|struct
+name|tm
+modifier|*
+name|tm
+parameter_list|,
+specifier|const
+name|ASN1_UTCTIME
+modifier|*
+name|d
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|asn1_generalizedtime_to_tm
+parameter_list|(
+name|struct
+name|tm
+modifier|*
+name|tm
+parameter_list|,
+specifier|const
+name|ASN1_GENERALIZEDTIME
+modifier|*
+name|d
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* ASN1 print context structure */
 end_comment

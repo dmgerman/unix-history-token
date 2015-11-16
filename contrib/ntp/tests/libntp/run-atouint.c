@@ -42,6 +42,30 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_fp.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +94,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_RegularPositive
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +104,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_PositiveOverflowBoundary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +114,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_PositiveOverflowBig
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +124,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Negative
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +134,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_IllegalChar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,10 +144,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +171,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +201,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"atouint.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"atouint.c"
@@ -177,28 +217,28 @@ name|RUN_TEST
 argument_list|(
 name|test_PositiveOverflowBoundary
 argument_list|,
-literal|17
+literal|10
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_PositiveOverflowBig
 argument_list|,
-literal|24
+literal|11
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_Negative
 argument_list|,
-literal|31
+literal|12
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_IllegalChar
 argument_list|,
-literal|38
+literal|13
 argument_list|)
 expr_stmt|;
 return|return

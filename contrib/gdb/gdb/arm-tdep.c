@@ -9390,6 +9390,36 @@ name|GDB_OSABI_ARM_EABI_V2
 expr_stmt|;
 break|break;
 case|case
+name|EF_ARM_EABI_VER3
+case|:
+case|case
+name|EF_ARM_EABI_VER4
+case|:
+case|case
+name|EF_ARM_EABI_VER5
+case|:
+comment|/* 	       * GDB does not support these EABI versions. Fallback 	       * to the highest known to make the KGDB working with 	       * kernel ELF image. 	       */
+name|osabi
+operator|=
+name|GDB_OSABI_ARM_EABI_V2
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n%s:%d "
+literal|"arm_elf_osabi_sniffer: Unsupported ARM EABI "
+literal|"version 0x%x, falling back to 0x%x\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|eflags
+argument_list|,
+name|EF_ARM_EABI_VER2
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|EF_ARM_EABI_UNKNOWN
 case|:
 comment|/* Assume GNU tools.  */

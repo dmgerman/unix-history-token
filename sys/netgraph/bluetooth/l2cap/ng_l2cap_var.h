@@ -293,6 +293,9 @@ comment|/* last allocated ident */
 name|uint8_t
 name|linktype
 decl_stmt|;
+name|uint8_t
+name|encryption
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

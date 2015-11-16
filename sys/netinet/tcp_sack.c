@@ -1355,6 +1355,15 @@ operator|&
 name|TOF_SACK
 condition|)
 block|{
+name|tp
+operator|->
+name|sackhint
+operator|.
+name|sacked_bytes
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset */
 for|for
 control|(
 name|i
@@ -1480,6 +1489,7 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
+block|{
 name|sack_blocks
 index|[
 name|num_sack_blks
@@ -1488,6 +1498,23 @@ index|]
 operator|=
 name|sack
 expr_stmt|;
+name|tp
+operator|->
+name|sackhint
+operator|.
+name|sacked_bytes
+operator|+=
+operator|(
+name|sack
+operator|.
+name|end
+operator|-
+name|sack
+operator|.
+name|start
+operator|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Return if SND.UNA is not advanced and no valid SACK block is 	 * received. 	 */

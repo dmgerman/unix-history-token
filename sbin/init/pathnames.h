@@ -37,5 +37,19 @@ name|_PATH_RUNDOWN
 value|"/etc/rc.shutdown"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_REROOT
+value|"/dev/reroot"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_REROOT_INIT
+value|_PATH_REROOT "/init"
+end_define
+
 end_unit
 

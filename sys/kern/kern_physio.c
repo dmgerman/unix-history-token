@@ -114,6 +114,11 @@ name|ioflag
 parameter_list|)
 block|{
 name|struct
+name|cdevsw
+modifier|*
+name|csw
+decl_stmt|;
+name|struct
 name|buf
 modifier|*
 name|pbuf
@@ -149,6 +154,24 @@ decl_stmt|;
 name|vm_prot_t
 name|prot
 decl_stmt|;
+name|csw
+operator|=
+name|dev
+operator|->
+name|si_devsw
+expr_stmt|;
+comment|/* check if character device is being destroyed */
+if|if
+condition|(
+name|csw
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* XXX: sanity check */
 if|if
 condition|(
@@ -775,9 +798,7 @@ name|BIO_UNMAPPED
 expr_stmt|;
 block|}
 block|}
-name|dev
-operator|->
-name|si_devsw
+name|csw
 operator|->
 name|d_strategy
 argument_list|(

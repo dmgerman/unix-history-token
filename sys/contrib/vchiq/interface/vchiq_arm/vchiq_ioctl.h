@@ -363,8 +363,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|VCHIQ_IOC_LIB_VERSION
+value|_IO(VCHIQ_IOC_MAGIC,   16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHIQ_IOC_CLOSE_DELIVERED
+value|_IO(VCHIQ_IOC_MAGIC,   17)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VCHIQ_IOC_MAX
-value|15
+value|17
 end_define
 
 begin_endif

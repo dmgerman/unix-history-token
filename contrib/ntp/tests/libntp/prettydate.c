@@ -29,6 +29,15 @@ directive|include
 file|"unity.h"
 end_include
 
+begin_function_decl
+name|void
+name|test_ConstantDate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_ConstantDate
@@ -46,12 +55,14 @@ name|l_fp
 name|time
 init|=
 block|{
+block|{
 literal|3485080800UL
+block|}
 block|,
 name|HALF
 block|}
 decl_stmt|;
-comment|// 2010-06-09 14:00:00.5
+comment|/* 2010-06-09 14:00:00.5 */
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
 literal|"cfba1ce0.80000000  Wed, Jun  9 2010 14:00:00.500"

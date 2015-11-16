@@ -12119,7 +12119,7 @@ name|sh
 operator|->
 name|src_port
 operator|)
-operator|&&
+operator|||
 operator|(
 name|cookie
 operator|->
@@ -12129,7 +12129,7 @@ name|sh
 operator|->
 name|dest_port
 operator|)
-operator|&&
+operator|||
 operator|(
 name|cookie
 operator|->
@@ -23596,7 +23596,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err
@@ -23823,7 +23823,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err
@@ -29618,7 +29618,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err
@@ -29858,7 +29858,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err
@@ -30104,7 +30104,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err

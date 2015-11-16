@@ -763,6 +763,23 @@ name|ri
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ri
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Unable to allocate memory in launch_request()\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|ri
 operator|->
 name|n_read

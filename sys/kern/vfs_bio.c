@@ -8966,12 +8966,6 @@ operator|&
 name|BIO_ERROR
 operator|)
 operator|&&
-name|bp
-operator|->
-name|b_error
-operator|==
-name|EIO
-operator|&&
 operator|!
 operator|(
 name|bp
@@ -8982,7 +8976,7 @@ name|B_INVAL
 operator|)
 condition|)
 block|{
-comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped.  If the error is anything 		 * other than an I/O error (EIO), assume that retrying 		 * is futile. 		 */
+comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped. 		 */
 name|bp
 operator|->
 name|b_ioflags
@@ -9028,7 +9022,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Either a failed I/O or we were asked to free or not 		 * cache the buffer. 		 */
+comment|/* 		 * Either a failed read I/O or we were asked to free or not 		 * cache the buffer. 		 */
 name|bp
 operator|->
 name|b_flags
@@ -11561,6 +11555,10 @@ name|metadata
 decl_stmt|,
 name|reserved
 decl_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -14284,6 +14282,12 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* 			 * XXX This is here until the sleep path is diagnosed 			 * enough to work under very low memory conditions. 			 * 			 * There's an issue on low memory, 4BSD+non-preempt 			 * systems (eg MIPS routers with 32MB RAM) where buffer 			 * exhaustion occurs without sleeping for buffer 			 * reclaimation.  This just sticks in a loop and 			 * constantly attempts to allocate a buffer, which 			 * hits exhaustion and tries to wakeup bufdaemon. 			 * This never happens because we never yield. 			 * 			 * The real solution is to identify and fix these cases 			 * so we aren't effectively busy-waiting in a loop 			 * until the reclaimation path has cycles to run. 			 */
+name|kern_yield
+argument_list|(
+name|PRI_USER
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;

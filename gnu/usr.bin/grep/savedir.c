@@ -294,6 +294,12 @@ directive|include
 file|"savedir.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"system.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*

@@ -44,6 +44,17 @@ name|IOAT_XFERCAP_OFFSET
 value|0x01
 end_define
 
+begin_comment
+comment|/* Only bits [4:0] are valid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOAT_XFERCAP_VALID_MASK
+value|0x1f
+end_define
+
 begin_define
 define|#
 directive|define
@@ -112,6 +123,84 @@ define|#
 directive|define
 name|IOAT_DMACAPABILITY_OFFSET
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_PB
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DCA
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_BFILL
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_XOR
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_PQ
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DMA_DIF
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DWBES
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_RAID16SS
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DMAMC
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_CTOS
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_STR
+define|\
+value|"\20\24Completion_Timeout_Support\23DMA_with_Multicasting_Support" \     "\22RAID_Super_descriptors\16Descriptor_Write_Back_Error_Support" \     "\13DMA_with_DIF\12PQ\11XOR\07Block_Fill\05DCA\01Page_Break"
 end_define
 
 begin_comment
@@ -185,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|IOAT_CHANCTRL_RUN
-value|(IOAT_CHANCTRL_INT_REARM |\ 						 IOAT_CHANCTRL_ANY_ERR_ABORT_EN)
+value|(IOAT_CHANCTRL_INT_REARM |\ 						 IOAT_CHANCTRL_ERR_COMPLETION_EN |\ 						 IOAT_CHANCTRL_ANY_ERR_ABORT_EN |\ 						 IOAT_CHANCTRL_ERR_INT_EN)
 end_define
 
 begin_define
@@ -275,6 +364,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOAT_CHANSTS_ARMED
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOAT_CHANSTS_UNAFFILIATED_ERROR
 value|0x8ULL
 end_define
@@ -326,6 +422,207 @@ define|#
 directive|define
 name|IOAT_CHANERR_OFFSET
 value|0xA8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_XSADDERR
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_XDADDERR
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_NDADDERR
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_DERR
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_CHADDERR
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_CCMDERR
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_CUNCORERR
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_DUNCORERR
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_RDERR
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_WDERR
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_DCERR
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_DXSERR
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_CMPADDERR
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_INTCFGERR
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_SEDERR
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_UNAFFERR
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_CXPERR
+value|(1<< 16)
+end_define
+
+begin_comment
+comment|/* Reserved.				(1<< 17) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_DCNTERR
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_DIFFERR
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_GTVERR
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_ATVERR
+value|(1<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_RTVERR
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_BBERR
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_RDIFFERR
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_RGTVERR
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_RATVERR
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_RRTVERR
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANERR_STR
+define|\
+value|"\20\34RRTVERR\33RATVERR\32RGTVERR\31RDIFFERR\30BBERR\27RTVERR\26ATVERR" \     "\25GTVERR\24DIFFERR\23DCNTERR\21CXPERR\20UNAFFERR\17SEDERR\16INTCFGERR" \     "\15CMPADDERR\14DXSERR\13DCERR\12WDERR\11RDERR\10DUNCORERR\07CUNCORERR" \     "\06CCMDERR\05CHADDERR\04DERR\03NDADDERR\02XDADDERR\01XSADDERR"
 end_define
 
 begin_define

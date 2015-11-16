@@ -2287,6 +2287,11 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
+name|uint32_t
+name|actlr_mask
+decl_stmt|,
+name|actlr_set
+decl_stmt|;
 comment|/* 	 * Now, we are going to make real kernel mapping. Note that we are 	 * already running on some mapping made in locore.S and we expect 	 * that it's large enough to ensure nofault access to physical memory 	 * allocated herein before switch. 	 * 	 * As kernel image and everything needed before are and will be mapped 	 * by section mappings, we align last physical address to PTE1_SIZE. 	 */
 name|last_paddr
 operator|=
@@ -2745,33 +2750,22 @@ name|base_pt1
 operator||
 name|ttb_flags
 expr_stmt|;
+name|cpuinfo_get_actlr_modifier
+argument_list|(
+operator|&
+name|actlr_mask
+argument_list|,
+operator|&
+name|actlr_set
+argument_list|)
+expr_stmt|;
 name|reinit_mmu
 argument_list|(
 name|pmap_kern_ttb
 argument_list|,
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
+name|actlr_mask
 argument_list|,
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
+name|actlr_set
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the first available KVA. As kernel image is mapped by 	 * sections, we are leaving some gap behind. 	 */
@@ -24636,25 +24630,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|int
-name|pmap_dmap_iscurrent
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-return|return
-operator|(
-name|pmap_is_current
-argument_list|(
-name|pmap
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *  Perform the pmap work for mincore.  */
 end_comment
@@ -25545,7 +25520,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
-name|int
+name|bool
 name|usermode
 parameter_list|)
 block|{
@@ -25589,13 +25564,17 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * All L1 tables should always be mapped and present. 		 * However, we check only current one herein. For user mode, 		 * only permission abort from malicious user is not fatal. 		 */
+comment|/* 		 * All L1 tables should always be mapped and present. 		 * However, we check only current one herein. For user mode, 		 * only permission abort from malicious user is not fatal. 		 * And alignment abort as it may have higher priority. 		 */
 if|if
 condition|(
 operator|!
 name|usermode
 operator|||
 operator|(
+name|idx
+operator|!=
+name|FAULT_ALIGN
+operator|&&
 name|idx
 operator|!=
 name|FAULT_PERM_L2
@@ -25648,13 +25627,17 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * PT2MAP should be always mapped and present in current 		 * L1 table. However, only existing L2 tables are mapped 		 * in PT2MAP. For user mode, only L2 translation abort and 		 * permission abort from malicious user is not fatal. 		 */
+comment|/* 		 * PT2MAP should be always mapped and present in current 		 * L1 table. However, only existing L2 tables are mapped 		 * in PT2MAP. For user mode, only L2 translation abort and 		 * permission abort from malicious user is not fatal. 		 * And alignment abort as it may have higher priority. 		 */
 if|if
 condition|(
 operator|!
 name|usermode
 operator|||
 operator|(
+name|idx
+operator|!=
+name|FAULT_ALIGN
+operator|&&
 name|idx
 operator|!=
 name|FAULT_TRAN_L2

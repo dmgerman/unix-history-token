@@ -2041,6 +2041,10 @@ parameter_list|,
 name|struct
 name|sockaddr_in6
 modifier|*
+parameter_list|,
+name|struct
+name|route
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

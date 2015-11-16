@@ -3682,7 +3682,7 @@ literal|1
 argument_list|,
 name|size
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -4351,7 +4351,7 @@ literal|1
 argument_list|,
 name|IWM_RBUF_SIZE
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -4880,7 +4880,7 @@ literal|1
 argument_list|,
 name|MCLBYTES
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -9712,7 +9712,6 @@ name|sc_ic
 operator|.
 name|ic_macaddr
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_nvm

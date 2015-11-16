@@ -326,7 +326,7 @@ argument_list|(
 name|error
 argument_list|)
 argument_list|,
-literal|"Could could change to directory %s: %s\n"
+literal|"Could not change to directory %s: %s\n"
 argument_list|,
 name|getenv
 argument_list|(

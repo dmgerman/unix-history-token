@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd - IEEE 802.11i-2004 / WPA Authenticator  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * hostapd - IEEE 802.11i-2004 / WPA Authenticator  * Copyright (c) 2004-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -32,6 +32,19 @@ include|#
 directive|include
 file|"common/wpa_common.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"common/ieee802_11_defs.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|MAX_OWN_IE_OVERRIDE
+value|256
+end_define
 
 begin_ifdef
 ifdef|#
@@ -574,14 +587,10 @@ comment|/* CONFIG_IEEE80211W */
 ifdef|#
 directive|ifdef
 name|CONFIG_IEEE80211R
-define|#
-directive|define
-name|SSID_LEN
-value|32
 name|u8
 name|ssid
 index|[
-name|SSID_LEN
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -644,6 +653,15 @@ directive|ifdef
 name|CONFIG_TESTING_OPTIONS
 name|double
 name|corrupt_gtk_rekey_mic_probability
+decl_stmt|;
+name|u8
+name|own_ie_override
+index|[
+name|MAX_OWN_IE_OVERRIDE
+index|]
+decl_stmt|;
+name|size_t
+name|own_ie_override_len
 decl_stmt|;
 endif|#
 directive|endif
@@ -775,6 +793,22 @@ name|int
 function_decl|(
 modifier|*
 name|mic_failure_report
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|psk_failure_report
 function_decl|)
 parameter_list|(
 name|void
@@ -1401,9 +1435,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
+begin_enum
 enum|enum
+name|wpa_event
 block|{
 name|WPA_AUTH
 block|,
@@ -1419,9 +1453,8 @@ name|WPA_REAUTH_EAPOL
 block|,
 name|WPA_ASSOC_FT
 block|}
-name|wpa_event
-typedef|;
-end_typedef
+enum|;
+end_enum
 
 begin_function_decl
 name|void
@@ -1444,6 +1477,7 @@ name|wpa_state_machine
 modifier|*
 name|sm
 parameter_list|,
+name|enum
 name|wpa_event
 name|event
 parameter_list|)

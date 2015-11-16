@@ -322,7 +322,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * How are the aborts handled?  *  * Undefined Code:  *  - Always fatal as we do not know what does it mean.  * Imprecise External Abort:  *  - Always fatal, but can be handled somehow in the future.  *    Now, due to PCIe buggy harware, ignored.  * Precise External Abort:  *  - Always fatal, but who knows in the future???  * Debug Event:  *  - Special handling.  * External Translation Abort (L1& L2)  *  - Always fatal as something is screwed up in page tables or harware.  * Domain Fault (L1& L2):  *  - Always fatal as we do not play game with domains.  * Alignment Fault:  *  - Everything should be aligned in kernel including user to kernel and  *    vice versa data copying, so we ignore pcb_onfault, and it's always fatal.  *    We generate signal in case of abort from user mode.  * Instruction cache maintenance:  *  - According to manual, this is translation fault during cache maintenance  *    operation. So, it could be really complex in SMP case and fuzzy too  *    for cache operations working on virtual addresses. For now, we will  *    consider this abort as fatal. In fact, no cache maintenance on  *    not mapped virtual addresses should be called. As cache maintenance  *    operation (except DMB, DSB, and Flush Prefetch Buffer) are priviledged,  *    the abort is fatal for user mode as well for now. (This is good place to  *    note that cache maintenance on virtual address fill TLB.)  * Acces Bit (L1& L2):  *  - Fast hardware emulation for kernel and user mode.  * Translation Fault (L1& L2):  *  - Standard fault mechanism is held including vm_fault().  * Permission Fault (L1& L2):  *  - Fast harware emulation of modify bits and in other cases, standard  *    fault mechanism is held including vm_fault().  */
+comment|/*  * How are the aborts handled?  *  * Undefined Code:  *  - Always fatal as we do not know what does it mean.  * Imprecise External Abort:  *  - Always fatal, but can be handled somehow in the future.  *    Now, due to PCIe buggy hardware, ignored.  * Precise External Abort:  *  - Always fatal, but who knows in the future???  * Debug Event:  *  - Special handling.  * External Translation Abort (L1& L2)  *  - Always fatal as something is screwed up in page tables or hardware.  * Domain Fault (L1& L2):  *  - Always fatal as we do not play game with domains.  * Alignment Fault:  *  - Everything should be aligned in kernel with exception of user to kernel  *    and vice versa data copying, so if pcb_onfault is not set, it's fatal.  *    We generate signal in case of abort from user mode.  * Instruction cache maintenance:  *  - According to manual, this is translation fault during cache maintenance  *    operation. So, it could be really complex in SMP case and fuzzy too  *    for cache operations working on virtual addresses. For now, we will  *    consider this abort as fatal. In fact, no cache maintenance on  *    not mapped virtual addresses should be called. As cache maintenance  *    operation (except DMB, DSB, and Flush Prefetch Buffer) are priviledged,  *    the abort is fatal for user mode as well for now. (This is good place to  *    note that cache maintenance on virtual address fill TLB.)  * Acces Bit (L1& L2):  *  - Fast hardware emulation for kernel and user mode.  * Translation Fault (L1& L2):  *  - Standard fault mechanism is held including vm_fault().  * Permission Fault (L1& L2):  *  - Fast hardware emulation of modify bits and in other cases, standard  *    fault mechanism is held including vm_fault().  */
 end_comment
 
 begin_decl_stmt
@@ -609,7 +609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * abort_imprecise() handles the following abort:  *  *  FAULT_EA_IMPREC - Imprecise External Abort  *  * The imprecise means that we don't know where the abort happened,  * thus FAR is undefined. The abort should not never fire, but hot  * plugging or accidental harware failure can be the cause of it.  * If the abort happens, it can even be on different (thread) context.  * Without any additional support, the abort is fatal, as we do not  * know what really happened.  *  * QQQ: Some additional functionality, like pcb_onfault but global,  *      can be implemented. Imprecise handlers could be registered  *      which tell us if the abort is caused by something they know  *      about. They should return one of three codes like:  *		FAULT_IS_MINE,  *		FAULT_CAN_BE_MINE,  *		FAULT_IS_NOT_MINE.  *      The handlers should be called until some of them returns  *      FAULT_IS_MINE value or all was called. If all handlers return  *	FAULT_IS_NOT_MINE value, then the abort is fatal.  */
+comment|/*  * abort_imprecise() handles the following abort:  *  *  FAULT_EA_IMPREC - Imprecise External Abort  *  * The imprecise means that we don't know where the abort happened,  * thus FAR is undefined. The abort should not never fire, but hot  * plugging or accidental hardware failure can be the cause of it.  * If the abort happens, it can even be on different (thread) context.  * Without any additional support, the abort is fatal, as we do not  * know what really happened.  *  * QQQ: Some additional functionality, like pcb_onfault but global,  *      can be implemented. Imprecise handlers could be registered  *      which tell us if the abort is caused by something they know  *      about. They should return one of three codes like:  *		FAULT_IS_MINE,  *		FAULT_CAN_BE_MINE,  *		FAULT_IS_NOT_MINE.  *      The handlers should be called until some of them returns  *      FAULT_IS_MINE value or all was called. If all handlers return  *	FAULT_IS_NOT_MINE value, then the abort is fatal.  */
 end_comment
 
 begin_function
@@ -629,11 +629,11 @@ parameter_list|,
 name|u_int
 name|prefetch
 parameter_list|,
-name|u_int
+name|bool
 name|usermode
 parameter_list|)
 block|{
-comment|/* XXXX  We can got imprecise abort as result of access 	 * to not-present PCI/PCIe configuration space. 	 */
+comment|/* 	 * XXX - We can got imprecise abort as result of access 	 * to not-present PCI/PCIe configuration space. 	 */
 if|#
 directive|if
 literal|0
@@ -688,7 +688,7 @@ parameter_list|,
 name|u_int
 name|prefetch
 parameter_list|,
-name|u_int
+name|bool
 name|usermode
 parameter_list|,
 name|u_int
@@ -785,7 +785,7 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|,
-name|usermode
+name|rv
 decl_stmt|;
 name|uint32_t
 name|fsr
@@ -817,8 +817,8 @@ decl_stmt|;
 name|vm_prot_t
 name|ftype
 decl_stmt|;
-name|int
-name|rv
+name|bool
+name|usermode
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -969,6 +969,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * ARM has a set of unprivileged load and store instructions 	 * (LDRT/LDRBT/STRT/STRBT ...) which are supposed to be used in other 	 * than user mode and OS should recognize their aborts and behave 	 * appropriately. However, there is no way how to do that reasonably 	 * in general unless we restrict the handling somehow. 	 * 	 * For now, these instructions are used only in copyin()/copyout() 	 * like functions where usermode buffers are checked in advance that 	 * they are not from KVA space. Thus, no action is needed here. 	 */
 ifdef|#
 directive|ifdef
 name|ARM_NEW_PMAP
@@ -1029,7 +1030,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Now, when we handled imprecise and debug aborts, the rest of 	 * aborts should be really related to mapping. 	 * 	 */
+comment|/* 	 * Now, when we handled imprecise and debug aborts, the rest of 	 * aborts should be really related to mapping. 	 */
 name|PCPU_INC
 argument_list|(
 name|cnt
@@ -1335,7 +1336,7 @@ name|pcb_onfault
 expr_stmt|;
 return|return;
 block|}
-comment|/* Handle remaining I cache aborts. */
+comment|/* Handle remaining I-cache aborts. */
 if|if
 condition|(
 name|idx
@@ -1371,7 +1372,7 @@ name|out
 goto|;
 block|}
 comment|/* 	 * At this point, we're dealing with one of the following aborts: 	 * 	 *  FAULT_TRAN_xx  - Translation 	 *  FAULT_PERM_xx  - Permission 	 * 	 * These are the main virtual memory-related faults signalled by 	 * the MMU. 	 */
-comment|/* fusubailout is used by [fs]uswintr to avoid page faulting */
+comment|/* fusubailout is used by [fs]uswintr to avoid page faulting. */
 name|pcb
 operator|=
 name|td
@@ -1409,7 +1410,6 @@ name|pcb_onfault
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * QQQ: ARM has a set of unprivileged load and store instructions 	 *      (LDRT/LDRBT/STRT/STRBT ...) which are supposed to be used 	 *      in other than user mode and OS should recognize their 	 *      aborts and behaved appropriately. However, there is no way 	 *      how to do that reasonably in general unless we restrict 	 *      the handling somehow. One way is to limit the handling for 	 *      aborts which come from undefined mode only. 	 * 	 *      Anyhow, we do not use these instructions and do not implement 	 *      any special handling for them. 	 */
 name|va
 operator|=
 name|trunc_page
@@ -1759,7 +1759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * abort_fatal() handles the following data aborts:   *  FAULT_DEBUG		- Debug Event  *  FAULT_ACCESS_xx	- Acces Bit  *  FAULT_EA_PREC	- Precise External Abort  *  FAULT_DOMAIN_xx	- Domain Fault  *  FAULT_EA_TRAN_xx	- External Translation Abort  *  FAULT_EA_IMPREC	- Imprecise External Abort  *  + all undefined codes for ABORT  *  * We should never see these on a properly functioning system.  *  * This function is also called by the other handlers if they  * detect a fatal problem.  *  * Note: If 'l' is NULL, we assume we're dealing with a prefetch abort.  */
+comment|/*  * abort_fatal() handles the following data aborts:  *  *  FAULT_DEBUG		- Debug Event  *  FAULT_ACCESS_xx	- Acces Bit  *  FAULT_EA_PREC	- Precise External Abort  *  FAULT_DOMAIN_xx	- Domain Fault  *  FAULT_EA_TRAN_xx	- External Translation Abort  *  FAULT_EA_IMPREC	- Imprecise External Abort  *  + all undefined codes for ABORT  *  * We should never see these on a properly functioning system.  *  * This function is also called by the other handlers if they  * detect a fatal problem.  *  * Note: If 'l' is NULL, we assume we're dealing with a prefetch abort.  */
 end_comment
 
 begin_function
@@ -1795,7 +1795,7 @@ modifier|*
 name|ksig
 parameter_list|)
 block|{
-name|u_int
+name|bool
 name|usermode
 decl_stmt|;
 specifier|const
@@ -2068,7 +2068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * abort_align() handles the following data abort:  *  *  FAULT_ALIGN - Alignment fault  *  * Every memory access should be correctly aligned in kernel including  * user to kernel and vice versa data copying, so we ignore pcb_onfault,  * and it's always fatal. We generate a signal in case of abort from user mode.  */
+comment|/*  * abort_align() handles the following data abort:  *  *  FAULT_ALIGN - Alignment fault  *  * Everything should be aligned in kernel with exception of user to kernel   * and vice versa data copying, so if pcb_onfault is not set, it's fatal.  * We generate signal in case of abort from user mode.  */
 end_comment
 
 begin_function
@@ -2104,7 +2104,7 @@ modifier|*
 name|ksig
 parameter_list|)
 block|{
-name|u_int
+name|bool
 name|usermode
 decl_stmt|;
 name|usermode
@@ -2114,7 +2114,6 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Alignment faults are always fatal if they occur in any but user mode. 	 * 	 * XXX The old trap code handles pcb fault even for alignment traps. 	 * Unfortunately, we don't known why and if is this need. 	 */
 if|if
 condition|(
 operator|!
@@ -2142,21 +2141,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Got alignment fault with pcb_onfault set"
-literal|", please report this issue\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|tf
 operator|->
 name|tf_r0
 operator|=
 name|EFAULT
 expr_stmt|;
-empty_stmt|;
 name|tf
 operator|->
 name|tf_pc
@@ -2199,7 +2189,7 @@ name|ksig
 operator|->
 name|code
 operator|=
-literal|0
+name|BUS_ADRALN
 expr_stmt|;
 name|ksig
 operator|->

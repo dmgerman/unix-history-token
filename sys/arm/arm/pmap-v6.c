@@ -22489,25 +22489,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|pmap_dmap_iscurrent
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-return|return
-operator|(
-name|pmap_is_current
-argument_list|(
-name|pmap
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|pmap_page_set_memattr
 parameter_list|(

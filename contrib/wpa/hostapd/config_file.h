@@ -43,6 +43,7 @@ name|hostapd_bss_config
 modifier|*
 name|bss
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|field

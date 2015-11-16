@@ -219,7 +219,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 	} while (0)
+value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 		ARGE_READ((sc), (reg)); \ 	} while (0)
 end_define
 
 begin_define
@@ -280,7 +280,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|do { \ 		ARGE_WRITE((_sc), (_reg), (_val)); \ 		ARGE_READ((_sc), (_reg)); \ 	} while (0)
+value|ARGE_WRITE((_sc), (_reg), (_val))
 end_define
 
 begin_define
@@ -323,7 +323,7 @@ name|ARGE_MDIO_BARRIER_RW
 parameter_list|(
 name|_sc
 parameter_list|)
-value|ARGE_BARRIER_READ_RW(_sc)
+value|ARGE_BARRIER_RW(_sc)
 end_define
 
 begin_define
@@ -700,6 +700,17 @@ name|intr_ok
 decl_stmt|;
 block|}
 name|stats
+struct|;
+struct|struct
+block|{
+name|uint32_t
+name|count
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|intr_stats
 struct|;
 block|}
 struct|;

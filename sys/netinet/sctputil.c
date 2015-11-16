@@ -11474,7 +11474,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: Unknown timer type %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|)
@@ -11503,7 +11503,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: %d:software error to_ticks:%d tmr:%p not set ??\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|,
@@ -12129,7 +12129,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: Unknown timer type %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|)
@@ -20043,7 +20043,7 @@ name|SCTP_DEBUG_UTIL1
 argument_list|,
 literal|"%s: unknown notification %xh (%u)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|notification
 argument_list|,
@@ -29299,7 +29299,7 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|=
 name|SCTP_NEXT_MSG_AVAIL
 expr_stmt|;
@@ -29314,7 +29314,7 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator||=
 name|SCTP_NEXT_MSG_IS_UNORDERED
 expr_stmt|;
@@ -29330,14 +29330,14 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator||=
 name|SCTP_NEXT_MSG_IS_NOTIFICATION
 expr_stmt|;
 block|}
 name|s_extra
 operator|->
-name|sreinfo_next_aid
+name|serinfo_next_aid
 operator|=
 name|nxt
 operator|->
@@ -29345,7 +29345,7 @@ name|sinfo_assoc_id
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_length
+name|serinfo_next_length
 operator|=
 name|nxt
 operator|->
@@ -29353,7 +29353,7 @@ name|length
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_ppid
+name|serinfo_next_ppid
 operator|=
 name|nxt
 operator|->
@@ -29361,7 +29361,7 @@ name|sinfo_ppid
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_stream
+name|serinfo_next_stream
 operator|=
 name|nxt
 operator|->
@@ -29385,7 +29385,7 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator||=
 name|SCTP_NEXT_MSG_ISCOMPLETE
 expr_stmt|;
@@ -29401,31 +29401,31 @@ name|NULL
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|=
 name|SCTP_NO_NEXT_MSG
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_aid
+name|serinfo_next_aid
 operator|=
 literal|0
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_length
+name|serinfo_next_length
 operator|=
 literal|0
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_ppid
+name|serinfo_next_ppid
 operator|=
 literal|0
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_stream
+name|serinfo_next_stream
 operator|=
 literal|0
 expr_stmt|;
@@ -31863,7 +31863,7 @@ name|sinfo
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|=
 name|SCTP_NO_NEXT_MSG
 expr_stmt|;

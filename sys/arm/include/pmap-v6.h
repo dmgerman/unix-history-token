@@ -729,7 +729,7 @@ name|uint32_t
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -963,20 +963,6 @@ end_define
 begin_comment
 comment|/* The kernel uses domain #0 */
 end_comment
-
-begin_comment
-comment|/*  * sys/arm/arm/busdma_machdep-v6.c  */
-end_comment
-
-begin_function_decl
-name|int
-name|pmap_dmap_iscurrent
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * sys/arm/arm/cpufunc.c  */

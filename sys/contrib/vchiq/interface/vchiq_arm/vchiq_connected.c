@@ -15,6 +15,12 @@ directive|include
 file|"vchiq_core.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vchiq_killable.h"
+end_include
+
 begin_define
 define|#
 directive|define

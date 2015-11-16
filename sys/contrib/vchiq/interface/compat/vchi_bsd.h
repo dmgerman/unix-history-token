@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -633,7 +639,7 @@ struct|struct
 name|mutex
 block|{
 name|struct
-name|mtx
+name|sx
 name|mtx
 decl_stmt|;
 block|}
@@ -647,7 +653,7 @@ name|lmutex_init
 parameter_list|(
 name|lock
 parameter_list|)
-value|mtx_init(&(lock)->mtx, #lock, NULL, MTX_DEF)
+value|sx_init(&(lock)->mtx, #lock)
 end_define
 
 begin_define
@@ -657,7 +663,7 @@ name|lmutex_lock
 parameter_list|(
 name|lock
 parameter_list|)
-value|mtx_lock(&(lock)->mtx)
+value|sx_xlock(&(lock)->mtx)
 end_define
 
 begin_define
@@ -667,7 +673,7 @@ name|lmutex_unlock
 parameter_list|(
 name|lock
 parameter_list|)
-value|mtx_unlock(&(lock)->mtx)
+value|sx_unlock(&(lock)->mtx)
 end_define
 
 begin_define
@@ -677,36 +683,18 @@ name|lmutex_destroy
 parameter_list|(
 name|lock
 parameter_list|)
-value|mtx_destroy(&(lock)->mtx)
+value|sx_destroy(&(lock)->mtx)
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|int
+begin_define
+define|#
+directive|define
 name|lmutex_lock_interruptible
 parameter_list|(
-name|struct
-name|mutex
-modifier|*
 name|lock
 parameter_list|)
-block|{
-name|mtx_lock
-argument_list|(
-operator|&
-operator|(
-name|lock
-operator|)
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
+value|sx_xlock_sig(&(lock)->mtx)
+end_define
 
 begin_comment
 comment|/*  * Rwlock API  */
@@ -715,7 +703,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|sx
+name|rwlock
 name|rwlock_t
 typedef|;
 end_typedef
@@ -755,7 +743,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct sx name;					\ 	SX_SYSINIT(name,&name, #name)
+value|struct rwlock name;					\ 	SX_SYSINIT(name,&name, #name)
 end_define
 
 begin_define
@@ -765,7 +753,7 @@ name|rwlock_init
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_init_flags(rwlock, "VCHI rwlock", SX_NOADAPTIVE)
+value|rw_init(rwlock, "VCHI rwlock")
 end_define
 
 begin_define
@@ -775,7 +763,7 @@ name|read_lock
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_slock(rwlock)
+value|rw_rlock(rwlock)
 end_define
 
 begin_define
@@ -785,7 +773,7 @@ name|read_unlock
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_sunlock(rwlock)
+value|rw_unlock(rwlock)
 end_define
 
 begin_define
@@ -795,7 +783,7 @@ name|write_lock
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_xlock(rwlock)
+value|rw_wlock(rwlock)
 end_define
 
 begin_define
@@ -805,7 +793,7 @@ name|write_unlock
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_xunlock(rwlock)
+value|rw_unlock(rwlock)
 end_define
 
 begin_define
@@ -818,7 +806,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|do {						\ 		sx_xlock(rwlock);			\ 		(void)&(flags);			\ 	} while (0)
+value|do {						\ 		rw_wlock(rwlock);			\ 		(void)&(flags);			\ 	} while (0)
 end_define
 
 begin_define
@@ -831,7 +819,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|sx_xunlock(rwlock)
+value|rw_unlock(rwlock)
 end_define
 
 begin_define
@@ -841,7 +829,7 @@ name|read_lock_bh
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_slock(rwlock)
+value|rw_rlock(rwlock)
 end_define
 
 begin_define
@@ -851,7 +839,7 @@ name|read_unlock_bh
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_sunlock(rwlock)
+value|rw_unlock(rwlock)
 end_define
 
 begin_define
@@ -861,7 +849,7 @@ name|write_lock_bh
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_xlock(rwlock)
+value|rw_wlock(rwlock)
 end_define
 
 begin_define
@@ -871,7 +859,7 @@ name|write_unlock_bh
 parameter_list|(
 name|rwlock
 parameter_list|)
-value|sx_xunlock(rwlock)
+value|rw_unlock(rwlock)
 end_define
 
 begin_comment

@@ -11469,13 +11469,6 @@ operator|.
 name|sa_len
 argument_list|)
 expr_stmt|;
-name|EVENTHANDLER_INVOKE
-argument_list|(
-name|iflladdr_event
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SIOCAIFGROUP
@@ -14610,10 +14603,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the link layer address on an interface.  *  * At this time we only support certain types of interfaces,  * and we don't allow the length of the address to change.  */
+comment|/*  * Set the link layer address on an interface.  *  * At this time we only support certain types of interfaces,  * and we don't allow the length of the address to change.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
+name|__noinline
 name|int
 name|if_setlladdr
 parameter_list|(
@@ -14909,40 +14903,14 @@ name|ifr
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INET
-comment|/* 		 * Also send gratuitous ARPs to notify other nodes about 		 * the address change. 		 */
-name|TAILQ_FOREACH
+block|}
+name|EVENTHANDLER_INVOKE
 argument_list|(
-argument|ifa
+name|iflladdr_event
 argument_list|,
-argument|&ifp->if_addrhead
-argument_list|,
-argument|ifa_link
-argument_list|)
-block|{
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|->
-name|sa_family
-operator|==
-name|AF_INET
-condition|)
-name|arp_ifinit
-argument_list|(
 name|ifp
-argument_list|,
-name|ifa
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-block|}
 return|return
 operator|(
 literal|0

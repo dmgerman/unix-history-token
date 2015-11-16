@@ -293,7 +293,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* LWP name. */
-name|int
+name|pid_t
 name|pl_child_pid
 decl_stmt|;
 comment|/* New child pid */
@@ -737,25 +737,9 @@ decl_stmt|,
 name|writing
 decl_stmt|;
 comment|/* 	 * Assert that someone has locked this vmspace.  (Should be 	 * curthread but we can't assert that.)  This keeps the process 	 * from exiting out from under us until this operation completes. 	 */
-name|KASSERT
+name|PROC_ASSERT_HELD
 argument_list|(
 name|p
-operator|->
-name|p_lock
-operator|>=
-literal|1
-argument_list|,
-operator|(
-literal|"%s: process %p (pid %d) not held"
-operator|,
-name|__func__
-operator|,
-name|p
-operator|,
-name|p
-operator|->
-name|p_pid
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The map we want... 	 */
@@ -2986,7 +2970,45 @@ block|{
 case|case
 name|PT_TRACE_ME
 case|:
-comment|/* Always legal. */
+comment|/* 		 * Always legal, when there is a parent process which 		 * could trace us.  Otherwise, reject. 		 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
+name|p
+operator|->
+name|p_pptr
+operator|==
+name|initproc
+condition|)
+block|{
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 break|break;
 case|case
 name|PT_ATTACH
@@ -2995,14 +3017,10 @@ comment|/* Self */
 if|if
 condition|(
 name|p
-operator|->
-name|p_pid
 operator|==
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_pid
 condition|)
 block|{
 name|error

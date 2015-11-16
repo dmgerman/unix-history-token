@@ -1037,7 +1037,7 @@ name|say_bye
 operator|=
 name|TRUE
 expr_stmt|;
-break|break;
+continue|continue;
 block|}
 name|DEBUG_REQUIRE
 argument_list|(

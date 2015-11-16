@@ -640,7 +640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eap_get_id - Get EAP Type from wpabuf  * @msg: Buffer starting with an EAP header  * Returns: The EAP Type after the EAP header  */
+comment|/**  * eap_get_type - Get EAP Type from wpabuf  * @msg: Buffer starting with an EAP header  * Returns: The EAP Type after the EAP header  */
 end_comment
 
 begin_function

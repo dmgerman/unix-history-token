@@ -155,6 +155,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PV_MEMATTR_UNCACHEABLE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASID_BITS
 value|8
 end_define
@@ -582,18 +589,6 @@ parameter_list|)
 value|(((m)->aflags& PGA_WRITEABLE) != 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_page_set_memattr
-parameter_list|(
-name|m
-parameter_list|,
-name|ma
-parameter_list|)
-value|(void)0
-end_define
-
 begin_function_decl
 name|void
 name|pmap_bootstrap
@@ -727,6 +722,17 @@ name|void
 name|pmap_grow_direct_page_cache
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_page_set_memattr
+parameter_list|(
+name|vm_page_t
+parameter_list|,
+name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl

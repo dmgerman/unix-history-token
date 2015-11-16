@@ -162,7 +162,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -354,10 +354,10 @@ name|isrp
 parameter_list|,
 name|semap
 parameter_list|,
-name|mbox0p
+name|info
 parameter_list|)
 define|\
-value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, mbox0p)
+value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, info)
 end_define
 
 begin_define
@@ -1068,17 +1068,6 @@ value|0xfe
 end_define
 
 begin_comment
-comment|/* Use this handle for the base for multi-id firmware SNS logins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPH_SNS_HDLBASE
-value|0x400
-end_define
-
-begin_comment
 comment|/* These are for 2K Login Firmware cards */
 end_comment
 
@@ -1141,7 +1130,7 @@ begin_define
 define|#
 directive|define
 name|NPH_IP_BCST
-value|0x7ff
+value|0x7FF
 end_define
 
 begin_comment
@@ -3222,7 +3211,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 parameter_list|,
 name|uint16_t
 parameter_list|,

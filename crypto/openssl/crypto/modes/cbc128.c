@@ -55,11 +55,21 @@ directive|include
 file|<assert.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|STRICT_ALIGNMENT
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PEDANTIC
+argument_list|)
+end_if
 
 begin_define
 define|#

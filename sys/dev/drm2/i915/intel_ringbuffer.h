@@ -319,7 +319,7 @@ name|intel_ring_buffer
 modifier|*
 name|ring
 parameter_list|,
-name|uint32_t
+name|u32
 name|value
 parameter_list|)
 function_decl|;
@@ -334,10 +334,10 @@ name|intel_ring_buffer
 modifier|*
 name|ring
 parameter_list|,
-name|uint32_t
+name|u32
 name|invalidate_domains
 parameter_list|,
-name|uint32_t
+name|u32
 name|flush_domains
 parameter_list|)
 function_decl|;
@@ -380,10 +380,10 @@ name|intel_ring_buffer
 modifier|*
 name|ring
 parameter_list|,
-name|uint32_t
+name|u32
 name|offset
 parameter_list|,
-name|uint32_t
+name|u32
 name|length
 parameter_list|)
 function_decl|;
@@ -532,7 +532,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|uint32_t
+name|u32
 name|intel_ring_sync_index
 parameter_list|(
 name|struct
@@ -596,7 +596,6 @@ name|__compiler_membar
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|atomic_load_acq_32
 argument_list|(
 name|ring
@@ -607,7 +606,6 @@ name|page_addr
 operator|+
 name|reg
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -861,10 +859,10 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|uint64_t
+name|u64
 name|start
 parameter_list|,
-name|uint32_t
+name|u32
 name|size
 parameter_list|)
 function_decl|;

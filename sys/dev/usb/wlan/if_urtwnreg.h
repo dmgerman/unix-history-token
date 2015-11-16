@@ -477,6 +477,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92C_MSR
+value|0x102
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92C_PBP
 value|0x104
 end_define
@@ -2275,112 +2282,109 @@ begin_define
 define|#
 directive|define
 name|R92C_CR_HCI_TXDMA_EN
-value|0x00000001
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_HCI_RXDMA_EN
-value|0x00000002
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_TXDMA_EN
-value|0x00000004
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_RXDMA_EN
-value|0x00000008
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_PROTOCOL_EN
-value|0x00000010
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_SCHEDULE_EN
-value|0x00000020
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_MACTXEN
-value|0x00000040
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_MACRXEN
-value|0x00000080
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_ENSEC
-value|0x00000200
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_CALTMR_EN
-value|0x00000400
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Bits for R92C_MSR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_MSR_NOLINK
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_S
-value|16
+name|R92C_MSR_ADHOC
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_M
-value|0x00030000
+name|R92C_MSR_INFRA
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_NOLINK
-value|0
+name|R92C_MSR_AP
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_ADHOC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92C_CR_NETTYPE_INFRA
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92C_CR_NETTYPE_AP
-value|3
+name|R92C_MSR_MASK
+value|(R92C_MSR_AP)
 end_define
 
 begin_comment
@@ -2964,6 +2968,42 @@ value|0x10
 end_define
 
 begin_comment
+comment|/* Bits for R92C_MBID_NUM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_MBID_TXBCN_RPT0
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_MBID_TXBCN_RPT1
+value|0x10
+end_define
+
+begin_comment
+comment|/* Bits for R92C_DUAL_TSF_RST. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_DUAL_TSF_RST0
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_DUAL_TSF_RST1
+value|0x02
+end_define
+
+begin_comment
 comment|/* Bits for R92C_APSD_CTRL. */
 end_comment
 
@@ -3201,6 +3241,21 @@ define|#
 directive|define
 name|R92C_CAMCMD_POLLING
 value|0x80000000
+end_define
+
+begin_comment
+comment|/* Bits for R92C_RXFLTMAP*. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_RXFLTMAP_SUBTYPE
+parameter_list|(
+name|subtype
+parameter_list|)
+define|\
+value|(1<< ((subtype)>> IEEE80211_FC0_SUBTYPE_SHIFT))
 end_define
 
 begin_comment
@@ -5377,6 +5432,12 @@ literal|2
 index|]
 decl_stmt|;
 name|uint8_t
+name|chan
+decl_stmt|;
+name|uint8_t
+name|reserved1
+decl_stmt|;
+name|uint8_t
 name|sig_qual
 decl_stmt|;
 name|uint8_t
@@ -5386,7 +5447,7 @@ name|uint8_t
 name|rpt_b
 decl_stmt|;
 name|uint8_t
-name|reserved1
+name|reserved2
 decl_stmt|;
 name|uint8_t
 name|noise_power
@@ -5419,7 +5480,7 @@ name|uint8_t
 name|noise_power_db_lsb
 decl_stmt|;
 name|uint8_t
-name|reserved2
+name|reserved3
 index|[
 literal|3
 index|]
@@ -5438,12 +5499,6 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|sig_evm
-decl_stmt|;
-name|uint8_t
-name|reserved3
-decl_stmt|;
-name|uint8_t
-name|reserved4
 decl_stmt|;
 block|}
 name|__packed
@@ -5532,6 +5587,30 @@ define|#
 directive|define
 name|R92C_TXDW1_QSEL_BE
 value|0x00
+comment|/* or 0x03 */
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_BK
+value|0x01
+comment|/* or 0x02 */
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_VI
+value|0x04
+comment|/* or 0x05 */
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_VO
+value|0x06
+comment|/* or 0x07 */
+define|#
+directive|define
+name|URTWN_MAX_TID
+value|8
+define|#
+directive|define
+name|R92C_TXDW1_QSEL_BEACON
+value|0x10
 define|#
 directive|define
 name|R92C_TXDW1_QSEL_MGNT
@@ -5585,6 +5664,10 @@ decl_stmt|;
 name|uint16_t
 name|txdseq
 decl_stmt|;
+define|#
+directive|define
+name|R92C_TXDSEQ_HWSEQ_EN
+value|0x8000
 name|uint32_t
 name|txdw4
 decl_stmt|;
@@ -5598,12 +5681,8 @@ name|R92C_TXDW4_RTSRATE_S
 value|0
 define|#
 directive|define
-name|R92C_TXDW4_QOS
+name|R92C_TXDW4_HWSEQ_QOS
 value|0x00000040
-define|#
-directive|define
-name|R92C_TXDW4_HWSEQ
-value|0x00000080
 define|#
 directive|define
 name|R92C_TXDW4_DRVRATE
@@ -5685,6 +5764,87 @@ operator|)
 argument_list|)
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint8_t
+name|ridx2rate
+index|[]
+init|=
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|11
+block|,
+literal|22
+block|,
+literal|12
+block|,
+literal|18
+block|,
+literal|24
+block|,
+literal|36
+block|,
+literal|48
+block|,
+literal|72
+block|,
+literal|96
+block|,
+literal|108
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* HW rate indices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_CCK1
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_CCK11
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_OFDM6
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_OFDM24
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_OFDM54
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_COUNT
+value|28
+end_define
 
 begin_comment
 comment|/*  * MAC initialization values.  */

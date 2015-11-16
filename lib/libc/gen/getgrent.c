@@ -3539,9 +3539,6 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
-name|int
-name|rv
-decl_stmt|;
 name|assert
 argument_list|(
 name|uname
@@ -3562,8 +3559,9 @@ name|grpcnt
 operator|=
 literal|0
 expr_stmt|;
-name|rv
-operator|=
+operator|(
+name|void
+operator|)
 name|_nsdispatch
 argument_list|(
 name|NULL
@@ -6487,7 +6485,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do {	 				\ 	unsigned int i;						\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
+value|do {	 				\ 	int i;							\ 	for (i = 0; i< (int)(nitems(x) - 1); i++)		\ 		x[i].mdata = (void *)y;				\ } while (0)
 name|rv
 operator|=
 name|compat_getstate
@@ -6812,7 +6810,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do { 				\ 	unsigned int i;						\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
+value|do { 				\ 	int i;							\ 	for (i = 0; i< (int)(nitems(x) - 1); i++)		\ 		x[i].mdata = (void *)y;				\ } while (0)
 name|name
 operator|=
 name|NULL

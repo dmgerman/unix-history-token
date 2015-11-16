@@ -161,6 +161,13 @@ directive|include
 file|"gic_v3_var.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GIC_V3_ITS_QUIRK_THUNDERX_PEM_BUS_OFFSET
+value|144
+end_define
+
 begin_include
 include|#
 directive|include
@@ -801,7 +808,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Only single instance of ITS is supported, exitting...\n"
+literal|"Only single instance of ITS is supported, exiting...\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6390,12 +6397,12 @@ name|pci_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ECAM is on bus=0 */
+comment|/* Check if accessing internal PCIe (low bus numbers) */
 if|if
 condition|(
 name|bus
-operator|==
-literal|0
+operator|<
+name|GIC_V3_ITS_QUIRK_THUNDERX_PEM_BUS_OFFSET
 condition|)
 block|{
 return|return

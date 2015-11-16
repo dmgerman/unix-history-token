@@ -491,7 +491,14 @@ name|tmp
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|dirs
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|tmp
 index|[
 literal|0
@@ -1467,6 +1474,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|id
 operator|=
 name|pw_checkid
@@ -1476,6 +1484,11 @@ argument_list|,
 name|UID_MAX
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
 name|name
 operator|=

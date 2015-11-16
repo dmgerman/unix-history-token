@@ -29634,7 +29634,7 @@ name|SCTP_DEBUG_OUTPUT1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;

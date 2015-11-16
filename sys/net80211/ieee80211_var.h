@@ -556,6 +556,11 @@ name|task
 name|ic_wme_task
 decl_stmt|;
 comment|/* deferred WME update */
+name|struct
+name|task
+name|ic_restart_task
+decl_stmt|;
+comment|/* deferred device restart */
 name|counter_u64_t
 name|ic_ierrors
 decl_stmt|;

@@ -561,7 +561,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate and initalize a cd9660node  * @returns struct cd9660node * Pointer to new node, or NULL on error  */
+comment|/*  * Allocate and initialize a cd9660node  * @returns struct cd9660node * Pointer to new node, or NULL on error  */
 end_comment
 
 begin_function
@@ -1165,7 +1165,7 @@ name|isoLevel
 block|,
 literal|1
 block|,
-literal|3
+literal|2
 block|,
 literal|"ISO Level"
 block|}
@@ -1180,7 +1180,7 @@ name|isoLevel
 block|,
 literal|1
 block|,
-literal|3
+literal|2
 block|,
 literal|"ISO Level"
 block|}
@@ -1950,10 +1950,6 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|var
-condition|)
 name|free
 argument_list|(
 name|var
@@ -4534,6 +4530,21 @@ argument_list|(
 literal|"Rename_filename called\n"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+literal|1
+operator|<=
+name|diskStructure
+operator|.
+name|isoLevel
+operator|&&
+name|diskStructure
+operator|.
+name|isoLevel
+operator|<=
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* TODO : A LOT of chanes regarding 8.3 filenames */
 if|if
 condition|(
@@ -6957,6 +6968,21 @@ name|int
 name|is_file
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+literal|1
+operator|<=
+name|diskStructure
+operator|.
+name|isoLevel
+operator|&&
+name|diskStructure
+operator|.
+name|isoLevel
+operator|<=
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* NEW */
 name|cd9660_filename_conversion_functor
 name|conversion_function

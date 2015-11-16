@@ -3122,7 +3122,7 @@ block|{
 name|char
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|int
@@ -3136,7 +3136,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|SSID_MAX_LEN
 condition|;
 name|i
 operator|++
@@ -3162,7 +3162,7 @@ operator|*
 operator|)
 name|ssid
 argument_list|,
-literal|32
+name|SSID_MAX_LEN
 argument_list|)
 return|;
 block|}
@@ -3619,7 +3619,7 @@ name|ssid
 operator|->
 name|SsidLength
 operator|>
-literal|32
+name|SSID_MAX_LEN
 condition|)
 return|return
 name|r

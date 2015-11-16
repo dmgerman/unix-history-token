@@ -881,7 +881,7 @@ name|tapdclone
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enably legacy devfs interface creation"
+literal|"Enable legacy devfs interface creation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

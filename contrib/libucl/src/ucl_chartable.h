@@ -28,7 +28,7 @@ name|unsigned
 name|int
 name|ucl_chartable
 index|[
-literal|255
+literal|256
 index|]
 init|=
 block|{
@@ -866,6 +866,12 @@ name|UCL_CHARACTER_VALUE_STR
 comment|/* ~ */
 block|,
 name|UCL_CHARACTER_DENIED
+block|,
+name|UCL_CHARACTER_KEY_START
+operator||
+name|UCL_CHARACTER_KEY
+operator||
+name|UCL_CHARACTER_VALUE_STR
 block|,
 name|UCL_CHARACTER_KEY_START
 operator||

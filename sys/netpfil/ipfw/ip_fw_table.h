@@ -1332,17 +1332,6 @@ end_comment
 
 begin_function_decl
 name|int
-name|ipfw_check_table_name
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ipfw_move_tables_sets
 parameter_list|(
 name|struct

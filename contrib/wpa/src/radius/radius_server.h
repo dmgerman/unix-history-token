@@ -127,6 +127,10 @@ name|char
 modifier|*
 name|erp_domain
 decl_stmt|;
+name|unsigned
+name|int
+name|tls_session_lifetime
+decl_stmt|;
 comment|/** 	 * wps - Wi-Fi Protected Setup context 	 * 	 * If WPS is used with an external RADIUS server (which is quite 	 * unlikely configuration), this is used to provide a pointer to WPS 	 * context data. Normally, this can be set to %NULL. 	 */
 name|struct
 name|wps_context

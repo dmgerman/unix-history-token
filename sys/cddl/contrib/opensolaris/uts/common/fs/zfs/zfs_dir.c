@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -697,6 +697,13 @@ condition|(
 name|dzp
 operator|->
 name|z_unlinked
+operator|&&
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZXATTR
+operator|)
 condition|)
 block|{
 name|mutex_exit

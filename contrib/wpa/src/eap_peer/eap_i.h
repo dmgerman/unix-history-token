@@ -583,6 +583,7 @@ name|void
 modifier|*
 name|eapol_ctx
 decl_stmt|;
+specifier|const
 name|struct
 name|eapol_callbacks
 modifier|*
@@ -616,19 +617,19 @@ name|Boolean
 name|peap_done
 decl_stmt|;
 name|u8
-name|req_md5
+name|req_sha1
 index|[
-literal|16
+literal|20
 index|]
 decl_stmt|;
-comment|/* MD5() of the current EAP packet */
+comment|/* SHA1() of the current EAP packet */
 name|u8
-name|last_md5
+name|last_sha1
 index|[
-literal|16
+literal|20
 index|]
 decl_stmt|;
-comment|/* MD5() of the previously received EAP packet; used 			  * in duplicate request detection. */
+comment|/* SHA1() of the previously received EAP packet; used 			   * in duplicate request detection. */
 name|void
 modifier|*
 name|msg_ctx

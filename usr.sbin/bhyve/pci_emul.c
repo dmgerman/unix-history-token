@@ -1246,7 +1246,7 @@ init|=
 operator|~
 literal|0
 decl_stmt|;
-comment|/* 	 * The PCI standard only allows 4 and 8 byte accesses to the MSI-X 	 * table but we also allow 1 byte access to accomodate reads from 	 * ddb. 	 */
+comment|/* 	 * The PCI standard only allows 4 and 8 byte accesses to the MSI-X 	 * table but we also allow 1 byte access to accommodate reads from 	 * ddb. 	 */
 if|if
 condition|(
 name|size

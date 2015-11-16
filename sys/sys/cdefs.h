@@ -2315,7 +2315,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__sentinel
+name|__null_sentinel
 value|__attribute__((__sentinel__))
 end_define
 
@@ -2341,7 +2341,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__sentinel
+name|__null_sentinel
 end_define
 
 begin_define

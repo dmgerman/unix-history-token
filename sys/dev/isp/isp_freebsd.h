@@ -856,28 +856,23 @@ begin_struct
 struct|struct
 name|isp_nexus
 block|{
+name|uint64_t
+name|lun
+decl_stmt|;
+comment|/* LUN for target */
+name|uint32_t
+name|tgt
+decl_stmt|;
+comment|/* TGT for target */
+name|uint8_t
+name|crnseed
+decl_stmt|;
+comment|/* next command reference number */
 name|struct
 name|isp_nexus
 modifier|*
 name|next
 decl_stmt|;
-name|uint32_t
-name|crnseed
-range|:
-literal|8
-decl_stmt|;
-comment|/* next command reference number */
-name|uint32_t
-name|tgt
-range|:
-literal|16
-decl_stmt|,
-comment|/* TGT for target */
-name|lun
-range|:
-literal|16
-decl_stmt|;
-comment|/* LUN for target */
 block|}
 struct|;
 end_struct
@@ -985,15 +980,6 @@ name|uint32_t
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|proc_active
-range|:
-literal|1
-decl_stmt|,
-endif|#
-directive|endif
 name|tm_luns_enabled
 range|:
 literal|1
@@ -1069,16 +1055,6 @@ index|[
 name|LUN_HASH_SIZE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|struct
-name|proc
-modifier|*
-name|target_proc
-decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -1118,15 +1094,6 @@ name|uint32_t
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|proc_active
-range|:
-literal|1
-decl_stmt|,
-endif|#
-directive|endif
 name|tm_luns_enabled
 range|:
 literal|1
@@ -1163,16 +1130,6 @@ index|[
 name|LUN_HASH_SIZE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|struct
-name|proc
-modifier|*
-name|target_proc
-decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|int
@@ -1538,8 +1495,19 @@ begin_define
 define|#
 directive|define
 name|ISP_DELAY
-value|DELAY
+parameter_list|(
+name|x
+parameter_list|)
+value|DELAY(x)
 end_define
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000029
+end_if
 
 begin_define
 define|#
@@ -1550,8 +1518,30 @@ name|isp
 parameter_list|,
 name|x
 parameter_list|)
-value|DELAY(x)
+value|msleep(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", ((x) + tick - 1) / tick)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_SLEEP
+parameter_list|(
+name|isp
+parameter_list|,
+name|x
+parameter_list|)
+value|msleep_sbt(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1868,7 +1858,7 @@ name|XS_LUN
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(uint32_t)((ccb)->ccb_h.target_lun)
+value|(ccb)->ccb_h.target_lun
 end_define
 
 begin_define
@@ -2970,13 +2960,6 @@ name|isp_quickboot_time
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|isp_autoconfig
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Platform private flags  */
 end_comment
@@ -3153,9 +3136,10 @@ begin_function_decl
 name|void
 name|isp_fcp_reset_crn
 parameter_list|(
-name|struct
-name|isp_fc
+name|ispsoftc_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|uint32_t
 parameter_list|,

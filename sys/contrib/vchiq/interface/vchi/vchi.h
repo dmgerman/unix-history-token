@@ -653,7 +653,23 @@ name|VCHI_SERVICE_HANDLE_T
 name|handle
 parameter_list|)
 function_decl|;
-comment|// Routine to send a message accross a service
+comment|// Routine to set a control option for a named service
+specifier|extern
+name|int32_t
+name|vchi_service_set_option
+parameter_list|(
+specifier|const
+name|VCHI_SERVICE_HANDLE_T
+name|handle
+parameter_list|,
+name|VCHI_SERVICE_OPTION_T
+name|option
+parameter_list|,
+name|int
+name|value
+parameter_list|)
+function_decl|;
+comment|// Routine to send a message across a service
 specifier|extern
 name|int32_t
 name|vchi_msg_queue

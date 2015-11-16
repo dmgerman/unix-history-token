@@ -1,30 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
+comment|/* A Bison parser, made by GNU Bison 3.0.2.  */
 end_comment
 
 begin_comment
-comment|/* Bison interface for Yacc-like parsers in C           Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.        This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
+comment|/* Bison interface for Yacc-like parsers in C     Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.     This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
 end_comment
 
 begin_comment
-comment|/* As a special exception, you may create a larger work that contains    part or all of the Bison parser skeleton and distribute that work    under terms of your choice, so long as that work isn't itself a    parser generator using the skeleton or a modified version thereof    as a parser skeleton.  Alternatively, if you modify or redistribute    the parser skeleton itself, you may (at your option) remove this    special exception, which will cause the skeleton and the resulting    Bison output files to be licensed under the GNU General Public    License without this special exception.        This special exception was added by the Free Software Foundation in    version 2.2 of Bison.  */
+comment|/* As a special exception, you may create a larger work that contains    part or all of the Bison parser skeleton and distribute that work    under terms of your choice, so long as that work isn't itself a    parser generator using the skeleton or a modified version thereof    as a parser skeleton.  Alternatively, if you modify or redistribute    the parser skeleton itself, you may (at your option) remove this    special exception, which will cause the skeleton and the resulting    Bison output files to be licensed under the GNU General Public    License without this special exception.     This special exception was added by the Free Software Foundation in    version 2.2 of Bison.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YY_YY_NTP_PARSER_H_INCLUDED
+name|YY_YY__NTPD_NTP_PARSER_H_INCLUDED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|YY_YY_NTP_PARSER_H_INCLUDED
+name|YY_YY__NTPD_NTP_PARSER_H_INCLUDED
 end_define
 
 begin_comment
-comment|/* Enabling traces.  */
+comment|/* Debug traces.  */
 end_comment
 
 begin_ifndef
@@ -64,7 +64,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Tokens.  */
+comment|/* Token type.  */
 end_comment
 
 begin_ifndef
@@ -78,10 +78,6 @@ define|#
 directive|define
 name|YYTOKENTYPE
 end_define
-
-begin_comment
-comment|/* Put the tokens into the symbol table, so that GDB and other debuggers       know about them.  */
-end_comment
 
 begin_enum
 enum|enum
@@ -2200,6 +2196,10 @@ name|T_Proc_Delay
 value|448
 end_define
 
+begin_comment
+comment|/* Value type.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -2214,14 +2214,21 @@ end_if
 
 begin_typedef
 typedef|typedef
+name|union
+name|YYSTYPE
+name|YYSTYPE
+typedef|;
+end_typedef
+
+begin_union
 union|union
 name|YYSTYPE
 block|{
-comment|/* Line 2053 of yacc.c  */
 line|#
 directive|line
 number|51
 file|"../../ntpd/ntp_parser.y"
+comment|/* yacc.c:1909  */
 name|char
 modifier|*
 name|String
@@ -2283,15 +2290,14 @@ name|script_info_fifo
 modifier|*
 name|Sim_script_fifo
 decl_stmt|;
-comment|/* Line 2053 of yacc.c  */
 line|#
 directive|line
-number|463
-file|"ntp_parser.h"
+number|459
+file|"../../ntpd/ntp_parser.h"
+comment|/* yacc.c:1909  */
 block|}
-name|YYSTYPE
-typedef|;
-end_typedef
+union|;
+end_union
 
 begin_define
 define|#
@@ -2299,17 +2305,6 @@ directive|define
 name|YYSTYPE_IS_TRIVIAL
 value|1
 end_define
-
-begin_define
-define|#
-directive|define
-name|yystype
-value|YYSTYPE
-end_define
-
-begin_comment
-comment|/* obsolescent; will be withdrawn */
-end_comment
 
 begin_define
 define|#
@@ -2330,69 +2325,6 @@ name|yylval
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YYPARSE_PARAM
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|||
-name|defined
-name|__cplusplus
-end_if
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|(
-name|void
-modifier|*
-name|YYPARSE_PARAM
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! YYPARSE_PARAM */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|||
-name|defined
-name|__cplusplus
-end_if
-
 begin_function_decl
 name|int
 name|yyparse
@@ -2402,39 +2334,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ! YYPARSE_PARAM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !YY_YY_NTP_PARSER_H_INCLUDED  */
+comment|/* !YY_YY__NTPD_NTP_PARSER_H_INCLUDED  */
 end_comment
 
 end_unit

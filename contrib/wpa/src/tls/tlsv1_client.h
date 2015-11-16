@@ -266,7 +266,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|tlsv1_client_get_keys
+name|tlsv1_client_get_random
 parameter_list|(
 name|struct
 name|tlsv1_client
@@ -274,9 +274,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|tls_keys
+name|tls_random
 modifier|*
-name|keys
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

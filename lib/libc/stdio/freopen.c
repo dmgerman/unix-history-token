@@ -796,6 +796,12 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fp
+operator|->
+name|_flags2
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|f
@@ -985,6 +991,13 @@ name|oflags
 operator|&
 name|O_APPEND
 condition|)
+block|{
+name|fp
+operator|->
+name|_flags2
+operator||=
+name|__S2OAP
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1000,6 +1013,7 @@ argument_list|,
 name|SEEK_END
 argument_list|)
 expr_stmt|;
+block|}
 name|FUNLOCKFILE
 argument_list|(
 name|fp

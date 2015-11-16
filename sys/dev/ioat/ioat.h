@@ -50,11 +50,22 @@ name|DMA_INT_EN
 value|0x1
 end_define
 
+begin_comment
+comment|/*  * Like M_NOWAIT.  Operations will return NULL if they cannot allocate a  * descriptor without blocking.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA_NO_WAIT
+value|0x2
+end_define
+
 begin_define
 define|#
 directive|define
 name|DMA_ALL_FLAGS
-value|(DMA_INT_EN)
+value|(DMA_INT_EN | DMA_NO_WAIT)
 end_define
 
 begin_typedef
@@ -82,6 +93,9 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_typedef
@@ -96,6 +110,20 @@ name|ioat_get_dmaengine
 parameter_list|(
 name|uint32_t
 name|channel_index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Release the DMA channel */
+end_comment
+
+begin_function_decl
+name|void
+name|ioat_put_dmaengine
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -120,6 +148,41 @@ name|ioat_release
 parameter_list|(
 name|bus_dmaengine_t
 name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Issue a blockfill operation.  The 64-bit pattern 'fillpattern' is written to  * 'len' physically contiguous bytes at 'dst'.  *  * Only supported on devices with the BFILL capability.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|bus_dmadesc
+modifier|*
+name|ioat_blockfill
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|,
+name|bus_addr_t
+name|dst
+parameter_list|,
+name|uint64_t
+name|fillpattern
+parameter_list|,
+name|bus_size_t
+name|len
+parameter_list|,
+name|bus_dmaengine_callback_t
+name|callback_fn
+parameter_list|,
+name|void
+modifier|*
+name|callback_arg
+parameter_list|,
+name|uint32_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

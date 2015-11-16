@@ -11441,7 +11441,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"Unexpected backend type."
+literal|"Unexpected backend type %d"
+argument_list|,
+name|be_lun
+operator|->
+name|dev_type
 argument_list|)
 expr_stmt|;
 break|break;

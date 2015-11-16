@@ -101,9 +101,6 @@ decl_stmt|,
 modifier|*
 name|sl
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
 name|size_t
 name|len
 init|=
@@ -164,8 +161,9 @@ argument_list|,
 literal|"symlink()"
 argument_list|)
 expr_stmt|;
-name|n
-operator|=
+operator|(
+name|void
+operator|)
 name|readlink
 argument_list|(
 literal|"symlink"

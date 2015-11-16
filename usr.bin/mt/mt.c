@@ -7083,7 +7083,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Only one paramter name may be "
+literal|"Only one parameter name may be "
 literal|"specified"
 argument_list|)
 expr_stmt|;
@@ -7123,7 +7123,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Only one paramter value may be "
+literal|"Only one parameter value may be "
 literal|"specified"
 argument_list|)
 expr_stmt|;

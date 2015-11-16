@@ -3981,7 +3981,7 @@ name|addr
 operator|==
 name|NULL
 condition|)
-break|break;
+continue|continue;
 name|ELM_MALLOC
 argument_list|(
 name|rdn
@@ -4322,7 +4322,7 @@ name|addr
 operator|==
 name|NULL
 condition|)
-break|break;
+continue|continue;
 name|ELM_MALLOC
 argument_list|(
 name|dns
@@ -7561,6 +7561,16 @@ operator|%
 literal|8
 else|:
 literal|0
+expr_stmt|;
+name|buf
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ndopt_dnssl
+operator|+
+name|len
 expr_stmt|;
 comment|/* Length field must be in 8 octets */
 name|ndopt_dnssl

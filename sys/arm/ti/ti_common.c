@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -199,9 +205,18 @@ name|fdt_pic_table
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SOC_OMAP4
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ARM_INTRNG
+argument_list|)
 operator|&
 name|gic_decode_fdt
 block|,

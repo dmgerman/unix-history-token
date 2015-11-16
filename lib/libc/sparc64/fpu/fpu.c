@@ -966,6 +966,7 @@ decl_stmt|,
 name|cx
 decl_stmt|,
 name|cond
+name|__unused
 decl_stmt|;
 name|u_long
 name|reg

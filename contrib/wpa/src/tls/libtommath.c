@@ -6892,11 +6892,9 @@ argument_list|(
 name|clean_args
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
+return|return
 name|MP_MEM
-expr_stmt|;
-break|break;
+return|;
 block|}
 name|n
 operator|++
@@ -7602,9 +7600,9 @@ name|q
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|!=
 name|MP_OKAY
-operator|)
 condition|)
 block|{
 return|return

@@ -3611,12 +3611,14 @@ name|_opmode
 parameter_list|,
 name|_chan
 parameter_list|,
-name|_outdoor
+name|_fullreset
+parameter_list|,
+name|_resettype
 parameter_list|,
 name|_pstatus
 parameter_list|)
 define|\
-value|((*(_ah)->ah_reset)((_ah), (_opmode), (_chan), (_outdoor), (_pstatus)))
+value|((*(_ah)->ah_reset)((_ah), (_opmode), (_chan), (_fullreset), \ 	    (_resettype), (_pstatus)))
 end_define
 
 begin_define

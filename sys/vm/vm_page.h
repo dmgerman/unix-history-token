@@ -509,6 +509,11 @@ name|vm_page
 name|vmd_marker
 decl_stmt|;
 comment|/* marker for pagedaemon private use */
+name|struct
+name|vm_page
+name|vmd_inacthead
+decl_stmt|;
+comment|/* marker for LRU-defeating insertions */
 block|}
 struct|;
 end_struct
@@ -1144,6 +1149,10 @@ name|entry
 parameter_list|)
 value|((entry)->phys_addr)
 end_define
+
+begin_comment
+comment|/*  * PHYS_TO_VM_PAGE() returns the vm_page_t object that represents a memory  * page to which the given physical address belongs. The correct vm_page_t  * object is returned for addresses that are not page-aligned.  */
+end_comment
 
 begin_function_decl
 name|vm_page_t

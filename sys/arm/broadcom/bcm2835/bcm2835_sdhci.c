@@ -591,8 +591,6 @@ name|err
 operator|=
 name|bcm2835_mbox_set_power_state
 argument_list|(
-name|dev
-argument_list|,
 name|BCM2835_MBOX_POWER_ID_EMMC
 argument_list|,
 name|TRUE
@@ -630,8 +628,6 @@ name|err
 operator|=
 name|bcm2835_mbox_get_clock_rate
 argument_list|(
-name|dev
-argument_list|,
 name|BCM2835_MBOX_CLOCK_ID_EMMC
 argument_list|,
 operator|&

@@ -9421,7 +9421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound  * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * The page must be locked.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound  * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally noreuse is FALSE, resulting in LRU operation.  noreuse is set  * to TRUE if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  In  * practice this is implemented by inserting the page at the head of the  * queue, using a marker page to guide FIFO insertion ordering.  *  * The page must be locked.  */
 end_comment
 
 begin_function
@@ -9433,8 +9433,8 @@ parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|int
-name|athead
+name|boolean_t
+name|noreuse
 parameter_list|)
 block|{
 name|struct
@@ -9464,7 +9464,7 @@ operator|==
 name|PQ_INACTIVE
 operator|&&
 operator|!
-name|athead
+name|noreuse
 condition|)
 return|return;
 if|if
@@ -9552,14 +9552,17 @@ name|PQ_INACTIVE
 expr_stmt|;
 if|if
 condition|(
-name|athead
+name|noreuse
 condition|)
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_BEFORE
 argument_list|(
 operator|&
-name|pq
+name|vm_phys_domain
+argument_list|(
+name|m
+argument_list|)
 operator|->
-name|pq_pl
+name|vmd_inacthead
 argument_list|,
 name|m
 argument_list|,
@@ -9613,7 +9616,7 @@ name|_vm_page_deactivate
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -9635,7 +9638,7 @@ name|_vm_page_deactivate
 argument_list|(
 name|m
 argument_list|,
-literal|1
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}

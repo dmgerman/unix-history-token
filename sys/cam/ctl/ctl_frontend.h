@@ -30,6 +30,10 @@ block|,
 name|CTL_PORT_STATUS_ONLINE
 init|=
 literal|0x01
+block|,
+name|CTL_PORT_STATUS_HA_SHARED
+init|=
+literal|0x02
 block|}
 name|ctl_port_status
 typedef|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2014 Devin Teske<dteske@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2015 Devin Teske<dteske@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -79,8 +79,8 @@ end_include
 
 begin_decl_stmt
 name|struct
-name|fp_config
-name|fp_dummy_config
+name|figpar_config
+name|figpar_dummy_config
 init|=
 block|{
 literal|0
@@ -97,17 +97,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Search for config option (struct fp_config) in the array of config options,  * returning the struct whose directive matches the given parameter. If no  * match is found, a pointer to the static dummy array (above) is returned.  *  * This is to eliminate dependency on the index position of an item in the  * array, since the index position is more apt to be changed as code grows.  */
+comment|/*  * Search for config option (struct figpar_config) in the array of config  * options, returning the struct whose directive matches the given parameter.  * If no match is found, a pointer to the static dummy array (above) is  * returned.  *  * This is to eliminate dependency on the index position of an item in the  * array, since the index position is more apt to be changed as code grows.  */
 end_comment
 
 begin_function
 name|struct
-name|fp_config
+name|figpar_config
 modifier|*
 name|get_config_option
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 name|options
 index|[]
 parameter_list|,
@@ -134,7 +134,7 @@ condition|)
 return|return
 operator|(
 operator|&
-name|fp_dummy_config
+name|figpar_dummy_config
 operator|)
 return|;
 comment|/* Loop through the array, return the index of the first match */
@@ -184,25 +184,25 @@ operator|)
 operator|)
 return|;
 comment|/* Re-initialize the dummy variable in case it was written to */
-name|fp_dummy_config
+name|figpar_dummy_config
 operator|.
 name|directive
 operator|=
 name|NULL
 expr_stmt|;
-name|fp_dummy_config
+name|figpar_dummy_config
 operator|.
 name|type
 operator|=
 literal|0
 expr_stmt|;
-name|fp_dummy_config
+name|figpar_dummy_config
 operator|.
 name|action
 operator|=
 name|NULL
 expr_stmt|;
-name|fp_dummy_config
+name|figpar_dummy_config
 operator|.
 name|value
 operator|.
@@ -213,7 +213,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|fp_dummy_config
+name|figpar_dummy_config
 operator|)
 return|;
 block|}
@@ -228,7 +228,7 @@ name|int
 name|parse_config
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 name|options
 index|[]
 parameter_list|,
@@ -244,7 +244,7 @@ name|unknown
 function_decl|)
 parameter_list|(
 name|struct
-name|fp_config
+name|figpar_config
 modifier|*
 name|option
 parameter_list|,
@@ -379,7 +379,7 @@ operator|=
 operator|(
 name|processing_options
 operator|&
-name|FP_BREAK_ON_EQUALS
+name|FIGPAR_BREAK_ON_EQUALS
 operator|)
 operator|==
 literal|0
@@ -393,7 +393,7 @@ operator|=
 operator|(
 name|processing_options
 operator|&
-name|FP_BREAK_ON_SEMICOLON
+name|FIGPAR_BREAK_ON_SEMICOLON
 operator|)
 operator|==
 literal|0
@@ -407,7 +407,7 @@ operator|=
 operator|(
 name|processing_options
 operator|&
-name|FP_CASE_SENSITIVE
+name|FIGPAR_CASE_SENSITIVE
 operator|)
 operator|==
 literal|0
@@ -421,7 +421,7 @@ operator|=
 operator|(
 name|processing_options
 operator|&
-name|FP_REQUIRE_EQUALS
+name|FIGPAR_REQUIRE_EQUALS
 operator|)
 operator|==
 literal|0
@@ -435,7 +435,7 @@ operator|=
 operator|(
 name|processing_options
 operator|&
-name|FP_STRICT_EQUALS
+name|FIGPAR_STRICT_EQUALS
 operator|)
 operator|==
 literal|0

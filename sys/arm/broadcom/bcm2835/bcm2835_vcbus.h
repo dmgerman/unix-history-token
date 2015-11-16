@@ -144,7 +144,7 @@ name|VCBUS_TO_PHYS
 parameter_list|(
 name|vca
 parameter_list|)
-value|((vca) - BCM2835_VCBUS_SDRAM_BASE)
+value|((vca)& ~(BCM2835_VCBUS_SDRAM_BASE))
 end_define
 
 begin_endif

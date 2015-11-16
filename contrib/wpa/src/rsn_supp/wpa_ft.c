@@ -844,23 +844,13 @@ expr_stmt|;
 comment|/* Group Suite Selector */
 if|if
 condition|(
+operator|!
+name|wpa_cipher_valid_group
+argument_list|(
 name|sm
 operator|->
 name|group_cipher
-operator|!=
-name|WPA_CIPHER_CCMP
-operator|&&
-name|sm
-operator|->
-name|group_cipher
-operator|!=
-name|WPA_CIPHER_GCMP
-operator|&&
-name|sm
-operator|->
-name|group_cipher
-operator|!=
-name|WPA_CIPHER_TKIP
+argument_list|)
 condition|)
 block|{
 name|wpa_printf

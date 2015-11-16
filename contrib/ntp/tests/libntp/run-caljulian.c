@@ -42,6 +42,36 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"test-libntp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -67,8 +97,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
-name|resetTest
+name|test_RegularTime
 parameter_list|(
 name|void
 parameter_list|)
@@ -78,16 +109,10 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|test_RegularTime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|test_LeapYear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -95,7 +120,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_uLongBoundary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -103,7 +130,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_uLongWrapped
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -111,10 +140,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -127,6 +167,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -156,12 +197,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"caljulian.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"caljulian.c"
@@ -171,28 +206,28 @@ name|RUN_TEST
 argument_list|(
 name|test_RegularTime
 argument_list|,
-literal|74
+literal|16
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_LeapYear
 argument_list|,
-literal|85
+literal|17
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_uLongBoundary
 argument_list|,
-literal|96
+literal|18
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_uLongWrapped
 argument_list|,
-literal|107
+literal|19
 argument_list|)
 expr_stmt|;
 return|return

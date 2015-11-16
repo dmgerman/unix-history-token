@@ -1960,6 +1960,8 @@ name|pd
 operator|->
 name|pd_tmo
 argument_list|)
+operator|>
+literal|0
 condition|)
 block|{
 name|pf_release_state
@@ -9709,6 +9711,8 @@ name|pd
 operator|->
 name|pd_tmo
 argument_list|)
+operator|>
+literal|0
 condition|)
 name|pfsync_undefer
 argument_list|(

@@ -10488,7 +10488,7 @@ argument_list|,
 name|fib
 argument_list|)
 operator|&
-literal|0x7FFFF
+literal|0x7FFF
 expr_stmt|;
 if|if
 condition|(

@@ -526,10 +526,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|rce_addr
-condition|)
 name|free
 argument_list|(
 name|rce_addr

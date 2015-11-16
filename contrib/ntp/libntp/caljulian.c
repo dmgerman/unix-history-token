@@ -97,7 +97,7 @@ decl_stmt|;
 name|ntpcal_split
 name|split
 decl_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|NULL
 operator|!=

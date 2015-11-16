@@ -197,6 +197,20 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|clflushopt
+parameter_list|(
+name|u_long
+name|addr
+parameter_list|)
+block|{
+asm|__asm __volatile(".byte 0x66;clflush %0" : : "m" (*(char *)addr));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|clts
 parameter_list|(
 name|void

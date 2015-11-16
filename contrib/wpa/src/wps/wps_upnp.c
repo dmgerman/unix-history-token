@@ -2050,6 +2050,12 @@ name|now
 operator|+
 name|UPNP_SUBSCRIBE_SEC
 decl_stmt|;
+name|char
+name|str
+index|[
+literal|80
+index|]
+decl_stmt|;
 comment|/* Get rid of expired subscriptions so we have room */
 name|subscription_list_age
 argument_list|(
@@ -2268,13 +2274,29 @@ return|return
 name|NULL
 return|;
 block|}
+name|uuid_bin2str
+argument_list|(
+name|s
+operator|->
+name|uuid
+argument_list|,
+name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPS UPnP: Subscription %p started with %s"
+literal|"WPS UPnP: Subscription %p (SID %s) started with %s"
 argument_list|,
 name|s
+argument_list|,
+name|str
 argument_list|,
 name|callback_urls
 argument_list|)

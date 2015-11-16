@@ -1193,7 +1193,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Fetch the jail(s) and print the paramters. */
+comment|/* Fetch the jail(s) and print the parameters. */
 if|if
 condition|(
 name|jid

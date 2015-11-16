@@ -701,12 +701,6 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__CYGWIN32__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|OPENSSL_SYS_WINCE
 argument_list|)
 end_if

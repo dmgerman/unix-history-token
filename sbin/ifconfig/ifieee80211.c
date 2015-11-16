@@ -16164,7 +16164,7 @@ literal|14
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s  %-17.17s  %4s %4s  %-7s  %3s %4s\n"
+literal|"%-*.*s  %-17.17s  %4s %4s   %-7s  %3s %4s\n"
 argument_list|,
 name|ssidmax
 argument_list|,
@@ -16260,7 +16260,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%-*.*s  %s  %3d  %3dM %3d:%-3d  %3d %-4.4s"
+literal|"%-*.*s  %s  %3d  %3dM %4d:%-4d %4d %-4.4s"
 argument_list|,
 name|ssidmax
 argument_list|,

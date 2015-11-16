@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|CLANG_DEFAULT_OPENMP_RUNTIME
-value|"libgomp"
+value|"libomp"
 end_define
 
 begin_comment

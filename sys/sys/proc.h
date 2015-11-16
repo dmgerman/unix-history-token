@@ -1978,12 +1978,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED29
+name|TDP_FORKING
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Thread is being created through fork() */
 end_comment
 
 begin_define
@@ -4183,7 +4183,7 @@ name|_PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT) || (p) == curproc,		\ 	    ("PHOLD of exiting process"));				\ 	(p)->p_lock++;							\ 	if (((p)->p_flag& P_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT) || (p) == curproc,		\ 	    ("PHOLD of exiting process %p", p));			\ 	(p)->p_lock++;							\ 	if (((p)->p_flag& P_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
 end_define
 
 begin_define
@@ -4193,7 +4193,7 @@ name|PROC_ASSERT_HELD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {					\ 	KASSERT((p)->p_lock> 0, ("process not held"));			\ } while (0)
+value|do {					\ 	KASSERT((p)->p_lock> 0, ("process %p not held", p));		\ } while (0)
 end_define
 
 begin_define
@@ -4223,7 +4223,7 @@ name|PROC_ASSERT_NOT_HELD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {					\ 	KASSERT((p)->p_lock == 0, ("process held"));			\ } while (0)
+value|do {					\ 	KASSERT((p)->p_lock == 0, ("process %p held", p));		\ } while (0)
 end_define
 
 begin_define

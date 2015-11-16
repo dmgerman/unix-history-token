@@ -2063,7 +2063,7 @@ name|ctrl_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * ECC layout have to end up with 0xffff, so 		 * we're filling buffer with 0xff. If ecc_layout is 		 * defined in config file, values will be overriden. 		 */
+comment|/* 		 * ECC layout have to end up with 0xffff, so 		 * we're filling buffer with 0xff. If ecc_layout is 		 * defined in config file, values will be overridden. 		 */
 name|memset
 argument_list|(
 operator|(
@@ -2393,7 +2393,7 @@ name|chip_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Bad block map have to end up with 0xffff, so 		 * we're filling array with 0xff. If bad block map is 		 * defined in config file, values will be overriden. 		 */
+comment|/* 		 * Bad block map have to end up with 0xffff, so 		 * we're filling array with 0xff. If bad block map is 		 * defined in config file, values will be overridden. 		 */
 name|memset
 argument_list|(
 operator|(

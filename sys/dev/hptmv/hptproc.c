@@ -115,20 +115,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|FORMAL_HANDLER_ARGS
-value|struct sysctl_oid *oidp, void *arg1,	\ 	intptr_t arg2, struct sysctl_req *req
-end_define
-
-begin_define
-define|#
-directive|define
-name|REAL_HANDLER_ARGS
-value|oidp, arg1, arg2, req
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -3121,7 +3107,7 @@ name|__inline
 name|int
 name|hpt_proc_in
 parameter_list|(
-name|FORMAL_HANDLER_ARGS
+name|SYSCTL_HANDLER_ARGS
 parameter_list|,
 name|int
 modifier|*
@@ -3221,7 +3207,7 @@ specifier|static
 name|int
 name|hpt_status
 parameter_list|(
-name|FORMAL_HANDLER_ARGS
+name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|int
@@ -3243,7 +3229,13 @@ name|error
 operator|=
 name|hpt_proc_in
 argument_list|(
-name|REAL_HANDLER_ARGS
+name|oidp
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|req
 argument_list|,
 operator|&
 name|length

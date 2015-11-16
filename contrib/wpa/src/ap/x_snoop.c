@@ -174,6 +174,36 @@ operator|-
 literal|1
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_IPV6
+if|if
+condition|(
+name|hostapd_drv_br_set_net_param
+argument_list|(
+name|hapd
+argument_list|,
+name|DRV_BR_MULTICAST_SNOOPING
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"x_snoop: Failed to enable multicast snooping on the bridge"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_IPV6 */
 return|return
 literal|0
 return|;

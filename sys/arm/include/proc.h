@@ -62,6 +62,12 @@ decl_stmt|;
 name|int
 name|md_ptrace_addr
 decl_stmt|;
+name|int
+name|md_ptrace_instr_alt
+decl_stmt|;
+name|int
+name|md_ptrace_addr_alt
+decl_stmt|;
 name|register_t
 name|md_tp
 decl_stmt|;

@@ -1473,6 +1473,9 @@ parameter_list|,
 name|HAL_BOOL
 name|bChannelChange
 parameter_list|,
+name|HAL_RESET_TYPE
+name|resetType
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|status

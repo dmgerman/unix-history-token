@@ -358,6 +358,17 @@ modifier|*
 name|group
 parameter_list|)
 function_decl|;
+comment|/** Returns the montgomery data for order(Generator)  *  \param  group  EC_GROUP object  *  \return the currently used generator (possibly NULL). */
+name|BN_MONT_CTX
+modifier|*
+name|EC_GROUP_get_mont_data
+parameter_list|(
+specifier|const
+name|EC_GROUP
+modifier|*
+name|group
+parameter_list|)
+function_decl|;
 comment|/** Gets the order of a EC_GROUP  *  \param  group  EC_GROUP object  *  \param  order  BIGNUM to which the order is copied  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_get_order
@@ -751,6 +762,24 @@ name|r
 parameter_list|,
 name|size_t
 name|nitems
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|EC_curve_nid2nist
+parameter_list|(
+name|int
+name|nid
+parameter_list|)
+function_decl|;
+name|int
+name|EC_curve_nist2nid
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 comment|/********************************************************************/
@@ -2264,11 +2293,164 @@ parameter_list|,
 name|nid
 parameter_list|)
 define|\
-value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_PARAMGEN, \                                 EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID, nid, NULL)
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_PARAMGEN|EVP_PKEY_OP_KEYGEN, \                                 EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID, nid, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_ec_param_enc
+parameter_list|(
+name|ctx
+parameter_list|,
+name|flag
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_PARAMGEN|EVP_PKEY_OP_KEYGEN, \                                 EVP_PKEY_CTRL_EC_PARAM_ENC, flag, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_ecdh_cofactor_mode
+parameter_list|(
+name|ctx
+parameter_list|,
+name|flag
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_ECDH_COFACTOR, flag, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_ecdh_cofactor_mode
+parameter_list|(
+name|ctx
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_ECDH_COFACTOR, -2, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_ecdh_kdf_type
+parameter_list|(
+name|ctx
+parameter_list|,
+name|kdf
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_KDF_TYPE, kdf, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_ecdh_kdf_type
+parameter_list|(
+name|ctx
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_KDF_TYPE, -2, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_ecdh_kdf_md
+parameter_list|(
+name|ctx
+parameter_list|,
+name|md
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_KDF_MD, 0, (void *)md)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_ecdh_kdf_md
+parameter_list|(
+name|ctx
+parameter_list|,
+name|pmd
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_GET_EC_KDF_MD, 0, (void *)pmd)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_ecdh_kdf_outlen
+parameter_list|(
+name|ctx
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_KDF_OUTLEN, len, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_ecdh_kdf_outlen
+parameter_list|(
+name|ctx
+parameter_list|,
+name|plen
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                         EVP_PKEY_CTRL_GET_EC_KDF_OUTLEN, 0, (void *)plen)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set0_ecdh_kdf_ukm
+parameter_list|(
+name|ctx
+parameter_list|,
+name|p
+parameter_list|,
+name|plen
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_EC_KDF_UKM, plen, (void *)p)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get0_ecdh_kdf_ukm
+parameter_list|(
+name|ctx
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_GET_EC_KDF_UKM, 0, (void *)p)
 define|#
 directive|define
 name|EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID
 value|(EVP_PKEY_ALG_CTRL + 1)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_PARAM_ENC
+value|(EVP_PKEY_ALG_CTRL + 2)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_ECDH_COFACTOR
+value|(EVP_PKEY_ALG_CTRL + 3)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_KDF_TYPE
+value|(EVP_PKEY_ALG_CTRL + 4)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_KDF_MD
+value|(EVP_PKEY_ALG_CTRL + 5)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_EC_KDF_MD
+value|(EVP_PKEY_ALG_CTRL + 6)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_KDF_OUTLEN
+value|(EVP_PKEY_ALG_CTRL + 7)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_EC_KDF_OUTLEN
+value|(EVP_PKEY_ALG_CTRL + 8)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_EC_KDF_UKM
+value|(EVP_PKEY_ALG_CTRL + 9)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_EC_KDF_UKM
+value|(EVP_PKEY_ALG_CTRL + 10)
+comment|/* KDF types */
+define|#
+directive|define
+name|EVP_PKEY_ECDH_KDF_NONE
+value|1
+define|#
+directive|define
+name|EVP_PKEY_ECDH_KDF_X9_62
+value|2
 comment|/* BEGIN ERROR CODES */
 comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
@@ -2303,6 +2485,14 @@ define|#
 directive|define
 name|EC_F_DO_EC_KEY_PRINT
 value|221
+define|#
+directive|define
+name|EC_F_ECDH_CMS_DECRYPT
+value|238
+define|#
+directive|define
+name|EC_F_ECDH_CMS_SET_SHARED_INFO
+value|239
 define|#
 directive|define
 name|EC_F_ECKEY_PARAM2TYPE
@@ -2347,6 +2537,30 @@ define|#
 directive|define
 name|EC_F_ECPKPARAMETERS_PRINT_FP
 value|150
+define|#
+directive|define
+name|EC_F_ECP_NISTZ256_GET_AFFINE
+value|240
+define|#
+directive|define
+name|EC_F_ECP_NISTZ256_MULT_PRECOMPUTE
+value|243
+define|#
+directive|define
+name|EC_F_ECP_NISTZ256_POINTS_MUL
+value|241
+define|#
+directive|define
+name|EC_F_ECP_NISTZ256_PRE_COMP_NEW
+value|244
+define|#
+directive|define
+name|EC_F_ECP_NISTZ256_SET_WORDS
+value|245
+define|#
+directive|define
+name|EC_F_ECP_NISTZ256_WINDOWED_MUL
+value|242
 define|#
 directive|define
 name|EC_F_ECP_NIST_MOD_192
@@ -2898,6 +3112,10 @@ name|EC_R_INVALID_CURVE
 value|141
 define|#
 directive|define
+name|EC_R_INVALID_DIGEST
+value|151
+define|#
+directive|define
 name|EC_R_INVALID_DIGEST_TYPE
 value|138
 define|#
@@ -2928,6 +3146,10 @@ define|#
 directive|define
 name|EC_R_INVALID_TRINOMIAL_BASIS
 value|137
+define|#
+directive|define
+name|EC_R_KDF_PARAMETER_ERROR
+value|148
 define|#
 directive|define
 name|EC_R_KEYS_NOT_SET
@@ -2970,6 +3192,10 @@ name|EC_R_PASSED_NULL_PARAMETER
 value|134
 define|#
 directive|define
+name|EC_R_PEER_KEY_ERROR
+value|149
+define|#
+directive|define
 name|EC_R_PKPARAMETERS2GROUP_FAILURE
 value|127
 define|#
@@ -2980,6 +3206,10 @@ define|#
 directive|define
 name|EC_R_POINT_IS_NOT_ON_CURVE
 value|107
+define|#
+directive|define
+name|EC_R_SHARED_INFO_ERROR
+value|150
 define|#
 directive|define
 name|EC_R_SLOT_FULL

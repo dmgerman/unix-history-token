@@ -403,6 +403,10 @@ decl_stmt|;
 name|int
 name|clock
 decl_stmt|;
+name|uint32_t
+name|use_rmii
+decl_stmt|;
+comment|/* 0 or USRIO_RMII */
 block|}
 struct|;
 end_struct

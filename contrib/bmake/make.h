@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.95 2014/09/07 20:55:34 joerg Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.96 2015/09/21 21:50:16 pooka Exp $	*/
 end_comment
 
 begin_comment
@@ -2151,6 +2151,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* At least GNU/Hurd systems lack hardcoded MAXPATHLEN/PATH_MAX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2162,6 +2183,24 @@ define|#
 directive|define
 name|MAXPATHLEN
 value|BMAKE_PATH_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PATH_MAX
+value|MAXPATHLEN
 end_define
 
 begin_endif

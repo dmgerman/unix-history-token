@@ -1128,9 +1128,9 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-literal|"VMware"
+literal|"VMware*"
 block|,
-literal|"Virtual disk"
+literal|"*"
 block|,
 literal|"*"
 block|}

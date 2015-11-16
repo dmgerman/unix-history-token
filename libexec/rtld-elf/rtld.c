@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"paths.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rtld_tls.h"
 end_include
 
@@ -144,36 +150,6 @@ include|#
 directive|include
 file|"notes.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_32BIT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PATH_RTLD
-value|"/libexec/ld-elf.so.1"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PATH_RTLD
-value|"/libexec/ld-elf32.so.1"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Types. */
@@ -2248,6 +2224,55 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Globals for path names, and such  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ld_path_elf_hints
+init|=
+name|_PATH_ELF_HINTS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ld_path_libmap_conf
+init|=
+name|_PATH_LIBMAP_CONF
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ld_path_rtld
+init|=
+name|_PATH_RTLD
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ld_standard_library_path
+init|=
+name|STANDARD_LIBRARY_PATH
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ld_env_prefix
+init|=
+name|LD_
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Fill in a DoneList with an allocation large enough to hold all of  * the currently-loaded objects.  Keep this as a macro since it calls  * alloca and we want that to occur within the scope of the caller.  */
 end_comment
 
@@ -3273,7 +3298,7 @@ literal|0
 condition|)
 name|ld_elf_hints_path
 operator|=
-name|_PATH_ELF_HINTS
+name|ld_path_elf_hints
 expr_stmt|;
 if|if
 condition|(
@@ -8494,7 +8519,7 @@ name|search_library_path
 argument_list|(
 name|name
 argument_list|,
-name|STANDARD_LIBRARY_PATH
+name|ld_standard_library_path
 argument_list|)
 operator|)
 operator|!=
@@ -8644,7 +8669,7 @@ name|search_library_path
 argument_list|(
 name|name
 argument_list|,
-name|STANDARD_LIBRARY_PATH
+name|ld_standard_library_path
 argument_list|)
 operator|)
 operator|!=
@@ -9366,7 +9391,7 @@ name|hmeta
 expr_stmt|;
 name|path_enumerate
 argument_list|(
-name|STANDARD_LIBRARY_PATH
+name|ld_standard_library_path
 argument_list|,
 name|fill_search_info
 argument_list|,
@@ -9489,7 +9514,7 @@ index|]
 expr_stmt|;
 name|path_enumerate
 argument_list|(
-name|STANDARD_LIBRARY_PATH
+name|ld_standard_library_path
 argument_list|,
 name|fill_search_info
 argument_list|,
@@ -10218,7 +10243,7 @@ name|path
 operator|=
 name|xstrdup
 argument_list|(
-name|PATH_RTLD
+name|ld_path_rtld
 argument_list|)
 expr_stmt|;
 name|r_debug
@@ -17920,7 +17945,7 @@ name|z_nodeflib
 condition|)
 name|path_enumerate
 argument_list|(
-name|STANDARD_LIBRARY_PATH
+name|ld_standard_library_path
 argument_list|,
 name|fill_search_info
 argument_list|,
@@ -18158,7 +18183,7 @@ name|z_nodeflib
 operator|&&
 name|path_enumerate
 argument_list|(
-name|STANDARD_LIBRARY_PATH
+name|ld_standard_library_path
 argument_list|,
 name|fill_search_info
 argument_list|,

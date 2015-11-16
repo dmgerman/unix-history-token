@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|MIPS_CCA_CACHED
-value|0x00
+value|0x03
 end_define
 
 begin_endif
