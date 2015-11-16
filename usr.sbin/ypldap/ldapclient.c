@@ -397,10 +397,9 @@ name|getnameinfo
 argument_list|(
 name|sa
 argument_list|,
-name|SA_LEN
-argument_list|(
 name|sa
-argument_list|)
+operator|->
+name|sa_len
 argument_list|,
 name|hbuf
 argument_list|,
@@ -458,10 +457,9 @@ name|fd
 argument_list|,
 name|sa
 argument_list|,
-name|SA_LEN
-argument_list|(
 name|sa
-argument_list|)
+operator|->
+name|sa_len
 argument_list|)
 operator|==
 literal|0
