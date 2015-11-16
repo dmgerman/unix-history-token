@@ -221,9 +221,7 @@ decl_stmt|;
 name|char
 name|idm_name
 index|[
-name|HOST_NAME_MAX
-operator|+
-literal|1
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 define|#
@@ -526,9 +524,7 @@ decl_stmt|;
 name|char
 name|sc_domainname
 index|[
-name|HOST_NAME_MAX
-operator|+
-literal|1
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct
