@@ -115,7 +115,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__dead
+name|__dead2
 name|void
 name|fatal
 parameter_list|(
@@ -127,7 +127,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__dead
+name|__dead2
 name|void
 name|fatalx
 parameter_list|(

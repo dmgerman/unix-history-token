@@ -126,7 +126,7 @@ file|"ypldap.h"
 end_include
 
 begin_function_decl
-name|__dead
+name|__dead2
 name|void
 name|usage
 parameter_list|(
