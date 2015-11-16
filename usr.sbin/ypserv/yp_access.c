@@ -369,11 +369,6 @@ condition|)
 block|{
 name|securenets
 operator|=
-operator|(
-expr|struct
-name|securenet
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -508,11 +503,6 @@ continue|continue;
 block|}
 name|tmp
 operator|=
-operator|(
-expr|struct
-name|securenet
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

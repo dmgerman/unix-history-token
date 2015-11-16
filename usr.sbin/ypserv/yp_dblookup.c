@@ -287,11 +287,6 @@ name|q
 decl_stmt|;
 name|q
 operator|=
-operator|(
-expr|struct
-name|circleq_entry
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -338,11 +333,6 @@ name|q
 operator|->
 name|dbptr
 operator|=
-operator|(
-expr|struct
-name|dbent
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
