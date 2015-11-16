@@ -807,10 +807,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|netid
-condition|)
 name|free
 argument_list|(
 name|netid
@@ -858,10 +854,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|netid
-condition|)
 name|free
 argument_list|(
 name|netid
