@@ -635,6 +635,12 @@ case|case
 name|AR71XX_SOC_AR9344
 case|:
 case|case
+name|AR71XX_SOC_QCA9533
+case|:
+case|case
+name|AR71XX_SOC_QCA9533_V2
+case|:
+case|case
 name|AR71XX_SOC_QCA9556
 case|:
 case|case
