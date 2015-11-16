@@ -20087,7 +20087,7 @@ name|sc
 operator|->
 name|sc_cap_off
 operator|+
-literal|0x10
+name|PCIER_LINK_CTL
 argument_list|,
 literal|1
 argument_list|)
@@ -20098,7 +20098,7 @@ operator|!
 operator|(
 name|reg
 operator|&
-literal|0x1
+name|PCIEM_LINK_CTL_ASPMC_L0S
 operator|)
 condition|)
 comment|/* L0s Entry disabled. */
@@ -27050,7 +27050,7 @@ name|sc
 operator|->
 name|sc_cap_off
 operator|+
-literal|0x10
+name|PCIER_LINK_CTL
 argument_list|,
 literal|1
 argument_list|)
@@ -27060,7 +27060,7 @@ if|if
 condition|(
 name|reg
 operator|&
-literal|0x02
+name|PCIEM_LINK_CTL_ASPMC_L1
 condition|)
 comment|/* L1 Entry enabled. */
 name|WPI_SETBITS
