@@ -380,12 +380,7 @@ name|i
 decl_stmt|;
 specifier|extern
 name|fd_set
-modifier|*
-name|__svc_fdset
-decl_stmt|;
-specifier|extern
-name|int
-name|__svc_fdsetsize
+name|svc_fdset
 decl_stmt|;
 name|struct
 name|yp_event
@@ -400,7 +395,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|__svc_fdsetsize
+name|getdtablesize
+argument_list|()
 condition|;
 name|i
 operator|++
@@ -412,7 +408,8 @@ name|FD_ISSET
 argument_list|(
 name|i
 argument_list|,
-name|__svc_fdset
+operator|&
+name|svc_fdset
 argument_list|)
 condition|)
 block|{
