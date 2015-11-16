@@ -41,13 +41,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|void
 parameter_list|)
 block|{
 name|int
@@ -147,7 +141,6 @@ name|st_dev
 operator|==
 literal|0
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -163,7 +156,6 @@ operator|.
 name|st_dev
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|st1

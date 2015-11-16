@@ -5697,6 +5697,12 @@ name|TD_IS_SUSPENDED
 argument_list|(
 name|td
 argument_list|)
+operator|&&
+operator|!
+name|TD_IS_SWAPPED
+argument_list|(
+name|td
+argument_list|)
 condition|)
 block|{
 name|thread_unlock

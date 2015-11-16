@@ -988,11 +988,6 @@ return|;
 block|}
 name|ypdb
 operator|=
-operator|(
-expr|struct
-name|_dom_binding
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2324,11 +2319,6 @@ expr_stmt|;
 comment|/* build initial domain binding, make it "unsuccessful" */
 name|ypbindlist
 operator|=
-operator|(
-expr|struct
-name|_dom_binding
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4232,11 +4222,6 @@ condition|)
 return|return;
 name|ypdb
 operator|=
-operator|(
-expr|struct
-name|_dom_binding
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
