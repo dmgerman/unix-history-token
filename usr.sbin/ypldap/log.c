@@ -53,6 +53,12 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_function_decl
 name|void
 name|log_init
