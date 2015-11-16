@@ -206,6 +206,22 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+end_if
+
 begin_function
 name|void
 name|dumpsys_gen_pa_init
@@ -213,19 +229,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__sparc__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
 name|int
 name|n
 decl_stmt|,
@@ -323,10 +326,13 @@ name|idx
 index|]
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|struct
@@ -384,7 +390,7 @@ name|dumpsys_gen_wbinv_all
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -404,8 +410,18 @@ modifier|*
 name|va
 name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -424,6 +440,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -997,6 +1018,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1800,6 +1831,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
