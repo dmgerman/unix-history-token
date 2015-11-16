@@ -6664,8 +6664,34 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some samples were dropped.\n"
+literal|"WARNING: sampling was paused at least %u time%s.\n"
 literal|"Please consider tuning the \"kern.hwpmc.nsamples\" tunable."
+argument_list|,
+name|ds_end
+operator|.
+name|pm_intr_bufferfull
+operator|-
+name|ds_start
+operator|.
+name|pm_intr_bufferfull
+argument_list|,
+operator|(
+operator|(
+name|ds_end
+operator|.
+name|pm_intr_bufferfull
+operator|-
+name|ds_start
+operator|.
+name|pm_intr_bufferfull
+operator|)
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -6686,8 +6712,34 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some events were discarded.\n"
+literal|"WARNING: at least %u event%s were discarded while running.\n"
 literal|"Please consider tuning the \"kern.hwpmc.nbuffers\" tunable."
+argument_list|,
+name|ds_end
+operator|.
+name|pm_buffer_requests_failed
+operator|-
+name|ds_start
+operator|.
+name|pm_buffer_requests_failed
+argument_list|,
+operator|(
+operator|(
+name|ds_end
+operator|.
+name|pm_buffer_requests_failed
+operator|-
+name|ds_start
+operator|.
+name|pm_buffer_requests_failed
+operator|)
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
