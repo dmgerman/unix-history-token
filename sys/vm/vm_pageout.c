@@ -308,7 +308,10 @@ modifier|*
 name|vmd
 parameter_list|,
 name|int
-name|pass
+name|page_shortage
+parameter_list|,
+name|int
+name|starting_page_shortage
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -494,6 +497,15 @@ end_comment
 begin_decl_stmt
 name|int
 name|vm_pageout_wakeup_thresh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_pageout_oom_seq
+init|=
+literal|12
 decl_stmt|;
 end_decl_stmt
 
@@ -941,6 +953,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"vget() lock misses during pageout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pageout_oom_seq
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vm_pageout_oom_seq
+argument_list|,
+literal|0
+argument_list|,
+literal|"back-to-back calls to oom detector to start OOM"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4068,6 +4101,9 @@ name|scan_tick
 decl_stmt|,
 name|scanned
 decl_stmt|,
+name|starting_page_shortage
+decl_stmt|;
+name|int
 name|vnodes_skipped
 decl_stmt|;
 name|boolean_t
@@ -4158,6 +4194,10 @@ operator|=
 name|deficit
 operator|=
 literal|0
+expr_stmt|;
+name|starting_page_shortage
+operator|=
+name|page_shortage
 expr_stmt|;
 comment|/* 	 * maxlaunder limits the number of dirty pages we flush per scan. 	 * For most systems a smaller value (16 or 32) is more robust under 	 * extreme memory and disk pressure because any unnecessary writes 	 * to disk can result in extreme performance degredation.  However, 	 * systems with excessive dirty pages (especially when MAP_NOSYNC is 	 * used) will die horribly with limited laundering.  If the pageout 	 * daemon cannot clean enough pages in the first pass, we let it go 	 * all out in succeeding passes. 	 */
 if|if
@@ -4970,6 +5010,16 @@ operator|)
 name|speedup_syncer
 argument_list|()
 expr_stmt|;
+comment|/* 	 * If the inactive queue scan fails repeatedly to meet its 	 * target, kill the largest process. 	 */
+name|vm_pageout_mightbe_oom
+argument_list|(
+name|vmd
+argument_list|,
+name|page_shortage
+argument_list|,
+name|starting_page_shortage
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Compute the number of pages we want to try to move from the 	 * active queue to the inactive queue. 	 */
 name|page_shortage
 operator|=
@@ -5391,14 +5441,6 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If we are critically low on one of RAM or swap and low on 	 * the other, kill the largest process.  However, we avoid 	 * doing this on the first pass in order to give ourselves a 	 * chance to flush out dirty vnode-backed pages and to allow 	 * active pages to be moved to the inactive queue and reclaimed. 	 */
-name|vm_pageout_mightbe_oom
-argument_list|(
-name|vmd
-argument_list|,
-name|pass
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5424,7 +5466,10 @@ modifier|*
 name|vmd
 parameter_list|,
 name|int
-name|pass
+name|page_shortage
+parameter_list|,
+name|int
+name|starting_page_shortage
 parameter_list|)
 block|{
 name|int
@@ -5432,30 +5477,33 @@ name|old_vote
 decl_stmt|;
 if|if
 condition|(
-name|pass
+name|starting_page_shortage
 operator|<=
-literal|1
-operator|||
-operator|!
-operator|(
-operator|(
-name|swap_pager_avail
-operator|<
-literal|64
-operator|&&
-name|vm_page_count_min
-argument_list|()
-operator|)
-operator|||
-operator|(
-name|swap_pager_full
-operator|&&
-name|vm_paging_target
-argument_list|()
-operator|>
 literal|0
-operator|)
-operator|)
+operator|||
+name|starting_page_shortage
+operator|!=
+name|page_shortage
+condition|)
+name|vmd
+operator|->
+name|vmd_oom_seq
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|vmd
+operator|->
+name|vmd_oom_seq
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vmd
+operator|->
+name|vmd_oom_seq
+operator|<
+name|vm_pageout_oom_seq
 condition|)
 block|{
 if|if
@@ -5482,6 +5530,13 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+comment|/* 	 * Do not follow the call sequence until OOM condition is 	 * cleared. 	 */
+name|vmd
+operator|->
+name|vmd_oom_seq
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|vmd
