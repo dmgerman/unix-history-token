@@ -1562,7 +1562,7 @@ name|name
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{etk:name/%s}{e:flags/0x%x}{d:/%-*.*s}"
+literal|"{etk:name/%s}{eq:flags/0x%x}{d:/%-*.*s}"
 argument_list|,
 name|name
 argument_list|,
