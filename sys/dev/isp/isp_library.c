@@ -3151,6 +3151,8 @@ operator|.
 name|options
 operator|=
 name|ICB2400_VPOPT_ENABLED
+operator||
+name|ICB2400_VPOPT_ENA_SNSLOGIN
 expr_stmt|;
 if|if
 condition|(
