@@ -15888,11 +15888,16 @@ name|isp
 argument_list|,
 name|ISP_LOG_SANCFG
 argument_list|,
-literal|"%s: chan %d not at FW_READY state"
-argument_list|,
-name|__func__
+literal|"Chan %d Firmware is not ready (%s)"
 argument_list|,
 name|chan
+argument_list|,
+name|isp_fc_fw_statename
+argument_list|(
+name|fcp
+operator|->
+name|isp_fwstate
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
