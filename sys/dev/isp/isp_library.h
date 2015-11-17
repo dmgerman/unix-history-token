@@ -1260,6 +1260,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isp_put_rff_id
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|rff_id_t
+modifier|*
+parameter_list|,
+name|rff_id_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isp_get_ct_hdr
 parameter_list|(
 name|ispsoftc_t
