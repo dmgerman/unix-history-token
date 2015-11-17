@@ -23641,6 +23641,8 @@ expr_stmt|;
 name|maxh
 operator|=
 name|NPH_RESERVED
+operator|-
+literal|1
 expr_stmt|;
 block|}
 else|else
