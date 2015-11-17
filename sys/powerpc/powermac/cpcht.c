@@ -766,7 +766,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -991,12 +991,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
 literal|"reg"
 argument_list|,
+operator|(
+name|pcell_t
+operator|*
+operator|)
 operator|&
 name|pcir
 argument_list|,

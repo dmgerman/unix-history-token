@@ -288,7 +288,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -305,7 +305,7 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|node
 argument_list|,
@@ -322,7 +322,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -339,7 +339,7 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|node
 argument_list|,
@@ -363,7 +363,7 @@ argument_list|,
 literal|"ibm,my-dma-window"
 argument_list|)
 condition|)
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -386,7 +386,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,

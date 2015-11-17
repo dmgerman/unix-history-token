@@ -1232,7 +1232,7 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Get properties */
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|ofw_bus_get_node
 argument_list|(

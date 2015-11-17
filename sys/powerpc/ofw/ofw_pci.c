@@ -562,12 +562,16 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
 literal|"reg"
 argument_list|,
+operator|(
+name|pcell_t
+operator|*
+operator|)
 operator|&
 name|sc
 operator|->
@@ -591,7 +595,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2347,7 +2351,7 @@ decl_stmt|;
 name|ssize_t
 name|nbase_ranges
 decl_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|OF_parent
 argument_list|(
@@ -2365,7 +2369,7 @@ name|host_address_cells
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2380,7 +2384,7 @@ name|pci_address_cells
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2481,7 +2485,7 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|OF_parent
 argument_list|(
@@ -2499,7 +2503,7 @@ name|host_address_cells
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2514,7 +2518,7 @@ name|pci_address_cells
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2578,7 +2582,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
