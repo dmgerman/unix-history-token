@@ -3434,6 +3434,14 @@ modifier|*
 name|vcp
 parameter_list|)
 block|{
+if|if
+condition|(
+name|vcp
+operator|->
+name|vc_iod
+operator|!=
+name|NULL
+condition|)
 name|smb_iod_request
 argument_list|(
 name|vcp
