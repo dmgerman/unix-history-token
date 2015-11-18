@@ -11877,6 +11877,10 @@ parameter_list|,
 name|size_t
 modifier|*
 name|align_size
+parameter_list|,
+name|bus_addr_t
+modifier|*
+name|plimit
 parameter_list|)
 block|{
 name|struct
@@ -11884,8 +11888,15 @@ name|ntb_pci_bar_info
 modifier|*
 name|bar
 decl_stmt|;
+name|bus_addr_t
+name|limit
+decl_stmt|;
 name|size_t
 name|bar_b2b_off
+decl_stmt|;
+name|enum
+name|ntb_bar
+name|bar_num
 decl_stmt|;
 if|if
 condition|(
@@ -11901,6 +11912,15 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|bar_num
+operator|=
+name|ntb_mw_to_bar
+argument_list|(
+name|ntb
+argument_list|,
+name|mw_idx
+argument_list|)
+expr_stmt|;
 name|bar
 operator|=
 operator|&
@@ -11908,12 +11928,7 @@ name|ntb
 operator|->
 name|bar_info
 index|[
-name|ntb_mw_to_bar
-argument_list|(
-name|ntb
-argument_list|,
-name|mw_idx
-argument_list|)
+name|bar_num
 index|]
 expr_stmt|;
 name|bar_b2b_off
@@ -11949,6 +11964,24 @@ operator|->
 name|b2b_off
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bar_is_64bit
+argument_list|(
+name|ntb
+argument_list|,
+name|bar_num
+argument_list|)
+condition|)
+name|limit
+operator|=
+name|BUS_SPACE_MAXADDR
+expr_stmt|;
+else|else
+name|limit
+operator|=
+name|BUS_SPACE_MAXADDR_32BIT
+expr_stmt|;
 if|if
 condition|(
 name|base
@@ -12018,6 +12051,17 @@ name|align_size
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|plimit
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|plimit
+operator|=
+name|limit
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -12027,7 +12071,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ntb_mw_set_trans() - set the translation of a memory window  * @ntb:        NTB device context  * @idx:        Memory window number  * @addr:       The dma address local memory to expose to the peer  * @size:       The size of the local memory to expose to the peer  *  * Set the translation of a memory window.  The peer may access local memory  * through the window starting at the address, up to the size.  The address  * must be aligned to the alignment specified by ntb_mw_get_range().  The size  * must be aligned to the size alignment specified by ntb_mw_get_range().  *  * Return: Zero on success, otherwise an error number.  */
+comment|/*  * ntb_mw_set_trans() - set the translation of a memory window  * @ntb:        NTB device context  * @idx:        Memory window number  * @addr:       The dma address local memory to expose to the peer  * @size:       The size of the local memory to expose to the peer  *  * Set the translation of a memory window.  The peer may access local memory  * through the window starting at the address, up to the size.  The address  * must be aligned to the alignment specified by ntb_mw_get_range().  The size  * must be aligned to the size alignment specified by ntb_mw_get_range().  The  * address must be below the plimit specified by ntb_mw_get_range() (i.e. for  * 32-bit BARs).  *  * Return: Zero on success, otherwise an error number.  */
 end_comment
 
 begin_function
@@ -12336,7 +12380,7 @@ name|addr
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|ERANGE
 operator|)
 return|;
 if|if
@@ -12359,7 +12403,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|ERANGE
 operator|)
 return|;
 name|base

@@ -790,6 +790,9 @@ decl_stmt|;
 name|size_t
 name|xlat_align_size
 decl_stmt|;
+name|bus_addr_t
+name|addr_limit
+decl_stmt|;
 comment|/* Tx buff is off vbase / phys_addr */
 name|caddr_t
 name|vbase
@@ -2806,6 +2809,11 @@ operator|&
 name|mw
 operator|->
 name|xlat_align_size
+argument_list|,
+operator|&
+name|mw
+operator|->
+name|addr_limit
 argument_list|)
 expr_stmt|;
 if|if
@@ -6631,7 +6639,9 @@ name|M_ZERO
 argument_list|,
 literal|0
 argument_list|,
-name|BUS_SPACE_MAXADDR
+name|mw
+operator|->
+name|addr_limit
 argument_list|,
 name|mw
 operator|->

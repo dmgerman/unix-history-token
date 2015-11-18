@@ -313,6 +313,10 @@ parameter_list|,
 name|size_t
 modifier|*
 name|align_size
+parameter_list|,
+name|bus_addr_t
+modifier|*
+name|plimit
 parameter_list|)
 function_decl|;
 end_function_decl
