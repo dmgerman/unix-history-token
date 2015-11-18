@@ -436,7 +436,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|unsigned
+name|uint32_t
 name|ntb_q_idx_t
 typedef|;
 end_typedef
@@ -461,10 +461,10 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|uint32_t
 name|len
 decl_stmt|;
-name|unsigned
+name|uint32_t
 name|flags
 decl_stmt|;
 name|struct
@@ -920,13 +920,13 @@ begin_struct
 struct|struct
 name|ntb_payload_header
 block|{
-name|uint64_t
+name|ntb_q_idx_t
 name|ver
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|len
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|flags
 decl_stmt|;
 block|}
@@ -1707,6 +1707,38 @@ literal|"ntb network driver"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|iowrite32
+parameter_list|(
+name|uint32_t
+name|val
+parameter_list|,
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|bus_space_write_4
+argument_list|(
+name|X86_BUS_SPACE_MEM
+argument_list|,
+literal|0
+comment|/* HACK */
+argument_list|,
+operator|(
+name|uintptr_t
+operator|)
+name|addr
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Module setup and teardown */
@@ -4454,10 +4486,6 @@ name|offset
 decl_stmt|;
 name|offset
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|qp
 operator|->
 name|tx_mw
@@ -4474,7 +4502,7 @@ name|CTR3
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"TX: process_tx: tx_pkts=%u, tx_index=%u, remote entry=%u"
+literal|"TX: process_tx: tx_pkts=%lu, tx_index=%u, remote entry=%u"
 argument_list|,
 name|qp
 operator|->
@@ -4697,24 +4725,30 @@ name|x_hdr
 operator|=
 name|hdr
 expr_stmt|;
-name|hdr
-operator|->
-name|len
-operator|=
+name|iowrite32
+argument_list|(
 name|entry
 operator|->
 name|len
-expr_stmt|;
-comment|/* TODO: replace with bus_space_write */
+argument_list|,
+operator|&
 name|hdr
 operator|->
-name|ver
-operator|=
+name|len
+argument_list|)
+expr_stmt|;
+name|iowrite32
+argument_list|(
 name|qp
 operator|->
 name|tx_pkts
+argument_list|,
+operator|&
+name|hdr
+operator|->
+name|ver
+argument_list|)
 expr_stmt|;
-comment|/* TODO: replace with bus_space_write */
 comment|/* This piece is ntb_memcpy_tx() */
 name|CTR2
 argument_list|(
@@ -4764,16 +4798,28 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* The rest is ntb_tx_copy_callback() */
-comment|/* TODO: replace with bus_space_write */
-name|hdr
-operator|->
-name|flags
-operator|=
+name|iowrite32
+argument_list|(
 name|entry
 operator|->
 name|flags
 operator||
 name|IF_NTB_DESC_DONE_FLAG
+argument_list|,
+operator|&
+name|hdr
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_NTB
+argument_list|,
+literal|"TX: hdr %p set DESC_DONE"
+argument_list|,
+name|hdr
+argument_list|)
 expr_stmt|;
 name|ntb_peer_db_set
 argument_list|(
@@ -4832,17 +4878,22 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"TX: entry %p sent. hdr->ver = %d, Returning to tx_free_q"
+literal|"TX: entry %p sent. hdr->ver = %u, hdr->flags = 0x%x, Returning "
+literal|"to tx_free_q"
 argument_list|,
 name|entry
 argument_list|,
 name|hdr
 operator|->
 name|ver
+argument_list|,
+name|hdr
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|ntb_list_add
@@ -5088,21 +5139,11 @@ name|ntb_queue_entry
 modifier|*
 name|entry
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|offset
 decl_stmt|;
 name|offset
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|qp
 operator|->
 name|rx_buff
@@ -5114,7 +5155,6 @@ operator|*
 name|qp
 operator|->
 name|rx_index
-operator|)
 expr_stmt|;
 name|hdr
 operator|=
@@ -5123,10 +5163,6 @@ name|void
 operator|*
 operator|)
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|offset
 operator|+
 name|qp
@@ -5238,7 +5274,7 @@ argument_list|(
 name|KTR_NTB
 argument_list|,
 literal|"RX: ver != rx_pkts (%x != %lx). "
-literal|"Returning entry %p to rx_pend_q"
+literal|"Returning entry to rx_pend_q"
 argument_list|,
 name|hdr
 operator|->
@@ -5710,16 +5746,19 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX bus_space_write */
+name|iowrite32
+argument_list|(
+name|entry
+operator|->
+name|index
+argument_list|,
+operator|&
 name|qp
 operator|->
 name|rx_info
 operator|->
 name|entry
-operator|=
-name|entry
-operator|->
-name|index
+argument_list|)
 expr_stmt|;
 name|len
 operator|=
