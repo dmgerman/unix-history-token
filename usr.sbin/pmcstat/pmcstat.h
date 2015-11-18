@@ -244,6 +244,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLAG_DO_WIDE_GPROF_HC
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* -e */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_SAMPLE_COUNT
 value|65536
 end_define

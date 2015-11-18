@@ -366,6 +366,40 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * RFF_ID Requet CT_IU  *  * Source: INCITS 463-2010 Generic Services 6 Section 5.2.5.34  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|ct_hdr_t
+name|rffid_hdr
+decl_stmt|;
+name|uint8_t
+name|rffid_reserved
+decl_stmt|;
+name|uint8_t
+name|rffid_portid
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint16_t
+name|rffid_reserved2
+decl_stmt|;
+name|uint8_t
+name|rffid_fc4features
+decl_stmt|;
+name|uint8_t
+name|rffid_fc4type
+decl_stmt|;
+block|}
+name|rff_id_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * FCP Response IU and bits of interest  * Source: NCITS T10, Project 1828D, Revision 02b (aka FCP4r02b)  */
 end_comment
 

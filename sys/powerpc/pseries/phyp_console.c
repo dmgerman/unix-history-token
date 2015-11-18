@@ -619,7 +619,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -884,7 +884,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|chosen
 argument_list|,

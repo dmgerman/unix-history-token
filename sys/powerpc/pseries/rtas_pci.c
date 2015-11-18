@@ -502,7 +502,7 @@ name|sc_extended_config
 operator|=
 literal|0
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|ofw_bus_get_node
 argument_list|(

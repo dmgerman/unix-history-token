@@ -482,7 +482,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|phandle
 argument_list|,
@@ -511,7 +511,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|phandle
 argument_list|,
@@ -549,7 +549,7 @@ operator|||
 operator|(
 name|sz
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2321,7 +2321,7 @@ name|res
 decl_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2349,7 +2349,7 @@ literal|2
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2636,7 +2636,7 @@ name|bs_le_tag
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|dev
 argument_list|,
@@ -2855,7 +2855,7 @@ name|bs_le_tag
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|bridge
 argument_list|,

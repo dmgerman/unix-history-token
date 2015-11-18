@@ -1006,7 +1006,7 @@ block|,
 comment|/* NB: blocksize of 4 is to generate a properly aligned ESP header */
 name|NULL_BLOCK_LEN
 block|,
-name|NULL_BLOCK_LEN
+literal|0
 block|,
 name|NULL_MIN_KEY
 block|,

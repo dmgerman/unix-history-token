@@ -882,6 +882,8 @@ name|isrc
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|mtx_owned
 decl_stmt|;
 name|isrc
 operator|=
@@ -904,6 +906,21 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Recursion is needed here so PICs can remove interrupts 		 * while resuming. It was previously not possible due to 		 * intr_resume holding the intr_table_lock and 		 * intr_remove_handler recursing on it. 		 */
+name|mtx_owned
+operator|=
+name|mtx_owned
+argument_list|(
+operator|&
+name|intr_table_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+operator|==
+literal|0
+condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -950,6 +967,12 @@ argument_list|(
 name|isrc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+operator|==
+literal|0
+condition|)
 name|mtx_unlock
 argument_list|(
 operator|&

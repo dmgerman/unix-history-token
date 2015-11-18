@@ -474,7 +474,8 @@ name|ehci_methods
 block|,
 expr|sizeof
 operator|(
-name|ehci_softc_t
+expr|struct
+name|exynos_ehci_softc
 operator|)
 block|}
 decl_stmt|;

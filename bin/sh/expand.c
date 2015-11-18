@@ -1244,6 +1244,17 @@ index|]
 operator|==
 name|CTLVAR
 operator|&&
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|&
+name|VSQUOTE
+operator|)
+operator|!=
+literal|0
+operator|&&
 name|p
 index|[
 literal|2

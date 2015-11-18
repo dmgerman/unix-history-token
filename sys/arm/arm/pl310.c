@@ -265,6 +265,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|pl310_print_config
 parameter_list|(

@@ -601,12 +601,16 @@ control|)
 block|{
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
 literal|"reg"
 argument_list|,
+operator|(
+name|pcell_t
+operator|*
+operator|)
 operator|&
 name|pcir
 argument_list|,
@@ -1245,7 +1249,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1278,7 +1282,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|OF_node_from_xref
 argument_list|(
@@ -1299,7 +1303,7 @@ expr_stmt|;
 comment|/* 	 * Any AAPL,interrupts property gets priority and is 	 * fully specified (i.e. does not need routing) 	 */
 name|isz
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1355,7 +1359,7 @@ operator|)
 return|;
 name|isz
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,

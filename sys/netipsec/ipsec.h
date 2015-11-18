@@ -225,6 +225,10 @@ directive|define
 name|IPSEC_SPSTATE_ALIVE
 value|1
 name|u_int32_t
+name|priority
+decl_stmt|;
+comment|/* priority of this policy */
+name|u_int32_t
 name|id
 decl_stmt|;
 comment|/* It's unique number on the system. */

@@ -153,27 +153,6 @@ begin_comment
 comment|/*--------------------------- Forward Declarations ---------------------------*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|xen_hvm_cpu_resume
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -183,25 +162,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*---------------------------- Extern Declarations ---------------------------*/
-end_comment
-
-begin_comment
-comment|/* Variables used by mp_machdep to perform the bitmap IPI */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|u_int
-name|cpu_ipi_pending
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*-------------------------------- Local Types -------------------------------*/
@@ -253,7 +213,7 @@ block|,
 operator|.
 name|cpu_resume
 operator|=
-name|xen_hvm_cpu_resume
+name|xen_hvm_cpu_init
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -372,52 +332,6 @@ name|xen_disable_pv_nics
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_comment
-comment|/*---------------------- XEN diverged cpu operations -------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|xen_hvm_cpu_resume
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int
-name|cpuid
-init|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-decl_stmt|;
-comment|/* 	 * Reset pending bitmap IPIs, because Xen doesn't preserve pending 	 * event channels on migration. 	 */
-name|cpu_ipi_pending
-index|[
-name|cpuid
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* register vcpu_info area */
-name|xen_hvm_cpu_init
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*---------------------- XEN Hypervisor Probe and Setup ----------------------*/

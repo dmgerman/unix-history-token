@@ -627,7 +627,7 @@ expr_stmt|;
 block|}
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -663,7 +663,7 @@ index|]
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
