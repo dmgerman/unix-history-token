@@ -1535,11 +1535,28 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
+comment|/* Looks good, but give brand a chance to veto */
+if|if
+condition|(
+operator|!
+name|bi
+operator|->
+name|header_supported
+operator|||
+name|bi
+operator|->
+name|header_supported
+argument_list|(
+name|imgp
+argument_list|)
+condition|)
 return|return
 operator|(
 name|bi
 operator|)
 return|;
+block|}
 block|}
 comment|/* No known brand, see if the header is recognized by any brand */
 for|for
