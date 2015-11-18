@@ -223,9 +223,7 @@ argument_list|)
 operator|!=
 literal|0
 argument_list|,
-literal|"ether_line succeeded unexpectedly; errno=%d"
-argument_list|,
-name|errno
+literal|"ether_line succeeded unexpectedly"
 argument_list|)
 expr_stmt|;
 block|}
@@ -285,9 +283,7 @@ argument_list|)
 operator|!=
 literal|0
 argument_list|,
-literal|"ether_line succeeded unexpectedly; errno=%d"
-argument_list|,
-name|errno
+literal|"ether_line succeeded unexpectedly"
 argument_list|)
 expr_stmt|;
 block|}
