@@ -1508,7 +1508,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|uint32_t
+name|uint16_t
 parameter_list|,
 name|fcportdb_t
 modifier|*

@@ -110,7 +110,7 @@ name|char
 name|atiocope
 index|[]
 init|=
-literal|"ATIO returned for lun %d because it was in the middle of Bus Device Reset on bus %d"
+literal|"ATIO returned for LUN %x because it was in the middle of Bus Device Reset on bus %d"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ name|char
 name|atior
 index|[]
 init|=
-literal|"ATIO returned on for lun %d on from loopid %d because a Bus Reset occurred on bus %d"
+literal|"ATIO returned for LUN %x from handle 0x%x because a Bus Reset occurred on bus %d"
 decl_stmt|;
 end_decl_stmt
 
@@ -4902,7 +4902,7 @@ name|char
 name|f1
 index|[]
 init|=
-literal|"%s from N-port handle 0x%x lun %d seq 0x%x"
+literal|"%s from N-port handle 0x%x lun %x seq 0x%x"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -4910,12 +4910,12 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown %s 0x%x lun %d N-Port handle 0x%x task flags 0x%x seq 0x%x\n"
+literal|"unknown %s 0x%x lun %x N-Port handle 0x%x task flags 0x%x seq 0x%x\n"
 decl_stmt|;
 name|uint16_t
 name|seqid
 decl_stmt|,
-name|loopid
+name|nphdl
 decl_stmt|;
 name|ISP_MEMZERO
 argument_list|(
@@ -4962,7 +4962,7 @@ operator|)
 operator|->
 name|in_iid
 expr_stmt|;
-name|loopid
+name|nphdl
 operator|=
 operator|(
 operator|(
@@ -4997,7 +4997,7 @@ name|inp
 operator|->
 name|in_iid
 expr_stmt|;
-name|loopid
+name|nphdl
 operator|=
 name|inp
 operator|->
@@ -5129,7 +5129,7 @@ name|notify
 operator|.
 name|nt_lun
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|inp
 operator|->
@@ -5170,7 +5170,7 @@ name|f1
 argument_list|,
 literal|"ABORT TASK SET"
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|notify
 operator|.
@@ -5208,7 +5208,7 @@ name|f1
 argument_list|,
 literal|"CLEAR TASK SET"
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|notify
 operator|.
@@ -5246,7 +5246,7 @@ name|f1
 argument_list|,
 literal|"LUN RESET"
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|notify
 operator|.
@@ -5284,7 +5284,7 @@ name|f1
 argument_list|,
 literal|"TARGET RESET"
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|notify
 operator|.
@@ -5322,7 +5322,7 @@ name|f1
 argument_list|,
 literal|"CLEAR ACA"
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|notify
 operator|.
@@ -5360,7 +5360,7 @@ name|notify
 operator|.
 name|nt_lun
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|inp
 operator|->
@@ -5418,7 +5418,7 @@ name|char
 name|f1
 index|[]
 init|=
-literal|"%s from PortID 0x%06x lun %d seq 0x%08x"
+literal|"%s from PortID 0x%06x lun %x seq 0x%08x"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -5426,7 +5426,7 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown Task Flag 0x%x lun %d PortID 0x%x tag 0x%08x"
+literal|"unknown Task Flag 0x%x lun %x PortID 0x%x tag 0x%08x"
 decl_stmt|;
 name|uint16_t
 name|chan
@@ -6573,7 +6573,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"notify ack loopid %u seqid %x flags %x tflags %x response %x"
+literal|"notify ack handle %x seqid %x flags %x tflags %x response %x"
 argument_list|,
 name|iid
 argument_list|,
@@ -6723,7 +6723,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"notify ack loopid %u lun %u tgt %u seqid %x event %x"
+literal|"notify ack handle %x lun %x tgt %u seqid %x event %x"
 argument_list|,
 name|na
 operator|->
@@ -7249,7 +7249,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"rejected ATIO for disabled lun %d"
+literal|"rejected ATIO for disabled lun %x"
 argument_list|,
 name|lun
 argument_list|)
@@ -7265,7 +7265,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"rejected ATIO for lun %d because of command count overflow"
+literal|"rejected ATIO for lun %x because of command count overflow"
 argument_list|,
 name|lun
 argument_list|)
@@ -7350,7 +7350,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Unknown ATIO status 0x%x from loopid %d for lun %d"
+literal|"Unknown ATIO status 0x%x from handle %x for lun %x"
 argument_list|,
 name|aep
 operator|->
@@ -7565,7 +7565,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Unknown ATIO2 status 0x%x from loopid %d for lun %x"
+literal|"Unknown ATIO2 status 0x%x from handle %d for lun %x"
 argument_list|,
 name|aep
 operator|->
@@ -7773,7 +7773,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Firmware rejected CTIO for disabled lun %d"
+literal|"Firmware rejected CTIO for disabled lun %x"
 argument_list|,
 name|ct
 operator|->
@@ -7791,7 +7791,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Firmware rejected CTIO for bad nexus %d/%d/%d"
+literal|"Firmware rejected CTIO for bad nexus %d/%d/%x"
 argument_list|,
 name|ct
 operator|->
