@@ -173,6 +173,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BAR_HIGH_MASK
+value|(~((1ull<< 12) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICE2SOFTC
 parameter_list|(
 name|dev
@@ -12199,6 +12206,8 @@ literal|8
 argument_list|,
 name|base_reg
 argument_list|)
+operator|&
+name|BAR_HIGH_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -12234,6 +12243,8 @@ literal|8
 argument_list|,
 name|xlat_reg
 argument_list|)
+operator|&
+name|BAR_HIGH_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -12275,6 +12286,8 @@ literal|8
 argument_list|,
 name|limit_reg
 argument_list|)
+operator|&
+name|BAR_HIGH_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -12357,6 +12370,8 @@ literal|4
 argument_list|,
 name|base_reg
 argument_list|)
+operator|&
+name|BAR_HIGH_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -12392,6 +12407,8 @@ literal|4
 argument_list|,
 name|xlat_reg
 argument_list|)
+operator|&
+name|BAR_HIGH_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -12433,6 +12450,8 @@ literal|4
 argument_list|,
 name|limit_reg
 argument_list|)
+operator|&
+name|BAR_HIGH_MASK
 expr_stmt|;
 if|if
 condition|(
