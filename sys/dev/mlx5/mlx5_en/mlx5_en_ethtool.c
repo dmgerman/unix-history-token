@@ -1251,7 +1251,7 @@ name|priv
 operator|->
 name|ifp
 argument_list|,
-literal|"%s:%d: Not recognized cable type = 0x%x\n"
+literal|"%s:%d: Not recognized cable type = 0x%x(%s)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1260,6 +1260,13 @@ argument_list|,
 name|data
 operator|&
 name|MLX5_EEPROM_IDENTIFIER_BYTE_MASK
+argument_list|,
+name|sff_8024_id
+index|[
+name|data
+operator|&
+name|MLX5_EEPROM_IDENTIFIER_BYTE_MASK
+index|]
 argument_list|)
 expr_stmt|;
 return|return
