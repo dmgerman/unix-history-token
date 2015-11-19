@@ -955,6 +955,34 @@ argument_list|,
 name|lro_cap
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* set the correct (0) value to params_ethtool.hw_lro, issue a warning and return error */
+name|priv
+operator|->
+name|params_ethtool
+operator|.
+name|hw_lro
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|priv
+operator|->
+name|ifp
+argument_list|,
+literal|"Can't set HW_LRO to a device with LRO turned off"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 block|}
 else|else
 block|{
