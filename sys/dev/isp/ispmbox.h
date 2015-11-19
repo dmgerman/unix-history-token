@@ -880,29 +880,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBGSD_ONEGB
-value|0
+name|MBGSD_1GB
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBGSD_TWOGB
-value|1
+name|MBGSD_2GB
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBGSD_AUTO
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBGSD_FOURGB
-value|3
+name|MBGSD_4GB
+value|0x03
 end_define
 
 begin_comment
@@ -912,12 +912,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBGSD_EIGHTGB
-value|4
+name|MBGSD_8GB
+value|0x04
 end_define
 
 begin_comment
 comment|/* 25XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_16GB
+value|0x05
+end_define
+
+begin_comment
+comment|/* 26XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_10GB
+value|0x13
+end_define
+
+begin_comment
+comment|/* 26XX only */
 end_comment
 
 begin_define

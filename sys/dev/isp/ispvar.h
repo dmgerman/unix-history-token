@@ -1445,13 +1445,17 @@ decl_stmt|;
 comment|/* Incoming new PRLI parameters */
 name|uint16_t
 label|:
-literal|12
+literal|11
 operator|,
 name|autologin
 operator|:
 literal|1
 operator|,
 comment|/* F/W does PLOGI/PLOGO */
+name|probational
+operator|:
+literal|1
+operator|,
 name|state
 operator|:
 literal|3
@@ -1501,54 +1505,64 @@ name|FC_PORTDB_STATE_NIL
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|FC_PORTDB_STATE_PROBATIONAL
-value|1
-end_define
+begin_comment
+comment|/* Empty DB slot */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_DEAD
-value|2
+value|1
 end_define
+
+begin_comment
+comment|/* Was valid, but no more. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_CHANGED
-value|3
+value|2
 end_define
+
+begin_comment
+comment|/* Was valid, but changed. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_NEW
-value|4
+value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|FC_PORTDB_STATE_PENDING_VALID
-value|5
-end_define
+begin_comment
+comment|/* Logged in, not announced. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_ZOMBIE
-value|6
+value|4
 end_define
+
+begin_comment
+comment|/* Invalid, but announced. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_VALID
-value|7
+value|5
 end_define
+
+begin_comment
+comment|/* Valid */
+end_comment
 
 begin_define
 define|#
@@ -1836,6 +1850,16 @@ define|#
 directive|define
 name|TOPO_PTP_STUB
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPO_IS_FABRIC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == TOPO_FL_PORT || (x) == TOPO_F_PORT)
 end_define
 
 begin_comment
