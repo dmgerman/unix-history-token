@@ -810,7 +810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The return value is not going back to the stack because of  * the drbr */
+comment|/*  * The return value is not going back to the stack because of  * the drbr  */
 end_comment
 
 begin_function
@@ -880,7 +880,7 @@ decl_stmt|;
 name|u8
 name|opcode
 decl_stmt|;
-comment|/* Return ENOBUFS if the queue is full, this may trigger reinsertion 	 * of the mbuf into the drbr (see mlx5e_xmit_locked) */
+comment|/* 	 * Return ENOBUFS if the queue is full, this may trigger reinsertion 	 * of the mbuf into the drbr (see mlx5e_xmit_locked) 	 */
 if|if
 condition|(
 name|unlikely
@@ -932,7 +932,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* send one multi NOP message instead of many */
+comment|/* Send one multi NOP message instead of many */
 name|mlx5e_send_nop
 argument_list|(
 name|sq
@@ -1034,7 +1034,7 @@ name|wqe
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* send a copy of the frame to the BPF listener, if any */
+comment|/* Send a copy of the frame to the BPF listener, if any */
 if|if
 condition|(
 name|ifp
@@ -1297,7 +1297,7 @@ name|eth
 operator|.
 name|inline_hdr_start
 decl_stmt|;
-comment|/* range checks */
+comment|/* Range checks */
 if|if
 condition|(
 name|ihs
@@ -1353,7 +1353,7 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* insert 4 bytes VLAN tag into data stream */
+comment|/* Insert 4 bytes VLAN tag into data stream */
 name|eh
 operator|->
 name|evl_proto
@@ -1384,7 +1384,7 @@ operator|.
 name|ether_vtag
 argument_list|)
 expr_stmt|;
-comment|/* copy rest of header data, if any */
+comment|/* Copy rest of header data, if any */
 name|m_copydata
 argument_list|(
 name|mb
@@ -1414,7 +1414,7 @@ operator|-
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* extend header by 4 bytes */
+comment|/* Extend header by 4 bytes */
 name|ihs
 operator|+=
 name|ETHER_VLAN_ENCAP_LEN
@@ -1518,7 +1518,7 @@ operator|)
 operator|+
 name|ds_cnt
 expr_stmt|;
-comment|/* trim off empty mbufs */
+comment|/* Trim off empty mbufs */
 while|while
 condition|(
 name|mb
@@ -1535,7 +1535,7 @@ argument_list|(
 name|mb
 argument_list|)
 expr_stmt|;
-comment|/* check if all data has been inlined */
+comment|/* Check if all data has been inlined */
 if|if
 condition|(
 name|mb
@@ -1580,7 +1580,7 @@ operator|==
 name|EFBIG
 condition|)
 block|{
-comment|/* Update *mbp before defrag in case it was trimmed in the loop above */
+comment|/* 		 * Update *mbp before defrag in case it was trimmed in the 		 * loop above 		 */
 operator|*
 name|mbp
 operator|=
@@ -1650,7 +1650,7 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* catch errors */
+comment|/* Catch errors */
 if|if
 condition|(
 name|err
@@ -1805,7 +1805,7 @@ name|fm_ce_se
 operator|=
 name|MLX5_WQE_CTRL_CQ_UPDATE
 expr_stmt|;
-comment|/* store pointer to mbuf */
+comment|/* Store pointer to mbuf */
 name|sq
 operator|->
 name|mbuf
@@ -1846,7 +1846,7 @@ index|]
 operator|.
 name|num_wqebbs
 expr_stmt|;
-comment|/* make sure all mbuf data is written to RAM */
+comment|/* Make sure all mbuf data is written to RAM */
 if|if
 condition|(
 name|mb
@@ -2008,7 +2008,7 @@ name|mbuf
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* safety clear */
+comment|/* Safety clear */
 if|if
 condition|(
 name|mb
@@ -2076,7 +2076,7 @@ operator|.
 name|dma_map
 argument_list|)
 expr_stmt|;
-comment|/* free transmitted mbuf */
+comment|/* Free transmitted mbuf */
 name|m_freem
 argument_list|(
 name|mb
@@ -2105,7 +2105,7 @@ operator|.
 name|wq
 argument_list|)
 expr_stmt|;
-comment|/* ensure cq space is freed before enabling more cqes */
+comment|/* Ensure cq space is freed before enabling more cqes */
 name|wmb
 argument_list|()
 expr_stmt|;
@@ -2217,7 +2217,7 @@ name|mb
 operator|!=
 name|NULL
 condition|)
-comment|/* If we can't insert mbuf into drbr, try to xmit anyway.                  * We keep the error we got so we could return that after xmit.                  */
+comment|/* 		 * If we can't insert mbuf into drbr, try to xmit anyway. 		 * We keep the error we got so we could return that after xmit. 		 */
 name|err
 operator|=
 name|drbr_enqueue
@@ -2379,7 +2379,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* invalid send queue */
+comment|/* Invalid send queue */
 name|m_freem
 argument_list|(
 name|mb

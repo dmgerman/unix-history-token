@@ -12111,7 +12111,7 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-comment|/* Copy from the user-space address ifr_data to the kernel-space address i2c */
+comment|/* 		 * Copy from the user-space address ifr_data to the 		 * kernel-space address i2c 		 */
 name|error
 operator|=
 name|copyin
@@ -12541,7 +12541,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/*  	 * hw lro is currently defaulted to off.  	 * when it won't anymore we will consider the  	 * HW capability: "!!MLX5_CAP_ETH(mdev, lro_cap)" 	*/
+comment|/* 	 * hw lro is currently defaulted to off. when it won't anymore we 	 * will consider the HW capability: "!!MLX5_CAP_ETH(mdev, lro_cap)" 	 */
 name|priv
 operator|->
 name|params
@@ -12938,7 +12938,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-comment|/* %d.%d%.d the string format. 	 * fw_rev_{maj,min,sub} return u16, 2^16 = 65536. 	 * We need at most 5 chars to store that. 	 * it also has: two "." and NULL at the end. 	 * Which means we need 18 (5*3 + 3) chars at most. 	 */
+comment|/* 	 * %d.%d%.d the string format. 	 * fw_rev_{maj,min,sub} return u16, 2^16 = 65536. 	 * We need at most 5 chars to store that. 	 * It also has: two "." and NULL at the end, which means we need 18 	 * (5*3 + 3) chars at most. 	 */
 name|char
 name|fw
 index|[

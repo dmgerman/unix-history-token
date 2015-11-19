@@ -1915,7 +1915,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* Allocate needed length buffer and additional space for the 3rd */
+comment|/* 		 * Allocate needed length buffer and additional space for 		 * page 0x03 		 */
 name|eeprom
 operator|.
 name|data
@@ -1968,7 +1968,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Continue printing partial information in case of an error */
+comment|/* 			 * Continue printing partial information in case of 			 * an error 			 */
 block|}
 name|mlx5e_print_eeprom
 argument_list|(

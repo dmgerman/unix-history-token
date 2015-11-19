@@ -361,7 +361,7 @@ value|MIN(ETHERMTU_JUMBO, MJUM16BYTES)
 end_define
 
 begin_comment
-comment|/* Max MTU of Ethernet jumbo frames */
+comment|/* Max MTU of Ethernet 									 * jumbo frames */
 end_comment
 
 begin_define
