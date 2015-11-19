@@ -1418,6 +1418,11 @@ name|fp
 index|[
 literal|1
 index|]
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
 operator|)
 decl_stmt|;
 if|if
