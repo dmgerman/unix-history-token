@@ -12420,12 +12420,6 @@ operator|->
 name|lc_name
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sbuf_printf(sb, 			"w_rmatrix[%s][%s] == %x, w_rmatrix[%s][%s] == %x\n",  			    tmp_w1->name, tmp_w2->w_name, w_rmatrix1,  			    tmp_w2->name, tmp_w1->w_name, w_rmatrix2);
-endif|#
-directive|endif
 if|if
 condition|(
 name|data1
