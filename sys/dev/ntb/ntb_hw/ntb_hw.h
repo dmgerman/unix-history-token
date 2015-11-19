@@ -585,6 +585,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|XEON_SPAD_COUNT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOM_SPAD_COUNT
+value|16
+end_define
+
 begin_comment
 comment|/* Hardware owns the low 16 bits of features. */
 end_comment
