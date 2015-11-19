@@ -641,6 +641,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint8_t
+name|usb_pc_buffer_is_aligned
+parameter_list|(
+name|struct
+name|usb_page_cache
+modifier|*
+name|pc
+parameter_list|,
+name|usb_frlength_t
+name|offset
+parameter_list|,
+name|usb_frlength_t
+name|len
+parameter_list|,
+name|usb_frlength_t
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
