@@ -3521,7 +3521,7 @@ operator|(
 name|VM_PAGER_ERROR
 operator|)
 return|;
-comment|/* 		 * if the blocksize is smaller than a page size, then use 		 * special small filesystem code.  NFS sometimes has a small 		 * blocksize, but it can handle large reads itself. 		 */
+comment|/* 		 * If the blocksize is smaller than a page size, then use 		 * special small filesystem code. 		 */
 block|}
 elseif|else
 if|if
@@ -3533,18 +3533,6 @@ name|bsize
 operator|)
 operator|>
 literal|1
-operator|&&
-operator|(
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_stat
-operator|.
-name|f_type
-operator|!=
-name|nfs_mount_type
-operator|)
 condition|)
 block|{
 name|relpbuf
