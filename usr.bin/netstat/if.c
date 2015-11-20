@@ -1562,19 +1562,19 @@ name|name
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{etk:name/%s}{eq:flags/0x%x}{d:/%-*.*s}"
-argument_list|,
-name|name
-argument_list|,
-name|ifa
-operator|->
-name|ifa_flags
+literal|"{d:/%-*.*s}{etk:name}{eq:flags/0x%x}"
 argument_list|,
 name|ifn_len_max
 argument_list|,
 name|ifn_len_max
 argument_list|,
 name|xname
+argument_list|,
+name|name
+argument_list|,
+name|ifa
+operator|->
+name|ifa_flags
 argument_list|)
 expr_stmt|;
 define|#
@@ -1686,9 +1686,7 @@ condition|)
 block|{
 name|xo_emit
 argument_list|(
-literal|"{et:network/%s}{d:/%-*s} "
-argument_list|,
-name|nn
+literal|"{t:network/%-*s} "
 argument_list|,
 name|net_len
 argument_list|,
@@ -1697,9 +1695,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{et:address/%s}{d:/%-*s} "
-argument_list|,
-name|rn
+literal|"{t:address/%-*s} "
 argument_list|,
 name|addr_len
 argument_list|,
@@ -1711,26 +1707,26 @@ else|else
 block|{
 name|xo_emit
 argument_list|(
-literal|"{et:network/%s}{d:/%-*.*s} "
+literal|"{d:network/%-*.*s}{et:network} "
+argument_list|,
+name|net_len
+argument_list|,
+name|net_len
 argument_list|,
 name|nn
-argument_list|,
-name|net_len
-argument_list|,
-name|net_len
 argument_list|,
 name|nn
 argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{et:address/%s}{d:/%-*.*s} "
+literal|"{d:address/%-*.*s}{et:address} "
+argument_list|,
+name|addr_len
+argument_list|,
+name|addr_len
 argument_list|,
 name|rn
-argument_list|,
-name|addr_len
-argument_list|,
-name|addr_len
 argument_list|,
 name|rn
 argument_list|)
