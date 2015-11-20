@@ -4473,6 +4473,10 @@ name|datacount2
 decl_stmt|;
 if|if
 condition|(
+name|map
+operator|==
+name|NULL
+operator|||
 operator|(
 name|bpage
 operator|=
