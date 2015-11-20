@@ -262,6 +262,19 @@ directive|include
 file|<libutil.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|VMSTAT_XO_VERSION
+value|"1"
+end_define
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -937,6 +950,24 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+return|return
+name|argc
+return|;
 while|while
 condition|(
 operator|(
@@ -1062,7 +1093,7 @@ name|maxshowdevs
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1098,7 +1129,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1128,7 +1159,7 @@ name|TIMESTAT
 expr_stmt|;
 else|#
 directive|else
-name|errx
+name|xo_errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -1181,6 +1212,11 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|xo_set_version
+argument_list|(
+name|VMSTAT_XO_VERSION
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|todo
@@ -1219,7 +1255,7 @@ name|kd
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1258,6 +1294,22 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|bufsize
+init|=
+literal|0
+decl_stmt|,
+name|len
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|,
+modifier|*
+name|bp
+decl_stmt|;
 comment|/* 			 * 'cnt' was renamed to 'vm_cnt'. If 'vm_cnt' is not 			 * found try looking up older 'cnt' symbol. 			 * */
 if|if
 condition|(
@@ -1298,9 +1350,73 @@ goto|goto
 name|retry_nlist
 goto|;
 block|}
-name|warnx
+for|for
+control|(
+name|c
+operator|=
+literal|0
+init|;
+name|c
+operator|<
+call|(
+name|int
+call|)
 argument_list|(
-literal|"undefined symbols:"
+sizeof|sizeof
+argument_list|(
+name|namelist
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|namelist
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+condition|;
+name|c
+operator|++
+control|)
+if|if
+condition|(
+name|namelist
+index|[
+name|c
+index|]
+operator|.
+name|n_type
+operator|==
+literal|0
+condition|)
+name|bufsize
+operator|+=
+name|strlen
+argument_list|(
+name|namelist
+index|[
+name|c
+index|]
+operator|.
+name|n_name
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|bufsize
+operator|+=
+name|len
+operator|+
+literal|1
+expr_stmt|;
+name|buf
+operator|=
+name|bp
+operator|=
+name|alloca
+argument_list|(
+name|bufsize
 argument_list|)
 expr_stmt|;
 for|for
@@ -1343,13 +1459,9 @@ name|n_type
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+block|{
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|" %s"
 argument_list|,
 name|namelist
@@ -1360,19 +1472,58 @@ operator|.
 name|n_name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputc
+name|len
+operator|=
+name|strlen
 argument_list|(
-literal|'\n'
+name|namelist
+index|[
+name|c
+index|]
+operator|.
+name|n_name
+argument_list|)
+expr_stmt|;
+operator|*
+name|bp
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|bp
 argument_list|,
-name|stderr
+name|namelist
+index|[
+name|c
+index|]
+operator|.
+name|n_name
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|len
+expr_stmt|;
+block|}
+operator|*
+name|bp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|xo_error
+argument_list|(
+literal|"undefined symbols:\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"kvm_nlist: %s"
 argument_list|,
@@ -1381,6 +1532,9 @@ argument_list|(
 name|kd
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -1394,7 +1548,7 @@ name|kd
 operator|&&
 name|Pflag
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1418,7 +1572,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1582,6 +1736,9 @@ argument_list|,
 name|reps
 argument_list|)
 expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -1644,7 +1801,7 @@ name|errno
 operator|!=
 name|ENOMEM
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -1687,7 +1844,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1749,7 +1906,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1896,7 +2053,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1960,7 +2117,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2078,7 +2235,7 @@ name|maxcpu
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2110,7 +2267,7 @@ name|pcpu
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2158,7 +2315,7 @@ operator|)
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2917,7 +3074,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX fill vmtp */
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2960,7 +3117,7 @@ operator|*
 name|vmtp
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3022,7 +3179,7 @@ name|kd
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3068,7 +3225,7 @@ argument_list|(
 name|maxcpu
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3099,7 +3256,7 @@ name|times
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -3239,6 +3396,11 @@ specifier|static
 name|void
 name|prthuman
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|u_int64_t
 name|val
 parameter_list|,
@@ -3255,6 +3417,26 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|char
+name|fmt
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|fmt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
+argument_list|,
+literal|"{:%s/%%*s}"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|size
@@ -3265,7 +3447,7 @@ name|size
 operator|>
 literal|9
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3295,9 +3477,21 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_attr
 argument_list|(
-literal|"%*s"
+literal|"value"
+argument_list|,
+literal|"%ju"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|val
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|fmt
 argument_list|,
 name|size
 argument_list|,
@@ -3552,7 +3746,7 @@ argument_list|(
 name|clockrate
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3658,7 +3852,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3710,7 +3904,7 @@ operator|.
 name|cp_time
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3747,7 +3941,7 @@ name|size
 operator|!=
 name|size_cp_times
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3799,7 +3993,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3882,7 +4076,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3922,12 +4116,15 @@ operator|&
 name|total
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%1d %1d %1d"
+literal|"processes"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:runnable/%1d} {:waiting/%ld} "
+literal|"{:swapped-out/%ld}"
 argument_list|,
 name|total
 operator|.
@@ -3946,6 +4143,16 @@ argument_list|,
 name|total
 operator|.
 name|t_sw
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"processes"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"memory"
 argument_list|)
 expr_stmt|;
 define|#
@@ -3968,13 +4175,15 @@ condition|(
 name|hflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
 name|prthuman
 argument_list|(
+literal|"available-memory"
+argument_list|,
 name|total
 operator|.
 name|t_avm
@@ -3989,13 +4198,15 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
 name|prthuman
 argument_list|(
+literal|"free-memory"
+argument_list|,
 name|total
 operator|.
 name|t_free
@@ -4010,40 +4221,22 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|" "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%5lu "
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|rate
-argument_list|(
-name|sum
-operator|.
-name|v_vm_faults
-operator|-
-name|osum
-operator|.
-name|v_vm_faults
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %7d"
+literal|" "
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:available-memory/%7d}"
 argument_list|,
 name|vmstat_pgtok
 argument_list|(
@@ -4053,9 +4246,14 @@ name|t_avm
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %7d "
+literal|" "
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:free-memory/%7d}"
 argument_list|,
 name|vmstat_pgtok
 argument_list|(
@@ -4065,36 +4263,40 @@ name|t_free
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%4lu "
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|rate
-argument_list|(
-name|sum
-operator|.
-name|v_vm_faults
-operator|-
-name|osum
-operator|.
-name|v_vm_faults
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3lu "
+literal|"{:total-page-faults/%5lu} "
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|rate
+argument_list|(
+name|sum
+operator|.
+name|v_vm_faults
+operator|-
+name|osum
+operator|.
+name|v_vm_faults
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"memory"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"paging-rates"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:page-reactivated/%3lu} "
 argument_list|,
 operator|(
 name|unsigned
@@ -4112,12 +4314,9 @@ name|v_reactivated
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3lu "
+literal|"{:paged-in/%3lu} "
 argument_list|,
 operator|(
 name|unsigned
@@ -4145,12 +4344,9 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3lu "
+literal|"{:paged-out/%3lu} "
 argument_list|,
 operator|(
 name|unsigned
@@ -4178,12 +4374,9 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5lu "
+literal|"{:freed/%5lu} "
 argument_list|,
 operator|(
 name|unsigned
@@ -4201,12 +4394,9 @@ name|v_tfree
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%4lu "
+literal|"{:scanned/%4lu} "
 argument_list|,
 operator|(
 name|unsigned
@@ -4222,17 +4412,25 @@ name|osum
 operator|.
 name|v_pdpages
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"paging-rates"
 argument_list|)
 expr_stmt|;
 name|devstats
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%4lu %5lu %5lu"
+literal|"fault-rates"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:interrupts/%4lu} {:system-calls/%5lu} "
+literal|"{:context-switches/%5u}"
 argument_list|,
 operator|(
 name|unsigned
@@ -4278,6 +4476,11 @@ name|osum
 operator|.
 name|v_swtch
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"fault-rates"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4297,21 +4500,13 @@ else|else
 name|cpustats
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
+name|xo_flush
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4407,12 +4602,9 @@ condition|(
 name|hflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"procs  memory      page%*s "
+literal|"{T:procs}  {T:memory}       ${T:/page%*s}"
 argument_list|,
 literal|19
 argument_list|,
@@ -4422,12 +4614,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"procs     memory       page%*s "
+literal|"{T:procs}     {T:memory}        ${T:/page%*s}"
 argument_list|,
 literal|19
 argument_list|,
@@ -4441,12 +4630,9 @@ name|num_shown
 operator|>
 literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   disks %*s"
+literal|" {T:/disks %*s}"
 argument_list|,
 name|num_shown
 operator|*
@@ -4464,20 +4650,14 @@ name|num_shown
 operator|==
 literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   disk"
+literal|"   {T:disks}"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   faults      "
+literal|"   {T:faults}      "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4509,24 +4689,24 @@ operator|<<
 name|i
 operator|)
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  cpu%d   "
+literal|"  {T:/cpu%d}   "
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   cpu\n"
+literal|"   {T:cpu}\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4534,23 +4714,17 @@ condition|(
 name|hflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"r b w  avm   fre   flt  re  pi  po    fr   sr "
+literal|"{T:r} {T:b} {T:w}  {T:avm}   {T:fre}   {T:flt}  {T:re}  {T:pi}  {T:po}    {T:fr}   {T:sr} "
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"r b w     avm     fre  flt  re  pi  po    fr   sr "
+literal|"{T:r} {T:b} {T:w}     {T:avm}     {T:fre}  {T:flt}  {T:re}  {T:pi}  {T:po}    {T:fr}   {T:sr} "
 argument_list|)
 expr_stmt|;
 block|}
@@ -4589,12 +4763,9 @@ operator|<=
 name|maxshowdevs
 operator|)
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%c%c%d "
+literal|"{T:/%c%c%d} "
 argument_list|,
 name|dev_select
 index|[
@@ -4624,12 +4795,9 @@ operator|.
 name|unit_number
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  in    sy    cs"
+literal|"  {T:in}    {T:sy}    {T:cs}"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4661,22 +4829,22 @@ operator|<<
 name|i
 operator|)
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" us sy id"
+literal|" {T:us} {T:sy} {T:id}"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|" us sy id\n"
+literal|" {T:us} {T:sy} {T:id}\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4798,7 +4966,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -4895,12 +5063,10 @@ name|sum
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%u reclaims, %u total time (usec)\n"
+literal|"{:page-reclaims/%u} {N:reclaims}, "
+literal|"{:reclaim-time/%u} {N:total time (usec)}\n"
 argument_list|,
 name|sum
 operator|.
@@ -4909,12 +5075,9 @@ argument_list|,
 name|rectime
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"average: %u usec / reclaim\n"
+literal|"{L:average}: {:reclaim-average/%u} {N:usec \\/ reclaim}\n"
 argument_list|,
 name|rectime
 operator|/
@@ -4923,20 +5086,15 @@ operator|.
 name|v_pgrec
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%u page ins, %u total time (msec)\n"
+literal|"{:page-ins/%u} {N:page ins}, "
+literal|"{:page-in-time/%u} {N:total time (msec)}\n"
 argument_list|,
 name|sum
 operator|.
@@ -4947,12 +5105,9 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"average: %8.1f msec / page in\n"
+literal|"{L:average}: {:average/%8.1f} {N:msec \\/ page in}\n"
 argument_list|,
 name|pgintime
 operator|/
@@ -5051,492 +5206,374 @@ operator|&
 name|sum
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%9u cpu context switches\n"
+literal|"summary-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:context-switches/%9u} {N:cpu context switches}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_swtch
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u device interrupts\n"
+literal|"{:interrupts/%9u} {N:device interrupts}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_intr
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u software interrupts\n"
+literal|"{:software-interrupts/%9u} {N:software interrupts}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_soft
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u traps\n"
+literal|"{:traps/%9u} {N:traps}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_trap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u system calls\n"
+literal|"{:system-calls/%9u} {N:system calls}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_syscall
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u kernel threads created\n"
+literal|"{:kernel-threads/%9u} {N:kernel threads created}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_kthreads
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u  fork() calls\n"
+literal|"{:forks/%9u} {N: fork() calls}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_forks
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u vfork() calls\n"
+literal|"{:vforks/%9u} {N:vfork() calls}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vforks
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u rfork() calls\n"
+literal|"{:rforks/%9u} {N:rfork() calls}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_rforks
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u swap pager pageins\n"
+literal|"{:swap-ins/%9u} {N:swap pager pageins}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_swapin
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u swap pager pages paged in\n"
+literal|"{:swap-in-pages/%9u} {N:swap pager pages paged in}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_swappgsin
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u swap pager pageouts\n"
+literal|"{:swap-outs/%9u} {N:swap pager pageouts}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_swapout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u swap pager pages paged out\n"
+literal|"{:swap-out-pages/%9u} {N:swap pager pages paged out}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_swappgsout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u vnode pager pageins\n"
+literal|"{:vnode-page-ins/%9u} {N:vnode pager pageins}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vnodein
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u vnode pager pages paged in\n"
+literal|"{:vnode-page-in-pages/%9u} {N:vnode pager pages paged in}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vnodepgsin
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u vnode pager pageouts\n"
+literal|"{:vnode-page-outs/%9u} {N:vnode pager pageouts}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vnodeout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u vnode pager pages paged out\n"
+literal|"{:vnode-page-outs/%9u} {N:vnode pager pages paged out}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vnodepgsout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u page daemon wakeups\n"
+literal|"{:page-daemon-wakeups/%9u} {N:page daemon wakeups}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_pdwakeups
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages examined by the page daemon\n"
+literal|"{:page-daemon-pages/%9u} {N:pages examined by the page daemon}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_pdpages
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages reactivated\n"
+literal|"{:reactivated/%9u} {N:pages reactivated}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_reactivated
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u copy-on-write faults\n"
+literal|"{:copy-on-write-faults/%9u} {N:copy-on-write faults}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_cow_faults
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u copy-on-write optimized faults\n"
+literal|"{:copy-on-write-optimized-faults/%9u} {N:copy-on-write optimized faults}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_cow_optim
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u zero fill pages zeroed\n"
+literal|"{:zero-fill-pages/%9u} {N:zero fill pages zeroed}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_zfod
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u zero fill pages prezeroed\n"
+literal|"{:zero-fill-prezeroed/%9u} {N:zero fill pages prezeroed}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_ozfod
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u intransit blocking page faults\n"
+literal|"{:intransit-blocking/%9u} {N:intransit blocking page faults}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_intrans
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u total VM faults taken\n"
+literal|"{:total-faults/%9u} {N:total VM faults taken}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vm_faults
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u page faults requiring I/O\n"
+literal|"{:faults-requiring-io/%9u} {N:page faults requiring I\\/O}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_io_faults
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages affected by kernel thread creation\n"
+literal|"{:faults-from-thread-creation/%9u} {N:pages affected by kernel thread creation}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_kthreadpages
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages affected by  fork()\n"
+literal|"{:faults-from-fork/%9u} {N:pages affected by  fork}()\n"
 argument_list|,
 name|sum
 operator|.
 name|v_forkpages
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages affected by vfork()\n"
+literal|"{:faults-from-vfork/%9u} {N:pages affected by vfork}()\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vforkpages
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages affected by rfork()\n"
+literal|"{:pages-rfork/%9u} {N:pages affected by rfork}()\n"
 argument_list|,
 name|sum
 operator|.
 name|v_rforkpages
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages cached\n"
+literal|"{:pages-total-cached/%9u} {N:pages cached}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_tcached
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages freed\n"
+literal|"{:pages-freed/%9u} {N:pages freed}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_tfree
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages freed by daemon\n"
+literal|"{:pages-freed-by-daemon/%9u} {N:pages freed by daemon}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_dfree
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages freed by exiting processes\n"
+literal|"{:pages-freed-on-exit/%9u} {N:pages freed by exiting processes}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_pfree
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages active\n"
+literal|"{:active-pages/%9u} {N:pages active}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_active_count
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages inactive\n"
+literal|"{:inactive-pages/%9u} {N:pages inactive}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_inactive_count
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages in VM cache\n"
+literal|"{:vm-cache/%9u} {N:pages in VM cache}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_cache_count
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages wired down\n"
+literal|"{:wired-pages/%9u} {N:pages wired down}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_wire_count
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u pages free\n"
+literal|"{:free-pages/%9u} {N:pages free}\n"
 argument_list|,
 name|sum
 operator|.
 name|v_free_count
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9u bytes per page\n"
+literal|"{:bytes-per-page/%9u} {N:bytes per page}\n"
 argument_list|,
 name|sum
 operator|.
@@ -5598,7 +5635,7 @@ argument_list|(
 name|lnchstats
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -5632,22 +5669,19 @@ name|lnchstats
 operator|.
 name|ncs_long
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9ld total name lookups\n"
+literal|":total-name-lookups/%9ld} {N:total name lookups}\n"
 argument_list|,
 name|nchtotal
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9s cache hits (%ld%% pos + %ld%% neg) system %ld%% per-directory\n"
+literal|"{P:/%9s} {N:cache hits} "
+literal|"({:positive-cache-hits/%ld}% pos + "
+literal|"{:negative-cache-hits/%ld}% {N:neg}) "
+literal|"system {:cache-hit-percent/%ld}% per-directory\n"
 argument_list|,
 literal|""
 argument_list|,
@@ -5679,12 +5713,11 @@ name|nchtotal
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%9s deletions %ld%%, falsehits %ld%%, toolong %ld%%\n"
+literal|"{P:/%9s} {L:deletions} {:deletions/%ld}%, "
+literal|"{L:falsehits} {:false-hits/%ld}%, "
+literal|"{L:toolong} {:too-long/%ld}%\n"
 argument_list|,
 literal|""
 argument_list|,
@@ -5716,6 +5749,11 @@ name|nchtotal
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"summary-statistics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5733,12 +5771,15 @@ operator|&
 name|sum
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%u forks, %u pages, average %.2f\n"
+literal|"fork-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:fork/%u} {N:forks}, {:fork-pages/%u} {N:pages}, "
+literal|"{L:average} {:fork-average/%.2f}\n"
 argument_list|,
 name|sum
 operator|.
@@ -5768,12 +5809,10 @@ operator|.
 name|v_forks
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%u vforks, %u pages, average %.2f\n"
+literal|"{:vfork/%u} {N:vforks}, {:vfork-pages/%u} {N:pages}, "
+literal|"{L:average} {:vfork-average/%.2f}\n"
 argument_list|,
 name|sum
 operator|.
@@ -5803,12 +5842,10 @@ operator|.
 name|v_vforks
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%u rforks, %u pages, average %.2f\n"
+literal|"{:rfork/%u} {N:rforks}, {:rfork-pages/%u} {N:pages}, "
+literal|"{L:average} {:rfork-average/%.2f}\n"
 argument_list|,
 name|sum
 operator|.
@@ -5836,6 +5873,11 @@ operator|/
 name|sum
 operator|.
 name|v_rforks
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"fork-statistics"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5921,6 +5963,11 @@ operator|-
 name|last
 operator|.
 name|snap_time
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"device"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -6009,7 +6056,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -6018,17 +6065,56 @@ argument_list|,
 name|devstat_errbuf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%3.0Lf "
+literal|"device"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{ekq:name/%c%c%d}{:transfers/%3.0Lf} "
+argument_list|,
+name|dev_select
+index|[
+name|dn
+index|]
+operator|.
+name|device_name
+index|[
+literal|0
+index|]
+argument_list|,
+name|dev_select
+index|[
+name|dn
+index|]
+operator|.
+name|device_name
+index|[
+literal|1
+index|]
+argument_list|,
+name|dev_select
+index|[
+name|dn
+index|]
+operator|.
+name|unit_number
 argument_list|,
 name|transfers_per_second
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"device"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"device"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6037,6 +6123,11 @@ specifier|static
 name|void
 name|percent
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|double
 name|pct
 parameter_list|,
@@ -6051,9 +6142,29 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+name|char
+name|fmt
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|int
 name|l
 decl_stmt|;
+name|snprintf
+argument_list|(
+name|fmt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
+argument_list|,
+literal|" {:%s/%%*s}"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|l
 operator|=
 name|snprintf
@@ -6080,9 +6191,11 @@ operator|*
 name|over
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+name|fmt
+argument_list|,
+literal|1
 argument_list|,
 name|buf
 argument_list|)
@@ -6095,9 +6208,11 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%2s"
+name|fmt
+argument_list|,
+literal|2
 argument_list|,
 name|buf
 argument_list|)
@@ -6180,13 +6295,15 @@ name|over
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|" "
+literal|"cpu-statistics"
 argument_list|)
 expr_stmt|;
 name|percent
 argument_list|(
+literal|"user"
+argument_list|,
 operator|(
 name|cur
 operator|.
@@ -6209,13 +6326,10 @@ operator|&
 name|over
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|percent
 argument_list|(
+literal|"system"
+argument_list|,
 operator|(
 name|cur
 operator|.
@@ -6238,13 +6352,10 @@ operator|&
 name|over
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|percent
 argument_list|(
+literal|"idle"
+argument_list|,
 name|cur
 operator|.
 name|cp_time
@@ -6256,6 +6367,11 @@ name|lpct
 argument_list|,
 operator|&
 name|over
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"cpu-statistics"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6382,6 +6498,11 @@ name|over
 operator|=
 literal|0
 expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"cpu"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6411,6 +6532,18 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|xo_open_instance
+argument_list|(
+literal|"cpu"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{ke:name/%d}"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|total
 operator|=
 literal|0
@@ -6454,13 +6587,10 @@ name|lpct
 operator|=
 literal|0.0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|percent
 argument_list|(
+literal|"user"
+argument_list|,
 operator|(
 name|cur_cp_times
 index|[
@@ -6487,13 +6617,10 @@ operator|&
 name|over
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|percent
 argument_list|(
+literal|"system"
+argument_list|,
 operator|(
 name|cur_cp_times
 index|[
@@ -6520,13 +6647,10 @@ operator|&
 name|over
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|percent
 argument_list|(
+literal|"idle"
+argument_list|,
 name|cur_cp_times
 index|[
 name|i
@@ -6542,7 +6666,17 @@ operator|&
 name|over
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"cpu"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"cpu"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6762,6 +6896,27 @@ name|intrname
 operator|=
 name|intrnames
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%-*s} {T:/%20s} {T:/%10s}\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|istrnamlen
+argument_list|,
+literal|"interrupt"
+argument_list|,
+literal|"total"
+argument_list|,
+literal|"rate"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"interrupt"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6831,12 +6986,14 @@ operator|)
 operator|/
 name|period_ms
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%-*s %20lu %10lu\n"
+literal|"interrupt"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{k:name/%-*s} {:total/%20lu} {:rate/%10lu}\n"
 argument_list|,
 operator|(
 name|int
@@ -6848,6 +7005,11 @@ argument_list|,
 name|count
 argument_list|,
 name|rate
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"interrupt"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6893,16 +7055,19 @@ operator|)
 operator|/
 name|period_ms
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_close_list
 argument_list|(
-literal|"%-*s %20"
+literal|"interrupt"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{L:/%-*s} {:total-interrupts/%20"
 name|PRIu64
-literal|" %10"
+literal|"} "
+literal|"{:total-rate/%10"
 name|PRIu64
-literal|"\n"
+literal|"}\n"
 argument_list|,
 operator|(
 name|int
@@ -7003,7 +7168,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -7053,7 +7218,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -7128,12 +7293,9 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*s %20s %10s\n"
+literal|"%{T:/%-%s} {T:/%20s} {T:/%10s\n"
 argument_list|,
 operator|(
 name|int
@@ -7202,7 +7364,7 @@ name|old_intrcnts
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -7313,7 +7475,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"memstat_mtl_alloc"
 argument_list|)
@@ -7339,7 +7501,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_sysctl_malloc: %s"
 argument_list|,
@@ -7382,7 +7544,7 @@ name|error
 operator|==
 name|MEMSTAT_ERROR_KVM
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_kvm_malloc: %s"
 argument_list|,
@@ -7393,7 +7555,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_kvm_malloc: %s"
 argument_list|,
@@ -7405,9 +7567,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%13s %5s %6s %7s %8s  Size(s)\n"
+literal|"{T:/%13s} {T:/%5s} {T:/%6s} {T:/%7s} {T:/%8s}  {T:Size(s)}\n"
 argument_list|,
 literal|"Type"
 argument_list|,
@@ -7418,6 +7580,11 @@ argument_list|,
 literal|"HighUse"
 argument_list|,
 literal|"Requests"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"memory"
 argument_list|)
 expr_stmt|;
 for|for
@@ -7458,15 +7625,22 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%13s %5"
+literal|"memory"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{k:type/%13s} {:in-use/%5"
 name|PRIu64
-literal|" %5"
+literal|"} "
+literal|"{:memory-use/%5"
 name|PRIu64
-literal|"K %7s %8"
+literal|"}{U:K} {:high-use/%7s} "
+literal|"{:requests/%8"
 name|PRIu64
-literal|"  "
+literal|"}  "
 argument_list|,
 name|memstat_get_name
 argument_list|(
@@ -7501,6 +7675,11 @@ name|first
 operator|=
 literal|1
 expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"size"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7534,14 +7713,14 @@ condition|(
 operator|!
 name|first
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|","
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%d"
+literal|"{l:size/%d}"
 argument_list|,
 literal|1
 operator|<<
@@ -7558,12 +7737,27 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|xo_close_list
+argument_list|(
+literal|"size"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"memory"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"memory"
+argument_list|)
+expr_stmt|;
 name|memstat_mtl_free
 argument_list|(
 name|mtlp
@@ -7613,7 +7807,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"memstat_mtl_alloc"
 argument_list|)
@@ -7639,7 +7833,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_sysctl_uma: %s"
 argument_list|,
@@ -7682,7 +7876,7 @@ name|error
 operator|==
 name|MEMSTAT_ERROR_KVM
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_kvm_uma: %s"
 argument_list|,
@@ -7693,7 +7887,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_kvm_uma: %s"
 argument_list|,
@@ -7705,9 +7899,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-20s %6s %6s %8s %8s %8s %4s %4s\n\n"
+literal|"{T:/%-20s} {T:/%6s} {T:/%6s} {T:/%8s} {T:/%8s} {T:/%8s} "
+literal|"{T:/%4s} {T:/%4s}\n\n"
 argument_list|,
 literal|"ITEM"
 argument_list|,
@@ -7724,6 +7919,11 @@ argument_list|,
 literal|"FAIL"
 argument_list|,
 literal|"SLEEP"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"zone"
 argument_list|)
 expr_stmt|;
 for|for
@@ -7766,23 +7966,31 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%-20s %6"
+literal|"zone"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{k:name/%-20s} {:size/%6"
 name|PRIu64
-literal|", %6"
+literal|"}, "
+literal|"{:limit/%6"
 name|PRIu64
-literal|",%8"
+literal|"},{:used/%8"
 name|PRIu64
-literal|",%8"
+literal|"},"
+literal|"{:free/%8"
 name|PRIu64
-literal|",%8"
+literal|"},{:requests/%8"
 name|PRIu64
-literal|",%4"
+literal|"},"
+literal|"{:fail/%4"
 name|PRIu64
-literal|",%4"
+literal|"},{:sleep/%4"
 name|PRIu64
-literal|"\n"
+literal|"}\n"
 argument_list|,
 name|name
 argument_list|,
@@ -7822,13 +8030,23 @@ name|mtp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"zone"
+argument_list|)
+expr_stmt|;
 block|}
 name|memstat_mtl_free
 argument_list|(
 name|mtlp
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_close_list
+argument_list|(
+literal|"zone"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -7852,9 +8070,14 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%5jd "
+literal|"object"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:resident/%5jd} "
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7864,9 +8087,9 @@ operator|->
 name|kvo_resident
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5jd "
+literal|"{:active/%5jd} "
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7876,9 +8099,9 @@ operator|->
 name|kvo_active
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5jd "
+literal|"{:inactive/%5jd} "
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7888,18 +8111,18 @@ operator|->
 name|kvo_inactive
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:refcount/%3d} "
 argument_list|,
 name|kvo
 operator|->
 name|kvo_ref_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:shadowcount/%3d} "
 argument_list|,
 name|kvo
 operator|->
@@ -8063,9 +8286,9 @@ literal|"??"
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-3s "
+literal|"{:attribute/%-3s} "
 argument_list|,
 name|str
 argument_list|)
@@ -8151,20 +8374,25 @@ literal|"??"
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-2s "
+literal|"{:type/%-2s} "
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-s\n"
+literal|"{:path/%-s}\n"
 argument_list|,
 name|kvo
 operator|->
 name|kvo_path
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"object"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8203,32 +8431,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"Failed to fetch VM object list"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %5s %5s %3s %3s %3s %2s %s\n"
-argument_list|,
-literal|"RES"
-argument_list|,
-literal|"ACT"
-argument_list|,
-literal|"INACT"
-argument_list|,
-literal|"REF"
-argument_list|,
-literal|"SHD"
-argument_list|,
-literal|"CM"
-argument_list|,
-literal|"TP"
-argument_list|,
-literal|"PATH"
+literal|"{T:RES/%5s} {T:ACT/%5s} {T:INACT/%5s} {T:REF/%3s} {T:SHD/%3s} "
+literal|"{T:CM/%3s} {T:TP/%2s} {T:PATH/%s}\n"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"object"
 argument_list|)
 expr_stmt|;
 for|for
@@ -8256,6 +8474,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|kvo
+argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"object"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8329,7 +8552,7 @@ condition|)
 operator|++
 name|sym
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -8384,7 +8607,7 @@ condition|)
 operator|++
 name|sym
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -8485,7 +8708,7 @@ name|ret
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -8523,7 +8746,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -8565,19 +8788,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s%s"
 argument_list|,
 literal|"usage: vmstat [-afHhimoPsz] [-M core [-N system]] [-c count] [-n devs]\n"
 argument_list|,
 literal|"              [-p type,if,pass] [-w wait] [disks] [wait [count]]\n"
 argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
