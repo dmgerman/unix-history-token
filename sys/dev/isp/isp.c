@@ -17791,14 +17791,14 @@ comment|/*  * Scan the fabric for devices and add them to our port database.  * 
 end_comment
 
 begin_comment
-comment|/*  * Take less than half of our scratch area to store Port IDs  */
+comment|/*  * Take half of our scratch area to store Port IDs  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GIDLEN
-value|((ISP_FC_SCRLEN>> 1) - 16 - SNS_GID_FT_REQ_SIZE)
+value|(ISP_FC_SCRLEN>> 1)
 end_define
 
 begin_define
@@ -17812,7 +17812,7 @@ begin_define
 define|#
 directive|define
 name|IGPOFF
-value|(2 * QENTRY_LEN)
+value|(0)
 end_define
 
 begin_define
@@ -17825,9 +17825,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|ZTXOFF
-value|(ISP_FC_SCRLEN - (1 * QENTRY_LEN))
+name|XTXOFF
+value|(ISP_FC_SCRLEN - (3 * QENTRY_LEN))
 end_define
+
+begin_comment
+comment|/* CT request */
+end_comment
 
 begin_define
 define|#
@@ -17836,12 +17840,20 @@ name|CTXOFF
 value|(ISP_FC_SCRLEN - (2 * QENTRY_LEN))
 end_define
 
+begin_comment
+comment|/* Request IOCB */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|XTXOFF
-value|(ISP_FC_SCRLEN - (3 * QENTRY_LEN))
+name|ZTXOFF
+value|(ISP_FC_SCRLEN - (1 * QENTRY_LEN))
 end_define
+
+begin_comment
+comment|/* Response IOCB */
+end_comment
 
 begin_function
 specifier|static
@@ -17889,6 +17901,14 @@ operator|&
 name|un
 operator|.
 name|_x
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|scp
+init|=
+name|fcp
+operator|->
+name|isp_scratch
 decl_stmt|;
 name|mbreg_t
 name|mbs
@@ -18013,9 +18033,15 @@ name|isp
 argument_list|,
 name|rq
 argument_list|,
-name|fcp
-operator|->
-name|isp_scratch
+operator|(
+name|sns_gid_ft_req_t
+operator|*
+operator|)
+operator|&
+name|scp
+index|[
+name|CTXOFF
+index|]
 argument_list|)
 expr_stmt|;
 name|MEMORYBARRIER
@@ -18075,6 +18101,8 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
+operator|+
+name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -18089,6 +18117,8 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
+operator|+
+name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -18103,6 +18133,8 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
+operator|+
+name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -18117,6 +18149,8 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
+operator|+
+name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -18861,8 +18895,6 @@ argument_list|,
 name|IGPOFF
 argument_list|,
 name|GIDLEN
-operator|+
-literal|16
 argument_list|,
 name|chan
 argument_list|)
@@ -18883,8 +18915,6 @@ argument_list|,
 literal|"CT response"
 argument_list|,
 name|GIDLEN
-operator|+
-literal|16
 argument_list|,
 operator|&
 name|scp
