@@ -775,7 +775,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__dead
 name|m4errx
 parameter_list|(
 name|int
