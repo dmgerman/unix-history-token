@@ -615,7 +615,7 @@ block|{
 comment|// Match finder may update coder->pending and expects it to
 comment|// start from zero, so use a temporary variable.
 specifier|const
-name|size_t
+name|uint32_t
 name|pending
 init|=
 name|coder

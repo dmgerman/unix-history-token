@@ -334,35 +334,7 @@ argument_list|()
 operator|==
 literal|0
 expr_stmt|;
-comment|// Create a pipe for the self-pipe trick. If pipe2() is available,
-comment|// we can avoid the fcntl() calls.
-ifdef|#
-directive|ifdef
-name|HAVE_PIPE2
-if|if
-condition|(
-name|pipe2
-argument_list|(
-name|user_abort_pipe
-argument_list|,
-name|O_NONBLOCK
-argument_list|)
-condition|)
-name|message_fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"Error creating a pipe: %s"
-argument_list|)
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|// Create a pipe for the self-pipe trick.
 if|if
 condition|(
 name|pipe
@@ -450,8 +422,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#

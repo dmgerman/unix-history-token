@@ -2415,7 +2415,7 @@ name|fast_mode
 condition|)
 for|for
 control|(
-name|size_t
+name|uint32_t
 name|pos_state
 init|=
 literal|0

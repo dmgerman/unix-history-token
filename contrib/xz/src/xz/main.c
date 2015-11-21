@@ -678,7 +678,7 @@ comment|// Process the files given on the command line. Note that if no names
 comment|// were given, args_parse() gave us a fake "-" filename.
 for|for
 control|(
-name|size_t
+name|unsigned
 name|i
 init|=
 literal|0

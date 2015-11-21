@@ -54,7 +54,8 @@ modifier|*
 name|arg_names
 decl_stmt|;
 comment|/// Number of filenames from command line
-name|size_t
+name|unsigned
+name|int
 name|arg_count
 decl_stmt|;
 comment|/// Name of the file from which to read filenames. This is NULL
