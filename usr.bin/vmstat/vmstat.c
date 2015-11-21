@@ -5671,7 +5671,7 @@ name|ncs_long
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|":total-name-lookups/%9ld} {N:total name lookups}\n"
+literal|"{:total-name-lookups/%9ld} {N:total name lookups}\n"
 argument_list|,
 name|nchtotal
 argument_list|)
