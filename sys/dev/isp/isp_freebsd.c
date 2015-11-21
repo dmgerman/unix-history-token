@@ -14045,7 +14045,7 @@ name|atp
 operator|->
 name|portid
 operator|=
-name|PORT_NONE
+name|PORT_ANY
 expr_stmt|;
 name|atp
 operator|->

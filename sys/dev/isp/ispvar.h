@@ -1237,6 +1237,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VALID_PORT
+parameter_list|(
+name|port
+parameter_list|)
+value|(port != PORT_NONE&& port != PORT_ANY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DOMAIN_CONTROLLER_BASE
 value|0xFFFC00
 end_define
