@@ -881,11 +881,11 @@ comment|/* Unassigned */
 comment|/* Keyboard Lang 1              90 */
 literal|0x71
 block|,
-comment|/* eisu */
+comment|/* Kana */
 comment|/* Keyboard Lang 2              91 */
 literal|0x72
 block|,
-comment|/* kana */
+comment|/* Eisu */
 comment|/* Keyboard Lang 3              92 */
 literal|0x78
 block|,
