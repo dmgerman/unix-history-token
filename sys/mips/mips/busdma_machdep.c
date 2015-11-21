@@ -2392,8 +2392,7 @@ name|BUS_DMA_MIN_ALLOC_COMP
 operator|)
 operator|==
 literal|0
-operator|||
-operator|(
+operator|&&
 name|bz
 operator|->
 name|map_count
@@ -2405,7 +2404,6 @@ operator|->
 name|total_bpages
 operator|<
 name|maxpages
-operator|)
 condition|)
 block|{
 name|int
