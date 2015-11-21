@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: main.c,v 1.84 2014/12/21 09:33:12 espie Exp $	*/
+comment|/*	$OpenBSD: main.c,v 1.86 2015/11/03 16:21:47 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -720,17 +720,6 @@ operator||
 name|NOARGS
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__unix__
-argument_list|)
 block|{
 literal|"unix"
 block|,
@@ -738,25 +727,7 @@ name|SELFTYPE
 operator||
 name|NOARGS
 block|}
-block|,
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|vms
-block|{
-literal|"vms"
-block|,
-name|SELFTYPE
-operator||
-name|NOARGS
-block|}
-block|,
-endif|#
-directive|endif
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2340,24 +2311,24 @@ condition|)
 block|{
 name|char
 modifier|*
-name|cp
+name|p
 decl_stmt|;
 for|for
 control|(
-name|cp
+name|p
 operator|=
 name|scommt
 init|;
 operator|*
-name|cp
+name|p
 condition|;
-name|cp
+name|p
 operator|++
 control|)
 name|chrsave
 argument_list|(
 operator|*
-name|cp
+name|p
 argument_list|)
 expr_stmt|;
 for|for
@@ -2383,20 +2354,20 @@ condition|)
 block|{
 for|for
 control|(
-name|cp
+name|p
 operator|=
 name|ecommt
 init|;
 operator|*
-name|cp
+name|p
 condition|;
-name|cp
+name|p
 operator|++
 control|)
 name|chrsave
 argument_list|(
 operator|*
-name|cp
+name|p
 argument_list|)
 expr_stmt|;
 break|break;

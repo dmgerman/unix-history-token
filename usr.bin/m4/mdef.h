@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: mdef.h,v 1.32 2014/12/21 09:33:12 espie Exp $	*/
+comment|/*	$OpenBSD: mdef.h,v 1.33 2015/11/03 16:21:47 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -458,27 +458,6 @@ directive|define
 name|ECOMMT
 value|'\n'
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|msdos
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|system
-parameter_list|(
-name|str
-parameter_list|)
-value|(-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * other important constants  */
