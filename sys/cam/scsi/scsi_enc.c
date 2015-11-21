@@ -1469,6 +1469,12 @@ case|:
 case|case
 name|ENCIOC_GETELMDEVNAMES
 case|:
+case|case
+name|ENCIOC_GETENCNAME
+case|:
+case|case
+name|ENCIOC_GETENCID
+case|:
 break|break;
 default|default:
 if|if
@@ -1730,6 +1736,12 @@ name|ENCIOC_GETSTRING
 case|:
 case|case
 name|ENCIOC_SETSTRING
+case|:
+case|case
+name|ENCIOC_GETENCNAME
+case|:
+case|case
+name|ENCIOC_GETENCID
 case|:
 if|if
 condition|(
