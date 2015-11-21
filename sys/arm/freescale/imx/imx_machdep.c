@@ -144,7 +144,7 @@ name|uint16_t
 modifier|*
 name|pcr
 decl_stmt|;
-comment|/* 	 * The deceptively simple write of WDOG_CR_WDE enables the watchdog, 	 * sets the timeout to its minimum value (half a second), and also 	 * clears the SRS bit which results in the SFTW (software-requested 	 * reset) bit being set in the watchdog status register after the reset. 	 * This is how software can distinguish a reset from a wdog timeout. 	 */
+comment|/* 	 * Trigger an immediate reset by clearing the SRS bit in the watchdog 	 * control register.  The reset happens on the next cycle of the wdog 	 * 32KHz clock, so hang out in a spin loop until the reset takes effect. 	 */
 if|if
 condition|(
 operator|(
@@ -175,8 +175,9 @@ else|else
 block|{
 operator|*
 name|pcr
-operator|=
-name|WDOG_CR_WDE
+operator|&=
+operator|~
+name|WDOG_CR_SRS
 expr_stmt|;
 block|}
 for|for
