@@ -2239,6 +2239,9 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
+name|nfsrv_freeallbackchannel_xprts
+argument_list|()
+expr_stmt|;
 name|svcpool_destroy
 argument_list|(
 name|nfsrvd_pool
