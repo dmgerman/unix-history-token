@@ -29,6 +29,12 @@ directive|include
 file|<machine/_bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_comment
 comment|/*  *	int bus_space_map  (bus_space_tag_t t, bus_addr_t addr,  *	    bus_size_t size, int flags, bus_space_handle_t *bshp);  *  * Map a region of bus space.  */
 end_comment
@@ -1228,12 +1234,25 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|bus_space_tag_t
 name|arm_base_bs_tag
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Utility macros; INTERNAL USE ONLY.  */
