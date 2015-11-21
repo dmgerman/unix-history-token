@@ -2508,6 +2508,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|so
+operator|->
+name|so_pcb
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2516,7 +2522,6 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* IPSEC */
 name|SCTP_INP_WUNLOCK
 argument_list|(
 name|inp
