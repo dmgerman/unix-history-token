@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*      $OpenBSD: tty.c,v 1.2 2013/11/12 13:54:51 deraadt Exp $	*/
+comment|/*      $OpenBSD: tty.c,v 1.3 2015/09/05 09:49:24 jsg Exp $	*/
 end_comment
 
 begin_comment
@@ -77,10 +77,10 @@ name|TCSADRAIN
 argument_list|,
 name|t
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
-operator|)
 operator|&&
 name|errno
 operator|==
@@ -117,10 +117,10 @@ literal|0
 argument_list|,
 name|t
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
-operator|)
 operator|&&
 name|errno
 operator|==
