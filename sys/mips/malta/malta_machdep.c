@@ -642,7 +642,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10
+name|PHYS_AVAIL_ENTRIES
 condition|;
 name|i
 operator|++
