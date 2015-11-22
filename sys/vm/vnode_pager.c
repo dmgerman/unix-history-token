@@ -4932,7 +4932,7 @@ name|count
 operator|*
 name|PAGE_SIZE
 decl_stmt|;
-comment|/* 	 * Force synchronous operation if we are extremely low on memory 	 * to prevent a low-memory deadlock.  VOP operations often need to 	 * allocate more memory to initiate the I/O ( i.e. do a BMAP  	 * operation ).  The swapper handles the case by limiting the amount 	 * of asynchronous I/O, but that sort of solution doesn't scale well 	 * for the vnode pager without a lot of work. 	 * 	 * Also, the backing vnode's iodone routine may not wake the pageout 	 * daemon up.  This should be probably be addressed XXX. 	 */
+comment|/* 	 * Force synchronous operation if we are extremely low on memory 	 * to prevent a low-memory deadlock.  VOP operations often need to 	 * allocate more memory to initiate the I/O ( i.e. do a BMAP 	 * operation ).  The swapper handles the case by limiting the amount 	 * of asynchronous I/O, but that sort of solution doesn't scale well 	 * for the vnode pager without a lot of work. 	 * 	 * Also, the backing vnode's iodone routine may not wake the pageout 	 * daemon up.  This should be probably be addressed XXX. 	 */
 if|if
 condition|(
 name|vm_cnt
