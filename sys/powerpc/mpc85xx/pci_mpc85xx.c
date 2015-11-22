@@ -1308,7 +1308,6 @@ operator|)
 return|;
 name|err
 label|:
-comment|//panic("Because I said so\n");
 return|return
 operator|(
 name|ENXIO
