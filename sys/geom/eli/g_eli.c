@@ -996,6 +996,12 @@ operator|->
 name|bio_error
 operator|==
 literal|0
+operator|&&
+name|bp
+operator|->
+name|bio_error
+operator|!=
+literal|0
 condition|)
 name|pbp
 operator|->
@@ -1052,9 +1058,13 @@ literal|0
 argument_list|,
 name|pbp
 argument_list|,
-literal|"%s() failed"
+literal|"%s() failed (error=%d)"
 argument_list|,
 name|__func__
+argument_list|,
+name|pbp
+operator|->
+name|bio_error
 argument_list|)
 expr_stmt|;
 name|pbp
@@ -1189,10 +1199,7 @@ operator|->
 name|bio_error
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|bp
 operator|->
 name|bio_error
@@ -1207,7 +1214,6 @@ name|bp
 operator|->
 name|bio_error
 expr_stmt|;
-block|}
 name|g_destroy_bio
 argument_list|(
 name|bp
@@ -1260,7 +1266,9 @@ literal|0
 argument_list|,
 name|pbp
 argument_list|,
-literal|"Crypto WRITE request failed (error=%d)."
+literal|"%s() failed (error=%d)"
+argument_list|,
+name|__func__
 argument_list|,
 name|pbp
 operator|->
@@ -1274,7 +1282,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Write is finished, send it up. 	 */
+else|else
 name|pbp
 operator|->
 name|bio_completed
@@ -1283,6 +1291,7 @@ name|pbp
 operator|->
 name|bio_length
 expr_stmt|;
+comment|/* 	 * Write is finished, send it up. 	 */
 name|sc
 operator|=
 name|pbp
