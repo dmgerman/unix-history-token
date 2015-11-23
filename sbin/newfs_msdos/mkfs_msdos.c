@@ -1257,7 +1257,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|check_mounted
 parameter_list|(
 specifier|const
@@ -1271,7 +1271,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|getstdfmt
 parameter_list|(
 specifier|const
@@ -1287,7 +1287,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|getdiskinfo
 parameter_list|(
 name|int
@@ -1323,7 +1323,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int
+name|int
 name|ckgeom
 parameter_list|(
 specifier|const
@@ -1518,10 +1518,8 @@ operator|>
 literal|8
 condition|)
 block|{
-name|errx
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: bad OEM string"
 argument_list|,
 name|o
@@ -1529,6 +1527,10 @@ operator|.
 name|OEM_string
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -1543,13 +1545,17 @@ name|o
 operator|.
 name|no_create
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"create (-C) is incompatible with -N"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|fd
 operator|=
 name|open
@@ -1572,15 +1578,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"failed to create %s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|ftruncate
@@ -1592,10 +1602,9 @@ operator|.
 name|create_size
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"failed to initialize %jd bytes"
 argument_list|,
 operator|(
@@ -1606,6 +1615,11 @@ operator|.
 name|create_size
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1630,15 +1644,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|fstat
@@ -1649,15 +1667,19 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|o
@@ -1710,6 +1732,8 @@ name|o
 operator|.
 name|no_create
 condition|)
+if|if
+condition|(
 name|check_mounted
 argument_list|(
 name|fname
@@ -1718,7 +1742,14 @@ name|sb
 operator|.
 name|st_mode
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|o
@@ -1740,10 +1771,9 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"cannot seek to %jd"
 argument_list|,
 operator|(
@@ -1754,6 +1784,11 @@ operator|.
 name|offset
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -1774,6 +1809,8 @@ operator|.
 name|floppy
 condition|)
 block|{
+if|if
+condition|(
 name|getstdfmt
 argument_list|(
 name|o
@@ -1783,7 +1820,14 @@ argument_list|,
 operator|&
 name|bpb
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|bpb
 operator|.
 name|bpbHugeSectors
@@ -2091,10 +2135,9 @@ operator|.
 name|bpbBytesPerSec
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"bytes/sector (%u) is not a power of 2"
 argument_list|,
 name|bpb
@@ -2102,6 +2145,11 @@ operator|.
 name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|bpb
@@ -2110,10 +2158,9 @@ name|bpbBytesPerSec
 operator|<
 name|MINBPS
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"bytes/sector (%u) is too small; minimum is %u"
 argument_list|,
 name|bpb
@@ -2123,6 +2170,11 @@ argument_list|,
 name|MINBPS
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|o
@@ -2137,10 +2189,9 @@ operator|.
 name|volume_label
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: bad volume label"
 argument_list|,
 name|o
@@ -2148,6 +2199,11 @@ operator|.
 name|volume_label
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2221,10 +2277,9 @@ name|backup_sector
 operator|)
 operator|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"-%c is not a legal FAT%s option"
 argument_list|,
 name|fat
@@ -2250,6 +2305,11 @@ else|:
 literal|"12/16"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|o
@@ -2285,15 +2345,17 @@ operator|!=
 literal|32
 condition|)
 block|{
-name|errx
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%d: bad FAT type"
 argument_list|,
 name|fat
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -2312,10 +2374,9 @@ operator|.
 name|block_size
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"block size (%u) is not a power of 2"
 argument_list|,
 name|o
@@ -2323,6 +2384,11 @@ operator|.
 name|block_size
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|o
@@ -2333,10 +2399,9 @@ name|bpb
 operator|.
 name|bpbBytesPerSec
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"block size (%u) is too small; minimum is %u"
 argument_list|,
 name|o
@@ -2348,6 +2413,11 @@ operator|.
 name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|o
@@ -2360,10 +2430,9 @@ name|bpbBytesPerSec
 operator|*
 name|MAXSPC
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"block size (%u) is too large; maximum is %u"
 argument_list|,
 name|o
@@ -2377,6 +2446,11 @@ operator|*
 name|MAXSPC
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bpb
 operator|.
 name|bpbSecPerClust
@@ -2407,10 +2481,9 @@ operator|.
 name|sectors_per_cluster
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"sectors/cluster (%u) is not a power of 2"
 argument_list|,
 name|o
@@ -2418,6 +2491,11 @@ operator|.
 name|sectors_per_cluster
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bpb
 operator|.
 name|bpbSecPerClust
@@ -2456,10 +2534,9 @@ name|num_FAT
 operator|>
 name|MAXNFT
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"number of FATs (%u) is too large; maximum is %u"
 argument_list|,
 name|o
@@ -2469,6 +2546,11 @@ argument_list|,
 name|MAXNFT
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bpb
 operator|.
 name|bpbFATs
@@ -2507,10 +2589,9 @@ name|media_descriptor
 operator|<
 literal|0xf0
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"illegal media descriptor (%#x)"
 argument_list|,
 name|o
@@ -2518,6 +2599,11 @@ operator|.
 name|media_descriptor
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bpb
 operator|.
 name|bpbMedia
@@ -2632,13 +2718,17 @@ name|buf
 argument_list|)
 operator|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -2664,15 +2754,19 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|bname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2709,15 +2803,19 @@ name|bpbBytesPerSec
 operator|*
 name|MAXU16
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: inappropriate file type or format"
 argument_list|,
 name|bname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bss
 operator|=
 name|sb
@@ -2988,13 +3086,17 @@ name|bpb
 operator|.
 name|bpbBackup
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"no room for info sector"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bpb
 operator|.
 name|bpbFSInfo
@@ -3038,13 +3140,17 @@ name|x
 operator|==
 name|MAXU16
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"no room for backup sector"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|bpb
 operator|.
 name|bpbBackup
@@ -3069,13 +3175,17 @@ name|bpb
 operator|.
 name|bpbFSInfo
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"backup sector would overwrite info sector"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|bpb
@@ -3141,10 +3251,9 @@ name|bpbResSectors
 operator|<
 name|x
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"too few reserved sectors (need %d have %d)"
 argument_list|,
 name|x
@@ -3154,6 +3263,11 @@ operator|.
 name|bpbResSectors
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|fat
@@ -3297,13 +3411,17 @@ name|bpbBigFATsecs
 operator|>
 name|MAXU16
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"too many sectors/FAT for FAT12/16"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|x1
 operator|=
 name|bpb
@@ -3341,13 +3459,17 @@ name|bpb
 operator|.
 name|bpbHugeSectors
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"meta data exceeds file system size"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|x1
 operator|+=
 name|x
@@ -3526,10 +3648,9 @@ argument_list|(
 name|fat
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%u clusters too few clusters for FAT%u, need %u"
 argument_list|,
 name|cls
@@ -3542,6 +3663,11 @@ name|fat
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|cls
@@ -3765,13 +3891,17 @@ name|bpbBytesPerSec
 argument_list|)
 operator|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|dir
 operator|=
 name|bpb
@@ -3830,13 +3960,17 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"sigaction SIGINFO"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 for|for
 control|(
 name|lsn
@@ -3977,15 +4111,19 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|bname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -4018,15 +4156,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|bname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4038,10 +4180,9 @@ name|bpb
 operator|.
 name|bpbBytesPerSec
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: can't read sector %u"
 argument_list|,
 name|bname
@@ -4049,6 +4190,11 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 else|else
 name|memset
@@ -4961,15 +5107,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4981,10 +5131,9 @@ name|bpb
 operator|.
 name|bpbBytesPerSec
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: can't write sector %u"
 argument_list|,
 name|fname
@@ -4992,6 +5141,11 @@ argument_list|,
 name|lsn
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 block|}
 return|return
@@ -5001,12 +5155,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Exit with error if file system is mounted.  */
+comment|/*  * return -1 with error if file system is mounted.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|check_mounted
 parameter_list|(
 specifier|const
@@ -5054,13 +5208,17 @@ name|MNT_NOWAIT
 argument_list|)
 operator|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"getmntinfo"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|len
 operator|=
 name|strlen
@@ -5166,10 +5324,9 @@ argument_list|,
 name|s2
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s is mounted on %s"
 argument_list|,
 name|fname
@@ -5179,7 +5336,15 @@ operator|->
 name|f_mntonname
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
+block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -5189,7 +5354,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|getstdfmt
 parameter_list|(
 specifier|const
@@ -5255,15 +5420,19 @@ name|i
 operator|==
 name|x
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: unknown standard format"
 argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 operator|*
 name|bpb
 operator|=
@@ -5274,6 +5443,9 @@ index|]
 operator|.
 name|bpb
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -5283,7 +5455,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|getdiskinfo
 parameter_list|(
 name|int
@@ -5693,10 +5865,9 @@ name|bpbBytesPerSec
 operator|==
 literal|0
 condition|)
-name|bpb
-operator|->
-name|bpbBytesPerSec
-operator|=
+block|{
+if|if
+condition|(
 name|ckgeom
 argument_list|(
 name|fname
@@ -5707,7 +5878,23 @@ name|d_secsize
 argument_list|,
 literal|"bytes/sector"
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|bpb
+operator|->
+name|bpbBytesPerSec
+operator|=
+name|lp
+operator|->
+name|d_secsize
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bpb
@@ -5716,10 +5903,9 @@ name|bpbSecPerTrack
 operator|==
 literal|0
 condition|)
-name|bpb
-operator|->
-name|bpbSecPerTrack
-operator|=
+block|{
+if|if
+condition|(
 name|ckgeom
 argument_list|(
 name|fname
@@ -5730,7 +5916,23 @@ name|d_nsectors
 argument_list|,
 literal|"sectors/track"
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|bpb
+operator|->
+name|bpbSecPerTrack
+operator|=
+name|lp
+operator|->
+name|d_nsectors
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bpb
@@ -5739,10 +5941,9 @@ name|bpbHeads
 operator|==
 literal|0
 condition|)
-name|bpb
-operator|->
-name|bpbHeads
-operator|=
+block|{
+if|if
+condition|(
 name|ckgeom
 argument_list|(
 name|fname
@@ -5753,7 +5954,23 @@ name|d_ntracks
 argument_list|,
 literal|"drive heads"
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|bpb
+operator|->
+name|bpbHeads
+operator|=
+name|lp
+operator|->
+name|d_ntracks
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bpb
@@ -5784,6 +6001,9 @@ name|bpbHiddenSecs
 operator|=
 name|hs
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -5989,7 +6209,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int
+name|int
 name|ckgeom
 parameter_list|(
 specifier|const
@@ -6011,10 +6231,9 @@ condition|(
 operator|!
 name|val
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: no default %s"
 argument_list|,
 name|fname
@@ -6022,16 +6241,20 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|val
 operator|>
 name|MAXU16
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s: illegal %s %d"
 argument_list|,
 name|fname
@@ -6042,7 +6265,12 @@ name|val
 argument_list|)
 expr_stmt|;
 return|return
-name|val
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
 return|;
 block|}
 end_function
