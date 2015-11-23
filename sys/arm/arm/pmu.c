@@ -135,12 +135,35 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|MAX_RLEN
 value|8
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAX_RLEN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -273,6 +296,10 @@ block|,
 name|RF_ACTIVE
 block|}
 block|,
+comment|/* We don't currently handle pmu events, other than on cpu 0 */
+if|#
+directive|if
+name|notyet
 block|{
 name|SYS_RES_IRQ
 block|,
@@ -343,6 +370,8 @@ operator||
 name|RF_OPTIONAL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1
