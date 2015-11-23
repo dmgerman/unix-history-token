@@ -1753,53 +1753,6 @@ block|{
 name|int
 name|tval
 decl_stmt|;
-comment|/* 	 * Figure out if we're supposed to skip this one. 	 */
-name|tval
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|resource_int_value
-argument_list|(
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"disable"
-argument_list|,
-operator|&
-name|tval
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|tval
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"disabled at user request\n"
-argument_list|)
-expr_stmt|;
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|disabled
-operator|=
-literal|1
-expr_stmt|;
-return|return;
-block|}
 name|tval
 operator|=
 literal|0
@@ -3371,23 +3324,6 @@ argument_list|,
 name|isp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check to see if options have us disabled 	 */
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|disabled
-condition|)
-block|{
-comment|/* 		 * But return zero to preserve unit numbering 		 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 	 * Get PCI options- which in this case are just mapping preferences. 	 */
 name|isp_get_pci_options
 argument_list|(

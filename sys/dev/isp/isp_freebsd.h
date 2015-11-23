@@ -1190,10 +1190,6 @@ name|ehook_active
 range|:
 literal|1
 decl_stmt|,
-name|disabled
-range|:
-literal|1
-decl_stmt|,
 name|mbox_sleeping
 range|:
 literal|1
