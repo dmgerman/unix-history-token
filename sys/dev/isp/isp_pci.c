@@ -7732,7 +7732,7 @@ name|isp
 operator|->
 name|isp_type
 operator|>=
-name|ISP_HA_FC_2300
+name|ISP_HA_FC_2200
 condition|)
 block|{
 name|imushp
@@ -8653,7 +8653,7 @@ name|isp
 operator|->
 name|isp_type
 operator|>=
-name|ISP_HA_FC_2300
+name|ISP_HA_FC_2200
 condition|)
 block|{
 name|len
@@ -9127,11 +9127,11 @@ goto|;
 block|}
 if|if
 condition|(
+operator|!
+name|IS_2100
+argument_list|(
 name|isp
-operator|->
-name|isp_type
-operator|>=
-name|ISP_HA_FC_2300
+argument_list|)
 condition|)
 block|{
 for|for

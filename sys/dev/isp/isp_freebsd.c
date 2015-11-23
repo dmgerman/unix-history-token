@@ -28764,11 +28764,10 @@ name|idx
 decl_stmt|;
 if|if
 condition|(
+name|IS_2100
+argument_list|(
 name|isp
-operator|->
-name|isp_type
-operator|<
-name|ISP_HA_FC_2300
+argument_list|)
 condition|)
 return|return
 operator|(
