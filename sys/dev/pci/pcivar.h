@@ -668,54 +668,6 @@ begin_comment
 comment|/* additional type 1 device config header information (PCI to PCI bridge) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCI_PPBMEMBASE
-parameter_list|(
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|((((pci_addr_t)(h)<< 32) + ((l)<<16))& ~0xfffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_PPBMEMLIMIT
-parameter_list|(
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|((((pci_addr_t)(h)<< 32) + ((l)<<16)) | 0xfffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_PPBIOBASE
-parameter_list|(
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|((((h)<<16) + ((l)<<8))& ~0xfff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_PPBIOLIMIT
-parameter_list|(
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|((((h)<<16) + ((l)<<8)) | 0xfff)
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
