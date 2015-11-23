@@ -534,6 +534,9 @@ modifier|*
 name|sv_syscallnames
 decl_stmt|;
 name|vm_offset_t
+name|sv_timekeep_base
+decl_stmt|;
+name|vm_offset_t
 name|sv_shared_page_base
 decl_stmt|;
 name|vm_offset_t
@@ -541,18 +544,6 @@ name|sv_shared_page_len
 decl_stmt|;
 name|vm_offset_t
 name|sv_sigcode_base
-decl_stmt|;
-name|vm_offset_t
-name|sv_timekeep_base
-decl_stmt|;
-name|int
-name|sv_timekeep_off
-decl_stmt|;
-name|int
-name|sv_timekeep_curr
-decl_stmt|;
-name|uint32_t
-name|sv_timekeep_gen
 decl_stmt|;
 name|void
 modifier|*
@@ -649,6 +640,13 @@ end_define
 begin_comment
 comment|/* Force cap_enter() on startup. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SV_TIMEKEEP
+value|0x040000
+end_define
 
 begin_define
 define|#
@@ -1217,6 +1215,15 @@ parameter_list|(
 name|void
 modifier|*
 name|param
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|exec_inittk
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

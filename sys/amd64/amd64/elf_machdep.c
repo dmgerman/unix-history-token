@@ -281,6 +281,8 @@ operator||
 name|SV_LP64
 operator||
 name|SV_SHP
+operator||
+name|SV_TIMEKEEP
 block|,
 operator|.
 name|sv_set_syscall_retval
