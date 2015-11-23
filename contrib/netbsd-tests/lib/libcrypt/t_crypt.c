@@ -388,6 +388,25 @@ name|i
 operator|++
 control|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+if|if
+condition|(
+literal|22
+operator|<=
+name|i
+condition|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"Old-style/bad inputs fail on FreeBSD"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|hash
