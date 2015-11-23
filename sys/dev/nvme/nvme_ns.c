@@ -999,6 +999,8 @@ name|nvme_completion
 name|parent_cpl
 decl_stmt|;
 name|int
+name|children
+decl_stmt|,
 name|inbed
 decl_stmt|;
 if|if
@@ -1021,7 +1023,17 @@ operator|=
 name|bio_error
 expr_stmt|;
 block|}
-comment|/* 	 * atomic_fetchadd will return value before adding 1, so we still 	 *  must add 1 to get the updated inbed number. 	 */
+comment|/* 	 * atomic_fetchadd will return value before adding 1, so we still 	 *  must add 1 to get the updated inbed number.  Save bio_children 	 *  before incrementing to guard against race conditions when 	 *  two children bios complete on different queues. 	 */
+name|children
+operator|=
+name|atomic_load_acq_int
+argument_list|(
+operator|&
+name|parent
+operator|->
+name|bio_children
+argument_list|)
+expr_stmt|;
 name|inbed
 operator|=
 name|atomic_fetchadd_int
@@ -1040,9 +1052,7 @@ if|if
 condition|(
 name|inbed
 operator|==
-name|parent
-operator|->
-name|bio_children
+name|children
 condition|)
 block|{
 name|bzero
