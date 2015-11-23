@@ -14202,7 +14202,9 @@ parameter_list|)
 block|{
 name|witness_output
 argument_list|(
-literal|"%s"
+literal|"%.*s"
+argument_list|,
+name|len
 argument_list|,
 name|data
 argument_list|)
