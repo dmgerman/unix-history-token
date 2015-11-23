@@ -8632,6 +8632,11 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+name|kfree
+argument_list|(
+name|work
+argument_list|)
+expr_stmt|;
 return|return
 name|err
 return|;
