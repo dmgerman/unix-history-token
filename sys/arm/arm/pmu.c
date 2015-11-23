@@ -297,8 +297,8 @@ name|RF_ACTIVE
 block|}
 block|,
 comment|/* We don't currently handle pmu events, other than on cpu 0 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|notyet
 block|{
 name|SYS_RES_IRQ
