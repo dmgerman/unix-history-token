@@ -2,7 +2,19 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/select.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -14,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -26,19 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<unistd.h>
 end_include
 
 begin_define
@@ -57,6 +63,7 @@ comment|/*  * Test for the non-blocking big pipe bug (write(2) returning  * EAGA
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|write_frame
 parameter_list|(
@@ -121,18 +128,13 @@ name|i
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"select"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"select failed"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i
@@ -140,9 +142,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"select returned unexpected value %d\n"
 argument_list|,
@@ -179,9 +181,9 @@ name|errno
 operator|!=
 name|EAGAIN
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"write"
+literal|"write failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -205,15 +207,17 @@ end_function
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+comment|/* any value over PIPE_SIZE should do */
 name|char
 name|buf
 index|[
 name|BIG_PIPE_SIZE
 index|]
 decl_stmt|;
-comment|/* any value over PIPE_SIZE should do */
 name|int
 name|i
 decl_stmt|,
@@ -224,11 +228,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pipe
@@ -238,18 +237,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"pipe"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"pipe failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|flags
 operator|=
 name|fcntl
@@ -287,9 +281,14 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|printf
 argument_list|(
-literal|"fcntl"
+literal|"fcntl failed: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -308,16 +307,19 @@ case|case
 operator|-
 literal|1
 case|:
-name|perror
-argument_list|(
-literal|"fork"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"fork failed: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|0
 case|:
@@ -335,6 +337,7 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* Any small size should do */
 name|i
 operator|=
 name|read
@@ -349,7 +352,6 @@ argument_list|,
 literal|256
 argument_list|)
 expr_stmt|;
-comment|/* any small size should do */
 if|if
 condition|(
 name|i
@@ -363,18 +365,13 @@ name|i
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"read"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|exit
 argument_list|(
@@ -430,7 +427,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 1\n"
+literal|"ok\n"
 argument_list|)
 expr_stmt|;
 name|exit

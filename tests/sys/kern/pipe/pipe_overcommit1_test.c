@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -27,15 +39,16 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
-name|returnval
-decl_stmt|;
-name|int
 name|pipes
 index|[
 literal|10000
 index|]
+decl_stmt|,
+name|returnval
+decl_stmt|;
+name|unsigned
+name|int
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -45,7 +58,10 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10000
+name|nitems
+argument_list|(
+name|pipes
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -66,6 +82,11 @@ block|}
 name|printf
 argument_list|(
 literal|"PASS\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
