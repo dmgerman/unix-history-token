@@ -1664,7 +1664,7 @@ name|calcsize
 condition|)
 name|fputs
 argument_list|(
-literal|"      funcblocksize += nodesize[n->type];\n"
+literal|"      result->blocksize += nodesize[n->type];\n"
 argument_list|,
 name|cfile
 argument_list|)
@@ -1673,14 +1673,14 @@ else|else
 block|{
 name|fputs
 argument_list|(
-literal|"      new = funcblock;\n"
+literal|"      new = state->block;\n"
 argument_list|,
 name|cfile
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"      funcblock = (char *)funcblock + nodesize[n->type];\n"
+literal|"      state->block = (char *)state->block + nodesize[n->type];\n"
 argument_list|,
 name|cfile
 argument_list|)
@@ -1798,7 +1798,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"calcsize(n->%s.%s);\n"
+literal|"calcsize(n->%s.%s, result);\n"
 argument_list|,
 name|sp
 operator|->
@@ -1823,7 +1823,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"new->%s.%s = copynode(n->%s.%s);\n"
+literal|"new->%s.%s = copynode(n->%s.%s, state);\n"
 argument_list|,
 name|sp
 operator|->
@@ -1863,7 +1863,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"sizenodelist(n->%s.%s);\n"
+literal|"sizenodelist(n->%s.%s, result);\n"
 argument_list|,
 name|sp
 operator|->
@@ -1888,7 +1888,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"new->%s.%s = copynodelist(n->%s.%s);\n"
+literal|"new->%s.%s = copynodelist(n->%s.%s, state);\n"
 argument_list|,
 name|sp
 operator|->
@@ -1928,7 +1928,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"funcstringsize += strlen(n->%s.%s) + 1;\n"
+literal|"result->stringsize += strlen(n->%s.%s) + 1;\n"
 argument_list|,
 name|sp
 operator|->
@@ -1953,7 +1953,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"new->%s.%s = nodesavestr(n->%s.%s);\n"
+literal|"new->%s.%s = nodesavestr(n->%s.%s, state);\n"
 argument_list|,
 name|sp
 operator|->
