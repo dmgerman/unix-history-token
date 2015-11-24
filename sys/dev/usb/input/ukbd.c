@@ -1073,7 +1073,7 @@ comment|/*  * Translate USB keycodes to AT keyboard scancodes.  */
 end_comment
 
 begin_comment
-comment|/*  * FIXME: Mac USB keyboard generates:  * 0x53: keypad NumLock/Clear  * 0x66: Power  * 0x67: keypad =  * 0x68: F13  * 0x69: F14  * 0x6a: F15  */
+comment|/*  * FIXME: Mac USB keyboard generates:  * 0x53: keypad NumLock/Clear  * 0x66: Power  * 0x67: keypad =  * 0x68: F13  * 0x69: F14  * 0x6a: F15  *   * USB Apple Keyboard JIS generates:  * 0x90: Kana  * 0x91: Eisu  */
 end_comment
 
 begin_decl_stmt
@@ -1392,9 +1392,9 @@ block|,
 name|NN
 block|,
 comment|/* 88 - 8F */
-name|NN
+literal|129
 block|,
-name|NN
+literal|130
 block|,
 name|NN
 block|,
@@ -10311,7 +10311,7 @@ comment|/* Sun Type 6 Cut */
 literal|0x125
 block|,
 comment|/* Sun Type 6 Mute */
-comment|/* 120 - 128 */
+comment|/* 120 - 130 */
 literal|0x11f
 block|,
 comment|/* Sun Type 6 VolumeDown */
@@ -10340,6 +10340,12 @@ comment|/* Keyboard Intl' 5 (Muhenkan) */
 literal|0x5c
 block|,
 comment|/* Keyboard Intl' 6 (Keypad ,) (For PC-9821 layout) */
+literal|0x71
+block|,
+comment|/* Apple Keyboard JIS (Kana) */
+literal|0x72
+block|,
+comment|/* Apple Keyboard JIS (Eisu) */
 block|}
 decl_stmt|;
 if|if
