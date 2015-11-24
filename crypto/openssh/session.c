@@ -6587,12 +6587,14 @@ literal|1024
 index|]
 decl_stmt|,
 modifier|*
-name|nl
-decl_stmt|,
-modifier|*
 name|def_nl
 init|=
 name|_PATH_NOLOGIN
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|nl
 decl_stmt|;
 name|struct
 name|stat
