@@ -676,7 +676,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Free vnode target.  Free vnodes may simply be files which have been stat'd  * but not read.  This is somewhat common, and a small cache of such files  * should be kept to avoid recreation costs.  */
+comment|/*  * "Free" vnode target.  Free vnodes are rarely completely free, but are  * just ones that are cheap to recycle.  Usually they are for files which  * have been stat'd but not read; these usually have inode and namecache  * data attached to them.  This target is the preferred minimum size of a  * sub-cache consisting mostly of such files. The system balances the size  * of this sub-cache with its complement to try to prevent either from  * thrashing while the other is relatively inactive.  The targets express  * a preference for the best balance.  *  * "Above" this target there are 2 further targets (watermarks) related  * to recyling of free vnodes.  In the best-operating case, the cache is  * exactly full, the free list has size between vlowat and vhiwat above the  * free target, and recycling from it and normal use maintains this state.  * Sometimes the free list is below vlowat or even empty, but this state  * is even better for immediate use provided the cache is not full.  * Otherwise, vnlru_proc() runs to reclaim enough vnodes (usually non-free  * ones) to reach one of these states.  The watermarks are currently hard-  * coded as 4% and 9% of the available space higher.  These and the default  * of 25% for wantfreevnodes are too large if the memory size is large.  * E.g., 9% of 75% of MAXVNODES is more than 566000 vnodes to reclaim  * whenever vnlru_proc() becomes active.  */
 end_comment
 
 begin_decl_stmt
@@ -702,14 +702,10 @@ name|wantfreevnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Target for minimum number of \"free\" vnodes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Number of vnodes in the free list. */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -734,35 +730,7 @@ name|freevnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of vnodes in the free list"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vlru_allow_cache_src
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|vlru_allow_cache_src
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|vlru_allow_cache_src
-argument_list|,
-literal|0
-argument_list|,
-literal|"Allow vlru to reclaim source vnode"
+literal|"Number of \"free\" vnodes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -790,7 +758,7 @@ name|recycles_count
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of vnodes recycled to avoid exceding kern.maxvnodes"
+literal|"Number of vnodes recycled to meet vnode cache targets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1191,7 +1159,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Number of vnodes we want to exist at any one time.  This is mostly used  * to size hash tables in vnode-related code.  It is normally not used in  * getnewvnode(), as wantfreevnodes is normally nonzero.)  *  * XXX desiredvnodes is historical cruft and should not exist.  */
+comment|/* Target for maximum number of vnodes. */
 end_comment
 
 begin_decl_stmt
@@ -1199,6 +1167,64 @@ name|int
 name|desiredvnodes
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|gapvnodes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* gap between wanted and desired */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vhiwat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enough extras after expansion */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vlowat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimal extras before expansion */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vstir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* nonzero to stir non-free vnodes */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|int
+name|vsmalltrigger
+init|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pref to keep if> this many pages */
+end_comment
 
 begin_function
 specifier|static
@@ -1248,6 +1274,13 @@ operator|!=
 name|desiredvnodes
 condition|)
 block|{
+name|wantfreevnodes
+operator|=
+name|desiredvnodes
+operator|/
+literal|4
+expr_stmt|;
+comment|/* XXX locking seems to be incomplete. */
 name|vfs_hash_changesize
 argument_list|(
 name|desiredvnodes
@@ -1291,7 +1324,7 @@ name|sysctl_update_desiredvnodes
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Maximum number of vnodes"
+literal|"Target for maximum number of vnodes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1312,7 +1345,7 @@ name|wantfreevnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|"Minimum number of vnodes (legacy)"
+literal|"Old name for vfs.wantfreevnodes (legacy)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1425,7 +1458,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Initialize the vnode management data structures.  *  * Reevaluate the following cap on the number of vnodes after the physical  * memory size exceeds 512GB.  In the limit, as the physical memory size  * grows, the ratio of physical pages to vnodes approaches sixteen to one.  */
+comment|/*  * Initialize the vnode management data structures.  *  * Reevaluate the following cap on the number of vnodes after the physical  * memory size exceeds 512GB.  In the limit, as the physical memory size  * grows, the ratio of the memory size in KB to to vnodes approaches 64:1.  */
 end_comment
 
 begin_ifndef
@@ -1438,8 +1471,12 @@ begin_define
 define|#
 directive|define
 name|MAXVNODES_MAX
-value|(512 * (1024 * 1024 * 1024 / (int)PAGE_SIZE / 16))
+value|(512 * 1024 * 1024 / 64)
 end_define
+
+begin_comment
+comment|/* 8M */
+end_comment
 
 begin_endif
 endif|#
@@ -1465,16 +1502,19 @@ name|physvnodes
 decl_stmt|,
 name|virtvnodes
 decl_stmt|;
-comment|/* 	 * Desiredvnodes is a function of the physical memory size and the 	 * kernel's heap size.  Generally speaking, it scales with the 	 * physical memory size.  The ratio of desiredvnodes to physical pages 	 * is one to four until desiredvnodes exceeds 98,304.  Thereafter, the 	 * marginal ratio of desiredvnodes to physical pages is one to 	 * sixteen.  However, desiredvnodes is limited by the kernel's heap 	 * size.  The memory required by desiredvnodes vnodes and vm objects 	 * may not exceed one seventh of the kernel's heap size. 	 */
+comment|/* 	 * Desiredvnodes is a function of the physical memory size and the 	 * kernel's heap size.  Generally speaking, it scales with the 	 * physical memory size.  The ratio of desiredvnodes to the physical 	 * memory size is 1:16 until desiredvnodes exceeds 98,304. 	 * Thereafter, the 	 * marginal ratio of desiredvnodes to the physical memory size is 	 * 1:64.  However, desiredvnodes is limited by the kernel's heap 	 * size.  The memory required by desiredvnodes vnodes and vm objects 	 * must not exceed 1/7th of the kernel's heap size. 	 */
 name|physvnodes
 operator|=
 name|maxproc
 operator|+
+name|pgtok
+argument_list|(
 name|vm_cnt
 operator|.
 name|v_page_count
+argument_list|)
 operator|/
-literal|16
+literal|64
 operator|+
 literal|3
 operator|*
@@ -1482,14 +1522,17 @@ name|min
 argument_list|(
 literal|98304
 operator|*
-literal|4
+literal|16
 argument_list|,
+name|pgtok
+argument_list|(
 name|vm_cnt
 operator|.
 name|v_page_count
 argument_list|)
+argument_list|)
 operator|/
-literal|16
+literal|64
 expr_stmt|;
 name|virtvnodes
 operator|=
@@ -3133,6 +3176,12 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|int
+name|reclaim_nc_src
+parameter_list|,
+name|int
+name|trigger
 parameter_list|)
 block|{
 name|struct
@@ -3141,42 +3190,12 @@ modifier|*
 name|vp
 decl_stmt|;
 name|int
-name|done
-decl_stmt|;
-name|int
-name|trigger
-decl_stmt|;
-name|int
-name|usevnodes
-decl_stmt|;
-name|int
 name|count
+decl_stmt|,
+name|done
+decl_stmt|,
+name|target
 decl_stmt|;
-comment|/* 	 * Calculate the trigger point, don't allow user 	 * screwups to blow us up.   This prevents us from 	 * recycling vnodes with lots of resident pages.  We 	 * aren't trying to free memory, we are trying to 	 * free vnodes. 	 */
-name|usevnodes
-operator|=
-name|desiredvnodes
-expr_stmt|;
-if|if
-condition|(
-name|usevnodes
-operator|<=
-literal|0
-condition|)
-name|usevnodes
-operator|=
-literal|1
-expr_stmt|;
-name|trigger
-operator|=
-name|vm_cnt
-operator|.
-name|v_page_count
-operator|*
-literal|2
-operator|/
-name|usevnodes
-expr_stmt|;
 name|done
 operator|=
 literal|0
@@ -3201,6 +3220,26 @@ operator|=
 name|mp
 operator|->
 name|mnt_nvnodelistsize
+expr_stmt|;
+name|target
+operator|=
+name|count
+operator|*
+operator|(
+name|int64_t
+operator|)
+name|gapvnodes
+operator|/
+name|imax
+argument_list|(
+name|desiredvnodes
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|target
+operator|=
+name|target
 operator|/
 literal|10
 operator|+
@@ -3211,6 +3250,10 @@ condition|(
 name|count
 operator|!=
 literal|0
+operator|&&
+name|done
+operator|<
+name|target
 condition|)
 block|{
 name|vp
@@ -3251,6 +3294,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* 		 * XXX LRU is completely broken for non-free vnodes.  First 		 * by calling here in mountpoint order, then by moving 		 * unselected vnodes to the end here, and most grossly by 		 * removing the vlruvp() function that was supposed to 		 * maintain the order.  (This function was born broken 		 * since syncer problems prevented it doing anything.)  The 		 * order is closer to LRC (C = Created). 		 * 		 * LRU reclaiming of vnodes seems to have last worked in 		 * FreeBSD-3 where LRU wasn't mentioned under any spelling. 		 * Then there was no hold count, and inactive vnodes were 		 * simply put on the free list in LRU order.  The separate 		 * lists also break LRU.  We prefer to reclaim from the 		 * free list for technical reasons.  This tends to thrash 		 * the free list to keep very unrecently used held vnodes. 		 * The problem is mitigated by keeping the free list large. 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3289,7 +3333,7 @@ condition|)
 goto|goto
 name|next_iter
 goto|;
-comment|/* 		 * If it's been deconstructed already, it's still 		 * referenced, or it exceeds the trigger, skip it. 		 */
+comment|/* 		 * If it's been deconstructed already, it's still 		 * referenced, or it exceeds the trigger, skip it. 		 * Also skip free vnodes.  We are trying to make space 		 * to expand the free list, not reduce it. 		 */
 if|if
 condition|(
 name|vp
@@ -3298,18 +3342,28 @@ name|v_usecount
 operator|||
 operator|(
 operator|!
-name|vlru_allow_cache_src
+name|reclaim_nc_src
 operator|&&
 operator|!
 name|LIST_EMPTY
 argument_list|(
 operator|&
-operator|(
 name|vp
-operator|)
 operator|->
 name|v_cache_src
 argument_list|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_FREE
+operator|)
+operator|!=
+literal|0
 operator|)
 operator|||
 operator|(
@@ -3395,19 +3449,27 @@ name|v_usecount
 operator|||
 operator|(
 operator|!
-name|vlru_allow_cache_src
+name|reclaim_nc_src
 operator|&&
 operator|!
 name|LIST_EMPTY
 argument_list|(
 operator|&
-operator|(
 name|vp
-operator|)
 operator|->
 name|v_cache_src
 argument_list|)
 operator|)
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_FREE
+operator|)
+operator|!=
+literal|0
 operator|||
 operator|(
 name|vp
@@ -3547,7 +3609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to keep the free list at wantfreevnodes length.  */
+comment|/*  * Attempt to reduce the free list by the requested amount.  */
 end_comment
 
 begin_function
@@ -3756,6 +3818,82 @@ block|}
 end_function
 
 begin_comment
+comment|/* XXX some names and initialization are bad for limits and watermarks. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vspace
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|space
+decl_stmt|;
+name|gapvnodes
+operator|=
+name|imax
+argument_list|(
+name|desiredvnodes
+operator|-
+name|wantfreevnodes
+argument_list|,
+literal|100
+argument_list|)
+expr_stmt|;
+name|vhiwat
+operator|=
+name|gapvnodes
+operator|/
+literal|11
+expr_stmt|;
+comment|/* 9% -- just under the 10% in vlrureclaim() */
+name|vlowat
+operator|=
+name|vhiwat
+operator|/
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|numvnodes
+operator|>
+name|desiredvnodes
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|space
+operator|=
+name|desiredvnodes
+operator|-
+name|numvnodes
+expr_stmt|;
+if|if
+condition|(
+name|freevnodes
+operator|>
+name|wantfreevnodes
+condition|)
+name|space
+operator|+=
+name|freevnodes
+operator|-
+name|wantfreevnodes
+expr_stmt|;
+return|return
+operator|(
+name|space
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Attempt to recycle vnodes in a context that is always safe to block.  * Calling vlrurecycle() from the bowels of filesystem code has some  * interesting deadlock problems.  */
 end_comment
 
@@ -3791,15 +3929,22 @@ decl_stmt|,
 modifier|*
 name|nmp
 decl_stmt|;
+name|unsigned
+name|long
+name|ofreevnodes
+decl_stmt|,
+name|onumvnodes
+decl_stmt|;
 name|int
 name|done
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|vnlruproc
+decl_stmt|,
+name|force
+decl_stmt|,
+name|reclaim_nc_src
+decl_stmt|,
+name|trigger
+decl_stmt|,
+name|usevnodes
 decl_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -3807,10 +3952,14 @@ name|shutdown_pre_sync
 argument_list|,
 name|kproc_shutdown
 argument_list|,
-name|p
+name|vnlruproc
 argument_list|,
 name|SHUTDOWN_PRI_FIRST
 argument_list|)
+expr_stmt|;
+name|force
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -3820,7 +3969,7 @@ control|)
 block|{
 name|kproc_suspend_check
 argument_list|(
-name|p
+name|vnlruproc
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3829,28 +3978,58 @@ operator|&
 name|vnode_free_list_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freevnodes
-operator|>
-name|wantfreevnodes
-condition|)
-name|vnlru_free
-argument_list|(
-name|freevnodes
-operator|-
-name|wantfreevnodes
-argument_list|)
-expr_stmt|;
+comment|/* 		 * If numvnodes is too large (due to desiredvnodes being 		 * adjusted using its sysctl, or emergency growth), first 		 * try to reduce it by discarding from the free list. 		 */
 if|if
 condition|(
 name|numvnodes
-operator|<=
+operator|>
 name|desiredvnodes
-operator|*
-literal|9
-operator|/
-literal|10
+operator|&&
+name|freevnodes
+operator|>
+literal|0
+condition|)
+name|vnlru_free
+argument_list|(
+name|ulmin
+argument_list|(
+name|numvnodes
+operator|-
+name|desiredvnodes
+argument_list|,
+name|freevnodes
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Sleep if the vnode cache is in a good state.  This is 		 * when it is not over-full and has space for about a 4% 		 * or 9% expansion (by growing its size or inexcessively 		 * reducing its free list).  Otherwise, try to reclaim 		 * space for a 10% expansion. 		 */
+if|if
+condition|(
+name|vstir
+operator|&&
+name|force
+operator|==
+literal|0
+condition|)
+block|{
+name|force
+operator|=
+literal|1
+expr_stmt|;
+name|vstir
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|vspace
+argument_list|()
+operator|>=
+name|vlowat
+operator|&&
+name|force
+operator|==
+literal|0
 condition|)
 block|{
 name|vnlruproc_sig
@@ -3890,6 +4069,69 @@ expr_stmt|;
 name|done
 operator|=
 literal|0
+expr_stmt|;
+name|ofreevnodes
+operator|=
+name|freevnodes
+expr_stmt|;
+name|onumvnodes
+operator|=
+name|numvnodes
+expr_stmt|;
+comment|/* 		 * Calculate parameters for recycling.  These are the same 		 * throughout the loop to give some semblance of fairness. 		 * The trigger point is to avoid recycling vnodes with lots 		 * of resident pages.  We aren't trying to free memory; we 		 * are trying to recycle or at least free vnodes. 		 */
+if|if
+condition|(
+name|numvnodes
+operator|<=
+name|desiredvnodes
+condition|)
+name|usevnodes
+operator|=
+name|numvnodes
+operator|-
+name|freevnodes
+expr_stmt|;
+else|else
+name|usevnodes
+operator|=
+name|numvnodes
+expr_stmt|;
+if|if
+condition|(
+name|usevnodes
+operator|<=
+literal|0
+condition|)
+name|usevnodes
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 		 * The trigger value is is chosen to give a conservatively 		 * large value to ensure that it alone doesn't prevent 		 * making progress.  The value can easily be so large that 		 * it is effectively infinite in some congested and 		 * misconfigured cases, and this is necessary.  Normally 		 * it is about 8 to 100 (pages), which is quite large. 		 */
+name|trigger
+operator|=
+name|vm_cnt
+operator|.
+name|v_page_count
+operator|*
+literal|2
+operator|/
+name|usevnodes
+expr_stmt|;
+if|if
+condition|(
+name|force
+operator|<
+literal|2
+condition|)
+name|trigger
+operator|=
+name|vsmalltrigger
+expr_stmt|;
+name|reclaim_nc_src
+operator|=
+name|force
+operator|>=
+literal|3
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -3944,6 +4186,10 @@ operator|+=
 name|vlrureclaim
 argument_list|(
 name|mp
+argument_list|,
+name|reclaim_nc_src
+argument_list|,
+name|trigger
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3975,18 +4221,58 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|onumvnodes
+operator|>
+name|desiredvnodes
+operator|&&
+name|numvnodes
+operator|<=
+name|desiredvnodes
+condition|)
+name|uma_reclaim
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|done
 operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
+if|if
+condition|(
+name|force
+operator|==
 literal|0
-comment|/* These messages are temporary debugging aids */
-block|if (vnlru_nowhere< 5) 				printf("vnlru process getting nowhere..\n"); 			else if (vnlru_nowhere == 5) 				printf("vnlru process messages stopped.\n");
-endif|#
-directive|endif
+operator|||
+name|force
+operator|==
+literal|1
+condition|)
+block|{
+name|force
+operator|=
+literal|2
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|force
+operator|==
+literal|2
+condition|)
+block|{
+name|force
+operator|=
+literal|3
+expr_stmt|;
+continue|continue;
+block|}
+name|force
+operator|=
+literal|0
+expr_stmt|;
 name|vnlru_nowhere
 operator|++
 expr_stmt|;
@@ -4009,6 +4295,14 @@ name|kern_yield
 argument_list|(
 name|PRI_USER
 argument_list|)
+expr_stmt|;
+comment|/* 		 * After becoming active to expand above low water, keep 		 * active until above high water. 		 */
+name|force
+operator|=
+name|vspace
+argument_list|()
+operator|<
+name|vhiwat
 expr_stmt|;
 block|}
 block|}
@@ -4259,8 +4553,41 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|vcheckspace
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vspace
+argument_list|()
+operator|<
+name|vlowat
+operator|&&
+name|vnlruproc_sig
+operator|==
+literal|0
+condition|)
+block|{
+name|vnlruproc_sig
+operator|=
+literal|1
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|vnlruproc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
-comment|/*  * Wait for available vnodes.  */
+comment|/*  * Wait if necessary for space for a new vnode.  */
 end_comment
 
 begin_function
@@ -4283,7 +4610,7 @@ expr_stmt|;
 if|if
 condition|(
 name|numvnodes
-operator|>
+operator|>=
 name|desiredvnodes
 condition|)
 block|{
@@ -4292,20 +4619,7 @@ condition|(
 name|suspended
 condition|)
 block|{
-comment|/* 			 * File system is beeing suspended, we cannot risk a 			 * deadlock here, so allocate new vnode anyway. 			 */
-if|if
-condition|(
-name|freevnodes
-operator|>
-name|wantfreevnodes
-condition|)
-name|vnlru_free
-argument_list|(
-name|freevnodes
-operator|-
-name|wantfreevnodes
-argument_list|)
-expr_stmt|;
+comment|/* 			 * The file system is being suspended.  We cannot 			 * risk a deadlock here, so allow allocation of 			 * another vnode even if this would give too many. 			 */
 return|return
 operator|(
 literal|0
@@ -4346,10 +4660,28 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Post-adjust like the pre-adjust in getnewvnode(). */
+if|if
+condition|(
+name|numvnodes
+operator|+
+literal|1
+operator|>
+name|desiredvnodes
+operator|&&
+name|freevnodes
+operator|>
+literal|1
+condition|)
+name|vnlru_free
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|numvnodes
-operator|>
+operator|>=
 name|desiredvnodes
 condition|?
 name|ENFILE
@@ -4359,6 +4691,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This hack is fragile, and probably not needed any more now that the  * watermark handling works.  */
+end_comment
 
 begin_function
 name|void
@@ -4373,6 +4709,48 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+comment|/* Pre-adjust like the pre-adjust in getnewvnode(), with any count. */
+comment|/* XXX no longer so quick, but this part is not racy. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|numvnodes
+operator|+
+name|count
+operator|>
+name|desiredvnodes
+operator|&&
+name|freevnodes
+operator|>
+name|wantfreevnodes
+condition|)
+name|vnlru_free
+argument_list|(
+name|ulmin
+argument_list|(
+name|numvnodes
+operator|+
+name|count
+operator|-
+name|desiredvnodes
+argument_list|,
+name|freevnodes
+operator|-
+name|wantfreevnodes
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -4399,6 +4777,10 @@ name|td_vp_reserv
 operator|+=
 name|count
 expr_stmt|;
+name|vcheckspace
+argument_list|()
+expr_stmt|;
+comment|/* XXX no longer so quick, but more racy */
 return|return;
 block|}
 else|else
@@ -4451,6 +4833,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vcheckspace
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4459,6 +4844,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This hack is fragile, especially if desiredvnodes or wantvnodes are  * misconfgured or changed significantly.  Reducing desiredvnodes below  * the reserved amount should cause bizarre behaviour like reducing it  * below the number of active vnodes -- the system will try to reduce  * numvnodes to match, but should fail, so the subtraction below should  * not overflow.  */
+end_comment
 
 begin_function
 name|void
@@ -4540,6 +4929,10 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|static
+name|int
+name|cyclecount
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -4589,18 +4982,58 @@ operator|&
 name|vnode_free_list_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Lend our context to reclaim vnodes if they've exceeded the max. 	 */
+if|if
+condition|(
+name|numvnodes
+operator|<
+name|desiredvnodes
+condition|)
+name|cyclecount
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cyclecount
+operator|++
+operator|>=
+name|freevnodes
+condition|)
+block|{
+name|cyclecount
+operator|=
+literal|0
+expr_stmt|;
+name|vstir
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 	 * Grow the vnode cache if it will not be above its target max 	 * after growing.  Otherwise, if the free list is nonempty, try 	 * to reclaim 1 item from it before growing the cache (possibly 	 * above its target max if the reclamation failed or is delayed). 	 * Otherwise, wait for some space.  In all cases, schedule 	 * vnlru_proc() if we are getting short of space.  The watermarks 	 * should be chosen so that we never wait or even reclaim from 	 * the free list to below its target minimum. 	 */
+if|if
+condition|(
+name|numvnodes
+operator|+
+literal|1
+operator|<=
+name|desiredvnodes
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|freevnodes
 operator|>
-name|wantfreevnodes
+literal|0
 condition|)
 name|vnlru_free
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
 name|error
 operator|=
 name|getnewvnode_wait
@@ -4622,9 +5055,13 @@ if|#
 directive|if
 literal|0
 comment|/* XXX Not all VFS_VGET/ffs_vget callers check returns. */
-block|if (error != 0) { 		mtx_unlock(&vnode_free_list_mtx); 		return (error); 	}
+block|if (error != 0) { 			mtx_unlock(&vnode_free_list_mtx); 			return (error); 		}
 endif|#
 directive|endif
+block|}
+name|vcheckspace
+argument_list|()
+expr_stmt|;
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -10884,6 +11321,7 @@ name|mnt_activevnodelistsize
 operator|--
 expr_stmt|;
 block|}
+comment|/* XXX V*AGE hasn't been set since 1997. */
 if|if
 condition|(
 name|vp
