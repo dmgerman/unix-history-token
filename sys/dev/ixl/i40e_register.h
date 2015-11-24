@@ -2308,6 +2308,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_PRTDCB_RUPTQ
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x00122400 + ((_i) * 32))
+end_define
+
+begin_comment
+comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTDCB_RUPTQ_MAX_INDEX
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTDCB_RUPTQ_RXQNUM_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTDCB_RUPTQ_RXQNUM_MASK
+value|I40E_MASK(0x3FFF, I40E_PRTDCB_RUPTQ_RXQNUM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_PRTDCB_TC2PFC
 value|0x001C0980
 end_define
@@ -3165,6 +3204,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_GLGEN_GPIO_CTL_PRT_BIT_MAP_SHIFT
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLGEN_GPIO_CTL_PRT_BIT_MAP_MASK
+value|I40E_MASK(0xF, I40E_GLGEN_GPIO_CTL_PRT_BIT_MAP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_GLGEN_GPIO_SET
 value|0x00088184
 end_define
@@ -3656,7 +3709,21 @@ begin_define
 define|#
 directive|define
 name|I40E_GLGEN_MDIO_CTRL_LEGACY_RSVD1_MASK
-value|I40E_MASK(0x3FFF, I40E_GLGEN_MDIO_CTRL_LEGACY_RSVD1_SHIFT)
+value|I40E_MASK(0x7FF, I40E_GLGEN_MDIO_CTRL_LEGACY_RSVD1_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLGEN_MDIO_CTRL_LEGACY_RSVD0_SHIFT
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLGEN_MDIO_CTRL_LEGACY_RSVD0_MASK
+value|I40E_MASK(0x7, I40E_GLGEN_MDIO_CTRL_LEGACY_RSVD0_SHIFT)
 end_define
 
 begin_define
@@ -4143,31 +4210,6 @@ define|#
 directive|define
 name|I40E_GLGEN_RSTCTL_ECC_RST_ENA_MASK
 value|I40E_MASK(0x1, I40E_GLGEN_RSTCTL_ECC_RST_ENA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLGEN_RSTENA_EMP
-value|0x000B818C
-end_define
-
-begin_comment
-comment|/* Reset: POR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_GLGEN_RSTENA_EMP_EMP_RST_ENA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLGEN_RSTENA_EMP_EMP_RST_ENA_MASK
-value|I40E_MASK(0x1, I40E_GLGEN_RSTENA_EMP_EMP_RST_ENA_SHIFT)
 end_define
 
 begin_define
@@ -8230,7 +8272,7 @@ value|0x00038400
 end_define
 
 begin_comment
-comment|/* Reset: PFR */
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -9068,7 +9110,7 @@ comment|/* _i=0...127 */
 end_comment
 
 begin_comment
-comment|/* Reset: VFR */
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -14155,31 +14197,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GLPCI_LATCT
-value|0x0009C4B4
-end_define
-
-begin_comment
-comment|/* Reset: PCIR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_GLPCI_LATCT_PCI_COUNT_LAT_CT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLPCI_LATCT_PCI_COUNT_LAT_CT_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLPCI_LATCT_PCI_COUNT_LAT_CT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|I40E_GLPCI_LBARCTRL
 value|0x000BE484
 end_define
@@ -14919,6 +14936,45 @@ define|#
 directive|define
 name|I40E_GLPCI_VFSUP_VR_BAR_TYPE_MASK
 value|I40E_MASK(0x1, I40E_GLPCI_VFSUP_VR_BAR_TYPE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLTPH_CTRL
+value|0x000BE480
+end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_GLTPH_CTRL_DESC_PH_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLTPH_CTRL_DESC_PH_MASK
+value|I40E_MASK(0x3, I40E_GLTPH_CTRL_DESC_PH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLTPH_CTRL_DATA_PH_SHIFT
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GLTPH_CTRL_DATA_PH_MASK
+value|I40E_MASK(0x3, I40E_GLTPH_CTRL_DATA_PH_SHIFT)
 end_define
 
 begin_define
@@ -18850,15 +18906,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPRCH_UPRCH_SHIFT
+name|I40E_GLPRT_BPRCH_BPRCH_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPRCH_UPRCH_MASK
-value|I40E_MASK(0xFFFF, I40E_GLPRT_BPRCH_UPRCH_SHIFT)
+name|I40E_GLPRT_BPRCH_BPRCH_MASK
+value|I40E_MASK(0xFFFF, I40E_GLPRT_BPRCH_BPRCH_SHIFT)
 end_define
 
 begin_define
@@ -18889,15 +18945,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPRCL_UPRCH_SHIFT
+name|I40E_GLPRT_BPRCL_BPRCL_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPRCL_UPRCH_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLPRT_BPRCL_UPRCH_SHIFT)
+name|I40E_GLPRT_BPRCL_BPRCL_MASK
+value|I40E_MASK(0xFFFFFFFF, I40E_GLPRT_BPRCL_BPRCL_SHIFT)
 end_define
 
 begin_define
@@ -18928,15 +18984,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPTCH_UPRCH_SHIFT
+name|I40E_GLPRT_BPTCH_BPTCH_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPTCH_UPRCH_MASK
-value|I40E_MASK(0xFFFF, I40E_GLPRT_BPTCH_UPRCH_SHIFT)
+name|I40E_GLPRT_BPTCH_BPTCH_MASK
+value|I40E_MASK(0xFFFF, I40E_GLPRT_BPTCH_BPTCH_SHIFT)
 end_define
 
 begin_define
@@ -18967,15 +19023,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPTCL_UPRCH_SHIFT
+name|I40E_GLPRT_BPTCL_BPTCL_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_GLPRT_BPTCL_UPRCH_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLPRT_BPTCL_UPRCH_SHIFT)
+name|I40E_GLPRT_BPTCL_BPTCL_MASK
+value|I40E_MASK(0xFFFFFFFF, I40E_GLPRT_BPTCL_BPTCL_SHIFT)
 end_define
 
 begin_define
@@ -21248,45 +21304,6 @@ define|#
 directive|define
 name|I40E_GLPRT_TDOLD_GLPRT_TDOLD_MASK
 value|I40E_MASK(0xFFFFFFFF, I40E_GLPRT_TDOLD_GLPRT_TDOLD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLPRT_TDPC
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00375400 + ((_i) * 8))
-end_define
-
-begin_comment
-comment|/* _i=0...3 */
-end_comment
-
-begin_comment
-comment|/* Reset: CORER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_GLPRT_TDPC_MAX_INDEX
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLPRT_TDPC_TDPC_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLPRT_TDPC_TDPC_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLPRT_TDPC_TDPC_SHIFT)
 end_define
 
 begin_define
@@ -24688,31 +24705,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GLSCD_QUANTA
-value|0x000B2080
-end_define
-
-begin_comment
-comment|/* Reset: CORER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_GLSCD_QUANTA_TSCDQUANTA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLSCD_QUANTA_TSCDQUANTA_MASK
-value|I40E_MASK(0x7, I40E_GLSCD_QUANTA_TSCDQUANTA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|I40E_GL_MDET_RX
 value|0x0012A510
 end_define
@@ -26763,7 +26755,7 @@ value|0x00005400
 end_define
 
 begin_comment
-comment|/* Reset: VFR */
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -27641,6 +27633,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _I40E_REGISTER_H_ */
+end_comment
 
 end_unit
 

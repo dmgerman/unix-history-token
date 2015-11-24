@@ -871,6 +871,18 @@ name|i40e_aqc_opc_lldp_start
 init|=
 literal|0x0A06
 block|,
+name|i40e_aqc_opc_get_cee_dcb_cfg
+init|=
+literal|0x0A07
+block|,
+name|i40e_aqc_opc_lldp_set_local_mib
+init|=
+literal|0x0A08
+block|,
+name|i40e_aqc_opc_lldp_stop_start_spec_agent
+init|=
+literal|0x0A09
+block|,
 comment|/* Tunnel commands */
 name|i40e_aqc_opc_add_udp_tunnel
 init|=
@@ -898,6 +910,14 @@ name|i40e_aqc_opc_oem_device_status_change
 init|=
 literal|0xFE01
 block|,
+name|i40e_aqc_opc_oem_ocsd_initialize
+init|=
+literal|0xFE02
+block|,
+name|i40e_aqc_opc_oem_ocbb_initialize
+init|=
+literal|0xFE03
+block|,
 comment|/* debug commands */
 name|i40e_aqc_opc_debug_get_deviceid
 init|=
@@ -922,10 +942,6 @@ block|,
 name|i40e_aqc_opc_debug_dump_internals
 init|=
 literal|0xFF08
-block|,
-name|i40e_aqc_opc_debug_modify_internals
-init|=
-literal|0xFF09
 block|, }
 enum|;
 end_enum
@@ -1378,6 +1394,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_AQ_CAP_ID_ISCSI
+value|0x0022
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_AQ_CAP_ID_RSS
 value|0x0040
 end_define
@@ -1573,9 +1596,25 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+name|u8
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x14
+argument_list|,
+name|i40e_aqc_arp_proxy_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Set NS Proxy Table Entry Command (indirect 0x0105) */
@@ -1679,6 +1718,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x3c
+argument_list|,
+name|i40e_aqc_ns_proxy_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Manage LAA Command (0x0106) - obsolete */
 end_comment
@@ -1715,6 +1764,14 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_mng_laa
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Manage MAC Address Read Command (indirect 0x0107) */
@@ -1960,6 +2017,14 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_get_switch_config_header_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|i40e_aqc_switch_config_element_resp
@@ -2050,6 +2115,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x10
+argument_list|,
+name|i40e_aqc_switch_config_element_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Get Switch Configuration (indirect 0x0200)  *    an array of elements are returned in the response buffer  *    the first in the array is the header, remainder are elements  */
 end_comment
@@ -2072,6 +2147,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_get_switch_config_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Add Statistics (direct 0x0201)  * Remove Statistics (direct 0x0202)  */
@@ -2304,6 +2389,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x10
+argument_list|,
+name|i40e_aqc_switch_resource_alloc_element_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Add VSI (indirect 0x0210)  *    this indirect command uses struct i40e_aqc_vsi_properties_data  *    as the indirect buffer (128 bytes)  *  * Update VSI (indirect 0x211)  *     uses the same data structure as Add VSI  *  * Get VSI (indirect 0x0212)  *     uses the same completion and data structure as Add VSI  */
@@ -3662,6 +3757,14 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_remove_tag
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Add multicast E-Tag (direct 0x0257)  * del multicast E-Tag (direct 0x0258) only uses pv_seid and etag fields  * and no external data  */
 end_comment
@@ -4127,7 +4230,7 @@ value|0
 define|#
 directive|define
 name|I40E_AQC_ADD_CLOUD_QUEUE_MASK
-value|(0x3F<< \ 						 I40E_AQC_ADD_CLOUD_QUEUE_SHIFT)
+value|(0x7FF<< \ 						 I40E_AQC_ADD_CLOUD_QUEUE_SHIFT)
 name|u8
 name|reserved2
 index|[
@@ -4491,6 +4594,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x40
+argument_list|,
+name|i40e_aqc_configure_vsi_ets_sla_bw_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Configure VSI Bandwidth Allocation per Traffic Type (indirect 0x0407)  *    responds with i40e_aqc_qs_handles_resp  */
 end_comment
@@ -4529,6 +4642,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_configure_vsi_tc_bw_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Query vsi bw configuration (indirect 0x0408) */
@@ -4585,6 +4708,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x40
+argument_list|,
+name|i40e_aqc_query_vsi_bw_config_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Query VSI Bandwidth Allocation per Traffic Type (indirect 0x040A) */
 end_comment
@@ -4624,6 +4757,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_query_vsi_ets_sla_config_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Configure Switching Component Bandwidth Limit (direct 0x0410) */
@@ -4722,6 +4865,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x80
+argument_list|,
+name|i40e_aqc_configure_switching_comp_ets_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Configure Switching Component Bandwidth Limits per Tc (indirect 0x0416) */
 end_comment
@@ -4762,6 +4915,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x40
+argument_list|,
+name|i40e_aqc_configure_switching_comp_ets_bw_limit_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Configure Switching Component Bandwidth Allocation per Tc  * (indirect 0x0417)  */
 end_comment
@@ -4798,6 +4961,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_configure_switching_comp_bw_config_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Query Switching Component Configuration (indirect 0x0418) */
@@ -4838,6 +5011,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x40
+argument_list|,
+name|i40e_aqc_query_switching_comp_ets_config_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Query PhysicalPort ETS Configuration (indirect 0x0419) */
@@ -4894,6 +5077,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x44
+argument_list|,
+name|i40e_aqc_query_port_ets_config_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Query Switching Component Bandwidth Allocation per Traffic Type  * (indirect 0x041A)  */
 end_comment
@@ -4938,6 +5131,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_query_switching_comp_bw_config_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Suspend/resume port TX traffic  * (direct 0x041B and 0x041C) uses the generic SEID struct  */
 end_comment
@@ -4970,6 +5173,16 @@ comment|/* bandwidth limit */
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x22
+argument_list|,
+name|i40e_aqc_configure_partition_bw_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Get and set the active HMC resource profile and status.  * (direct 0x0500) and (direct 0x0501)  */
@@ -5301,6 +5514,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_module_desc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|i40e_aq_get_phy_abilities_resp
@@ -5412,6 +5635,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x218
+argument_list|,
+name|i40e_aq_get_phy_abilities_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Set PHY Config (direct 0x0601) */
@@ -6063,15 +6296,15 @@ name|cmd_flags
 decl_stmt|;
 define|#
 directive|define
-name|ANVM_SINGLE_OR_MULTIPLE_FEATURES_MASK
+name|I40E_AQ_ANVM_SINGLE_OR_MULTIPLE_FEATURES_MASK
 value|1
 define|#
 directive|define
-name|ANVM_READ_SINGLE_FEATURE
+name|I40E_AQ_ANVM_READ_SINGLE_FEATURE
 value|0
 define|#
 directive|define
-name|ANVM_READ_MULTIPLE_FEATURES
+name|I40E_AQ_ANVM_READ_MULTIPLE_FEATURES
 value|1
 name|__le16
 name|element_count
@@ -6080,12 +6313,10 @@ name|__le16
 name|element_id
 decl_stmt|;
 comment|/* Feature/field ID */
-name|u8
-name|reserved
-index|[
-literal|2
-index|]
+name|__le16
+name|element_id_msw
 decl_stmt|;
+comment|/* MSWord of field ID */
 name|__le32
 name|address_high
 decl_stmt|;
@@ -6142,6 +6373,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Used for 0x0704 as well as for 0x0705 commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_AQ_ANVM_FEATURE_OR_IMMEDIATE_SHIFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQ_ANVM_FEATURE_OR_IMMEDIATE_MASK
+value|(1<< I40E_AQ_ANVM_FEATURE_OR_IMMEDIATE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQ_ANVM_FEATURE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQ_ANVM_IMMEDIATE_FIELD
+value|(1<< FEATURE_OR_IMMEDIATE_SHIFT)
+end_define
+
 begin_struct
 struct|struct
 name|i40e_aqc_nvm_config_data_feature
@@ -6149,9 +6412,18 @@ block|{
 name|__le16
 name|feature_id
 decl_stmt|;
-name|__le16
-name|instance_id
-decl_stmt|;
+define|#
+directive|define
+name|I40E_AQ_ANVM_FEATURE_OPTION_OEM_ONLY
+value|0x01
+define|#
+directive|define
+name|I40E_AQ_ANVM_FEATURE_OPTION_DWORD_MAP
+value|0x08
+define|#
+directive|define
+name|I40E_AQ_ANVM_FEATURE_OPTION_POR_CSR
+value|0x10
 name|__le16
 name|feature_options
 decl_stmt|;
@@ -6162,29 +6434,45 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x6
+argument_list|,
+name|i40e_aqc_nvm_config_data_feature
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|i40e_aqc_nvm_config_data_immediate_field
 block|{
-define|#
-directive|define
-name|ANVM_FEATURE_OR_IMMEDIATE_MASK
-value|0x2
-name|__le16
+name|__le32
 name|field_id
 decl_stmt|;
-name|__le16
-name|instance_id
+name|__le32
+name|field_value
 decl_stmt|;
 name|__le16
 name|field_options
 decl_stmt|;
 name|__le16
-name|field_value
+name|reserved
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0xc
+argument_list|,
+name|i40e_aqc_nvm_config_data_immediate_field
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Send to PF command (indirect 0x0801) id is only used by PF  * Send to VF command (indirect 0x0802) id is only used by PF  * Send to Peer PF command (indirect 0x0803)  */
@@ -6697,8 +6985,280 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Apply MIB changes (0x0A07)  * uses the generic struc as it contains no data  */
+comment|/* Get CEE DCBX Oper Config (0x0A07)  * uses the generic descriptor struct  * returns below as indirect response  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_FCOE_SHIFT
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_FCOE_MASK
+value|(0x7<< I40E_AQC_CEE_APP_FCOE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_ISCSI_SHIFT
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_ISCSI_MASK
+value|(0x7<< I40E_AQC_CEE_APP_ISCSI_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_FIP_SHIFT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_FIP_MASK
+value|(0x7<< I40E_AQC_CEE_APP_FIP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_PG_STATUS_SHIFT
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_PG_STATUS_MASK
+value|(0x7<< I40E_AQC_CEE_PG_STATUS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_PFC_STATUS_SHIFT
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_PFC_STATUS_MASK
+value|(0x7<< I40E_AQC_CEE_PFC_STATUS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_STATUS_SHIFT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_APP_STATUS_MASK
+value|(0x7<< I40E_AQC_CEE_APP_STATUS_SHIFT)
+end_define
+
+begin_struct
+struct|struct
+name|i40e_aqc_get_cee_dcb_cfg_v1_resp
+block|{
+name|u8
+name|reserved1
+decl_stmt|;
+name|u8
+name|oper_num_tc
+decl_stmt|;
+name|u8
+name|oper_prio_tc
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u8
+name|reserved2
+decl_stmt|;
+name|u8
+name|oper_tc_bw
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u8
+name|oper_pfc_en
+decl_stmt|;
+name|u8
+name|reserved3
+decl_stmt|;
+name|__le16
+name|oper_app_prio
+decl_stmt|;
+name|u8
+name|reserved4
+decl_stmt|;
+name|__le16
+name|tlv_status
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x18
+argument_list|,
+name|i40e_aqc_get_cee_dcb_cfg_v1_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|i40e_aqc_get_cee_dcb_cfg_resp
+block|{
+name|u8
+name|oper_num_tc
+decl_stmt|;
+name|u8
+name|oper_prio_tc
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u8
+name|oper_tc_bw
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u8
+name|oper_pfc_en
+decl_stmt|;
+name|__le16
+name|oper_app_prio
+decl_stmt|;
+name|__le32
+name|tlv_status
+decl_stmt|;
+name|u8
+name|reserved
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x20
+argument_list|,
+name|i40e_aqc_get_cee_dcb_cfg_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*	Set Local LLDP MIB (indirect 0x0A08)  *	Used to replace the local MIB of a given LLDP agent. e.g. DCBx  */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_aqc_lldp_set_local_mib
+block|{
+define|#
+directive|define
+name|SET_LOCAL_MIB_AC_TYPE_DCBX_SHIFT
+value|0
+define|#
+directive|define
+name|SET_LOCAL_MIB_AC_TYPE_DCBX_MASK
+value|(1<< SET_LOCAL_MIB_AC_TYPE_DCBX_SHIFT)
+name|u8
+name|type
+decl_stmt|;
+name|u8
+name|reserved0
+decl_stmt|;
+name|__le16
+name|length
+decl_stmt|;
+name|u8
+name|reserved1
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|__le32
+name|address_high
+decl_stmt|;
+name|__le32
+name|address_low
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_lldp_set_local_mib
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*	Stop/Start LLDP Agent (direct 0x0A09)  *	Used for stopping/starting specific LLDP agent. e.g. DCBx  */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_aqc_lldp_stop_start_specific_agent
+block|{
+define|#
+directive|define
+name|I40E_AQC_START_SPECIFIC_AGENT_SHIFT
+value|0
+define|#
+directive|define
+name|I40E_AQC_START_SPECIFIC_AGENT_MASK
+value|(1<< I40E_AQC_START_SPECIFIC_AGENT_SHIFT)
+name|u8
+name|command
+decl_stmt|;
+name|u8
+name|reserved
+index|[
+literal|15
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_lldp_stop_start_specific_agent
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Add Udp Tunnel command and completion (direct 0x0B00) */
@@ -6968,10 +7528,13 @@ value|2
 name|__le32
 name|param_value1
 decl_stmt|;
-name|u8
+name|__le16
 name|param_value2
+decl_stmt|;
+name|u8
+name|reserved
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -7015,6 +7578,85 @@ begin_expr_stmt
 name|I40E_CHECK_CMD_LENGTH
 argument_list|(
 name|i40e_aqc_oem_state_change
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Initialize OCSD (0xFE02, direct) */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_aqc_opc_oem_ocsd_initialize
+block|{
+name|u8
+name|type_status
+decl_stmt|;
+name|u8
+name|reserved1
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|__le32
+name|ocsd_memory_block_addr_high
+decl_stmt|;
+name|__le32
+name|ocsd_memory_block_addr_low
+decl_stmt|;
+name|__le32
+name|requested_update_interval
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_opc_oem_ocsd_initialize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Initialize OCBB  (0xFE03, direct) */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_aqc_opc_oem_ocbb_initialize
+block|{
+name|u8
+name|type_status
+decl_stmt|;
+name|u8
+name|reserved1
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|__le32
+name|ocbb_memory_block_addr_high
+decl_stmt|;
+name|__le32
+name|ocbb_memory_block_addr_low
+decl_stmt|;
+name|u8
+name|reserved2
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_opc_oem_ocbb_initialize
 argument_list|)
 expr_stmt|;
 end_expr_stmt
