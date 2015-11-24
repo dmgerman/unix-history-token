@@ -324,6 +324,32 @@ define|\
 value|.section ".toc","aw"; \ 	TOC_REF(name): \         .tc name[TC],name
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|_CALL_ELF
+argument_list|)
+operator|||
+name|_CALL_ELF
+operator|==
+literal|1
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define

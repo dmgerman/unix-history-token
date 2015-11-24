@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: extern.h,v 1.54 2014/05/12 19:11:19 espie Exp $ */
+comment|/*	$OpenBSD: extern.h,v 1.54 2014/05/12 19:11:19 espie Exp $	*/
 end_comment
 
 begin_comment

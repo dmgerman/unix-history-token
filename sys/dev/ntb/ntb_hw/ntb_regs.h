@@ -109,13 +109,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_SPAD_COUNT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|XEON_SPCICMD_OFFSET
 value|0x0504
 end_define
@@ -398,13 +391,6 @@ define|#
 directive|define
 name|ATOM_DB_MSIX_VECTOR_SHIFT
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOM_SPAD_COUNT
-value|16
 end_define
 
 begin_define

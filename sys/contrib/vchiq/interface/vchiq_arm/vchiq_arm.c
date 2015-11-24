@@ -98,18 +98,6 @@ name|KEEPALIVE_VER_MIN
 value|KEEPALIVE_VER
 end_define
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_VCHIQ
-argument_list|,
-literal|"vchiq_cdev"
-argument_list|,
-literal|"VideoCore cdev memroy"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* Run time control of log level, based on KERN_XXX level. */
 end_comment
@@ -4634,11 +4622,9 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|free
+name|kfree
 argument_list|(
 name|data
-argument_list|,
-name|M_VCHIQ
 argument_list|)
 expr_stmt|;
 block|}

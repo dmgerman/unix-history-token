@@ -3652,6 +3652,13 @@ name|bounce_page
 modifier|*
 name|bpage
 decl_stmt|;
+if|if
+condition|(
+name|map
+operator|==
+name|NULL
+condition|)
+return|return;
 while|while
 condition|(
 operator|(
@@ -3717,6 +3724,10 @@ name|tempvaddr
 decl_stmt|;
 if|if
 condition|(
+name|map
+operator|==
+name|NULL
+operator|||
 operator|(
 name|bpage
 operator|=

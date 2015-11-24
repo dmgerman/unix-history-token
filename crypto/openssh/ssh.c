@@ -3424,18 +3424,6 @@ name|request_tty
 operator|=
 name|REQUEST_TTY_NO
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-comment|/* 			 * Ensure that the user does not try to backdoor a 			 * NONE cipher switch on an interactive session by 			 * explicitly disabling it if the user asks for a 			 * session without a tty. 			 */
-name|options
-operator|.
-name|none_switch
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'o'

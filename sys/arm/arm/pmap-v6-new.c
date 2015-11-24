@@ -22430,7 +22430,7 @@ name|CTR5
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s: page %p - 0x%08X oma: %d, ma: %d, phys: 0x%08X"
+literal|"%s: page %p - 0x%08X oma: %d, ma: %d"
 argument_list|,
 name|__func__
 argument_list|,

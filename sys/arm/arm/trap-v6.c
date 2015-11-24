@@ -905,11 +905,13 @@ name|td_frame
 operator|=
 name|tf
 expr_stmt|;
-name|CTR4
+name|CTR6
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"abort_handler: fsr %#x (idx %u) far %#x prefetch %u"
+literal|"%s: fsr %#x (idx %u) far %#x prefetch %u usermode %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|fsr
 argument_list|,
@@ -918,6 +920,8 @@ argument_list|,
 name|far
 argument_list|,
 name|prefetch
+argument_list|,
+name|usermode
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Firstly, handle aborts that are not directly related to mapping. 	 */

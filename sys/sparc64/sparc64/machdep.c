@@ -1232,7 +1232,7 @@ name|phandle_t
 name|child
 decl_stmt|;
 name|uint32_t
-name|cpuid
+name|portid
 decl_stmt|;
 for|for
 control|(
@@ -1325,17 +1325,17 @@ name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
-name|cpu_cpuid_prop
+name|cpu_portid_prop
 argument_list|(
 name|cpu_impl
 argument_list|)
 argument_list|,
 operator|&
-name|cpuid
+name|portid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|cpuid
+name|portid
 argument_list|)
 argument_list|)
 operator|<=
@@ -1344,7 +1344,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|cpuid
+name|portid
 operator|==
 name|bspid
 condition|)
@@ -1367,7 +1367,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
-name|cpu_cpuid_prop
+name|cpu_portid_prop
 parameter_list|(
 name|u_int
 name|cpu_impl

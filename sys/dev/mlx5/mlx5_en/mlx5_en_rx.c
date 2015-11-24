@@ -604,7 +604,7 @@ name|cqe
 operator|->
 name|lro_tcp_win
 expr_stmt|;
-comment|/* FreeBSD handles only 32bit aligned timestamp 		 * right after the TCP hdr 		 * +--------+--------+--------+--------+ 		 * |   NOP  |  NOP   |  TSopt |   10   | 		 * +--------+--------+--------+--------+ 		 * |          TSval   timestamp        | 		 * +--------+--------+--------+--------+ 		 * |          TSecr   timestamp        | 		 * +--------+--------+--------+--------+ 		 */
+comment|/* 		 * FreeBSD handles only 32bit aligned timestamp right after 		 * the TCP hdr 		 * +--------+--------+--------+--------+ 		 * |   NOP  |  NOP   |  TSopt |   10   | 		 * +--------+--------+--------+--------+ 		 * |          TSval   timestamp        | 		 * +--------+--------+--------+--------+ 		 * |          TSecr   timestamp        | 		 * +--------+--------+--------+--------+ 		 */
 if|if
 condition|(
 name|get_cqe_lro_timestamp_valid
@@ -638,7 +638,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* cqe->timestamp is 64bit long. 			 * [0-31] - timestamp. 			 * [32-64] - timestamp echo replay. 			 */
+comment|/* 			 * cqe->timestamp is 64bit long. 			 * [0-31] - timestamp. 			 * [32-64] - timestamp echo replay. 			 */
 name|ts_ptr
 index|[
 literal|1

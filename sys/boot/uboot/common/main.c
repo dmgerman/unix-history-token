@@ -1253,7 +1253,7 @@ operator|.
 name|d_disk
 operator|.
 name|partition
-operator|>
+operator|>=
 literal|0
 condition|)
 name|sprintf
@@ -1603,7 +1603,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"  Requested disk type/unit not found\n"
+literal|"  Requested disk type/unit/slice/partition not found\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1644,7 +1644,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|loaderdev
+name|ldev
 decl_stmt|;
 comment|/* 	 * If we can't find the magic signature and related info, exit with a 	 * unique error code that U-Boot reports as "## Application terminated, 	 * rc = 0xnnbadab1". Hopefully 'badab1' looks enough like "bad api" to 	 * provide a clue. It's better than 0xffffffff anyway. 	 */
 if|if
@@ -2021,17 +2021,21 @@ literal|0xbadef1ce
 operator|)
 return|;
 block|}
+name|ldev
+operator|=
+name|uboot_fmtdev
+argument_list|(
+operator|&
+name|currdev
+argument_list|)
+expr_stmt|;
 name|env_setenv
 argument_list|(
 literal|"currdev"
 argument_list|,
 name|EV_VOLATILE
 argument_list|,
-name|uboot_fmtdev
-argument_list|(
-operator|&
-name|currdev
-argument_list|)
+name|ldev
 argument_list|,
 name|uboot_setcurrdev
 argument_list|,
@@ -2044,15 +2048,18 @@ literal|"loaddev"
 argument_list|,
 name|EV_VOLATILE
 argument_list|,
-name|uboot_fmtdev
-argument_list|(
-operator|&
-name|currdev
-argument_list|)
+name|ldev
 argument_list|,
 name|env_noset
 argument_list|,
 name|env_nounset
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Booting from %s %\n"
+argument_list|,
+name|ldev
 argument_list|)
 expr_stmt|;
 name|setenv

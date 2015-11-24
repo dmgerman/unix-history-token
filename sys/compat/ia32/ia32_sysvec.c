@@ -647,6 +647,8 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 name|SV_SHP
+operator||
+name|SV_TIMEKEEP
 else|#
 directive|else
 literal|0

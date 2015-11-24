@@ -2572,17 +2572,6 @@ begin_comment
 comment|/* highest defined filesystem type */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nfs_mount_type
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vfc_typenum for nfs, or -1 */
-end_comment
-
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(

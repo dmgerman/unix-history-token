@@ -857,19 +857,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Cache for the mount type id assigned to NFS.  This is used for  * special checks in nfs/nfs_nqlease.c and vm/vnode_pager.c.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nfs_mount_type
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* To keep more than one thread at a time from running vfs_getnewfsid */
 end_comment
 

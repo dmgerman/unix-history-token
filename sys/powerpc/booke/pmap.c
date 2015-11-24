@@ -14581,9 +14581,11 @@ return|;
 block|}
 name|pa_base
 operator|=
-name|trunc_page
+name|rounddown
 argument_list|(
 name|pa
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|size

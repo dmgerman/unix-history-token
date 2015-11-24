@@ -562,7 +562,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* save timestamps */
+comment|/* Save timestamps */
 name|pinfo
 operator|->
 name|tcp_ts
@@ -680,7 +680,7 @@ name|TCPOLEN_TIMESTAMP
 argument_list|)
 condition|)
 return|return;
-comment|/* restore timestamps */
+comment|/* Restore timestamps */
 name|ts_ptr
 index|[
 literal|1
@@ -777,7 +777,7 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
-comment|/* fill in information */
+comment|/* Fill in information */
 name|pinfo
 operator|->
 name|head
@@ -1493,7 +1493,7 @@ operator|->
 name|th_dport
 argument_list|)
 expr_stmt|;
-comment|/* store TCP header length */
+comment|/* Store TCP header length */
 operator|*
 name|phdr
 operator|++
@@ -1521,7 +1521,7 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/* compute offset to data payload */
+comment|/* Compute offset to data payload */
 name|pinfo
 operator|->
 name|tcp_len
@@ -1540,7 +1540,7 @@ name|pinfo
 operator|->
 name|tcp_len
 expr_stmt|;
-comment|/* store more info */
+comment|/* Store more info */
 name|pinfo
 operator|->
 name|data_off
@@ -1553,7 +1553,7 @@ name|tcp
 operator|=
 name|tcp
 expr_stmt|;
-comment|/* try to save timestamp, if any */
+comment|/* Try to save timestamp, if any */
 operator|*
 name|phdr
 operator|++
@@ -1563,7 +1563,7 @@ argument_list|(
 name|pinfo
 argument_list|)
 expr_stmt|;
-comment|/* verify offset and IP/TCP length */
+comment|/* Verify offset and IP/TCP length */
 if|if
 condition|(
 name|off
@@ -1585,7 +1585,7 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/* compute data payload length */
+comment|/* Compute data payload length */
 name|pinfo
 operator|->
 name|data_len
@@ -1604,7 +1604,7 @@ operator|->
 name|ip_hdrlen
 operator|)
 expr_stmt|;
-comment|/* trim any padded data */
+comment|/* Trim any padded data */
 name|diff
 operator|=
 operator|(
@@ -1647,7 +1647,7 @@ name|diff
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* compute header length */
+comment|/* Compute header length */
 name|pinfo
 operator|->
 name|buf_length
@@ -1662,7 +1662,7 @@ name|pinfo
 operator|->
 name|buf
 expr_stmt|;
-comment|/* zero-pad rest of buffer */
+comment|/* Zero-pad rest of buffer */
 name|memset
 argument_list|(
 name|phdr
@@ -2245,7 +2245,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* forward traffic which cannot be combined */
+comment|/* Forward traffic which cannot be combined */
 for|for
 control|(
 name|z
@@ -2260,7 +2260,7 @@ name|z
 operator|++
 control|)
 block|{
-comment|/* just forward packets */
+comment|/* Just forward packets */
 name|pinfob
 operator|=
 name|tlro
@@ -2278,7 +2278,7 @@ name|pinfob
 operator|->
 name|head
 expr_stmt|;
-comment|/* reset info structure */
+comment|/* Reset info structure */
 name|pinfob
 operator|->
 name|head
@@ -2291,13 +2291,13 @@ name|buf_length
 operator|=
 literal|0
 expr_stmt|;
-comment|/* do stats */
+comment|/* Do stats */
 name|tlro
 operator|->
 name|lro_flushed
 operator|++
 expr_stmt|;
-comment|/* input packet to network layer */
+comment|/* Input packet to network layer */
 call|(
 modifier|*
 name|tlro
@@ -2321,7 +2321,7 @@ name|z
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* compute current checksum subtracted some header parts */
+comment|/* Compute current checksum subtracted some header parts */
 name|temp
 operator|=
 operator|(
@@ -2371,7 +2371,7 @@ operator|->
 name|tcp_len
 argument_list|)
 expr_stmt|;
-comment|/* append all fragments into one block */
+comment|/* Append all fragments into one block */
 for|for
 control|(
 name|z
@@ -2399,7 +2399,7 @@ index|]
 operator|.
 name|data
 expr_stmt|;
-comment|/* check for command packets */
+comment|/* Check for command packets */
 if|if
 condition|(
 operator|(
@@ -2433,7 +2433,7 @@ operator|)
 operator|)
 condition|)
 break|break;
-comment|/* check if there is enough space */
+comment|/* Check if there is enough space */
 if|if
 condition|(
 operator|(
@@ -2449,7 +2449,7 @@ operator|>
 name|tlro_max_packet
 condition|)
 break|break;
-comment|/* try to append the new segment */
+comment|/* Try to append the new segment */
 name|temp
 operator|=
 name|ntohl
@@ -2529,7 +2529,7 @@ operator|->
 name|tcp_len
 argument_list|)
 expr_stmt|;
-comment|/* remove fields which appear twice */
+comment|/* Remove fields which appear twice */
 name|cs
 operator|+=
 operator|(
@@ -2631,7 +2631,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* remainder computation */
+comment|/* Remainder computation */
 while|while
 condition|(
 name|cs
@@ -2652,7 +2652,7 @@ operator|&
 literal|0xffff
 operator|)
 expr_stmt|;
-comment|/* update window and ack sequence number */
+comment|/* Update window and ack sequence number */
 name|pinfoa
 operator|->
 name|tcp
@@ -2677,7 +2677,7 @@ name|tcp
 operator|->
 name|th_win
 expr_stmt|;
-comment|/* check if we should restore the timestamp */
+comment|/* Check if we should restore the timestamp */
 name|tcp_tlro_info_restore_timestamp
 argument_list|(
 name|pinfoa
@@ -2685,7 +2685,7 @@ argument_list|,
 name|pinfob
 argument_list|)
 expr_stmt|;
-comment|/* accumulate TCP flags */
+comment|/* Accumulate TCP flags */
 name|pinfoa
 operator|->
 name|tcp
@@ -2715,14 +2715,14 @@ name|pinfob
 operator|->
 name|data_len
 expr_stmt|;
-comment|/* clear mbuf pointer - packet is accumulated */
+comment|/* Clear mbuf pointer - packet is accumulated */
 name|m
 operator|=
 name|pinfob
 operator|->
 name|head
 expr_stmt|;
-comment|/* reset info structure */
+comment|/* Reset info structure */
 name|pinfob
 operator|->
 name|head
@@ -2735,7 +2735,7 @@ name|buf_length
 operator|=
 literal|0
 expr_stmt|;
-comment|/* append data to mbuf [y] */
+comment|/* Append data to mbuf [y] */
 name|m_adj
 argument_list|(
 name|m
@@ -2745,7 +2745,7 @@ operator|->
 name|data_off
 argument_list|)
 expr_stmt|;
-comment|/* delete mbuf tags, if any */
+comment|/* Delete mbuf tags, if any */
 name|m_tag_delete_chain
 argument_list|(
 name|m
@@ -2753,7 +2753,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* clear packet header flag */
+comment|/* Clear packet header flag */
 name|m
 operator|->
 name|m_flags
@@ -2761,7 +2761,7 @@ operator|&=
 operator|~
 name|M_PKTHDR
 expr_stmt|;
-comment|/* concat mbuf(s) to end of list */
+comment|/* Concat mbuf(s) to end of list */
 name|pinfoa
 operator|->
 name|pprev
@@ -2800,7 +2800,7 @@ operator|->
 name|data_len
 expr_stmt|;
 block|}
-comment|/* compute new TCP header checksum */
+comment|/* Compute new TCP header checksum */
 name|pinfoa
 operator|->
 name|tcp
@@ -2862,7 +2862,7 @@ operator|>>
 literal|8
 operator|)
 expr_stmt|;
-comment|/* remainder computation */
+comment|/* Remainder computation */
 while|while
 condition|(
 name|cs
@@ -2883,7 +2883,7 @@ operator|&
 literal|0xffff
 operator|)
 expr_stmt|;
-comment|/* update new checksum */
+comment|/* Update new checksum */
 name|pinfoa
 operator|->
 name|tcp
@@ -2896,7 +2896,7 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
-comment|/* update IP length, if any */
+comment|/* Update IP length, if any */
 if|if
 condition|(
 name|pinfoa
@@ -3044,7 +3044,7 @@ name|pinfoa
 operator|->
 name|last_tick
 expr_stmt|;
-comment|/* check if packet should be forwarded */
+comment|/* Check if packet should be forwarded */
 if|if
 condition|(
 name|force
@@ -3066,7 +3066,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* compute new IPv4 header checksum */
+comment|/* Compute new IPv4 header checksum */
 if|if
 condition|(
 name|pinfoa
@@ -3126,14 +3126,14 @@ name|cs
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* forward packet */
+comment|/* Forward packet */
 name|m
 operator|=
 name|pinfoa
 operator|->
 name|head
 expr_stmt|;
-comment|/* reset info structure */
+comment|/* Reset info structure */
 name|pinfoa
 operator|->
 name|head
@@ -3146,13 +3146,13 @@ name|buf_length
 operator|=
 literal|0
 expr_stmt|;
-comment|/* do stats */
+comment|/* Do stats */
 name|tlro
 operator|->
 name|lro_flushed
 operator|++
 expr_stmt|;
-comment|/* input packet to network layer */
+comment|/* Input packet to network layer */
 call|(
 modifier|*
 name|tlro
@@ -3175,7 +3175,7 @@ operator|=
 name|z
 expr_stmt|;
 block|}
-comment|/* cleanup all NULL heads */
+comment|/* Cleanup all NULL heads */
 for|for
 control|(
 name|y
@@ -3404,7 +3404,7 @@ decl_stmt|;
 name|uint32_t
 name|x
 decl_stmt|;
-comment|/* set zero defaults */
+comment|/* Set zero defaults */
 name|memset
 argument_list|(
 name|tlro
@@ -3418,7 +3418,7 @@ name|tlro
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* compute size needed for data */
+comment|/* Compute size needed for data */
 name|size
 operator|=
 operator|(
@@ -3441,7 +3441,7 @@ operator|*
 name|max_mbufs
 operator|)
 expr_stmt|;
-comment|/* range check */
+comment|/* Range check */
 if|if
 condition|(
 name|max_mbufs
@@ -3461,7 +3461,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* setup tlro control structure */
+comment|/* Setup tlro control structure */
 name|tlro
 operator|->
 name|mbuf
@@ -3489,7 +3489,7 @@ name|ifp
 operator|=
 name|ifp
 expr_stmt|;
-comment|/* setup pointer array */
+comment|/* Setup pointer array */
 for|for
 control|(
 name|x
@@ -3564,7 +3564,7 @@ decl_stmt|;
 name|uint32_t
 name|y
 decl_stmt|;
-comment|/* check if not setup */
+comment|/* Check if not setup */
 if|if
 condition|(
 name|tlro
@@ -3574,7 +3574,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* free MBUF array and any leftover MBUFs */
+comment|/* Free MBUF array and any leftover MBUFs */
 for|for
 control|(
 name|y
@@ -3608,7 +3608,7 @@ name|pinfo
 operator|->
 name|head
 expr_stmt|;
-comment|/* reset info structure */
+comment|/* Reset info structure */
 name|pinfo
 operator|->
 name|head
@@ -3636,7 +3636,7 @@ argument_list|,
 name|M_TLRO
 argument_list|)
 expr_stmt|;
-comment|/* reset buffer */
+comment|/* Reset buffer */
 name|memset
 argument_list|(
 name|tlro

@@ -307,7 +307,7 @@ name|UHCI_TD_SET_MAXLEN
 parameter_list|(
 name|l
 parameter_list|)
-value|(((l)-1)<< 21)
+value|(((l)-1U)<< 21)
 define|#
 directive|define
 name|UHCI_TD_GET_MAXLEN

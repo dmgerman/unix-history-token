@@ -1955,6 +1955,19 @@ literal|"malloc(M_WAITOK) in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_critnest
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"malloc: called with spinlock or critical section held"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_MEMGUARD
@@ -2290,6 +2303,19 @@ literal|"free: bad malloc type magic"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_critnest
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"free: called with spinlock or critical section held"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* free(NULL, ...) does nothing */
 if|if
 condition|(
@@ -2551,6 +2577,19 @@ name|M_MAGIC
 argument_list|,
 operator|(
 literal|"realloc: bad malloc type magic"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_critnest
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"realloc: called with spinlock or critical section held"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -9198,6 +9198,19 @@ name|uz_name
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_critnest
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"uma_zalloc_arg: called with spinlock or critical section held"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_MEMGUARD
@@ -11327,6 +11340,19 @@ argument_list|,
 name|zone
 operator|->
 name|uz_name
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_critnest
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"uma_zfree_arg: called with spinlock or critical section held"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* uma_zfree(..., NULL) does nothing, to match free(9). */

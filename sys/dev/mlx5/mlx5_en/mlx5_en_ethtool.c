@@ -955,6 +955,34 @@ argument_list|,
 name|lro_cap
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* set the correct (0) value to params_ethtool.hw_lro, issue a warning and return error */
+name|priv
+operator|->
+name|params_ethtool
+operator|.
+name|hw_lro
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|priv
+operator|->
+name|ifp
+argument_list|,
+literal|"Can't set HW_LRO to a device with LRO turned off"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 block|}
 else|else
 block|{
@@ -1251,7 +1279,7 @@ name|priv
 operator|->
 name|ifp
 argument_list|,
-literal|"%s:%d: Not recognized cable type = 0x%x\n"
+literal|"%s:%d: Not recognized cable type = 0x%x(%s)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1260,6 +1288,13 @@ argument_list|,
 name|data
 operator|&
 name|MLX5_EEPROM_IDENTIFIER_BYTE_MASK
+argument_list|,
+name|sff_8024_id
+index|[
+name|data
+operator|&
+name|MLX5_EEPROM_IDENTIFIER_BYTE_MASK
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -1880,7 +1915,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* Allocate needed length buffer and additional space for the 3rd */
+comment|/* 		 * Allocate needed length buffer and additional space for 		 * page 0x03 		 */
 name|eeprom
 operator|.
 name|data
@@ -1933,7 +1968,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Continue printing partial information in case of an error */
+comment|/* 			 * Continue printing partial information in case of 			 * an error 			 */
 block|}
 name|mlx5e_print_eeprom
 argument_list|(

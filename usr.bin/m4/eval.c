@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: eval.c,v 1.73 2014/07/11 21:04:17 espie Exp $ */
+comment|/*	$OpenBSD: eval.c,v 1.74 2015/02/05 12:59:57 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -62,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdint.h>
 end_include
 
 begin_include

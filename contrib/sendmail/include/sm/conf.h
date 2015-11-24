@@ -7198,11 +7198,24 @@ begin_comment
 comment|/* 2.2-current when it appeared */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500012
+end_if
+
 begin_include
 include|#
 directive|include
 file|<libutil.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

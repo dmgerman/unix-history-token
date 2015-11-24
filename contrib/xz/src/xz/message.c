@@ -1196,7 +1196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Make a string indicating elapsed or remaining time. The format is either
+comment|/// Make a string indicating elapsed time. The format is either
 end_comment
 
 begin_comment
@@ -1225,12 +1225,18 @@ literal|"9999:59:59"
 argument_list|)
 index|]
 decl_stmt|;
+comment|// 32-bit variable is enough for elapsed time (136 years).
 name|uint32_t
 name|seconds
 init|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|mseconds
 operator|/
 literal|1000
+argument_list|)
 decl_stmt|;
 comment|// Don't show anything if the time is zero or ridiculously big.
 if|if

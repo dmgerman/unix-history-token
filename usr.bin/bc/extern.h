@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$						*/
 end_comment
 
 begin_comment
-comment|/*      $OpenBSD: extern.h,v 1.10 2013/09/19 16:12:01 otto Exp $	*/
+comment|/*      $OpenBSD: extern.h,v 1.12 2014/04/17 19:07:14 otto Exp $	*/
 end_comment
 
 begin_comment

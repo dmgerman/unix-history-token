@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: mkfs_msdos.h,v 1.2 2013/01/23 15:29:15 christos Exp $	*/
+comment|/*	$NetBSD: mkfs_msdos.h,v 1.3 2015/10/16 17:38:17 christos Exp $	*/
 end_comment
 
 begin_comment

@@ -1864,7 +1864,7 @@ init|=
 literal|0
 decl_stmt|;
 name|u32
-name|out_of_rx_buffer
+name|rx_out_of_buffer
 init|=
 literal|0
 decl_stmt|;
@@ -2220,6 +2220,50 @@ argument_list|,
 name|outlen
 argument_list|)
 expr_stmt|;
+comment|/* get number of out-of-buffer drops first */
+if|if
+condition|(
+name|mlx5_vport_query_out_of_rx_buffer
+argument_list|(
+name|mdev
+argument_list|,
+name|priv
+operator|->
+name|counter_set_id
+argument_list|,
+operator|&
+name|rx_out_of_buffer
+argument_list|)
+condition|)
+goto|goto
+name|free_out
+goto|;
+comment|/* accumulate difference into a 64-bit counter */
+name|s
+operator|->
+name|rx_out_of_buffer
+operator|+=
+call|(
+name|u64
+call|)
+argument_list|(
+name|u32
+argument_list|)
+argument_list|(
+name|rx_out_of_buffer
+operator|-
+name|s
+operator|->
+name|rx_out_of_buffer_prev
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|rx_out_of_buffer_prev
+operator|=
+name|rx_out_of_buffer
+expr_stmt|;
+comment|/* get port statistics */
 if|if
 condition|(
 name|mlx5_cmd_exec
@@ -2474,6 +2518,10 @@ operator|+
 name|s
 operator|->
 name|rx_broadcast_packets
+operator|-
+name|s
+operator|->
+name|rx_out_of_buffer
 expr_stmt|;
 name|s
 operator|->
@@ -2546,6 +2594,12 @@ name|s
 operator|->
 name|rx_csum_none
 expr_stmt|;
+comment|/* Update per port counters */
+name|mlx5e_update_pport_counters
+argument_list|(
+name|priv
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -2569,6 +2623,14 @@ operator|=
 name|s
 operator|->
 name|rx_error_packets
+expr_stmt|;
+name|ifp
+operator|->
+name|if_iqdrops
+operator|=
+name|s
+operator|->
+name|rx_out_of_buffer
 expr_stmt|;
 name|ifp
 operator|->
@@ -2614,37 +2676,6 @@ name|tx_bytes
 expr_stmt|;
 endif|#
 directive|endif
-name|mlx5_vport_query_out_of_rx_buffer
-argument_list|(
-name|mdev
-argument_list|,
-name|priv
-operator|->
-name|counter_set_id
-argument_list|,
-operator|&
-name|out_of_rx_buffer
-argument_list|)
-expr_stmt|;
-comment|/* Update per port counters */
-name|mlx5e_update_pport_counters
-argument_list|(
-name|priv
-argument_list|)
-expr_stmt|;
-name|priv
-operator|->
-name|stats
-operator|.
-name|pport
-operator|.
-name|out_of_rx_buffer
-operator|=
-operator|(
-name|u64
-operator|)
-name|out_of_rx_buffer
-expr_stmt|;
 name|free_out
 label|:
 name|kvfree
@@ -11039,6 +11070,20 @@ name|rx_error_packets
 expr_stmt|;
 break|break;
 case|case
+name|IFCOUNTER_IQDROPS
+case|:
+name|retval
+operator|=
+name|priv
+operator|->
+name|stats
+operator|.
+name|vport
+operator|.
+name|rx_out_of_buffer
+expr_stmt|;
+break|break;
+case|case
 name|IFCOUNTER_OPACKETS
 case|:
 name|retval
@@ -12066,7 +12111,7 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-comment|/* Copy from the user-space address ifr_data to the kernel-space address i2c */
+comment|/* 		 * Copy from the user-space address ifr_data to the 		 * kernel-space address i2c 		 */
 name|error
 operator|=
 name|copyin
@@ -12496,7 +12541,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/*  	 * hw lro is currently defaulted to off.  	 * when it won't anymore we will consider the  	 * HW capability: "!!MLX5_CAP_ETH(mdev, lro_cap)" 	*/
+comment|/* 	 * hw lro is currently defaulted to off. when it won't anymore we 	 * will consider the HW capability: "!!MLX5_CAP_ETH(mdev, lro_cap)" 	 */
 name|priv
 operator|->
 name|params
@@ -12893,7 +12938,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-comment|/* %d.%d%.d the string format. 	 * fw_rev_{maj,min,sub} return u16, 2^16 = 65536. 	 * We need at most 5 chars to store that. 	 * it also has: two "." and NULL at the end. 	 * Which means we need 18 (5*3 + 3) chars at most. 	 */
+comment|/* 	 * %d.%d%.d the string format. 	 * fw_rev_{maj,min,sub} return u16, 2^16 = 65536. 	 * We need at most 5 chars to store that. 	 * It also has: two "." and NULL at the end, which means we need 18 	 * (5*3 + 3) chars at most. 	 */
 name|char
 name|fw
 index|[

@@ -767,6 +767,8 @@ operator|*
 name|argv
 expr_stmt|;
 return|return
+operator|!
+operator|!
 name|mkfs_msdos
 argument_list|(
 name|fname
