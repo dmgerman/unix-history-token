@@ -47,7 +47,7 @@ define|#
 directive|define
 name|mb
 parameter_list|()
-value|__asm __volatile("lwsync" : : : "memory")
+value|__asm __volatile("sync" : : : "memory")
 end_define
 
 begin_define
@@ -131,6 +131,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|powerpc_lwsync
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("lwsync" : : : "memory");
+else|#
+directive|else
+asm|__asm __volatile("sync" : : : "memory");
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_comment
 comment|/*  * atomic_add(p, v)  * { *p += v; }  */
@@ -1338,7 +1359,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	mb();							\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	mb();							\ 	*p = v;							\ }
+value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	mb();							\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 								\ 	powerpc_lwsync();					\ 	*p = v;							\ }
 end_define
 
 begin_macro
@@ -2285,16 +2306,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* See above comment about lwsync being broken on Book-E. */
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-asm|__asm __volatile("lwsync" : : : "memory");
-else|#
-directive|else
-asm|__asm __volatile("sync" : : : "memory");
-endif|#
-directive|endif
+name|powerpc_lwsync
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2307,15 +2321,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-asm|__asm __volatile("lwsync" : : : "memory");
-else|#
-directive|else
-asm|__asm __volatile("sync" : : : "memory");
-endif|#
-directive|endif
+name|powerpc_lwsync
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2328,15 +2336,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-asm|__asm __volatile("lwsync" : : : "memory");
-else|#
-directive|else
-asm|__asm __volatile("sync" : : : "memory");
-endif|#
-directive|endif
+name|powerpc_lwsync
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
