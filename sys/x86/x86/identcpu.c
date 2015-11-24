@@ -7057,7 +7057,7 @@ literal|0x6c
 case|:
 name|printf
 argument_list|(
-literal|"DTLB: 2M/4M pages, 8-way set associative, 126 entries\n"
+literal|"DTLB: 2M/4M pages, 8-way set associative, 128 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
