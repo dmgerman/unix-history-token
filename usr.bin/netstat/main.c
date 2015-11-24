@@ -1521,6 +1521,17 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
