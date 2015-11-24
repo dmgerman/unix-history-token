@@ -5242,6 +5242,13 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|URTWN_EFUSE_MAX_LEN
+value|512
+end_define
+
 begin_comment
 comment|/* Rx MAC descriptor. */
 end_comment
