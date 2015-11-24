@@ -471,8 +471,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-nv] [-a address] [-p port] [-R rcvbuf] "
-literal|"[-S sndbuf] [exports file]\n"
+literal|"usage: %s [-nv] [-a address] [-F pidfile] [-p port] "
+literal|"[-R rcvbuf] [-S sndbuf] [exports file]\n"
 argument_list|,
 name|getprogname
 argument_list|()
