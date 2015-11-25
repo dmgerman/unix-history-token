@@ -1736,6 +1736,8 @@ literal|"-d        Check output from git diff\n"
 literal|"\t"
 literal|"-D        Check output from svn diff\n"
 literal|"\t"
+literal|"-c<cmd>  Set custom command to produce diff\n"
+literal|"\t"
 literal|"-g<hash> Check output from git hash\n"
 literal|"\t"
 literal|"-s<rev>  Check output from svn revision\n"
@@ -1747,6 +1749,8 @@ literal|"\t"
 literal|"indent_wrapper -D\n"
 literal|"\t"
 literal|"indent_wrapper -D -t meld\n"
+literal|"\t"
+literal|"indent_wrapper -D -t \"diff -u\"\n"
 argument_list|)
 expr_stmt|;
 name|exit
