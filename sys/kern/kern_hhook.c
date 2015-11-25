@@ -390,6 +390,12 @@ condition|(
 name|hhk
 operator|->
 name|hhk_helper
+operator|!=
+name|NULL
+operator|&&
+name|hhk
+operator|->
+name|hhk_helper
 operator|->
 name|h_flags
 operator|&
