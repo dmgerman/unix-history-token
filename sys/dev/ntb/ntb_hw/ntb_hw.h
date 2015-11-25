@@ -364,9 +364,9 @@ parameter_list|,
 name|unsigned
 name|mw_idx
 parameter_list|,
-name|bool
+name|vm_memattr_t
 modifier|*
-name|wc
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -382,8 +382,8 @@ parameter_list|,
 name|unsigned
 name|mw_idx
 parameter_list|,
-name|bool
-name|wc
+name|vm_memattr_t
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -320,10 +320,8 @@ decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
-name|bool
-name|mapped_wc
-range|:
-literal|1
+name|vm_memattr_t
+name|map_mode
 decl_stmt|;
 comment|/* Configuration register offsets */
 name|uint32_t
@@ -1001,8 +999,7 @@ parameter_list|,
 name|unsigned
 name|idx
 parameter_list|,
-name|bool
-name|wc
+name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3654,6 +3651,12 @@ argument_list|(
 name|bar
 argument_list|)
 expr_stmt|;
+name|bar
+operator|->
+name|map_mode
+operator|=
+name|VM_MEMATTR_UNCACHEABLE
+expr_stmt|;
 name|print_map_success
 argument_list|(
 name|ntb
@@ -3689,6 +3692,9 @@ parameter_list|)
 block|{
 name|int
 name|rc
+decl_stmt|;
+name|vm_memattr_t
+name|mapmode
 decl_stmt|;
 name|uint8_t
 name|bar_size_bits
@@ -3839,6 +3845,12 @@ name|bar
 argument_list|)
 expr_stmt|;
 block|}
+name|bar
+operator|->
+name|map_mode
+operator|=
+name|VM_MEMATTR_UNCACHEABLE
+expr_stmt|;
 name|print_map_success
 argument_list|(
 name|ntb
@@ -3848,18 +3860,21 @@ argument_list|,
 literal|"mw"
 argument_list|)
 expr_stmt|;
+comment|/* Mark bar region as write combining to improve performance. */
+name|mapmode
+operator|=
+name|VM_MEMATTR_WRITE_COMBINING
+expr_stmt|;
 if|if
 condition|(
 name|g_ntb_enable_wc
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Mark bar region as write combining to improve performance. */
+name|mapmode
+operator|=
+name|VM_MEMATTR_WRITE_BACK
+expr_stmt|;
 name|rc
 operator|=
 name|pmap_change_attr
@@ -3875,7 +3890,7 @@ name|bar
 operator|->
 name|size
 argument_list|,
-name|VM_MEMATTR_WRITE_COMBINING
+name|mapmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -3887,9 +3902,9 @@ condition|)
 block|{
 name|bar
 operator|->
-name|mapped_wc
+name|map_mode
 operator|=
-name|true
+name|mapmode
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -3898,7 +3913,7 @@ operator|->
 name|device
 argument_list|,
 literal|"Marked BAR%d v:[%p-%p] p:[%p-%p] as "
-literal|"WRITE_COMBINING.\n"
+literal|"%s.\n"
 argument_list|,
 name|PCI_RID2BAR
 argument_list|(
@@ -3948,6 +3963,16 @@ name|size
 operator|-
 literal|1
 operator|)
+argument_list|,
+operator|(
+name|mapmode
+operator|==
+name|VM_MEMATTR_WRITE_COMBINING
+operator|)
+condition|?
+literal|"WRITE_COMBINING"
+else|:
+literal|"WRITE_BACK"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3959,7 +3984,7 @@ operator|->
 name|device
 argument_list|,
 literal|"Unable to mark BAR%d v:[%p-%p] p:[%p-%p] as "
-literal|"WRITE_COMBINING: %d\n"
+literal|"%s: %d\n"
 argument_list|,
 name|PCI_RID2BAR
 argument_list|(
@@ -4009,6 +4034,16 @@ name|size
 operator|-
 literal|1
 operator|)
+argument_list|,
+operator|(
+name|mapmode
+operator|==
+name|VM_MEMATTR_WRITE_COMBINING
+operator|)
+condition|?
+literal|"WRITE_COMBINING"
+else|:
+literal|"WRITE_BACK"
 argument_list|,
 name|rc
 argument_list|)
@@ -6269,7 +6304,7 @@ name|ntb
 operator|->
 name|b2b_mw_idx
 argument_list|,
-name|false
+name|VM_MEMATTR_UNCACHEABLE
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -12711,7 +12746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ntb_mw_get_wc - Get the write-combine status of a memory window  *  * Returns:  Zero on success, setting *wc; otherwise an error number (e.g. if  * idx is an invalid memory window).  */
+comment|/*  * ntb_mw_get_wc - Get the write-combine status of a memory window  *  * Returns:  Zero on success, setting *wc; otherwise an error number (e.g. if  * idx is an invalid memory window).  *  * Mode is a VM_MEMATTR_* type.  */
 end_comment
 
 begin_function
@@ -12726,9 +12761,9 @@ parameter_list|,
 name|unsigned
 name|idx
 parameter_list|,
-name|bool
+name|vm_memattr_t
 modifier|*
-name|wc
+name|mode
 parameter_list|)
 block|{
 name|struct
@@ -12775,11 +12810,11 @@ argument_list|)
 index|]
 expr_stmt|;
 operator|*
-name|wc
+name|mode
 operator|=
 name|bar
 operator|->
-name|mapped_wc
+name|map_mode
 expr_stmt|;
 return|return
 operator|(
@@ -12790,7 +12825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ntb_mw_set_wc - Set the write-combine status of a memory window  *  * If 'wc' matches the current status, this does nothing and succeeds.  *  * Returns:  Zero on success, setting the caching attribute on the virtual  * mapping of the BAR; otherwise an error number (e.g. if idx is an invalid  * memory window, or if changing the caching attribute fails).  */
+comment|/*  * ntb_mw_set_wc - Set the write-combine status of a memory window  *  * If 'mode' matches the current status, this does nothing and succeeds.  Mode  * is a VM_MEMATTR_* type.  *  * Returns:  Zero on success, setting the caching attribute on the virtual  * mapping of the BAR; otherwise an error number (e.g. if idx is an invalid  * memory window, or if changing the caching attribute fails).  */
 end_comment
 
 begin_function
@@ -12805,8 +12840,8 @@ parameter_list|,
 name|unsigned
 name|idx
 parameter_list|,
-name|bool
-name|wc
+name|vm_memattr_t
+name|mode
 parameter_list|)
 block|{
 if|if
@@ -12840,7 +12875,7 @@ name|ntb
 argument_list|,
 name|idx
 argument_list|,
-name|wc
+name|mode
 argument_list|)
 operator|)
 return|;
@@ -12860,17 +12895,14 @@ parameter_list|,
 name|unsigned
 name|idx
 parameter_list|,
-name|bool
-name|wc
+name|vm_memattr_t
+name|mode
 parameter_list|)
 block|{
 name|struct
 name|ntb_pci_bar_info
 modifier|*
 name|bar
-decl_stmt|;
-name|vm_memattr_t
-name|attr
 decl_stmt|;
 name|int
 name|rc
@@ -12894,9 +12926,9 @@ if|if
 condition|(
 name|bar
 operator|->
-name|mapped_wc
+name|map_mode
 operator|==
-name|wc
+name|mode
 condition|)
 return|return
 operator|(
@@ -12905,17 +12937,23 @@ operator|)
 return|;
 if|if
 condition|(
-name|wc
-condition|)
-name|attr
-operator|=
-name|VM_MEMATTR_WRITE_COMBINING
-expr_stmt|;
-else|else
-name|attr
-operator|=
+name|mode
+operator|!=
+name|VM_MEMATTR_UNCACHEABLE
+operator|&&
+name|mode
+operator|!=
 name|VM_MEMATTR_DEFAULT
-expr_stmt|;
+operator|&&
+name|mode
+operator|!=
+name|VM_MEMATTR_WRITE_COMBINING
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|rc
 operator|=
 name|pmap_change_attr
@@ -12931,7 +12969,7 @@ name|bar
 operator|->
 name|size
 argument_list|,
-name|attr
+name|mode
 argument_list|)
 expr_stmt|;
 if|if
@@ -12942,9 +12980,9 @@ literal|0
 condition|)
 name|bar
 operator|->
-name|mapped_wc
+name|map_mode
 operator|=
-name|wc
+name|mode
 expr_stmt|;
 return|return
 operator|(
