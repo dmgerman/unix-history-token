@@ -438,14 +438,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Break to debugger to display result */
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayResultObject
 argument_list|(
 name|LocalObjDesc
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Delete the predicate result object (we know that      * we don't need it anymore)      */
@@ -1007,8 +1004,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Call debugger for single step support (DEBUG build only) */
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|Status
 operator|=
 name|AcpiDbSingleStep
@@ -1019,13 +1014,21 @@ name|Op
 argument_list|,
 name|OpClass
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
-argument|if (ACPI_FAILURE (Status)) {return_ACPI_STATUS (Status);}
-argument_list|)
-empty_stmt|;
+block|}
 comment|/* Decode the Opcode Class */
 switch|switch
 condition|(
@@ -1911,7 +1914,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unimplemented opcode, class=0x%X type=0x%X Opcode=0x%X Op=%p"
+literal|"Unimplemented opcode, class=0x%X "
+literal|"type=0x%X Opcode=0x%X Op=%p"
 operator|,
 name|OpClass
 operator|,
@@ -2014,8 +2018,6 @@ name|ResultObj
 condition|)
 block|{
 comment|/* Break to debugger to display result */
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayResultObject
 argument_list|(
 name|WalkState
@@ -2023,7 +2025,6 @@ operator|->
 name|ResultObj
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*          * Delete the result op if and only if:          * Parent will not use the result -- such as any          * non-nested type2 op in a method (parent will be method)          */

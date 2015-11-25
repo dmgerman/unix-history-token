@@ -335,7 +335,7 @@ name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus, GSBus or IPMI read. We must create a buffer to hold          * the data and then directly access the region handler.          *          * Note: SMBus and GSBus protocol value is passed in upper 16-bits of Function          */
+comment|/*          * This is an SMBus, GSBus or IPMI read. We must create a buffer to          * hold the data and then directly access the region handler.          *          * Note: SMBus and GSBus protocol value is passed in upper 16-bits          * of Function          */
 if|if
 condition|(
 name|ObjDesc
@@ -407,7 +407,7 @@ operator|.
 name|AccessLength
 argument_list|)
 expr_stmt|;
-comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;      (Byte 0 of the data buffer)              *     Length;      (Byte 1 of the data buffer)              *     Data[x-1];   (Bytes 2-x of the arbitrary length data buffer)              */
+comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;    (Byte 0 of the data buffer)              *     Length;    (Byte 1 of the data buffer)              *     Data[x-1]: (Bytes 2-x of the arbitrary length data buffer)              */
 name|Length
 operator|+=
 literal|2
@@ -987,7 +987,7 @@ name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus, GSBus or IPMI write. We will bypass the entire field          * mechanism and handoff the buffer directly to the handler. For          * these address spaces, the buffer is bi-directional; on a write,          * return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE, ACPI_GSBUS_BUFFER_SIZE, or ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus and GSBus protocol type is passed in upper 16-bits of Function          */
+comment|/*          * This is an SMBus, GSBus or IPMI write. We will bypass the entire          * field mechanism and handoff the buffer directly to the handler.          * For these address spaces, the buffer is bi-directional; on a          * write, return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE, ACPI_GSBUS_BUFFER_SIZE, or          * ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus and GSBus protocol type is passed in upper 16-bits          * of Function          */
 if|if
 condition|(
 name|SourceDesc
@@ -1004,7 +1004,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus/IPMI/GenericSerialBus write requires Buffer, found type %s"
+literal|"SMBus/IPMI/GenericSerialBus write requires "
+literal|"Buffer, found type %s"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -1090,7 +1091,7 @@ operator|.
 name|AccessLength
 argument_list|)
 expr_stmt|;
-comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;      (Byte 0 of the data buffer)              *     Length;      (Byte 1 of the data buffer)              *     Data[x-1];   (Bytes 2-x of the arbitrary length data buffer)              */
+comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;    (Byte 0 of the data buffer)              *     Length;    (Byte 1 of the data buffer)              *     Data[x-1]: (Bytes 2-x of the arbitrary length data buffer)              */
 name|Length
 operator|+=
 literal|2
@@ -1134,7 +1135,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus/IPMI/GenericSerialBus write requires Buffer of length %u, found length %u"
+literal|"SMBus/IPMI/GenericSerialBus write requires "
+literal|"Buffer of length %u, found length %u"
 operator|,
 name|Length
 operator|,
@@ -1292,7 +1294,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"GPIO FieldWrite [FROM]: (%s:%X), Val %.8X  [TO]:  Pin %u Bits %u\n"
+literal|"GPIO FieldWrite [FROM]: (%s:%X), Val %.8X  [TO]: Pin %u Bits %u\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

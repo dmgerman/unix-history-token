@@ -618,6 +618,14 @@ literal|"NODE_METHOD_TYPED"
 expr_stmt|;
 break|break;
 case|case
+name|NODE_COULD_NOT_REDUCE
+case|:
+name|FlagName
+operator|=
+literal|"NODE_COULD_NOT_REDUCE"
+expr_stmt|;
+break|break;
+case|case
 name|NODE_COMPILE_TIME_CONST
 case|:
 name|FlagName
@@ -1532,7 +1540,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateConstantLeafNode  Ln/Col %u/%u NewNode %p  Op %s  Value %8.8X%8.8X  \n"
+literal|"\nCreateConstantLeafNode  Ln/Col %u/%u NewNode %p  "
+literal|"Op %s  Value %8.8X%8.8X  \n"
 argument_list|,
 name|Op
 operator|->
@@ -1841,7 +1850,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateValuedLeafNode  Ln/Col %u/%u NewNode %p  Op %s  Value %8.8X%8.8X  "
+literal|"\nCreateValuedLeafNode  Ln/Col %u/%u NewNode %p  "
+literal|"Op %s  Value %8.8X%8.8X  "
 argument_list|,
 name|Op
 operator|->
@@ -2069,12 +2079,31 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_ASL_CODE
 case|:
 name|RootNode
 operator|=
 name|Op
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_DEFAULT_ARG
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"ASLCODE (Tree Completed)->"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_DEFINITION_BLOCK
+case|:
 name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
@@ -2353,12 +2382,31 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_ASL_CODE
 case|:
 name|RootNode
 operator|=
 name|Op
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_DEFAULT_ARG
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"ASLCODE (Tree Completed)->"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_DEFINITION_BLOCK
+case|:
 name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT

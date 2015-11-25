@@ -506,7 +506,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"No param list passed to method\n"
+literal|"No parameter list passed to method\n"
 operator|)
 argument_list|)
 expr_stmt|;

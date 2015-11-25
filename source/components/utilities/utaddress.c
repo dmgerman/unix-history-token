@@ -497,11 +497,13 @@ comment|/* Optional warning message */
 block|{
 name|Pathname
 operator|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
 name|RangeInfo
 operator|->
 name|RegionNode
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|ACPI_WARNING

@@ -64,53 +64,6 @@ argument_list|(
 name|AcpiTerminate
 argument_list|)
 expr_stmt|;
-comment|/* Just exit if subsystem is already shutdown */
-if|if
-condition|(
-name|AcpiGbl_Shutdown
-condition|)
-block|{
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"ACPI Subsystem is already terminated"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Subsystem appears active, go ahead and shut it down */
-name|AcpiGbl_Shutdown
-operator|=
-name|TRUE
-expr_stmt|;
-name|AcpiGbl_StartupFlags
-operator|=
-literal|0
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Shutting down ACPI Subsystem\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Terminate the AML Debugger if present */
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
-name|AcpiGbl_DbTerminateThreads
-operator|=
-name|TRUE
-argument_list|)
-expr_stmt|;
 comment|/* Shutdown and free all resources */
 name|AcpiUtSubsystemShutdown
 argument_list|()

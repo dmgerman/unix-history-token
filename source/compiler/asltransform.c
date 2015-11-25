@@ -574,7 +574,7 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 case|:
 name|TrDoDefinitionBlock
 argument_list|(
@@ -1637,7 +1637,7 @@ name|Asl
 operator|.
 name|ParseOpcode
 operator|!=
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 operator|)
 condition|)
 block|{

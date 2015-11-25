@@ -651,7 +651,8 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"/*** Disassembler: inserted missing EndDependentFn () ***/\n"
+literal|"/*** Disassembler: inserted "
+literal|"missing EndDependentFn () ***/\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -78,6 +78,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Structure used for the pruning parse tree walk */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct

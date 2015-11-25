@@ -1099,7 +1099,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * Exit on failure. Cannot continue because the descriptor length              * may be bogus also.              */
+comment|/*              * Exit on failure. Cannot continue because the descriptor              * length may be bogus also.              */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1366,7 +1366,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Check validity of the resource type, via AcpiGbl_ResourceTypes. Zero      * indicates an invalid resource.      */
+comment|/*      * Check validity of the resource type, via AcpiGbl_ResourceTypes.      * Zero indicates an invalid resource.      */
 if|if
 condition|(
 operator|!

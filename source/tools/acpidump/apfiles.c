@@ -35,6 +35,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    ApIsExistingFile  *  * PARAMETERS:  Pathname            - Output filename  *  * RETURN:      0 on success  *  * DESCRIPTION: Query for file overwrite if it already exists.  *  ******************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|int

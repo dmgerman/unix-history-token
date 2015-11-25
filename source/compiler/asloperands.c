@@ -2822,7 +2822,7 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 case|:
 name|OpnDoDefinitionBlock
 argument_list|(

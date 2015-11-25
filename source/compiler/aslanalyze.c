@@ -366,7 +366,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* _HID Length is valid (7 or 8), now check the prefix (first 3 or 4 chars) */
+comment|/* _HID Length is valid (7 or 8), now check prefix (first 3 or 4 chars) */
 if|if
 condition|(
 name|Length
@@ -918,7 +918,7 @@ case|case
 name|PARSEOP_METHOD
 case|:
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 case|:
 case|case
 name|PARSEOP_ELSE

@@ -4082,7 +4082,7 @@ comment|/* Includes null terminator */
 end_comment
 
 begin_comment
-comment|/* Structures used for device/processor HID, UID, CID, and SUB */
+comment|/* Structures used for device/processor HID, UID, CID */
 end_comment
 
 begin_typedef
@@ -4192,10 +4192,6 @@ name|UniqueId
 decl_stmt|;
 comment|/* _UID value */
 name|ACPI_PNP_DEVICE_ID
-name|SubsystemId
-decl_stmt|;
-comment|/* _SUB value */
-name|ACPI_PNP_DEVICE_ID
 name|ClassCode
 decl_stmt|;
 comment|/* _CLS value */
@@ -4254,13 +4250,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_VALID_SUB
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_VALID_CID
 value|0x0020
 end_define
@@ -4287,7 +4276,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* Flags for _STA return value (CurrentStatus above) */
+comment|/* Flags for _STA method */
 end_comment
 
 begin_define

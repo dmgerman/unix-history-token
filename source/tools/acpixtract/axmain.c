@@ -7,29 +7,21 @@ begin_comment
 comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"acpi.h"
-end_include
+begin_define
+define|#
+directive|define
+name|DEFINE_ACPIXTRACT_GLOBALS
+end_define
 
 begin_include
 include|#
 directive|include
-file|"accommon.h"
+file|"acpixtract.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acapps.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_comment
+comment|/* Local prototypes */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -40,109 +32,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|int
-name|AxExtractTables
-parameter_list|(
-name|char
-modifier|*
-name|InputPathname
-parameter_list|,
-name|char
-modifier|*
-name|Signature
-parameter_list|,
-name|unsigned
-name|int
-name|MinimumInstances
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|AxListTables
-parameter_list|(
-name|char
-modifier|*
-name|InputPathname
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Options */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AX_EXTRACT_ALL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX_LIST_ALL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX_EXTRACT_SIGNATURE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX_EXTRACT_AML_TABLES
-value|3
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|AxAction
-init|=
-name|AX_EXTRACT_AML_TABLES
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* DSDT& SSDTs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AX_OPTIONAL_TABLES
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX_REQUIRED_TABLE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX_UTILITY_NAME
-value|"ACPI Binary Table Extraction Utility"
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX_SUPPORTED_OPTIONS
-value|"ahls:v"
-end_define
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    DisplayUsage  *  * DESCRIPTION: Usage message  *  ******************************************************************************/
@@ -173,6 +62,13 @@ argument_list|(
 literal|"-l"
 argument_list|,
 literal|"List table summaries, do not extract"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-m"
+argument_list|,
+literal|"Extract multiple DSDT/SSDTs to a single file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -224,11 +120,27 @@ modifier|*
 name|Filename
 decl_stmt|;
 name|int
+name|AxAction
+decl_stmt|;
+name|int
 name|Status
 decl_stmt|;
 name|int
 name|j
 decl_stmt|;
+name|Gbl_TableCount
+operator|=
+literal|0
+expr_stmt|;
+name|Gbl_TableListHead
+operator|=
+name|NULL
+expr_stmt|;
+name|AxAction
+operator|=
+name|AX_EXTRACT_AML_TABLES
+expr_stmt|;
+comment|/* Default: DSDT& SSDTs */
 name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
@@ -300,6 +212,15 @@ operator|=
 name|AX_LIST_ALL
 expr_stmt|;
 comment|/* List tables only, do not extract */
+break|break;
+case|case
+literal|'m'
+case|:
+name|AxAction
+operator|=
+name|AX_EXTRACT_MULTI_TABLE
+expr_stmt|;
+comment|/* Make single file for all DSDT/SSDTs */
 break|break;
 case|case
 literal|'s'
@@ -376,6 +297,17 @@ argument_list|,
 name|NULL
 argument_list|,
 name|AX_OPTIONAL_TABLES
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AX_EXTRACT_MULTI_TABLE
+case|:
+name|Status
+operator|=
+name|AxExtractToMultiAmlFile
+argument_list|(
+name|Filename
 argument_list|)
 expr_stmt|;
 break|break;

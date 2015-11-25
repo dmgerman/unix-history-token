@@ -1218,9 +1218,11 @@ return|;
 block|}
 name|Pathname
 operator|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
 name|Node
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if

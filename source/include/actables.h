@@ -196,8 +196,7 @@ begin_function_decl
 name|void
 name|AcpiTbParseFadt
 parameter_list|(
-name|UINT32
-name|TableIndex
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -424,15 +423,6 @@ end_comment
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbInitializeFacs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BOOLEAN
-name|AcpiTbTablesLoaded
 parameter_list|(
 name|void
 parameter_list|)

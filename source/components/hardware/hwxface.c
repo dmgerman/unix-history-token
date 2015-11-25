@@ -1158,8 +1158,20 @@ name|Status
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_NOT_FOUND
+condition|)
+block|{
+comment|/* The _Sx states are optional, ignore NOT_FOUND */
 goto|goto
-name|Cleanup
+name|FinalCleanup
+goto|;
+block|}
+goto|goto
+name|WarningCleanup
 goto|;
 block|}
 comment|/* Must have a return object */
@@ -1189,7 +1201,7 @@ operator|=
 name|AE_AML_NO_RETURN_VALUE
 expr_stmt|;
 goto|goto
-name|Cleanup
+name|WarningCleanup
 goto|;
 block|}
 comment|/* Return object must be of type Package */
@@ -1220,7 +1232,7 @@ operator|=
 name|AE_AML_OPERAND_TYPE
 expr_stmt|;
 goto|goto
-name|Cleanup1
+name|ReturnValueCleanup
 goto|;
 block|}
 comment|/*      * Any warnings about the package length or the object types have      * already been issued by the predefined name module -- there is no      * need to repeat them here.      */
@@ -1384,7 +1396,7 @@ name|Value
 expr_stmt|;
 break|break;
 block|}
-name|Cleanup1
+name|ReturnValueCleanup
 label|:
 name|AcpiUtRemoveReference
 argument_list|(
@@ -1393,7 +1405,7 @@ operator|->
 name|ReturnObject
 argument_list|)
 expr_stmt|;
-name|Cleanup
+name|WarningCleanup
 label|:
 if|if
 condition|(
@@ -1419,6 +1431,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|FinalCleanup
+label|:
 name|ACPI_FREE
 argument_list|(
 name|Info

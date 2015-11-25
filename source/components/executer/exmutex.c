@@ -490,7 +490,7 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Current sync level must be less than or equal to the sync level of the      * mutex. This mechanism provides some deadlock prevention      */
+comment|/*      * Current sync level must be less than or equal to the sync level      * of the mutex. This mechanism provides some deadlock prevention.      */
 if|if
 condition|(
 name|WalkState
@@ -511,7 +511,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot acquire Mutex [%4.4s], current SyncLevel is too large (%u)"
+literal|"Cannot acquire Mutex [%4.4s], "
+literal|"current SyncLevel is too large (%u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -536,6 +537,38 @@ name|AE_AML_MUTEX_ORDER
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Acquiring: Mutex SyncLevel %u, Thread SyncLevel %u, "
+literal|"Depth %u TID %p\n"
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|SyncLevel
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiExAcquireMutexObject
@@ -620,6 +653,33 @@ name|Thread
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Acquired: Mutex SyncLevel %u, Thread SyncLevel %u, Depth %u\n"
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|SyncLevel
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -778,17 +838,17 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-init|=
-name|AE_OK
-decl_stmt|;
 name|UINT8
 name|PreviousSyncLevel
 decl_stmt|;
 name|ACPI_THREAD_STATE
 modifier|*
 name|OwnerThread
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -960,7 +1020,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: mutex %u current %u"
+literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: "
+literal|"mutex %u current %u"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1002,6 +1063,40 @@ name|Mutex
 operator|.
 name|OriginalSyncLevel
 expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Releasing: Object SyncLevel %u, Thread SyncLevel %u, "
+literal|"Prev SyncLevel %u, Depth %u TID %p\n"
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|SyncLevel
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
+operator|,
+name|PreviousSyncLevel
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiExReleaseMutexObject
@@ -1042,6 +1137,36 @@ operator|=
 name|PreviousSyncLevel
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Released: Object SyncLevel %u, Thread SyncLevel, %u, "
+literal|"Prev SyncLevel %u, Depth %u\n"
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|SyncLevel
+operator|,
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
+operator|,
+name|PreviousSyncLevel
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1075,7 +1200,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|ExReleaseAllMutexes
 argument_list|)
@@ -1090,6 +1215,77 @@ name|ObjDesc
 operator|=
 name|Next
 expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Mutex [%4.4s] force-release, SyncLevel %u Depth %u\n"
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|SyncLevel
+operator|,
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|AcquisitionDepth
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Release the mutex, special case for Global Lock */
+if|if
+condition|(
+name|ObjDesc
+operator|==
+name|AcpiGbl_GlobalLockMutex
+condition|)
+block|{
+comment|/* Ignore errors */
+operator|(
+name|void
+operator|)
+name|AcpiEvReleaseGlobalLock
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsReleaseMutex
+argument_list|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OsMutex
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Update Thread SyncLevel (Last mutex is the important one) */
+name|Thread
+operator|->
+name|CurrentSyncLevel
+operator|=
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OriginalSyncLevel
+expr_stmt|;
+comment|/* Mark mutex unowned */
 name|Next
 operator|=
 name|ObjDesc
@@ -1122,46 +1318,6 @@ name|AcquisitionDepth
 operator|=
 literal|0
 expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"Force-releasing held mutex: %p\n"
-operator|,
-name|ObjDesc
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Release the mutex, special case for Global Lock */
-if|if
-condition|(
-name|ObjDesc
-operator|==
-name|AcpiGbl_GlobalLockMutex
-condition|)
-block|{
-comment|/* Ignore errors */
-operator|(
-name|void
-operator|)
-name|AcpiEvReleaseGlobalLock
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsReleaseMutex
-argument_list|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|OsMutex
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Mark mutex unowned */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -1178,18 +1334,9 @@ name|ThreadId
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Update Thread SyncLevel (Last mutex is the important one) */
-name|Thread
-operator|->
-name|CurrentSyncLevel
-operator|=
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
-name|OriginalSyncLevel
-expr_stmt|;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 

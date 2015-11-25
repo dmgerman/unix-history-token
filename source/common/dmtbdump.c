@@ -1085,7 +1085,8 @@ return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n// ACPI Warning: FADT revision %X does not match length: found %X expected %X\n"
+literal|"\n// ACPI Warning: FADT revision %X does not match length: "
+literal|"found %X expected %X\n"
 argument_list|,
 name|Revision
 argument_list|,
@@ -1590,7 +1591,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** ACPI table terminates in the middle of a data structure! (ASF! table)\n"
+literal|"**** ACPI table terminates in the middle of a "
+literal|"data structure! (ASF! table)\n"
 argument_list|)
 expr_stmt|;
 return|return;

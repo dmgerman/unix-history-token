@@ -1890,45 +1890,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Some code only gets executed when the debugger is built in.  * Note that this is entirely independent of whether the  * DEBUG_PRINT stuff (set by ACPI_DEBUG_OUTPUT) is on, or not.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUGGER_EXEC
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUGGER_EXEC
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Macros used for ACPICA utilities only  */
 end_comment
 

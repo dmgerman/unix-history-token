@@ -947,7 +947,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiHwReadPort
 argument_list|,
@@ -968,7 +968,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiHwReadPort
 argument_list|,
@@ -1004,7 +1004,7 @@ argument_list|,
 name|BitWidth
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiHwReadPort
 argument_list|,
@@ -1047,7 +1047,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiHwWritePort
 argument_list|,
@@ -1071,7 +1071,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiHwWritePort
 argument_list|,
@@ -1096,7 +1096,7 @@ argument_list|,
 name|BitWidth
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiHwWritePort
 argument_list|,
@@ -2114,7 +2114,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Request on [%4.4s] is beyond region limit Req-0x%X+0x%X, Base=0x%X, Len-0x%X"
+literal|"Request on [%4.4s] is beyond region limit "
+literal|"Req-0x%X+0x%X, Base=0x%X, Len-0x%X"
 operator|,
 operator|(
 name|RegionObject

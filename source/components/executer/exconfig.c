@@ -934,7 +934,7 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If the Region Address and Length have not been previously evaluated,          * evaluate them now and save the results.          */
+comment|/*          * If the Region Address and Length have not been previously          * evaluated, evaluate them now and save the results.          */
 if|if
 condition|(
 operator|!
@@ -1203,7 +1203,7 @@ name|AE_INVALID_TABLE_LENGTH
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Copy the table from the buffer because the buffer could be modified          * or even deleted in the future          */
+comment|/*          * Copy the table from the buffer because the buffer could be          * modified or even deleted in the future          */
 name|Table
 operator|=
 name|ACPI_ALLOCATE

@@ -283,6 +283,10 @@ expr_stmt|;
 name|OpcGetIntegerWidth
 argument_list|(
 name|RootNode
+operator|->
+name|Asl
+operator|.
+name|Child
 argument_list|)
 expr_stmt|;
 name|UtEndEvent
@@ -356,7 +360,7 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
-comment|/*      * Now that the input is parsed, we can open the AML output file.      * Note: by default, the name of this file comes from the table descriptor      * within the input file.      */
+comment|/*      * Now that the input is parsed, we can open the AML output file.      * Note: by default, the name of this file comes from the table      * descriptor within the input file.      */
 name|Event
 operator|=
 name|UtBeginEvent
@@ -1286,10 +1290,10 @@ name|UINT32
 name|Delta
 decl_stmt|;
 name|UINT32
-name|USec
+name|MicroSeconds
 decl_stmt|;
 name|UINT32
-name|MSec
+name|MilliSeconds
 decl_stmt|;
 name|UINT32
 name|i
@@ -1353,13 +1357,13 @@ operator|->
 name|StartTime
 argument_list|)
 expr_stmt|;
-name|USec
+name|MicroSeconds
 operator|=
 name|Delta
 operator|/
 name|ACPI_100NSEC_PER_USEC
 expr_stmt|;
-name|MSec
+name|MilliSeconds
 operator|=
 name|Delta
 operator|/
@@ -1369,10 +1373,10 @@ comment|/* Round milliseconds up */
 if|if
 condition|(
 operator|(
-name|USec
+name|MicroSeconds
 operator|-
 operator|(
-name|MSec
+name|MilliSeconds
 operator|*
 name|ACPI_USEC_PER_MSEC
 operator|)
@@ -1381,7 +1385,7 @@ operator|>=
 literal|500
 condition|)
 block|{
-name|MSec
+name|MilliSeconds
 operator|++
 expr_stmt|;
 block|}
@@ -1391,9 +1395,9 @@ name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"%8u usec %8u msec - %s\n"
 argument_list|,
-name|USec
+name|MicroSeconds
 argument_list|,
-name|MSec
+name|MilliSeconds
 argument_list|,
 name|Event
 operator|->
@@ -1409,9 +1413,9 @@ name|printf
 argument_list|(
 literal|"%8u usec %8u msec - %s\n"
 argument_list|,
-name|USec
+name|MicroSeconds
 argument_list|,
-name|MSec
+name|MilliSeconds
 argument_list|,
 name|Event
 operator|->

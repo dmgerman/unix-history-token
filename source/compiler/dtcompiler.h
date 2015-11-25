@@ -550,6 +550,26 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|DtCompileTwoSubtables
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|List
+parameter_list|,
+name|ACPI_DMTABLE_INFO
+modifier|*
+name|TableInfo1
+parameter_list|,
+name|ACPI_DMTABLE_INFO
+modifier|*
+name|TableInfo2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|DtCompilePadding
 parameter_list|(
 name|UINT32

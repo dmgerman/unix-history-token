@@ -90,7 +90,7 @@ name|ACPI_USE_SYSTEM_INTTYPES
 end_define
 
 begin_comment
-comment|/* Compile for reduced hardware mode only with this kernel config */
+comment|/* Kernel specific ACPICA configuration */
 end_comment
 
 begin_ifdef
@@ -104,6 +104,23 @@ define|#
 directive|define
 name|ACPI_REDUCED_HARDWARE
 value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_ACPI_DEBUGGER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUGGER
 end_define
 
 begin_endif
@@ -456,12 +473,6 @@ begin_define
 define|#
 directive|define
 name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsRedirectOutput
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetLine
 end_define
 
 begin_define

@@ -706,15 +706,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseFadt  *  * PARAMETERS:  TableIndex          - Index for the FADT  *  * RETURN:      None  *  * DESCRIPTION: Initialize the FADT, DSDT and FACS tables  *              (FADT contains the addresses of the DSDT and FACS)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseFadt  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Initialize the FADT, DSDT and FACS tables  *              (FADT contains the addresses of the DSDT and FACS)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiTbParseFadt
 parameter_list|(
-name|UINT32
-name|TableIndex
+name|void
 parameter_list|)
 block|{
 name|UINT32
@@ -731,7 +730,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|TableIndex
+name|AcpiGbl_FadtIndex
 index|]
 operator|.
 name|Length
@@ -744,7 +743,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|TableIndex
+name|AcpiGbl_FadtIndex
 index|]
 operator|.
 name|Address

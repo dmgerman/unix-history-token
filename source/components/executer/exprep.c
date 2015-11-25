@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML field prep utilities  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -319,7 +319,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Entire field can be accessed with one operation of size %u\n"
+literal|"Entire field can be accessed "
+literal|"with one operation of size %u\n"
 operator|,
 name|AccessByteWidth
 operator|)
@@ -1491,7 +1492,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"IndexField: BitOff %X, Off %X, Value %X, Gran %X, Index %p, Data %p\n"
+literal|"IndexField: BitOff %X, Off %X, Value %X, "
+literal|"Gran %X, Index %p, Data %p\n"
 operator|,
 name|ObjDesc
 operator|->

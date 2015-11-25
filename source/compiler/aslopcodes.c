@@ -413,7 +413,7 @@ if|#
 directive|if
 literal|0
 comment|/*      * TBD: - we don't want to optimize integers in the block header, but the      * code below does not work correctly.      */
-block|if (Op->Asl.Parent&&         Op->Asl.Parent->Asl.Parent&&        (Op->Asl.Parent->Asl.Parent->Asl.ParseOpcode == PARSEOP_DEFINITIONBLOCK))     {         return (0);     }
+block|if (Op->Asl.Parent&&         Op->Asl.Parent->Asl.Parent&&        (Op->Asl.Parent->Asl.Parent->Asl.ParseOpcode == PARSEOP_DEFINITION_BLOCK))     {         return (0);     }
 endif|#
 directive|endif
 comment|/*      * Check for the special AML integers first - Zero, One, Ones.      * These are single-byte opcodes that are the smallest possible      * representation of an integer.      *      * This optimization is optional.      */

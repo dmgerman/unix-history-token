@@ -422,7 +422,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field [%4.4s] access width (%u bytes) too large for region [%4.4s] (length %u)"
+literal|"Field [%4.4s] access width (%u bytes) "
+literal|"too large for region [%4.4s] (length %u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -463,7 +464,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field [%4.4s] Base+Offset+Width %u+%u+%u is beyond end of region [%4.4s] (length %u)"
+literal|"Field [%4.4s] Base+Offset+Width %u+%u+%u "
+literal|"is beyond end of region [%4.4s] (length %u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1608,7 +1610,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Mask %8.8X%8.8X, DatumOffset %X, Width %X, Value %8.8X%8.8X, MergedValue %8.8X%8.8X\n"
+literal|"Mask %8.8X%8.8X, DatumOffset %X, Width %X, "
+literal|"Value %8.8X%8.8X, MergedValue %8.8X%8.8X\n"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(

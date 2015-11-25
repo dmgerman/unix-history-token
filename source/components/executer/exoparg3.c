@@ -118,7 +118,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"FatalOp: Type %X Code %X Arg %X<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
+literal|"FatalOp: Type %X Code %X Arg %X "
+literal|"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
 operator|,
 operator|(
 name|UINT32
@@ -683,9 +684,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Set the return object and exit */
 else|else
 block|{
+comment|/* Set the return object and exit */
 name|WalkState
 operator|->
 name|ResultObj

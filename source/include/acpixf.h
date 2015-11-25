@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20150930
+value|0x20151124
 end_define
 
 begin_include
@@ -907,6 +907,74 @@ end_endif
 
 begin_comment
 comment|/* ACPI_APPLICATION */
+end_comment
+
+begin_comment
+comment|/*  * Debugger prototypes  *  * All interfaces used by debugger will be configured  * out of the ACPICA build unless the ACPI_DEBUGGER  * flag is defined.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|ACPI_EXTERNAL_RETURN_OK(Prototype)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|ACPI_EXTERNAL_RETURN_VOID(Prototype)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(AE_OK);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return;}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_DEBUGGER */
 end_comment
 
 begin_comment
@@ -1851,6 +1919,16 @@ name|void
 name|AcpiTerminateDebugger
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiSetDebuggerThreadId
+parameter_list|(
+name|ACPI_THREAD_ID
+name|ThreadId
 parameter_list|)
 function_decl|;
 end_function_decl

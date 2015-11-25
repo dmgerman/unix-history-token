@@ -782,7 +782,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Pci-Config %u (%u) Seg(%04x) Bus(%04x) Dev(%04x) Func(%04x) Reg(%04x)\n"
+literal|"Pci-Config %u (%u) Seg(%04x) Bus(%04x) "
+literal|"Dev(%04x) Func(%04x) Reg(%04x)\n"
 operator|,
 name|Function
 operator|,

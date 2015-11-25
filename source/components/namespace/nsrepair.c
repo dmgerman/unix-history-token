@@ -1232,7 +1232,7 @@ argument_list|(
 name|NsWrapWithPackage
 argument_list|)
 expr_stmt|;
-comment|/*      * Create the new outer package and populate it. The new package will      * have a single element, the lone sub-object.      */
+comment|/*      * Create the new outer package and populate it. The new      * package will have a single element, the lone sub-object.      */
 name|PkgObjDesc
 operator|=
 name|AcpiUtCreatePackageObject

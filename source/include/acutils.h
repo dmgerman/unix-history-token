@@ -768,6 +768,7 @@ argument_list|)
 end_if
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetMutexName
@@ -799,6 +800,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetTypeName
@@ -810,6 +812,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetNodeName
@@ -822,6 +825,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetDescriptorName
@@ -847,6 +851,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetObjectTypeName
@@ -859,6 +864,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetRegionName
@@ -870,6 +876,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetEventName
@@ -1554,37 +1561,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * utfileio - file operations  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
-end_ifdef
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiUtReadTableFromFile
-parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-modifier|*
-name|Table
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * utids - device ID support  */
 end_comment
 
@@ -1607,22 +1583,6 @@ end_function_decl
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtExecute_UID
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|DeviceNode
-parameter_list|,
-name|ACPI_PNP_DEVICE_ID
-modifier|*
-modifier|*
-name|ReturnId
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiUtExecute_SUB
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*

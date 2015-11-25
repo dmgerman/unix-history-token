@@ -132,9 +132,11 @@ name|ScopeName
 decl_stmt|;
 name|ScopeName
 operator|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
 name|ParentNode
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if

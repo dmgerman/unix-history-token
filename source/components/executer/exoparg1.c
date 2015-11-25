@@ -1914,7 +1914,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Operand must be Buffer/Integer/String/Package - found type %s"
+literal|"Operand must be Buffer/Integer/String/Package"
+literal|" - found type %s"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

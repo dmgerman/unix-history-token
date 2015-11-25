@@ -1477,9 +1477,10 @@ name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
-comment|/* We don't care about actual method declarations */
+comment|/* We don't care about actual method declarations or scopes */
 if|if
 condition|(
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -1487,6 +1488,17 @@ operator|.
 name|AmlOpcode
 operator|==
 name|AML_METHOD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_SCOPE_OP
+operator|)
 condition|)
 block|{
 return|return;

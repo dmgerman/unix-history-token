@@ -1349,7 +1349,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * If the transfer to the new method method call worked, a new walk              * state was created -- get it              */
+comment|/*              * If the transfer to the new method method call worked              *, a new walk state was created -- get it              */
 name|WalkState
 operator|=
 name|AcpiDsGetCurrentWalkState

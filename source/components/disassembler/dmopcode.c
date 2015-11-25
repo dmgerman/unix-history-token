@@ -1889,7 +1889,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"/**** Is ResourceTemplate, but EndTag not at buffer end ****/ "
+literal|"/**** Is ResourceTemplate, "
+literal|"but EndTag not at buffer end ****/ "
 argument_list|)
 expr_stmt|;
 block|}

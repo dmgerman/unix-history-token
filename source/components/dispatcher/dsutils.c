@@ -1412,14 +1412,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayArgumentObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1532,8 +1529,6 @@ literal|"Argument previously created, already stacked\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayArgumentObject
 argument_list|(
 name|WalkState
@@ -1548,7 +1543,6 @@ literal|1
 index|]
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*              * Use value that was already previously returned              * by the evaluation of this argument              */
@@ -1672,14 +1666,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayArgumentObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

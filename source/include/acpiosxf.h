@@ -45,7 +45,9 @@ name|OSL_NOTIFY_HANDLER
 block|,
 name|OSL_GPE_HANDLER
 block|,
-name|OSL_DEBUGGER_THREAD
+name|OSL_DEBUGGER_MAIN_THREAD
+block|,
+name|OSL_DEBUGGER_EXEC_THREAD
 block|,
 name|OSL_EC_POLL_HANDLER
 block|,

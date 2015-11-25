@@ -1342,7 +1342,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Actual Package length (%u) is larger than NumElements field (%u), truncated"
+literal|"Actual Package length (%u) is larger than "
+literal|"NumElements field (%u), truncated"
 operator|,
 name|i
 operator|,
@@ -1365,7 +1366,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Package List length (%u) smaller than NumElements count (%u), padded with null elements\n"
+literal|"Package List length (%u) smaller than NumElements "
+literal|"count (%u), padded with null elements\n"
 operator|,
 name|i
 operator|,

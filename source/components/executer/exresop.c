@@ -1314,7 +1314,7 @@ case|case
 name|ARGI_REGION_OR_BUFFER
 case|:
 comment|/* Used by Load() only */
-comment|/* Need an operand of type REGION or a BUFFER (which could be a resolved region field) */
+comment|/*              * Need an operand of type REGION or a BUFFER              * (which could be a resolved region field)              */
 switch|switch
 condition|(
 name|ObjDesc
@@ -1409,7 +1409,7 @@ condition|(
 name|AcpiGbl_EnableInterpreterSlack
 condition|)
 block|{
-comment|/*                      * Enable original behavior of Store(), allowing any and all                      * objects as the source operand. The ACPI spec does not                      * allow this, however.                      */
+comment|/*                      * Enable original behavior of Store(), allowing any                      * and all objects as the source operand. The ACPI                      * spec does not allow this, however.                      */
 break|break;
 block|}
 if|if
@@ -1427,7 +1427,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Needed Integer/Buffer/String/Package/Ref/Ddb], found [%s] %p"
+literal|"Needed Integer/Buffer/String/Package/Ref/Ddb]"
+literal|", found [%s] %p"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(

@@ -210,8 +210,8 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * The ResourceSourceIndex and ResourceSource are optional elements of some      * Large-type resource descriptors.      */
-comment|/*      * If the length of the actual resource descriptor is greater than the ACPI      * spec-defined minimum length, it means that a ResourceSourceIndex exists      * and is followed by a (required) null terminated string. The string length      * (including the null terminator) is the resource length minus the minimum      * length, minus one byte for the ResourceSourceIndex itself.      */
+comment|/*      * The ResourceSourceIndex and ResourceSource are optional elements of      * some Large-type resource descriptors.      */
+comment|/*      * If the length of the actual resource descriptor is greater than the      * ACPI spec-defined minimum length, it means that a ResourceSourceIndex      * exists and is followed by a (required) null terminated string. The      * string length (including the null terminator) is the resource length      * minus the minimum length, minus one byte for the ResourceSourceIndex      * itself.      */
 if|if
 condition|(
 name|ResourceLength

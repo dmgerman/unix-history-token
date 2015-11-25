@@ -37,6 +37,12 @@ directive|include
 file|"acinterp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acdebug.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -767,20 +773,9 @@ break|break;
 case|case
 name|AML_BREAK_POINT_OP
 case|:
-comment|/*          * Set the single-step flag. This will cause the debugger (if present)          * to break to the console within the AML debugger at the start of the          * next AML instruction.          */
-name|ACPI_DEBUGGER_EXEC
+name|AcpiDbSignalBreakPoint
 argument_list|(
-name|AcpiGbl_CmSingleStep
-operator|=
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
-name|AcpiOsPrintf
-argument_list|(
-literal|"**break** Executed AML BreakPoint opcode\n"
-argument_list|)
+name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/* Call to the OSL in case OS wants a piece of the action */

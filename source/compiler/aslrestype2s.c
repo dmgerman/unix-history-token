@@ -784,7 +784,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: %.2X, VendLen: %.2X, IntLen: %.2X\n"
+literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
+literal|"%.2X, VendLen: %.2X, IntLen: %.2X\n"
 argument_list|,
 literal|"GpioInt"
 argument_list|,
@@ -1536,7 +1537,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: %.2X, VendLen: %.2X, IntLen: %.2X\n"
+literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
+literal|"%.2X, VendLen: %.2X, IntLen: %.2X\n"
 argument_list|,
 literal|"GpioIo"
 argument_list|,
@@ -2222,7 +2224,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: %.2X, VendLen: %.2X, TypLen: %.2X\n"
+literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
+literal|"%.2X, VendLen: %.2X, TypLen: %.2X\n"
 argument_list|,
 literal|"I2cSerialBus"
 argument_list|,
@@ -2761,7 +2764,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: %.2X, VendLen: %.2X, TypLen: %.2X\n"
+literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
+literal|"%.2X, VendLen: %.2X, TypLen: %.2X\n"
 argument_list|,
 literal|"SpiSerialBus"
 argument_list|,
@@ -3453,7 +3457,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: %.2X, VendLen: %.2X, TypLen: %.2X\n"
+literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
+literal|"%.2X, VendLen: %.2X, TypLen: %.2X\n"
 argument_list|,
 literal|"UartSerialBus"
 argument_list|,

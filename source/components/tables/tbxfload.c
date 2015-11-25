@@ -507,7 +507,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%u ACPI AML tables successfully acquired and loaded"
+literal|"%u ACPI AML tables successfully acquired and loaded\n"
 operator|,
 name|TablesLoaded
 operator|)

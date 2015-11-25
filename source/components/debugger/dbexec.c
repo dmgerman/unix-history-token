@@ -1608,7 +1608,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%u loops, Thread 0x%x\n",                 i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Evaluation of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
+block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%u loops, Thread 0x%x\n",                 i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Evaluation of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer,                 (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
 endif|#
 directive|endif
 block|}
@@ -2239,7 +2239,7 @@ name|Status
 operator|=
 name|AcpiOsExecute
 argument_list|(
-name|OSL_DEBUGGER_THREAD
+name|OSL_DEBUGGER_EXEC_THREAD
 argument_list|,
 name|AcpiDbMethodThread
 argument_list|,

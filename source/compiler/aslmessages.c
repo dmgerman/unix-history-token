@@ -541,6 +541,12 @@ literal|"Method Argument (as a local) is set but never used"
 block|,
 comment|/*    ASL_MSG_ARG_NOT_USED */
 literal|"Method Argument is never used"
+block|,
+comment|/*    ASL_MSG_CONSTANT_REQUIRED */
+literal|"Non-reducible expression"
+block|,
+comment|/*    ASL_MSG_CROSS_TABLE_SCOPE */
+literal|"Illegal open scope on external object from within DSDT"
 block|}
 decl_stmt|;
 end_decl_stmt

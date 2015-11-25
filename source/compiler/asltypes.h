@@ -114,7 +114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NODE_UNUSED_FLAG
+name|NODE_COULD_NOT_REDUCE
 value|0x00001000
 end_define
 

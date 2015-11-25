@@ -25,6 +25,23 @@ directive|include
 file|"acdebug.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"acapps.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2135,14 +2152,6 @@ name|Next
 expr_stmt|;
 block|}
 comment|/* Uppercase the actual command */
-if|if
-condition|(
-name|AcpiGbl_DbArgs
-index|[
-literal|0
-index|]
-condition|)
-block|{
 name|AcpiUtStrupr
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -2151,7 +2160,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|Count
 operator|=
 name|i
@@ -2307,7 +2315,7 @@ decl_stmt|;
 comment|/* If AcpiTerminate has been called, terminate this thread */
 if|if
 condition|(
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 return|return
@@ -3261,20 +3269,43 @@ break|break;
 case|case
 name|CMD_LOAD
 case|:
+block|{
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|ListHead
+init|=
+name|NULL
+decl_stmt|;
 name|Status
 operator|=
-name|AcpiDbGetTableFromFile
+name|AcpiAcGetAllTablesFromFile
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|NULL
+name|ACPI_GET_ALL_TABLES
 argument_list|,
-name|FALSE
+operator|&
+name|ListHead
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiDbLoadTables
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|CMD_OPEN
@@ -3301,6 +3332,10 @@ name|AcpiUtSubsystemShutdown
 argument_list|()
 expr_stmt|;
 comment|/*          * TBD: [Restructure] Need some way to re-initialize without          * re-creating the semaphores!          */
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/*  AcpiInitialize (NULL);  */
 break|break;
 case|case
@@ -3400,7 +3435,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3477,6 +3512,9 @@ condition|(
 name|Status
 operator|!=
 name|AE_CTRL_TERMINATE
+operator|&&
+operator|!
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 name|AcpiGbl_MethodExecuting
@@ -3523,6 +3561,10 @@ name|AcpiGbl_DbCommandComplete
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_function
 
@@ -3591,7 +3633,7 @@ comment|/* TBD: [Restructure] Need a separate command line buffer for step mode 
 while|while
 condition|(
 operator|!
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 comment|/* Force output to console until a command is entered */
@@ -3676,20 +3718,6 @@ argument_list|(
 name|AcpiGbl_DbCommandReady
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|Status
 operator|=
 name|AcpiOsAcquireMutex
@@ -3722,16 +3750,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* Shut down the debugger */
-name|AcpiTerminateDebugger
-argument_list|()
-expr_stmt|;
-comment|/*      * Only this thread (the original thread) should actually terminate the      * subsystem, because all the semaphores are deleted during termination      */
-name|Status
-operator|=
-name|AcpiTerminate
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|Status

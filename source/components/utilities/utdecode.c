@@ -207,6 +207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetRegionName
@@ -272,15 +273,10 @@ return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_RegionTypes
 index|[
 name|SpaceId
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
@@ -319,6 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetEventName
@@ -342,15 +339,10 @@ return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_EventTypes
 index|[
 name|EventId
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
@@ -361,7 +353,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching;  * when stored in a table it really means that we have thus far seen no  * evidence to indicate what type is actually going to be stored for this entry.  */
+comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching;  * when stored in a table it really means that we have thus far seen no  * evidence to indicate what type is actually going to be stored for this& entry.  */
 end_comment
 
 begin_decl_stmt
@@ -485,6 +477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetTypeName
@@ -502,32 +495,23 @@ condition|)
 block|{
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_BadType
-argument_list|)
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_NsTypeNames
 index|[
 name|Type
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetObjectTypeName
@@ -632,6 +616,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetNodeName
@@ -795,6 +780,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetDescriptorName
@@ -834,10 +820,6 @@ return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_DescTypeNames
 index|[
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -845,7 +827,6 @@ argument_list|(
 name|Object
 argument_list|)
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
@@ -1008,6 +989,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|AcpiGbl_MutexNames
@@ -1032,6 +1014,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetMutexName

@@ -461,7 +461,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*              * This method has called another method              * NOTE: the method call parse subtree is already deleted at this              * point, so we cannot disassemble the method invocation.              */
+comment|/*              * This method has called another method              * NOTE: the method call parse subtree is already deleted at              * this point, so we cannot disassemble the method invocation.              */
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(

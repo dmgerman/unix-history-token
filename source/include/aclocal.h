@@ -232,6 +232,40 @@ value|(ACPI_THREAD_ID) -1
 end_define
 
 begin_comment
+comment|/* This Thread ID means an invalid thread ID */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OS_INVALID_THREAD_ID
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INVALID_THREAD_ID
+value|ACPI_OS_INVALID_THREAD_ID
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_INVALID_THREAD_ID
+value|((ACPI_THREAD_ID) 0xFFFFFFFF)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Table for the global mutexes */
 end_comment
 
@@ -608,6 +642,29 @@ directive|define
 name|ACPI_ROOT_ALLOW_RESIZE
 value|(2)
 end_define
+
+begin_comment
+comment|/* List to manage incoming ACPI tables */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_new_table_desc
+block|{
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+decl_stmt|;
+name|struct
+name|acpi_new_table_desc
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_NEW_TABLE_DESC
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Predefined table indexes */

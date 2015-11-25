@@ -418,7 +418,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Small descriptor -- bits 2:0 of byte 0 contain the length */
+comment|/*          * Small descriptor -- bits 2:0 of byte 0 contain the length          * Clear any existing length, preserving descriptor type bits          */
 name|Aml
 operator|->
 name|SmallHeader
@@ -428,7 +428,6 @@ operator|=
 call|(
 name|UINT8
 call|)
-comment|/* Clear any existing length, preserving descriptor type bits */
 argument_list|(
 operator|(
 name|Aml
@@ -620,7 +619,7 @@ argument_list|,
 name|MinimumLength
 argument_list|)
 expr_stmt|;
-comment|/*      * ResourceSource is present if the length of the descriptor is longer than      * the minimum length.      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the minimum length.      */
+comment|/*      * ResourceSource is present if the length of the descriptor is longer      * than the minimum length.      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the minimum length.      */
 if|if
 condition|(
 name|TotalLength

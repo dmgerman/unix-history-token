@@ -468,7 +468,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Attempt to dereference an Index to NULL package element Idx=%p"
+literal|"Attempt to dereference an Index to "
+literal|"NULL package element Idx=%p"
 operator|,
 name|StackDesc
 operator|)

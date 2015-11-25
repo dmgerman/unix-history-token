@@ -1261,7 +1261,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*          * All sub-objects must have their reference count incremented also.          * Different object types have different subobjects.          */
+comment|/*          * All sub-objects must have their reference count incremented          * also. Different object types have different subobjects.          */
 switch|switch
 condition|(
 name|Object

@@ -420,6 +420,10 @@ name|ASL_MSG_ARG_AS_LOCAL_NOT_USED
 block|,
 name|ASL_MSG_ARG_NOT_USED
 block|,
+name|ASL_MSG_CONSTANT_REQUIRED
+block|,
+name|ASL_MSG_CROSS_TABLE_SCOPE
+block|,
 comment|/* These messages are used by the Data Table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 init|=

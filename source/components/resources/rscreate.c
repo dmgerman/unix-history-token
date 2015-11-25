@@ -607,7 +607,7 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
-comment|/*          * Fill in the Length field with the information we have at this point.          * The minus four is to subtract the size of the UINT8 Source[4] member          * because it is added below.          */
+comment|/*          * Fill in the Length field with the information we have at this          * point. The minus four is to subtract the size of the UINT8          * Source[4] member because it is added below.          */
 name|UserPrt
 operator|->
 name|Length
@@ -956,7 +956,7 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-comment|/*                  * If this is a number, then the Source Name is NULL, since the                  * entire buffer was zeroed out, we can leave this alone.                  *                  * Add to the Length field the length of the UINT32 NULL                  */
+comment|/*                  * If this is a number, then the Source Name is NULL, since                  * the entire buffer was zeroed out, we can leave this alone.                  *                  * Add to the Length field the length of the UINT32 NULL                  */
 name|UserPrt
 operator|->
 name|Length

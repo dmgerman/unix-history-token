@@ -1026,7 +1026,7 @@ operator|=
 name|AcpiUpdateAllGpes
 argument_list|()
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiUpdateAllGpes
 argument_list|,
@@ -1525,7 +1525,7 @@ operator|=
 name|AeInstallSciHandler
 argument_list|()
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AeInstallSciHandler
 argument_list|,
@@ -1544,7 +1544,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallFixedEventHandler
 argument_list|,
@@ -1562,7 +1562,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallFixedEventHandler
 argument_list|,
@@ -1861,7 +1861,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallNotifyHandler
 argument_list|,
@@ -1879,7 +1879,7 @@ argument_list|,
 name|AeNotifyHandler1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRemoveNotifyHandler
 argument_list|,
@@ -1959,7 +1959,7 @@ argument_list|,
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAttachData
 argument_list|,
@@ -1975,7 +1975,7 @@ argument_list|,
 name|AeAttachedDataHandler
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiDetachData
 argument_list|,
@@ -1994,7 +1994,7 @@ argument_list|,
 name|AcpiGbl_RootNode
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAttachData
 argument_list|,
@@ -2012,7 +2012,7 @@ argument_list|,
 name|AcpiGbl_RootNode
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAttachData
 argument_list|,
@@ -2031,7 +2031,7 @@ argument_list|,
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAttachData
 argument_list|,
@@ -2049,7 +2049,7 @@ argument_list|,
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAttachData
 argument_list|,

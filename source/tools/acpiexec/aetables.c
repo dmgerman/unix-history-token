@@ -351,21 +351,23 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeBuildLocalTables  *  * PARAMETERS:  TableCount      - Number of tables on the command line  *              TableList       - List of actual tables from files  *  * RETURN:      Status  *  * DESCRIPTION: Build a complete ACPI table chain, with a local RSDP, XSDT,  *              FADT, and several other test tables.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeBuildLocalTables  *  * PARAMETERS:  TableCount      - Number of tables on the command line  *              ListHead        - List of actual tables from files  *  * RETURN:      Status  *  * DESCRIPTION: Build a complete ACPI table chain, with a local RSDP, XSDT,  *              FADT, and several other test tables.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AeBuildLocalTables
 parameter_list|(
-name|UINT32
-name|TableCount
-parameter_list|,
-name|AE_TABLE_DESC
+name|ACPI_NEW_TABLE_DESC
 modifier|*
-name|TableList
+name|ListHead
 parameter_list|)
 block|{
+name|UINT32
+name|TableCount
+init|=
+literal|1
+decl_stmt|;
 name|ACPI_PHYSICAL_ADDRESS
 name|DsdtAddress
 init|=
@@ -374,7 +376,7 @@ decl_stmt|;
 name|UINT32
 name|XsdtSize
 decl_stmt|;
-name|AE_TABLE_DESC
+name|ACPI_NEW_TABLE_DESC
 modifier|*
 name|NextTable
 decl_stmt|;
@@ -390,7 +392,7 @@ decl_stmt|;
 comment|/*      * Update the table count. For the DSDT, it is not put into the XSDT.      * For the FADT, this table is already accounted for since we usually      * install a local FADT.      */
 name|NextTable
 operator|=
-name|TableList
+name|ListHead
 expr_stmt|;
 while|while
 condition|(
@@ -399,6 +401,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
 name|NextTable
@@ -409,7 +412,8 @@ name|Signature
 argument_list|,
 name|ACPI_SIG_DSDT
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
 name|NextTable
@@ -423,7 +427,7 @@ argument_list|)
 condition|)
 block|{
 name|TableCount
-operator|--
+operator|++
 expr_stmt|;
 block|}
 name|NextTable
@@ -514,7 +518,7 @@ expr_stmt|;
 comment|/*      * Install the user tables. The DSDT must be installed in the FADT.      * All other tables are installed directly into the XSDT.      *      * Note: The tables are loaded in reverse order from the incoming      * input, which makes it match the command line order.      */
 name|NextTable
 operator|=
-name|TableList
+name|ListHead
 expr_stmt|;
 while|while
 condition|(
@@ -1464,7 +1468,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInitializeTables
 argument_list|,
@@ -1476,7 +1480,7 @@ operator|=
 name|AcpiLoadTables
 argument_list|()
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiLoadTables
 argument_list|,
@@ -1554,7 +1558,7 @@ operator|&
 name|Header
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetTableHeader
 argument_list|,
@@ -1573,7 +1577,7 @@ operator|&
 name|Header
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetTableHeader
 argument_list|,
@@ -1592,7 +1596,7 @@ operator|&
 name|Header
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiGetTableHeader
 argument_list|,
@@ -1614,7 +1618,7 @@ operator|&
 name|Table
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetTable
 argument_list|,
@@ -1633,7 +1637,7 @@ operator|&
 name|Table
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetTable
 argument_list|,
@@ -1652,7 +1656,7 @@ operator|&
 name|Table
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiGetTable
 argument_list|,
@@ -1698,7 +1702,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetTableByIndex
 argument_list|,

@@ -1334,11 +1334,11 @@ name|char
 modifier|*
 name|ScopeName
 init|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
-name|Info
-operator|->
-name|Node
+name|DeviceNode
+argument_list|,
+name|TRUE
 argument_list|)
 decl_stmt|;
 name|ACPI_EXCEPTION

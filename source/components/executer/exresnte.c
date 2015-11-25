@@ -187,7 +187,7 @@ operator|=
 name|Node
 expr_stmt|;
 block|}
-comment|/*      * Several object types require no further processing:      * 1) Device/Thermal objects don't have a "real" subobject, return the Node      * 2) Method locals and arguments have a pseudo-Node      * 3) 10/2007: Added method type to assist with Package construction.      */
+comment|/*      * Several object types require no further processing:      * 1) Device/Thermal objects don't have a "real" subobject, return Node      * 2) Method locals and arguments have a pseudo-Node      * 3) 10/2007: Added method type to assist with Package construction.      */
 if|if
 condition|(
 operator|(

@@ -952,7 +952,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Target must be [Buffer/Integer/String/Reference], found [%s] (%4.4s)"
+literal|"Target must be [Buffer/Integer/String/Reference]"
+literal|", found [%s] (%4.4s)"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

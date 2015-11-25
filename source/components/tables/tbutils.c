@@ -185,40 +185,6 @@ comment|/* !ACPI_REDUCED_HARDWARE */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbTablesLoaded  *  * PARAMETERS:  None  *  * RETURN:      TRUE if required ACPI tables are loaded  *  * DESCRIPTION: Determine if the minimum required ACPI tables are present  *              (FADT, FACS, DSDT)  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiTbTablesLoaded
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
-operator|>=
-literal|4
-condition|)
-block|{
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCheckDsdtHeader  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Quick compare to check validity of the DSDT. This will detect  *              if the DSDT has been replaced from outside the OS and/or if  *              the DSDT header has been corrupted.  *  ******************************************************************************/
 end_comment
 
@@ -912,10 +878,12 @@ name|ACPI_SIG_FADT
 argument_list|)
 condition|)
 block|{
-name|AcpiTbParseFadt
-argument_list|(
+name|AcpiGbl_FadtIndex
+operator|=
 name|TableIndex
-argument_list|)
+expr_stmt|;
+name|AcpiTbParseFadt
+argument_list|()
 expr_stmt|;
 block|}
 name|NextTable

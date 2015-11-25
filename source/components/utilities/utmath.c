@@ -481,7 +481,7 @@ argument_list|,
 name|Partial1
 argument_list|)
 expr_stmt|;
-comment|/*          * The quotient is always 32 bits, and simply requires adjustment.          * The 64-bit remainder must be generated.          */
+comment|/*          * The quotient is always 32 bits, and simply requires          * adjustment. The 64-bit remainder must be generated.          */
 name|Partial1
 operator|=
 name|Quotient

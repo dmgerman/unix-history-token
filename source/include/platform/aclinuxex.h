@@ -255,6 +255,26 @@ define|\
 value|({ \         spinlock_t *Lock = ACPI_ALLOCATE(sizeof(*Lock)); \         if (Lock) { \             *(__Handle) = Lock; \             spin_lock_init(*(__Handle)); \         } \         Lock ? AE_OK : AE_NO_MEMORY; \     })
 end_define
 
+begin_function
+specifier|static
+specifier|inline
+name|BOOLEAN
+name|AcpiOsReadable
+parameter_list|(
+name|void
+modifier|*
+name|Pointer
+parameter_list|,
+name|ACPI_SIZE
+name|Length
+parameter_list|)
+block|{
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * OSL interfaces added by Linux  */
 end_comment

@@ -46,7 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../acpiexec/aecommon.h"
+file|"acnamesp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"actables.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
 end_include
 
 begin_include
@@ -68,6 +80,17 @@ name|BOOLEAN
 name|AcpiGbl_NsLoadOnly
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|ACPI_STATUS
+name|AnBuildLocalTables
+parameter_list|(
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|TableList
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

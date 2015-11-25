@@ -325,7 +325,7 @@ argument_list|(
 name|ExNameSegment
 argument_list|)
 expr_stmt|;
-comment|/*      * If first character is a digit, then we know that we aren't looking at a      * valid name segment      */
+comment|/*      * If first character is a digit, then we know that we aren't looking      * at a valid name segment      */
 name|CharBuf
 index|[
 literal|0

@@ -1092,7 +1092,7 @@ name|Asl
 operator|.
 name|ParseOpcode
 operator|==
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 operator|)
 operator|)
 operator|&&

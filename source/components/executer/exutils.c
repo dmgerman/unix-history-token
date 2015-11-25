@@ -249,7 +249,7 @@ name|ACPI_UINT32_MAX
 operator|)
 condition|)
 block|{
-comment|/*          * We are executing in a 32-bit ACPI table.          * Truncate the value to 32 bits by zeroing out the upper 32-bit field          */
+comment|/*          * We are executing in a 32-bit ACPI table. Truncate          * the value to 32 bits by zeroing out the upper 32-bit field          */
 name|ObjDesc
 operator|->
 name|Integer
@@ -532,7 +532,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Expected EISAID is larger than 32 bits: 0x%8.8X%8.8X, truncating"
+literal|"Expected EISAID is larger than 32 bits: "
+literal|"0x%8.8X%8.8X, truncating"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(

@@ -2512,7 +2512,7 @@ comment|/* Previous resource validations */
 end_comment
 
 begin_comment
-unit|if (Aml->ExtAddress64.RevisionID != AML_RESOURCE_EXTENDED_ADDRESS_REVISION)     {         return_ACPI_STATUS (AE_SUPPORT);     }      if (Resource->Data.StartDpf.PerformanceRobustness>= 3)     {         return_ACPI_STATUS (AE_AML_BAD_RESOURCE_VALUE);     }      if (((Aml->Irq.Flags& 0x09) == 0x00) ||         ((Aml->Irq.Flags& 0x09) == 0x09))     {
+unit|if (Aml->ExtAddress64.RevisionID !=         AML_RESOURCE_EXTENDED_ADDRESS_REVISION)     {         return_ACPI_STATUS (AE_SUPPORT);     }      if (Resource->Data.StartDpf.PerformanceRobustness>= 3)     {         return_ACPI_STATUS (AE_AML_BAD_RESOURCE_VALUE);     }      if (((Aml->Irq.Flags& 0x09) == 0x00) ||         ((Aml->Irq.Flags& 0x09) == 0x09))     {
 comment|/*          * Only [ActiveHigh, EdgeSensitive] or [ActiveLow, LevelSensitive]          * polarity/trigger interrupts are allowed (ACPI spec, section          * "IRQ Format"), so 0x00 and 0x09 are illegal.          */
 end_comment
 

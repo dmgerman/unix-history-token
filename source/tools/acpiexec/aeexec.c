@@ -317,7 +317,7 @@ operator|&
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -420,7 +420,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeBlock
 argument_list|,
@@ -442,7 +442,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -458,7 +458,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -475,7 +475,7 @@ operator|&
 name|GpeDevice
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetGpeDevice
 argument_list|,
@@ -492,7 +492,7 @@ operator|&
 name|GpeDevice
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetGpeDevice
 argument_list|,
@@ -511,7 +511,7 @@ operator|&
 name|GpeDevice
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetGpeDevice
 argument_list|,
@@ -528,7 +528,7 @@ operator|&
 name|GpeDevice
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiGetGpeDevice
 argument_list|,
@@ -548,7 +548,7 @@ argument_list|,
 name|AeGpeHandler
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRemoveGpeHandler
 argument_list|,
@@ -617,7 +617,7 @@ argument_list|,
 literal|11
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeBlock
 argument_list|,
@@ -1358,7 +1358,7 @@ operator|&
 name|GenericRegister
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRead
 argument_list|,
@@ -1375,7 +1375,7 @@ operator|&
 name|GenericRegister
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiWrite
 argument_list|,
@@ -1411,7 +1411,7 @@ operator|&
 name|GenericRegister
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRead
 argument_list|,
@@ -1428,7 +1428,7 @@ operator|&
 name|GenericRegister
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiWrite
 argument_list|,
@@ -1478,7 +1478,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -1507,7 +1507,7 @@ argument_list|,
 literal|0xFFFF
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAcquireMutex
 argument_list|,
@@ -1534,7 +1534,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReleaseMutex
 argument_list|,
@@ -1585,7 +1585,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiWriteBitRegister
 argument_list|,
@@ -1601,7 +1601,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiWriteBitRegister
 argument_list|,
@@ -1617,7 +1617,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiWriteBitRegister
 argument_list|,
@@ -1633,7 +1633,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiWriteBitRegister
 argument_list|,
@@ -1650,7 +1650,7 @@ operator|&
 name|Value
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReadBitRegister
 argument_list|,
@@ -1667,7 +1667,7 @@ operator|&
 name|Value
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReadBitRegister
 argument_list|,
@@ -1684,7 +1684,7 @@ operator|&
 name|Value
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReadBitRegister
 argument_list|,
@@ -1701,7 +1701,7 @@ operator|&
 name|Value
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReadBitRegister
 argument_list|,
@@ -1749,6 +1749,12 @@ operator|(
 operator|!
 name|ACPI_REDUCED_HARDWARE
 operator|)
+name|UINT32
+name|LockHandle1
+decl_stmt|;
+name|UINT32
+name|LockHandle2
+decl_stmt|;
 name|ACPI_VENDOR_UUID
 name|Uuid
 init|=
@@ -1783,12 +1789,6 @@ argument_list|)
 block|}
 block|}
 decl_stmt|;
-name|UINT32
-name|LockHandle1
-decl_stmt|;
-name|UINT32
-name|LockHandle2
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* !ACPI_REDUCED_HARDWARE */
@@ -1804,7 +1804,7 @@ operator|&
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -1830,7 +1830,7 @@ operator|&
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -1844,7 +1844,7 @@ argument_list|(
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiUnloadParentTable
 argument_list|,
@@ -1865,7 +1865,7 @@ operator|)
 name|Ssdt4Code
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiLoadTable
 argument_list|,
@@ -1884,7 +1884,7 @@ operator|&
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -1898,7 +1898,7 @@ argument_list|(
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiUnloadParentTable
 argument_list|,
@@ -1917,7 +1917,7 @@ operator|)
 name|Ssdt4Code
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiLoadTable
 argument_list|,
@@ -1937,7 +1937,7 @@ operator|&
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -1951,7 +1951,7 @@ argument_list|(
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiUnloadParentTable
 argument_list|,
@@ -1969,7 +1969,7 @@ operator|)
 name|Ssdt2Code
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiLoadTable
 argument_list|,
@@ -1988,7 +1988,7 @@ operator|)
 name|Ssdt3Code
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiLoadTable
 argument_list|,
@@ -2024,7 +2024,7 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiInstallInterface
 argument_list|,
@@ -2040,7 +2040,7 @@ argument_list|(
 literal|"TestString"
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallInterface
 argument_list|,
@@ -2054,7 +2054,7 @@ argument_list|(
 literal|"TestString"
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiInstallInterface
 argument_list|,
@@ -2070,7 +2070,7 @@ argument_list|(
 literal|"Windows 2006"
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRemoveInterface
 argument_list|,
@@ -2084,7 +2084,7 @@ argument_list|(
 literal|"TestString"
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRemoveInterface
 argument_list|,
@@ -2098,7 +2098,7 @@ argument_list|(
 literal|"XXXXXX"
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_STATUS
+name|ACPI_CHECK_STATUS
 argument_list|(
 name|AcpiRemoveInterface
 argument_list|,
@@ -2114,7 +2114,7 @@ argument_list|(
 literal|"AnotherTestString"
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallInterface
 argument_list|,
@@ -2131,7 +2131,7 @@ argument_list|,
 literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|ExecuteOSI
 argument_list|,
@@ -2147,7 +2147,7 @@ argument_list|,
 literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|ExecuteOSI
 argument_list|,
@@ -2163,7 +2163,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|ExecuteOSI
 argument_list|,
@@ -2194,7 +2194,7 @@ operator|&
 name|ReturnBuf
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetName
 argument_list|,
@@ -2215,7 +2215,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetDevices
 argument_list|,
@@ -2230,7 +2230,7 @@ operator|&
 name|Stats
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetStatistics
 argument_list|,
@@ -2252,7 +2252,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGlobalEventHandler
 argument_list|,
@@ -2276,7 +2276,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableEvent
 argument_list|,
@@ -2299,7 +2299,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2315,7 +2315,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -2333,7 +2333,7 @@ argument_list|,
 name|AeGpeHandler
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiRemoveGpeHandler
 argument_list|,
@@ -2355,7 +2355,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2371,7 +2371,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -2389,7 +2389,7 @@ argument_list|,
 name|ACPI_GPE_DISABLE
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetGpe
 argument_list|,
@@ -2407,7 +2407,7 @@ argument_list|,
 name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetGpe
 argument_list|,
@@ -2429,7 +2429,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2445,7 +2445,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -2467,7 +2467,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2483,7 +2483,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -2505,7 +2505,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2527,7 +2527,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2549,7 +2549,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2568,7 +2568,7 @@ operator|&
 name|Handle
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiGetHandle
 argument_list|,
@@ -2586,7 +2586,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetupGpeForWake
 argument_list|,
@@ -2604,7 +2604,7 @@ argument_list|,
 name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetGpeWakeMask
 argument_list|,
@@ -2622,7 +2622,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetupGpeForWake
 argument_list|,
@@ -2640,7 +2640,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetupGpeForWake
 argument_list|,
@@ -2658,7 +2658,7 @@ argument_list|,
 literal|9
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiSetupGpeForWake
 argument_list|,
@@ -2680,7 +2680,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2696,7 +2696,7 @@ argument_list|,
 literal|0x19
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -2719,7 +2719,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiInstallGpeHandler
 argument_list|,
@@ -2735,7 +2735,7 @@ argument_list|,
 literal|101
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiEnableGpe
 argument_list|,
@@ -2751,7 +2751,7 @@ argument_list|,
 literal|101
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiDisableGpe
 argument_list|,
@@ -2767,7 +2767,7 @@ operator|=
 name|AcpiUpdateAllGpes
 argument_list|()
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiUpdateAllGpes
 argument_list|,
@@ -2843,7 +2843,7 @@ operator|&
 name|LockHandle1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAcquireGlobalLock
 argument_list|,
@@ -2860,7 +2860,7 @@ operator|&
 name|LockHandle2
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiAcquireGlobalLock
 argument_list|,
@@ -2874,7 +2874,7 @@ argument_list|(
 name|LockHandle1
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReleaseGlobalLock
 argument_list|,
@@ -2888,7 +2888,7 @@ argument_list|(
 name|LockHandle2
 argument_list|)
 expr_stmt|;
-name|AE_CHECK_OK
+name|ACPI_CHECK_OK
 argument_list|(
 name|AcpiReleaseGlobalLock
 argument_list|,

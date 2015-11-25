@@ -1833,9 +1833,5 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    Stubs  *  * DESCRIPTION: For linkage  *  ******************************************************************************/
-end_comment
-
 end_unit
 

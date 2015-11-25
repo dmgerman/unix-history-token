@@ -4384,6 +4384,17 @@ argument_list|,
 name|ACPI_BTYPE_DATA_REFERENCE
 argument_list|)
 block|,
+comment|/* ASLCODE  */
+name|OP_TABLE_ENTRY
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}
 decl_stmt|;

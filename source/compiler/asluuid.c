@@ -134,9 +134,9 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* All other positions must contain hex digits */
 else|else
 block|{
+comment|/* All other positions must contain hex digits */
 if|if
 condition|(
 operator|!

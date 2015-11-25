@@ -81,7 +81,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/*      * Special case for the predefined Root Node      * (return type ANY)      */
+comment|/* Special case for the predefined Root Node (return type ANY) */
 if|if
 condition|(
 name|Handle

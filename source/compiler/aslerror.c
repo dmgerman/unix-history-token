@@ -386,7 +386,7 @@ operator|->
 name|SourceLine
 condition|)
 block|{
-comment|/* Use the merged header/source file if present, otherwise use input file */
+comment|/*          * Use the merged header/source file if present, otherwise          * use input file          */
 name|SourceFile
 operator|=
 name|Gbl_Files
@@ -535,14 +535,14 @@ operator|->
 name|LineNumber
 argument_list|)
 expr_stmt|;
-comment|/*                      * If not at EOF, get the corresponding source code line and                      * display it. Don't attempt this if we have a premature EOF                      * condition.                      */
+comment|/*                      * If not at EOF, get the corresponding source code line                      * and display it. Don't attempt this if we have a                      * premature EOF condition.                      */
 if|if
 condition|(
 operator|!
 name|PrematureEOF
 condition|)
 block|{
-comment|/*                          * Seek to the offset in the combined source file, read                          * the source line, and write it to the output.                          */
+comment|/*                          * Seek to the offset in the combined source file,                          * read the source line, and write it to the output.                          */
 name|Actual
 operator|=
 name|fseek

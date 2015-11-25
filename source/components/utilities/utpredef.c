@@ -443,7 +443,7 @@ name|ACPI_PREDEFINED_INFO
 modifier|*
 name|ThisName
 decl_stmt|;
-comment|/* Quick check for a predefined name, first character must be underscore */
+comment|/*      * Quick check for a predefined name, first character must      * be underscore      */
 if|if
 condition|(
 name|Name

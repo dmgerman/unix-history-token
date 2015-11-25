@@ -852,7 +852,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot acquire Mutex for method [%4.4s], current SyncLevel is too large (%u)"
+literal|"Cannot acquire Mutex for method [%4.4s]"
+literal|", current SyncLevel is too large (%u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -979,6 +980,21 @@ name|Thread
 operator|->
 name|ThreadId
 expr_stmt|;
+comment|/*                  * Update the current SyncLevel only if this is not an auto-                  * serialized method. In the auto case, we have to ignore                  * the sync level for the method mutex (created for the                  * auto-serialization) because we have no idea of what the                  * sync level should be. Therefore, just ignore it.                  */
+if|if
+condition|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|InfoFlags
+operator|&
+name|ACPI_METHOD_IGNORE_SYNC_LEVEL
+operator|)
+condition|)
+block|{
 name|WalkState
 operator|->
 name|Thread
@@ -991,6 +1007,7 @@ name|Method
 operator|.
 name|SyncLevel
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1938,7 +1955,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Marking method %4.4s as Serialized because of AE_ALREADY_EXISTS error"
+literal|"Marking method %4.4s as Serialized "
+literal|"because of AE_ALREADY_EXISTS error"
 operator|,
 name|WalkState
 operator|->

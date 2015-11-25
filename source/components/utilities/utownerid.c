@@ -116,7 +116,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Find a free owner ID, cycle through all possible IDs on repeated      * allocations. (ACPI_NUM_OWNERID_MASKS + 1) because first index may have      * to be scanned twice.      */
+comment|/*      * Find a free owner ID, cycle through all possible IDs on repeated      * allocations. (ACPI_NUM_OWNERID_MASKS + 1) because first index      * may have to be scanned twice.      */
 for|for
 control|(
 name|i
@@ -275,7 +275,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * All OwnerIds have been allocated. This typically should      * not happen since the IDs are reused after deallocation. The IDs are      * allocated upon table load (one per table) and method execution, and      * they are released when a table is unloaded or a method completes      * execution.      *      * If this error happens, there may be very deep nesting of invoked control      * methods, or there may be a bug where the IDs are not released.      */
+comment|/*      * All OwnerIds have been allocated. This typically should      * not happen since the IDs are reused after deallocation. The IDs are      * allocated upon table load (one per table) and method execution, and      * they are released when a table is unloaded or a method completes      * execution.      *      * If this error happens, there may be very deep nesting of invoked      * control methods, or there may be a bug where the IDs are not released.      */
 name|Status
 operator|=
 name|AE_OWNER_ID_LIMIT

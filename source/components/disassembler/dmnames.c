@@ -291,7 +291,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * We can't get the pathname since the object              * is not in the namespace. This can happen during single              * stepping where a dynamic named object is *about* to be created.              */
+comment|/*              * We can't get the pathname since the object is not in the              * namespace. This can happen during single stepping              * where a dynamic named object is *about* to be created.              */
 name|AcpiOsPrintf
 argument_list|(
 literal|"  [Path not found]"

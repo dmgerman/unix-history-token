@@ -1536,7 +1536,7 @@ name|Package
 operator|.
 name|Elements
 expr_stmt|;
-comment|/*      * Recursive implementation. Probably ok, since nested external packages      * as parameters should be very rare.      */
+comment|/*      * Recursive implementation. Probably ok, since nested external      * packages as parameters should be very rare.      */
 for|for
 control|(
 name|i

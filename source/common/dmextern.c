@@ -1721,7 +1721,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"External method arg count mismatch %s: Current %u, attempted %u"
+literal|"External method arg count mismatch %s: "
+literal|"Current %u, attempted %u"
 operator|,
 name|NextExternal
 operator|->

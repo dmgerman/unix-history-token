@@ -257,6 +257,47 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSignalBreakPoint  *  * PARAMETERS:  WalkState       - Current walk  *  * RETURN:      Status  *  * DESCRIPTION: Called for AML_BREAK_POINT_OP  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDbSignalBreakPoint
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|ACPI_APPLICATION
+if|if
+condition|(
+name|AcpiGbl_DbThreadId
+operator|!=
+name|AcpiOsGetThreadId
+argument_list|()
+condition|)
+block|{
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/*      * Set the single-step flag. This will cause the debugger (if present)      * to break to the console within the AML debugger at the start of the      * next AML instruction.      */
+name|AcpiGbl_CmSingleStep
+operator|=
+name|TRUE
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"**break** Executed AML BreakPoint opcode\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleStep  *  * PARAMETERS:  WalkState       - Current walk  *              Op              - Current executing op (from aml interpreter)  *              OpcodeClass     - Class of the current AML Opcode  *  * RETURN:      Status  *  * DESCRIPTION: Called just before execution of an AML opcode.  *  ******************************************************************************/
 end_comment
 
@@ -302,6 +343,25 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_APPLICATION
+if|if
+condition|(
+name|AcpiGbl_DbThreadId
+operator|!=
+name|AcpiOsGetThreadId
+argument_list|()
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* Check the abort flag */
 if|if
 condition|(
@@ -987,6 +1047,11 @@ name|AcpiGbl_DbScopeNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
+comment|/* Initialize user commands loop */
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/*      * If configured for multi-thread support, the debug executor runs in      * a separate thread so that the front end can be in another address      * space, environment, or even another machine.      */
 if|if
 condition|(
@@ -1053,11 +1118,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Create the debug execution thread to execute commands */
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|FALSE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsExecute
 argument_list|(
-name|OSL_DEBUGGER_THREAD
+name|OSL_DEBUGGER_MAIN_THREAD
 argument_list|,
 name|AcpiDbExecuteThread
 argument_list|,
@@ -1083,12 +1152,24 @@ literal|"Could not start debugger thread"
 operator|)
 argument_list|)
 expr_stmt|;
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|TRUE
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|AcpiGbl_DbThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -1116,6 +1197,37 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Terminate the AML Debugger */
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_DebuggerConfiguration
+operator|&
+name|DEBUGGER_MULTI_THREADED
+condition|)
+block|{
+name|AcpiOsReleaseMutex
+argument_list|(
+name|AcpiGbl_DbCommandReady
+argument_list|)
+expr_stmt|;
+comment|/* Wait the AML Debugger threads */
+while|while
+condition|(
+operator|!
+name|AcpiGbl_DbThreadsTerminated
+condition|)
+block|{
+name|AcpiOsSleep
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|AcpiGbl_DbBuffer
@@ -1143,6 +1255,32 @@ begin_macro
 name|ACPI_EXPORT_SYMBOL
 argument_list|(
 argument|AcpiTerminateDebugger
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetDebuggerThreadId  *  * PARAMETERS:  ThreadId        - Debugger thread ID  *  * RETURN:      None  *  * DESCRIPTION: Set debugger thread ID  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiSetDebuggerThreadId
+parameter_list|(
+name|ACPI_THREAD_ID
+name|ThreadId
+parameter_list|)
+block|{
+name|AcpiGbl_DbThreadId
+operator|=
+name|ThreadId
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiSetDebuggerThreadId
 argument_list|)
 end_macro
 

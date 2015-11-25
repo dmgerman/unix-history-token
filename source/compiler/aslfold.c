@@ -176,7 +176,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlConstantWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Reduce an Op and its subtree to a constant if possible  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlConstantWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Reduce an Op and its subtree to a constant if possible.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -421,7 +421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlCheckForConstant  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check one Op for a type 3/4/5 AML opcode  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlCheckForConstant  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check one Op for a reducible type 3/4/5 AML opcode.  *              This is performed via a downward walk of the parse subtree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -451,6 +451,15 @@ name|ACPI_STATUS
 name|Status
 init|=
 name|AE_OK
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|NextOp
+decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
 decl_stmt|;
 name|WalkState
 operator|->
@@ -500,31 +509,6 @@ operator|.
 name|ParseOpName
 argument_list|)
 expr_stmt|;
-comment|/*      * TBD: Ignore buffer constants for now. The problem is that these      * constants have been transformed into RAW_DATA at this point, from      * the parse tree transform process which currently happens before      * the constant folding process. We may need to defer this transform      * for buffer until after the constant folding.      */
-if|if
-condition|(
-name|WalkState
-operator|->
-name|Opcode
-operator|==
-name|AML_BUFFER_OP
-condition|)
-block|{
-name|DbgPrint
-argument_list|(
-name|ASL_PARSE_OUTPUT
-argument_list|,
-literal|"\nBuffer+Buffer->Buffer constant reduction is not supported yet"
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_TYPE
-expr_stmt|;
-goto|goto
-name|CleanupAndExit
-goto|;
-block|}
 comment|/*      * These opcodes do not appear in the OpcodeInfo table, but      * they represent constants, so abort the constant walk now.      */
 if|if
 condition|(
@@ -576,6 +560,70 @@ goto|goto
 name|CleanupAndExit
 goto|;
 block|}
+comment|/*      * Search upwards for a possible Name() operator. This is done      * because a type 3/4/5 opcode within a Name() expression      * MUST be reduced to a simple constant.      */
+name|NextOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+expr_stmt|;
+while|while
+condition|(
+name|NextOp
+condition|)
+block|{
+comment|/* Finished if we find a Name() opcode */
+if|if
+condition|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_NAME_OP
+condition|)
+block|{
+break|break;
+block|}
+comment|/*          * Any "deferred" opcodes contain one or more TermArg parameters,          * and thus are not required to be folded to constants at compile          * time. This affects things like Buffer() and Package() objects.          * We just ignore them here. However, any sub-expressions can and          * will still be typechecked. Note: These are called the          * "deferred" opcodes in the AML interpreter.          */
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|NextOp
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_DEFER
+condition|)
+block|{
+name|NextOp
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+name|NextOp
+operator|=
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Parent
+expr_stmt|;
+block|}
 comment|/* Type 3/4/5 opcodes have the AML_CONSTANT flag set */
 if|if
 condition|(
@@ -591,7 +639,103 @@ name|AML_CONSTANT
 operator|)
 condition|)
 block|{
-comment|/* Not 3/4/5 opcode, but maybe can convert to STORE */
+comment|/*          * From the ACPI specification:          *          * "The Type 3/4/5 opcodes return a value and can be used in an          * expression that evaluates to a constant. These opcodes may be          * evaluated at ASL compile-time. To ensure that these opcodes          * will evaluate to a constant, the following rules apply: The          * term cannot have a destination (target) operand, and must have          * either a Type3Opcode, Type4Opcode, Type5Opcode, ConstExprTerm,          * Integer, BufferTerm, Package, or String for all arguments."          */
+comment|/*          * The value (second) operand for the Name() operator MUST          * reduce to a single constant, as per the ACPI specification          * (the operand is a DataObject). This also implies that there          * can be no target operand. Name() is the only ASL operator          * with a "DataObject" as an operand and is thus special-          * cased here.          */
+if|if
+condition|(
+name|NextOp
+condition|)
+comment|/* Inspect a Name() operator */
+block|{
+comment|/* Error if there is a target operand */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator|&
+name|NODE_IS_TARGET
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_INVALID_TARGET
+argument_list|,
+name|Op
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_TYPE
+expr_stmt|;
+block|}
+comment|/* Error if expression cannot be reduced (folded) */
+if|if
+condition|(
+operator|!
+operator|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator|&
+name|NODE_COULD_NOT_REDUCE
+operator|)
+condition|)
+block|{
+comment|/* Ensure only one error message per statement */
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator||=
+name|NODE_COULD_NOT_REDUCE
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"**** Could not reduce operands for NAME opcode ****\n"
+argument_list|)
+expr_stmt|;
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_CONSTANT_REQUIRED
+argument_list|,
+name|Op
+argument_list|,
+literal|"Constant is required for Name operator"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_TYPE
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|CleanupAndExit
+goto|;
+block|}
+comment|/* This is not a 3/4/5 opcode, but maybe can convert to STORE */
 if|if
 condition|(
 name|Op
@@ -621,7 +765,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"**** Not a Type 3/4/5 opcode (%s) ****"
+literal|"**** Not a Type 3/4/5 opcode or cannot reduce/fold (%s) ****\n"
 argument_list|,
 name|Op
 operator|->
@@ -630,6 +774,49 @@ operator|.
 name|ParseOpName
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_TYPE
+expr_stmt|;
+goto|goto
+name|CleanupAndExit
+goto|;
+block|}
+comment|/*      * TBD: Ignore buffer constants for now. The problem is that these      * constants have been transformed into RAW_DATA at this point, from      * the parse tree transform process which currently happens before      * the constant folding process. We may need to defer this transform      * for buffer until after the constant folding.      */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|Opcode
+operator|==
+name|AML_BUFFER_OP
+condition|)
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\nBuffer constant reduction is not supported yet\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NextOp
+condition|)
+comment|/* Found a Name() operator, error */
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_UNSUPPORTED
+argument_list|,
+name|Op
+argument_list|,
+literal|"Buffer expression cannot be reduced"
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AE_TYPE

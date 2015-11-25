@@ -563,7 +563,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Remember location in AML stream of the field unit opcode and operands --      * since the buffer and index operands must be evaluated.      */
+comment|/*      * Remember location in AML stream of the field unit opcode and operands      * -- since the buffer and index operands must be evaluated.      */
 name|SecondDesc
 operator|=
 name|ObjDesc
@@ -1993,7 +1993,7 @@ name|RegionNode
 operator|=
 name|RegionNode
 expr_stmt|;
-comment|/*      * Use Info.DataRegisterNode to store BankField Op      * It's safe because DataRegisterNode will never be used when create bank field      * We store AmlStart and AmlLength in the BankField Op for late evaluation      * Used in AcpiExPrepFieldValue(Info)      *      * TBD: Or, should we add a field in ACPI_CREATE_FIELD_INFO, like "void *ParentOp"?      */
+comment|/*      * Use Info.DataRegisterNode to store BankField Op      * It's safe because DataRegisterNode will never be used when create      * bank field \we store AmlStart and AmlLength in the BankField Op for      * late evaluation. Used in AcpiExPrepFieldValue(Info)      *      * TBD: Or, should we add a field in ACPI_CREATE_FIELD_INFO, like      * "void *ParentOp"?      */
 name|Info
 operator|.
 name|DataRegisterNode

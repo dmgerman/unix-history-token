@@ -82,9 +82,9 @@ expr_stmt|;
 comment|/* ACPI tables must be present */
 if|if
 condition|(
-operator|!
-name|AcpiTbTablesLoaded
-argument_list|()
+name|AcpiGbl_FadtIndex
+operator|==
+name|ACPI_INVALID_TABLE_INDEX
 condition|)
 block|{
 name|return_ACPI_STATUS

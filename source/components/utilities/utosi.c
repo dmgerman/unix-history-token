@@ -643,7 +643,7 @@ name|Name
 argument_list|)
 condition|)
 block|{
-comment|/* Found: name is in either the static list or was added at runtime */
+comment|/*              * Found: name is in either the static list              * or was added at runtime              */
 if|if
 condition|(
 name|NextInterface
@@ -694,7 +694,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * Interface is in static list. If marked invalid, then it                  * does not actually exist. Else, mark it invalid.                  */
+comment|/*                  * Interface is in static list. If marked invalid, then                  * it does not actually exist. Else, mark it invalid.                  */
 if|if
 condition|(
 name|NextInterface

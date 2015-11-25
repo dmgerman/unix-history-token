@@ -328,7 +328,7 @@ name|FullyQualified
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*      * For the internal name, the required length is 4 bytes per segment, plus      * 1 each for RootPrefix, MultiNamePrefixOp, segment count, trailing null      * (which is not really needed, but no there's harm in putting it there)      *      * strlen() + 1 covers the first NameSeg, which has no path separator      */
+comment|/*      * For the internal name, the required length is 4 bytes per segment,      * plus 1 each for RootPrefix, MultiNamePrefixOp, segment count,      * trailing null (which is not really needed, but no there's harm in      * putting it there)      *      * strlen() + 1 covers the first NameSeg, which has no path separator      */
 if|if
 condition|(
 name|ACPI_IS_ROOT_PREFIX

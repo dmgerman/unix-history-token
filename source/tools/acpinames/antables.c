@@ -34,7 +34,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|AeInitializeTableHeader
+name|AnInitializeTableHeader
 parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
@@ -106,13 +106,13 @@ value|(sizeof (ACPI_TABLE_XSDT) + \                                     ((BASE_X
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeInitializeTableHeader  *  * PARAMETERS:  Header          - A valid standard ACPI table header  *              Signature       - Signature to insert  *              Length          - Length of the table  *  * RETURN:      None. Header is modified.  *  * DESCRIPTION: Initialize the table header for a local ACPI table.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AnInitializeTableHeader  *  * PARAMETERS:  Header          - A valid standard ACPI table header  *              Signature       - Signature to insert  *              Length          - Length of the table  *  * RETURN:      None. Header is modified.  *  * DESCRIPTION: Initialize the table header for a local ACPI table.  *  *****************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|AeInitializeTableHeader
+name|AnInitializeTableHeader
 parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
@@ -218,21 +218,23 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeBuildLocalTables  *  * PARAMETERS:  TableCount      - Number of tables on the command line  *              TableList       - List of actual tables from files  *  * RETURN:      Status  *  * DESCRIPTION: Build a complete ACPI table chain, with a local RSDP, XSDT,  *              FADT, FACS, and the input DSDT/SSDT.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AnBuildLocalTables  *  * PARAMETERS:  TableCount      - Number of tables on the command line  *              TableList       - List of actual tables from files  *  * RETURN:      Status  *  * DESCRIPTION: Build a complete ACPI table chain, with a local RSDP, XSDT,  *              FADT, FACS, and the input DSDT/SSDT.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AeBuildLocalTables
+name|AnBuildLocalTables
 parameter_list|(
-name|UINT32
-name|TableCount
-parameter_list|,
-name|AE_TABLE_DESC
+name|ACPI_NEW_TABLE_DESC
 modifier|*
 name|TableList
 parameter_list|)
 block|{
+name|UINT32
+name|TableCount
+init|=
+literal|0
+decl_stmt|;
 name|ACPI_PHYSICAL_ADDRESS
 name|DsdtAddress
 init|=
@@ -241,7 +243,7 @@ decl_stmt|;
 name|UINT32
 name|XsdtSize
 decl_stmt|;
-name|AE_TABLE_DESC
+name|ACPI_NEW_TABLE_DESC
 modifier|*
 name|NextTable
 decl_stmt|;
@@ -266,6 +268,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
 name|NextTable
@@ -276,7 +279,8 @@ name|Signature
 argument_list|,
 name|ACPI_SIG_DSDT
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
 name|NextTable
@@ -290,7 +294,7 @@ argument_list|)
 condition|)
 block|{
 name|TableCount
-operator|--
+operator|++
 expr_stmt|;
 block|}
 name|NextTable
@@ -541,7 +545,7 @@ name|ACPI_TABLE_XSDT
 argument_list|)
 expr_stmt|;
 comment|/* Set checksums for both XSDT and RSDP */
-name|AeInitializeTableHeader
+name|AnInitializeTableHeader
 argument_list|(
 operator|(
 name|void
@@ -876,7 +880,7 @@ name|Pm1EventLength
 argument_list|)
 expr_stmt|;
 block|}
-name|AeInitializeTableHeader
+name|AnInitializeTableHeader
 argument_list|(
 operator|(
 name|void
