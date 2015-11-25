@@ -2577,6 +2577,14 @@ operator|->
 name|t_sndzerowin
 argument_list|)
 expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"{P:/%21s}"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
