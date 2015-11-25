@@ -293,6 +293,7 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* Work around incorrect O_ACCMODE. */
 if|if
 condition|(
 operator|(
@@ -306,7 +307,11 @@ operator|&&
 operator|(
 name|dflags
 operator|&
+operator|(
 name|O_ACCMODE
+operator||
+name|O_EXEC
+operator|)
 operator|)
 operator|!=
 operator|(

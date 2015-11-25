@@ -194,11 +194,16 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* Work around incorrect O_ACCMODE. */
 name|tmp
 operator|=
 name|fdflags
 operator|&
+operator|(
 name|O_ACCMODE
+operator||
+name|O_EXEC
+operator|)
 expr_stmt|;
 if|if
 condition|(
