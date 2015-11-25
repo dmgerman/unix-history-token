@@ -512,15 +512,9 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_PROM
 expr_stmt|;
-comment|/* 	 * Only listen to all beacons if we're scanning. 	 * 	 * Otherwise we only really need to hear beacons from 	 * our own BSSID. 	 */
+comment|/* 	 * Only listen to all beacons if we're scanning. 	 * 	 * Otherwise we only really need to hear beacons from 	 * our own BSSID. 	 * 	 * IBSS? software beacon miss? Just receive all beacons. 	 * We need to hear beacons/probe requests from everyone so 	 * we can merge ibss. 	 */
 if|if
 condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_STA
-operator|||
 name|ic
 operator|->
 name|ic_opmode
@@ -530,6 +524,21 @@ operator|||
 name|sc
 operator|->
 name|sc_swbmiss
+condition|)
+block|{
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_BEACON
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_STA
 condition|)
 block|{
 if|if
