@@ -109,6 +109,20 @@ name|HHOOK_TYPE_SOCKET
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|HHOOK_TYPE_IPSEC_IN
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|HHOOK_TYPE_IPSEC_OUT
+value|4
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|helper
