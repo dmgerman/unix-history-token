@@ -21209,6 +21209,17 @@ name|ifmr
 operator|.
 name|ifm_current
 operator|&
+name|IFM_IEEE80211_IBSS
+condition|)
+return|return
+name|IEEE80211_M_IBSS
+return|;
+if|if
+condition|(
+name|ifmr
+operator|.
+name|ifm_current
+operator|&
 name|IFM_IEEE80211_MONITOR
 condition|)
 return|return
