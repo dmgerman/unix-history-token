@@ -340,6 +340,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 name|char
 name|c
 init|=
