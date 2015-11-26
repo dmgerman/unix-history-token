@@ -21,6 +21,20 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_imx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Common functions, implemented in imx_machdep.c. */
 end_comment
@@ -41,6 +55,16 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|void
+name|imx_wdog_init_last_reset
+parameter_list|(
+name|vm_offset_t
+name|_wdsr_phys
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* From here down, routines are implemented in imxNN_machdep.c. */
