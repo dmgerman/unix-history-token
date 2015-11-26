@@ -7841,6 +7841,10 @@ name|old
 decl_stmt|;
 name|char
 modifier|*
+name|ep
+decl_stmt|;
+name|char
+modifier|*
 name|fp
 init|=
 name|NULL
@@ -7870,6 +7874,17 @@ condition|(
 name|old
 condition|)
 block|{
+name|ep
+operator|=
+name|old
+operator|+
+name|strlen
+argument_list|(
+name|old
+argument_list|)
+operator|-
+name|name_len
+expr_stmt|;
 comment|/* does it contain name? */
 for|for
 control|(
@@ -7898,6 +7913,14 @@ condition|)
 name|old
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|old
+operator|>=
+name|ep
+condition|)
+break|break;
+comment|/* cannot contain name */
 if|if
 condition|(
 name|memcmp
