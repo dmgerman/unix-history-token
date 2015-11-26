@@ -9198,6 +9198,14 @@ operator|)
 operator|==
 name|NULL
 operator|)
+operator|||
+operator|(
+operator|!
+name|key_havesp
+argument_list|(
+name|IPSEC_DIR_OUTBOUND
+argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

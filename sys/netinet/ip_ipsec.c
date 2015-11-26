@@ -781,6 +781,17 @@ name|m_tag
 modifier|*
 name|mtag
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|key_havesp
+argument_list|(
+name|IPSEC_DIR_OUTBOUND
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* 	 * Check the security policy (SP) for the packet and, if 	 * required, do IPsec-related processing.  There are two 	 * cases here; the first time a packet is sent through 	 * it will be untagged and handled by ipsec4_checkpolicy. 	 * If the packet is resubmitted to ip_output (e.g. after 	 * AH, ESP, etc. processing), there will be a tag to bypass 	 * the lookup and related policy checking. 	 */
 name|mtag
 operator|=
