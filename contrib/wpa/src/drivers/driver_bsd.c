@@ -5672,6 +5672,22 @@ return|return
 operator|-
 literal|1
 return|;
+comment|/* 	 * NB: interface must be marked UP for association 	 * or scanning (ap_scan=2) 	 */
+if|if
+condition|(
+name|bsd_ctrl_iface
+argument_list|(
+name|drv
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|os_memset
 argument_list|(
 operator|&
