@@ -25,6 +25,52 @@ directive|include
 file|<rdma/ib_mad.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAX_U32
+value|0xffffffffULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_U16
+value|0xffffUL
+end_define
+
+begin_comment
+comment|/* Counters should be saturate once they reach their maximum value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSIGN_32BIT_COUNTER
+parameter_list|(
+name|counter
+parameter_list|,
+name|value
+parameter_list|)
+value|do {	\ 	if ((value)> MAX_U32)				\ 		counter = cpu_to_be32(MAX_U32);		\ 	else						\ 		counter = cpu_to_be32(value);		\ } while (0)
+end_define
+
+begin_comment
+comment|/* Counters should be saturate once they reach their maximum value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSIGN_16BIT_COUNTER
+parameter_list|(
+name|counter
+parameter_list|,
+name|value
+parameter_list|)
+value|do {	\ 	if ((value)> MAX_U16)				\ 		counter = cpu_to_be16(MAX_U16);		\ 	else						\ 		counter = cpu_to_be16(value);		\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * PMA class portinfo capability mask bits  */
 end_comment

@@ -494,6 +494,16 @@ name|pvh_global_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_paddr_t
+name|dmap_phys_base
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The start of the dmap region */
+end_comment
+
 begin_comment
 comment|/*  * Data for the pv entry allocation mechanism  */
 end_comment
@@ -1727,6 +1737,9 @@ name|pmap_bootstrap_dmap
 parameter_list|(
 name|vm_offset_t
 name|l1pt
+parameter_list|,
+name|vm_paddr_t
+name|kernstart
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -1742,6 +1755,15 @@ decl_stmt|;
 name|u_int
 name|l1_slot
 decl_stmt|;
+name|pa
+operator|=
+name|dmap_phys_base
+operator|=
+name|kernstart
+operator|&
+operator|~
+name|L1_OFFSET
+expr_stmt|;
 name|va
 operator|=
 name|DMAP_MIN_ADDRESS
@@ -1763,9 +1785,6 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|pa
-operator|=
-literal|0
 init|;
 name|va
 operator|<
@@ -2237,6 +2256,11 @@ name|msgbufpv
 decl_stmt|;
 name|vm_paddr_t
 name|pa
+decl_stmt|,
+name|min_pa
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|kern_delta
 operator|=
@@ -2304,10 +2328,72 @@ argument_list|,
 literal|"pmap pv global"
 argument_list|)
 expr_stmt|;
+comment|/* Assume the address we were loaded to is a valid physical address */
+name|min_pa
+operator|=
+name|KERNBASE
+operator|-
+name|kern_delta
+expr_stmt|;
+comment|/* 	 * Find the minimum physical address. physmap is sorted, 	 * but may contain empty ranges. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|physmap_idx
+operator|*
+literal|2
+operator|)
+condition|;
+name|i
+operator|+=
+literal|2
+control|)
+block|{
+if|if
+condition|(
+name|physmap
+index|[
+name|i
+index|]
+operator|==
+name|physmap
+index|[
+name|i
+operator|+
+literal|1
+index|]
+condition|)
+continue|continue;
+if|if
+condition|(
+name|physmap
+index|[
+name|i
+index|]
+operator|<=
+name|min_pa
+condition|)
+name|min_pa
+operator|=
+name|physmap
+index|[
+name|i
+index|]
+expr_stmt|;
+break|break;
+block|}
 comment|/* Create a direct map region early so we can use it for pa -> va */
 name|pmap_bootstrap_dmap
 argument_list|(
 name|l1pt
+argument_list|,
+name|min_pa
 argument_list|)
 expr_stmt|;
 name|va

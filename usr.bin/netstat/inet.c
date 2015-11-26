@@ -342,6 +342,9 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2144,7 +2147,20 @@ operator|)
 condition|?
 literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-18.18s}"
 else|:
+operator|(
+operator|(
+operator|!
+name|Wflag
+operator|||
+name|af1
+operator|==
+name|AF_INET
+operator|)
+condition|?
 literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-22.22s}"
+else|:
+literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-45.45s}"
+operator|)
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2169,7 +2185,20 @@ operator|)
 condition|?
 literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-18.18s} {T:/%s}"
 else|:
+operator|(
+operator|(
+operator|!
+name|Wflag
+operator|||
+name|af1
+operator|==
+name|AF_INET
+operator|)
+condition|?
 literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-22.22s} {T:/%s}"
+else|:
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-45.45s} {T:/%s}"
+operator|)
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2197,7 +2226,20 @@ operator|)
 condition|?
 literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-18.18s} {T:/%-18.18s}"
 else|:
+operator|(
+operator|(
+operator|!
+name|Wflag
+operator|||
+name|af1
+operator|==
+name|AF_INET
+operator|)
+condition|?
 literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-22.22s} {T:/%-22.22s}"
+else|:
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-45.45s} {T:/%-45.45s}"
+operator|)
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2535,6 +2577,14 @@ operator|->
 name|t_sndzerowin
 argument_list|)
 expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"{P:/%21s}"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2590,6 +2640,8 @@ argument_list|,
 name|name
 argument_list|,
 literal|1
+argument_list|,
+name|af1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2616,6 +2668,8 @@ argument_list|,
 name|name
 argument_list|,
 literal|1
+argument_list|,
+name|af1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2723,6 +2777,8 @@ argument_list|,
 name|name
 argument_list|,
 literal|1
+argument_list|,
+name|af1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2749,6 +2805,8 @@ argument_list|,
 name|name
 argument_list|,
 literal|0
+argument_list|,
+name|af1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2848,6 +2906,8 @@ argument_list|,
 name|name
 argument_list|,
 literal|0
+argument_list|,
+name|af1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2880,6 +2940,8 @@ operator|!=
 name|inp
 operator|->
 name|inp_fport
+argument_list|,
+name|af1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6233,6 +6295,10 @@ name|proto
 parameter_list|,
 name|int
 name|num_port
+parameter_list|,
+specifier|const
+name|int
+name|af1
 parameter_list|)
 block|{
 name|struct
@@ -6381,7 +6447,20 @@ operator|)
 condition|?
 literal|18
 else|:
+operator|(
+operator|(
+operator|!
+name|Wflag
+operator|||
+name|af1
+operator|==
+name|AF_INET
+operator|)
+condition|?
 literal|22
+else|:
+literal|45
+operator|)
 expr_stmt|;
 if|if
 condition|(

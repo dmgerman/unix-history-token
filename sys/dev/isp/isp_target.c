@@ -3206,7 +3206,7 @@ case|case
 name|ASYNC_LIP_ERROR
 case|:
 case|case
-name|ASYNC_LIP_F8
+name|ASYNC_LIP_NOS_OLS_RECV
 case|:
 case|case
 name|ASYNC_LIP_OCCURRED
