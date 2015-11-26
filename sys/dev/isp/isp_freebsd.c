@@ -293,20 +293,6 @@ name|isp_gdt_task
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|timeout_t
-name|isp_ldt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|task_fn_t
-name|isp_ldt_task
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
