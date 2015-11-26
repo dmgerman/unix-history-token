@@ -595,6 +595,7 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
+operator|*
 name|sc
 operator|->
 name|gic_res
