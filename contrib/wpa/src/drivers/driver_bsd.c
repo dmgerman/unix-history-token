@@ -5417,9 +5417,16 @@ break|break;
 case|case
 name|IEEE80211_MODE_IBSS
 case|:
+comment|/* 		 * Ref bin/203086 - FreeBSD's net80211 currently uses 		 * IFM_IEEE80211_ADHOC. 		 */
+if|#
+directive|if
+literal|0
+block|mode = IFM_IEEE80211_IBSS;
+endif|#
+directive|endif
 name|mode
 operator|=
-name|IFM_IEEE80211_IBSS
+name|IFM_IEEE80211_ADHOC
 expr_stmt|;
 break|break;
 case|case
