@@ -23365,6 +23365,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|sctp_send_stream_reset_out_if_possible
@@ -23374,11 +23375,14 @@ argument_list|,
 name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
+block|{
 name|sctp_chunk_output
 argument_list|(
 name|inp
@@ -23390,6 +23394,15 @@ argument_list|,
 name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * For outgoing streams don't report any 				 * problems in sending the request to the 				 * application. XXX: Double check resetting 				 * incoming streams. 				 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
