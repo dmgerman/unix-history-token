@@ -120,7 +120,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Kernel per-CPU data state.  We cache this stuff on the first  * access.	  *  * XXXRW: Possibly, this (and kvmpcpu_nl) should be per-kvm_t, in case the  * consumer has multiple handles in flight to differently configured  * kernels/crashdumps.  */
+comment|/*  * Kernel per-CPU data state.  We cache this stuff on the first  * access.  *  * XXXRW: Possibly, this (and kvmpcpu_nl) should be per-kvm_t, in case the  * consumer has multiple handles in flight to differently configured  * kernels/crashdumps.  */
 end_comment
 
 begin_decl_stmt

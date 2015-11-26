@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * AMD64 machine dependent routines for kvm and minidumps.   */
+comment|/*  * AMD64 machine dependent routines for kvm and minidumps.  */
 end_comment
 
 begin_include
