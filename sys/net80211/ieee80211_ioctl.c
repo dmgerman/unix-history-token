@@ -14595,6 +14595,11 @@ name|i_val
 condition|)
 block|{
 case|case
+literal|0
+case|:
+comment|/* wpa_supplicant calls this to clear the WPA config */
+break|break;
+case|case
 literal|1
 case|:
 if|if
