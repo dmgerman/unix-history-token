@@ -3753,19 +3753,13 @@ operator||
 operator|(
 literal|1
 operator|<<
-name|TLV_PORT_MODE_40G
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
 name|TLV_PORT_MODE_10G_10G
 operator|)
 operator||
 operator|(
 literal|1
 operator|<<
-name|TLV_PORT_MODE_40G_40G
+name|TLV_PORT_MODE_10G_10G_10G_10G
 operator|)
 block|,
 literal|1
@@ -3778,7 +3772,13 @@ block|,
 operator|(
 literal|1
 operator|<<
-name|TLV_PORT_MODE_10G_10G_10G_10G
+name|TLV_PORT_MODE_40G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_40G_40G
 operator|)
 operator||
 operator|(
@@ -3795,6 +3795,7 @@ operator|)
 block|,
 literal|2
 block|}
+comment|/* 	 * NOTE: Medford modes will require 4 outputs per port: 	 *	TLV_PORT_MODE_10G_10G_10G_10G_Q 	 *	TLV_PORT_MODE_10G_10G_10G_10G_Q2 	 * The Q2 mode routes outputs to external port 2. Support for this 	 * will require a new field specifying the number to add after 	 * scaling by stride. This is fixed at 1 currently. 	 */
 block|}
 struct|;
 end_struct
