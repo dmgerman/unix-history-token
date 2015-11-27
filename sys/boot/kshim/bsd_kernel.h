@@ -2420,6 +2420,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bus_space_subregion
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+name|nbshp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* BUS SPACE API */
 end_comment
