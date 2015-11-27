@@ -2984,9 +2984,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|fprintf
 argument_list|(
-literal|"Could not open file\n"
+name|stderr
+argument_list|,
+literal|"Could not open %s for reading\n"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 if|if
