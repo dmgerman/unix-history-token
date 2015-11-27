@@ -3644,6 +3644,11 @@ name|fail3
 goto|;
 block|}
 comment|/* Set up the new descriptor queue */
+operator|*
+name|addedp
+operator|=
+literal|0
+expr_stmt|;
 name|EFX_POPULATE_OWORD_6
 argument_list|(
 name|oword
