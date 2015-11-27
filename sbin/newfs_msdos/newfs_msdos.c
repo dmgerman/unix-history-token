@@ -1070,31 +1070,92 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newfs_msdos [ -options ] special [disktype]\n"
+literal|"usage: %s [ -options ] special [disktype]\n"
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"where the options are:\n"
-literal|"\t-@ create file system at specified offset\n"
-literal|"\t-B get bootstrap from file\n"
-literal|"\t-C create image file with specified size\n"
-literal|"\t-F FAT type (12, 16, or 32)\n"
-literal|"\t-I volume ID\n"
-literal|"\t-L volume label\n"
-literal|"\t-N don't create file system: just print out parameters\n"
-literal|"\t-O OEM string\n"
-literal|"\t-S bytes/sector\n"
-literal|"\t-a sectors/FAT\n"
-literal|"\t-b block size\n"
-literal|"\t-c sectors/cluster\n"
-literal|"\t-e root directory entries\n"
-literal|"\t-f standard format\n"
-literal|"\t-h drive heads\n"
-literal|"\t-i file system info sector\n"
-literal|"\t-k backup boot sector\n"
-literal|"\t-m media descriptor\n"
-literal|"\t-n number of FATs\n"
-literal|"\t-o hidden sectors\n"
-literal|"\t-r reserved sectors\n"
-literal|"\t-s file system size (sectors)\n"
-literal|"\t-u sectors/track\n"
+argument_list|)
+expr_stmt|;
+specifier|static
+struct|struct
+block|{
+name|char
+name|o
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|h
+decl_stmt|;
+block|}
+name|opts
+index|[]
+init|=
+block|{
+define|#
+directive|define
+name|AOPT
+parameter_list|(
+name|_opt
+parameter_list|,
+name|_type
+parameter_list|,
+name|_name
+parameter_list|,
+name|_min
+parameter_list|,
+name|_desc
+parameter_list|)
+value|{ _opt, _desc },
+name|ALLOPTS
+undef|#
+directive|undef
+name|AOPT
+block|}
+struct|;
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|nitems
+argument_list|(
+name|opts
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-%c %s\n"
+argument_list|,
+name|opts
+index|[
+name|i
+index|]
+operator|.
+name|o
+argument_list|,
+name|opts
+index|[
+name|i
+index|]
+operator|.
+name|h
 argument_list|)
 expr_stmt|;
 name|exit
