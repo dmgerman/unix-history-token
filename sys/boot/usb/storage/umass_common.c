@@ -238,6 +238,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
 name|memset
 argument_list|(
 operator|&
@@ -251,6 +254,8 @@ name|umass_uaa
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
