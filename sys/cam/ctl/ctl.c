@@ -50381,11 +50381,15 @@ name|softc
 operator|->
 name|is_single
 operator|||
+operator|(
+name|port
+operator|&&
 name|port
 operator|->
 name|status
 operator|&
 name|CTL_PORT_STATUS_HA_SHARED
+operator|)
 condition|)
 name|g
 operator|=
