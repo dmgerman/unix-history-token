@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<kvm.h>
 end_include
 
@@ -152,7 +146,7 @@ name|vnet
 name|vnet
 decl_stmt|;
 name|struct
-name|nlist
+name|kvm_nlist
 name|nl
 index|[]
 init|=
@@ -257,6 +251,21 @@ directive|endif
 name|lwpid_t
 name|dumptid
 decl_stmt|;
+comment|/* 	 * XXX: This only works for native kernels for now. 	 */
+if|if
+condition|(
+operator|!
+name|kvm_native
+argument_list|(
+name|kd
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Locate and cache locations of important symbols 	 * using the internal version of _kvm_nlist, turning 	 * off initialization to avoid recursion in case of 	 * unresolveable symbols. 	 */
 if|if
 condition|(
@@ -896,7 +905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether the vnet module has been initialized sucessfully  * or not, intialize it if permitted.  */
+comment|/*  * Check whether the vnet module has been initialized sucessfully  * or not, initialize it if permitted.  */
 end_comment
 
 begin_function
@@ -953,14 +962,14 @@ comment|/*  * Check whether the value is within the vnet symbol range and  * onl
 end_comment
 
 begin_function
-name|uintptr_t
+name|kvaddr_t
 name|_kvm_vnet_validaddr
 parameter_list|(
 name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
-name|uintptr_t
+name|kvaddr_t
 name|value
 parameter_list|)
 block|{

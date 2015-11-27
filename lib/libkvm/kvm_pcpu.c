@@ -928,7 +928,7 @@ name|kd
 parameter_list|)
 block|{
 name|struct
-name|nlist
+name|kvm_nlist
 name|nl
 index|[]
 init|=
@@ -997,6 +997,21 @@ decl_stmt|;
 name|u_int
 name|dpcpu_maxcpus
 decl_stmt|;
+comment|/* 	 * XXX: This only works for native kernels for now. 	 */
+if|if
+condition|(
+operator|!
+name|kvm_native
+argument_list|(
+name|kd
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Locate and cache locations of important symbols using the internal 	 * version of _kvm_nlist, turning off initialization to avoid 	 * recursion in case of unresolveable symbols. 	 */
 if|if
 condition|(
@@ -1230,14 +1245,14 @@ comment|/*  * Check whether the value is within the dpcpu symbol range and only 
 end_comment
 
 begin_function
-name|uintptr_t
+name|kvaddr_t
 name|_kvm_dpcpu_validaddr
 parameter_list|(
 name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
-name|uintptr_t
+name|kvaddr_t
 name|value
 parameter_list|)
 block|{
@@ -1393,6 +1408,20 @@ name|int
 name|cpu
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|kvm_native
+argument_list|(
+name|kd
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 name|kvm_read
