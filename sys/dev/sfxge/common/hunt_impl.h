@@ -572,7 +572,7 @@ name|efsys_stat_t
 operator|*
 name|stat
 argument_list|,
-name|__out_opt
+name|__inout_opt
 name|uint32_t
 operator|*
 name|generationp
