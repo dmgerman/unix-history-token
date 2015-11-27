@@ -2098,9 +2098,15 @@ if|if
 condition|(
 name|cksummed
 condition|)
+block|{
+name|rc
+operator|=
+name|EFAULT
+expr_stmt|;
 goto|goto
 name|fail2
 goto|;
+block|}
 if|if
 condition|(
 operator|(
