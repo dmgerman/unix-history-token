@@ -332,20 +332,16 @@ name|int
 name|third_tiled
 decl_stmt|;
 comment|/* buffer object handles for the static buffers.  May change 	 * over the lifetime of the client, though it doesn't in our current 	 * implementation. 	 */
-name|unsigned
-name|int
+name|__u32
 name|front_bo_handle
 decl_stmt|;
-name|unsigned
-name|int
+name|__u32
 name|back_bo_handle
 decl_stmt|;
-name|unsigned
-name|int
+name|__u32
 name|third_bo_handle
 decl_stmt|;
-name|unsigned
-name|int
+name|__u32
 name|depth_bo_handle
 decl_stmt|;
 block|}
@@ -1742,7 +1738,7 @@ typedef|typedef
 struct|struct
 name|drm_i915_hws_addr
 block|{
-name|uint64_t
+name|__u64
 name|addr
 decl_stmt|;
 block|}
@@ -1802,11 +1798,11 @@ struct|struct
 name|drm_i915_gem_init
 block|{
 comment|/** 	 * Beginning offset in the GTT to be managed by the DRM memory 	 * manager. 	 */
-name|uint64_t
+name|__u64
 name|gtt_start
 decl_stmt|;
 comment|/** 	 * Ending offset in the GTT to be managed by the DRM memory 	 * manager. 	 */
-name|uint64_t
+name|__u64
 name|gtt_end
 decl_stmt|;
 block|}
@@ -1818,14 +1814,14 @@ struct|struct
 name|drm_i915_gem_create
 block|{
 comment|/** 	 * Requested size for the object. 	 * 	 * The (page-aligned) allocated size for the object will be returned. 	 */
-name|uint64_t
+name|__u64
 name|size
 decl_stmt|;
 comment|/** 	 * Returned handle for the object. 	 * 	 * Object handles are nonzero. 	 */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 block|}
@@ -1837,22 +1833,22 @@ struct|struct
 name|drm_i915_gem_pread
 block|{
 comment|/** Handle for the object being read. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 comment|/** Offset into the object to read from */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 comment|/** Length of data to read */
-name|uint64_t
+name|__u64
 name|size
 decl_stmt|;
 comment|/** Pointer to write the data into. */
-name|uint64_t
+name|__u64
 name|data_ptr
 decl_stmt|;
 comment|/* void *, but pointers are not 32/64 compatible */
@@ -1865,22 +1861,22 @@ struct|struct
 name|drm_i915_gem_pwrite
 block|{
 comment|/** Handle for the object being written to. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 comment|/** Offset into the object to write to */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 comment|/** Length of data to write */
-name|uint64_t
+name|__u64
 name|size
 decl_stmt|;
 comment|/** Pointer to read the data from. */
-name|uint64_t
+name|__u64
 name|data_ptr
 decl_stmt|;
 comment|/* void *, but pointers are not 32/64 compatible */
@@ -1893,22 +1889,22 @@ struct|struct
 name|drm_i915_gem_mmap
 block|{
 comment|/** Handle for the object being mapped. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 comment|/** Offset in the object to map. */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 comment|/** 	 * Length of data to map. 	 * 	 * The value will be page-aligned. 	 */
-name|uint64_t
+name|__u64
 name|size
 decl_stmt|;
 comment|/** Returned pointer the data was mapped at */
-name|uint64_t
+name|__u64
 name|addr_ptr
 decl_stmt|;
 comment|/* void *, but pointers are not 32/64 compatible */
@@ -1921,14 +1917,14 @@ struct|struct
 name|drm_i915_gem_mmap_gtt
 block|{
 comment|/** Handle for the object being mapped. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 comment|/** 	 * Fake offset to use for subsequent mmap call 	 * 	 * This is a fixed-size type for 32/64 compatibility. 	 */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 block|}
@@ -1940,15 +1936,15 @@ struct|struct
 name|drm_i915_gem_set_domain
 block|{
 comment|/** Handle for the object */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** New read domains */
-name|uint32_t
+name|__u32
 name|read_domains
 decl_stmt|;
 comment|/** New write domain */
-name|uint32_t
+name|__u32
 name|write_domain
 decl_stmt|;
 block|}
@@ -1960,7 +1956,7 @@ struct|struct
 name|drm_i915_gem_sw_finish
 block|{
 comment|/** Handle for the object */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 block|}
@@ -1972,27 +1968,27 @@ struct|struct
 name|drm_i915_gem_relocation_entry
 block|{
 comment|/** 	 * Handle of the buffer being pointed to by this relocation entry. 	 * 	 * It's appealing to make this be an index into the mm_validate_entry 	 * list to refer to the buffer, but this allows the driver to create 	 * a relocation list for state buffers and not re-write it per 	 * exec using the buffer. 	 */
-name|uint32_t
+name|__u32
 name|target_handle
 decl_stmt|;
 comment|/** 	 * Value to be added to the offset of the target buffer to make up 	 * the relocation entry. 	 */
-name|uint32_t
+name|__u32
 name|delta
 decl_stmt|;
 comment|/** Offset in the buffer the relocation entry will be written into */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 comment|/** 	 * Offset value of the target buffer that the relocation entry was last 	 * written as. 	 * 	 * If the buffer has the same offset as last time, we can skip syncing 	 * and writing the relocation.  This value is written back out by 	 * the execbuffer ioctl when the relocation is written. 	 */
-name|uint64_t
+name|__u64
 name|presumed_offset
 decl_stmt|;
 comment|/** 	 * Target memory domains read by this operation. 	 */
-name|uint32_t
+name|__u32
 name|read_domains
 decl_stmt|;
 comment|/** 	 * Target memory domains written by this operation. 	 * 	 * Note that only one domain may be written by the whole 	 * execbuffer operation, so that where there are conflicts, 	 * the application will get -EINVAL back. 	 */
-name|uint32_t
+name|__u32
 name|write_domain
 decl_stmt|;
 block|}
@@ -2089,23 +2085,23 @@ struct|struct
 name|drm_i915_gem_exec_object
 block|{
 comment|/** 	 * User's handle for a buffer to be bound into the GTT for this 	 * operation. 	 */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** Number of relocations to be performed on this buffer */
-name|uint32_t
+name|__u32
 name|relocation_count
 decl_stmt|;
 comment|/** 	 * Pointer to array of struct drm_i915_gem_relocation_entry containing 	 * the relocations to be performed in this buffer. 	 */
-name|uint64_t
+name|__u64
 name|relocs_ptr
 decl_stmt|;
 comment|/** Required alignment in graphics aperture */
-name|uint64_t
+name|__u64
 name|alignment
 decl_stmt|;
 comment|/** 	 * Returned value of the updated offset of the object, for future 	 * presumed_offset writes. 	 */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 block|}
@@ -2117,30 +2113,30 @@ struct|struct
 name|drm_i915_gem_execbuffer
 block|{
 comment|/** 	 * List of buffers to be validated with their relocations to be 	 * performend on them. 	 * 	 * This is a pointer to an array of struct drm_i915_gem_validate_entry. 	 * 	 * These buffers must be listed in an order such that all relocations 	 * a buffer is performing refer to buffers that have already appeared 	 * in the validate list. 	 */
-name|uint64_t
+name|__u64
 name|buffers_ptr
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|buffer_count
 decl_stmt|;
 comment|/** Offset in the batchbuffer to start execution from. */
-name|uint32_t
+name|__u32
 name|batch_start_offset
 decl_stmt|;
 comment|/** Bytes used in batchbuffer from batch_start_offset */
-name|uint32_t
+name|__u32
 name|batch_len
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|DR1
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|DR4
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|num_cliprects
 decl_stmt|;
-name|uint64_t
+name|__u64
 name|cliprects_ptr
 decl_stmt|;
 comment|/* struct drm_clip_rect *cliprects */
@@ -2153,37 +2149,37 @@ struct|struct
 name|drm_i915_gem_exec_object2
 block|{
 comment|/** 	 * User's handle for a buffer to be bound into the GTT for this 	 * operation. 	 */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** Number of relocations to be performed on this buffer */
-name|uint32_t
+name|__u32
 name|relocation_count
 decl_stmt|;
 comment|/** 	 * Pointer to array of struct drm_i915_gem_relocation_entry containing 	 * the relocations to be performed in this buffer. 	 */
-name|uint64_t
+name|__u64
 name|relocs_ptr
 decl_stmt|;
 comment|/** Required alignment in graphics aperture */
-name|uint64_t
+name|__u64
 name|alignment
 decl_stmt|;
 comment|/** 	 * Returned value of the updated offset of the object, for future 	 * presumed_offset writes. 	 */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 define|#
 directive|define
 name|EXEC_OBJECT_NEEDS_FENCE
 value|(1<<0)
-name|uint64_t
+name|__u64
 name|flags
 decl_stmt|;
-name|uint64_t
+name|__u64
 name|rsvd1
 decl_stmt|;
 comment|/* now used for context info */
-name|uint64_t
+name|__u64
 name|rsvd2
 decl_stmt|;
 block|}
@@ -2195,31 +2191,31 @@ struct|struct
 name|drm_i915_gem_execbuffer2
 block|{
 comment|/** 	 * List of gem_exec_object2 structs 	 */
-name|uint64_t
+name|__u64
 name|buffers_ptr
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|buffer_count
 decl_stmt|;
 comment|/** Offset in the batchbuffer to start execution from. */
-name|uint32_t
+name|__u32
 name|batch_start_offset
 decl_stmt|;
 comment|/** Bytes used in batchbuffer from batch_start_offset */
-name|uint32_t
+name|__u32
 name|batch_len
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|DR1
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|DR4
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|num_cliprects
 decl_stmt|;
 comment|/** This is a struct drm_clip_rect *cliprects */
-name|uint64_t
+name|__u64
 name|cliprects_ptr
 decl_stmt|;
 define|#
@@ -2261,13 +2257,13 @@ directive|define
 name|I915_EXEC_CONSTANTS_REL_SURFACE
 value|(2<<6)
 comment|/* gen4/5 only */
-name|uint64_t
+name|__u64
 name|flags
 decl_stmt|;
-name|uint64_t
+name|__u64
 name|rsvd1
 decl_stmt|;
-name|uint64_t
+name|__u64
 name|rsvd2
 decl_stmt|;
 block|}
@@ -2321,18 +2317,18 @@ struct|struct
 name|drm_i915_gem_pin
 block|{
 comment|/** Handle of the buffer to be pinned. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 comment|/** alignment required within the aperture */
-name|uint64_t
+name|__u64
 name|alignment
 decl_stmt|;
 comment|/** Returned GTT offset of the buffer. */
-name|uint64_t
+name|__u64
 name|offset
 decl_stmt|;
 block|}
@@ -2344,10 +2340,10 @@ struct|struct
 name|drm_i915_gem_unpin
 block|{
 comment|/** Handle of the buffer to be unpinned. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 block|}
@@ -2359,11 +2355,11 @@ struct|struct
 name|drm_i915_gem_busy
 block|{
 comment|/** Handle of the buffer to check for busy */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** Return busy status (1 if busy, 0 if idle) */
-name|uint32_t
+name|__u32
 name|busy
 decl_stmt|;
 block|}
@@ -2460,19 +2456,19 @@ struct|struct
 name|drm_i915_gem_set_tiling
 block|{
 comment|/** Handle of the buffer to have its tiling state updated */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** 	 * Tiling mode for the object (I915_TILING_NONE, I915_TILING_X, 	 * I915_TILING_Y). 	 * 	 * This value is to be set on request, and will be updated by the 	 * kernel on successful return with the actual chosen tiling layout. 	 * 	 * The tiling mode may be demoted to I915_TILING_NONE when the system 	 * has bit 6 swizzling that can't be managed correctly by GEM. 	 * 	 * Buffer contents become undefined when changing tiling_mode. 	 */
-name|uint32_t
+name|__u32
 name|tiling_mode
 decl_stmt|;
 comment|/** 	 * Stride in bytes for the object when in I915_TILING_X or 	 * I915_TILING_Y. 	 */
-name|uint32_t
+name|__u32
 name|stride
 decl_stmt|;
 comment|/** 	 * Returned address bit 6 swizzling required for CPU access through 	 * mmap mapping. 	 */
-name|uint32_t
+name|__u32
 name|swizzle_mode
 decl_stmt|;
 block|}
@@ -2484,15 +2480,15 @@ struct|struct
 name|drm_i915_gem_get_tiling
 block|{
 comment|/** Handle of the buffer to get tiling state for. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** 	 * Current tiling mode for the object (I915_TILING_NONE, I915_TILING_X, 	 * I915_TILING_Y). 	 */
-name|uint32_t
+name|__u32
 name|tiling_mode
 decl_stmt|;
 comment|/** 	 * Returned address bit 6 swizzling required for CPU access through 	 * mmap mapping. 	 */
-name|uint32_t
+name|__u32
 name|swizzle_mode
 decl_stmt|;
 block|}
@@ -2504,11 +2500,11 @@ struct|struct
 name|drm_i915_gem_get_aperture
 block|{
 comment|/** Total size of the aperture used by i915_gem_execbuffer, in bytes */
-name|uint64_t
+name|__u64
 name|aper_size
 decl_stmt|;
 comment|/** 	 * Available space in the aperture used by i915_gem_execbuffer, in 	 * bytes 	 */
-name|uint64_t
+name|__u64
 name|aper_available_size
 decl_stmt|;
 block|}
@@ -2520,11 +2516,11 @@ struct|struct
 name|drm_i915_get_pipe_from_crtc_id
 block|{
 comment|/** ID of CRTC being requested **/
-name|uint32_t
+name|__u32
 name|crtc_id
 decl_stmt|;
 comment|/** pipe of requested CRTC **/
-name|uint32_t
+name|__u32
 name|pipe
 decl_stmt|;
 block|}
@@ -2561,15 +2557,15 @@ struct|struct
 name|drm_i915_gem_madvise
 block|{
 comment|/** Handle of the buffer to change the backing store advice */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/* Advice: either the buffer will be needed again in the near future, 	 *         or wont be and could be discarded under memory pressure. 	 */
-name|uint32_t
+name|__u32
 name|madv
 decl_stmt|;
 comment|/** Whether the backing store still exists. */
-name|uint32_t
+name|__u32
 name|retained
 decl_stmt|;
 block|}
@@ -2714,59 +2710,59 @@ struct|struct
 name|drm_intel_overlay_put_image
 block|{
 comment|/* various flags and src format description */
-name|uint32_t
+name|__u32
 name|flags
 decl_stmt|;
 comment|/* source picture description */
-name|uint32_t
+name|__u32
 name|bo_handle
 decl_stmt|;
 comment|/* stride values and offsets are in bytes, buffer relative */
-name|uint16_t
+name|__u16
 name|stride_Y
 decl_stmt|;
 comment|/* stride for packed formats */
-name|uint16_t
+name|__u16
 name|stride_UV
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|offset_Y
 decl_stmt|;
 comment|/* offset for packet formats */
-name|uint32_t
+name|__u32
 name|offset_U
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|offset_V
 decl_stmt|;
 comment|/* in pixels */
-name|uint16_t
+name|__u16
 name|src_width
 decl_stmt|;
-name|uint16_t
+name|__u16
 name|src_height
 decl_stmt|;
 comment|/* to compensate the scaling factors for partially covered surfaces */
-name|uint16_t
+name|__u16
 name|src_scan_width
 decl_stmt|;
-name|uint16_t
+name|__u16
 name|src_scan_height
 decl_stmt|;
 comment|/* output crtc description */
-name|uint32_t
+name|__u32
 name|crtc_id
 decl_stmt|;
-name|uint16_t
+name|__u16
 name|dst_x
 decl_stmt|;
-name|uint16_t
+name|__u16
 name|dst_y
 decl_stmt|;
-name|uint16_t
+name|__u16
 name|dst_width
 decl_stmt|;
-name|uint16_t
+name|__u16
 name|dst_height
 decl_stmt|;
 block|}
@@ -2795,37 +2791,37 @@ begin_struct
 struct|struct
 name|drm_intel_overlay_attrs
 block|{
-name|uint32_t
+name|__u32
 name|flags
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|color_key
 decl_stmt|;
-name|int32_t
+name|__s32
 name|brightness
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|contrast
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|saturation
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|gamma0
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|gamma1
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|gamma2
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|gamma3
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|gamma4
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|gamma5
 decl_stmt|;
 block|}
@@ -2865,19 +2861,19 @@ begin_struct
 struct|struct
 name|drm_intel_sprite_colorkey
 block|{
-name|uint32_t
+name|__u32
 name|plane_id
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|min_value
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|channel_mask
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|max_value
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|flags
 decl_stmt|;
 block|}
@@ -2889,10 +2885,10 @@ struct|struct
 name|drm_i915_gem_context_create
 block|{
 comment|/*  output: id of new context*/
-name|uint32_t
+name|__u32
 name|ctx_id
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 block|}
@@ -2903,10 +2899,10 @@ begin_struct
 struct|struct
 name|drm_i915_gem_context_destroy
 block|{
-name|uint32_t
+name|__u32
 name|ctx_id
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 block|}
