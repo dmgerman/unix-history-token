@@ -373,6 +373,13 @@ name|atomic_store_rel_int
 value|atomic_store_rel_32
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_swap_int
+value|atomic_swap_32
+end_define
+
 begin_endif
 endif|#
 directive|endif
