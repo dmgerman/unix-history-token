@@ -583,6 +583,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9300_DEVID_QCA953X
+value|0x003d
+end_define
+
+begin_comment
+comment|/* Honey Bee */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_SUBVENDOR_ID_NOG
 value|0x0e11
 end_define
