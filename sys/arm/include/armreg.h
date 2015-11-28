@@ -741,13 +741,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPU_ID_KRAIT
+name|CPU_ID_KRAIT300R0
 value|0x510f06f0
 end_define
 
 begin_comment
 comment|/* Snapdragon S4 Pro/APQ8064 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_KRAIT300R1
+value|0x511f06f0
+end_define
 
 begin_define
 define|#
