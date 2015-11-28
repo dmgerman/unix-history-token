@@ -2556,11 +2556,11 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+end_ifdef
 
 begin_function
 specifier|static
@@ -2761,9 +2761,9 @@ argument_list|,
 name|series
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
