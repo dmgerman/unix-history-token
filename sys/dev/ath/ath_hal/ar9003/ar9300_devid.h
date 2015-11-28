@@ -82,6 +82,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_SREV_VERSION_QCA9530
+value|0x500
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_REVISION_AR9380_10
 value|0
 end_define

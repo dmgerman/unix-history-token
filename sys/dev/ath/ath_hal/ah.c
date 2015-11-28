@@ -529,14 +529,7 @@ return|return
 literal|"9565"
 return|;
 case|case
-name|AR9300_DEVID_QCA955X
-case|:
-comment|/* XXX should say QCA, not AR */
-return|return
-literal|"9550"
-return|;
-case|case
-name|AR9300_DEVID_QCA953X
+name|AR_SREV_VERSION_QCA9530
 case|:
 comment|/* XXX should say QCA, not AR */
 return|return
