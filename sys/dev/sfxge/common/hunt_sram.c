@@ -49,7 +49,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_sram_test
 parameter_list|(
 name|__in
@@ -62,7 +62,7 @@ name|efx_sram_pattern_fn_t
 name|func
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* FIXME */
@@ -99,7 +99,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

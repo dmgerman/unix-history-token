@@ -49,7 +49,7 @@ end_include
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_family
 parameter_list|(
 name|__in
@@ -211,7 +211,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_infer_family
 parameter_list|(
 name|__in
@@ -235,7 +235,7 @@ name|unsigned
 name|int
 name|portnum
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_BAR_READO
@@ -381,7 +381,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -410,7 +410,7 @@ end_define
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_biu_test
 parameter_list|(
 name|__in
@@ -422,7 +422,7 @@ block|{
 name|efx_oword_t
 name|oword
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Write magic values to scratch registers 0 and 1, then 	 * verify that the values were written correctly.  Interleave 	 * the accesses to ensure that the BIU is not just reading 	 * back the cached value that was last written. 	 */
@@ -687,7 +687,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -885,7 +885,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_create
 parameter_list|(
 name|__in
@@ -918,7 +918,7 @@ name|efx_nic_t
 modifier|*
 name|enp
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1165,7 +1165,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1180,7 +1180,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_probe
 parameter_list|(
 name|__in
@@ -1193,7 +1193,7 @@ name|efx_nic_ops_t
 modifier|*
 name|enop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1307,7 +1307,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1328,7 +1328,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_pcie_tune
 parameter_list|(
 name|__in
@@ -1408,7 +1408,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_pcie_extended_sync
 parameter_list|(
 name|__in
@@ -1491,7 +1491,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_set_drv_limits
 parameter_list|(
 name|__inout
@@ -1513,7 +1513,7 @@ name|enp
 operator|->
 name|en_enop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1579,7 +1579,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1594,7 +1594,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_get_bar_region
 parameter_list|(
 name|__in
@@ -1625,7 +1625,7 @@ name|enp
 operator|->
 name|en_enop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1724,7 +1724,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1739,7 +1739,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_get_vi_pool
 parameter_list|(
 name|__in
@@ -1780,7 +1780,7 @@ name|enp
 operator|->
 name|en_nic_cfg
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1905,7 +1905,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1920,7 +1920,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_init
 parameter_list|(
 name|__in
@@ -1937,7 +1937,7 @@ name|enp
 operator|->
 name|en_enop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2021,7 +2021,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2379,7 +2379,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_reset
 parameter_list|(
 name|__in
@@ -2400,7 +2400,7 @@ name|unsigned
 name|int
 name|mod_flags
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2511,7 +2511,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2568,7 +2568,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_register_test
 parameter_list|(
 name|__in
@@ -2585,7 +2585,7 @@ name|enp
 operator|->
 name|en_enop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2651,7 +2651,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2666,7 +2666,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_test_registers
 parameter_list|(
 name|__in
@@ -2697,7 +2697,7 @@ decl_stmt|;
 name|efx_oword_t
 name|buf
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 while|while
@@ -2985,7 +2985,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3017,7 +3017,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_test_tables
 parameter_list|(
 name|__in
@@ -3056,7 +3056,7 @@ decl_stmt|;
 name|efx_oword_t
 name|buf
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -3305,7 +3305,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3826,7 +3826,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_loopback_modes
 parameter_list|(
 name|__in
@@ -3866,7 +3866,7 @@ decl_stmt|;
 name|efx_qword_t
 name|modes
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -4196,7 +4196,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

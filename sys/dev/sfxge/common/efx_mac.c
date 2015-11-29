@@ -86,7 +86,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_mac_multicast_list_set
 parameter_list|(
 name|__in
@@ -463,7 +463,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_pdu_set
 parameter_list|(
 name|__in
@@ -498,7 +498,7 @@ decl_stmt|;
 name|uint32_t
 name|old_pdu
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -624,7 +624,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -639,7 +639,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_addr_set
 parameter_list|(
 name|__in
@@ -681,7 +681,7 @@ decl_stmt|;
 name|uint32_t
 name|oui
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -828,7 +828,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -843,7 +843,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_filter_set
 parameter_list|(
 name|__in
@@ -899,7 +899,7 @@ decl_stmt|;
 name|boolean_t
 name|old_brdcst
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1001,7 +1001,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1040,7 +1040,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_drain
 parameter_list|(
 name|__in
@@ -1072,7 +1072,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1205,7 +1205,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1220,7 +1220,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_up
 parameter_list|(
 name|__in
@@ -1253,7 +1253,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1309,7 +1309,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1324,7 +1324,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_fcntl_set
 parameter_list|(
 name|__in
@@ -1380,7 +1380,7 @@ name|unsigned
 name|int
 name|old_adv_cap
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1609,7 +1609,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1739,7 +1739,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_hash_set
 argument_list|(
 name|__in
@@ -1787,7 +1787,7 @@ name|unsigned
 name|int
 name|index
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1951,7 +1951,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1980,7 +1980,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_multicast_list_set
 argument_list|(
 name|__in
@@ -2031,7 +2031,7 @@ decl_stmt|;
 name|uint32_t
 name|old_mulcst_addr_count
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2253,7 +2253,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2268,7 +2268,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_filter_default_rxq_set
 parameter_list|(
 name|__in
@@ -2305,7 +2305,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2373,7 +2373,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2713,7 +2713,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_stats_upload
 parameter_list|(
 name|__in
@@ -2746,7 +2746,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2816,7 +2816,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2831,7 +2831,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_stats_periodic
 parameter_list|(
 name|__in
@@ -2872,7 +2872,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2963,7 +2963,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2978,7 +2978,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_stats_update
 argument_list|(
 name|__in
@@ -3024,7 +3024,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -3102,7 +3102,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_select
 parameter_list|(
 name|__in
@@ -3414,7 +3414,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3575,7 +3575,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_mac_multicast_list_set
 parameter_list|(
 name|__in
@@ -3609,7 +3609,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -3704,7 +3704,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

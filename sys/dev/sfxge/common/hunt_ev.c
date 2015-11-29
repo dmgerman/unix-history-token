@@ -263,7 +263,7 @@ end_function_decl
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_init_evq
 parameter_list|(
 name|__in
@@ -331,7 +331,7 @@ decl_stmt|;
 name|int
 name|supports_rx_batching
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|npages
@@ -677,7 +677,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -693,7 +693,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_fini_evq
 parameter_list|(
 name|__in
@@ -720,7 +720,7 @@ name|MC_CMD_FINI_EVQ_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -815,7 +815,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -830,7 +830,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_init
 parameter_list|(
 name|__in
@@ -870,7 +870,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qcreate
 parameter_list|(
 name|__in
@@ -916,7 +916,7 @@ decl_stmt|;
 name|uint32_t
 name|irq
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|_NOTE
@@ -1074,7 +1074,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1133,7 +1133,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qprime
 parameter_list|(
 name|__in
@@ -1314,7 +1314,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_driver_event
 parameter_list|(
 name|__in
@@ -1345,7 +1345,7 @@ name|MC_CMD_DRIVER_EVENT_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|req
@@ -1453,7 +1453,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1530,7 +1530,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qmoderate
 parameter_list|(
 name|__in
@@ -1571,7 +1571,7 @@ name|timer_val
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1720,7 +1720,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3125,7 +3125,7 @@ decl_stmt|;
 name|efx_mon_stat_value_t
 name|value
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Decode monitor stat for MCDI sensor (if supported) */

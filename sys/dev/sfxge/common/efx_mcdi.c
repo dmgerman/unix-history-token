@@ -159,7 +159,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_init
 parameter_list|(
 name|__in
@@ -178,7 +178,7 @@ name|efx_mcdi_ops_t
 modifier|*
 name|emcop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -397,7 +397,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1009,7 +1009,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_request_errcode
 parameter_list|(
 name|__in
@@ -1329,7 +1329,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|efx_mcdi_poll_reboot
 parameter_list|(
 name|__in
@@ -1944,7 +1944,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_version
 argument_list|(
 name|__in
@@ -2013,7 +2013,7 @@ decl_stmt|;
 name|efx_mcdi_boot_t
 name|status
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2487,7 +2487,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2503,7 +2503,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_do_reboot
 parameter_list|(
 name|__in
@@ -2530,7 +2530,7 @@ decl_stmt|;
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * We could require the caller to have caused en_mod_flags=0 to 	 * call this function. This doesn't help the other port though, 	 * who's about to get the MC ripped out from underneath them. 	 * Since they have to cope with the subsequent fallout of MCDI 	 * failures, we should as well. 	 */
@@ -2666,7 +2666,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2681,7 +2681,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_reboot
 parameter_list|(
 name|__in
@@ -2705,7 +2705,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_exit_assertion_handler
 parameter_list|(
 name|__in
@@ -2729,7 +2729,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_read_assertion
 parameter_list|(
 name|__in
@@ -2772,7 +2772,7 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Before we attempt to chat to the MC, we should verify that the MC 	 * isn't in it's assertion handler, either due to a previous reboot, 	 * or because we're reinitializing due to an eec_exception(). 	 * 	 * Use GET_ASSERTS to read any assertion state that may be present. 	 * Retry this command twice. Once because a boot-time assertion failure 	 * might cause the 1st MCDI request to fail. And once again because 	 * we might race with efx_mcdi_exit_assertion_handler() running on 	 * partner port(s) on the same NIC. 	 */
@@ -3060,7 +3060,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3079,7 +3079,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_drv_attach
 parameter_list|(
 name|__in
@@ -3120,7 +3120,7 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -3393,7 +3393,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3408,7 +3408,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_board_cfg
 argument_list|(
 name|__in
@@ -3464,7 +3464,7 @@ name|MC_CMD_GET_BOARD_CFG_OUT_LENMIN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -3743,7 +3743,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3758,7 +3758,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_resource_limits
 parameter_list|(
 name|__in
@@ -3796,7 +3796,7 @@ name|MC_CMD_GET_RESOURCE_LIMITS_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -3954,7 +3954,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3969,7 +3969,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_phy_cfg
 parameter_list|(
 name|__in
@@ -4014,7 +4014,7 @@ name|MC_CMD_GET_PHY_CFG_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -4489,7 +4489,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4504,7 +4504,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_firmware_update_supported
 parameter_list|(
 name|__in
@@ -4528,7 +4528,7 @@ name|en_mcdi
 operator|.
 name|em_emcop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4585,7 +4585,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4600,7 +4600,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_macaddr_change_supported
 parameter_list|(
 name|__in
@@ -4624,7 +4624,7 @@ name|en_mcdi
 operator|.
 name|em_emcop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4681,7 +4681,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4712,7 +4712,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_bist_enable_offline
 parameter_list|(
 name|__in
@@ -4724,7 +4724,7 @@ block|{
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFX_STATIC_ASSERT
@@ -4809,7 +4809,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4833,7 +4833,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_bist_start
 parameter_list|(
 name|__in
@@ -4860,7 +4860,7 @@ name|MC_CMD_START_BIST_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -5036,7 +5036,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5064,7 +5064,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_log_ctrl
 parameter_list|(
 name|__in
@@ -5087,7 +5087,7 @@ name|MC_CMD_LOG_CTRL_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -5191,7 +5191,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5232,7 +5232,7 @@ end_typedef
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats
 parameter_list|(
 name|__in
@@ -5309,7 +5309,7 @@ operator|==
 name|EFX_STATS_DISABLE
 operator|)
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -5566,7 +5566,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5581,7 +5581,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats_clear
 parameter_list|(
 name|__in
@@ -5590,7 +5590,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -5624,7 +5624,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5639,7 +5639,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats_upload
 parameter_list|(
 name|__in
@@ -5653,7 +5653,7 @@ modifier|*
 name|esmp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * The MC DMAs aggregate statistics for our convenience, so we can 	 * avoid having to pull the statistics buffer into the cache to 	 * maintain cumulative statistics. 	 */
@@ -5688,7 +5688,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5703,7 +5703,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats_periodic
 parameter_list|(
 name|__in
@@ -5725,7 +5725,7 @@ name|boolean_t
 name|events
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * The MC DMAs aggregate statistics for our convenience, so we can 	 * avoid having to pull the statistics buffer into the cache to 	 * maintain cumulative statistics. 	 * Huntington uses a fixed 1sec period, so use that on Siena too. 	 */
@@ -5794,7 +5794,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5828,7 +5828,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_function_info
 parameter_list|(
 name|__in
@@ -5861,7 +5861,7 @@ name|MC_CMD_GET_FUNCTION_INFO_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -5997,7 +5997,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6012,7 +6012,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_privilege_mask
 parameter_list|(
 name|__in
@@ -6048,7 +6048,7 @@ name|MC_CMD_PRIVILEGE_MASK_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -6183,7 +6183,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6207,7 +6207,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_set_workaround
 parameter_list|(
 name|__in
@@ -6243,7 +6243,7 @@ name|MC_CMD_WORKAROUND_EXT_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -6383,7 +6383,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6398,7 +6398,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_workarounds
 parameter_list|(
 name|__in
@@ -6426,7 +6426,7 @@ index|[
 name|MC_CMD_GET_WORKAROUNDS_OUT_LEN
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -6548,7 +6548,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

@@ -582,6 +582,12 @@ directive|define
 name|__checkReturn
 define|#
 directive|define
+name|__success
+parameter_list|(
+name|_x
+parameter_list|)
+define|#
+directive|define
 name|__drv_when
 parameter_list|(
 name|_p

@@ -58,7 +58,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_init
 parameter_list|(
 name|__in
@@ -91,7 +91,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_hdr_split_enable
 parameter_list|(
 name|__in
@@ -130,7 +130,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scatter_enable
 parameter_list|(
 name|__in
@@ -164,7 +164,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scale_mode_set
 parameter_list|(
 name|__in
@@ -190,7 +190,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scale_key_set
 argument_list|(
 name|__in
@@ -216,7 +216,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scale_tbl_set
 argument_list|(
 name|__in
@@ -316,7 +316,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_qflush
 parameter_list|(
 name|__in
@@ -343,7 +343,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_qcreate
 parameter_list|(
 name|__in
@@ -652,7 +652,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_init
 parameter_list|(
 name|__inout
@@ -665,7 +665,7 @@ name|efx_rx_ops_t
 modifier|*
 name|erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -867,7 +867,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -986,7 +986,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_hdr_split_enable
 parameter_list|(
 name|__in
@@ -1013,7 +1013,7 @@ name|enp
 operator|->
 name|en_erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1082,7 +1082,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1112,7 +1112,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scatter_enable
 parameter_list|(
 name|__in
@@ -1134,7 +1134,7 @@ name|enp
 operator|->
 name|en_erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1190,7 +1190,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1220,7 +1220,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_hash_support_get
 parameter_list|(
 name|__in
@@ -1234,7 +1234,7 @@ modifier|*
 name|supportp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1293,7 +1293,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1308,7 +1308,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_support_get
 parameter_list|(
 name|__in
@@ -1322,7 +1322,7 @@ modifier|*
 name|supportp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1381,7 +1381,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1396,7 +1396,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_mode_set
 parameter_list|(
 name|__in
@@ -1425,7 +1425,7 @@ name|enp
 operator|->
 name|en_erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1495,7 +1495,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1525,7 +1525,7 @@ end_if
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_key_set
 argument_list|(
 name|__in
@@ -1554,7 +1554,7 @@ name|enp
 operator|->
 name|en_erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1612,7 +1612,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1642,7 +1642,7 @@ end_if
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_tbl_set
 argument_list|(
 name|__in
@@ -1672,7 +1672,7 @@ name|enp
 operator|->
 name|en_erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1730,7 +1730,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1900,7 +1900,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_qflush
 parameter_list|(
 name|__in
@@ -1925,7 +1925,7 @@ name|enp
 operator|->
 name|en_erxop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1968,7 +1968,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2030,7 +2030,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_qcreate
 parameter_list|(
 name|__in
@@ -2089,7 +2089,7 @@ name|efx_rxq_t
 modifier|*
 name|erp
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2252,7 +2252,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2318,7 +2318,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_psuedo_hdr_pkt_length_get
 parameter_list|(
 name|__in
@@ -2590,7 +2590,7 @@ end_if
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_init
 parameter_list|(
 name|__in
@@ -2754,7 +2754,7 @@ end_if
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_hdr_split_enable
 parameter_list|(
 name|__in
@@ -2784,7 +2784,7 @@ decl_stmt|;
 name|efx_oword_t
 name|oword
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|nhdr32
@@ -2962,7 +2962,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2993,7 +2993,7 @@ end_if
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scatter_enable
 parameter_list|(
 name|__in
@@ -3014,7 +3014,7 @@ decl_stmt|;
 name|efx_oword_t
 name|oword
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|nbuf32
@@ -3155,7 +3155,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3233,7 +3233,7 @@ end_if
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scale_mode_set
 parameter_list|(
 name|__in
@@ -3254,7 +3254,7 @@ name|boolean_t
 name|insert
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 switch|switch
@@ -3359,7 +3359,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3393,7 +3393,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scale_key_set
 argument_list|(
 name|__in
@@ -3425,7 +3425,7 @@ name|unsigned
 name|int
 name|offset
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|byte
@@ -3973,7 +3973,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4000,7 +4000,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_scale_tbl_set
 argument_list|(
 name|__in
@@ -4028,7 +4028,7 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFX_STATIC_ASSERT
@@ -4235,7 +4235,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4585,7 +4585,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_qflush
 parameter_list|(
 name|__in
@@ -4744,7 +4744,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_rx_qcreate
 parameter_list|(
 name|__in
@@ -4813,7 +4813,7 @@ decl_stmt|;
 name|boolean_t
 name|jumbo
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFX_STATIC_ASSERT
@@ -5220,7 +5220,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

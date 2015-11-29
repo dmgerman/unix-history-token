@@ -67,7 +67,7 @@ name|HUNTINGTON_RSS_CONTEXT_INVALID
 value|(0xffffffff)
 comment|/* EV */
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_init
 parameter_list|(
 name|__in
@@ -86,7 +86,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qcreate
 parameter_list|(
 name|__in
@@ -128,7 +128,7 @@ name|eep
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qprime
 parameter_list|(
 name|__in
@@ -156,7 +156,7 @@ name|data
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qmoderate
 parameter_list|(
 name|__in
@@ -228,7 +228,7 @@ parameter_list|)
 function_decl|;
 comment|/* INTR */
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_intr_init
 parameter_list|(
 name|__in
@@ -274,7 +274,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_intr_trigger
 parameter_list|(
 name|__in
@@ -300,7 +300,7 @@ function_decl|;
 comment|/* NIC */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_probe
 parameter_list|(
 name|__in
@@ -311,7 +311,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_set_drv_limits
 parameter_list|(
 name|__inout
@@ -327,7 +327,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_get_vi_pool
 parameter_list|(
 name|__in
@@ -343,7 +343,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_get_bar_region
 parameter_list|(
 name|__in
@@ -368,7 +368,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_reset
 parameter_list|(
 name|__in
@@ -379,7 +379,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_init
 parameter_list|(
 name|__in
@@ -393,7 +393,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_register_test
 parameter_list|(
 name|__in
@@ -428,7 +428,7 @@ function_decl|;
 comment|/* MAC */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_poll
 parameter_list|(
 name|__in
@@ -444,7 +444,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_up
 parameter_list|(
 name|__in
@@ -460,7 +460,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_addr_set
 parameter_list|(
 name|__in
@@ -471,7 +471,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_reconfigure
 parameter_list|(
 name|__in
@@ -482,7 +482,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_multicast_list_set
 parameter_list|(
 name|__in
@@ -493,7 +493,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_filter_default_rxq_set
 parameter_list|(
 name|__in
@@ -526,7 +526,7 @@ directive|if
 name|EFSYS_OPT_LOOPBACK
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_loopback_set
 parameter_list|(
 name|__in
@@ -551,7 +551,7 @@ directive|if
 name|EFSYS_OPT_MAC_STATS
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_stats_update
 argument_list|(
 name|__in
@@ -587,7 +587,7 @@ directive|if
 name|EFSYS_OPT_MCDI
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mcdi_init
 parameter_list|(
 name|__in
@@ -667,7 +667,7 @@ name|emrp
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|efx_rc_t
 name|hunt_mcdi_poll_reboot
 parameter_list|(
 name|__in
@@ -678,7 +678,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mcdi_fw_update_supported
 parameter_list|(
 name|__in
@@ -694,7 +694,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mcdi_macaddr_change_supported
 parameter_list|(
 name|__in
@@ -719,7 +719,7 @@ operator|||
 name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_buf_read_tlv
 argument_list|(
 name|__in
@@ -758,7 +758,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_buf_write_tlv
 argument_list|(
 name|__inout_bcount
@@ -795,7 +795,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_read_tlv
 argument_list|(
 name|__in
@@ -827,7 +827,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_write_tlv
 argument_list|(
 name|__in
@@ -857,7 +857,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_write_segment_tlv
 argument_list|(
 name|__in
@@ -891,7 +891,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_size
 parameter_list|(
 name|__in
@@ -912,7 +912,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_lock
 parameter_list|(
 name|__in
@@ -928,7 +928,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_read
 argument_list|(
 name|__in
@@ -960,7 +960,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_erase
 parameter_list|(
 name|__in
@@ -985,7 +985,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_write
 argument_list|(
 name|__in
@@ -1041,7 +1041,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_test
 parameter_list|(
 name|__in
@@ -1055,7 +1055,7 @@ directive|endif
 comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_size
 parameter_list|(
 name|__in
@@ -1075,7 +1075,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_get_version
 argument_list|(
 name|__in
@@ -1105,7 +1105,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_rw_start
 parameter_list|(
 name|__in
@@ -1125,7 +1125,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_read_chunk
 argument_list|(
 name|__in
@@ -1156,7 +1156,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_erase
 parameter_list|(
 name|__in
@@ -1171,7 +1171,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_write_chunk
 argument_list|(
 name|__in
@@ -1216,7 +1216,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_set_version
 argument_list|(
 name|__in
@@ -1242,7 +1242,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_set_version
 argument_list|(
 name|__in
@@ -1322,7 +1322,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_get_link
 parameter_list|(
 name|__in
@@ -1338,7 +1338,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_power
 parameter_list|(
 name|__in
@@ -1353,7 +1353,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_reconfigure
 parameter_list|(
 name|__in
@@ -1364,7 +1364,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_verify
 parameter_list|(
 name|__in
@@ -1375,7 +1375,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_oui_get
 parameter_list|(
 name|__in
@@ -1394,7 +1394,7 @@ directive|if
 name|EFSYS_OPT_PHY_STATS
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_stats_update
 argument_list|(
 name|__in
@@ -1447,7 +1447,7 @@ directive|endif
 comment|/* EFSYS_OPT_NAMES */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_prop_get
 parameter_list|(
 name|__in
@@ -1472,7 +1472,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_prop_set
 parameter_list|(
 name|__in
@@ -1498,7 +1498,7 @@ directive|if
 name|EFSYS_OPT_BIST
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_bist_enable_offline
 parameter_list|(
 name|__in
@@ -1509,7 +1509,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_bist_start
 parameter_list|(
 name|__in
@@ -1524,7 +1524,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_bist_poll
 argument_list|(
 name|__in
@@ -1597,7 +1597,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_sram_test
 parameter_list|(
 name|__in
@@ -1616,7 +1616,7 @@ comment|/* EFSYS_OPT_DIAG */
 comment|/* TX */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_init
 parameter_list|(
 name|__in
@@ -1637,7 +1637,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qcreate
 parameter_list|(
 name|__in
@@ -1701,7 +1701,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpost
 argument_list|(
 name|__in
@@ -1756,7 +1756,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpace
 parameter_list|(
 name|__in
@@ -1772,7 +1772,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qflush
 parameter_list|(
 name|__in
@@ -1793,7 +1793,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpio_enable
 parameter_list|(
 name|__in
@@ -1814,7 +1814,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpio_write
 argument_list|(
 name|__in
@@ -1841,7 +1841,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpio_post
 parameter_list|(
 name|__in
@@ -1867,7 +1867,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qdesc_post
 argument_list|(
 name|__in
@@ -2066,7 +2066,7 @@ name|EFX_PIOBUF_HANDLE_INVALID
 value|((efx_piobuf_handle_t) -1)
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_alloc
 parameter_list|(
 name|__inout
@@ -2102,7 +2102,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_free
 parameter_list|(
 name|__inout
@@ -2121,7 +2121,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_link
 parameter_list|(
 name|__inout
@@ -2140,7 +2140,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_unlink
 parameter_list|(
 name|__inout
@@ -2159,7 +2159,7 @@ directive|if
 name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_init
 parameter_list|(
 name|__in
@@ -2170,7 +2170,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_size
 parameter_list|(
 name|__in
@@ -2186,7 +2186,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_read
 argument_list|(
 name|__in
@@ -2208,7 +2208,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_verify
 argument_list|(
 name|__in
@@ -2230,7 +2230,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_reinit
 argument_list|(
 name|__in
@@ -2252,7 +2252,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_get
 argument_list|(
 name|__in
@@ -2279,7 +2279,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_set
 argument_list|(
 name|__in
@@ -2306,7 +2306,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_next
 argument_list|(
 name|__in
@@ -2339,7 +2339,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_write
 argument_list|(
 name|__in
@@ -2375,7 +2375,7 @@ comment|/* EFSYS_OPT_VPD */
 comment|/* RX */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_init
 parameter_list|(
 name|__in
@@ -2389,7 +2389,7 @@ directive|if
 name|EFSYS_OPT_RX_HDR_SPLIT
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_hdr_split_enable
 parameter_list|(
 name|__in
@@ -2416,7 +2416,7 @@ directive|if
 name|EFSYS_OPT_RX_SCATTER
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_scatter_enable
 parameter_list|(
 name|__in
@@ -2438,7 +2438,7 @@ directive|if
 name|EFSYS_OPT_RX_SCALE
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_scale_mode_set
 parameter_list|(
 name|__in
@@ -2461,7 +2461,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_scale_key_set
 argument_list|(
 name|__in
@@ -2484,7 +2484,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_scale_tbl_set
 argument_list|(
 name|__in
@@ -2569,7 +2569,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_qflush
 parameter_list|(
 name|__in
@@ -2590,7 +2590,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_rx_qcreate
 parameter_list|(
 name|__in
@@ -2744,7 +2744,7 @@ block|}
 name|hunt_filter_table_t
 typedef|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_init
 parameter_list|(
 name|__in
@@ -2763,7 +2763,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_restore
 parameter_list|(
 name|__in
@@ -2773,7 +2773,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_add
 parameter_list|(
 name|__in
@@ -2792,7 +2792,7 @@ name|may_replace
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_delete
 parameter_list|(
 name|__in
@@ -2808,7 +2808,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_supported_filters
 parameter_list|(
 name|__in
@@ -2829,7 +2829,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_reconfigure
 argument_list|(
 name|__in
@@ -2932,7 +2932,7 @@ directive|endif
 comment|/* EFSYS_OPT_FILTER */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_pktfilter_set
 parameter_list|(
 name|__in
@@ -2954,7 +2954,7 @@ directive|if
 name|EFSYS_OPT_MCAST_FILTER_LIST
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_pktfilter_mcast_set
 parameter_list|(
 name|__in
@@ -2978,7 +2978,7 @@ directive|endif
 comment|/* EFSYS_OPT_MCAST_FILTER_LIST */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_pktfilter_mcast_all
 parameter_list|(
 name|__in
@@ -2989,7 +2989,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_function_info
 parameter_list|(
 name|__in
@@ -3010,7 +3010,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_privilege_mask
 parameter_list|(
 name|__in

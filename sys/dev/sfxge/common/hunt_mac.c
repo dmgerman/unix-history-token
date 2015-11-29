@@ -43,7 +43,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_poll
 parameter_list|(
 name|__in
@@ -72,7 +72,7 @@ decl_stmt|;
 name|hunt_link_state_t
 name|hls
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -128,7 +128,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -148,7 +148,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_up
 parameter_list|(
 name|__in
@@ -166,7 +166,7 @@ comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 
 name|hunt_link_state_t
 name|hls
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Because Huntington doesn't *require* polling, we can't rely on 	 * hunt_mac_poll() being executed to populate epp->ep_mac_up. 	 */
@@ -207,7 +207,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -227,7 +227,7 @@ end_comment
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_vadapter_set_mac
 parameter_list|(
 name|__in
@@ -261,7 +261,7 @@ name|MC_CMD_VADAPTOR_SET_MAC_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -374,7 +374,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -389,7 +389,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_addr_set
 parameter_list|(
 name|__in
@@ -398,7 +398,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -460,7 +460,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -475,7 +475,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_reconfigure
 parameter_list|(
 name|__in
@@ -509,7 +509,7 @@ name|MC_CMD_SET_MAC_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -722,7 +722,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -737,7 +737,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_multicast_list_set
 parameter_list|(
 name|__in
@@ -765,7 +765,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -807,7 +807,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -822,7 +822,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_filter_default_rxq_set
 parameter_list|(
 name|__in
@@ -858,7 +858,7 @@ decl_stmt|;
 name|boolean_t
 name|old_using_rss
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|hunt_filter_get_default_rxq
@@ -936,7 +936,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1028,7 +1028,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_loopback_set
 parameter_list|(
 name|__in
@@ -1071,7 +1071,7 @@ decl_stmt|;
 name|efx_link_mode_t
 name|old_loopback_link_mode
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* The PHY object handles this on Huntington */
@@ -1128,7 +1128,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1185,7 +1185,7 @@ end_define
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_mac_stats_update
 argument_list|(
 name|__in

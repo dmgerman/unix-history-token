@@ -43,7 +43,7 @@ end_include
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_port_init
 parameter_list|(
 name|__in
@@ -71,7 +71,7 @@ name|epp
 operator|->
 name|ep_epop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -299,7 +299,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -321,7 +321,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_port_poll
 parameter_list|(
 name|__in
@@ -357,7 +357,7 @@ decl_stmt|;
 name|efx_link_mode_t
 name|ignore_link_mode
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -439,7 +439,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -460,7 +460,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_port_loopback_set
 parameter_list|(
 name|__in
@@ -507,7 +507,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -630,7 +630,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

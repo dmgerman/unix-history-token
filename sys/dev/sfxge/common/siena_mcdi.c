@@ -482,7 +482,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|efx_rc_t
 name|siena_mcdi_poll_reboot
 parameter_list|(
 name|__in
@@ -681,7 +681,7 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1131,7 +1131,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1181,7 +1181,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mcdi_init
 parameter_list|(
 name|__in
@@ -1216,7 +1216,7 @@ name|unsigned
 name|int
 name|portnum
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1308,7 +1308,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1335,7 +1335,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mcdi_fw_update_supported
 parameter_list|(
 name|__in
@@ -1375,7 +1375,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mcdi_macaddr_change_supported
 parameter_list|(
 name|__in
