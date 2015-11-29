@@ -4179,7 +4179,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10
+literal|100
 argument_list|)
 expr_stmt|;
 name|pci_write_config
