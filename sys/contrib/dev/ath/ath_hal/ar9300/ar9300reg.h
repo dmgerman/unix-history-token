@@ -18385,6 +18385,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_SREV_REVISION_JUPITER_21
+value|3
+end_define
+
+begin_comment
+comment|/* Jupiter 2.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_REVISION_APHRODITE_10
 value|0
 end_define
@@ -18571,12 +18582,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_SREV_JUPITER_21
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_SREV_VERSION_JUPITER)&& \      (AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_JUPITER_21))
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_JUPITER_20_OR_LATER
 parameter_list|(
 name|_ah
 parameter_list|)
 define|\
 value|((AH_PRIVATE((_ah))->ah_macVersion == AR_SREV_VERSION_JUPITER)&& \      (AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_JUPITER_20))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_JUPITER_21_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_SREV_VERSION_JUPITER)&& \      (AH_PRIVATE((_ah))->ah_macRev>= AR_SREV_REVISION_JUPITER_21))
 end_define
 
 begin_define
