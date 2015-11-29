@@ -3261,6 +3261,15 @@ argument_list|,
 name|is
 argument_list|)
 expr_stmt|;
+name|ATA_RBL
+argument_list|(
+name|ctlr
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_IS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3350,6 +3359,15 @@ operator|<<
 name|unit
 argument_list|)
 expr_stmt|;
+name|ATA_RBL
+argument_list|(
+name|ctlr
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_IS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3433,6 +3451,15 @@ operator|.
 name|function
 argument_list|(
 name|arg
+argument_list|)
+expr_stmt|;
+name|ATA_RBL
+argument_list|(
+name|ctlr
+operator|->
+name|r_mem
+argument_list|,
+name|AHCI_IS
 argument_list|)
 expr_stmt|;
 block|}
