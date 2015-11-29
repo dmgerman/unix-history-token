@@ -1451,13 +1451,13 @@ condition|)
 goto|goto
 name|fail1
 goto|;
-comment|/* Store new dynamic VPD in DYNAMIC_CONFIG partition */
+comment|/* Store new dynamic VPD in all segments in DYNAMIC_CONFIG partition */
 if|if
 condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_write_tlv
+name|hunt_nvram_partn_write_segment_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -1471,6 +1471,8 @@ argument_list|,
 name|data
 argument_list|,
 name|vpd_length
+argument_list|,
+name|B_TRUE
 argument_list|)
 operator|)
 operator|!=
