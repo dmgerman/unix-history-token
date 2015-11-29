@@ -984,7 +984,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"nfs"
+name|nfs_vnode_tag
 argument_list|,
 name|mntp
 argument_list|,

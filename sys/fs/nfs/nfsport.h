@@ -4284,6 +4284,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Name used by getnewvnode() to describe filesystem, "nfs".  * For perfomance reasons it is useful to have the same string  * used in both places that call getnewvnode().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|nfs_vnode_tag
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
