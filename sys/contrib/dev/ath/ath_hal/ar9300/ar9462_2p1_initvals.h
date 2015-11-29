@@ -155,7 +155,7 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p1_mac_core
 index|[]
 index|[
@@ -1124,7 +1124,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p1_baseband_postamble
 index|[]
 index|[
@@ -1799,7 +1799,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p1_soc_preamble
 index|[]
 index|[
