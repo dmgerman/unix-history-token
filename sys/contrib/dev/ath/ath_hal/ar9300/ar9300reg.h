@@ -18169,6 +18169,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_SREV_VERSION_HONEYBEE
+value|0x500
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_VERSION_APHRODITE
 value|0x2C0
 end_define
@@ -18396,6 +18403,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_SREV_REVISION_HONEYBEE_10
+value|0
+end_define
+
+begin_comment
+comment|/* Honeybee 1.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_REVISION_HONEYBEE_11
+value|1
+end_define
+
+begin_comment
+comment|/* Honeybee 1.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_REVISION_HONEYBEE_MASK
+value|0xf
+end_define
+
+begin_comment
+comment|/* Honeybee revision mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_REVISION_APHRODITE_10
 value|0
 end_define
@@ -18543,7 +18583,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_AR9580(_ah))
+value|(AR_SREV_AR9580(_ah) || AR_SREV_SCORPION(_ah) || AR_SREV_HONEYBEE(_ah))
 end_define
 
 begin_define
@@ -18785,6 +18825,92 @@ begin_comment
 comment|/* #if defined(AH_SUPPORT_WASP) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AH_SUPPORT_HONEYBEE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HONEYBEE
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_SREV_VERSION_HONEYBEE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HONEYBEE_10
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_SREV_VERSION_HONEYBEE)&& \      (AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_HONEYBEE_10))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HONEYBEE_11
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_SREV_VERSION_HONEYBEE)&& \      (AH_PRIVATE((_ah))->ah_macRev == AR_SREV_REVISION_HONEYBEE_11))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HONEYBEE
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HONEYBEE_10
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_HONEYBEE_11
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #if defined(AH_SUPPORT_HONEYBEE) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18977,7 +19103,7 @@ name|AR_SREV_SOC
 parameter_list|(
 name|_ah
 parameter_list|)
-value|(AR_SREV_HORNET(_ah) || AR_SREV_POSEIDON(_ah) || AR_SREV_WASP(_ah))
+value|(AR_SREV_HORNET(_ah) || AR_SREV_POSEIDON(_ah) || AR_SREV_WASP(_ah) || AR_SREV_HONEYBEE(_ah))
 end_define
 
 begin_comment

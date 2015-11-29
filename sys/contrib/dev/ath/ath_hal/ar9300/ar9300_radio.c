@@ -398,6 +398,11 @@ name|AR_SREV_SCORPION
 argument_list|(
 name|ah
 argument_list|)
+operator|||
+name|AR_SREV_HONEYBEE
+argument_list|(
+name|ah
+argument_list|)
 condition|)
 block|{
 name|u_int32_t
@@ -412,6 +417,11 @@ comment|/*                   * freq_ref = (50 / (refdiva>> a_mode_ref_sel));    
 if|if
 condition|(
 name|AR_SREV_SCORPION
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_HONEYBEE
 argument_list|(
 name|ah
 argument_list|)
