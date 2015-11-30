@@ -12788,13 +12788,8 @@ argument_list|(
 name|announce_buf
 argument_list|)
 argument_list|,
-literal|"%juMB (%ju %u byte sectors: %dH %dS/T "
-literal|"%dC)"
+literal|"%juMB (%ju %u byte sectors)"
 argument_list|,
-call|(
-name|uintmax_t
-call|)
-argument_list|(
 operator|(
 operator|(
 name|uintmax_t
@@ -12813,7 +12808,6 @@ literal|1024
 operator|*
 literal|1024
 operator|)
-argument_list|)
 argument_list|,
 operator|(
 name|uintmax_t
@@ -12825,18 +12819,6 @@ argument_list|,
 name|dp
 operator|->
 name|secsize
-argument_list|,
-name|dp
-operator|->
-name|heads
-argument_list|,
-name|dp
-operator|->
-name|secs_per_track
-argument_list|,
-name|dp
-operator|->
-name|cylinders
 argument_list|)
 expr_stmt|;
 block|}
