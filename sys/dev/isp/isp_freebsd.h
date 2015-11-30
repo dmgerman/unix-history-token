@@ -1518,7 +1518,7 @@ name|isp
 parameter_list|,
 name|x
 parameter_list|)
-value|msleep(&(isp)->isp_osinfo.lock, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", ((x) + tick - 1) / tick)
+value|msleep(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", ((x) + tick - 1) / tick)
 end_define
 
 begin_else
@@ -1535,7 +1535,7 @@ name|isp
 parameter_list|,
 name|x
 parameter_list|)
-value|msleep_sbt(&(isp)->isp_osinfo.lock, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
+value|msleep_sbt(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
 end_define
 
 begin_endif
