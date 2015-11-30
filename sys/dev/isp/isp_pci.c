@@ -1971,8 +1971,8 @@ operator|>
 literal|0
 operator|&&
 name|tval
-operator|<
-literal|127
+operator|<=
+literal|254
 condition|)
 block|{
 name|isp_nvports
