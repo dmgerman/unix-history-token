@@ -4177,8 +4177,8 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
-modifier|*
+name|int
+name|freq
 parameter_list|)
 function_decl|;
 end_function_decl

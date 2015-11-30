@@ -279,13 +279,14 @@ directive|endif
 name|uint32_t
 name|i
 decl_stmt|;
+comment|/*              * Pay close attention to this bit!              *              * We need to map the actual desired synth frequency to              * one of the channel select array entries.              *              * For HT20, it'll align with the channel we select.              *              * For HT40 though it won't - the centre frequency              * will not be the frequency of chan->ic_freq or ichan->freq;              * it needs to be whatever frequency maps to 'freq'.              */
 name|i
 operator|=
 name|ath_hal_mhz2ieee_2ghz
 argument_list|(
 name|ah
 argument_list|,
-name|ichan
+name|freq
 argument_list|)
 expr_stmt|;
 name|HALASSERT
