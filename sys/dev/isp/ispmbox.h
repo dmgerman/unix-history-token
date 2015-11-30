@@ -7144,6 +7144,13 @@ name|SNS_RFT_ID
 value|0x217
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNS_RFF_ID
+value|0x21F
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
