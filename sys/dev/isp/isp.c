@@ -13718,7 +13718,7 @@ name|ISP_LOG_SANCFG
 operator||
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"isp_port_login: portid 0x%06x already logged in as %u"
+literal|"isp_port_login: portid 0x%06x already logged in as 0x%x"
 argument_list|,
 name|portid
 argument_list|,
@@ -32095,6 +32095,19 @@ name|nlstate
 decl_stmt|,
 name|reason
 decl_stmt|;
+if|if
+condition|(
+name|IS_23XX
+argument_list|(
+name|isp
+argument_list|)
+operator|||
+name|IS_24XX
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
 name|nphdl
 operator|=
 name|ISP_READ
@@ -32113,6 +32126,16 @@ argument_list|,
 name|OUTMAILBOX2
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|nphdl
+operator|=
+name|nlstate
+operator|=
+literal|0xffff
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|IS_24XX
