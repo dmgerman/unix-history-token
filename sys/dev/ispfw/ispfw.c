@@ -647,40 +647,6 @@ name|ISPFW_VERSION
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ISPFW_KLD
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISPFW_KLD
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -688,7 +654,7 @@ name|RMACRO
 parameter_list|(
 name|token
 parameter_list|)
-value|do {						\ 	if (token##_loaded)						\ 		break;							\ 	if (firmware_register(#token, token##_risc_code,		\ 	    token##_risc_code[3] * sizeof(token##_risc_code[3]),	\ 	    ISPFW_VERSION, NULL) == NULL) {				\ 		printf("%s: unable to register firmware<%s>\n",	\ 		    MODULE_NAME, #token);				\ 		break;							\ 	}								\ 	token##_loaded++;						\ 	if (bootverbose || ISPFW_KLD)					\ 		printf("%s: registered firmware<%s>\n", MODULE_NAME, 	\ 		    #token);						\ } while (0)
+value|do {						\ 	if (token##_loaded)						\ 		break;							\ 	if (firmware_register(#token, token##_risc_code,		\ 	    token##_risc_code[3] * sizeof(token##_risc_code[3]),	\ 	    ISPFW_VERSION, NULL) == NULL)				\ 		break;							\ 	token##_loaded++;						\ } while (0)
 end_define
 
 begin_define
@@ -698,12 +664,12 @@ name|UMACRO
 parameter_list|(
 name|token
 parameter_list|)
-value|do {						\ 	if (!token##_loaded)						\ 		break;							\ 	if (firmware_unregister(#token) != 0) {				\ 		printf("%s: unable to unregister firmware<%s>\n",	\ 		    MODULE_NAME, #token);				\ 		break;							\ 	}								\ 	token##_loaded--;						\ 	if (bootverbose || ISPFW_KLD)					\ 		printf("%s: unregistered firmware<%s>\n", MODULE_NAME,	\ 		    #token);						\ } while (0)
+value|do {						\ 	if (!token##_loaded)						\ 		break;							\ 	if (firmware_unregister(#token) != 0) {				\ 		error = EBUSY;						\ 		break;							\ 	}								\ 	token##_loaded--;						\ } while (0)
 end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|do_load_fw
 parameter_list|(
 name|void
@@ -839,17 +805,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|do_unload_fw
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -980,6 +956,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -1007,31 +988,25 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+return|return
+operator|(
 name|do_load_fw
 argument_list|()
-expr_stmt|;
-break|break;
+operator|)
+return|;
 case|case
 name|MOD_UNLOAD
 case|:
-name|do_unload_fw
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MOD_SHUTDOWN
-case|:
-break|break;
-default|default:
 return|return
 operator|(
-name|EOPNOTSUPP
+name|do_unload_fw
+argument_list|()
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|0
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
