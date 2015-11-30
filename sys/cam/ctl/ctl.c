@@ -57686,6 +57686,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ooa_entry
+operator|->
+name|seridx
+operator|==
+name|CTL_SERIDX_INVLD
+condition|)
+return|return
+operator|(
+name|CTL_ACTION_PASS
+operator|)
+return|;
+comment|/* Unsupported command in OOA queue */
 name|KASSERT
 argument_list|(
 name|ooa_entry
