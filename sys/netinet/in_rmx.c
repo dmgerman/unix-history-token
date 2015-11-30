@@ -150,29 +150,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|static
-name|void
-name|in_setifarnh
-parameter_list|(
-name|struct
-name|radix_node_head
-modifier|*
-name|rnh
-parameter_list|,
-name|uint32_t
-name|fibnum
-parameter_list|,
-name|int
-name|af
-parameter_list|,
-name|void
-modifier|*
-name|_arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Do what we need to do when inserting a route.  */
 end_comment
