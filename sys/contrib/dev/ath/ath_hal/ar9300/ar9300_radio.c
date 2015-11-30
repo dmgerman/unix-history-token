@@ -205,6 +205,9 @@ decl_stmt|;
 name|int
 name|load_synth_channel
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG_ALQ
 name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
@@ -216,6 +219,8 @@ argument_list|,
 name|chan
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * Put this behind AH_DEBUG_ALQ for now until the Hornet      * channel_sel code below is made to work.      */
 ifdef|#
 directive|ifdef
