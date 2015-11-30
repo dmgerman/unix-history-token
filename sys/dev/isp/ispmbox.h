@@ -2724,7 +2724,10 @@ decl_stmt|;
 name|uint16_t
 name|req_flags
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|req_crn
+decl_stmt|;
+name|uint8_t
 name|req_reserved
 decl_stmt|;
 name|uint16_t
@@ -5017,6 +5020,13 @@ define|#
 directive|define
 name|ICBZOPT_50_OHM
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_NO_LOCAL_PLOGI
+value|0x0080
 end_define
 
 begin_define
