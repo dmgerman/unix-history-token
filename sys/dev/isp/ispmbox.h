@@ -1498,7 +1498,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASYNC_LIP_F8
+name|ASYNC_LIP_NOS_OLS_RECV
 value|0x8016
 end_define
 
