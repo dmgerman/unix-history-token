@@ -1380,7 +1380,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 0 - ATTR_WB_WA */
+comment|/* 0 - ATTR_WB_WA	*/
 name|TEX
 argument_list|(
 name|PRRR_MEM
@@ -1392,7 +1392,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 1 - ATTR_NOCACHE */
+comment|/* 1 - ATTR_NOCACHE	*/
 name|TEX
 argument_list|(
 name|PRRR_DEV
@@ -1404,7 +1404,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 2 - ATTR_DEVICE */
+comment|/* 2 - ATTR_DEVICE	*/
 name|TEX
 argument_list|(
 name|PRRR_SO
@@ -1416,7 +1416,19 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 3 - ATTR_SO    */
+comment|/* 3 - ATTR_SO	*/
+name|TEX
+argument_list|(
+name|PRRR_MEM
+argument_list|,
+name|NMRR_WT
+argument_list|,
+name|NMRR_WT
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* 4 - ATTR_WT	*/
 name|TEX
 argument_list|(
 name|PRRR_MEM
@@ -1428,7 +1440,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 4 - NOT USED YET */
+comment|/* 5 - NOT USED YET	*/
 name|TEX
 argument_list|(
 name|PRRR_MEM
@@ -1440,7 +1452,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 5 - NOT USED YET */
+comment|/* 6 - NOT USED YET	*/
 name|TEX
 argument_list|(
 name|PRRR_MEM
@@ -1452,19 +1464,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* 6 - NOT USED YET */
-name|TEX
-argument_list|(
-name|PRRR_MEM
-argument_list|,
-name|NMRR_NC
-argument_list|,
-name|NMRR_NC
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* 7 - NOT USED YET */
+comment|/* 7 - NOT USED YET	*/
 block|}
 decl_stmt|;
 end_decl_stmt
