@@ -1452,6 +1452,10 @@ name|ASYNC_LIP_OCCURRED
 value|0x8010
 end_define
 
+begin_comment
+comment|/* FC only */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1472,6 +1476,10 @@ directive|define
 name|ASYNC_LOOP_RESET
 value|0x8013
 end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
 
 begin_define
 define|#
@@ -1494,11 +1502,26 @@ name|ASYNC_LIP_F8
 value|0x8016
 end_define
 
+begin_comment
+comment|/* FC only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ASYNC_LIP_ERROR
 value|0x8017
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTO_PLOGI_RJT
+value|0x8018
 end_define
 
 begin_define
@@ -1581,9 +1604,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASYNC_ERR_LOGGING_DISABLED
+value|0x8029
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASYNC_PTPMODE
 value|0x8030
 end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
 
 begin_define
 define|#
@@ -1665,6 +1699,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASYNC_P2P_INIT_ERR
+value|0x8037
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASYNC_RIOZIO_STALL
 value|0x8040
 end_define
@@ -1689,6 +1730,107 @@ define|#
 directive|define
 name|ASYNC_RCV_ERR
 value|0x8048
+end_define
+
+begin_comment
+comment|/*  * 2.01.31 2200 Only. Need Bit 13 in Mailbox 1 for Set Firmware Options  * mailbox command to enable this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_QFULL_SENT
+value|0x8049
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_RJT_SENT
+value|0x8049
+end_define
+
+begin_comment
+comment|/* 24XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_SEL_CLASS2_P_RJT_SENT
+value|0x804f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_FW_RESTART_COMPLETE
+value|0x8060
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_TEMPERATURE_ALERT
+value|0x8070
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_INTER_DRIVER_COMP
+value|0x8100
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_INTER_DRIVER_NOTIFY
+value|0x8101
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_INTER_DRIVER_TIME_EXT
+value|0x8102
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_NIC_FW_STATE_CHANGE
+value|0x8200
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTOLOAD_FW_COMPLETE
+value|0x8400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTOLOAD_FW_FAILURE
+value|0x8401
 end_define
 
 begin_comment
@@ -1810,39 +1952,6 @@ define|#
 directive|define
 name|IFCOPT3_RNDASYNC
 value|(1<< 1)
-end_define
-
-begin_comment
-comment|/*  * 2.01.31 2200 Only. Need Bit 13 in Mailbox 1 for Set Firmware Options  * mailbox command to enable this.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASYNC_QFULL_SENT
-value|0x8049
-end_define
-
-begin_comment
-comment|/*  * Needs to be enabled  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASYNC_AUTO_PLOGI_RJT
-value|0x8018
-end_define
-
-begin_comment
-comment|/*  * 24XX only  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASYNC_RJT_SENT
-value|0x8049
 end_define
 
 begin_comment
