@@ -1477,7 +1477,23 @@ end_endif
 
 begin_function_decl
 name|int
-name|isp_find_pdb_by_wwn
+name|isp_find_pdb_empty
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|fcportdb_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isp_find_pdb_by_wwpn
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -1492,12 +1508,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
 
 begin_function_decl
 name|int
@@ -1519,7 +1529,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|isp_find_pdb_by_sid
+name|isp_find_pdb_by_portid
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -1534,6 +1544,12 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
 
 begin_function_decl
 name|void

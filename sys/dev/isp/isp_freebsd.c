@@ -15477,7 +15477,7 @@ block|}
 comment|/* 	 * Find the PDB entry for this initiator 	 */
 if|if
 condition|(
-name|isp_find_pdb_by_sid
+name|isp_find_pdb_by_portid
 argument_list|(
 name|isp
 argument_list|,
@@ -19672,7 +19672,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|isp_find_pdb_by_sid
+name|isp_find_pdb_by_portid
 argument_list|(
 name|isp
 argument_list|,
@@ -20336,7 +20336,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|isp_find_pdb_by_sid
+name|isp_find_pdb_by_portid
 argument_list|(
 name|isp
 argument_list|,
@@ -29120,6 +29120,8 @@ name|nphdl
 decl_stmt|,
 name|nlstate
 decl_stmt|,
+name|portid
+decl_stmt|,
 name|reason
 decl_stmt|;
 name|va_start
@@ -29149,11 +29151,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IS_24XX
-argument_list|(
-name|isp
-argument_list|)
-operator|&&
 name|evt
 operator|==
 name|ISPASYNC_CHANGE_PDB
@@ -29178,6 +29175,24 @@ name|int
 argument_list|)
 expr_stmt|;
 name|reason
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|evt
+operator|==
+name|ISPASYNC_CHANGE_SNS
+condition|)
+block|{
+name|portid
 operator|=
 name|va_arg
 argument_list|(
@@ -29225,6 +29240,25 @@ name|msg
 operator|=
 literal|"Port Database Changed"
 expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Chan %d %s (nphdl 0x%x state 0x%x reason 0x%x)"
+argument_list|,
+name|bus
+argument_list|,
+name|msg
+argument_list|,
+name|nphdl
+argument_list|,
+name|nlstate
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -29238,12 +29272,40 @@ name|msg
 operator|=
 literal|"Name Server Database Changed"
 expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Chan %d %s (PortID 0x%06x)"
+argument_list|,
+name|bus
+argument_list|,
+name|msg
+argument_list|,
+name|portid
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 name|msg
 operator|=
 literal|"Other Change Notify"
+expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Chan %d %s"
+argument_list|,
+name|bus
+argument_list|,
+name|msg
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * If the loop down timer is running, cancel it. 		 */
@@ -29288,19 +29350,6 @@ name|ldt
 argument_list|)
 expr_stmt|;
 block|}
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGINFO
-argument_list|,
-literal|"Chan %d %s"
-argument_list|,
-name|bus
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|FCPARAM
