@@ -38482,6 +38482,7 @@ init|=
 block|{
 literal|"NO-OP"
 block|,
+comment|/* 00h */
 literal|"LOAD RAM"
 block|,
 literal|"EXEC FIRMWARE"
@@ -38504,7 +38505,7 @@ literal|"DUMP RAM"
 block|,
 literal|"LOAD RISC RAM"
 block|,
-name|NULL
+literal|"DUMP RISC RAM"
 block|,
 literal|"WRITE RAM WORD EXTENDED"
 block|,
@@ -38514,6 +38515,7 @@ literal|"READ RAM WORD EXTENDED"
 block|,
 literal|"INIT REQUEST QUEUE"
 block|,
+comment|/* 10h */
 literal|"INIT RESULT QUEUE"
 block|,
 literal|"EXECUTE IOCB"
@@ -38546,9 +38548,10 @@ literal|"GET FIRMWARE STATUS"
 block|,
 literal|"GET LOOP ID"
 block|,
+comment|/* 20h */
 name|NULL
 block|,
-literal|"GET RETRY COUNT"
+literal|"GET TIMEOUT PARAMS"
 block|,
 name|NULL
 block|,
@@ -38564,7 +38567,7 @@ literal|"GET FIRMWARE OPTIONS"
 block|,
 literal|"GET PORT QUEUE PARAMS"
 block|,
-name|NULL
+literal|"GENERATE SYSTEM ERROR"
 block|,
 name|NULL
 block|,
@@ -38576,11 +38579,12 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"WRITE SFP"
 block|,
-name|NULL
+comment|/* 30h */
+literal|"READ SFP"
 block|,
-literal|"SET RETRY COUNT"
+literal|"SET TIMEOUT PARAMS"
 block|,
 name|NULL
 block|,
@@ -38598,27 +38602,28 @@ literal|"SET PORT QUEUE PARAMS"
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"SET FC LED CONF"
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"RESTART NIC FIRMWARE"
 block|,
-name|NULL
+literal|"ACCESS CONTROL"
 block|,
 name|NULL
 block|,
 literal|"LOOP PORT BYPASS"
 block|,
+comment|/* 40h */
 literal|"LOOP PORT ENABLE"
 block|,
 literal|"GET RESOURCE COUNT"
 block|,
 literal|"REQUEST NON PARTICIPATING MODE"
 block|,
-name|NULL
+literal|"DIAGNOSTIC ECHO TEST"
 block|,
-name|NULL
+literal|"DIAGNOSTIC LOOPBACK"
 block|,
 name|NULL
 block|,
@@ -38640,13 +38645,14 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"GET FCF LIST"
+block|,
+comment|/* 50h */
+literal|"GET DCBX PARAMETERS"
 block|,
 name|NULL
 block|,
-name|NULL
-block|,
-name|NULL
+literal|"HOST MEMORY COPY"
 block|,
 literal|"EXECUTE IOCB A64"
 block|,
@@ -38654,27 +38660,28 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"SEND RNID"
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"SET PARAMETERS"
 block|,
-name|NULL
+literal|"GET PARAMETERS"
 block|,
 literal|"DRIVER HEARTBEAT"
 block|,
-name|NULL
+literal|"FIRMWARE HEARTBEAT"
 block|,
 literal|"GET/SET DATA RATE"
 block|,
-name|NULL
+literal|"SEND RNFT"
 block|,
 name|NULL
 block|,
 literal|"INIT FIRMWARE"
 block|,
-name|NULL
+comment|/* 60h */
+literal|"GET INIT CONTROL BLOCK"
 block|,
 literal|"INIT LIP"
 block|,
@@ -38698,7 +38705,7 @@ literal|"GET LINK STATUS"
 block|,
 literal|"INIT LIP RESET"
 block|,
-name|NULL
+literal|"GET LINK STATS& PRIVATE DATA CNTS"
 block|,
 literal|"SEND SNS"
 block|,
@@ -38706,6 +38713,7 @@ literal|"FABRIC LOGIN"
 block|,
 literal|"SEND CHANGE REQUEST"
 block|,
+comment|/* 70h */
 literal|"FABRIC LOGOUT"
 block|,
 literal|"INIT LIP LOGIN"
@@ -38724,15 +38732,15 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"GET XGMAC STATS"
 block|,
 name|NULL
 block|,
-literal|"Get ID List"
+literal|"GET ID LIST"
 block|,
 literal|"SEND LFA"
 block|,
-literal|"Lun RESET"
+literal|"LUN RESET"
 block|}
 decl_stmt|;
 end_decl_stmt
