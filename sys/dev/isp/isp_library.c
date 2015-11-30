@@ -20601,7 +20601,7 @@ parameter_list|,
 name|int
 name|chan
 parameter_list|,
-name|uint32_t
+name|uint16_t
 name|handle
 parameter_list|,
 name|fcportdb_t

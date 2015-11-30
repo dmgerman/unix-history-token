@@ -3588,7 +3588,7 @@ operator|)
 name|addr
 decl_stmt|;
 name|uint16_t
-name|loopid
+name|nphdl
 decl_stmt|;
 name|mbreg_t
 name|mbs
@@ -3635,7 +3635,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-name|loopid
+name|nphdl
 operator|=
 name|fct
 operator|->
@@ -3716,7 +3716,7 @@ name|lp
 operator|->
 name|handle
 operator|==
-name|loopid
+name|nphdl
 condition|)
 block|{
 break|break;
@@ -4210,7 +4210,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|loopid
+name|nphdl
 operator|<<=
 literal|8
 expr_stmt|;
@@ -4241,7 +4241,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 name|mbs
 operator|.
@@ -4274,7 +4274,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 name|needmarker
 operator|=
@@ -4300,7 +4300,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 name|mbs
 operator|.
@@ -4337,7 +4337,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 name|mbs
 operator|.
@@ -4374,7 +4374,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 name|mbs
 operator|.
@@ -6782,7 +6782,7 @@ name|tptr
 operator|->
 name|owner
 argument_list|,
-literal|"ATP: [0x%x] origdlen %u bytes_xfrd %u lun %u nphdl 0x%04x s_id 0x%06x d_id 0x%06x oxid 0x%04x state %s\n"
+literal|"ATP: [0x%x] origdlen %u bytes_xfrd %u lun %x nphdl 0x%04x s_id 0x%06x d_id 0x%06x oxid 0x%04x state %s\n"
 argument_list|,
 name|atp
 operator|->
@@ -13706,7 +13706,7 @@ name|tptr
 operator|->
 name|owner
 argument_list|,
-literal|"no %s for lun %d from initiator %d\n"
+literal|"no %s for lun %x from initiator %d\n"
 argument_list|,
 operator|(
 name|atp
@@ -14080,7 +14080,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"ATIO[0x%x] CDB=0x%x lun %d"
+literal|"ATIO[0x%x] CDB=0x%x lun %x"
 argument_list|,
 name|aep
 operator|->
@@ -18484,11 +18484,11 @@ modifier|*
 name|tptr
 decl_stmt|;
 name|uint16_t
+name|nphdl
+decl_stmt|,
 name|lun
 decl_stmt|;
 name|uint32_t
-name|loopid
-decl_stmt|,
 name|sid
 decl_stmt|;
 name|uint64_t
@@ -18552,7 +18552,7 @@ name|isp
 argument_list|)
 condition|)
 block|{
-name|loopid
+name|nphdl
 operator|=
 operator|(
 operator|(
@@ -18567,7 +18567,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|loopid
+name|nphdl
 operator|=
 name|inp
 operator|->
@@ -18582,7 +18582,7 @@ name|isp
 argument_list|,
 literal|0
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 operator|&
 name|lp
@@ -18655,7 +18655,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"ABORT TASK for lun %u- but no tstate"
+literal|"ABORT TASK for lun %x, but no tstate"
 argument_list|,
 name|lun
 argument_list|)
@@ -18856,7 +18856,7 @@ name|nt
 operator|->
 name|nt_nphdl
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 name|nt
 operator|->

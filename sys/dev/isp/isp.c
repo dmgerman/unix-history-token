@@ -174,7 +174,7 @@ name|char
 name|topology
 index|[]
 init|=
-literal|"Chan %d WWPN 0x%08x%08x PortID 0x%06x handle 0x%x, Connection '%s'"
+literal|"Chan %d WWPN 0x%08x%08x PortID 0x%06x LoopID 0x%x Connection '%s'"
 decl_stmt|;
 end_decl_stmt
 
@@ -15079,10 +15079,10 @@ block|{
 name|isp_pdb_t
 name|pdb
 decl_stmt|;
-name|int
+name|uint16_t
 name|lim
 decl_stmt|,
-name|loopid
+name|nphdl
 decl_stmt|;
 name|isp_prt
 argument_list|(
@@ -15119,15 +15119,15 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|loopid
+name|nphdl
 operator|=
 literal|0
 init|;
-name|loopid
+name|nphdl
 operator|!=
 name|lim
 condition|;
-name|loopid
+name|nphdl
 operator|++
 control|)
 block|{
@@ -15139,7 +15139,7 @@ name|isp
 argument_list|,
 name|chan
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 operator|&
 name|pdb
@@ -15158,12 +15158,12 @@ name|ISP_LOG_SANCFG
 operator||
 name|ISP_LOGINFO
 argument_list|,
-literal|"Chan %d Loopid 0x%04x "
+literal|"Chan %d Handle 0x%04x "
 literal|"PortID 0x%06x WWPN 0x%02x%02x%02x%02x%02x%02x%02x%02x"
 argument_list|,
 name|chan
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 name|pdb
 operator|.
@@ -15243,7 +15243,7 @@ name|int
 name|chan
 parameter_list|,
 name|int
-name|loopid
+name|nphdl
 parameter_list|,
 name|int
 name|nodename
@@ -15290,7 +15290,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 expr_stmt|;
 if|if
 condition|(
@@ -15332,7 +15332,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|loopid
+name|nphdl
 operator|<<
 literal|8
 expr_stmt|;
@@ -15746,8 +15746,8 @@ name|check_for_fabric
 decl_stmt|,
 name|r
 decl_stmt|;
-name|int
-name|loopid
+name|uint16_t
+name|nphdl
 decl_stmt|;
 name|fcparam
 modifier|*
@@ -16274,14 +16274,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* XXX SHOULDN'T THIS BE FOR 2K F/W? XXX */
-name|loopid
+name|nphdl
 operator|=
 name|NPH_FL_ID
 expr_stmt|;
 block|}
 else|else
 block|{
-name|loopid
+name|nphdl
 operator|=
 name|FL_ID
 expr_stmt|;
@@ -16299,7 +16299,7 @@ name|isp
 argument_list|,
 name|chan
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 operator|&
 name|pdb
@@ -19493,9 +19493,7 @@ name|uint32_t
 name|portid
 decl_stmt|;
 name|uint16_t
-name|handle
-decl_stmt|,
-name|loopid
+name|nphdl
 decl_stmt|;
 name|isp_pdb_t
 name|pdb
@@ -19685,14 +19683,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* XXX SHOULDN'T THIS BE TRUE FOR 2K F/W? XXX */
-name|loopid
+name|nphdl
 operator|=
 name|NPH_FL_ID
 expr_stmt|;
 block|}
 else|else
 block|{
-name|loopid
+name|nphdl
 operator|=
 name|FL_ID
 expr_stmt|;
@@ -19705,7 +19703,7 @@ name|isp
 argument_list|,
 name|chan
 argument_list|,
-name|loopid
+name|nphdl
 argument_list|,
 operator|&
 name|pdb
@@ -21240,7 +21238,7 @@ goto|goto
 name|abort
 goto|;
 block|}
-name|handle
+name|nphdl
 operator|=
 name|pdb
 operator|.
@@ -21360,7 +21358,7 @@ name|lp
 operator|->
 name|handle
 operator|=
-name|handle
+name|nphdl
 expr_stmt|;
 name|lp
 operator|->
@@ -21502,7 +21500,7 @@ name|lp
 operator|->
 name|handle
 operator|=
-name|handle
+name|nphdl
 expr_stmt|;
 name|lp
 operator|->
@@ -21971,7 +21969,7 @@ operator|==
 name|MBOX_LOOP_ID_USED
 condition|)
 block|{
-comment|/* Try the next loop id. */
+comment|/* Try the next handle. */
 name|handle
 operator|=
 name|isp_next_handle
