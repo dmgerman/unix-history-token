@@ -301,7 +301,6 @@ operator|(
 literal|0
 operator|)
 return|;
-empty_stmt|;
 block|}
 end_function
 
