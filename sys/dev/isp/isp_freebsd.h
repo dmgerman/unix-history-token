@@ -946,13 +946,13 @@ decl_stmt|;
 name|uint64_t
 name|def_wwnn
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|loop_down_time
 decl_stmt|;
-name|uint32_t
+name|int
 name|loop_down_limit
 decl_stmt|;
-name|uint32_t
+name|int
 name|gone_device_time
 decl_stmt|;
 comment|/* 	 * Per target/lun info- just to keep a per-ITL nexus crn count 	 */
@@ -978,10 +978,6 @@ name|default_id
 range|:
 literal|8
 decl_stmt|,
-name|hysteresis
-range|:
-literal|8
-decl_stmt|,
 name|def_role
 range|:
 literal|2
@@ -995,6 +991,10 @@ name|loop_dead
 range|:
 literal|1
 decl_stmt|,
+name|loop_seen_once
+range|:
+literal|1
+decl_stmt|,
 name|fcbsy
 range|:
 literal|1
@@ -1005,18 +1005,9 @@ literal|1
 decl_stmt|;
 name|struct
 name|callout
-name|ldt
-decl_stmt|;
-comment|/* loop down timer */
-name|struct
-name|callout
 name|gdt
 decl_stmt|;
 comment|/* gone device timer */
-name|struct
-name|task
-name|ltask
-decl_stmt|;
 name|struct
 name|task
 name|gtask
@@ -2856,13 +2847,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|isp_announced
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|isp_fabric_hysteresis
 decl_stmt|;
 end_decl_stmt
 
