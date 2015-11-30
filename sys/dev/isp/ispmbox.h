@@ -1008,6 +1008,34 @@ name|MBOX_NOT_LOGGED_IN
 value|0x400A
 end_define
 
+begin_define
+define|#
+directive|define
+name|MBOX_LINK_DOWN_ERROR
+value|0x400B
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_LOOPBACK_ERROR
+value|0x400C
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_CHECKSUM_ERROR
+value|0x4010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_INVALID_PRODUCT_KEY
+value|0x4020
+end_define
+
 begin_comment
 comment|/* pseudo mailbox completion codes */
 end_comment
@@ -1038,14 +1066,14 @@ begin_define
 define|#
 directive|define
 name|MBLOGALL
-value|0x000f
+value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBLOGNONE
-value|0x0000
+value|0x00000000
 end_define
 
 begin_define
@@ -1055,7 +1083,7 @@ name|MBLOGMASK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0xf)
+value|(1<< (((x) - 1)& 0x1f))
 end_define
 
 begin_comment
