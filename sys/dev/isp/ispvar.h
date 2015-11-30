@@ -1694,7 +1694,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_WAIT_AL_PA
+name|FW_WAIT_LINK
 value|1
 end_define
 
@@ -1750,14 +1750,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_LIP_RCVD
+name|LOOP_TESTING_LINK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_PDB_RCVD
+name|LOOP_LTEST_DONE
 value|2
 end_define
 
@@ -3297,7 +3297,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands locks may be released while this function is called.  *  * ... ISPCTL_RESET_BUS, int channel);  *        Reset BUS on this channel  * ... ISPCTL_RESET_DEV, int channel, int target);  *        Reset Device on this channel at this target.  * ... ISPCTL_ABORT_CMD, XS_T *xs);  *        Abort active transaction described by xs.  * ... IPCTL_UPDATE_PARAMS);  *        Update any operating parameters (speed, etc.)  * ... ISPCTL_FCLINK_TEST, int channel);  *        Test FC link status on this channel  * ... ISPCTL_SCAN_FABRIC, int channel);  *        Scan fabric on this channel  * ... ISPCTL_SCAN_LOOP, int channel);  *        Scan local loop on this channel  * ... ISPCTL_PDB_SYNC, int channel);  *        Synchronize port database on this channel  * ... ISPCTL_SEND_LIP, int channel);  *        Send a LIP on this channel  * ... ISPCTL_GET_NAMES, int channel, int np, uint64_t *wwnn, uint64_t *wwpn)  *        Get a WWNN/WWPN for this N-port handle on this channel  * ... ISPCTL_RUN_MBOXCMD, mbreg_t *mbp)  *        Run this mailbox command  * ... ISPCTL_GET_PDB, int channel, int nphandle, isp_pdb_t *pdb)  *        Get PDB on this channel for this N-port handle  * ... ISPCTL_PLOGX, isp_plcmd_t *)  *        Performa a port login/logout  * ... ISPCTL_CHANGE_ROLE, int channel, int role);  *        Change role of specified channel  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been separated to allow for finer control.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands locks may be released while this function is called.  *  * ... ISPCTL_RESET_BUS, int channel);  *        Reset BUS on this channel  * ... ISPCTL_RESET_DEV, int channel, int target);  *        Reset Device on this channel at this target.  * ... ISPCTL_ABORT_CMD, XS_T *xs);  *        Abort active transaction described by xs.  * ... IPCTL_UPDATE_PARAMS);  *        Update any operating parameters (speed, etc.)  * ... ISPCTL_FCLINK_TEST, int channel);  *        Test FC link status on this channel  * ... ISPCTL_SCAN_LOOP, int channel);  *        Scan local loop on this channel  * ... ISPCTL_SCAN_FABRIC, int channel);  *        Scan fabric on this channel  * ... ISPCTL_PDB_SYNC, int channel);  *        Synchronize port database on this channel  * ... ISPCTL_SEND_LIP, int channel);  *        Send a LIP on this channel  * ... ISPCTL_GET_NAMES, int channel, int np, uint64_t *wwnn, uint64_t *wwpn)  *        Get a WWNN/WWPN for this N-port handle on this channel  * ... ISPCTL_RUN_MBOXCMD, mbreg_t *mbp)  *        Run this mailbox command  * ... ISPCTL_GET_PDB, int channel, int nphandle, isp_pdb_t *pdb)  *        Get PDB on this channel for this N-port handle  * ... ISPCTL_PLOGX, isp_plcmd_t *)  *        Performa a port login/logout  * ... ISPCTL_CHANGE_ROLE, int channel, int role);  *        Change role of specified channel  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_LOOP, and ISPCTL_SCAN_FABRIC.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices.  */
 end_comment
 
 begin_typedef

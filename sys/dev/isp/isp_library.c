@@ -2018,21 +2018,6 @@ return|;
 block|}
 if|if
 condition|(
-name|fcp
-operator|->
-name|isp_fwstate
-operator|<
-name|FW_READY
-operator|||
-name|fcp
-operator|->
-name|isp_loopstate
-operator|<
-name|LOOP_PDB_RCVD
-condition|)
-block|{
-if|if
-condition|(
 name|isp_control
 argument_list|(
 name|isp
@@ -2067,40 +2052,6 @@ return|;
 block|}
 if|if
 condition|(
-name|fcp
-operator|->
-name|isp_fwstate
-operator|!=
-name|FW_READY
-operator|||
-name|fcp
-operator|->
-name|isp_loopstate
-operator|<
-name|LOOP_PDB_RCVD
-condition|)
-block|{
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOG_SANCFG
-argument_list|,
-literal|"isp_fc_runstate: f/w not ready for channel %d"
-argument_list|,
-name|chan
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-block|}
-if|if
-condition|(
 name|isp_control
 argument_list|(
 name|isp
@@ -2119,14 +2070,14 @@ name|isp
 argument_list|,
 name|ISP_LOG_SANCFG
 argument_list|,
-literal|"isp_fc_runstate: scan loop fails on channel %d"
+literal|"isp_fc_runstate: scan loop failed on channel %d"
 argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|LOOP_PDB_RCVD
+name|LOOP_LTEST_DONE
 operator|)
 return|;
 block|}
@@ -2150,7 +2101,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_SANCFG
 argument_list|,
-literal|"isp_fc_runstate: scan fabric fails on channel %d"
+literal|"isp_fc_runstate: scan fabric failed on channel %d"
 argument_list|,
 name|chan
 argument_list|)
@@ -2181,7 +2132,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_SANCFG
 argument_list|,
-literal|"isp_fc_runstate: pdb_sync fails on channel %d"
+literal|"isp_fc_runstate: pdb_sync failed on channel %d"
 argument_list|,
 name|chan
 argument_list|)
@@ -2196,12 +2147,6 @@ if|if
 condition|(
 name|fcp
 operator|->
-name|isp_fwstate
-operator|!=
-name|FW_READY
-operator|||
-name|fcp
-operator|->
 name|isp_loopstate
 operator|!=
 name|LOOP_READY
@@ -2213,7 +2158,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_SANCFG
 argument_list|,
-literal|"isp_fc_runstate: f/w not ready again on channel %d"
+literal|"isp_fc_runstate: not ready again on channel %d"
 argument_list|,
 name|chan
 argument_list|)
@@ -2834,10 +2779,10 @@ return|return
 literal|"Config Wait"
 return|;
 case|case
-name|FW_WAIT_AL_PA
+name|FW_WAIT_LINK
 case|:
 return|return
-literal|"Waiting for AL_PA"
+literal|"Wait Link"
 return|;
 case|case
 name|FW_WAIT_LOGIN
@@ -2905,22 +2850,22 @@ return|return
 literal|"NIL"
 return|;
 case|case
-name|LOOP_LIP_RCVD
+name|LOOP_TESTING_LINK
 case|:
 return|return
-literal|"LIP Received"
+literal|"Testing Link"
 return|;
 case|case
-name|LOOP_PDB_RCVD
+name|LOOP_LTEST_DONE
 case|:
 return|return
-literal|"PDB Received"
+literal|"Link Test Done"
 return|;
 case|case
 name|LOOP_SCANNING_LOOP
 case|:
 return|return
-literal|"Scanning"
+literal|"Scanning Loop"
 return|;
 case|case
 name|LOOP_LSCAN_DONE
@@ -2975,9 +2920,9 @@ if|if
 condition|(
 name|fcp
 operator|->
-name|isp_fwstate
-operator|!=
-name|FW_READY
+name|isp_loopstate
+operator|<
+name|LOOP_LTEST_DONE
 condition|)
 block|{
 return|return
@@ -20809,15 +20754,9 @@ literal|0
 operator|||
 name|fcp
 operator|->
-name|isp_fwstate
-operator|!=
-name|FW_READY
-operator|||
-name|fcp
-operator|->
 name|isp_loopstate
 operator|<
-name|LOOP_PDB_RCVD
+name|LOOP_LTEST_DONE
 condition|)
 block|{
 continue|continue;
