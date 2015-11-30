@@ -9831,15 +9831,9 @@ directive|ifdef
 name|ISP_TARGET_MODE
 if|if
 condition|(
-name|ISP_FW_NEWER_THAN
+name|IS_23XX
 argument_list|(
 name|isp
-argument_list|,
-literal|3
-argument_list|,
-literal|25
-argument_list|,
-literal|0
 argument_list|)
 operator|&&
 operator|(
