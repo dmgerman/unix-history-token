@@ -83,187 +83,108 @@ begin_comment
 comment|/* Full system memory barrier load */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATOMIC_OP
+parameter_list|(
+name|op
+parameter_list|,
+name|asm_op
+parameter_list|,
+name|bar
+parameter_list|,
+name|a
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|static __inline void							\ atomic_##op##_##bar##32(volatile uint32_t *p, uint32_t val)		\ {									\ 	uint32_t tmp;							\ 	int res;							\ 									\ 	__asm __volatile(						\ 	    "1: ld"#a"xr   %w0, [%2]      \n"				\ 	    "   "#asm_op"  %w0, %w0, %w3  \n"				\ 	    "   st"#l"xr   %w1, %w0, [%2] \n"				\             "   cbnz       %w1, 1b        \n"				\ 	    : "=&r"(tmp), "=&r"(res)					\ 	    : "r" (p), "r" (val)					\ 	    : "memory"							\ 	);								\ }									\ 									\ static __inline void							\ atomic_##op##_##bar##64(volatile uint64_t *p, uint64_t val)		\ {									\ 	uint64_t tmp;							\ 	int res;							\ 									\ 	__asm __volatile(						\ 	    "1: ld"#a"xr   %0, [%2]      \n"				\ 	    "   "#asm_op"  %0, %0, %3    \n"				\ 	    "   st"#l"xr   %w1, %0, [%2] \n"				\             "   cbnz       %w1, 1b       \n"				\ 	    : "=&r"(tmp), "=&r"(res)					\ 	    : "r" (p), "r" (val)					\ 	    : "memory"							\ 	);								\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC
+parameter_list|(
+name|op
+parameter_list|,
+name|asm_op
+parameter_list|)
+define|\
+value|ATOMIC_OP(op, asm_op,     ,  ,  )					\     ATOMIC_OP(op, asm_op, acq_, a,  )					\     ATOMIC_OP(op, asm_op, rel_,  , l)					\  ATOMIC(add,      add)
+end_define
+
+begin_macro
+name|ATOMIC
+argument_list|(
+argument|clear
+argument_list|,
+argument|bic
+argument_list|)
+end_macro
+
+begin_macro
+name|ATOMIC
+argument_list|(
+argument|set
+argument_list|,
+argument|orr
+argument_list|)
+end_macro
+
+begin_macro
+name|ATOMIC
+argument_list|(
+argument|subtract
+argument_list|,
+argument|sub
+argument_list|)
+end_macro
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_CMPSET
+parameter_list|(
+name|bar
+parameter_list|,
+name|a
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|static __inline int							\ atomic_cmpset_##bar##32(volatile uint32_t *p, uint32_t cmpval,		\     uint32_t newval)							\ {									\ 	uint32_t tmp;							\ 	int res;							\ 									\ 	__asm __volatile(						\ 	    "1: mov      %w1, #1        \n"				\ 	    "   ld"#a"xr %w0, [%2]      \n"				\ 	    "   cmp      %w0, %w3       \n"				\ 	    "   b.ne     2f             \n"				\ 	    "   st"#l"xr %w1, %w4, [%2] \n"				\             "   cbnz     %w1, 1b        \n"				\ 	    "2:"							\ 	    : "=&r"(tmp), "=&r"(res)					\ 	    : "r" (p), "r" (cmpval), "r" (newval)			\ 	    : "cc", "memory"							\ 	);								\ 									\ 	return (!res);							\ }									\ 									\ static __inline int							\ atomic_cmpset_##bar##64(volatile uint64_t *p, uint64_t cmpval,		\     uint64_t newval)							\ {									\ 	uint64_t tmp;							\ 	int res;							\ 									\ 	__asm __volatile(						\ 	    "1: mov      %w1, #1       \n"				\ 	    "   ld"#a"xr %0, [%2]      \n"				\ 	    "   cmp      %0, %3        \n"				\ 	    "   b.ne     2f            \n"				\ 	    "   st"#l"xr %w1, %4, [%2] \n"				\             "   cbnz     %w1, 1b       \n"				\ 	    "2:"							\ 	    : "=&r"(tmp), "=&r"(res)					\ 	    : "r" (p), "r" (cmpval), "r" (newval)			\ 	    : "cc", "memory"							\ 	);								\ 									\ 	return (!res);							\ }
+end_define
+
+begin_macro
+name|ATOMIC_CMPSET
+argument_list|(
+argument_list|,
+argument_list|, )
+end_macro
+
+begin_macro
+name|ATOMIC_CMPSET
+argument_list|(
+argument|acq_
+argument_list|,
+argument|a
+argument_list|, )
+end_macro
+
+begin_macro
+name|ATOMIC_CMPSET
+argument_list|(
+argument|rel_
+argument_list|,
+argument_list|,
+argument|l
+argument_list|)
+end_macro
+
 begin_function
 specifier|static
-name|__inline
-name|void
-name|atomic_add_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   add	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   bic	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_cmpset_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|cmpval
-parameter_list|,
-name|uint32_t
-name|newval
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: mov	%w1, #1        \n"
-literal|"   ldxr	%w0, [%2]      \n"
-literal|"   cmp	%w0, %w3       \n"
-literal|"   b.ne	2f             \n"
-literal|"   stxr	%w1, %w4, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|newval
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|!
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
 name|__inline
 name|uint32_t
 name|atomic_fetchadd_32
@@ -286,9 +207,9 @@ name|int
 name|res
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1: ldxr	%w4, [%2]      \n"
-literal|"   add	%w0, %w4, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
+literal|"1: ldxr	%w2, [%3]      \n"
+literal|"   add	%w0, %w2, %w4  \n"
+literal|"   stxr	%w1, %w0, [%3] \n"
 literal|"   cbnz	%w1, 1b        \n"
 operator|:
 literal|"=&r"
@@ -301,14 +222,71 @@ operator|(
 name|res
 operator|)
 operator|,
-literal|"+r"
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|:
+literal|"r"
 operator|(
 name|p
 operator|)
 operator|,
-literal|"+r"
+literal|"r"
 operator|(
 name|val
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_fetchadd_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|,
+name|ret
+decl_stmt|;
+name|int
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1: ldxr	%2, [%3]      \n"
+literal|"   add	%0, %2, %4    \n"
+literal|"   stxr	%w1, %0, [%3] \n"
+literal|"   cbnz	%w1, 1b       \n"
+operator|:
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|res
 operator|)
 operator|,
 literal|"=&r"
@@ -316,8 +294,17 @@ operator|(
 name|ret
 operator|)
 operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|val
+operator|)
 operator|:
-literal|"cc"
+literal|"memory"
 block|)
 function|;
 end_function
@@ -343,32 +330,19 @@ name|p
 parameter_list|)
 block|{
 name|uint32_t
-name|tmp
-decl_stmt|,
 name|ret
 decl_stmt|;
 name|int
 name|res
 decl_stmt|;
 asm|__asm __volatile(
-literal|"   mov	%w0, #0        \n"
-literal|"1: ldxr	%w3, [%2]      \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
+literal|"1: ldxr	%w1, [%2]      \n"
+literal|"   stxr	%w0, wzr, [%2] \n"
+literal|"   cbnz	%w0, 1b        \n"
 operator|:
 literal|"=&r"
 operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
 name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
 operator|)
 operator|,
 literal|"=&r"
@@ -376,8 +350,12 @@ operator|(
 name|ret
 operator|)
 operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
 operator|:
-literal|"cc"
+literal|"memory"
 block|)
 function|;
 end_function
@@ -393,55 +371,53 @@ end_return
 begin_function
 unit|}  static
 name|__inline
-name|void
-name|atomic_set_32
+name|uint64_t
+name|atomic_readandclear_64
 parameter_list|(
 specifier|volatile
-name|uint32_t
+name|uint64_t
 modifier|*
 name|p
-parameter_list|,
-name|uint32_t
-name|val
 parameter_list|)
 block|{
-name|uint32_t
-name|tmp
+name|uint64_t
+name|ret
 decl_stmt|;
 name|int
 name|res
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   orr	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
+literal|"1: ldxr	%1, [%2]      \n"
+literal|"   stxr	%w0, xzr, [%2] \n"
+literal|"   cbnz	%w0, 1b        \n"
 operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
 literal|"=&r"
 operator|(
 name|res
 operator|)
 operator|,
-literal|"+r"
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|:
+literal|"r"
 operator|(
 name|p
 operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
 operator|:
-operator|:
-literal|"cc"
+literal|"memory"
 block|)
 function|;
 end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
 
 begin_function
 unit|}  static
@@ -459,7 +435,7 @@ name|val
 parameter_list|)
 block|{
 name|uint32_t
-name|tmp
+name|ret
 decl_stmt|;
 name|int
 name|res
@@ -471,27 +447,24 @@ literal|"   cbnz	%w1, 1b        \n"
 operator|:
 literal|"=&r"
 operator|(
-name|tmp
+name|ret
 operator|)
 operator|,
 literal|"=&r"
 operator|(
 name|res
 operator|)
-operator|,
-literal|"+r"
+operator|:
+literal|"r"
 operator|(
 name|p
 operator|)
 operator|,
-literal|"+r"
+literal|"r"
 operator|(
 name|val
 operator|)
 operator|:
-operator|:
-literal|"cc"
-operator|,
 literal|"memory"
 block|)
 function|;
@@ -500,7 +473,148 @@ end_function
 begin_return
 return|return
 operator|(
-name|tmp
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_swap_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|;
+name|int
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1: ldxr	%0, [%2]      \n"
+literal|"   stxr	%w1, %3, [%2] \n"
+literal|"   cbnz	%w1, 1b       \n"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|res
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint32_t
+name|atomic_load_acq_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint32_t
+name|ret
+decl_stmt|;
+asm|__asm __volatile(
+literal|"ldar	%w0, [%1] \n"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_load_acq_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|;
+asm|__asm __volatile(
+literal|"ldar	%0, [%1] \n"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 end_return
@@ -509,7 +623,7 @@ begin_function
 unit|}  static
 name|__inline
 name|void
-name|atomic_subtract_32
+name|atomic_store_rel_32
 parameter_list|(
 specifier|volatile
 name|uint32_t
@@ -520,40 +634,55 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
 asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   sub	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
+literal|"stlr	%w0, [%1] \n"
 operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
+operator|:
+literal|"r"
 operator|(
 name|val
 operator|)
+operator|,
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_store_rel_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"stlr	%0, [%1] \n"
 operator|:
 operator|:
-literal|"cc"
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -615,345 +744,7 @@ name|atomic_subtract_int
 value|atomic_subtract_32
 end_define
 
-begin_function
-unit|static
-name|__inline
-name|void
-name|atomic_add_acq_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%w0, [%2]      \n"
-literal|"   add	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_acq_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%w0, [%2]      \n"
-literal|"   bic	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_cmpset_acq_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|cmpval
-parameter_list|,
-name|uint32_t
-name|newval
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: mov	%w1, #1        \n"
-literal|"   ldaxr	%w0, [%2]      \n"
-literal|"   cmp	%w0, %w3       \n"
-literal|"   b.ne	2f             \n"
-literal|"   stxr	%w1, %w4, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|newval
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|!
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|uint32_t
-name|atomic_load_acq_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|uint32_t
-name|ret
-decl_stmt|;
-asm|__asm __volatile(
-literal|"ldar	%w0, [%1] \n"
-operator|:
-literal|"=&r"
-operator|(
-name|ret
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|p
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_set_acq_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%w0, [%2]      \n"
-literal|"   orr	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_subtract_acq_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%w0, [%2]      \n"
-literal|"   sub	%w0, %w0, %w3  \n"
-literal|"   stxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
 begin_define
-unit|}
 define|#
 directive|define
 name|atomic_add_acq_int
@@ -995,342 +786,7 @@ name|atomic_subtract_acq_int
 value|atomic_subtract_acq_32
 end_define
 
-begin_comment
-comment|/* The atomic functions currently are both acq and rel, we should fix this. */
-end_comment
-
-begin_function
-unit|static
-name|__inline
-name|void
-name|atomic_add_rel_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   add	%w0, %w0, %w3  \n"
-literal|"   stlxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_rel_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   bic	%w0, %w0, %w3  \n"
-literal|"   stlxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_cmpset_rel_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|cmpval
-parameter_list|,
-name|uint32_t
-name|newval
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: mov	%w1, #1        \n"
-literal|"   ldxr	%w0, [%2]      \n"
-literal|"   cmp	%w0, %w3       \n"
-literal|"   b.ne	2f             \n"
-literal|"   stlxr	%w1, %w4, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|newval
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|!
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_set_rel_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   orr	%w0, %w0, %w3  \n"
-literal|"   stlxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_store_rel_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-asm|__asm __volatile(
-literal|"stlr	%w0, [%1] \n"
-operator|:
-operator|:
-literal|"r"
-operator|(
-name|val
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|p
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_subtract_rel_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|p
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%w0, [%2]      \n"
-literal|"   sub	%w0, %w0, %w3  \n"
-literal|"   stlxr	%w1, %w0, [%2] \n"
-literal|"   cbnz	%w1, 1b        \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
 begin_define
-unit|}
 define|#
 directive|define
 name|atomic_add_rel_int
@@ -1372,485 +828,7 @@ name|atomic_store_rel_int
 value|atomic_store_rel_32
 end_define
 
-begin_function
-unit|static
-name|__inline
-name|void
-name|atomic_add_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   add	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   bic	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_cmpset_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|cmpval
-parameter_list|,
-name|uint64_t
-name|newval
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: mov	%w1, #1       \n"
-literal|"   ldxr	%0, [%2]      \n"
-literal|"   cmp	%0, %3        \n"
-literal|"   b.ne	2f            \n"
-literal|"   stxr	%w1, %4, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|newval
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|!
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|uint64_t
-name|atomic_fetchadd_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|,
-name|ret
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%4, [%2]      \n"
-literal|"   add	%0, %4, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|ret
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|uint64_t
-name|atomic_readandclear_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|,
-name|ret
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"   mov	%0, #0        \n"
-literal|"1: ldxr	%3, [%2]      \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|ret
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_set_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   orr	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_subtract_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   sub	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|uint64_t
-name|atomic_swap_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|old
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   stxr	%w1, %3, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|old
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|old
-operator|)
-return|;
-end_return
-
 begin_define
-unit|}
 define|#
 directive|define
 name|atomic_add_long
@@ -1962,345 +940,7 @@ name|atomic_subtract_ptr
 value|atomic_subtract_64
 end_define
 
-begin_function
-unit|static
-name|__inline
-name|void
-name|atomic_add_acq_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%0, [%2]      \n"
-literal|"   add	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_acq_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%0, [%2]      \n"
-literal|"   bic	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_cmpset_acq_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|cmpval
-parameter_list|,
-name|uint64_t
-name|newval
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: mov	%w1, #1       \n"
-literal|"   ldaxr	%0, [%2]      \n"
-literal|"   cmp	%0, %3        \n"
-literal|"   b.ne	2f            \n"
-literal|"   stxr	%w1, %4, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|newval
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|!
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|uint64_t
-name|atomic_load_acq_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|uint64_t
-name|ret
-decl_stmt|;
-asm|__asm __volatile(
-literal|"ldar	%0, [%1] \n"
-operator|:
-literal|"=&r"
-operator|(
-name|ret
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|p
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_set_acq_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%0, [%2]      \n"
-literal|"   orr	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_subtract_acq_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldaxr	%0, [%2]      \n"
-literal|"   sub	%0, %0, %3    \n"
-literal|"   stxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
 begin_define
-unit|}
 define|#
 directive|define
 name|atomic_add_acq_long
@@ -2383,408 +1023,6 @@ directive|define
 name|atomic_subtract_acq_ptr
 value|atomic_subtract_acq_64
 end_define
-
-begin_comment
-comment|/*  * TODO: The atomic functions currently are both acq and rel, we should fix  * this.  */
-end_comment
-
-begin_function
-unit|static
-name|__inline
-name|void
-name|atomic_add_rel_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   add	%0, %0, %3    \n"
-literal|"   stlxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_rel_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   bic	%0, %0, %3    \n"
-literal|"   stlxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_cmpset_rel_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|cmpval
-parameter_list|,
-name|uint64_t
-name|newval
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: mov	%w1, #1       \n"
-literal|"   ldxr	%0, [%2]      \n"
-literal|"   cmp	%0, %3        \n"
-literal|"   b.ne	2f            \n"
-literal|"   stlxr	%w1, %4, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|cmpval
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|newval
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|!
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_set_rel_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   orr	%0, %0, %3    \n"
-literal|"   stlxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_store_rel_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-asm|__asm __volatile(
-literal|"stlr	%0, [%1] \n"
-operator|:
-operator|:
-literal|"r"
-operator|(
-name|val
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|p
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_subtract_rel_64
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|val
-parameter_list|)
-block|{
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"1: ldxr	%0, [%2]      \n"
-literal|"   sub	%0, %0, %3    \n"
-literal|"   stlxr	%w1, %0, [%2] \n"
-literal|"   cbnz	%w1, 1b       \n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"cc"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_thread_fence_acq
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dmb
-argument_list|(
-name|ld
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|atomic_thread_fence_rel
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dmb
-argument_list|(
-name|sy
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|atomic_thread_fence_acq_rel
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dmb
-argument_list|(
-name|sy
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|atomic_thread_fence_seq_cst
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dmb
-argument_list|(
-name|sy
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_define
 define|#
@@ -2869,6 +1107,74 @@ directive|define
 name|atomic_store_rel_ptr
 value|atomic_store_rel_64
 end_define
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|atomic_thread_fence_acq
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|dmb
+argument_list|(
+name|ld
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_rel
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|dmb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_acq_rel
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|dmb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_seq_cst
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|dmb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
