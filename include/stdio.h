@@ -2093,6 +2093,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|fdclose
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|fgetln
