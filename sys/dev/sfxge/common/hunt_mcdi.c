@@ -1642,7 +1642,7 @@ argument_list|,
 name|EFX_FAMILY_HUNTINGTON
 argument_list|)
 expr_stmt|;
-comment|/* use privilege mask state at MCDI attach */
+comment|/* 	 * Use privilege mask state at MCDI attach. 	 * Admin privilege must be used prior to introduction of 	 * specific flag. 	 */
 operator|*
 name|supportedp
 operator|=
@@ -1691,6 +1691,13 @@ operator|->
 name|en_nic_cfg
 operator|)
 decl_stmt|;
+name|uint32_t
+name|privilege_mask
+init|=
+name|encp
+operator|->
+name|enc_privilege_mask
+decl_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp
@@ -1702,19 +1709,29 @@ argument_list|,
 name|EFX_FAMILY_HUNTINGTON
 argument_list|)
 expr_stmt|;
-comment|/* use privilege mask state at MCDI attach */
+comment|/* 	 * Use privilege mask state at MCDI attach. 	 * Admin privilege must be used prior to introduction of 	 * specific flag (at v4.6). 	 */
 operator|*
 name|supportedp
 operator|=
 operator|(
-name|encp
-operator|->
-name|enc_privilege_mask
+operator|(
+name|privilege_mask
 operator|&
 name|MC_CMD_PRIVILEGE_MASK_IN_GRP_MAC_SPOOFING
 operator|)
 operator|==
 name|MC_CMD_PRIVILEGE_MASK_IN_GRP_MAC_SPOOFING
+operator|)
+operator|||
+operator|(
+operator|(
+name|privilege_mask
+operator|&
+name|MC_CMD_PRIVILEGE_MASK_IN_GRP_ADMIN
+operator|)
+operator|==
+name|MC_CMD_PRIVILEGE_MASK_IN_GRP_ADMIN
+operator|)
 expr_stmt|;
 return|return
 operator|(
