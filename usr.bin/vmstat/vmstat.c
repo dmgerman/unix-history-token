@@ -6896,22 +6896,6 @@ name|intrname
 operator|=
 name|intrnames
 expr_stmt|;
-name|xo_emit
-argument_list|(
-literal|"{T:/%-*s} {T:/%20s} {T:/%10s}\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|istrnamlen
-argument_list|,
-literal|"interrupt"
-argument_list|,
-literal|"total"
-argument_list|,
-literal|"rate"
-argument_list|)
-expr_stmt|;
 name|xo_open_list
 argument_list|(
 literal|"interrupt"
@@ -6993,12 +6977,15 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{k:name/%-*s} {:total/%20lu} {:rate/%10lu}\n"
+literal|"{d:name/%-*s}{ket:name/%s} "
+literal|"{:total/%20lu} {:rate/%10lu}\n"
 argument_list|,
 operator|(
 name|int
 operator|)
 name|istrnamlen
+argument_list|,
+name|intrname
 argument_list|,
 name|intrname
 argument_list|,
@@ -7295,7 +7282,7 @@ expr_stmt|;
 block|}
 name|xo_emit
 argument_list|(
-literal|"%{T:/%-%s} {T:/%20s} {T:/%10s\n"
+literal|"{T:/%-*s} {T:/%20s} {T:/%10s}\n"
 argument_list|,
 operator|(
 name|int
@@ -7310,6 +7297,11 @@ literal|"rate"
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Loop reps times printing differential interrupt counts.  If reps is 	 * zero, then run just once, printing total counts 	 */
+name|xo_open_container
+argument_list|(
+literal|"interrupt-statistics"
+argument_list|)
+expr_stmt|;
 name|period_ms
 operator|=
 name|uptime
@@ -7387,6 +7379,9 @@ argument_list|,
 name|period_ms
 argument_list|)
 expr_stmt|;
+name|xo_flush
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|old_intrcnts
@@ -7435,6 +7430,11 @@ operator|/
 literal|1000000
 expr_stmt|;
 block|}
+name|xo_close_container
+argument_list|(
+literal|"interrupt-statistics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7567,6 +7567,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|xo_open_container
+argument_list|(
+literal|"malloc-statistics"
+argument_list|)
+expr_stmt|;
 name|xo_emit
 argument_list|(
 literal|"{T:/%13s} {T:/%5s} {T:/%6s} {T:/%7s} {T:/%8s}  {T:Size(s)}\n"
@@ -7632,7 +7637,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{k:type/%13s} {:in-use/%5"
+literal|"{k:type/%13s/%s} {:in-use/%5"
 name|PRIu64
 literal|"} "
 literal|"{:memory-use/%5"
@@ -7756,6 +7761,11 @@ block|}
 name|xo_close_list
 argument_list|(
 literal|"memory"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"malloc-statistics"
 argument_list|)
 expr_stmt|;
 name|memstat_mtl_free
@@ -7899,6 +7909,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|xo_open_container
+argument_list|(
+literal|"memory-zone-statistics"
+argument_list|)
+expr_stmt|;
 name|xo_emit
 argument_list|(
 literal|"{T:/%-20s} {T:/%6s} {T:/%6s} {T:/%8s} {T:/%8s} {T:/%8s} "
@@ -7973,7 +7988,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{k:name/%-20s} {:size/%6"
+literal|"{d:name/%-20s}{ke:name/%s} {:size/%6"
 name|PRIu64
 literal|"}, "
 literal|"{:limit/%6"
@@ -7993,6 +8008,11 @@ name|PRIu64
 literal|"}\n"
 argument_list|,
 name|name
+argument_list|,
+name|memstat_get_name
+argument_list|(
+name|mtp
+argument_list|)
 argument_list|,
 name|memstat_get_size
 argument_list|(
@@ -8044,6 +8064,11 @@ expr_stmt|;
 name|xo_close_list
 argument_list|(
 literal|"zone"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"memory-zone-statistics"
 argument_list|)
 expr_stmt|;
 name|xo_emit
