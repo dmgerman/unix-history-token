@@ -777,6 +777,20 @@ argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" far: %16lx\n"
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" esr:         %.8lx\n"
+argument_list|,
+name|esr
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"data abort in critical section or under mutex"
@@ -952,6 +966,30 @@ name|pcb_onfault
 expr_stmt|;
 return|return;
 block|}
+name|printf
+argument_list|(
+literal|"Fatal data abort:\n"
+argument_list|)
+expr_stmt|;
+name|print_registers
+argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" far: %16lx\n"
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" esr:         %.8lx\n"
+argument_list|,
+name|esr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
@@ -1181,6 +1219,13 @@ case|:
 name|print_registers
 argument_list|(
 name|frame
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" esr:         %.8lx\n"
+argument_list|,
+name|esr
 argument_list|)
 expr_stmt|;
 name|panic
