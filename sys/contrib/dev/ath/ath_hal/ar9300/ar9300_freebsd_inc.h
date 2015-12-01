@@ -380,7 +380,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* These are the embedded boards; we don't currently support these */
+comment|/* These are the embedded boards */
 end_comment
 
 begin_ifdef
