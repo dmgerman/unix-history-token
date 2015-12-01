@@ -56,7 +56,7 @@ value|howmany(SFXGE_TSO_MAX_SIZE, 512)
 end_define
 
 begin_comment
-comment|/* Maximum number of DMA segments needed to map an mbuf chain.  With  * TSO, the mbuf length may be just over 64K, divided into 2K mbuf  * clusters taking into account that the first may be not 2K cluster  * boundary aligned.  * The chain could be longer than this initially, but can be shortened  * with m_collapse().  */
+comment|/* Maximum number of DMA segments needed to map an mbuf chain.  With  * TSO, the mbuf length may be just over 64K, divided into 2K mbuf  * clusters taking into account that the first may be not 2K cluster  * boundary aligned.  * Packet header may be split into two segments because of, for example,  * VLAN header insertion.  * The chain could be longer than this initially, but can be shortened  * with m_collapse().  */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ define|#
 directive|define
 name|SFXGE_TX_MAPPING_MAX_SEG
 define|\
-value|(1 + howmany(SFXGE_TSO_MAX_SIZE, MCLBYTES) + 1)
+value|(2 + howmany(SFXGE_TSO_MAX_SIZE, MCLBYTES) + 1)
 end_define
 
 begin_comment
