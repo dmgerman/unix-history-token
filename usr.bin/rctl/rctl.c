@@ -190,7 +190,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"malformed rule '%s': uknown user '%s'"
+literal|"malformed rule '%s': unknown user '%s'"
 argument_list|,
 name|unexpanded_rule
 argument_list|,
@@ -323,7 +323,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"malformed rule '%s': uknown group '%s'"
+literal|"malformed rule '%s': unknown group '%s'"
 argument_list|,
 name|unexpanded_rule
 argument_list|,
