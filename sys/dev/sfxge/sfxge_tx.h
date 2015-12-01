@@ -34,6 +34,17 @@ file|<netinet/tcp.h>
 end_include
 
 begin_comment
+comment|/* If defined, parse TX packets directly in if_transmit  * for better cache locality and reduced time under TX lock  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TX_PARSE_EARLY
+value|1
+end_define
+
+begin_comment
 comment|/* Maximum size of TSO packet */
 end_comment
 
