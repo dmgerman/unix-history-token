@@ -4177,19 +4177,6 @@ argument_list|,
 name|mac_addr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|rc
-operator|=
-name|efx_mcdi_get_mac_address_vf
-argument_list|(
-name|enp
-argument_list|,
-name|mac_addr
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4208,10 +4195,23 @@ literal|0x02
 operator|)
 condition|)
 block|{
-comment|/* 		 * If the static config does not include a global MAC address 		 * pool then the board may return a locally administered MAC 		 * address (this should only happen on incorrectly programmed 		 * boards). 		 */
+comment|/* 			 * If the static config does not include a global MAC 			 * address pool then the board may return a locally 			 * administered MAC address (this should only happen on 			 * incorrectly programmed boards). 			 */
 name|rc
 operator|=
 name|EINVAL
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|rc
+operator|=
+name|efx_mcdi_get_mac_address_vf
+argument_list|(
+name|enp
+argument_list|,
+name|mac_addr
+argument_list|)
 expr_stmt|;
 block|}
 if|if
