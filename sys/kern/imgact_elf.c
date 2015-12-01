@@ -1437,6 +1437,24 @@ argument_list|,
 name|osrel
 argument_list|)
 expr_stmt|;
+comment|/* Give brand a chance to veto check_note's guess */
+if|if
+condition|(
+name|ret
+operator|&&
+name|bi
+operator|->
+name|header_supported
+condition|)
+name|ret
+operator|=
+name|bi
+operator|->
+name|header_supported
+argument_list|(
+name|imgp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
