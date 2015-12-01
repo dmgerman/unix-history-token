@@ -499,10 +499,6 @@ index|]
 decl_stmt|;
 comment|/* space for 0x; ox[1] is either x, X, or \0 */
 name|int
-name|prsize
-decl_stmt|;
-comment|/* max size of printed field */
-name|int
 name|ret
 decl_stmt|;
 comment|/* return value accumulator */
@@ -1303,20 +1299,6 @@ condition|)
 name|realsz
 operator|+=
 literal|2
-expr_stmt|;
-name|prsize
-operator|=
-name|pi
-operator|->
-name|width
-operator|>
-name|realsz
-condition|?
-name|pi
-operator|->
-name|width
-else|:
-name|realsz
 expr_stmt|;
 comment|/* right-adjusting blank padding */
 if|if
