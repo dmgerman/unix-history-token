@@ -2342,7 +2342,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_ONEGB
+name|ISP_CFG_1GB
 value|0x10
 end_define
 
@@ -2353,7 +2353,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_TWOGB
+name|ISP_CFG_2GB
 value|0x20
 end_define
 
@@ -2441,7 +2441,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_FOURGB
+name|ISP_CFG_4GB
 value|0x2000
 end_define
 
@@ -2452,7 +2452,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_EIGHTGB
+name|ISP_CFG_8GB
 value|0x4000
 end_define
 
@@ -2463,7 +2463,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_SIXTEENGB
+name|ISP_CFG_16GB
 value|0x8000
 end_define
 
@@ -2912,6 +2912,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_FC_2600
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -3117,6 +3124,16 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|((isp)->isp_type>= ISP_HA_FC_2500)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_26XX
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type>= ISP_HA_FC_2600)
 end_define
 
 begin_comment
