@@ -60896,7 +60896,6 @@ name|sctp_stream_out
 operator|*
 argument_list|,
 operator|(
-operator|(
 name|stcb
 operator|->
 name|asoc
@@ -60911,7 +60910,6 @@ argument_list|(
 expr|struct
 name|sctp_stream_out
 argument_list|)
-operator|)
 argument_list|,
 name|SCTP_M_STRMO
 argument_list|)
