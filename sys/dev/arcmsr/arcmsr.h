@@ -479,6 +479,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1203
+value|0x1203
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1210
 value|0x1210
 end_define
@@ -800,6 +811,17 @@ define|#
 directive|define
 name|PCIDevVenIDARC1201
 value|0x120117D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1203
+value|0x120317D3
 end_define
 
 begin_comment
@@ -1211,6 +1233,32 @@ parameter_list|,
 name|d
 parameter_list|)
 value|bus_space_write_4(acb->btag[b], acb->bhandle[b], offsetof(struct s, r), d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_CHIP_REG32
+parameter_list|(
+name|b
+parameter_list|,
+name|r
+parameter_list|)
+value|bus_space_read_4(acb->btag[b], acb->bhandle[b], r)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_CHIP_REG32
+parameter_list|(
+name|b
+parameter_list|,
+name|r
+parameter_list|,
+name|d
+parameter_list|)
+value|bus_space_write_4(acb->btag[b], acb->bhandle[b], r, d)
 end_define
 
 begin_comment
@@ -1759,6 +1807,42 @@ define|#
 directive|define
 name|ARCMSR_IOP2DRV_DOORBELL_MASK
 value|0x0002040C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_DOORBELL_1203
+value|0x00021870
+end_define
+
+begin_comment
+comment|/* window of "instruction flags" from iop to driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_DOORBELL_MASK_1203
+value|0x00021874
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_DOORBELL_1203
+value|0x00021878
+end_define
+
+begin_comment
+comment|/* window of "instruction flags" from driver to iop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_DOORBELL_MASK_1203
+value|0x0002187C
 end_define
 
 begin_comment
@@ -2748,6 +2832,37 @@ end_comment
 
 begin_struct
 struct|struct
+name|HBB_DOORBELL_1203
+block|{
+name|u_int8_t
+name|doorbell_reserved
+index|[
+name|ARCMSR_IOP2DRV_DOORBELL_1203
+index|]
+decl_stmt|;
+comment|/*reserved */
+name|u_int32_t
+name|iop2drv_doorbell
+decl_stmt|;
+comment|/*offset 0x00021870:00,01,02,03: window of "instruction flags" from iop to driver */
+name|u_int32_t
+name|iop2drv_doorbell_mask
+decl_stmt|;
+comment|/*                  04,05,06,07: doorbell mask */
+name|u_int32_t
+name|drv2iop_doorbell
+decl_stmt|;
+comment|/*                  08,09,10,11: window of "instruction flags" from driver to iop */
+name|u_int32_t
+name|drv2iop_doorbell_mask
+decl_stmt|;
+comment|/*                  12,13,14,15: doorbell mask */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|HBB_DOORBELL
 block|{
 name|u_int8_t
@@ -2864,6 +2979,22 @@ name|HBB_RWBUFFER
 modifier|*
 name|hbb_rwbuffer
 decl_stmt|;
+name|bus_size_t
+name|drv2iop_doorbell
+decl_stmt|;
+comment|/* window of "instruction flags" from driver to iop */
+name|bus_size_t
+name|drv2iop_doorbell_mask
+decl_stmt|;
+comment|/* doorbell mask */
+name|bus_size_t
+name|iop2drv_doorbell
+decl_stmt|;
+comment|/* window of "instruction flags" from iop to driver */
+name|bus_size_t
+name|iop2drv_doorbell_mask
+decl_stmt|;
+comment|/* doorbell mask */
 block|}
 struct|;
 end_struct
