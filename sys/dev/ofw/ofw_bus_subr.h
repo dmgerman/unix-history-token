@@ -311,7 +311,7 @@ comment|/* Helper to get node's interrupt parent */
 end_comment
 
 begin_function_decl
-name|void
+name|phandle_t
 name|ofw_bus_find_iparent
 parameter_list|(
 name|phandle_t
