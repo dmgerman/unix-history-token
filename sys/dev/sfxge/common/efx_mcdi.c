@@ -1749,6 +1749,7 @@ name|emr_rc
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|emcop
 operator|->
 name|emco_request_copyout
@@ -1758,7 +1759,6 @@ argument_list|,
 name|emrp
 argument_list|)
 expr_stmt|;
-block|}
 name|emtp
 operator|->
 name|emt_ev_cpl

@@ -437,6 +437,24 @@ name|EFX_MCDI_EXCEPTION_MC_BADASSERT
 block|, }
 name|efx_mcdi_exception_t
 typedef|;
+if|#
+directive|if
+name|EFSYS_OPT_MCDI_LOGGING
+typedef|typedef
+enum|enum
+name|efx_log_msg_e
+block|{
+name|EFX_LOG_INVALID
+block|,
+name|EFX_LOG_MCDI_REQUEST
+block|,
+name|EFX_LOG_MCDI_RESPONSE
+block|, }
+name|efx_log_msg_t
+typedef|;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MCDI_LOGGING */
 typedef|typedef
 struct|struct
 name|efx_mcdi_transport_s
@@ -484,6 +502,34 @@ parameter_list|,
 name|efx_mcdi_exception_t
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|EFSYS_OPT_MCDI_LOGGING
+name|void
+function_decl|(
+modifier|*
+name|emt_logger
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|efx_log_msg_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MCDI_LOGGING */
 block|}
 name|efx_mcdi_transport_t
 typedef|;
