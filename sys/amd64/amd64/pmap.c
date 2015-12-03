@@ -5634,7 +5634,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 		 * Promotion: flush every 4KB page mapping from the TLB, 		 * including any global (PG_G) mappings. 		 */
-name|invltlb_globpcid
+name|invltlb_glob
 argument_list|()
 expr_stmt|;
 block|}
@@ -6182,7 +6182,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|invltlb_globpcid
+name|invltlb_glob
 argument_list|()
 expr_stmt|;
 block|}
@@ -6988,7 +6988,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|invltlb_globpcid
+name|invltlb_glob
 argument_list|()
 expr_stmt|;
 block|}

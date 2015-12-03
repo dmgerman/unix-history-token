@@ -63,6 +63,12 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* global symbols in mpboot.S */
 end_comment
@@ -264,6 +270,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|pmap
+modifier|*
+name|smp_tlb_pmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|volatile
 name|int
 name|smp_tlb_wait
@@ -449,12 +464,6 @@ end_decl_stmt
 begin_comment
 comment|/* handle CPU rendezvous */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|pmap
-struct_decl|;
-end_struct_decl
 
 begin_comment
 comment|/* functions in mp_machdep.c */
