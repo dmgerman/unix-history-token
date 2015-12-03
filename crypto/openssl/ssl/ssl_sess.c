@@ -493,14 +493,14 @@ name|tlsext_hostname
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 name|dest
 operator|->
 name|tlsext_tick
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 operator|&
@@ -671,8 +671,6 @@ name|err
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ticket
@@ -722,6 +720,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|dest
 return|;
