@@ -6768,14 +6768,7 @@ argument_list|)
 expr_stmt|;
 name|buff_size
 operator|=
-name|roundup
-argument_list|(
-name|size
-argument_list|,
-name|mw
-operator|->
-name|xlat_align
-argument_list|)
+name|xlat_size
 expr_stmt|;
 comment|/* No need to re-setup */
 if|if
