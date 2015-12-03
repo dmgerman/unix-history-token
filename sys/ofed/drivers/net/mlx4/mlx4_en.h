@@ -144,20 +144,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRV_VERSION
-value|"2.1"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRV_RELDATE
-value|__DATE__
-end_define
-
-begin_define
-define|#
-directive|define
 name|MLX4_EN_MSG_LEVEL
 value|(NETIF_MSG_LINK | NETIF_MSG_IFDOWN)
 end_define
@@ -551,7 +537,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TX_RINGS
-value|(MLX4_EN_MAX_TX_RING_P_UP * \ 					 MLX4_EN_NUM_UP)
+value|(MLX4_EN_MAX_TX_RING_P_UP * \ 					MLX4_EN_NUM_UP)
 end_define
 
 begin_define
@@ -1057,20 +1043,66 @@ end_define
 begin_define
 define|#
 directive|define
-name|MLX4_EN_TX_BUDGET
-value|64*4
+name|MLX4_EN_RX_BUDGET
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_MAX_DESC_SIZE
+value|512
 end_define
 
 begin_comment
-comment|//Compensate for no NAPI in freeBSD - might need some fine tunning in the future.
+comment|/* bytes */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MLX4_EN_RX_BUDGET
-value|64
+name|MLX4_EN_TX_MAX_MBUF_SIZE
+value|65536
 end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_MAX_PAYLOAD_SIZE
+value|65536
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_MAX_MBUF_FRAGS
+define|\
+value|((MLX4_EN_TX_MAX_DESC_SIZE - 128) / DS_SIZE_ALIGNMENT)
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_WQE_MAX_WQEBBS
+define|\
+value|(MLX4_EN_TX_MAX_DESC_SIZE / TXBB_SIZE)
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
 
 begin_define
 define|#
@@ -1123,7 +1155,7 @@ decl_stmt|;
 name|u32
 name|doorbell_qpn
 decl_stmt|;
-name|void
+name|u8
 modifier|*
 name|buf
 decl_stmt|;
@@ -1190,6 +1222,10 @@ decl_stmt|;
 name|unsigned
 name|long
 name|queue_stopped
+decl_stmt|;
+name|unsigned
+name|long
+name|oversized_packets
 decl_stmt|;
 name|unsigned
 name|long
@@ -1317,7 +1353,7 @@ decl_stmt|;
 name|int
 name|qpn
 decl_stmt|;
-name|void
+name|u8
 modifier|*
 name|buf
 decl_stmt|;
@@ -1521,6 +1557,9 @@ name|tot_rx
 decl_stmt|;
 name|u32
 name|tot_tx
+decl_stmt|;
+name|u32
+name|curr_poll_rx_cpu_id
 decl_stmt|;
 ifdef|#
 directive|ifdef

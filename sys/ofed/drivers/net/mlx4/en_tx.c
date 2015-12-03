@@ -1383,6 +1383,12 @@ name|mlx4_en_tx_desc
 modifier|*
 name|tx_desc
 init|=
+operator|(
+expr|struct
+name|mlx4_en_tx_desc
+operator|*
+operator|)
+operator|(
 name|ring
 operator|->
 name|buf
@@ -1390,6 +1396,7 @@ operator|+
 name|index
 operator|*
 name|TXBB_SIZE
+operator|)
 decl_stmt|;
 name|void
 modifier|*
@@ -1525,6 +1532,10 @@ condition|)
 block|{
 name|ptr
 operator|=
+operator|(
+name|__be32
+operator|*
+operator|)
 name|ring
 operator|->
 name|buf
@@ -1593,6 +1604,12 @@ name|mlx4_en_tx_desc
 modifier|*
 name|tx_desc
 init|=
+operator|(
+expr|struct
+name|mlx4_en_tx_desc
+operator|*
+operator|)
+operator|(
 name|ring
 operator|->
 name|buf
@@ -1600,6 +1617,7 @@ operator|+
 name|index
 operator|*
 name|TXBB_SIZE
+operator|)
 decl_stmt|;
 name|struct
 name|mlx4_wqe_data_seg
@@ -1783,6 +1801,12 @@ condition|)
 block|{
 name|data
 operator|=
+operator|(
+expr|struct
+name|mlx4_wqe_data_seg
+operator|*
+operator|)
+operator|(
 name|ring
 operator|->
 name|buf
@@ -1795,6 +1819,7 @@ operator|)
 name|data
 operator|-
 name|end
+operator|)
 operator|)
 expr_stmt|;
 block|}
@@ -1862,6 +1887,11 @@ name|end
 condition|)
 name|data
 operator|=
+operator|(
+expr|struct
+name|mlx4_wqe_data_seg
+operator|*
+operator|)
 name|ring
 operator|->
 name|buf
@@ -2995,6 +3025,12 @@ expr_stmt|;
 block|}
 comment|/* Return real descriptor location */
 return|return
+operator|(
+expr|struct
+name|mlx4_en_tx_desc
+operator|*
+operator|)
+operator|(
 name|ring
 operator|->
 name|buf
@@ -3002,6 +3038,7 @@ operator|+
 name|index
 operator|*
 name|TXBB_SIZE
+operator|)
 return|;
 block|}
 end_function
@@ -4243,25 +4280,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* check if flowid is set */
-if|if
-condition|(
-name|M_HASHTYPE_GET
-argument_list|(
-name|mb
-argument_list|)
-operator|!=
-name|M_HASHTYPE_NONE
-condition|)
-name|queue_index
-operator|=
-name|mb
-operator|->
-name|m_pkthdr
-operator|.
-name|flowid
-expr_stmt|;
-else|else
 name|queue_index
 operator|=
 name|m_ether_tcpip_hash
@@ -4303,6 +4321,7 @@ name|__iomem
 modifier|*
 name|dst
 parameter_list|,
+specifier|volatile
 name|unsigned
 name|long
 modifier|*
@@ -4316,7 +4335,13 @@ name|__iowrite64_copy
 argument_list|(
 name|dst
 argument_list|,
+name|__DEVOLATILE
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|src
+argument_list|)
 argument_list|,
 name|bytecnt
 operator|/
@@ -4821,6 +4846,12 @@ argument_list|)
 condition|)
 name|tx_desc
 operator|=
+operator|(
+expr|struct
+name|mlx4_en_tx_desc
+operator|*
+operator|)
+operator|(
 name|ring
 operator|->
 name|buf
@@ -4828,6 +4859,7 @@ operator|+
 name|index
 operator|*
 name|TXBB_SIZE
+operator|)
 expr_stmt|;
 else|else
 block|{
@@ -5867,10 +5899,7 @@ name|m
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-operator|(
+comment|/* 		 * If we can't insert mbuf into drbr, try to xmit anyway. 		 * We keep the error we got so we could return that after xmit. 		 */
 name|err
 operator|=
 name|drbr_enqueue
@@ -5883,16 +5912,7 @@ name|br
 argument_list|,
 name|m
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
+expr_stmt|;
 comment|/* Process the queue */
 while|while
 condition|(
@@ -6176,6 +6196,31 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Compute which queue to use */
+if|if
+condition|(
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
+condition|)
+block|{
+name|i
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|%
+name|priv
+operator|->
+name|tx_ring_num
+expr_stmt|;
+block|}
+else|else
+block|{
 name|i
 operator|=
 name|mlx4_en_select_queue
@@ -6185,6 +6230,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|ring
 operator|=
 name|priv
