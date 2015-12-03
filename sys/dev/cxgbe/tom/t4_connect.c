@@ -1137,7 +1137,9 @@ name|pi
 init|=
 name|toep
 operator|->
-name|port
+name|vi
+operator|->
+name|pi
 decl_stmt|;
 name|struct
 name|adapter
@@ -1494,9 +1496,9 @@ operator|->
 name|rt_ifp
 decl_stmt|;
 name|struct
-name|port_info
+name|vi_info
 modifier|*
-name|pi
+name|vi
 decl_stmt|;
 name|int
 name|mtu_idx
@@ -1572,7 +1574,7 @@ name|if_type
 operator|==
 name|IFT_ETHER
 condition|)
-name|pi
+name|vi
 operator|=
 name|rt_ifp
 operator|->
@@ -1598,7 +1600,7 @@ argument_list|(
 name|rt_ifp
 argument_list|)
 decl_stmt|;
-name|pi
+name|vi
 operator|=
 name|ifp
 operator|->
@@ -1630,7 +1632,7 @@ name|toep
 operator|=
 name|alloc_toepcb
 argument_list|(
-name|pi
+name|vi
 argument_list|,
 operator|-
 literal|1
@@ -1682,6 +1684,8 @@ name|l2te
 operator|=
 name|t4_l2t_get
 argument_list|(
+name|vi
+operator|->
 name|pi
 argument_list|,
 name|rt_ifp
@@ -1961,7 +1965,7 @@ name|params
 operator|=
 name|select_ntuple
 argument_list|(
-name|pi
+name|vi
 argument_list|,
 name|toep
 operator|->
@@ -2006,7 +2010,7 @@ name|params
 operator|=
 name|select_ntuple
 argument_list|(
-name|pi
+name|vi
 argument_list|,
 name|toep
 operator|->
@@ -2129,7 +2133,7 @@ name|calc_opt0
 argument_list|(
 name|so
 argument_list|,
-name|pi
+name|vi
 argument_list|,
 name|toep
 operator|->
@@ -2193,7 +2197,7 @@ name|params
 operator|=
 name|select_ntuple
 argument_list|(
-name|pi
+name|vi
 argument_list|,
 name|toep
 operator|->
@@ -2238,7 +2242,7 @@ name|params
 operator|=
 name|select_ntuple
 argument_list|(
-name|pi
+name|vi
 argument_list|,
 name|toep
 operator|->
@@ -2294,7 +2298,7 @@ name|calc_opt0
 argument_list|(
 name|so
 argument_list|,
-name|pi
+name|vi
 argument_list|,
 name|toep
 operator|->
