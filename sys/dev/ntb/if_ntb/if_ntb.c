@@ -6855,6 +6855,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ntb_printf
+argument_list|(
+literal|0
+argument_list|,
+literal|"Unable to allocate MW buffer of size %zu/%zu\n"
+argument_list|,
+name|mw
+operator|->
+name|buff_size
+argument_list|,
+name|mw
+operator|->
+name|xlat_size
+argument_list|)
+expr_stmt|;
 name|mw
 operator|->
 name|xlat_size
@@ -6866,15 +6881,6 @@ operator|->
 name|buff_size
 operator|=
 literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ntb: Unable to allocate MW buffer of size %zu\n"
-argument_list|,
-name|mw
-operator|->
-name|xlat_size
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
