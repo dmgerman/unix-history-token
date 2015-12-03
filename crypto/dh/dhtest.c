@@ -5714,7 +5714,6 @@ expr_stmt|;
 comment|/*          * Work out shared secrets using both sides and compare with expected          * values.          */
 if|if
 condition|(
-operator|!
 name|DH_compute_key
 argument_list|(
 name|Z1
@@ -5725,13 +5724,15 @@ name|pub_key
 argument_list|,
 name|dhA
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|bad_err
 goto|;
 if|if
 condition|(
-operator|!
 name|DH_compute_key
 argument_list|(
 name|Z2
@@ -5742,6 +5743,9 @@ name|pub_key
 argument_list|,
 name|dhB
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|bad_err

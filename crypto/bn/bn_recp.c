@@ -560,9 +560,16 @@ argument_list|,
 name|m
 argument_list|)
 condition|)
+block|{
+name|BN_CTX_end
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|BN_CTX_end
 argument_list|(
 name|ctx

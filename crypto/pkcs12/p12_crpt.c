@@ -110,6 +110,15 @@ index|[
 name|EVP_MAX_IV_LENGTH
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|cipher
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Extract useful info from parameter */
 if|if
 condition|(

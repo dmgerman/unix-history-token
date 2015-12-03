@@ -315,7 +315,7 @@ name|BIGNUM
 modifier|*
 name|pub_key
 decl_stmt|;
-comment|/* g^x */
+comment|/* g^x % p */
 name|BIGNUM
 modifier|*
 name|priv_key

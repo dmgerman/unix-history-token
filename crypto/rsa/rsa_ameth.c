@@ -1307,6 +1307,12 @@ condition|(
 name|alg
 operator|==
 name|NULL
+operator|||
+name|alg
+operator|->
+name|parameter
+operator|==
+name|NULL
 condition|)
 return|return
 name|NULL

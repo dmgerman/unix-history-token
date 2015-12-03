@@ -1753,6 +1753,52 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|V1_ROOT
+value|(EXFLAG_V1|EXFLAG_SS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ku_reject
+parameter_list|(
+name|x
+parameter_list|,
+name|usage
+parameter_list|)
+define|\
+value|(((x)->ex_flags& EXFLAG_KUSAGE)&& !((x)->ex_kusage& (usage)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|xku_reject
+parameter_list|(
+name|x
+parameter_list|,
+name|usage
+parameter_list|)
+define|\
+value|(((x)->ex_flags& EXFLAG_XKUSAGE)&& !((x)->ex_xkusage& (usage)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_reject
+parameter_list|(
+name|x
+parameter_list|,
+name|usage
+parameter_list|)
+define|\
+value|(((x)->ex_flags& EXFLAG_NSCERT)&& !((x)->ex_nscert& (usage)))
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -2399,6 +2445,14 @@ name|akid
 argument_list|)
 operator|==
 name|X509_V_OK
+operator|&&
+operator|!
+name|ku_reject
+argument_list|(
+name|x
+argument_list|,
+name|KU_KEY_CERT_SIGN
+argument_list|)
 condition|)
 name|x
 operator|->
@@ -2581,52 +2635,6 @@ end_function
 begin_comment
 comment|/*-  * CA checks common to all purposes  * return codes:  * 0 not a CA  * 1 is a CA  * 2 basicConstraints absent so "maybe" a CA  * 3 basicConstraints absent but self signed V1.  * 4 basicConstraints absent but keyUsage present and keyCertSign asserted.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|V1_ROOT
-value|(EXFLAG_V1|EXFLAG_SS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ku_reject
-parameter_list|(
-name|x
-parameter_list|,
-name|usage
-parameter_list|)
-define|\
-value|(((x)->ex_flags& EXFLAG_KUSAGE)&& !((x)->ex_kusage& (usage)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|xku_reject
-parameter_list|(
-name|x
-parameter_list|,
-name|usage
-parameter_list|)
-define|\
-value|(((x)->ex_flags& EXFLAG_XKUSAGE)&& !((x)->ex_xkusage& (usage)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ns_reject
-parameter_list|(
-name|x
-parameter_list|,
-name|usage
-parameter_list|)
-define|\
-value|(((x)->ex_flags& EXFLAG_NSCERT)&& !((x)->ex_nscert& (usage)))
-end_define
 
 begin_function
 specifier|static

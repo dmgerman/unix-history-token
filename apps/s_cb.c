@@ -3589,6 +3589,19 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|TLSEXT_TYPE_application_layer_protocol_negotiation
+case|case
+name|TLSEXT_TYPE_application_layer_protocol_negotiation
+case|:
+name|extname
+operator|=
+literal|"application layer protocol negotiation"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|TLSEXT_TYPE_padding
 case|:

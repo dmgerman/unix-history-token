@@ -3486,7 +3486,7 @@ name|CMSerr
 argument_list|(
 name|CMS_F_CMS_FINAL
 argument_list|,
-name|ERR_R_MALLOC_FAILURE
+name|CMS_R_CMS_LIB
 argument_list|)
 expr_stmt|;
 return|return

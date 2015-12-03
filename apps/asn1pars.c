@@ -1464,6 +1464,12 @@ operator|||
 operator|(
 name|typ
 operator|==
+name|V_ASN1_BOOLEAN
+operator|)
+operator|||
+operator|(
+name|typ
+operator|==
 name|V_ASN1_NULL
 operator|)
 condition|)
@@ -1474,13 +1480,10 @@ name|bio_err
 argument_list|,
 literal|"Can't parse %s type\n"
 argument_list|,
+name|ASN1_tag2str
+argument_list|(
 name|typ
-operator|==
-name|V_ASN1_NULL
-condition|?
-literal|"NULL"
-else|:
-literal|"OBJECT"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors

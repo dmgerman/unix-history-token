@@ -1348,11 +1348,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * ssl3_cbc_digest_record computes the MAC of a decrypted, padded SSLv3/TLS  * record.  *  *   ctx: the EVP_MD_CTX from which we take the hash function.  *     ssl3_cbc_record_digest_supported must return true for this EVP_MD_CTX.  *   md_out: the digest output. At most EVP_MAX_MD_SIZE bytes will be written.  *   md_out_size: if non-NULL, the number of output bytes is written here.  *   header: the 13-byte, TLS record header.  *   data: the record data itself, less any preceeding explicit IV.  *   data_plus_mac_size: the secret, reported length of the data and MAC  *     once the padding has been removed.  *   data_plus_mac_plus_padding_size: the public length of the whole  *     record, including padding.  *   is_sslv3: non-zero if we are to use SSLv3. Otherwise, TLS.  *  * On entry: by virtue of having been through one of the remove_padding  * functions, above, we know that data_plus_mac_size is large enough to contain  * a padding byte and MAC. (If the padding was invalid, it might contain the  * padding too. )  */
+comment|/*-  * ssl3_cbc_digest_record computes the MAC of a decrypted, padded SSLv3/TLS  * record.  *  *   ctx: the EVP_MD_CTX from which we take the hash function.  *     ssl3_cbc_record_digest_supported must return true for this EVP_MD_CTX.  *   md_out: the digest output. At most EVP_MAX_MD_SIZE bytes will be written.  *   md_out_size: if non-NULL, the number of output bytes is written here.  *   header: the 13-byte, TLS record header.  *   data: the record data itself, less any preceeding explicit IV.  *   data_plus_mac_size: the secret, reported length of the data and MAC  *     once the padding has been removed.  *   data_plus_mac_plus_padding_size: the public length of the whole  *     record, including padding.  *   is_sslv3: non-zero if we are to use SSLv3. Otherwise, TLS.  *  * On entry: by virtue of having been through one of the remove_padding  * functions, above, we know that data_plus_mac_size is large enough to contain  * a padding byte and MAC. (If the padding was invalid, it might contain the  * padding too. )  * Returns 1 on success or 0 on error  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ssl3_cbc_digest_record
 parameter_list|(
 specifier|const
@@ -1563,6 +1563,8 @@ block|{
 case|case
 name|NID_md5
 case|:
+if|if
+condition|(
 name|MD5_Init
 argument_list|(
 operator|(
@@ -1573,7 +1575,12 @@ name|md_state
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|md_final_raw
 operator|=
 name|tls1_md5_final_raw
@@ -1615,6 +1622,8 @@ break|break;
 case|case
 name|NID_sha1
 case|:
+if|if
+condition|(
 name|SHA1_Init
 argument_list|(
 operator|(
@@ -1625,7 +1634,12 @@ name|md_state
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|md_final_raw
 operator|=
 name|tls1_sha1_final_raw
@@ -1662,6 +1676,8 @@ name|OPENSSL_NO_SHA256
 case|case
 name|NID_sha224
 case|:
+if|if
+condition|(
 name|SHA224_Init
 argument_list|(
 operator|(
@@ -1672,7 +1688,12 @@ name|md_state
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|md_final_raw
 operator|=
 name|tls1_sha256_final_raw
@@ -1708,6 +1729,8 @@ break|break;
 case|case
 name|NID_sha256
 case|:
+if|if
+condition|(
 name|SHA256_Init
 argument_list|(
 operator|(
@@ -1718,7 +1741,12 @@ name|md_state
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|md_final_raw
 operator|=
 name|tls1_sha256_final_raw
@@ -1757,6 +1785,8 @@ name|OPENSSL_NO_SHA512
 case|case
 name|NID_sha384
 case|:
+if|if
+condition|(
 name|SHA384_Init
 argument_list|(
 operator|(
@@ -1767,7 +1797,12 @@ name|md_state
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|md_final_raw
 operator|=
 name|tls1_sha512_final_raw
@@ -1811,6 +1846,8 @@ break|break;
 case|case
 name|NID_sha512
 case|:
+if|if
+condition|(
 name|SHA512_Init
 argument_list|(
 operator|(
@@ -1821,7 +1858,12 @@ name|md_state
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|md_final_raw
 operator|=
 name|tls1_sha512_final_raw
@@ -1876,10 +1918,11 @@ condition|)
 operator|*
 name|md_out_size
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|OPENSSL_assert
 argument_list|(
@@ -2301,7 +2344,9 @@ name|md_block_size
 condition|)
 block|{
 comment|/* Should never happen */
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|overhang
 operator|=
@@ -2709,6 +2754,8 @@ operator|&
 name|md_ctx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|EVP_DigestInit_ex
 argument_list|(
 operator|&
@@ -2721,7 +2768,12 @@ argument_list|,
 name|NULL
 comment|/* engine */
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|is_sslv3
@@ -2737,6 +2789,8 @@ argument_list|,
 name|sslv3_pad_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|EVP_DigestUpdate
 argument_list|(
 operator|&
@@ -2746,7 +2800,9 @@ name|mac_secret
 argument_list|,
 name|mac_secret_length
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+operator|||
 name|EVP_DigestUpdate
 argument_list|(
 operator|&
@@ -2756,7 +2812,9 @@ name|hmac_pad
 argument_list|,
 name|sslv3_pad_length
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+operator|||
 name|EVP_DigestUpdate
 argument_list|(
 operator|&
@@ -2766,7 +2824,12 @@ name|mac_out
 argument_list|,
 name|md_size
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 block|}
 else|else
 block|{
@@ -2791,6 +2854,8 @@ index|]
 operator|^=
 literal|0x6a
 expr_stmt|;
+if|if
+condition|(
 name|EVP_DigestUpdate
 argument_list|(
 operator|&
@@ -2800,7 +2865,9 @@ name|hmac_pad
 argument_list|,
 name|md_block_size
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+operator|||
 name|EVP_DigestUpdate
 argument_list|(
 operator|&
@@ -2810,7 +2877,12 @@ name|mac_out
 argument_list|,
 name|md_size
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 block|}
 name|EVP_DigestFinal
 argument_list|(
@@ -2838,6 +2910,20 @@ operator|&
 name|md_ctx
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+name|err
+label|:
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|md_ctx
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

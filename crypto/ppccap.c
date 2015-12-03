@@ -63,7 +63,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<crypto.h>
+file|<openssl/crypto.h>
 end_include
 
 begin_include

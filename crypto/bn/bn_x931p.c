@@ -667,9 +667,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|err
+goto|;
 name|BN_CTX_start
 argument_list|(
 name|ctx
@@ -710,9 +710,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|err
+goto|;
 comment|/* Check that |Xp - Xq|> 2^(nbits - 100) */
 name|BN_sub
 argument_list|(
@@ -752,6 +752,16 @@ condition|)
 return|return
 literal|1
 return|;
+return|return
+literal|0
+return|;
+name|err
+label|:
+name|BN_CTX_end
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

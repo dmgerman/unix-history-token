@@ -4731,6 +4731,8 @@ name|i
 decl_stmt|;
 name|int
 name|cnid
+init|=
+name|NID_undef
 decl_stmt|;
 name|int
 name|alt_type
@@ -4826,10 +4828,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cnid
-operator|=
-literal|0
-expr_stmt|;
 name|alt_type
 operator|=
 name|V_ASN1_OCTET_STRING
@@ -4999,8 +4997,9 @@ name|rv
 return|;
 if|if
 condition|(
-operator|!
 name|cnid
+operator|==
+name|NID_undef
 operator|||
 operator|(
 name|san_present
@@ -5017,6 +5016,16 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* We're done if CN-ID is not pertinent */
+if|if
+condition|(
+name|cnid
+operator|==
+name|NID_undef
+condition|)
+return|return
+literal|0
+return|;
 name|i
 operator|=
 operator|-

@@ -964,6 +964,7 @@ argument_list|,
 literal|16
 argument_list|)
 condition|)
+block|{
 name|RSAerr
 argument_list|(
 name|RSA_F_INT_RSA_VERIFY
@@ -971,13 +972,16 @@ argument_list|,
 name|RSA_R_BAD_SIGNATURE
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|ret
 operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Special case: SSL signature */
+block|}
+elseif|else
 if|if
 condition|(
 name|dtype
@@ -985,6 +989,7 @@ operator|==
 name|NID_md5_sha1
 condition|)
 block|{
+comment|/* Special case: SSL signature */
 if|if
 condition|(
 operator|(

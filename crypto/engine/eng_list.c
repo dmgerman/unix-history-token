@@ -773,6 +773,9 @@ argument_list|,
 name|ENGINE_R_ID_OR_NAME_MISSING
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 name|CRYPTO_w_lock
 argument_list|(
