@@ -30,6 +30,13 @@ name|_BSD_SOURCE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_DEFAULT_SOURCE
+value|1
+end_define
+
 begin_include
 include|#
 directive|include

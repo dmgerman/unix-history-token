@@ -1299,6 +1299,10 @@ argument_list|(
 name|prkey
 argument_list|)
 expr_stmt|;
+name|prkey
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!

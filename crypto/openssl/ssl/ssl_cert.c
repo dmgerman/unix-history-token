@@ -427,6 +427,12 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|->
+name|references
+operator|=
+literal|1
+expr_stmt|;
+name|ret
+operator|->
 name|key
 operator|=
 operator|&
@@ -848,12 +854,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * ret->extra_certs *should* exist, but currently the own certificate      * chain is held inside SSL_CTX      */
-name|ret
-operator|->
-name|references
-operator|=
-literal|1
-expr_stmt|;
 comment|/*      * Set digests to defaults. NB: we don't copy existing values as they      * will be set during handshake.      */
 name|ssl_cert_set_default_md
 argument_list|(

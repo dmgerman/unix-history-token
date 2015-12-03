@@ -60,6 +60,13 @@ name|ctr
 init|=
 name|cleanse_ctr
 decl_stmt|;
+if|if
+condition|(
+name|ptr
+operator|==
+name|NULL
+condition|)
+return|return;
 while|while
 condition|(
 name|loop

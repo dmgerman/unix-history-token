@@ -5714,10 +5714,7 @@ parameter_list|,
 name|unsigned
 name|char
 modifier|*
-name|d
-parameter_list|,
-name|int
-name|n
+name|limit
 parameter_list|,
 name|int
 modifier|*
@@ -6322,7 +6319,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ssl3_cbc_digest_record
 parameter_list|(
 specifier|const

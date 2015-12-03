@@ -1252,13 +1252,23 @@ operator|==
 name|SSL23_ST_CW_CLNT_HELLO_A
 condition|)
 block|{
-if|#
-directive|if
+comment|/*          * Since we're sending s23 client hello, we're not reusing a session, as          * we'd be using the method from the saved session instead          */
+if|if
+condition|(
+operator|!
+name|ssl_get_new_session
+argument_list|(
+name|s
+argument_list|,
 literal|0
-comment|/* don't reuse session-id's */
-block|if (!ssl_get_new_session(s, 0)) {             return (-1);         }
-endif|#
-directive|endif
+argument_list|)
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|p
 operator|=
 name|s
@@ -1513,12 +1523,6 @@ operator|+=
 name|i
 expr_stmt|;
 comment|/*              * put in the session-id length (zero since there is no reuse)              */
-if|#
-directive|if
-literal|0
-block|s->session->session_id_length = 0;
-endif|#
-directive|endif
 name|s2n
 argument_list|(
 literal|0
@@ -2889,6 +2893,16 @@ goto|goto
 name|err
 goto|;
 block|}
+name|s
+operator|->
+name|session
+operator|->
+name|ssl_version
+operator|=
+name|s
+operator|->
+name|version
+expr_stmt|;
 comment|/* ensure that TLS_MAX_VERSION is up-to-date */
 name|OPENSSL_assert
 argument_list|(
@@ -3198,20 +3212,6 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Since, if we are sending a ssl23 client hello, we are not reusing a      * session-id      */
-if|if
-condition|(
-operator|!
-name|ssl_get_new_session
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
 return|return
 operator|(
 name|SSL_connect

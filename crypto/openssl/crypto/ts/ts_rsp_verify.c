@@ -2095,7 +2095,7 @@ condition|(
 operator|!
 name|first
 condition|)
-name|strcpy
+name|strcat
 argument_list|(
 name|failure_text
 argument_list|,

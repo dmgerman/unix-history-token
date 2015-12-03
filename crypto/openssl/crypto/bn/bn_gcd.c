@@ -1950,6 +1950,12 @@ operator|=
 operator|&
 name|local_B
 expr_stmt|;
+name|local_B
+operator|.
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|BN_with_flags
 argument_list|(
 name|pB
@@ -2002,6 +2008,12 @@ name|pA
 operator|=
 operator|&
 name|local_A
+expr_stmt|;
+name|local_A
+operator|.
+name|flags
+operator|=
+literal|0
 expr_stmt|;
 name|BN_with_flags
 argument_list|(

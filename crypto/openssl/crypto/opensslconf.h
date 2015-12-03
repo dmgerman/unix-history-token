@@ -639,6 +639,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__sun
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|sun
 argument_list|)
 comment|/* Newer Sparc's */

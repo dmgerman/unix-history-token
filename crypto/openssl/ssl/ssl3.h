@@ -477,6 +477,10 @@ define|#
 directive|define
 name|SSL3_RT_HEADER_LENGTH
 value|5
+define|#
+directive|define
+name|SSL3_HM_HEADER_LENGTH
+value|4
 ifndef|#
 directive|ifndef
 name|SSL3_ALIGN_PAYLOAD

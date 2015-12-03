@@ -37,6 +37,24 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASN1_PARSE_MAXDEPTH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASN1_PARSE_MAXDEPTH
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -499,6 +517,24 @@ expr_stmt|;
 comment|/* Because we know BIO_dump_indent() */
 endif|#
 directive|endif
+if|if
+condition|(
+name|depth
+operator|>
+name|ASN1_PARSE_MAXDEPTH
+condition|)
+block|{
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|"BAD RECURSION DEPTH\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|p
 operator|=
 operator|*

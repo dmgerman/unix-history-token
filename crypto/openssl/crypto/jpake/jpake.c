@@ -1153,6 +1153,27 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|==
+name|NULL
+operator|||
+name|t1
+operator|==
+name|NULL
+operator|||
+name|t2
+operator|==
+name|NULL
+operator|||
+name|t3
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|end
+goto|;
 name|zkp_hash
 argument_list|(
 name|h
@@ -1262,6 +1283,8 @@ argument_list|,
 name|JPAKE_R_ZKP_VERIFY_FAILED
 argument_list|)
 expr_stmt|;
+name|end
+label|:
 comment|/* cleanup */
 name|BN_free
 argument_list|(

@@ -118,6 +118,7 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
+comment|/*  * Like strndup, but in addition, explicitly guarantees to never read past the  * first |siz| bytes of |str|.  */
 name|char
 modifier|*
 name|BUF_strndup

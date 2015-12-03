@@ -592,14 +592,14 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 name|dest
 operator|->
 name|tlsext_tick
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SRP
@@ -923,8 +923,6 @@ goto|;
 block|}
 endif|#
 directive|endif
-endif|#
-directive|endif
 if|if
 condition|(
 name|ticket
@@ -974,6 +972,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SRP

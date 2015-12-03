@@ -1749,19 +1749,6 @@ condition|(
 name|check
 condition|)
 block|{
-if|if
-condition|(
-name|group
-operator|==
-name|NULL
-condition|)
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
-literal|"no elliptic curve parameters\n"
-argument_list|)
-expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1792,8 +1779,10 @@ argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
+goto|goto
+name|end
+goto|;
 block|}
-else|else
 name|BIO_printf
 argument_list|(
 name|bio_err
