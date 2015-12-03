@@ -736,6 +736,20 @@ condition|(
 name|vm_guest
 operator|==
 name|VM_GUEST_NO
+operator|&&
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x6
+operator|&&
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x2a
 condition|)
 block|{
 name|hw_vendor
@@ -745,13 +759,16 @@ argument_list|(
 literal|"smbios.planar.maker"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * It seems that some Lenovo SandyBridge-based 			 * notebook BIOSes have a bug which prevents 			 * booting AP in x2APIC mode.  Since the only 			 * way to detect mobile CPU is to check 			 * northbridge pci id, which cannot be done 			 * that early, disable x2APIC for all Lenovo 			 * SandyBridge machines. 			 */
+comment|/* 			 * It seems that some Lenovo and ASUS 			 * SandyBridge-based notebook BIOSes have a 			 * bug which prevents booting AP in x2APIC 			 * mode.  Since the only way to detect mobile 			 * CPU is to check northbridge pci id, which 			 * cannot be done that early, disable x2APIC 			 * for all Lenovo and ASUS SandyBridge 			 * machines. 			 */
 if|if
 condition|(
 name|hw_vendor
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -759,38 +776,7 @@ name|hw_vendor
 argument_list|,
 literal|"LENOVO"
 argument_list|)
-operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0x6
-operator|&&
-name|CPUID_TO_MODEL
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0x2a
-condition|)
-block|{
-name|x2apic_mode
-operator|=
-literal|0
-expr_stmt|;
-name|reason
-operator|=
-literal|"for a suspected Lenovo SandyBridge BIOS bug"
-expr_stmt|;
-block|}
-comment|/* 			 * Same reason, ASUS SandyBridge. 			 */
-if|if
-condition|(
-name|hw_vendor
-operator|!=
-name|NULL
-operator|&&
+operator|||
 operator|!
 name|strcmp
 argument_list|(
@@ -798,20 +784,6 @@ name|hw_vendor
 argument_list|,
 literal|"ASUSTeK Computer Inc."
 argument_list|)
-operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0x6
-operator|&&
-name|CPUID_TO_MODEL
-argument_list|(
-name|cpu_id
-argument_list|)
-operator|==
-literal|0x2a
 condition|)
 block|{
 name|x2apic_mode
@@ -820,7 +792,7 @@ literal|0
 expr_stmt|;
 name|reason
 operator|=
-literal|"for a suspected ASUS SandyBridge BIOS bug"
+literal|"for a suspected SandyBridge BIOS bug"
 expr_stmt|;
 block|}
 name|freeenv
@@ -828,6 +800,7 @@ argument_list|(
 name|hw_vendor
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|TUNABLE_INT_FETCH
 argument_list|(
