@@ -669,6 +669,15 @@ literal|0
 block|,
 name|fieldlen
 block|;
+specifier|const
+name|unsigned
+name|char
+operator|*
+name|q
+operator|=
+operator|*
+name|pp
+block|;
 if|if
 condition|(
 name|d2i_ASN1_OCTET_STRING
@@ -676,7 +685,8 @@ argument_list|(
 operator|&
 name|oct
 argument_list|,
-name|pp
+operator|&
+name|q
 argument_list|,
 name|length
 argument_list|)
@@ -1052,6 +1062,14 @@ name|ASN1_OCTET_STRING_free
 argument_list|(
 name|oct
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+name|pp
+operator|=
+name|q
 expr_stmt|;
 end_expr_stmt
 

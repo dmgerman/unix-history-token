@@ -1662,8 +1662,7 @@ name|dat
 operator|->
 name|ks1
 argument_list|)
-operator|!
-operator|!
+operator|||
 name|DES_set_key_checked
 argument_list|(
 operator|&

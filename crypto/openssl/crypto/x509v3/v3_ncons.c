@@ -549,6 +549,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|sub
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|memerr
+goto|;
+if|if
+condition|(
 operator|!
 name|v2i_GENERAL_NAME_ex
 argument_list|(

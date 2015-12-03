@@ -1528,7 +1528,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 operator|&
 operator|(
@@ -1538,7 +1538,7 @@ name|RR
 operator|)
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 operator|&
 operator|(
@@ -1548,7 +1548,7 @@ name|N
 operator|)
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 operator|&
 operator|(
@@ -1604,6 +1604,16 @@ decl_stmt|,
 modifier|*
 name|R
 decl_stmt|;
+if|if
+condition|(
+name|BN_is_zero
+argument_list|(
+name|mod
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|BN_CTX_start
 argument_list|(
 name|ctx

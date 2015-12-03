@@ -635,8 +635,13 @@ name|ec
 operator|->
 name|key
 operator|&&
+operator|(
 operator|!
 name|keep_key
+operator|||
+operator|!
+name|ok
+operator|)
 condition|)
 block|{
 name|OPENSSL_cleanse

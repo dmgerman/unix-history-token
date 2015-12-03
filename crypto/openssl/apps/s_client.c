@@ -1355,6 +1355,34 @@ argument_list|,
 literal|" -serverinfo types - send empty ClientHello extensions (comma-separated numbers)\n"
 argument_list|)
 expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -curves arg       - Elliptic curves to advertise (colon-separated list)\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -sigalgs arg      - Signature algorithms to support (colon-separated list)\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -client_sigalgs arg - Signature algorithms to support for client\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"                       certificate authentication (colon-separated list)\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 ifndef|#
@@ -10133,6 +10161,18 @@ argument_list|(
 name|pass
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRP
+name|OPENSSL_free
+argument_list|(
+name|srp_arg
+operator|.
+name|srppassin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vpm

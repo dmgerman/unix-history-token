@@ -889,24 +889,6 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* Not found: set default port */
-if|if
-condition|(
-operator|*
-name|pssl
-condition|)
-name|port
-operator|=
-literal|"443"
-expr_stmt|;
-else|else
-name|port
-operator|=
-literal|"80"
-expr_stmt|;
-block|}
 operator|*
 name|pport
 operator|=

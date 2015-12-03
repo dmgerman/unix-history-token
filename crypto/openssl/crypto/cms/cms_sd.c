@@ -4144,6 +4144,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|pkctx
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 name|EVP_PKEY_verify_init
 argument_list|(
 name|pkctx

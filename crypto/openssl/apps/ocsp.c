@@ -6620,13 +6620,13 @@ argument_list|,
 operator|&
 name|fd
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
 name|BIO_puts
 argument_list|(
-name|err
+name|bio_err
 argument_list|,
 literal|"Can't get connection fd\n"
 argument_list|)

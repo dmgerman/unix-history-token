@@ -145,7 +145,7 @@ name|t
 operator|=
 literal|1
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|out
 operator|+
@@ -448,7 +448,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|out
 argument_list|,

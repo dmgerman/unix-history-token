@@ -5874,6 +5874,12 @@ condition|(
 name|s
 operator|==
 name|NULL
+operator|||
+name|s
+operator|->
+name|s3
+operator|==
+name|NULL
 condition|)
 return|return;
 ifdef|#

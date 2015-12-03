@@ -985,6 +985,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|pkey
+operator|==
+name|NULL
+operator|||
 operator|!
 name|EVP_PKEY_set_type
 argument_list|(

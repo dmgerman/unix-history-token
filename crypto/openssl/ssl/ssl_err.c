@@ -789,6 +789,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_GENERATE_MASTER_SECRET
+argument_list|)
+block|,
+literal|"ssl3_generate_master_secret"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_GET_CERTIFICATE_REQUEST
 argument_list|)
 block|,
@@ -2272,6 +2281,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_DH_G_VALUE
+argument_list|)
+block|,
+literal|"bad dh g value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_DH_PUB_KEY_LENGTH
 argument_list|)
 block|,
@@ -2281,10 +2299,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_DH_PUB_KEY_VALUE
+argument_list|)
+block|,
+literal|"bad dh pub key value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_DH_P_LENGTH
 argument_list|)
 block|,
 literal|"bad dh p length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_DH_P_VALUE
+argument_list|)
+block|,
+literal|"bad dh p value"
 block|}
 block|,
 block|{
