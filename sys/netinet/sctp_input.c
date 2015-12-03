@@ -30536,6 +30536,12 @@ if|if
 condition|(
 name|cnt_ctrl_ready
 operator|||
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|trigger_reset
+operator|||
 operator|(
 operator|(
 name|un_sent
