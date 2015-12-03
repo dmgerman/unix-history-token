@@ -20414,9 +20414,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 name|MPASS
 argument_list|(
