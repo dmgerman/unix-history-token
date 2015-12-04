@@ -1009,12 +1009,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|filemon
-operator|->
-name|fp
-operator|=
-name|NULL
-expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&
