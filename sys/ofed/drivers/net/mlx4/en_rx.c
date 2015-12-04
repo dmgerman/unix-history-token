@@ -372,17 +372,6 @@ name|err
 operator|)
 return|;
 block|}
-name|KASSERT
-argument_list|(
-name|nsegs
-operator|==
-literal|1
-argument_list|,
-operator|(
-literal|"Number of segments is expected to be one"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* store spare info */
 name|ring
 operator|->
@@ -540,17 +529,6 @@ goto|goto
 name|use_spare
 goto|;
 block|}
-name|KASSERT
-argument_list|(
-name|nsegs
-operator|==
-literal|1
-argument_list|,
-operator|(
-literal|"Number of segments is expected to be one"
-operator|)
-argument_list|)
-expr_stmt|;
 operator|*
 name|pdma
 operator|=
