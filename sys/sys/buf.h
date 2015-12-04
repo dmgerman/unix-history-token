@@ -610,7 +610,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_000400000
+name|B_00040000
 value|0x00040000
 end_define
 
@@ -621,7 +621,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_000800000
+name|B_00080000
 value|0x00080000
 end_define
 
@@ -632,7 +632,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_001000000
+name|B_00100000
 value|0x00100000
 end_define
 
