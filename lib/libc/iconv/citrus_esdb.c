@@ -1563,7 +1563,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|buf1
 argument_list|,
