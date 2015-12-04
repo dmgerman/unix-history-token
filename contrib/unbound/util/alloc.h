@@ -381,13 +381,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<ldns/ldns.h>
+file|<sldns/ldns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ldns/packet.h>
+file|<sldns/packet.h>
 end_include
 
 begin_ifdef

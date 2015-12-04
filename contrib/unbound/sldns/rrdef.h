@@ -532,11 +532,11 @@ name|LDNS_RR_TYPE_ANY
 init|=
 literal|255
 block|,
-comment|/** draft-faltstrom-uri-06 */
 name|LDNS_RR_TYPE_URI
 init|=
 literal|256
 block|,
+comment|/* RFC 7553 */
 name|LDNS_RR_TYPE_CAA
 init|=
 literal|257
@@ -733,7 +733,7 @@ block|,
 comment|/** A non-zero sequence of US-ASCII letters and numbers in lower case.          *  For CAA.          */
 name|LDNS_RDF_TYPE_TAG
 block|,
-comment|/** A<character-string> encoding of the value field as specified           * [RFC1035], Section 5.1., encoded as remaining rdata.          * For CAA.          */
+comment|/** A<character-string> encoding of the value field as specified           * [RFC1035], Section 5.1., encoded as remaining rdata.          * For CAA, URI.          */
 name|LDNS_RDF_TYPE_LONG_STR
 block|,
 comment|/* Aliases */

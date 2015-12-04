@@ -58,19 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_function

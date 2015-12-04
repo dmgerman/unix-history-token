@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"util/storage/dnstree.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"util/rtt.h"
 end_include
 
@@ -156,6 +162,115 @@ decl_stmt|;
 comment|/** TTL value for host information, in seconds */
 name|int
 name|host_ttl
+decl_stmt|;
+comment|/** hash table with query rates per name: rate_key, rate_data */
+name|struct
+name|slabhash
+modifier|*
+name|domain_rates
+decl_stmt|;
+comment|/** ratelimit settings for domains, struct domain_limit_data */
+name|rbtree_t
+name|domain_limits
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/** ratelimit, unless overridden by domain_limits, 0 is off */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|infra_dp_ratelimit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**  * ratelimit settings for domains  */
+end_comment
+
+begin_struct
+struct|struct
+name|domain_limit_data
+block|{
+comment|/** key for rbtree, must be first in struct, name of domain */
+name|struct
+name|name_tree_node
+name|node
+decl_stmt|;
+comment|/** ratelimit for exact match with this name, -1 if not set */
+name|int
+name|lim
+decl_stmt|;
+comment|/** ratelimit for names below this name, -1 if not set */
+name|int
+name|below
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * key for ratelimit lookups, a domain name  */
+end_comment
+
+begin_struct
+struct|struct
+name|rate_key
+block|{
+comment|/** lruhash key entry */
+name|struct
+name|lruhash_entry
+name|entry
+decl_stmt|;
+comment|/** domain name in uncompressed wireformat */
+name|uint8_t
+modifier|*
+name|name
+decl_stmt|;
+comment|/** length of name */
+name|size_t
+name|namelen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/** number of seconds to track qps rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RATE_WINDOW
+value|2
+end_define
+
+begin_comment
+comment|/**  * Data for ratelimits per domain name  * It is incremented when a non-cache-lookup happens for that domain name.  * The name is the delegation point we have for the name.  * If a new delegation point is found (a referral reply), the previous  * delegation point is decremented, and the new one is charged with the query.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rate_data
+block|{
+comment|/** queries counted, for that second. 0 if not in use. */
+name|int
+name|qps
+index|[
+name|RATE_WINDOW
+index|]
+decl_stmt|;
+comment|/** what the timestamp is of the qps array members, counter is 	 * valid for that timestamp.  Usually now and now-1. */
+name|time_t
+name|timestamp
+index|[
+name|RATE_WINDOW
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -586,6 +701,125 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Increment the query rate counter for a delegation point.  * @param infra: infra cache.  * @param name: zone name  * @param namelen: zone name length  * @param timenow: what time it is now.  * @return 1 if it could be incremented. 0 if the increment overshot the  * ratelimit or if in the previous second the ratelimit was exceeded.  * Failures like alloc failures are not returned (probably as 1).  */
+end_comment
+
+begin_function_decl
+name|int
+name|infra_ratelimit_inc
+parameter_list|(
+name|struct
+name|infra_cache
+modifier|*
+name|infra
+parameter_list|,
+name|uint8_t
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|namelen
+parameter_list|,
+name|time_t
+name|timenow
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Decrement the query rate counter for a delegation point.  * Because the reply received for the delegation point was pleasant,  * we do not charge this delegation point with it (i.e. it was a referral).  * Should call it with same second as when inc() was called.  * @param infra: infra cache.  * @param name: zone name  * @param namelen: zone name length  * @param timenow: what time it is now.  */
+end_comment
+
+begin_function_decl
+name|void
+name|infra_ratelimit_dec
+parameter_list|(
+name|struct
+name|infra_cache
+modifier|*
+name|infra
+parameter_list|,
+name|uint8_t
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|namelen
+parameter_list|,
+name|time_t
+name|timenow
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * See if the query rate counter for a delegation point is exceeded.  * So, no queries are going to be allowed.  * @param infra: infra cache.  * @param name: zone name  * @param namelen: zone name length  * @param timenow: what time it is now.  * @return true if exceeded.  */
+end_comment
+
+begin_function_decl
+name|int
+name|infra_ratelimit_exceeded
+parameter_list|(
+name|struct
+name|infra_cache
+modifier|*
+name|infra
+parameter_list|,
+name|uint8_t
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|namelen
+parameter_list|,
+name|time_t
+name|timenow
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** find the maximum rate stored, not too old. 0 if no information. */
+end_comment
+
+begin_function_decl
+name|int
+name|infra_rate_max
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|time_t
+name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** find the ratelimit in qps for a domain */
+end_comment
+
+begin_function_decl
+name|int
+name|infra_find_ratelimit
+parameter_list|(
+name|struct
+name|infra_cache
+modifier|*
+name|infra
+parameter_list|,
+name|uint8_t
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|namelen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Get memory used by the infra cache.  * @param infra: infrastructure cache.  * @return memory in use in bytes.  */
 end_comment
 
@@ -665,6 +899,82 @@ end_comment
 begin_function_decl
 name|void
 name|infra_deldatafunc
+parameter_list|(
+name|void
+modifier|*
+name|d
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** calculate size for the hashtable */
+end_comment
+
+begin_function_decl
+name|size_t
+name|rate_sizefunc
+parameter_list|(
+name|void
+modifier|*
+name|k
+parameter_list|,
+name|void
+modifier|*
+name|d
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** compare two names, returns -1, 0, or +1 */
+end_comment
+
+begin_function_decl
+name|int
+name|rate_compfunc
+parameter_list|(
+name|void
+modifier|*
+name|key1
+parameter_list|,
+name|void
+modifier|*
+name|key2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** delete key, and destroy the lock */
+end_comment
+
+begin_function_decl
+name|void
+name|rate_delkeyfunc
+parameter_list|(
+name|void
+modifier|*
+name|k
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** delete data */
+end_comment
+
+begin_function_decl
+name|void
+name|rate_deldatafunc
 parameter_list|(
 name|void
 modifier|*

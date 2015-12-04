@@ -73,6 +73,12 @@ name|iter_priv
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rbtree_t
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/** max number of targets spawned for a query and its subqueries */
 end_comment
@@ -81,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TARGET_COUNT
-value|32
+value|64
 end_define
 
 begin_comment
@@ -210,6 +216,12 @@ name|struct
 name|iter_priv
 modifier|*
 name|priv
+decl_stmt|;
+comment|/** whitelist for capsforid names */
+name|struct
+name|rbtree_t
+modifier|*
+name|caps_white
 decl_stmt|;
 comment|/** The maximum dependency depth that this resolver will pursue. */
 name|int
@@ -349,6 +361,11 @@ name|reply_info
 modifier|*
 name|caps_reply
 decl_stmt|;
+name|struct
+name|dns_msg
+modifier|*
+name|caps_response
+decl_stmt|;
 comment|/** Current delegation message - returned for non-RD queries */
 name|struct
 name|dns_msg
@@ -379,6 +396,10 @@ comment|/** number of target queries spawned in [1], for this query and its 	 * 
 name|int
 modifier|*
 name|target_count
+decl_stmt|;
+comment|/** if true, already tested for ratelimiting and passed the test */
+name|int
+name|ratelimit_ok
 decl_stmt|;
 comment|/** 	 * The query must store NS records from referrals as parentside RRs 	 * Enabled once it hits resolution problems, to throttle retries. 	 * If enabled it is the pointer to the old delegation point with 	 * the old retry counts for bad-nameserver-addresses. 	 */
 name|struct

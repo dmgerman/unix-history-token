@@ -494,6 +494,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * see if reply has a 'useful' rcode for capsforid comparison, so  * not SERVFAIL or REFUSED, and thus NOERROR or NXDOMAIN.  * @param rep: reply to check.  * @return true if the rcode is a bad type of message.  */
+end_comment
+
+begin_function_decl
+name|int
+name|caps_failed_rcode
+parameter_list|(
+name|struct
+name|reply_info
+modifier|*
+name|rep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Store parent-side rrset in seperate rrset cache entries for later   * last-resort * lookups in case the child-side versions of this information   * fails.  * @param env: environment with cache, time, ...  * @param rrset: the rrset to store (copied).  * Failure to store is logged, but otherwise ignored.  */
 end_comment
 

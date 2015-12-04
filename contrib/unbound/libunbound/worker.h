@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include

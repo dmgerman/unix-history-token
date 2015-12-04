@@ -117,7 +117,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
@@ -5169,6 +5169,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5232,6 +5234,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8739,6 +8743,11 @@ operator|==
 name|NETEVENT_NOERROR
 operator|&&
 name|c
+operator|&&
+operator|!
+name|sq
+operator|->
+name|nocaps
 condition|)
 block|{
 comment|/* noerror and nxdomain must have a qname in reply */
@@ -9237,6 +9246,10 @@ directive|ifdef
 name|USE_DNSTAP
 if|if
 condition|(
+name|error
+operator|==
+name|NETEVENT_NOERROR
+operator|&&
 name|sq
 operator|->
 name|outnet
