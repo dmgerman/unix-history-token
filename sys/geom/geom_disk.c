@@ -1870,14 +1870,16 @@ name|false
 decl_stmt|;
 name|off_t
 name|maxsz
-init|=
+decl_stmt|;
+name|maxsz
+operator|=
 name|g_disk_maxsize
 argument_list|(
 name|dp
 argument_list|,
 name|bp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * XXX: If we have a stripesize we should really use it here. 	 *      Care should be taken in the delete case if this is done 	 *      as deletes can be very sensitive to size given how they 	 *      are processed. 	 */
 if|if
 condition|(
