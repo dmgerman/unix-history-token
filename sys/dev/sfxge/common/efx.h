@@ -2971,6 +2971,9 @@ comment|/* Datapath firmware vadapter/vport/vswitch support */
 name|boolean_t
 name|enc_datapath_cap_evb
 decl_stmt|;
+name|boolean_t
+name|enc_rx_disable_scatter_supported
+decl_stmt|;
 comment|/* External port identifier */
 name|uint8_t
 name|enc_external_port

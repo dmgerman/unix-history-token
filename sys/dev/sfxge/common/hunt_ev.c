@@ -1979,12 +1979,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * FIXME: There is not yet any driver that supports scatter on 		 * Huntington.  Scatter support is required for OSX. 		 */
-name|EFSYS_ASSERT
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 		 * This may be part of a scattered frame, or it may be a 		 * truncated frame if scatter is disabled on this RXQ. 		 * Overlength frames can be received if e.g. a VF is configured 		 * for 1500 MTU but connected to a port set to 9000 MTU 		 * (see bug56567). 		 * FIXME: There is not yet any driver that supports scatter on 		 * Huntington.  Scatter support is required for OSX. 		 */
 name|flags
 operator||=
 name|EFX_PKT_CONT
