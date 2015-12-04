@@ -18027,6 +18027,11 @@ name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
 condition|)
 block|{
 comment|/* 					 * Set it up so we don't stop 					 * retransmitting 					 */
+name|asoc
+operator|->
+name|stream_reset_outstanding
+operator|++
+expr_stmt|;
 name|stcb
 operator|->
 name|asoc
