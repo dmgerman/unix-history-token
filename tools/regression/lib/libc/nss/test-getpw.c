@@ -1535,7 +1535,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* passwd_check_ambiguity() is needed here because when doing the getpwent()  * calls sequence, records from different nsswitch sources can be different,   * though having the same pw_name/pw_uid */
+comment|/* passwd_check_ambiguity() is needed here because when doing the getpwent()  * calls sequence, records from different nsswitch sources can be different,  * though having the same pw_name/pw_uid */
 end_comment
 
 begin_function

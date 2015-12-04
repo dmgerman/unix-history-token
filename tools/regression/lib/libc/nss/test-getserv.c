@@ -1684,7 +1684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* servent_check_ambiguity() is needed when one port+proto is associated with  * more than one service (these cases are usually marked as PROBLEM in  * /etc/services. This functions is needed also when one service+proto is   * associated with several ports. We have to check all the servent structures  * to make sure that serv really exists and correct */
+comment|/* servent_check_ambiguity() is needed when one port+proto is associated with  * more than one service (these cases are usually marked as PROBLEM in  * /etc/services. This functions is needed also when one service+proto is  * associated with several ports. We have to check all the servent structures  * to make sure that serv really exists and correct */
 end_comment
 
 begin_function
