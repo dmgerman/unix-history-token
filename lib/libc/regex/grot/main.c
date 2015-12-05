@@ -58,7 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"debug.ih"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"main.ih"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"split.ih"
 end_include
 
 begin_decl_stmt
@@ -123,22 +135,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|int
-name|split
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|regprint
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  - main - do the simple case, hand off to regress() for regression  */
