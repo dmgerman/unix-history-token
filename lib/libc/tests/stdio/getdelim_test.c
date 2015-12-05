@@ -817,6 +817,10 @@ name|linecap
 decl_stmt|,
 name|n
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|line
 operator|=
 name|NULL
