@@ -3268,6 +3268,15 @@ name|isp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|IS_26XX
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
 name|ISP_WRITE
 argument_list|(
 name|isp
@@ -3286,6 +3295,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|ISP_WRITE
 argument_list|(
 name|isp
