@@ -21320,9 +21320,9 @@ argument_list|)
 expr_stmt|;
 name|j
 operator|%=
-name|pi
+name|vi
 operator|->
-name|vrxq
+name|nrxq
 expr_stmt|;
 name|rxq
 operator|=
