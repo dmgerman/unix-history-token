@@ -26,7 +26,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  - split - divide a string into fields, like awk split()  = int split(char *string, char *fields[], int nfields, char *sep);  - fields: list is not NULL-terminated  - nfields: number of entries available in fields[]  - sep: "" white, "c" single char, "ab" [ab]+  */
+comment|/*  - split - divide a string into fields, like awk split()  == int split(char *string, char *fields[], int nfields, char *sep);  - fields: list is not NULL-terminated  - nfields: number of entries available in fields[]  - sep: "" white, "c" single char, "ab" [ab]+  */
 end_comment
 
 begin_function
