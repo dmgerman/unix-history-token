@@ -133,20 +133,17 @@ comment|/*  - main - do the simple case, hand off to regress() for regression  *
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|regex_t
 name|re
@@ -708,12 +705,10 @@ begin_function
 name|void
 name|regress
 parameter_list|(
-name|in
-parameter_list|)
 name|FILE
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|inbuf
@@ -1299,49 +1294,36 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - try - try it, and report on problems  == void try(char *f0, char *f1, char *f2, char *f3, char *f4, int opts);  */
+comment|/*  - try - try it, and report on problems  == void try(char *f0, char *f1, char *f2, char *f3, char *f4, int opts);  - opts: may not match f1  */
 end_comment
 
 begin_function
 name|void
 name|try
 parameter_list|(
-name|f0
-parameter_list|,
-name|f1
-parameter_list|,
-name|f2
-parameter_list|,
-name|f3
-parameter_list|,
-name|f4
-parameter_list|,
-name|opts
-parameter_list|)
 name|char
 modifier|*
 name|f0
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|f1
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|f2
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|f3
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|f4
-decl_stmt|;
+parameter_list|,
 name|int
 name|opts
-decl_stmt|;
-comment|/* may not match f1 */
+parameter_list|)
 block|{
 name|regex_t
 name|re
@@ -2000,25 +1982,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - options - pick options out of a regression-test string  == int options(int type, char *s);  */
+comment|/*  - options - pick options out of a regression-test string  - type: 'c' - compile, 'e' - exec  == int options(int type, char *s);  */
 end_comment
 
 begin_function
 name|int
 name|options
 parameter_list|(
-name|type
-parameter_list|,
-name|s
-parameter_list|)
 name|int
 name|type
-decl_stmt|;
-comment|/* 'c' compile, 'e' exec */
+parameter_list|,
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2206,17 +2183,13 @@ name|int
 comment|/* predicate */
 name|opt
 parameter_list|(
-name|c
-parameter_list|,
-name|s
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2241,12 +2214,10 @@ begin_function
 name|void
 name|fixstr
 parameter_list|(
-name|p
-parameter_list|)
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2330,23 +2301,17 @@ modifier|*
 comment|/* NULL or complaint */
 name|check
 parameter_list|(
-name|str
-parameter_list|,
-name|sub
-parameter_list|,
-name|should
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|regmatch_t
 name|sub
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|should
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -2774,11 +2739,9 @@ name|char
 modifier|*
 name|eprint
 parameter_list|(
-name|err
-parameter_list|)
 name|int
 name|err
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -2839,12 +2802,10 @@ specifier|static
 name|int
 name|efind
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
