@@ -70,7 +70,7 @@ end_macro
 
 begin_block
 block|{
-comment|/*  	 * Use a pre-existing buffer. 	 */
+comment|/* Use a pre-existing buffer. */
 name|char
 name|buf
 index|[
@@ -236,7 +236,7 @@ name|buf2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Since a write on a FILE * retrieved by fmemopen 	 * will add a '\0' (if there's space), we can check 	 * the strings for equality. 	 */
+comment|/* 	 * Since a write on a FILE * retrieved by fmemopen 	 * will add a '\0' (if there's space), we can check 	 * the strings for equality. 	 */
 name|ATF_REQUIRE
 argument_list|(
 name|strcmp
@@ -350,7 +350,7 @@ end_macro
 
 begin_block
 block|{
-comment|/*  	 * Let fmemopen allocate the buffer. 	 */
+comment|/* Let fmemopen allocate the buffer. */
 name|char
 name|str
 index|[]
@@ -444,7 +444,7 @@ operator|==
 literal|512
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Try to write past the end, we should get a short object count (0) 	 */
+comment|/* Try to write past the end, we should get a short object count (0) */
 name|nofw
 operator|=
 name|fwrite
@@ -642,7 +642,7 @@ name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Now seek to the end and check that ftell 	 * gives us sizeof(str). 	 */
+comment|/* Now seek to the end and check that ftell gives us sizeof(str). */
 name|rc
 operator|=
 name|fseek
@@ -1066,7 +1066,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure that a pre-allocated buffer behaves correctly. 	 */
+comment|/* Make sure that a pre-allocated buffer behaves correctly. */
 name|char
 name|buf
 index|[]
@@ -1127,7 +1127,7 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	 * POSIX mandates that we return EINVAL if size is 0. 	 */
+comment|/* POSIX mandates that we return EINVAL if size is 0. */
 name|FILE
 modifier|*
 name|fp
