@@ -2936,10 +2936,10 @@ argument_list|)
 operator||=
 name|pgeflag
 expr_stmt|;
-name|invltlb_glob
+name|invltlb
 argument_list|()
 expr_stmt|;
-comment|/* Play it safe, invltlb() every time */
+comment|/* Flush non-PG_G entries. */
 name|va
 operator|+=
 name|NBPDR
@@ -2979,10 +2979,10 @@ name|pte
 operator||=
 name|pgeflag
 expr_stmt|;
-name|invltlb_glob
+name|invltlb
 argument_list|()
 expr_stmt|;
-comment|/* Play it safe, invltlb() every time */
+comment|/* Flush non-PG_G entries. */
 name|va
 operator|+=
 name|PAGE_SIZE
