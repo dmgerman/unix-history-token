@@ -105,11 +105,6 @@ end_macro
 begin_block
 block|{
 name|char
-name|buf
-index|[
-literal|512
-index|]
-decl_stmt|,
 name|lbuf
 index|[
 literal|512
