@@ -227,7 +227,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Static VPD.  *  * This is the portion of VPD which is set at manufacturing time and not  * expected to change.  It is formatted as a standard PCI VPD block.  */
+comment|/* Static VPD.  *  * This is the portion of VPD which is set at manufacturing time and not  * expected to change.  It is formatted as a standard PCI VPD block. There are  * global and per-pf TLVs for this, the global TLV is new for Medford and is  * used in preference to the per-pf TLV.  */
 end_comment
 
 begin_define
@@ -258,8 +258,33 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TLV_TAG_GLOBAL_STATIC_VPD
+value|(0x001f0000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_global_static_vpd
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|bytes
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* Dynamic VPD.  *  * This is the portion of VPD which may be changed (e.g. by firmware updates).  * It is formatted as a standard PCI VPD block.  */
+comment|/* Dynamic VPD.  *  * This is the portion of VPD which may be changed (e.g. by firmware updates).  * It is formatted as a standard PCI VPD block. There are global and per-pf TLVs  * for this, the global TLV is new for Medford and is used in preference to the  * per-pf TLV.  */
 end_comment
 
 begin_define
@@ -290,8 +315,33 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TLV_TAG_GLOBAL_DYNAMIC_VPD
+value|(0x10200000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_global_dynamic_vpd
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|bytes
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* "DBI" PCI config space changes.  *  * This is a set of edits made to the default PCI config space values before  * the device is allowed to enumerate.  */
+comment|/* "DBI" PCI config space changes.  *  * This is a set of edits made to the default PCI config space values before  * the device is allowed to enumerate. There are global and per-pf TLVs for  * this, the global TLV is new for Medford and is used in preference to the  * per-pf TLV.  */
 end_comment
 
 begin_define
@@ -307,6 +357,42 @@ end_define
 begin_struct
 struct|struct
 name|tlv_pf_dbi
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+struct|struct
+block|{
+name|uint16_t
+name|addr
+decl_stmt|;
+name|uint16_t
+name|byte_enables
+decl_stmt|;
+name|uint32_t
+name|value
+decl_stmt|;
+block|}
+name|items
+index|[]
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_GLOBAL_DBI
+value|(0x00210000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_global_dbi
 block|{
 name|uint32_t
 name|tag
@@ -528,6 +614,17 @@ name|TLV_TAG_TMP_GUBBINS
 value|(0x10090000)
 end_define
 
+begin_comment
+comment|/* legacy symbol - do not use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_TMP_GUBBINS_HUNT
+value|TLV_TAG_TMP_GUBBINS
+end_define
+
 begin_struct
 struct|struct
 name|tlv_tmp_gubbins
@@ -694,7 +791,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Voltage settings  *   * Intended for boards with A0 silicon where the core voltage may  * need tweaking. Most likely set once when the pass voltage is   * determined. */
+comment|/* Voltage settings  *  * Intended for boards with A0 silicon where the core voltage may  * need tweaking. Most likely set once when the pass voltage is  * determined. */
 end_comment
 
 begin_define
@@ -756,6 +853,17 @@ define|#
 directive|define
 name|TLV_TAG_CLOCK_CONFIG
 value|(0x000d0000)
+end_define
+
+begin_comment
+comment|/* legacy symbol - do not use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_CLOCK_CONFIG_HUNT
+value|TLV_TAG_CLOCK_CONFIG
 end_define
 
 begin_struct
@@ -878,6 +986,17 @@ define|#
 directive|define
 name|TLV_TAG_ATB_0V9_TARGET
 value|(0x000f0000)
+end_define
+
+begin_comment
+comment|/* legacy symbol - do not use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_ATB_0V9_TARGET_HUNT
+value|TLV_TAG_ATB_0V9_TARGET
 end_define
 
 begin_comment
