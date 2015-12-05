@@ -1859,9 +1859,12 @@ decl_stmt|;
 name|uint32_t
 name|size
 decl_stmt|;
-name|boolean_t
-name|parse_err
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|boolean_t parse_err;
+endif|#
+directive|endif
 name|uint32_t
 name|label
 decl_stmt|;
@@ -1985,20 +1988,13 @@ operator||=
 name|EFX_PKT_CONT
 expr_stmt|;
 block|}
-name|parse_err
-operator|=
-operator|(
-name|EFX_QWORD_FIELD
-argument_list|(
-operator|*
-name|eqp
-argument_list|,
-name|ESF_DZ_RX_PARSE_INCOMPLETE
-argument_list|)
-operator|!=
+if|#
+directive|if
 literal|0
-operator|)
-expr_stmt|;
+comment|/* TODO What to do if the packet is flagged with parsing error */
+block|parse_err = (EFX_QWORD_FIELD(*eqp, ESF_DZ_RX_PARSE_INCOMPLETE) != 0);
+endif|#
+directive|endif
 name|label
 operator|=
 name|EFX_QWORD_FIELD
@@ -2320,10 +2316,12 @@ case|case
 name|ESE_DZ_L3_CLASS_RSVD7
 case|:
 comment|/* Used by firmware for packet overrun */
-name|parse_err
-operator|=
-name|B_TRUE
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|parse_err = B_TRUE;
+endif|#
+directive|endif
 name|flags
 operator||=
 name|EFX_DISCARD
