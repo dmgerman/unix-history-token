@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -373,15 +379,11 @@ directive|ifdef
 name|__arm__
 end_ifdef
 
-begin_comment
-comment|/*  * At least on ARMv7, this appears to work quite well.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|PROF_ARTIFICIAL_FRAMES
-value|10
+value|3
 end_define
 
 begin_endif
@@ -864,13 +866,56 @@ specifier|static
 name|int
 name|profile_aframes
 init|=
-literal|0
+name|PROF_ARTIFICIAL_FRAMES
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* override */
-end_comment
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_dtrace
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern_dtrace
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|profile
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"DTrace profile parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_dtrace_profile
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|aframes
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|profile_aframes
+argument_list|,
+literal|0
+argument_list|,
+literal|"Skipped frames for profile provider"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1387,10 +1432,6 @@ argument_list|,
 name|name
 argument_list|,
 name|profile_aframes
-condition|?
-name|profile_aframes
-else|:
-name|PROF_ARTIFICIAL_FRAMES
 argument_list|,
 name|prof
 argument_list|)
