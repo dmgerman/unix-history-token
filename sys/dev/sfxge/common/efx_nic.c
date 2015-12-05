@@ -154,9 +154,6 @@ case|:
 case|case
 name|EFX_PCI_DEVID_GREENPORT
 case|:
-case|case
-name|EFX_PCI_DEVID_HUNTINGTON
-case|:
 operator|*
 name|efp
 operator|=
@@ -172,9 +169,6 @@ name|EFX_PCI_DEVID_FARMINGDALE_VF
 case|:
 case|case
 name|EFX_PCI_DEVID_GREENPORT_VF
-case|:
-case|case
-name|EFX_PCI_DEVID_HUNTINGTON_VF
 case|:
 operator|*
 name|efp
