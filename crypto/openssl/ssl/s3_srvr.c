@@ -11236,13 +11236,15 @@ name|session
 operator|->
 name|psk_identity
 operator|=
-name|BUF_strdup
+name|BUF_strndup
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|p
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 if|if
