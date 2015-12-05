@@ -390,7 +390,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"error %s, %d/%d `%s'\n"
+literal|"error %s, %zu/%zu `%s'\n"
 argument_list|,
 name|eprint
 argument_list|(
@@ -442,9 +442,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|eopts
 operator|&
 name|REG_STARTEND
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|subs
@@ -522,7 +526,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"error %s, %d/%d `%s'\n"
+literal|"error %s, %zu/%zu `%s'\n"
 argument_list|,
 name|eprint
 argument_list|(
@@ -547,12 +551,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|copts
 operator|&
 name|REG_NOSUB
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|len
@@ -599,6 +604,9 @@ name|printf
 argument_list|(
 literal|"match `%.*s'\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|argv
@@ -1357,20 +1365,25 @@ index|[
 name|NSHOULD
 index|]
 decl_stmt|;
-name|int
-name|nshould
-decl_stmt|;
 name|char
 name|erbuf
 index|[
 literal|100
 index|]
 decl_stmt|;
-name|int
-name|err
+name|size_t
+name|len
 decl_stmt|;
 name|int
-name|len
+name|err
+decl_stmt|,
+name|i
+decl_stmt|,
+name|nshould
+decl_stmt|;
+name|char
+modifier|*
+name|grump
 decl_stmt|;
 name|char
 modifier|*
@@ -1385,13 +1398,6 @@ condition|?
 literal|"ERE"
 else|:
 literal|"BRE"
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|char
-modifier|*
-name|grump
 decl_stmt|;
 name|char
 name|f0copy
@@ -1494,7 +1500,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d: %s error %s, %d/%d `%s'\n"
+literal|"%d: %s error %s, %zu/%zu `%s'\n"
 argument_list|,
 name|line
 argument_list|,
@@ -1722,7 +1728,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d: %s exec error %s, %d/%d `%s'\n"
+literal|"%d: %s exec error %s, %zu/%zu `%s'\n"
 argument_list|,
 name|line
 argument_list|,
