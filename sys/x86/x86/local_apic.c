@@ -2375,7 +2375,7 @@ name|lapic_et
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set lapic_eoi_suppression after lapic_enable(), to not 	 * enable suppression in the hardware prematurely.  Note that 	 * we by default enable suppression even when system only has 	 * one IO-APIC, since EOI is broadcasted to all APIC agents, 	 * including CPUs, otherwise. 	 */
+comment|/* 	 * Set lapic_eoi_suppression after lapic_enable(), to not 	 * enable suppression in the hardware prematurely.  Note that 	 * we by default enable suppression even when system only has 	 * one IO-APIC, since EOI is broadcasted to all APIC agents, 	 * including CPUs, otherwise. 	 * 	 * It seems that at least some KVM versions report 	 * EOI_SUPPRESSION bit, but auto-EOI does not work. 	 */
 name|ver
 operator|=
 name|lapic_read32
@@ -2398,6 +2398,35 @@ name|lapic_eoi_suppression
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_VM
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|hv_vendor
+argument_list|,
+literal|"KVMKVMKVM"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"KVM -- disabling lapic eoi suppression\n"
+argument_list|)
+expr_stmt|;
+name|lapic_eoi_suppression
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"hw.lapic_eoi_suppression"
