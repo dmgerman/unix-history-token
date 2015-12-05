@@ -5673,7 +5673,7 @@ name|txdseq
 decl_stmt|;
 define|#
 directive|define
-name|R92C_TXDSEQ_HWSEQ_EN
+name|R88E_TXDSEQ_HWSEQ_EN
 value|0x8000
 name|uint32_t
 name|txdw4
@@ -5690,6 +5690,10 @@ define|#
 directive|define
 name|R92C_TXDW4_HWSEQ_QOS
 value|0x00000040
+define|#
+directive|define
+name|R92C_TXDW4_HWSEQ_EN
+value|0x00000080
 define|#
 directive|define
 name|R92C_TXDW4_DRVRATE
