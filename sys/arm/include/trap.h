@@ -47,6 +47,13 @@ name|KERNEL_BREAKPOINT
 value|0xe7ffffff
 end_define
 
+begin_define
+define|#
+directive|define
+name|FBT_BREAKPOINT
+value|0xe7f000f0
+end_define
+
 begin_endif
 endif|#
 directive|endif
