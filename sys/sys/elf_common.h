@@ -5275,6 +5275,31 @@ value|0x20
 end_define
 
 begin_comment
+comment|/* Values for n_type used in executables. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_ABI_TAG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_NOINIT_TAG
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_ARCH_TAG
+value|3
+end_define
+
+begin_comment
 comment|/* Values for n_type.  Used in core files. */
 end_comment
 
