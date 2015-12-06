@@ -1614,17 +1614,13 @@ decl_stmt|;
 comment|/* Connection Type */
 name|uint32_t
 label|:
-literal|3
+literal|4
 operator|,
 name|fctape_enabled
 operator|:
 literal|1
 operator|,
 name|sendmarker
-operator|:
-literal|1
-operator|,
-name|loop_seen_once
 operator|:
 literal|1
 operator|,
@@ -1770,57 +1766,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_TESTING_LINK
+name|LOOP_HAVE_LINK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_LTEST_DONE
+name|LOOP_TESTING_LINK
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_LOOP
+name|LOOP_LTEST_DONE
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_LSCAN_DONE
+name|LOOP_SCANNING_LOOP
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_FABRIC
+name|LOOP_LSCAN_DONE
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_FSCAN_DONE
+name|LOOP_SCANNING_FABRIC
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SYNCING_PDB
+name|LOOP_FSCAN_DONE
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_READY
+name|LOOP_SYNCING_PDB
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_READY
+value|9
 end_define
 
 begin_define
@@ -2339,7 +2342,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_ONEGB
+name|ISP_CFG_1GB
 value|0x10
 end_define
 
@@ -2350,7 +2353,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_TWOGB
+name|ISP_CFG_2GB
 value|0x20
 end_define
 
@@ -2438,7 +2441,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_FOURGB
+name|ISP_CFG_4GB
 value|0x2000
 end_define
 
@@ -2449,7 +2452,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_EIGHTGB
+name|ISP_CFG_8GB
 value|0x4000
 end_define
 
@@ -2460,7 +2463,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_SIXTEENGB
+name|ISP_CFG_16GB
 value|0x8000
 end_define
 
@@ -2909,6 +2912,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_FC_2600
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -3114,6 +3124,16 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|((isp)->isp_type>= ISP_HA_FC_2500)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_26XX
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type>= ISP_HA_FC_2600)
 end_define
 
 begin_comment

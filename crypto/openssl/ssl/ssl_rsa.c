@@ -559,13 +559,27 @@ argument_list|(
 name|rsa
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|EVP_PKEY_assign_RSA
 argument_list|(
 name|pkey
 argument_list|,
 name|rsa
 argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|RSA_free
+argument_list|(
+name|rsa
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|ret
 operator|=
 name|ssl_set_pkey
@@ -754,6 +768,30 @@ operator|.
 name|x509
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pktmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL_SET_PKEY
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+name|EVP_PKEY_free
+argument_list|(
+name|pktmp
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/*          * The return code from EVP_PKEY_copy_parameters is deliberately          * ignored. Some EVP_PKEY types cannot do this.          */
 name|EVP_PKEY_copy_parameters
 argument_list|(
 name|pktmp
@@ -1804,6 +1842,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/*          * The return code from EVP_PKEY_copy_parameters is deliberately          * ignored. Some EVP_PKEY types cannot do this.          */
 name|EVP_PKEY_copy_parameters
 argument_list|(
 name|pkey
@@ -2397,13 +2436,27 @@ argument_list|(
 name|rsa
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|EVP_PKEY_assign_RSA
 argument_list|(
 name|pkey
 argument_list|,
 name|rsa
 argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|RSA_free
+argument_list|(
+name|rsa
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|ret
 operator|=
 name|ssl_set_pkey
@@ -3471,7 +3524,8 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 for|for
 control|(
@@ -3498,8 +3552,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 comment|/* Extension not found */
 comment|/* read 2-byte type field */
@@ -3510,7 +3563,8 @@ operator|<
 literal|2
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 comment|/* Error */
 name|type
@@ -3545,7 +3599,8 @@ operator|<
 literal|2
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 comment|/* Error */
 name|len
@@ -3579,7 +3634,8 @@ operator|>
 name|serverinfo_length
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 comment|/* Error */
 if|if
@@ -3759,22 +3815,29 @@ if|if
 condition|(
 name|retval
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
+block|{
+operator|*
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 comment|/* Error */
+block|}
 if|if
 condition|(
 name|retval
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 comment|/* No extension found, don't send extension */
 return|return

@@ -841,25 +841,11 @@ name|sbus_isp
 expr_stmt|;
 name|isp
 operator|->
-name|isp_bus_tag
+name|isp_regs
 operator|=
-name|rman_get_bustag
-argument_list|(
 name|sbs
 operator|->
 name|regs
-argument_list|)
-expr_stmt|;
-name|isp
-operator|->
-name|isp_bus_handle
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|sbs
-operator|->
-name|regs
-argument_list|)
 expr_stmt|;
 name|isp
 operator|->
@@ -1789,12 +1775,11 @@ define|#
 directive|define
 name|BXR2
 parameter_list|(
-name|sbc
+name|isp
 parameter_list|,
 name|off
 parameter_list|)
-define|\
-value|bus_space_read_2(isp->isp_bus_tag, isp->isp_bus_handle, off)
+value|bus_read_2((isp)->isp_regs, (off))
 end_define
 
 begin_function
@@ -1828,7 +1813,7 @@ name|isr
 operator|=
 name|BXR2
 argument_list|(
-name|sbc
+name|isp
 argument_list|,
 name|IspVirt2Off
 argument_list|(
@@ -1842,7 +1827,7 @@ name|sema
 operator|=
 name|BXR2
 argument_list|(
-name|sbc
+name|isp
 argument_list|,
 name|IspVirt2Off
 argument_list|(
@@ -1914,7 +1899,7 @@ name|info
 operator|=
 name|BXR2
 argument_list|(
-name|sbc
+name|isp
 argument_list|,
 name|IspVirt2Off
 argument_list|(
@@ -1986,15 +1971,9 @@ operator|)
 expr_stmt|;
 name|rval
 operator|=
-name|bus_space_read_2
+name|BXR2
 argument_list|(
 name|isp
-operator|->
-name|isp_bus_tag
-argument_list|,
-name|isp
-operator|->
-name|isp_bus_handle
 argument_list|,
 name|offset
 argument_list|)
@@ -2085,15 +2064,11 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|bus_space_write_2
+name|bus_write_2
 argument_list|(
 name|isp
 operator|->
-name|isp_bus_tag
-argument_list|,
-name|isp
-operator|->
-name|isp_bus_handle
+name|isp_regs
 argument_list|,
 name|offset
 argument_list|,

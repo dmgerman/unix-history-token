@@ -1547,7 +1547,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|invltlb_globpcid
+name|invltlb_glob
 parameter_list|(
 name|void
 parameter_list|)

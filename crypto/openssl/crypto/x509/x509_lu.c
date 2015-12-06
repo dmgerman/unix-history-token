@@ -2512,25 +2512,6 @@ argument_list|(
 name|CRYPTO_LOCK_X509_STORE
 argument_list|)
 block|;
-comment|/* Check cache first */
-name|idx
-operator|=
-name|x509_object_idx_cnt
-argument_list|(
-name|ctx
-operator|->
-name|ctx
-operator|->
-name|objs
-argument_list|,
-name|X509_LU_CRL
-argument_list|,
-name|nm
-argument_list|,
-operator|&
-name|cnt
-argument_list|)
-block|;
 comment|/*      * Always do lookup to possibly add new CRLs to cache      */
 name|CRYPTO_w_unlock
 argument_list|(

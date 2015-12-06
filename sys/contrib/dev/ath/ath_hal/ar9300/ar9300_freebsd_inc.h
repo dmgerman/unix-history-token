@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|ATH_SUPPORT_SPECTRAL
-value|0
+value|1
 end_define
 
 begin_comment
@@ -380,7 +380,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* These are the embedded boards; we don't currently support these */
+comment|/* These are the embedded boards */
 end_comment
 
 begin_ifdef
@@ -447,6 +447,28 @@ end_endif
 
 begin_comment
 comment|/* AH_SUPPORT_QCA9550 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_QCA9530
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_HONEYBEE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_QCA9530 */
 end_comment
 
 begin_define

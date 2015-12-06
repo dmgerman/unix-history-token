@@ -946,7 +946,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_probe
 parameter_list|(
 name|__in
@@ -981,7 +981,7 @@ name|efx_phy_ops_t
 modifier|*
 name|epop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1220,7 +1220,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1247,7 +1247,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_verify
 parameter_list|(
 name|__in
@@ -1318,7 +1318,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_led_set
 parameter_list|(
 name|__in
@@ -1364,7 +1364,7 @@ decl_stmt|;
 name|uint32_t
 name|mask
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1489,7 +1489,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1614,7 +1614,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_adv_cap_set
 parameter_list|(
 name|__in
@@ -1649,7 +1649,7 @@ decl_stmt|;
 name|uint32_t
 name|old_mask
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1783,7 +1783,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1856,7 +1856,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_oui_get
 parameter_list|(
 name|__in
@@ -2186,7 +2186,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_stats_update
 argument_list|(
 name|__in
@@ -2199,7 +2199,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_PHY_NSTATS
 argument_list|)
@@ -2371,7 +2371,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_prop_get
 parameter_list|(
 name|__in
@@ -2456,7 +2456,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_prop_set
 parameter_list|(
 name|__in
@@ -2549,7 +2549,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bist_enable_offline
 parameter_list|(
 name|__in
@@ -2577,7 +2577,7 @@ name|epp
 operator|->
 name|ep_epop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2644,7 +2644,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2659,7 +2659,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bist_start
 parameter_list|(
 name|__in
@@ -2691,7 +2691,7 @@ name|epp
 operator|->
 name|ep_epop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2795,7 +2795,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2810,7 +2810,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bist_poll
 argument_list|(
 name|__in
@@ -2865,7 +2865,7 @@ name|epp
 operator|->
 name|ep_epop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2980,7 +2980,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

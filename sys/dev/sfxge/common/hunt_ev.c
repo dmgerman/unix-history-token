@@ -263,7 +263,7 @@ end_function_decl
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_init_evq
 parameter_list|(
 name|__in
@@ -331,7 +331,7 @@ decl_stmt|;
 name|int
 name|supports_rx_batching
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|npages
@@ -677,7 +677,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -693,7 +693,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_fini_evq
 parameter_list|(
 name|__in
@@ -720,7 +720,7 @@ name|MC_CMD_FINI_EVQ_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -815,7 +815,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -830,7 +830,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_init
 parameter_list|(
 name|__in
@@ -870,7 +870,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qcreate
 parameter_list|(
 name|__in
@@ -916,7 +916,7 @@ decl_stmt|;
 name|uint32_t
 name|irq
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|_NOTE
@@ -1074,7 +1074,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1133,7 +1133,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qprime
 parameter_list|(
 name|__in
@@ -1314,7 +1314,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_driver_event
 parameter_list|(
 name|__in
@@ -1345,7 +1345,7 @@ name|MC_CMD_DRIVER_EVENT_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|req
@@ -1453,7 +1453,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1530,7 +1530,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_ev_qmoderate
 parameter_list|(
 name|__in
@@ -1571,7 +1571,7 @@ name|timer_val
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1720,7 +1720,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1859,9 +1859,12 @@ decl_stmt|;
 name|uint32_t
 name|size
 decl_stmt|;
-name|boolean_t
-name|parse_err
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|boolean_t parse_err;
+endif|#
+directive|endif
 name|uint32_t
 name|label
 decl_stmt|;
@@ -1979,31 +1982,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * FIXME: There is not yet any driver that supports scatter on 		 * Huntington.  Scatter support is required for OSX. 		 */
-name|EFSYS_ASSERT
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 		 * This may be part of a scattered frame, or it may be a 		 * truncated frame if scatter is disabled on this RXQ. 		 * Overlength frames can be received if e.g. a VF is configured 		 * for 1500 MTU but connected to a port set to 9000 MTU 		 * (see bug56567). 		 * FIXME: There is not yet any driver that supports scatter on 		 * Huntington.  Scatter support is required for OSX. 		 */
 name|flags
 operator||=
 name|EFX_PKT_CONT
 expr_stmt|;
 block|}
-name|parse_err
-operator|=
-operator|(
-name|EFX_QWORD_FIELD
-argument_list|(
-operator|*
-name|eqp
-argument_list|,
-name|ESF_DZ_RX_PARSE_INCOMPLETE
-argument_list|)
-operator|!=
+if|#
+directive|if
 literal|0
-operator|)
-expr_stmt|;
+comment|/* TODO What to do if the packet is flagged with parsing error */
+block|parse_err = (EFX_QWORD_FIELD(*eqp, ESF_DZ_RX_PARSE_INCOMPLETE) != 0);
+endif|#
+directive|endif
 name|label
 operator|=
 name|EFX_QWORD_FIELD
@@ -2325,10 +2316,12 @@ case|case
 name|ESE_DZ_L3_CLASS_RSVD7
 case|:
 comment|/* Used by firmware for packet overrun */
-name|parse_err
-operator|=
-name|B_TRUE
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|parse_err = B_TRUE;
+endif|#
+directive|endif
 name|flags
 operator||=
 name|EFX_DISCARD
@@ -3125,7 +3118,7 @@ decl_stmt|;
 name|efx_mon_stat_value_t
 name|value
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Decode monitor stat for MCDI sensor (if supported) */

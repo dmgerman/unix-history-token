@@ -1062,6 +1062,13 @@ name|PTE2_ATTR_SO
 value|TEX2_CLASS_3
 end_define
 
+begin_define
+define|#
+directive|define
+name|PTE2_ATTR_WT
+value|TEX2_CLASS_4
+end_define
+
 begin_comment
 comment|/*  * Software defined bits for L1	descriptors  *  - L1_AP0 is	used as	page accessed bit  *  - L1_AP2 (RO / not RW) is used as page not modified	bit  *  - L1_TEX0 is used as software emulated RO bit  */
 end_comment

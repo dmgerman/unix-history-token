@@ -387,7 +387,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_init
 parameter_list|(
 name|__in
@@ -396,7 +396,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|hunt_filter_table_t
@@ -569,7 +569,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -637,7 +637,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_filter_op_add
 parameter_list|(
 name|__in
@@ -680,7 +680,7 @@ name|match_fields
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|memset
@@ -1205,7 +1205,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1221,7 +1221,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_filter_op_delete
 parameter_list|(
 name|__in
@@ -1254,7 +1254,7 @@ name|MC_CMD_FILTER_OP_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|memset
@@ -1435,7 +1435,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1983,7 +1983,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_restore
 parameter_list|(
 name|__in
@@ -2015,7 +2015,7 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -2218,7 +2218,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2245,7 +2245,7 @@ end_define
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_add_internal
 parameter_list|(
 name|__in
@@ -2268,7 +2268,7 @@ modifier|*
 name|filter_id
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|hunt_filter_table_t
@@ -2896,7 +2896,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2924,7 +2924,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_add
 parameter_list|(
 name|__in
@@ -2942,7 +2942,7 @@ name|boolean_t
 name|may_replace
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|rc
@@ -2978,7 +2978,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2994,7 +2994,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_delete_internal
 parameter_list|(
 name|__in
@@ -3007,7 +3007,7 @@ name|uint32_t
 name|filter_id
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|hunt_filter_table_t
@@ -3255,7 +3255,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3270,7 +3270,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_delete
 parameter_list|(
 name|__in
@@ -3284,7 +3284,7 @@ modifier|*
 name|spec
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|hunt_filter_table_t
@@ -3472,7 +3472,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3501,7 +3501,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_parser_disp_info
 parameter_list|(
 name|__in
@@ -3534,7 +3534,7 @@ name|MC_CMD_GET_PARSER_DISP_INFO_OUT_LENMAX
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|uint32_t
@@ -3797,7 +3797,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3812,7 +3812,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_supported_filters
 parameter_list|(
 name|__in
@@ -3831,7 +3831,7 @@ modifier|*
 name|length
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -3865,7 +3865,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3881,7 +3881,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_unicast_refresh
 argument_list|(
 name|__in
@@ -3920,7 +3920,7 @@ decl_stmt|;
 name|efx_filter_spec_t
 name|spec
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4063,7 +4063,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4107,7 +4107,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_multicast_refresh
 argument_list|(
 name|__in
@@ -4168,7 +4168,7 @@ decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4486,7 +4486,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4502,7 +4502,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_get_workarounds
 parameter_list|(
 name|__in
@@ -4530,7 +4530,7 @@ name|enabled
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|rc
@@ -4609,7 +4609,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4628,7 +4628,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_filter_reconfigure
 argument_list|(
 name|__in
@@ -4698,7 +4698,7 @@ decl_stmt|;
 name|int
 name|all_mulcst_rc
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -5114,7 +5114,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

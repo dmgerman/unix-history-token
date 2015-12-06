@@ -626,7 +626,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_power
 parameter_list|(
 name|__in
@@ -639,7 +639,7 @@ name|boolean_t
 name|power
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -686,7 +686,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -701,7 +701,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_get_link
 parameter_list|(
 name|__in
@@ -729,7 +729,7 @@ name|MC_CMD_GET_LINK_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1062,7 +1062,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1077,7 +1077,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_reconfigure
 parameter_list|(
 name|__in
@@ -1132,7 +1132,7 @@ name|unsigned
 name|int
 name|speed
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1585,7 +1585,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1600,7 +1600,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_verify
 parameter_list|(
 name|__in
@@ -1626,7 +1626,7 @@ decl_stmt|;
 name|uint32_t
 name|state
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1782,7 +1782,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1797,7 +1797,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_oui_get
 parameter_list|(
 name|__in
@@ -1892,7 +1892,7 @@ name|uint64_t
 operator|*
 name|smaskp
 argument_list|,
-name|__out_ecount_opt
+name|__inout_ecount_opt
 argument_list|(
 argument|EFX_PHY_NSTATS
 argument_list|)
@@ -2474,7 +2474,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_stats_update
 argument_list|(
 name|__in
@@ -2487,7 +2487,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_PHY_NSTATS
 argument_list|)
@@ -2531,7 +2531,7 @@ name|MC_CMD_PHY_STATS_OUT_DMA_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2679,7 +2679,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2755,7 +2755,7 @@ end_comment
 begin_function
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_prop_get
 parameter_list|(
 name|__in
@@ -2793,7 +2793,7 @@ end_function
 begin_function
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_prop_set
 parameter_list|(
 name|__in
@@ -2840,7 +2840,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_bist_start
 parameter_list|(
 name|__in
@@ -2853,7 +2853,7 @@ name|efx_bist_type_t
 name|type
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2885,7 +2885,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2967,7 +2967,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_bist_poll
 argument_list|(
 name|__in
@@ -3050,7 +3050,7 @@ decl_stmt|;
 name|uint32_t
 name|result
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -3633,7 +3633,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

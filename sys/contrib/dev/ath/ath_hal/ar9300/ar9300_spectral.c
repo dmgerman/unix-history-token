@@ -9,11 +9,9 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
+begin_comment
+comment|//#ifdef AH_SUPPORT_AR9300
+end_comment
 
 begin_include
 include|#
@@ -31,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"ah_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ar9300_freebsd_inc.h"
 end_include
 
 begin_include
@@ -1817,7 +1821,7 @@ decl_stmt|;
 name|int16_t
 name|nf_buf
 index|[
-name|NUM_NF_READINGS
+name|HAL_NUM_NF_READINGS
 index|]
 decl_stmt|;
 if|if
@@ -1867,7 +1871,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_NF_READINGS
+name|HAL_NUM_NF_READINGS
 condition|;
 name|i
 operator|++
@@ -2171,12 +2175,13 @@ name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|chan
 init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_curchan
+name|NULL
+decl_stmt|;
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
 decl_stmt|;
 name|int
 name|i
@@ -2202,6 +2207,31 @@ name|ahp
 operator|->
 name|ah_chip_full_sleep
 decl_stmt|;
+name|c
+operator|=
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_curchan
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+name|NULL
+condition|)
+name|chan
+operator|=
+name|ath_hal_checkchannel
+argument_list|(
+name|ah
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+comment|// XXX TODO: just always wake up all chips?
 if|if
 condition|(
 operator|(
@@ -2359,7 +2389,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_NF_READINGS
+name|HAL_NUM_NF_READINGS
 condition|;
 name|i
 operator|++
@@ -3052,16 +3082,12 @@ block|{
 name|int16_t
 name|nf
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ahpriv
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct ath_hal_private *ahpriv = AH_PRIVATE(ah);
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -3099,7 +3125,10 @@ block|{
 comment|/* NF calibration is not done, return nominal value */
 name|nf
 operator|=
-name|ahpriv
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
 operator|->
 name|nfp
 operator|->
@@ -3149,16 +3178,12 @@ block|{
 name|int16_t
 name|nf
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ahpriv
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct ath_hal_private *ahpriv = AH_PRIVATE(ah);
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -3196,7 +3221,10 @@ block|{
 comment|/* NF calibration is not done, return nominal value */
 name|nf
 operator|=
-name|ahpriv
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
 operator|->
 name|nfp
 operator|->
@@ -3238,13 +3266,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* ATH_SUPPORT_SPECTRAL */
+end_comment
+
+begin_comment
+comment|//#endif
 end_comment
 
 end_unit

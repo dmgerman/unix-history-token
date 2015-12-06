@@ -873,11 +873,21 @@ name|generic_steppings
 block|}
 block|,
 block|{
-name|CPU_ID_KRAIT
+name|CPU_ID_KRAIT300R0
 block|,
 name|CPU_CLASS_KRAIT
 block|,
-literal|"Krait"
+literal|"Krait 300-r0"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_KRAIT300R1
+block|,
+name|CPU_CLASS_KRAIT
+block|,
+literal|"Krait 300-r1"
 block|,
 name|generic_steppings
 block|}

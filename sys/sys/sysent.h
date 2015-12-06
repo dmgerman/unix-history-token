@@ -287,15 +287,6 @@ name|sv_mask
 decl_stmt|;
 comment|/* optional mask to index */
 name|int
-name|sv_sigsize
-decl_stmt|;
-comment|/* size of signal translation table */
-name|int
-modifier|*
-name|sv_sigtbl
-decl_stmt|;
-comment|/* signal translation table */
-name|int
 name|sv_errsize
 decl_stmt|;
 comment|/* size of errno translation table */
@@ -366,26 +357,6 @@ modifier|*
 name|sv_szsigcode
 decl_stmt|;
 comment|/* size of sigtramp code */
-name|void
-function_decl|(
-modifier|*
-name|sv_prepsyscall
-function_decl|)
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|u_int
-modifier|*
-parameter_list|,
-name|caddr_t
-modifier|*
-parameter_list|)
-function_decl|;
 name|char
 modifier|*
 name|sv_name

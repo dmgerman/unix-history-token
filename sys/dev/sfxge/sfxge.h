@@ -884,6 +884,14 @@ decl_stmt|;
 name|int
 name|tso_fw_assisted
 decl_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_MCDI_LOGGING
+name|int
+name|mcdi_logging
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

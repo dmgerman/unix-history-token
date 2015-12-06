@@ -475,7 +475,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|p_sockaddr
 parameter_list|(
 specifier|const
@@ -1715,6 +1715,8 @@ index|]
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|protrusion
 decl_stmt|;
 name|xo_open_instance
 argument_list|(
@@ -1788,6 +1790,8 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+name|protrusion
+operator|=
 name|p_sockaddr
 argument_list|(
 literal|"destination"
@@ -1809,6 +1813,8 @@ argument_list|,
 name|wid_dst
 argument_list|)
 expr_stmt|;
+name|protrusion
+operator|=
 name|p_sockaddr
 argument_list|(
 literal|"gateway"
@@ -1823,6 +1829,8 @@ argument_list|,
 name|RTF_HOST
 argument_list|,
 name|wid_gw
+operator|-
+name|protrusion
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -1837,6 +1845,8 @@ argument_list|,
 literal|"{[:-%d}{:flags/%%s}{]:} "
 argument_list|,
 name|wid_flags
+operator|-
+name|protrusion
 argument_list|)
 expr_stmt|;
 name|p_flags
@@ -2043,7 +2053,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|p_sockaddr
 parameter_list|(
 specifier|const
@@ -2078,6 +2088,9 @@ name|buf
 index|[
 literal|128
 index|]
+decl_stmt|;
+name|int
+name|protrusion
 decl_stmt|;
 name|cp
 operator|=
@@ -2154,6 +2167,25 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|protrusion
+operator|=
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|-
+name|width
+expr_stmt|;
+if|if
+condition|(
+name|protrusion
+operator|<
+literal|0
+condition|)
+name|protrusion
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2183,8 +2215,17 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|protrusion
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|protrusion
+operator|)
+return|;
 block|}
 end_function
 

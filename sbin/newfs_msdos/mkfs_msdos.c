@@ -1506,6 +1506,27 @@ if|if
 condition|(
 name|o
 operator|.
+name|block_size
+operator|&&
+name|o
+operator|.
+name|sectors_per_cluster
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Cannot specify both block size and sectors per cluster"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|o
+operator|.
 name|OEM_string
 operator|&&
 name|strlen

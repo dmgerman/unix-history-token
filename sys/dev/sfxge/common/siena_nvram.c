@@ -63,7 +63,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_size
 parameter_list|(
 name|__in
@@ -82,7 +82,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -127,6 +127,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -155,7 +157,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -170,7 +172,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_lock
 parameter_list|(
 name|__in
@@ -184,7 +186,7 @@ name|int
 name|partn
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -218,7 +220,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -233,7 +235,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_read
 argument_list|(
 name|__in
@@ -266,7 +268,7 @@ block|{
 name|size_t
 name|chunk
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 while|while
@@ -335,7 +337,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -350,7 +352,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_erase
 parameter_list|(
 name|__in
@@ -373,7 +375,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -411,7 +413,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -426,7 +428,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_write
 argument_list|(
 name|__in
@@ -459,7 +461,7 @@ block|{
 name|size_t
 name|chunk
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 while|while
@@ -528,7 +530,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -559,7 +561,7 @@ block|{
 name|boolean_t
 name|reboot
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Reboot into the new image only for PHYs. The driver has to 	 * explicitly cope with an MC reboot after a firmware update. 	 */
@@ -608,7 +610,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -932,7 +934,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_test
 parameter_list|(
 name|__in
@@ -962,7 +964,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Iterate over the list of supported partition types 	 * applicable to *this* port 	 */
@@ -1055,7 +1057,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1079,7 +1081,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_size
 parameter_list|(
 name|__in
@@ -1101,7 +1103,7 @@ name|siena_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1168,7 +1170,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1199,7 +1201,7 @@ end_define
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_get_dynamic_cfg
 parameter_list|(
 name|__in
@@ -1264,7 +1266,7 @@ name|unsigned
 name|int
 name|region
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1717,7 +1719,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1732,7 +1734,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_get_subtype
 parameter_list|(
 name|__in
@@ -1769,7 +1771,7 @@ name|efx_word_t
 modifier|*
 name|fw_list
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1938,7 +1940,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1953,7 +1955,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_get_version
 argument_list|(
 name|__in
@@ -2001,7 +2003,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2391,7 +2393,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2406,7 +2408,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_rw_start
 parameter_list|(
 name|__in
@@ -2428,7 +2430,7 @@ name|siena_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2504,7 +2506,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2519,7 +2521,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_read_chunk
 argument_list|(
 name|__in
@@ -2552,7 +2554,7 @@ name|siena_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2623,7 +2625,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2638,7 +2640,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_erase
 parameter_list|(
 name|__in
@@ -2658,7 +2660,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2757,7 +2759,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2772,7 +2774,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_write_chunk
 argument_list|(
 name|__in
@@ -2805,7 +2807,7 @@ name|siena_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2876,7 +2878,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2936,7 +2938,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_set_version
 argument_list|(
 name|__in
@@ -3009,7 +3011,7 @@ decl_stmt|;
 name|size_t
 name|length
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -3611,7 +3613,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

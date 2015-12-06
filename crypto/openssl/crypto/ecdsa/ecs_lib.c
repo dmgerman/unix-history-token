@@ -1041,6 +1041,7 @@ name|ECDSA_METHOD
 modifier|*
 name|ECDSA_METHOD_new
 parameter_list|(
+specifier|const
 name|ECDSA_METHOD
 modifier|*
 name|ecdsa_meth

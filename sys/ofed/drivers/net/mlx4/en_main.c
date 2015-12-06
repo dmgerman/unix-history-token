@@ -51,67 +51,9 @@ directive|include
 file|"mlx4_en.h"
 end_include
 
-begin_expr_stmt
-name|MODULE_AUTHOR
-argument_list|(
-literal|"Liran Liss, Yevgeny Petrilin"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DESCRIPTION
-argument_list|(
-literal|"Mellanox ConnectX HCA Ethernet driver"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_LICENSE
-argument_list|(
-literal|"Dual BSD/GPL"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|DRV_VERSION
-literal|" ("
-name|DRV_RELDATE
-literal|")"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|mlx4_en_version
-index|[]
-init|=
-name|DRV_NAME
-literal|": Mellanox ConnectX HCA Ethernet driver v"
-name|DRV_VERSION
-literal|" ("
-name|DRV_RELDATE
-literal|")\n"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Mellanox ConnectX HCA Ethernet driver */
+end_comment
 
 begin_define
 define|#
@@ -743,14 +685,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|printk_once
-argument_list|(
-name|KERN_INFO
-literal|"%s"
-argument_list|,
-name|mlx4_en_version
-argument_list|)
-expr_stmt|;
 name|mdev
 operator|=
 name|kzalloc

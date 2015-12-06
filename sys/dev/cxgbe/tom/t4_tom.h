@@ -328,11 +328,11 @@ name|inp
 decl_stmt|;
 comment|/* backpointer to host stack's PCB */
 name|struct
-name|port_info
+name|vi_info
 modifier|*
-name|port
+name|vi
 decl_stmt|;
-comment|/* physical port */
+comment|/* virtual interface */
 name|struct
 name|sge_wrq
 modifier|*
@@ -784,7 +784,7 @@ modifier|*
 name|alloc_toepcb
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|,
 name|int
@@ -966,7 +966,7 @@ name|socket
 modifier|*
 parameter_list|,
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|,
 name|struct
@@ -989,7 +989,7 @@ name|uint64_t
 name|select_ntuple
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|,
 name|struct

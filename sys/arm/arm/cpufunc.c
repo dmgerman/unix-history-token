@@ -2786,7 +2786,11 @@ name|CPU_ID_CORTEXA15R3
 operator|||
 name|cputype
 operator|==
-name|CPU_ID_KRAIT
+name|CPU_ID_KRAIT300R0
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_KRAIT300R1
 condition|)
 block|{
 name|cpufuncs

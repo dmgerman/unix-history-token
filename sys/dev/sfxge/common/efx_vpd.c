@@ -318,7 +318,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_init
 parameter_list|(
 name|__in
@@ -331,7 +331,7 @@ name|efx_vpd_ops_t
 modifier|*
 name|evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -504,7 +504,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -519,7 +519,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_size
 parameter_list|(
 name|__in
@@ -541,7 +541,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -597,7 +597,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -612,7 +612,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_read
 argument_list|(
 name|__in
@@ -640,7 +640,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -698,7 +698,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -713,7 +713,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_verify
 argument_list|(
 name|__in
@@ -741,7 +741,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -799,7 +799,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -814,7 +814,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_reinit
 argument_list|(
 name|__in
@@ -842,7 +842,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -924,7 +924,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -939,7 +939,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_get
 argument_list|(
 name|__in
@@ -972,7 +972,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1032,7 +1032,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1047,7 +1047,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_set
 argument_list|(
 name|__in
@@ -1080,7 +1080,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1140,7 +1140,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1155,7 +1155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_next
 argument_list|(
 name|__in
@@ -1194,7 +1194,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1256,7 +1256,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1271,7 +1271,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_write
 argument_list|(
 name|__in
@@ -1299,7 +1299,7 @@ name|enp
 operator|->
 name|en_evpdop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1357,7 +1357,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1373,7 +1373,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_next_tag
 parameter_list|(
 name|__in
@@ -1416,7 +1416,7 @@ decl_stmt|;
 name|size_t
 name|headlen
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1683,7 +1683,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1699,7 +1699,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_next_keyword
 argument_list|(
 name|__in_bcount
@@ -1735,7 +1735,7 @@ decl_stmt|;
 name|uint8_t
 name|length
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1832,7 +1832,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1847,7 +1847,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_length
 argument_list|(
 name|__in_bcount
@@ -1877,7 +1877,7 @@ decl_stmt|;
 name|uint16_t
 name|taglen
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|offset
@@ -1948,7 +1948,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1963,7 +1963,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_verify
 argument_list|(
 name|__in_bcount
@@ -2015,7 +2015,7 @@ name|cksummed
 init|=
 name|B_FALSE
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Parse every tag,keyword in the existing VPD. If the csum is present, 	 * the assert it is correct, and is the final keyword in the RO block. 	 */
@@ -2098,9 +2098,15 @@ if|if
 condition|(
 name|cksummed
 condition|)
+block|{
+name|rc
+operator|=
+name|EFAULT
+expr_stmt|;
 goto|goto
 name|fail2
 goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2261,7 +2267,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2323,7 +2329,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_reinit
 argument_list|(
 name|__in_bcount
@@ -2358,7 +2364,7 @@ decl_stmt|;
 name|uint8_t
 name|cksum
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2502,7 +2508,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2517,7 +2523,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_next
 argument_list|(
 name|__in_bcount
@@ -2591,7 +2597,7 @@ decl_stmt|;
 name|uint8_t
 name|paylen
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|offset
@@ -2828,7 +2834,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2843,7 +2849,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_get
 argument_list|(
 name|__in_bcount
@@ -2897,7 +2903,7 @@ decl_stmt|;
 name|uint8_t
 name|keylen
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|offset
@@ -3092,7 +3098,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3107,7 +3113,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_set
 argument_list|(
 name|__in_bcount
@@ -3172,7 +3178,7 @@ decl_stmt|;
 name|size_t
 name|used
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 switch|switch
@@ -4021,7 +4027,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

@@ -5712,12 +5712,34 @@ end_elif
 begin_define
 define|#
 directive|define
+name|SPR_MCARU
+value|0x239
+end_define
+
+begin_comment
+comment|/* ..8 Machine Check Address register upper bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_MCSR
 value|0x23c
 end_define
 
 begin_comment
 comment|/* ..8 Machine Check Syndrome register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MCAR
+value|0x23d
+end_define
+
+begin_comment
+comment|/* ..8 Machine Check Address register */
 end_comment
 
 begin_define

@@ -28,19 +28,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fbt.h"
+file|<machine/trap.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|FBT_PATCHVAL
-value|0xe7f000f0
-end_define
-
-begin_comment
-comment|/* Specified undefined instruction */
-end_comment
+begin_include
+include|#
+directive|include
+file|"fbt.h"
+end_include
 
 begin_define
 define|#
@@ -126,6 +121,9 @@ name|addr
 argument_list|)
 index|]
 decl_stmt|;
+name|register_t
+name|fifthparam
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -158,7 +156,30 @@ name|cpu_dtrace_caller
 operator|=
 name|addr
 expr_stmt|;
-comment|/* TODO: Need 5th parameter from stack */
+comment|/* Get 5th parameter from stack */
+name|DTRACE_CPUFLAG_SET
+argument_list|(
+name|CPU_DTRACE_NOFAULT
+argument_list|)
+expr_stmt|;
+name|fifthparam
+operator|=
+operator|*
+operator|(
+name|register_t
+operator|*
+operator|)
+name|frame
+operator|->
+name|tf_usr_sp
+expr_stmt|;
+name|DTRACE_CPUFLAG_CLEAR
+argument_list|(
+name|CPU_DTRACE_NOFAULT
+operator||
+name|CPU_DTRACE_BADADDR
+argument_list|)
+expr_stmt|;
 name|dtrace_probe
 argument_list|(
 name|fbt
@@ -181,7 +202,7 @@ name|frame
 operator|->
 name|tf_r3
 argument_list|,
-literal|0
+name|fifthparam
 argument_list|)
 expr_stmt|;
 name|cpu
@@ -243,7 +264,10 @@ name|fbt
 operator|->
 name|fbtp_patchpoint
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+name|val
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -347,23 +371,6 @@ literal|1
 index|]
 operator|==
 literal|'_'
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* 	 * Architecture-specific exclusion list, largely to do with FBT trap 	 * processing, to prevent reentrance. 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-literal|"undefinedinstruction"
-argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -474,7 +481,7 @@ name|name
 argument_list|,
 name|FBT_ENTRY
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 name|fbt
 argument_list|)
@@ -510,7 +517,7 @@ name|fbt
 operator|->
 name|fbtp_patchval
 operator|=
-name|FBT_PATCHVAL
+name|FBT_BREAKPOINT
 expr_stmt|;
 name|fbt
 operator|->
@@ -662,10 +669,6 @@ operator|<
 name|start
 condition|)
 break|break;
-name|instr
-operator|++
-expr_stmt|;
-comment|/* skip delay slot */
 block|}
 block|}
 if|if
@@ -723,7 +726,7 @@ name|name
 argument_list|,
 name|FBT_RETURN
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 name|fbt
 argument_list|)
@@ -811,7 +814,7 @@ name|fbt
 operator|->
 name|fbtp_patchval
 operator|=
-name|FBT_PATCHVAL
+name|FBT_BREAKPOINT
 expr_stmt|;
 name|fbt
 operator|->

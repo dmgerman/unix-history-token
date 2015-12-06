@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Samsung Exynos 5 Interrupt Combiner  * Chapter 7, Exynos 5 Dual User's Manual Public Rev 1.00  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_GLOBAL_INCLUDE_FILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|USB_GLOBAL_INCLUDE_FILE
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -116,6 +133,11 @@ include|#
 directive|include
 file|<machine/intr.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

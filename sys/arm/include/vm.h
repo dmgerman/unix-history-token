@@ -58,6 +58,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_MEMATTR_WT
+value|((vm_memattr_t)PTE2_ATTR_WT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_MEMATTR_DEFAULT
 value|VM_MEMATTR_WB_WA
 end_define
@@ -70,7 +77,29 @@ value|VM_MEMATTR_SO
 end_define
 
 begin_comment
-comment|/*name is misused by DMA */
+comment|/* misused by DMA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_WRITE_COMBINING
+value|VM_MEMATTR_WT
+end_define
+
+begin_comment
+comment|/* for DRM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_WRITE_BACK
+value|VM_MEMATTR_WB_WA
+end_define
+
+begin_comment
+comment|/* for DRM */
 end_comment
 
 begin_else

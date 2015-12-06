@@ -202,11 +202,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_CALL_ELF
+argument_list|)
+operator|||
+name|_CALL_ELF
+operator|==
+literal|1
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/* ELFv1 kernel uses global dot symbols */
+end_comment
 
 begin_define
 define|#
@@ -247,6 +265,10 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
+begin_comment
+comment|/* ELFv1 user code uses local function entry points */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -285,6 +307,50 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ELFv2 doesn't have any of this complication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOT_LABEL
+parameter_list|(
+name|name
+parameter_list|)
+value|name
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+value|.type	name,@function;
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_SIZE
+parameter_list|(
+name|name
+parameter_list|)
+value|.size	name,.-DOT_LABEL(name);
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -329,15 +395,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
-operator|&&
-operator|(
 operator|!
 name|defined
 argument_list|(
@@ -347,7 +413,6 @@ operator|||
 name|_CALL_ELF
 operator|==
 literal|1
-operator|)
 end_if
 
 begin_define
@@ -360,6 +425,27 @@ parameter_list|)
 define|\
 value|.section ".text"; \ 	.p2align 2; \ 	.globl	name; \ 	.section ".opd","aw"; \ 	.p2align 3; \ 	name: \ 	.quad	DOT_LABEL(name),.TOC.@tocbase,0; \ 	.previous; \ 	.p2align 4; \ 	TYPE_ENTRY(name) \ DOT_LABEL(name):
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.text; \ 	.p2align 4; \ 	.globl	name; \ 	.type	name,@function; \ name: \ 	addis	%r2, %r12, (.TOC.-name)@ha; \ 	addi	%r2, %r2, (.TOC.-name)@l; \ 	.localentry name, .-name;
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

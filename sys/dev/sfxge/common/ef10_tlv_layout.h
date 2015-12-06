@@ -227,7 +227,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Static VPD.  *  * This is the portion of VPD which is set at manufacturing time and not  * expected to change.  It is formatted as a standard PCI VPD block.  */
+comment|/* Static VPD.  *  * This is the portion of VPD which is set at manufacturing time and not  * expected to change.  It is formatted as a standard PCI VPD block. There are  * global and per-pf TLVs for this, the global TLV is new for Medford and is  * used in preference to the per-pf TLV.  */
 end_comment
 
 begin_define
@@ -258,8 +258,33 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TLV_TAG_GLOBAL_STATIC_VPD
+value|(0x001f0000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_global_static_vpd
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|bytes
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* Dynamic VPD.  *  * This is the portion of VPD which may be changed (e.g. by firmware updates).  * It is formatted as a standard PCI VPD block.  */
+comment|/* Dynamic VPD.  *  * This is the portion of VPD which may be changed (e.g. by firmware updates).  * It is formatted as a standard PCI VPD block. There are global and per-pf TLVs  * for this, the global TLV is new for Medford and is used in preference to the  * per-pf TLV.  */
 end_comment
 
 begin_define
@@ -290,8 +315,33 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TLV_TAG_GLOBAL_DYNAMIC_VPD
+value|(0x10200000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_global_dynamic_vpd
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|bytes
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* "DBI" PCI config space changes.  *  * This is a set of edits made to the default PCI config space values before  * the device is allowed to enumerate.  */
+comment|/* "DBI" PCI config space changes.  *  * This is a set of edits made to the default PCI config space values before  * the device is allowed to enumerate. There are global and per-pf TLVs for  * this, the global TLV is new for Medford and is used in preference to the  * per-pf TLV.  */
 end_comment
 
 begin_define
@@ -307,6 +357,42 @@ end_define
 begin_struct
 struct|struct
 name|tlv_pf_dbi
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+struct|struct
+block|{
+name|uint16_t
+name|addr
+decl_stmt|;
+name|uint16_t
+name|byte_enables
+decl_stmt|;
+name|uint32_t
+name|value
+decl_stmt|;
+block|}
+name|items
+index|[]
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_GLOBAL_DBI
+value|(0x00210000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_global_dbi
 block|{
 name|uint32_t
 name|tag
@@ -528,6 +614,17 @@ name|TLV_TAG_TMP_GUBBINS
 value|(0x10090000)
 end_define
 
+begin_comment
+comment|/* legacy symbol - do not use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_TMP_GUBBINS_HUNT
+value|TLV_TAG_TMP_GUBBINS
+end_define
+
 begin_struct
 struct|struct
 name|tlv_tmp_gubbins
@@ -558,7 +655,7 @@ define|#
 directive|define
 name|TLV_DPCPU_TX_STRIPE
 value|(1)
-comment|/* TX striping is on */
+comment|/* No longer used, has no effect */
 define|#
 directive|define
 name|TLV_DPCPU_BIU_TAGS
@@ -694,7 +791,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Voltage settings  *   * Intended for boards with A0 silicon where the core voltage may  * need tweaking. Most likely set once when the pass voltage is   * determined. */
+comment|/* Voltage settings  *  * Intended for boards with A0 silicon where the core voltage may  * need tweaking. Most likely set once when the pass voltage is  * determined. */
 end_comment
 
 begin_define
@@ -756,6 +853,17 @@ define|#
 directive|define
 name|TLV_TAG_CLOCK_CONFIG
 value|(0x000d0000)
+end_define
+
+begin_comment
+comment|/* legacy symbol - do not use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_CLOCK_CONFIG_HUNT
+value|TLV_TAG_CLOCK_CONFIG
 end_define
 
 begin_struct
@@ -878,6 +986,17 @@ define|#
 directive|define
 name|TLV_TAG_ATB_0V9_TARGET
 value|(0x000f0000)
+end_define
+
+begin_comment
+comment|/* legacy symbol - do not use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_ATB_0V9_TARGET_HUNT
+value|TLV_TAG_ATB_0V9_TARGET
 end_define
 
 begin_comment
@@ -1441,6 +1560,103 @@ comment|/* Default */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Descriptor cache config.  *  * Sets the sizes of the TX and RX descriptor caches as a power of 2. It also  * sets the total number of VIs. When the number of VIs is reduced VIs are taken  * away from the highest numbered port first, so a vi_count of 1024 means 1024  * VIs on the first port and 0 on the second (on a Torino).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_DESCRIPTOR_CACHE_CONFIG
+value|(0x101d0000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_descriptor_cache_config
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|rx_desc_cache_size
+decl_stmt|;
+name|uint8_t
+name|tx_desc_cache_size
+decl_stmt|;
+name|uint16_t
+name|vi_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TLV_DESC_CACHE_DEFAULT
+value|(0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLV_VI_COUNT_DEFAULT
+value|(0xffff)
+end_define
+
+begin_comment
+comment|/* RX event merging config (read batching).  *  * Sets the global maximum number of events for the merging bins, and the  * global timeout configuration for the bins.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_RX_EVENT_MERGING_CONFIG
+value|(0x101e0000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_rx_event_merging_config
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint32_t
+name|max_events
+decl_stmt|;
+define|#
+directive|define
+name|TLV_RX_EVENT_MERGING_CONFIG_MAX_EVENTS_MAX
+value|((1<< 4) - 1)
+name|uint32_t
+name|timeout_ns
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TLV_RX_EVENT_MERGING_MAX_EVENTS_DEFAULT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLV_RX_EVENT_MERGING_TIMEOUT_NS_DEFAULT
+value|8740
+end_define
 
 begin_endif
 endif|#

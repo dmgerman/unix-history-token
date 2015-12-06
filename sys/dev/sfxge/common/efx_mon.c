@@ -435,7 +435,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mon_init
 parameter_list|(
 name|__in
@@ -470,7 +470,7 @@ name|efx_mon_ops_t
 modifier|*
 name|emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -699,7 +699,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -945,7 +945,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mon_stats_update
 argument_list|(
 name|__in
@@ -958,7 +958,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_MON_NSTATS
 argument_list|)
@@ -1063,7 +1063,7 @@ name|emp
 operator|->
 name|em_emop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1133,7 +1133,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

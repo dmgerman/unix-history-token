@@ -172,14 +172,6 @@ name|int
 name|step
 parameter_list|)
 block|{
-name|int
-name|l
-init|=
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -219,19 +211,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-operator|*
-name|buf
-operator|!=
-literal|'\0'
-condition|)
-name|l
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* ", " */
 if|if
 condition|(
 name|strlen

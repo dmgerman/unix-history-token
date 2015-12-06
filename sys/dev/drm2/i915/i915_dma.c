@@ -5945,10 +5945,6 @@ name|struct
 name|drm_i915_private
 modifier|*
 name|dev_priv
-init|=
-name|dev
-operator|->
-name|dev_private
 decl_stmt|;
 specifier|const
 name|struct

@@ -4373,17 +4373,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SSL_IS_DTLS
+argument_list|(
 name|s
-operator|->
-name|version
-operator|==
-name|DTLS1_VERSION
-operator|||
-name|s
-operator|->
-name|version
-operator|==
-name|DTLS1_BAD_VER
+argument_list|)
 condition|)
 block|{
 comment|/*                  * For DTLS, just drop it. That's kind of the whole point in                  * using a datagram service                  */

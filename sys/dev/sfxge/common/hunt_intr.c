@@ -43,7 +43,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_intr_init
 parameter_list|(
 name|__in
@@ -127,7 +127,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_trigger_interrupt
 parameter_list|(
 name|__in
@@ -155,7 +155,7 @@ name|MC_CMD_TRIGGER_INTERRUPT_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -285,7 +285,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -300,7 +300,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_intr_trigger
 parameter_list|(
 name|__in
@@ -325,7 +325,7 @@ operator|->
 name|en_nic_cfg
 operator|)
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -380,7 +380,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

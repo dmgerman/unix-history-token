@@ -317,14 +317,6 @@ name|i
 operator|++
 control|)
 block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* start with empty string */
 name|BUF_strlcpy
 argument_list|(
 name|buf

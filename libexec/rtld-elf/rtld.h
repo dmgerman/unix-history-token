@@ -716,6 +716,15 @@ decl_stmt|;
 comment|/* First dynamic symbol in GOT */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|Elf_Addr
+name|glink
+decl_stmt|;
+comment|/* GLINK PLT call stub section */
+endif|#
+directive|endif
 specifier|const
 name|Elf_Verneed
 modifier|*

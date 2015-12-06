@@ -572,6 +572,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MBOX_LOAD_FLASH_FIRMWARE
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_WRITE_FC_SERDES_REG
 value|0x0003
 end_define
@@ -4997,7 +5004,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBZOPT_RATE_ONEGB
+name|ICBZOPT_RATE_1GB
 value|0x0000
 end_define
 
@@ -5011,7 +5018,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBZOPT_RATE_TWOGB
+name|ICBZOPT_RATE_2GB
 value|0x4000
 end_define
 
@@ -5334,7 +5341,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_SKIP_FOURGB
+name|ICB2400_OPT3_SKIP_4GB
 value|0x00010000
 end_define
 
@@ -5348,14 +5355,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_ONEGB
+name|ICB2400_OPT3_RATE_1GB
 value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_TWOGB
+name|ICB2400_OPT3_RATE_2GB
 value|0x00002000
 end_define
 
@@ -5369,21 +5376,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_FOURGB
+name|ICB2400_OPT3_RATE_4GB
 value|0x00006000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_EIGHTGB
+name|ICB2400_OPT3_RATE_8GB
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_SIXTEENGB
+name|ICB2400_OPT3_RATE_16GB
 value|0x0000A000
 end_define
 

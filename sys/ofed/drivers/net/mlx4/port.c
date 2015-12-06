@@ -6239,12 +6239,26 @@ argument_list|(
 name|inbox
 argument_list|)
 condition|)
+block|{
+name|mlx4_err
+argument_list|(
+name|dev
+argument_list|,
+literal|"mlx4_alloc_cmd_mailbox returned with error(%lx)"
+argument_list|,
+name|PTR_ERR
+argument_list|(
+name|inbox
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|PTR_ERR
 argument_list|(
 name|inbox
 argument_list|)
 return|;
+block|}
 name|outbox
 operator|=
 name|mlx4_alloc_cmd_mailbox
@@ -6265,6 +6279,18 @@ argument_list|(
 name|dev
 argument_list|,
 name|inbox
+argument_list|)
+expr_stmt|;
+name|mlx4_err
+argument_list|(
+name|dev
+argument_list|,
+literal|"mlx4_alloc_cmd_mailbox returned with error(%lx)"
+argument_list|,
+name|PTR_ERR
+argument_list|(
+name|outbox
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

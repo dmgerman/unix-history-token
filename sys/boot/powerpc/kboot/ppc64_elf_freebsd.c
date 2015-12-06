@@ -242,7 +242,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set up interesting values in function descriptor */
+comment|/* Set up loader trampoline */
 name|trampoline
 operator|=
 name|malloc
@@ -260,6 +260,26 @@ argument_list|,
 name|szkerneltramp
 argument_list|)
 expr_stmt|;
+comment|/* Parse function descriptor for ELFv1 kernels */
+if|if
+condition|(
+operator|(
+name|e
+operator|->
+name|e_flags
+operator|&
+literal|3
+operator|)
+operator|==
+literal|2
+condition|)
+name|entry
+operator|=
+name|e
+operator|->
+name|e_entry
+expr_stmt|;
+else|else
 name|archsw
 operator|.
 name|arch_copyout

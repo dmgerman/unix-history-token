@@ -648,13 +648,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMXUART_UFCR_RFDIV_SHIFT
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
 name|IMXUART_UFCR_RFDIV_DIV6
 value|(0<< 7)
 end_define

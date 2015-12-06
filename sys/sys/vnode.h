@@ -604,17 +604,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VI_AGE
-value|0x0040
-end_define
-
-begin_comment
-comment|/* Insert vnode at head of free list */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VI_DOOMED
 value|0x0080
 end_define

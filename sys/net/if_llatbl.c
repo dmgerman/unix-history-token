@@ -1214,6 +1214,12 @@ name|la_flags
 operator||=
 name|LLE_VALID
 expr_stmt|;
+name|lle
+operator|->
+name|r_flags
+operator||=
+name|RLLE_VALID
+expr_stmt|;
 block|}
 end_function
 
@@ -2591,6 +2597,12 @@ operator|->
 name|la_flags
 operator||=
 name|LLE_VALID
+expr_stmt|;
+name|lle
+operator|->
+name|r_flags
+operator||=
+name|RLLE_VALID
 expr_stmt|;
 name|lle
 operator|->

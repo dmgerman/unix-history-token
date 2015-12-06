@@ -370,6 +370,12 @@ name|mtx
 name|rt_mtx
 decl_stmt|;
 comment|/* mutex for routing entry */
+name|struct
+name|rtentry
+modifier|*
+name|rt_chain
+decl_stmt|;
+comment|/* pointer to next rtentry to delete */
 block|}
 struct|;
 end_struct
@@ -1258,6 +1264,22 @@ begin_comment
 comment|/* size of array to allocate */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|rt_filter_f_t
+parameter_list|(
+specifier|const
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|rt_addrinfo
@@ -1265,6 +1287,11 @@ block|{
 name|int
 name|rti_addrs
 decl_stmt|;
+comment|/* Route RTF_ flags */
+name|int
+name|rti_flags
+decl_stmt|;
+comment|/* Route RTF_ flags */
 name|struct
 name|sockaddr
 modifier|*
@@ -1273,27 +1300,43 @@ index|[
 name|RTAX_MAX
 index|]
 decl_stmt|;
-name|int
-name|rti_flags
-decl_stmt|;
+comment|/* Sockaddr data */
 name|struct
 name|ifaddr
 modifier|*
 name|rti_ifa
 decl_stmt|;
+comment|/* value of rt_ifa addr */
 name|struct
 name|ifnet
 modifier|*
 name|rti_ifp
 decl_stmt|;
+comment|/* route interface */
+name|rt_filter_f_t
+modifier|*
+name|rti_filter
+decl_stmt|;
+comment|/* filter function */
+name|void
+modifier|*
+name|rti_filterdata
+decl_stmt|;
+comment|/* filter paramenters */
 name|u_long
 name|rti_mflags
 decl_stmt|;
+comment|/* metrics RTV_ flags */
+name|u_long
+name|rti_spare
+decl_stmt|;
+comment|/* Will be used for fib */
 name|struct
 name|rt_metrics
 modifier|*
 name|rti_rmx
 decl_stmt|;
+comment|/* Pointer to route metrics */
 block|}
 struct|;
 end_struct
@@ -1827,6 +1870,24 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rt_foreach_fib_walk_del
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+name|rt_filter_f_t
+modifier|*
+name|filter_f
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

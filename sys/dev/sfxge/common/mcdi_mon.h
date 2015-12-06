@@ -40,7 +40,7 @@ if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|mcdi_mon_cfg_build
 parameter_list|(
 name|__in
@@ -60,7 +60,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|mcdi_mon_ev
 parameter_list|(
 name|__in
@@ -86,7 +86,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|mcdi_mon_stats_update
 argument_list|(
 name|__in
@@ -99,7 +99,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_MON_NSTATS
 argument_list|)

@@ -964,7 +964,7 @@ name|fprintf
 argument_list|(
 name|d
 argument_list|,
-literal|"!%d(%d)!"
+literal|"!%ld(%ld)!"
 argument_list|,
 name|OP
 argument_list|(
@@ -972,6 +972,9 @@ operator|*
 name|s
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|opnd
 argument_list|)
 expr_stmt|;

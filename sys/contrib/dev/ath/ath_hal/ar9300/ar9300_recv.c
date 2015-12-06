@@ -810,6 +810,11 @@ name|AR_SREV_SCORPION
 argument_list|(
 name|ah
 argument_list|)
+operator|||
+name|AR_SREV_HONEYBEE
+argument_list|(
+name|ah
+argument_list|)
 condition|)
 block|{
 comment|/* Enable Rx for 4 address frames */

@@ -49,7 +49,7 @@ end_include
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_sram_buf_tbl_set
 parameter_list|(
 name|__in
@@ -96,7 +96,7 @@ name|unsigned
 name|int
 name|count
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -537,7 +537,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1121,7 +1121,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_sram_test
 parameter_list|(
 name|__in

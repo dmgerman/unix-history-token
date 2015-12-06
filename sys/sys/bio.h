@@ -175,6 +175,13 @@ name|BIO_TRANSIENT_MAPPING
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIO_VLIST
+value|0x40
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -1687,11 +1687,17 @@ name|ZLIB_SHARED
 if|if
 condition|(
 name|zlib_dso
+operator|!=
+name|NULL
 condition|)
 name|DSO_free
 argument_list|(
 name|zlib_dso
 argument_list|)
+expr_stmt|;
+name|zlib_dso
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif

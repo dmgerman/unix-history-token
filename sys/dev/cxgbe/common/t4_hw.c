@@ -26761,6 +26761,11 @@ name|ret
 return|;
 name|p
 operator|->
+name|vi
+index|[
+literal|0
+index|]
+operator|.
 name|viid
 operator|=
 name|ret
@@ -26790,6 +26795,11 @@ name|j
 expr_stmt|;
 name|p
 operator|->
+name|vi
+index|[
+literal|0
+index|]
+operator|.
 name|rss_size
 operator|=
 name|rss_size
@@ -26889,6 +26899,11 @@ name|V_FW_PARAMS_PARAM_YZ
 argument_list|(
 name|p
 operator|->
+name|vi
+index|[
+literal|0
+index|]
+operator|.
 name|viid
 argument_list|)
 expr_stmt|;
@@ -26919,6 +26934,11 @@ name|ret
 condition|)
 name|p
 operator|->
+name|vi
+index|[
+literal|0
+index|]
+operator|.
 name|rss_base
 operator|=
 literal|0xffff
@@ -26928,6 +26948,11 @@ block|{
 comment|/* MPASS((val>> 16) == rss_size); */
 name|p
 operator|->
+name|vi
+index|[
+literal|0
+index|]
+operator|.
 name|rss_base
 operator|=
 name|val

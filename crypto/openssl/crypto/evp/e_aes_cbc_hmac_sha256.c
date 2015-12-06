@@ -3597,6 +3597,7 @@ name|defined
 argument_list|(
 name|STITCHED_CALL
 argument_list|)
+comment|/*          * Assembly stitch handles AVX-capable processors, but its          * performance is not optimal on AMD Jaguar, ~40% worse, for          * unknown reasons. Incidentally processor in question supports          * AVX, but not AMD-specific XOP extension, which can be used          * to identify it and avoid stitch invocation. So that after we          * establish that current CPU supports AVX, we even see if it's          * either even XOP-capable Bulldozer-based or GenuineIntel one.          */
 if|if
 condition|(
 name|OPENSSL_ia32cap_P
@@ -3615,6 +3616,40 @@ operator|)
 operator|)
 operator|&&
 comment|/* AVX? */
+operator|(
+operator|(
+name|OPENSSL_ia32cap_P
+index|[
+literal|1
+index|]
+operator|&
+operator|(
+literal|1
+operator|<<
+operator|(
+literal|43
+operator|-
+literal|32
+operator|)
+operator|)
+operator|)
+comment|/* XOP? */
+operator||
+operator|(
+name|OPENSSL_ia32cap_P
+index|[
+literal|0
+index|]
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|30
+operator|)
+operator|)
+operator|)
+operator|&&
+comment|/* "Intel CPU"? */
 name|plen
 operator|>
 operator|(
@@ -6361,24 +6396,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|len
-operator|=
-name|p
-index|[
-name|arg
-operator|-
-literal|2
-index|]
-operator|<<
-literal|8
-operator||
-name|p
-index|[
-name|arg
-operator|-
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|ctx

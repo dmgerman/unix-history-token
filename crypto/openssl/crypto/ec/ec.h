@@ -136,7 +136,7 @@ name|POINT_CONVERSION_COMPRESSED
 init|=
 literal|2
 block|,
-comment|/** the point is encoded as z||x||y, where z is the octet 0x02  */
+comment|/** the point is encoded as z||x||y, where z is the octet 0x04  */
 name|POINT_CONVERSION_UNCOMPRESSED
 init|=
 literal|4

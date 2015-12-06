@@ -3846,37 +3846,6 @@ operator|~
 literal|0xF
 operator|)
 expr_stmt|;
-comment|/* Translate the signal if appropriate. */
-if|if
-condition|(
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-operator|&&
-name|sig
-operator|<=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigsize
-condition|)
-name|sig
-operator|=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-index|[
-name|_SIG_IDX
-argument_list|(
-name|sig
-argument_list|)
-index|]
-expr_stmt|;
 comment|/* Build the argument list for the signal handler. */
 name|sf
 operator|.

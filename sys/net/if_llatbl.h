@@ -177,9 +177,14 @@ comment|/* IB needs 20 bytes. */
 block|}
 name|ll_addr
 union|;
-name|uint32_t
-name|spare0
+name|uint16_t
+name|r_flags
 decl_stmt|;
+comment|/* LLE runtime flags */
+name|uint16_t
+name|r_skip_req
+decl_stmt|;
+comment|/* feedback from fast path */
 name|uint64_t
 name|spare1
 decl_stmt|;
@@ -252,6 +257,10 @@ decl_stmt|;
 name|struct
 name|rwlock
 name|lle_lock
+decl_stmt|;
+name|struct
+name|mtx
+name|req_mtx
 decl_stmt|;
 block|}
 struct|;
@@ -345,6 +354,46 @@ parameter_list|(
 name|lle
 parameter_list|)
 value|rw_assert(&(lle)->lle_lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLE_REQ_INIT
+parameter_list|(
+name|lle
+parameter_list|)
+value|mtx_init(&(lle)->req_mtx, "lle req", \ 	NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLE_REQ_DESTROY
+parameter_list|(
+name|lle
+parameter_list|)
+value|mtx_destroy(&(lle)->req_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLE_REQ_LOCK
+parameter_list|(
+name|lle
+parameter_list|)
+value|mtx_lock(&(lle)->req_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLE_REQ_UNLOCK
+parameter_list|(
+name|lle
+parameter_list|)
+value|mtx_unlock(&(lle)->req_mtx)
 end_define
 
 begin_define
@@ -869,6 +918,43 @@ end_define
 
 begin_comment
 comment|/* return lle xlocked  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLE_UNLOCKED
+value|0x4000
+end_define
+
+begin_comment
+comment|/* return lle unlocked */
+end_comment
+
+begin_comment
+comment|/* LLE flags used by fastpath code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLLE_VALID
+value|0x0001
+end_define
+
+begin_comment
+comment|/* entry is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLLE_IFADDR
+value|LLE_IFADDR
+end_define
+
+begin_comment
+comment|/* entry is ifaddr */
 end_comment
 
 begin_define

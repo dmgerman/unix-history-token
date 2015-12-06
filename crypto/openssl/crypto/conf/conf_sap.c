@@ -124,6 +124,10 @@ operator||
 name|CONF_MFLAGS_IGNORE_MISSING_FILE
 argument_list|)
 expr_stmt|;
+name|openssl_configured
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
