@@ -471,6 +471,9 @@ name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
+name|uint8_t
+name|sc_iface_index
+decl_stmt|;
 name|int
 name|ac2idx
 index|[
@@ -536,17 +539,6 @@ name|int
 function_decl|(
 modifier|*
 name|sc_power_on
-function_decl|)
-parameter_list|(
-name|struct
-name|urtwn_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|sc_dma_init
 function_decl|)
 parameter_list|(
 name|struct
