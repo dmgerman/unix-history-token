@@ -5887,6 +5887,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* 4k PTEs -- Chosen to exceed the total size of Broadwell L2 TLB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_INVLPG_THRESHOLD
+value|(4 * 1024 * PAGE_SIZE)
+end_define
+
 begin_function
 name|void
 name|pmap_invalidate_range
@@ -5913,6 +5924,22 @@ name|cpuid
 decl_stmt|,
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|eva
+operator|-
+name|sva
+operator|>=
+name|PMAP_INVLPG_THRESHOLD
+condition|)
+block|{
+name|pmap_invalidate_all
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|pmap_type_guest
