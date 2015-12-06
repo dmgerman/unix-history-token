@@ -5247,6 +5247,9 @@ name|override_tag
 parameter_list|,
 name|uint32_t
 name|vrf_id
+parameter_list|,
+name|uint16_t
+name|o_strms
 parameter_list|)
 block|{
 name|struct
@@ -6165,11 +6168,7 @@ name|asoc
 operator|->
 name|pre_open_streams
 operator|=
-name|inp
-operator|->
-name|sctp_ep
-operator|.
-name|pre_open_stream_count
+name|o_strms
 expr_stmt|;
 name|SCTP_MALLOC
 argument_list|(
