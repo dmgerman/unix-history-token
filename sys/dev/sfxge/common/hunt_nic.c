@@ -6451,6 +6451,14 @@ name|en_vport_id
 operator|=
 name|EVB_PORT_ID_ASSIGNED
 expr_stmt|;
+name|enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_mcdi_max_payload_length
+operator|=
+name|MCDI_CTL_SDU_LEN_MAX_V2
+expr_stmt|;
 return|return
 operator|(
 literal|0

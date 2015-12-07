@@ -2971,6 +2971,9 @@ comment|/* External port identifier */
 name|uint8_t
 name|enc_external_port
 decl_stmt|;
+name|uint32_t
+name|enc_mcdi_max_payload_length
+decl_stmt|;
 block|}
 name|efx_nic_cfg_t
 typedef|;
