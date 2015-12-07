@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|MLX5_ASYNC_EVENT_MASK
-value|((1ull<< MLX5_EVENT_TYPE_PATH_MIG)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_COMM_EST)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_SQ_DRAINED)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_CQ_ERROR)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_WQ_CATAS_ERROR)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_PATH_MIG_FAILED)    | \ 			       (1ull<< MLX5_EVENT_TYPE_WQ_INVAL_REQ_ERROR) | \ 			       (1ull<< MLX5_EVENT_TYPE_WQ_ACCESS_ERROR)    | \ 			       (1ull<< MLX5_EVENT_TYPE_PORT_CHANGE)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_NIC_VPORT_CHANGE)   | \ 			       (1ull<< MLX5_EVENT_TYPE_SRQ_CATAS_ERROR)    | \ 			       (1ull<< MLX5_EVENT_TYPE_SRQ_LAST_WQE)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_SRQ_RQ_LIMIT))
+value|((1ull<< MLX5_EVENT_TYPE_PATH_MIG)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_COMM_EST)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_SQ_DRAINED)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_CQ_ERROR)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_WQ_CATAS_ERROR)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_PATH_MIG_FAILED)    | \ 			       (1ull<< MLX5_EVENT_TYPE_WQ_INVAL_REQ_ERROR) | \ 			       (1ull<< MLX5_EVENT_TYPE_WQ_ACCESS_ERROR)    | \ 			       (1ull<< MLX5_EVENT_TYPE_PORT_CHANGE)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_SRQ_CATAS_ERROR)    | \ 			       (1ull<< MLX5_EVENT_TYPE_SRQ_LAST_WQE)	    | \ 			       (1ull<< MLX5_EVENT_TYPE_SRQ_RQ_LIMIT))
 end_define
 
 begin_struct
@@ -2020,6 +2020,23 @@ operator|(
 literal|1ull
 operator|<<
 name|MLX5_EVENT_TYPE_CODING_PORT_MODULE_EVENT
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|MLX5_CAP_GEN
+argument_list|(
+name|dev
+argument_list|,
+name|nic_vport_change_event
+argument_list|)
+condition|)
+name|async_event_mask
+operator||=
+operator|(
+literal|1ull
+operator|<<
+name|MLX5_EVENT_TYPE_NIC_VPORT_CHANGE
 operator|)
 expr_stmt|;
 name|err
