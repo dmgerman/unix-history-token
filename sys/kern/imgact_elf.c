@@ -890,7 +890,7 @@ argument_list|)
 operator|,
 function_decl|.hdr.n_type
 init|=
-literal|1
+name|NT_FREEBSD_ABI_TAG
 operator|,
 function_decl|.vendor
 init|=
