@@ -64915,7 +64915,7 @@ if|if
 condition|(
 name|dofhp
 operator|->
-name|dofhp_dof
+name|dofhp_addr
 operator|==
 name|help
 operator|->
@@ -64926,7 +64926,7 @@ index|]
 operator|->
 name|dthp_prov
 operator|.
-name|dofhp_dof
+name|dofhp_addr
 condition|)
 return|return
 operator|(
@@ -66732,6 +66732,15 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* 		 * Now that this is in-kernel, we change the sense of the 		 * members:  dofhp_dof denotes the in-kernel copy of the DOF 		 * and dofhp_addr denotes the address at user-level. 		 */
+name|dhp
+operator|->
+name|dofhp_addr
+operator|=
+name|dhp
+operator|->
+name|dofhp_dof
+expr_stmt|;
 name|dhp
 operator|->
 name|dofhp_dof
