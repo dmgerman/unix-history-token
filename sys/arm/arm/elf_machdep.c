@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/elf.h>
 end_include
 
@@ -267,6 +273,17 @@ block|,
 operator|.
 name|sv_flags
 operator|=
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+name|SV_SHP
+operator||
+name|SV_TIMEKEEP
+operator||
+endif|#
+directive|endif
 name|SV_ABI_FREEBSD
 operator||
 name|SV_ILP32
@@ -287,6 +304,16 @@ operator|=
 name|syscallnames
 block|,
 operator|.
+name|sv_shared_page_base
+operator|=
+name|SHAREDPAGE
+block|,
+operator|.
+name|sv_shared_page_len
+operator|=
+name|PAGE_SIZE
+block|,
+operator|.
 name|sv_schedtail
 operator|=
 name|NULL
@@ -298,6 +325,17 @@ name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|INIT_SYSENTVEC
+argument_list|(
+name|elf32_sysvec
+argument_list|,
+operator|&
+name|elf32_freebsd_sysvec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

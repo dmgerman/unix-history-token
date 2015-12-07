@@ -20,7 +20,7 @@ define|#
 directive|define
 name|VDSO_TIMEHANDS_MD
 define|\
-value|uint32_t	th_res[8];
+value|uint32_t	th_physical;		\ 	uint32_t	th_res[7];
 end_define
 
 begin_endif

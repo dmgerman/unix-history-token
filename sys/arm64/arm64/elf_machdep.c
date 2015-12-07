@@ -258,6 +258,10 @@ block|,
 operator|.
 name|sv_flags
 operator|=
+name|SV_SHP
+operator||
+name|SV_TIMEKEEP
+operator||
 name|SV_ABI_FREEBSD
 operator||
 name|SV_LP64
@@ -278,12 +282,33 @@ operator|=
 name|syscallnames
 block|,
 operator|.
+name|sv_shared_page_base
+operator|=
+name|SHAREDPAGE
+block|,
+operator|.
+name|sv_shared_page_len
+operator|=
+name|PAGE_SIZE
+block|,
+operator|.
 name|sv_schedtail
 operator|=
 name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|INIT_SYSENTVEC
+argument_list|(
+name|elf64_sysvec
+argument_list|,
+operator|&
+name|elf64_freebsd_sysvec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
