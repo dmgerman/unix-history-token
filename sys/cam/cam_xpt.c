@@ -11383,7 +11383,13 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"xpt_action\n"
+literal|"xpt_action: func=%#x\n"
+operator|,
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11456,7 +11462,13 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"xpt_action_default\n"
+literal|"xpt_action_default: func=%#x\n"
+operator|,
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12027,6 +12039,23 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"sim->sim_action: func=%#x\n"
+operator|,
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|)
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 operator|(
@@ -12040,6 +12069,23 @@ name|sim
 operator|,
 name|start_ccb
 operator|)
+expr_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"sim->sim_action: status=%#x\n"
+operator|,
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
