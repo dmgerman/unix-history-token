@@ -65,6 +65,54 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+specifier|static
+name|int
+name|basename_length
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|filename
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|p
+operator|-
+name|filename
+operator|)
+return|;
+return|return
+operator|(
+name|strlen
+argument_list|(
+name|filename
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Convert ELF object to `binary'. Sections with SHF_ALLOC flag set  * are copied to the result binary. The relative offsets for each section  * are retained, so the result binary file might contain "holes".  */
 end_comment
@@ -969,7 +1017,7 @@ name|_GEN_SYMNAME
 parameter_list|(
 name|S
 parameter_list|)
-value|do {						\ 	snprintf(name, sizeof(name), "%s%s%s", "_binary_", ifn, S);	\ } while (0)
+value|do {						\ 	snprintf(name, sizeof(name), "%s%.*s%s", "_binary_",		\ 	    basename_length(ifn), ifn, S);				\ } while (0)
 comment|/* 	 * Create symbol table. 	 */
 name|create_external_symtab
 argument_list|(
