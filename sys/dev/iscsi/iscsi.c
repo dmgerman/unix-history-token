@@ -11132,7 +11132,9 @@ name|iscsi_shutdown
 argument_list|,
 name|sc
 argument_list|,
-name|SHUTDOWN_PRI_FIRST
+name|SHUTDOWN_PRI_DEFAULT
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
