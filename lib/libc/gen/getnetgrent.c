@@ -2051,6 +2051,7 @@ operator|->
 name|l_groupname
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
