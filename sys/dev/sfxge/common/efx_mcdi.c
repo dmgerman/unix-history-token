@@ -98,6 +98,9 @@ comment|/* emco_macaddr_change_supported */
 name|siena_mcdi_link_control_supported
 block|,
 comment|/* emco_link_control_supported */
+name|siena_mcdi_read_response
+block|,
+comment|/* emco_read_response */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -150,6 +153,9 @@ comment|/* emco_macaddr_change_supported */
 name|hunt_mcdi_link_control_supported
 block|,
 comment|/* emco_link_control_supported */
+name|hunt_mcdi_read_response
+block|,
+comment|/* emco_read_response */
 block|}
 decl_stmt|;
 end_decl_stmt
