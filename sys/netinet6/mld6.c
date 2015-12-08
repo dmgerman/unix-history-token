@@ -11219,6 +11219,21 @@ name|mli_version
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check that there are some packets queued. If so, send them first. 	 * For large number of groups the reply to general query can take 	 * many packets, we should finish sending them before starting of 	 * queuing the new reply. 	 */
+if|if
+condition|(
+name|mli
+operator|->
+name|mli_gq
+operator|.
+name|ifq_head
+operator|!=
+name|NULL
+condition|)
+block|{
+goto|goto
+name|send
+goto|;
 name|ifp
 operator|=
 name|mli
@@ -11366,6 +11381,8 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|send
+label|:
 name|mld_dispatch_queue
 argument_list|(
 operator|&
@@ -11405,13 +11422,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Transmit the next pending message in the output queue.  *  * VIMAGE: Needs to store/restore vnet pointer on a per-mbuf-chain basis.  * MRT: Nothing needs to be done, as MLD traffic is always local to  * a link and uses a link-scope multicast address.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|mld_dispatch_packet
@@ -11799,13 +11810,7 @@ name|out
 label|:
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Encapsulate an MLDv2 report.  *  * KAME IPv6 requires that hop-by-hop options be passed separately,  * and that the IPv6 header be prepended in a separate mbuf.  *  * Returns a pointer to the new mbuf chain head, or NULL if the  * allocation failed.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|mbuf
@@ -12189,15 +12194,9 @@ name|mh
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|KTR
-end_ifdef
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -12262,14 +12261,8 @@ return|return
 literal|"unknown"
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|void
 name|mld_init
@@ -12326,9 +12319,6 @@ operator|=
 name|IP6PO_DONTFRAG
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|mld_init
@@ -12342,9 +12332,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|void
 name|mld_uninit
@@ -12368,9 +12355,6 @@ name|MLD_LOCK_DESTROY
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSUNINIT
 argument_list|(
 name|mld_uninit
@@ -12384,9 +12368,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|void
 name|vnet_mld_init
@@ -12414,9 +12395,6 @@ name|V_mli_head
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|VNET_SYSINIT
 argument_list|(
 name|vnet_mld_init
@@ -12430,9 +12408,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|void
 name|vnet_mld_uninit
@@ -12469,9 +12444,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_mld_uninit
@@ -12485,9 +12457,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|int
 name|mld_modevent
@@ -12529,9 +12498,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|moduledata_t
 name|mld_mod
@@ -12544,9 +12510,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
 name|mld
@@ -12558,7 +12521,7 @@ argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_function
 
 end_unit
 
