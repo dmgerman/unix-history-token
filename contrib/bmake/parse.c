@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.205 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.205 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.205 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1765,6 +1765,9 @@ name|SUCCESS
 condition|)
 block|{
 comment|/* found a size, try mmap */
+ifdef|#
+directive|ifdef
+name|_SC_PAGESIZE
 name|pagesize
 operator|=
 name|sysconf
@@ -1772,6 +1775,14 @@ argument_list|(
 name|_SC_PAGESIZE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|pagesize
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pagesize
