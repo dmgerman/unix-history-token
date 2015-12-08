@@ -12631,6 +12631,20 @@ name|igi_version
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check that there are some packets queued. If so, send them first. 	 * For large number of groups the reply to general query can take 	 * many packets, we should finish sending them before starting of 	 * queuing the new reply. 	 */
+if|if
+condition|(
+name|igi
+operator|->
+name|igi_gq
+operator|.
+name|ifq_head
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|send
+goto|;
 name|ifp
 operator|=
 name|igi
@@ -12776,6 +12790,8 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|send
+label|:
 name|loop
 operator|=
 operator|(
