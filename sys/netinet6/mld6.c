@@ -11213,6 +11213,20 @@ name|mli_version
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check that there are some packets queued. If so, send them first. 	 * For large number of groups the reply to general query can take 	 * many packets, we should finish sending them before starting of 	 * queuing the new reply. 	 */
+if|if
+condition|(
+name|mli
+operator|->
+name|mli_gq
+operator|.
+name|ifq_head
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|send
+goto|;
 name|ifp
 operator|=
 name|mli
@@ -11360,6 +11374,8 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|send
+label|:
 name|mld_dispatch_queue
 argument_list|(
 operator|&
