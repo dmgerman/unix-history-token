@@ -5226,7 +5226,7 @@ if|if
 condition|(
 name|panicstr
 operator|==
-literal|0
+name|NULL
 condition|)
 name|vfs_unmountall
 argument_list|()
