@@ -1316,6 +1316,66 @@ literal|"BDXDE IOAT Ch3"
 block|}
 block|,
 block|{
+literal|0x6f208086
+block|,
+literal|"BDX IOAT Ch0"
+block|}
+block|,
+block|{
+literal|0x6f218086
+block|,
+literal|"BDX IOAT Ch1"
+block|}
+block|,
+block|{
+literal|0x6f228086
+block|,
+literal|"BDX IOAT Ch2"
+block|}
+block|,
+block|{
+literal|0x6f238086
+block|,
+literal|"BDX IOAT Ch3"
+block|}
+block|,
+block|{
+literal|0x6f248086
+block|,
+literal|"BDX IOAT Ch4"
+block|}
+block|,
+block|{
+literal|0x6f258086
+block|,
+literal|"BDX IOAT Ch5"
+block|}
+block|,
+block|{
+literal|0x6f268086
+block|,
+literal|"BDX IOAT Ch6"
+block|}
+block|,
+block|{
+literal|0x6f278086
+block|,
+literal|"BDX IOAT Ch7"
+block|}
+block|,
+block|{
+literal|0x6f2e8086
+block|,
+literal|"BDX IOAT Ch0 (RAID)"
+block|}
+block|,
+block|{
+literal|0x6f2f8086
+block|,
+literal|"BDX IOAT Ch1 (RAID)"
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 name|NULL
