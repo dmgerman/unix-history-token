@@ -192,7 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The following two varients on popen and pclose with  * the cavet that they get you the PID so that you  * can supply it to pclose so it can send a SIGTERM   *  to the process.  */
+comment|/*  * The following two varients on popen and pclose with  * the cavet that they get you the PID so that you  * can supply it to pclose so it can send a SIGTERM  *  to the process.  */
 end_comment
 
 begin_function
@@ -3210,7 +3210,7 @@ comment|/*	  "pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s BR_MISP_RETIRED.ALL_BRANCH
 name|int
 name|ret
 decl_stmt|;
-comment|/*   	 * (BR_MISP_RETIRED.ALL_BRANCHES /  	 *         (BR_MISP_RETIRED.ALL_BRANCHES + 	 *          MACHINE_CLEAR.COUNT) *  	 *	   ((UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES) / (4 * CPU_CLK_UNHALTED.THREAD))) 	 * 	 */
+comment|/* 	 * (BR_MISP_RETIRED.ALL_BRANCHES / (BR_MISP_RETIRED.ALL_BRANCHES + 	 * MACHINE_CLEAR.COUNT) * ((UOPS_ISSUED.ANY - 	 * UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES) / (4 * 	 * CPU_CLK_UNHALTED.THREAD))) 	 *  	 */
 name|double
 name|br
 decl_stmt|,
@@ -3860,7 +3860,7 @@ name|l1
 decl_stmt|,
 name|ldb
 decl_stmt|;
-comment|/*   	 * ((L1D_PEND_MISS.PENDING / MEM_LOAD_UOPS_RETIRED.L1_MISS) * LD_BLOCKS.NO_SR) / CPU_CLK_UNHALTED.THREAD_P 	 * "pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s L1D_PEND_MISS.PENDING -s MEM_LOAD_UOPS_RETIRED.L1_MISS -s LD_BLOCKS.NO_SR -w 1", 	 */
+comment|/* 	 * ((L1D_PEND_MISS.PENDING / MEM_LOAD_UOPS_RETIRED.L1_MISS) * 	 * LD_BLOCKS.NO_SR) / CPU_CLK_UNHALTED.THREAD_P "pmcstat -s 	 * CPU_CLK_UNHALTED.THREAD_P -s L1D_PEND_MISS.PENDING -s 	 * MEM_LOAD_UOPS_RETIRED.L1_MISS -s LD_BLOCKS.NO_SR -w 1", 	 */
 name|unhalt
 operator|=
 name|find_counter
@@ -4166,7 +4166,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  5  - MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES (thresh> 0.01) */
+comment|/* 	 * 5  - MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES 	 * (thresh> 0.01) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -4292,7 +4292,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60) / CPU_CLK_UNHALTED.THREAD_P (thresh>.05) */
+comment|/* 	 * 6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.05) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -4428,7 +4428,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / CPU_CLK_UNHALTED.THREAD_P (thresh>.05) */
+comment|/* 	 * 6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.05) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -4564,7 +4564,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / CPU_CLK_UNHALTED.THREAD_P (thresh>.05) */
+comment|/* 	 * 6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.05) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -4739,7 +4739,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  7  - (LD_BLOCKS_STORE_FORWARD * 13) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .05)*/
+comment|/* 	 * 7  - (LD_BLOCKS_STORE_FORWARD * 13) / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>= .05) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -4875,7 +4875,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* ** Suspect *** 	 *  8  - ((MEM_LOAD_RETIRED.L3_HIT * 26) + (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 43) + 	 *        (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60)) / CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/* 	 * ** Suspect *** 8  - ((MEM_LOAD_RETIRED.L3_HIT * 26) + 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 43) + 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60)) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5104,7 +5104,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/* 	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5240,7 +5240,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/* 	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5376,7 +5376,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 *  (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/* 	 * (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5512,7 +5512,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * Examine ((MEM_LOAD_UOPS_RETIRED.LLC_HIT * 36) + \ 	 *          (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 72) + 	 *          (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84)) 	 *           / CPU_CLK_UNHALTED.THREAD_P 	 */
+comment|/* 	 * Examine ((MEM_LOAD_UOPS_RETIRED.LLC_HIT * 36) + \ 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 72) + 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84)) / 	 * CPU_CLK_UNHALTED.THREAD_P 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5740,7 +5740,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 *  (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/* 	 * (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5876,7 +5876,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  9  - (MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS * 180) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) */
+comment|/* 	 * 9  - (MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS * 180) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6012,7 +6012,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) */
+comment|/* 	 * 9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6148,7 +6148,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) */
+comment|/* 	 * 9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6284,7 +6284,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 10  - ((DTLB_LOAD_MISSES.STLB_HIT * 7) + DTLB_LOAD_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P (t>=.1) */
+comment|/* 	 * 10  - ((DTLB_LOAD_MISSES.STLB_HIT * 7) + 	 * DTLB_LOAD_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P (t 	 *>=.1) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6457,7 +6457,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/*  	 * ((DTLB_STORE_MISSES.STLB_HIT * 7) + DTLB_STORE_MISSES.WALK_DURATION) /  	 * CPU_CLK_UNHALTED.THREAD_P (t>= .1)  	 */
+comment|/* 	 * ((DTLB_STORE_MISSES.STLB_HIT * 7) + 	 * DTLB_STORE_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P (t 	 *>= .1) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6756,7 +6756,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* (7 * ITLB_MISSES.STLB_HIT_4K + ITLB_MISSES.WALK_DURATION) / CPU_CLK_UNTHREAD_P   */
+comment|/* 	 * (7 * ITLB_MISSES.STLB_HIT_4K + ITLB_MISSES.WALK_DURATION) / 	 * CPU_CLK_UNTHREAD_P 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6923,7 +6923,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* (ICACHE.IFETCH_STALL - ITLB_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P IB */
+comment|/* 	 * (ICACHE.IFETCH_STALL - ITLB_MISSES.WALK_DURATION) / 	 * CPU_CLK_UNHALTED.THREAD_P IB 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -7348,7 +7348,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 12  -  IDQ_UOPS_NOT_DELIVERED.CORE / (CPU_CLK_UNHALTED.THREAD_P * 4) (thresh>= .15) */
+comment|/* 	 * 12  -  IDQ_UOPS_NOT_DELIVERED.CORE / (CPU_CLK_UNHALTED.THREAD_P * 	 * 4) (thresh>= .15) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -7484,7 +7484,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 13  - ((MACHINE_CLEARS.MEMORY_ORDERING + MACHINE_CLEARS.SMC + MACHINE_CLEARS.MASKMOV ) * 100 )   	 *         / CPU_CLK_UNHALTED.THREAD_P (thresh>= .02)*/
+comment|/* 	 * 13  - ((MACHINE_CLEARS.MEMORY_ORDERING + MACHINE_CLEARS.SMC + 	 * MACHINE_CLEARS.MASKMOV ) * 100 )  / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>= .02) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -8284,7 +8284,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / CPU_CLK_UNHALTED.THREAD_P (thresh> .1) */
+comment|/* 	 * 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh> .1) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -8420,7 +8420,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / CPU_CLK_UNHALTED.THREAD_P (thresh> .1) */
+comment|/* 	 * 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh> .1) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -8682,7 +8682,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 17  - (OTHER_ASSISTS.AVX_TO_SSE * 75)/CPU_CLK_UNHALTED.THREAD_P thresh  .1*/
+comment|/* 	 * 17  - (OTHER_ASSISTS.AVX_TO_SSE * 75)/CPU_CLK_UNHALTED.THREAD_P 	 * thresh  .1 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -8840,7 +8840,7 @@ name|con
 decl_stmt|,
 name|res
 decl_stmt|;
-comment|/* 18     (OTHER_ASSISTS.SSE_TO_AVX * 75)/CPU_CLK_UNHALTED.THREAD_P  thresh .1*/
+comment|/* 	 * 18     (OTHER_ASSISTS.SSE_TO_AVX * 75)/CPU_CLK_UNHALTED.THREAD_P 	 * thresh .1 	 */
 name|con
 operator|=
 literal|75.0
@@ -8976,7 +8976,7 @@ name|con
 decl_stmt|,
 name|res
 decl_stmt|;
-comment|/* 19 (UOPS_RETIRED.RETIRE_SLOTS/(4*CPU_CLK_UNHALTED.THREAD_P) look if thresh< .9*/
+comment|/* 	 * 19 (UOPS_RETIRED.RETIRE_SLOTS/(4*CPU_CLK_UNHALTED.THREAD_P) look 	 * if thresh< .9 	 */
 name|con
 operator|=
 literal|4.0
@@ -9110,7 +9110,7 @@ name|ot
 decl_stmt|,
 name|res
 decl_stmt|;
-comment|/* 20  - CPU_CLK_UNHALTED.THREAD_P/INST_RETIRED.ANY_P good if> 1. (comp factor)*/
+comment|/* 	 * 20  - CPU_CLK_UNHALTED.THREAD_P/INST_RETIRED.ANY_P good if> 1. 	 * (comp factor) 	 */
 name|unhalt
 operator|=
 name|find_counter
@@ -11012,7 +11012,7 @@ name|len
 decl_stmt|,
 name|nlen
 decl_stmt|;
-comment|/*  	 * Given header element idx, at p in 	 * form 's/NN/nameof' 	 * process the entry to pull out the name and 	 * the CPU number. 	 */
+comment|/* 	 * Given header element idx, at p in form 's/NN/nameof' process the 	 * entry to pull out the name and the CPU number. 	 */
 if|if
 condition|(
 name|strncmp
@@ -11194,7 +11194,7 @@ decl_stmt|;
 name|size_t
 name|mlen
 decl_stmt|;
-comment|/* We have a new start, lets  	 * setup our headers and cpus. 	 */
+comment|/* 	 * We have a new start, lets setup our headers and cpus. 	 */
 if|if
 condition|(
 name|fgets
@@ -11221,7 +11221,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Ok output is an array of counters. Once 	 * we start to read the values in we must 	 * put them in there slot to match there CPU and  	 * counter being updated. We create a mass array 	 * of the counters, filling in the CPU and  	 * counter name.  	 */
+comment|/* 	 * Ok output is an array of counters. Once we start to read the 	 * values in we must put them in there slot to match there CPU and 	 * counter being updated. We create a mass array of the counters, 	 * filling in the CPU and counter name. 	 */
 comment|/* How many do we get? */
 name|len
 operator|=
@@ -12609,11 +12609,11 @@ case|:
 case|case
 literal|0x1E
 case|:
-comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
+comment|/* Per Intel document 253669-032 9/2009, pages 				 * A-2 and A-57 */
 case|case
 literal|0x1F
 case|:
-comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
+comment|/* Per Intel document 253669-032 9/2009, pages 				 * A-2 and A-57 */
 name|printf
 argument_list|(
 literal|"Intel COREI7\n"
@@ -13840,7 +13840,7 @@ modifier|*
 name|exp
 parameter_list|)
 block|{
-comment|/* 	 * Build the pmcstat command to handle 	 * the passed in expression. 	 * /usr/sbin/pmcstat -w 1 -s NNN -s QQQ 	 * where NNN and QQQ represent the PMC's in the expression 	 * uniquely.. 	 */
+comment|/* 	 * Build the pmcstat command to handle the passed in expression. 	 * /usr/sbin/pmcstat -w 1 -s NNN -s QQQ where NNN and QQQ represent 	 * the PMC's in the expression uniquely.. 	 */
 name|char
 name|forming
 index|[
@@ -14018,7 +14018,7 @@ name|mal
 operator|=
 literal|23
 expr_stmt|;
-comment|/*	"/usr/sbin/pmcstat -w 1"  + \0 */
+comment|/* "/usr/sbin/pmcstat -w 1"  + \0 */
 for|for
 control|(
 name|i
