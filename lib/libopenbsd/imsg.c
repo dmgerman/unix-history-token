@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: imsg.c,v 1.12 2015/12/05 13:06:52 claudio Exp $	*/
+comment|/*	$OpenBSD: imsg.c,v 1.13 2015/12/09 11:54:12 tb Exp $	*/
 end_comment
 
 begin_comment
@@ -338,6 +338,10 @@ argument_list|()
 operator|+
 name|imsg_fd_overhead
 operator|+
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|CMSG_SPACE
 argument_list|(
@@ -356,6 +360,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 name|int
+argument_list|)
 argument_list|)
 operator|>=
 name|getdtablesize
