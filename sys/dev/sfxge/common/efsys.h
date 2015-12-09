@@ -640,6 +640,10 @@ name|EFSYS_OPT_MCDI_LOGGING
 value|0
 define|#
 directive|define
+name|EFSYS_OPT_MCDI_PROXY_AUTH
+value|0
+define|#
+directive|define
 name|EFSYS_OPT_MAC_FALCON_GMAC
 value|0
 define|#

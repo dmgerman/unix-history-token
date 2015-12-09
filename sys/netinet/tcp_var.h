@@ -3622,7 +3622,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|tcp_sack_doack
 parameter_list|(
 name|struct

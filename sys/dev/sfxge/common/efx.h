@@ -2964,9 +2964,15 @@ decl_stmt|;
 name|boolean_t
 name|enc_rx_disable_scatter_supported
 decl_stmt|;
+name|boolean_t
+name|enc_allow_set_mac_with_installed_filters
+decl_stmt|;
 comment|/* External port identifier */
 name|uint8_t
 name|enc_external_port
+decl_stmt|;
+name|uint32_t
+name|enc_mcdi_max_payload_length
 decl_stmt|;
 block|}
 name|efx_nic_cfg_t
@@ -5501,6 +5507,14 @@ directive|define
 name|EFX_TXQ_MAX_BUFS
 value|8
 comment|/* Maximum independent of EFX_BUG35388_WORKAROUND. */
+define|#
+directive|define
+name|EFX_TXQ_CKSUM_IPV4
+value|0x0001
+define|#
+directive|define
+name|EFX_TXQ_CKSUM_TCPUDP
+value|0x0002
 specifier|extern
 name|__checkReturn
 name|efx_rc_t

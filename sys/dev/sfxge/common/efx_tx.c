@@ -3698,7 +3698,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|EFX_CKSUM_IPV4
+name|EFX_TXQ_CKSUM_IPV4
 operator|)
 condition|?
 literal|0
@@ -3715,7 +3715,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|EFX_CKSUM_TCPUDP
+name|EFX_TXQ_CKSUM_TCPUDP
 operator|)
 condition|?
 literal|0

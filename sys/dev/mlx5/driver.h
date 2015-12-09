@@ -4542,7 +4542,7 @@ begin_define
 define|#
 directive|define
 name|MLX5_EEPROM_MAX_BYTES
-value|48
+value|32
 end_define
 
 begin_define

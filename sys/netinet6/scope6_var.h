@@ -254,6 +254,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|in6_splitscope
+parameter_list|(
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|ifnet
 modifier|*

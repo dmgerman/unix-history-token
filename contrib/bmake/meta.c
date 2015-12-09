@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.40 2015/10/11 04:51:24 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.41 2015/11/30 23:37:56 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -55,11 +55,43 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBGEN_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<libgen.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|HAVE_DIRNAME
+argument_list|)
+end_elif
+
+begin_function_decl
+name|char
+modifier|*
+name|dirname
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -5053,6 +5085,27 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
+name|link_src
+operator|!=
+name|NULL
+operator|&&
+name|lstat
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|fs
+argument_list|)
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|link_src
+operator|==
+name|NULL
+operator|&&
 name|stat
 argument_list|(
 name|p
@@ -5062,6 +5115,7 @@ name|fs
 argument_list|)
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 name|Lst_AtEnd

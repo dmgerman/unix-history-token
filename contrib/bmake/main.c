@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.234 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.235 2015/10/25 05:24:44 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.234 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.235 2015/10/25 05:24:44 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.234 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.235 2015/10/25 05:24:44 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7742,6 +7742,11 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 comment|/*      * Finally, see if there is a .ERROR target, and run it if so.      */
 name|en
 operator|=

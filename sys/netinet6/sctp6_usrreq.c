@@ -4538,6 +4538,12 @@ literal|0
 argument_list|,
 name|vrf_id
 argument_list|,
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|pre_open_stream_count
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;

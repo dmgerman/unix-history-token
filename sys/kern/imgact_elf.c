@@ -293,6 +293,23 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__arm__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -658,6 +675,23 @@ argument_list|(
 name|__powerpc64__
 argument_list|)
 comment|/* both 64 and 32 bit */
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+name|__ARM_ARCH
+operator|>=
+literal|7
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
 literal|1
 function_decl|;
 end_function_decl
@@ -856,7 +890,7 @@ argument_list|)
 operator|,
 function_decl|.hdr.n_type
 init|=
-literal|1
+name|NT_FREEBSD_ABI_TAG
 operator|,
 function_decl|.vendor
 init|=

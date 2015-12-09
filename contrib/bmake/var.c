@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.199 2015/10/20 21:30:57 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.200 2015/12/01 07:26:08 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.199 2015/10/20 21:30:57 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.200 2015/12/01 07:26:08 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.199 2015/10/20 21:30:57 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.200 2015/12/01 07:26:08 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -120,12 +120,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
 end_include
 
 begin_include
@@ -2606,6 +2600,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|val
+condition|)
+block|{
 name|av
 operator|=
 name|brk_string
@@ -2648,17 +2648,18 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
 name|as
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|av
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -2775,6 +2776,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|val
+condition|)
+block|{
 name|av
 operator|=
 name|brk_string
@@ -2820,7 +2827,7 @@ literal|1
 index|]
 condition|)
 block|{
-comment|/* 	     * A single char. 	     * If it is one of the vars that should only appear in 	     * local context, skip it, else we can get Var_Subst 	     * into a loop. 	     */
+comment|/* 		 * A single char. 		 * If it is one of the vars that should only appear in 		 * local context, skip it, else we can get Var_Subst 		 * into a loop. 		 */
 switch|switch
 condition|(
 name|name
@@ -2885,17 +2892,18 @@ block|}
 block|}
 name|free
 argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
 name|as
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|av
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -8645,7 +8653,8 @@ operator|*
 operator|)
 name|str
 decl_stmt|;
-name|uint32_t
+name|unsigned
+name|int
 name|h
 decl_stmt|,
 name|k

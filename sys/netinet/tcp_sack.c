@@ -1240,11 +1240,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process cumulative ACK and the TCP SACK option to update the scoreboard.  * tp->snd_holes is an ordered list of holes (oldest to newest, in terms of  * the sequence space).  */
+comment|/*  * Process cumulative ACK and the TCP SACK option to update the scoreboard.  * tp->snd_holes is an ordered list of holes (oldest to newest, in terms of  * the sequence space).  * Returns 1 if incoming ACK has previously unknown SACK information,  * 0 otherwise. Note: We treat (snd_una, th_ack) as a sack block so any changes  * to that (i.e. left edge moving) would also be considered a change in SACK  * information which is slightly different than rfc6675.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|tcp_sack_doack
 parameter_list|(
 name|struct
@@ -1289,6 +1289,8 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|num_sack_blks
+decl_stmt|,
+name|sack_changed
 decl_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
@@ -1298,6 +1300,10 @@ name|t_inpcb
 argument_list|)
 expr_stmt|;
 name|num_sack_blks
+operator|=
+literal|0
+expr_stmt|;
+name|sack_changed
 operator|=
 literal|0
 expr_stmt|;
@@ -1524,7 +1530,11 @@ name|num_sack_blks
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|sack_changed
+operator|)
+return|;
 comment|/* 	 * Sort the SACK blocks so we can update the scoreboard with just one 	 * pass. The overhead of sorting upto 4+1 elements is less than 	 * making upto 4+1 passes over the scoreboard. 	 */
 for|for
 control|(
@@ -1700,6 +1710,10 @@ comment|/* Go to the previous sack block. */
 name|sblkp
 operator|--
 expr_stmt|;
+name|sack_changed
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1765,6 +1779,7 @@ operator|->
 name|end
 argument_list|)
 condition|)
+block|{
 comment|/* fack is advanced. */
 name|tp
 operator|->
@@ -1774,6 +1789,11 @@ name|sblkp
 operator|->
 name|end
 expr_stmt|;
+name|sack_changed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* We must have at least one SACK hole in scoreboard. */
 name|KASSERT
 argument_list|(
@@ -1894,6 +1914,10 @@ operator|(
 literal|"sackhint bytes rtx>= 0"
 operator|)
 argument_list|)
+expr_stmt|;
+name|sack_changed
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2158,6 +2182,11 @@ name|sblkp
 operator|--
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|sack_changed
+operator|)
+return|;
 block|}
 end_function
 

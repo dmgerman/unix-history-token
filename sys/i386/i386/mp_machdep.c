@@ -1300,10 +1300,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************  * local functions and data  */
-end_comment
-
-begin_comment
 comment|/*  * start each AP in our list  */
 end_comment
 
