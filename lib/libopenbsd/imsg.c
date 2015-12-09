@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: imsg.c,v 1.10 2015/07/19 07:18:59 nicm Exp $	*/
+comment|/*	$OpenBSD: imsg.c,v 1.11 2015/11/27 01:57:59 mmcc Exp $	*/
 end_comment
 
 begin_comment
@@ -581,10 +581,6 @@ comment|/* we do not handle other ctl data level */
 block|}
 name|fail
 label|:
-if|if
-condition|(
-name|ifd
-condition|)
 name|free
 argument_list|(
 name|ifd
