@@ -35,6 +35,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -44,19 +50,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
+file|<stdint.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
 
 begin_include
 include|#
