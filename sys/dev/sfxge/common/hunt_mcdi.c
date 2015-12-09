@@ -1172,23 +1172,6 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_MCDI_LOGGING
-specifier|const
-name|efx_mcdi_transport_t
-modifier|*
-name|emtp
-init|=
-name|enp
-operator|->
-name|en_mcdi
-operator|.
-name|em_emtp
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MCDI_LOGGING */
 name|efx_mcdi_iface_t
 modifier|*
 name|emip
