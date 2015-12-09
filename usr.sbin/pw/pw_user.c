@@ -3532,10 +3532,15 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
+operator|(
+operator|!
+name|gecos
+operator|&&
 operator|*
 name|ch
 operator|<
 literal|' '
+operator|)
 operator|||
 operator|*
 name|ch
