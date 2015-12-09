@@ -223,6 +223,44 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Issue a copy data operation, with constraints:  *  - src1, src2, dst1, dst2 are all page-aligned addresses  *  - The quantity to copy is exactly 2 pages;  *  - src1 -> dst1, src2 -> dst2  *  * Why use this instead of normal _copy()?  You can copy two non-contiguous  * pages (src, dst, or both) with one descriptor.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|bus_dmadesc
+modifier|*
+name|ioat_copy_8k_aligned
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|,
+name|bus_addr_t
+name|dst1
+parameter_list|,
+name|bus_addr_t
+name|dst2
+parameter_list|,
+name|bus_addr_t
+name|src1
+parameter_list|,
+name|bus_addr_t
+name|src2
+parameter_list|,
+name|bus_dmaengine_callback_t
+name|callback_fn
+parameter_list|,
+name|void
+modifier|*
+name|callback_arg
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Issues a null operation. This issues the operation to the hardware, but the  * hardware doesn't do anything with it.  */
 end_comment
 
