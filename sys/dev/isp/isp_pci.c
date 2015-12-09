@@ -1151,6 +1151,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCI_PRODUCT_QLOGIC_ISP8031
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP8031
+value|0x8031
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1293,6 +1311,14 @@ directive|define
 name|PCI_QLOGIC_ISP2031
 define|\
 value|((PCI_PRODUCT_QLOGIC_ISP2031<< 16) | PCI_VENDOR_QLOGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_QLOGIC_ISP8031
+define|\
+value|((PCI_PRODUCT_QLOGIC_ISP8031<< 16) | PCI_VENDOR_QLOGIC)
 end_define
 
 begin_comment
@@ -1781,6 +1807,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Qlogic ISP 2031 PCI FC-AL Adapter"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_QLOGIC_ISP8031
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Qlogic ISP 8031 PCI FCoE Adapter"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3805,6 +3842,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PCI_QLOGIC_ISP2031
+case|:
+case|case
+name|PCI_QLOGIC_ISP8031
 case|:
 name|did
 operator|=
