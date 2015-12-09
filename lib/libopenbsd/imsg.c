@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: imsg.c,v 1.11 2015/11/27 01:57:59 mmcc Exp $	*/
+comment|/*	$OpenBSD: imsg.c,v 1.12 2015/12/05 13:06:52 claudio Exp $	*/
 end_comment
 
 begin_comment
@@ -404,26 +404,13 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EMSGSIZE
-condition|)
-goto|goto
-name|fail
-goto|;
-if|if
-condition|(
-name|errno
-operator|!=
 name|EINTR
-operator|&&
-name|errno
-operator|!=
-name|EAGAIN
 condition|)
-goto|goto
-name|fail
-goto|;
 goto|goto
 name|again
+goto|;
+goto|goto
+name|fail
 goto|;
 block|}
 name|ibuf
