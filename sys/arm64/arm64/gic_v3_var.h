@@ -828,7 +828,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gic_v3_its_map_msix
+name|gic_v3_its_map_msi
 parameter_list|(
 name|device_t
 parameter_list|,
