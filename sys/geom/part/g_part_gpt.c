@@ -5137,6 +5137,13 @@ name|pri
 operator|=
 name|G_PART_PROBE_PRI_LOW
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|DOSMAGIC
+condition|)
+block|{
 for|for
 control|(
 name|index
@@ -5176,17 +5183,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|res
-operator|!=
-name|DOSMAGIC
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Check that there's a primary header. */
 name|buf
 operator|=
@@ -5244,6 +5240,13 @@ operator|(
 name|pri
 operator|)
 return|;
+block|}
+else|else
+name|g_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 comment|/* No primary? Check that there's a secondary. */
 name|buf
 operator|=
