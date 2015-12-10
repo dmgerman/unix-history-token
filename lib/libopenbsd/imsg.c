@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: imsg.c,v 1.10 2015/07/19 07:18:59 nicm Exp $	*/
+comment|/*	$OpenBSD: imsg.c,v 1.13 2015/12/09 11:54:12 tb Exp $	*/
 end_comment
 
 begin_comment
@@ -338,6 +338,10 @@ argument_list|()
 operator|+
 name|imsg_fd_overhead
 operator|+
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|CMSG_SPACE
 argument_list|(
@@ -356,6 +360,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 name|int
+argument_list|)
 argument_list|)
 operator|>=
 name|getdtablesize
@@ -404,26 +409,13 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EMSGSIZE
-condition|)
-goto|goto
-name|fail
-goto|;
-if|if
-condition|(
-name|errno
-operator|!=
 name|EINTR
-operator|&&
-name|errno
-operator|!=
-name|EAGAIN
 condition|)
-goto|goto
-name|fail
-goto|;
 goto|goto
 name|again
+goto|;
+goto|goto
+name|fail
 goto|;
 block|}
 name|ibuf
@@ -581,10 +573,6 @@ comment|/* we do not handle other ctl data level */
 block|}
 name|fail
 label|:
-if|if
-condition|(
-name|ifd
-condition|)
 name|free
 argument_list|(
 name|ifd

@@ -747,6 +747,22 @@ modifier|*
 name|supportedp
 parameter_list|)
 function_decl|;
+specifier|extern
+name|__checkReturn
+name|efx_rc_t
+name|hunt_mcdi_mac_spoofing_supported
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__out
+name|boolean_t
+modifier|*
+name|supportedp
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MCDI */

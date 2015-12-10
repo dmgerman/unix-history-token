@@ -474,12 +474,6 @@ decl_stmt|;
 name|uint8_t
 name|sc_iface_index
 decl_stmt|;
-name|int
-name|ac2idx
-index|[
-name|WME_NUM_AC
-index|]
-decl_stmt|;
 name|u_int
 name|sc_flags
 decl_stmt|;

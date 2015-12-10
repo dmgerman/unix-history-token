@@ -56,6 +56,10 @@ name|IOAT_TEST_DMA
 block|,
 name|IOAT_TEST_RAW_DMA
 block|,
+name|IOAT_TEST_DMA_8K
+block|,
+name|IOAT_TEST_MEMCPY
+block|,
 name|IOAT_NUM_TESTKINDS
 block|}
 enum|;

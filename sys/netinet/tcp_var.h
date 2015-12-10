@@ -180,6 +180,13 @@ name|int
 name|sacked_bytes
 decl_stmt|;
 comment|/* 					 * Total sacked bytes reported by the 					 * receiver via sack option 					 */
+name|uint32_t
+name|_pad1
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* TBD */
 name|uint64_t
 name|_pad
 index|[

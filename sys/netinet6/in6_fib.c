@@ -720,7 +720,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Performs IPv6 route table lookup on @dst. Returns 0 on success.  * Stores basic nexthop info into provided @pnh6 structure.  * Note that  * - nh_ifp represents logical transmit interface (rt_ifp) by default  * - nh_ifp represents "address" interface if NHR_IFAIF flag is passed  * - mtu from logical transmit interface will be returned.  * - nh_ifp cannot be safely dereferenced  * - nh_ifp represents rt_ifp (e.g. if looking up address on  *   interface "ix0" pointer to "ix0" interface will be returned instead  *   of "lo0")  * - howewer mtu from "transmit" interface will be returned.  */
+comment|/*  * Performs IPv6 route table lookup on @dst. Returns 0 on success.  * Stores basic nexthop info into provided @pnh6 structure.  * Note that  * - nh_ifp represents logical transmit interface (rt_ifp) by default  * - nh_ifp represents "address" interface if NHR_IFAIF flag is passed  * - mtu from logical transmit interface will be returned.  * - nh_ifp cannot be safely dereferenced  * - nh_ifp represents rt_ifp (e.g. if looking up address on  *   interface "ix0" pointer to "ix0" interface will be returned instead  *   of "lo0")  * - howewer mtu from "transmit" interface will be returned.  * - scope will be embedded in nh_addr  */
 end_comment
 
 begin_function
@@ -824,6 +824,16 @@ operator|=
 operator|*
 name|dst
 expr_stmt|;
+name|sin6
+operator|.
+name|sin6_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+expr_stmt|;
 comment|/* Assume scopeid is valid and embed it directly */
 if|if
 condition|(
@@ -910,7 +920,10 @@ name|fib6_rte_to_nh_basic
 argument_list|(
 name|rte
 argument_list|,
-name|dst
+operator|&
+name|sin6
+operator|.
+name|sin6_addr
 argument_list|,
 name|flags
 argument_list|,
@@ -943,7 +956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Performs IPv6 route table lookup on @dst. Returns 0 on success.  * Stores extended nexthop info into provided @pnh6 structure.  * Note that  * - nh_ifp cannot be safely dereferenced unless NHR_REF is specified.  * - in that case you need to call fib6_free_nh_ext()  * - nh_ifp represents logical transmit interface (rt_ifp) by default  * - nh_ifp represents "address" interface if NHR_IFAIF flag is passed  * - mtu from logical transmit interface will be returned.  */
+comment|/*  * Performs IPv6 route table lookup on @dst. Returns 0 on success.  * Stores extended nexthop info into provided @pnh6 structure.  * Note that  * - nh_ifp cannot be safely dereferenced unless NHR_REF is specified.  * - in that case you need to call fib6_free_nh_ext()  * - nh_ifp represents logical transmit interface (rt_ifp) by default  * - nh_ifp represents "address" interface if NHR_IFAIF flag is passed  * - mtu from logical transmit interface will be returned.  * - scope will be embedded in nh_addr  */
 end_comment
 
 begin_function
@@ -1143,7 +1156,10 @@ name|fib6_rte_to_nh_extended
 argument_list|(
 name|rte
 argument_list|,
-name|dst
+operator|&
+name|sin6
+operator|.
+name|sin6_addr
 argument_list|,
 name|flags
 argument_list|,

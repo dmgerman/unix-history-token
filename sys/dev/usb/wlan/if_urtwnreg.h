@@ -3004,6 +3004,45 @@ value|0x02
 end_define
 
 begin_comment
+comment|/* Bits for R92C_ACMHWCTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_ACMHWCTRL_EN
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_ACMHWCTRL_BE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_ACMHWCTRL_VI
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_ACMHWCTRL_VO
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_ACMHWCTRL_ACM_MASK
+value|0x0f
+end_define
+
+begin_comment
 comment|/* Bits for R92C_APSD_CTRL. */
 end_comment
 

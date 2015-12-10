@@ -943,11 +943,6 @@ name|struct
 name|nhop6_basic
 name|nh6
 decl_stmt|;
-name|struct
-name|in6_addr
-modifier|*
-name|dst
-decl_stmt|;
 comment|/* XXX empty scope id */
 if|if
 condition|(
@@ -957,7 +952,10 @@ name|sc
 operator|->
 name|gif_fibnum
 argument_list|,
-name|dst
+operator|&
+name|ip6
+operator|->
+name|ip6_src
 argument_list|,
 literal|0
 argument_list|,

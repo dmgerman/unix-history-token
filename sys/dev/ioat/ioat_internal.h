@@ -646,10 +646,10 @@ name|uint64_t
 name|next
 decl_stmt|;
 name|uint64_t
-name|reserved
+name|next_src_addr
 decl_stmt|;
 name|uint64_t
-name|reserved2
+name|next_dest_addr
 decl_stmt|;
 name|uint64_t
 name|user1
