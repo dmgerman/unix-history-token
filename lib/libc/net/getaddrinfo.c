@@ -11126,6 +11126,11 @@ operator|=
 operator|&
 name|sentinel
 expr_stmt|;
+name|res
+operator|=
+name|__res_state
+argument_list|()
+expr_stmt|;
 name|buf
 operator|=
 name|malloc
@@ -11376,11 +11381,6 @@ return|return
 name|NS_UNAVAIL
 return|;
 block|}
-name|res
-operator|=
-name|__res_state
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
