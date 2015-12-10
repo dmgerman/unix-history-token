@@ -520,6 +520,26 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MCDI_LOGGING */
+if|#
+directive|if
+name|EFSYS_OPT_MCDI_PROXY_AUTH
+name|void
+function_decl|(
+modifier|*
+name|emt_ev_proxy_response
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|efx_rc_t
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MCDI_PROXY_AUTH */
 block|}
 name|efx_mcdi_transport_t
 typedef|;

@@ -3075,6 +3075,36 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|EFSYS_OPT_MCDI_PROXY_AUTH
+case|case
+name|MCDI_EVENT_CODE_PROXY_RESPONSE
+case|:
+comment|/* 		 * This event notifies a function that an authorization request 		 * has been processed. If the request was authorized then the 		 * function can now re-send the original MCDI request. 		 * See SF-113652-SW "SR-IOV Proxied Network Access Control". 		 */
+name|efx_mcdi_ev_proxy_response
+argument_list|(
+name|enp
+argument_list|,
+name|MCDI_EV_FIELD
+argument_list|(
+name|eqp
+argument_list|,
+name|PROXY_RESPONSE_HANDLE
+argument_list|)
+argument_list|,
+name|MCDI_EV_FIELD
+argument_list|(
+name|eqp
+argument_list|,
+name|PROXY_RESPONSE_RC
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MCDI_PROXY_AUTH */
 case|case
 name|MCDI_EVENT_CODE_LINKCHANGE
 case|:
