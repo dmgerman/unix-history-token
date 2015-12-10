@@ -863,36 +863,40 @@ end_function
 
 begin_function
 specifier|static
-name|uint64_t
-name|nvlist_get_guid
+name|void
+name|nvlist_get_guids
 parameter_list|(
 name|nvlist_t
 modifier|*
 name|list
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pguid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|vguid
 parameter_list|)
 block|{
-name|uint64_t
-name|value
-decl_stmt|;
-name|value
-operator|=
-literal|0
-expr_stmt|;
 name|nvlist_lookup_uint64
 argument_list|(
 name|list
 argument_list|,
 name|ZPOOL_CONFIG_GUID
 argument_list|,
-operator|&
-name|value
+name|vguid
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|value
-operator|)
-return|;
+name|nvlist_lookup_uint64
+argument_list|(
+name|list
+argument_list|,
+name|ZPOOL_CONFIG_POOL_GUID
+argument_list|,
+name|pguid
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1182,8 +1186,6 @@ decl_stmt|,
 name|size
 decl_stmt|;
 name|uint64_t
-name|guid
-decl_stmt|,
 name|state
 decl_stmt|,
 name|txg
@@ -1265,10 +1267,6 @@ name|sectorsize
 operator|)
 operator|-
 literal|1
-expr_stmt|;
-name|guid
-operator|=
-literal|0
 expr_stmt|;
 name|label
 operator|=
@@ -2273,26 +2271,37 @@ end_function
 
 begin_function
 specifier|static
-name|uint64_t
-name|vdev_geom_read_guid
+name|void
+name|vdev_geom_read_guids
 parameter_list|(
 name|struct
 name|g_consumer
 modifier|*
 name|cp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pguid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|vguid
 parameter_list|)
 block|{
 name|nvlist_t
 modifier|*
 name|config
 decl_stmt|;
-name|uint64_t
-name|guid
-decl_stmt|;
 name|g_topology_assert_not
 argument_list|()
 expr_stmt|;
-name|guid
+operator|*
+name|pguid
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|vguid
 operator|=
 literal|0
 expr_stmt|;
@@ -2309,11 +2318,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|guid
-operator|=
-name|nvlist_get_guid
+name|nvlist_get_guids
 argument_list|(
 name|config
+argument_list|,
+name|pguid
+argument_list|,
+name|vguid
 argument_list|)
 expr_stmt|;
 name|nvlist_free
@@ -2322,11 +2333,6 @@ name|config
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|guid
-operator|)
-return|;
 block|}
 end_function
 
@@ -2335,10 +2341,13 @@ specifier|static
 name|struct
 name|g_consumer
 modifier|*
-name|vdev_geom_attach_by_guid
+name|vdev_geom_attach_by_guids
 parameter_list|(
 name|uint64_t
-name|guid
+name|pool_guid
+parameter_list|,
+name|uint64_t
+name|vdev_guid
 parameter_list|)
 block|{
 name|struct
@@ -2369,6 +2378,8 @@ name|zcp
 decl_stmt|;
 name|uint64_t
 name|pguid
+decl_stmt|,
+name|vguid
 decl_stmt|;
 name|g_topology_assert
 argument_list|()
@@ -2460,11 +2471,15 @@ continue|continue;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|pguid
-operator|=
-name|vdev_geom_read_guid
+name|vdev_geom_read_guids
 argument_list|(
 name|zcp
+argument_list|,
+operator|&
+name|pguid
+argument_list|,
+operator|&
+name|vguid
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -2479,7 +2494,11 @@ if|if
 condition|(
 name|pguid
 operator|!=
-name|guid
+name|pool_guid
+operator|||
+name|vguid
+operator|!=
+name|vdev_guid
 condition|)
 continue|continue;
 name|cp
@@ -2496,9 +2515,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|ZFS_LOG
 argument_list|(
-literal|"ZFS WARNING: Unable to attach to %s.\n"
+literal|1
+argument_list|,
+literal|"ZFS WARNING: Unable to "
+literal|"attach to %s.\n"
 argument_list|,
 name|pp
 operator|->
@@ -2550,7 +2572,7 @@ specifier|static
 name|struct
 name|g_consumer
 modifier|*
-name|vdev_geom_open_by_guid
+name|vdev_geom_open_by_guids
 parameter_list|(
 name|vdev_t
 modifier|*
@@ -2588,8 +2610,15 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|vdev_geom_attach_by_guid
+name|vdev_geom_attach_by_guids
 argument_list|(
+name|spa_guid
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
+argument_list|,
 name|vd
 operator|->
 name|vdev_guid
@@ -2661,7 +2690,17 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Attach by guid [%ju] succeeded, provider %s."
+literal|"Attach by guid [%ju:%ju] succeeded, provider %s."
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|spa_guid
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2682,7 +2721,17 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Search by guid [%ju] failed."
+literal|"Search by guid [%ju:%ju] failed."
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|spa_guid
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2727,7 +2776,9 @@ modifier|*
 name|cp
 decl_stmt|;
 name|uint64_t
-name|guid
+name|pguid
+decl_stmt|,
+name|vguid
 decl_stmt|;
 name|g_topology_assert
 argument_list|()
@@ -2802,11 +2853,15 @@ block|{
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|guid
-operator|=
-name|vdev_geom_read_guid
+name|vdev_geom_read_guids
 argument_list|(
 name|cp
+argument_list|,
+operator|&
+name|pguid
+argument_list|,
+operator|&
+name|vguid
 argument_list|)
 expr_stmt|;
 name|g_topology_lock
@@ -2814,7 +2869,16 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|guid
+name|pguid
+operator|!=
+name|spa_guid
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
+operator|||
+name|vguid
 operator|!=
 name|vd
 operator|->
@@ -2837,11 +2901,21 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"guid mismatch for provider %s: "
-literal|"%ju != %ju."
+literal|"%ju:%ju != %ju:%ju."
 argument_list|,
 name|vd
 operator|->
 name|vdev_path
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|spa_guid
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2853,7 +2927,12 @@ argument_list|,
 operator|(
 name|uintmax_t
 operator|)
-name|guid
+name|pguid
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|vguid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2972,9 +3051,21 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If we're creating or splitting a pool, just find the GEOM provider 	 * by its name and ignore GUID mismatches. 	 */
 if|if
 condition|(
+name|vd
+operator|->
+name|vdev_spa
+operator|->
+name|spa_splitting_newspa
+operator|||
+operator|(
+name|vd
+operator|->
+name|vdev_prevstate
+operator|==
+name|VDEV_STATE_UNKNOWN
+operator|&&
 name|vd
 operator|->
 name|vdev_spa
@@ -2982,15 +3073,10 @@ operator|->
 name|spa_load_state
 operator|==
 name|SPA_LOAD_NONE
-operator|||
-name|vd
-operator|->
-name|vdev_spa
-operator|->
-name|spa_splitting_newspa
-operator|==
-name|B_TRUE
+operator|)
 condition|)
+block|{
+comment|/* 		 * We are dealing with a vdev that hasn't been previously 		 * opened (since boot), and we are not loading an 		 * existing pool configuration.  This looks like a 		 * vdev add operation to a new or existing pool. 		 * Assume the user knows what he/she is doing and find 		 * GEOM provider by its name, ignoring GUID mismatches. 		 * 		 * XXPOLICY: It would be safer to only allow a device 		 *           that is unlabeled or labeled but missing 		 *           GUID information to be opened in this fashion, 		 *           unless we are doing a split, in which case we 		 *           should allow any guid. 		 */
 name|cp
 operator|=
 name|vdev_geom_open_by_path
@@ -3000,8 +3086,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
+comment|/* 		 * Try using the recorded path for this device, but only 		 * accept it if its label data contains the expected GUIDs. 		 */
 name|cp
 operator|=
 name|vdev_geom_open_by_path
@@ -3018,10 +3106,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * The device at vd->vdev_path doesn't have the 			 * expected guid. The disks might have merely 			 * moved around so try all other GEOM providers 			 * to find one with the right guid. 			 */
+comment|/* 			 * The device at vd->vdev_path doesn't have the 			 * expected GUIDs. The disks might have merely 			 * moved around so try all other GEOM providers 			 * to find one with the right GUIDs. 			 */
 name|cp
 operator|=
-name|vdev_geom_open_by_guid
+name|vdev_geom_open_by_guids
 argument_list|(
 name|vd
 argument_list|)
