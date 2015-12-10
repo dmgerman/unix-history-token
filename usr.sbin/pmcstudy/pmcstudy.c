@@ -77,6 +77,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|max_pmc_counters
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|run_all
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -192,7 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The following two varients on popen and pclose with  * the cavet that they get you the PID so that you  * can supply it to pclose so it can send a SIGTERM  *  to the process.  */
+comment|/*  * The following two varients on popen and pclose with  * the cavet that they get you the PID so that you  * can supply it to pclose so it can send a SIGTERM   *  to the process.  */
 end_comment
 
 begin_function
@@ -963,6 +981,9 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|int
+name|counters_required
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1115,7 +1136,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Examine MEM_UOP_RETIRED.SPLIT_LOADS * 5) / CPU_CLK_UNHALTED.THREAD_P\n"
+literal|"Examine MEM_UOPS_RETIRED.SPLIT_LOADS * 5) / CPU_CLK_UNHALTED.THREAD_P\n"
 argument_list|)
 expr_stmt|;
 name|mythresh
@@ -1138,7 +1159,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Examine MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES\n"
+literal|"Examine MEM_UOPS_RETIRED.SPLIT_STORES / MEM_UOPS_RETIRED.ALL_STORES\n"
 argument_list|)
 expr_stmt|;
 name|mythresh
@@ -1853,7 +1874,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Examine MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES\n"
+literal|"Examine MEM_UOPS_RETIRED.SPLIT_STORES / MEM_UOPS_RETIRED.ALL_STORES\n"
 argument_list|)
 expr_stmt|;
 name|mythresh
@@ -2392,7 +2413,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Examine  (MEM_UOP_RETIRED.SPLIT_LOADS * 5) / CPU_CLK_UNHALTED.THREAD_P\n"
+literal|"Examine  (MEM_UOPS_RETIRED.SPLIT_LOADS * 5) / CPU_CLK_UNHALTED.THREAD_P\n"
 argument_list|)
 expr_stmt|;
 name|mythresh
@@ -2415,7 +2436,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Examine MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES\n"
+literal|"Examine MEM_UOPS_RETIRED.SPLIT_STORES / MEM_UOPS_RETIRED.ALL_STORES\n"
 argument_list|)
 expr_stmt|;
 name|mythresh
@@ -3210,7 +3231,7 @@ comment|/*	  "pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s BR_MISP_RETIRED.ALL_BRANCH
 name|int
 name|ret
 decl_stmt|;
-comment|/* 	 * (BR_MISP_RETIRED.ALL_BRANCHES / (BR_MISP_RETIRED.ALL_BRANCHES + 	 * MACHINE_CLEAR.COUNT) * ((UOPS_ISSUED.ANY - 	 * UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES) / (4 * 	 * CPU_CLK_UNHALTED.THREAD))) 	 *  	 */
+comment|/*   	 * (BR_MISP_RETIRED.ALL_BRANCHES /  	 *         (BR_MISP_RETIRED.ALL_BRANCHES + 	 *          MACHINE_CLEAR.COUNT) *  	 *	   ((UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES) / (4 * CPU_CLK_UNHALTED.THREAD))) 	 * 	 */
 name|double
 name|br
 decl_stmt|,
@@ -3860,7 +3881,7 @@ name|l1
 decl_stmt|,
 name|ldb
 decl_stmt|;
-comment|/* 	 * ((L1D_PEND_MISS.PENDING / MEM_LOAD_UOPS_RETIRED.L1_MISS) * 	 * LD_BLOCKS.NO_SR) / CPU_CLK_UNHALTED.THREAD_P "pmcstat -s 	 * CPU_CLK_UNHALTED.THREAD_P -s L1D_PEND_MISS.PENDING -s 	 * MEM_LOAD_UOPS_RETIRED.L1_MISS -s LD_BLOCKS.NO_SR -w 1", 	 */
+comment|/*   	 * ((L1D_PEND_MISS.PENDING / MEM_LOAD_UOPS_RETIRED.L1_MISS) * LD_BLOCKS.NO_SR) / CPU_CLK_UNHALTED.THREAD_P 	 * "pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s L1D_PEND_MISS.PENDING -s MEM_LOAD_UOPS_RETIRED.L1_MISS -s LD_BLOCKS.NO_SR -w 1", 	 */
 name|unhalt
 operator|=
 name|find_counter
@@ -4052,6 +4073,142 @@ name|memd
 decl_stmt|,
 name|res
 decl_stmt|;
+comment|/*  4  - (MEM_UOPS_RETIRED.SPLIT_LOADS * 5) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .1)*/
+name|con
+operator|=
+literal|5.0
+expr_stmt|;
+name|unhalt
+operator|=
+name|find_counter
+argument_list|(
+name|cpu
+argument_list|,
+literal|"CPU_CLK_UNHALTED.THREAD_P"
+argument_list|)
+expr_stmt|;
+name|mem
+operator|=
+name|find_counter
+argument_list|(
+name|cpu
+argument_list|,
+literal|"MEM_UOPS_RETIRED.SPLIT_LOADS"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|memd
+operator|=
+name|mem
+operator|->
+name|vals
+index|[
+name|pos
+index|]
+operator|*
+literal|1.0
+expr_stmt|;
+name|un
+operator|=
+name|unhalt
+operator|->
+name|vals
+index|[
+name|pos
+index|]
+operator|*
+literal|1.0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|memd
+operator|=
+name|mem
+operator|->
+name|sum
+operator|*
+literal|1.0
+expr_stmt|;
+name|un
+operator|=
+name|unhalt
+operator|->
+name|sum
+operator|*
+literal|1.0
+expr_stmt|;
+block|}
+name|res
+operator|=
+operator|(
+name|memd
+operator|*
+name|con
+operator|)
+operator|/
+name|un
+expr_stmt|;
+name|ret
+operator|=
+name|printf
+argument_list|(
+literal|"%1.3f"
+argument_list|,
+name|res
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|splitload_sb
+parameter_list|(
+name|struct
+name|counters
+modifier|*
+name|cpu
+parameter_list|,
+name|int
+name|pos
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|struct
+name|counters
+modifier|*
+name|mem
+decl_stmt|;
+name|struct
+name|counters
+modifier|*
+name|unhalt
+decl_stmt|;
+name|double
+name|con
+decl_stmt|,
+name|un
+decl_stmt|,
+name|memd
+decl_stmt|,
+name|res
+decl_stmt|;
 comment|/*  4  - (MEM_UOP_RETIRED.SPLIT_LOADS * 5) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .1)*/
 name|con
 operator|=
@@ -4155,7 +4312,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|splitstore
+name|splitstore_sb
 parameter_list|(
 name|struct
 name|counters
@@ -4166,7 +4323,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 5  - MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES 	 * (thresh> 0.01) 	 */
+comment|/*  5  - MEM_UOP_RETIRED.SPLIT_STORES / MEM_UOP_RETIRED.ALL_STORES (thresh> 0.01) */
 name|int
 name|ret
 decl_stmt|;
@@ -4281,6 +4438,132 @@ end_function
 begin_function
 specifier|static
 name|int
+name|splitstore
+parameter_list|(
+name|struct
+name|counters
+modifier|*
+name|cpu
+parameter_list|,
+name|int
+name|pos
+parameter_list|)
+block|{
+comment|/*  5  - MEM_UOPS_RETIRED.SPLIT_STORES / MEM_UOPS_RETIRED.ALL_STORES (thresh> 0.01) */
+name|int
+name|ret
+decl_stmt|;
+name|struct
+name|counters
+modifier|*
+name|mem_split
+decl_stmt|;
+name|struct
+name|counters
+modifier|*
+name|mem_stores
+decl_stmt|;
+name|double
+name|memsplit
+decl_stmt|,
+name|memstore
+decl_stmt|,
+name|res
+decl_stmt|;
+name|mem_split
+operator|=
+name|find_counter
+argument_list|(
+name|cpu
+argument_list|,
+literal|"MEM_UOPS_RETIRED.SPLIT_STORES"
+argument_list|)
+expr_stmt|;
+name|mem_stores
+operator|=
+name|find_counter
+argument_list|(
+name|cpu
+argument_list|,
+literal|"MEM_UOPS_RETIRED.ALL_STORES"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|memsplit
+operator|=
+name|mem_split
+operator|->
+name|vals
+index|[
+name|pos
+index|]
+operator|*
+literal|1.0
+expr_stmt|;
+name|memstore
+operator|=
+name|mem_stores
+operator|->
+name|vals
+index|[
+name|pos
+index|]
+operator|*
+literal|1.0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|memsplit
+operator|=
+name|mem_split
+operator|->
+name|sum
+operator|*
+literal|1.0
+expr_stmt|;
+name|memstore
+operator|=
+name|mem_stores
+operator|->
+name|sum
+operator|*
+literal|1.0
+expr_stmt|;
+block|}
+name|res
+operator|=
+name|memsplit
+operator|/
+name|memstore
+expr_stmt|;
+name|ret
+operator|=
+name|printf
+argument_list|(
+literal|"%1.3f"
+argument_list|,
+name|res
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|contested
 parameter_list|(
 name|struct
@@ -4292,7 +4575,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.05) 	 */
+comment|/*  6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60) / CPU_CLK_UNHALTED.THREAD_P (thresh>.05) */
 name|int
 name|ret
 decl_stmt|;
@@ -4428,7 +4711,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.05) 	 */
+comment|/*  6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / CPU_CLK_UNHALTED.THREAD_P (thresh>.05) */
 name|int
 name|ret
 decl_stmt|;
@@ -4564,7 +4847,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.05) 	 */
+comment|/*  6  - (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84) / CPU_CLK_UNHALTED.THREAD_P (thresh>.05) */
 name|int
 name|ret
 decl_stmt|;
@@ -4739,7 +5022,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 7  - (LD_BLOCKS_STORE_FORWARD * 13) / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>= .05) 	 */
+comment|/*  7  - (LD_BLOCKS_STORE_FORWARD * 13) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .05)*/
 name|int
 name|ret
 decl_stmt|;
@@ -4875,7 +5158,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * ** Suspect *** 8  - ((MEM_LOAD_RETIRED.L3_HIT * 26) + 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 43) + 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60)) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/* ** Suspect *** 	 *  8  - ((MEM_LOAD_RETIRED.L3_HIT * 26) + (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 43) + 	 *        (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 60)) / CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5104,7 +5387,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/*  	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5240,7 +5523,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
+comment|/*  	 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * 43)/ CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5376,7 +5659,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>.2) 	 */
+comment|/* 	 *  (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5512,7 +5795,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * Examine ((MEM_LOAD_UOPS_RETIRED.LLC_HIT * 36) + \ 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 72) + 	 * (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84)) / 	 * CPU_CLK_UNHALTED.THREAD_P 	 */
+comment|/* 	 * Examine ((MEM_LOAD_UOPS_RETIRED.LLC_HIT * 36) + \ 	 *          (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT * 72) + 	 *          (MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM * 84)) 	 *           / CPU_CLK_UNHALTED.THREAD_P 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5740,7 +6023,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>.2) 	 */
+comment|/* 	 *  (29 * MEM_LOAD_UOPS_RETIRED.LLC_HIT / CPU_CLK_UNHALTED.THREAD_P (thresh>.2) 	 */
 name|int
 name|ret
 decl_stmt|;
@@ -5876,7 +6159,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 9  - (MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS * 180) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) 	 */
+comment|/*  9  - (MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS * 180) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) */
 name|int
 name|ret
 decl_stmt|;
@@ -6012,7 +6295,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) 	 */
+comment|/*  9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) */
 name|int
 name|ret
 decl_stmt|;
@@ -6148,7 +6431,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) 	 */
+comment|/*  9  - (MEM_LOAD_UOPS_L3_MISS_RETIRED.LCOAL_DRAM * 180) / CPU_CLK_UNHALTED.THREAD_P (thresh>= .2) */
 name|int
 name|ret
 decl_stmt|;
@@ -6284,7 +6567,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 10  - ((DTLB_LOAD_MISSES.STLB_HIT * 7) + 	 * DTLB_LOAD_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P (t 	 *>=.1) 	 */
+comment|/* 10  - ((DTLB_LOAD_MISSES.STLB_HIT * 7) + DTLB_LOAD_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P (t>=.1) */
 name|int
 name|ret
 decl_stmt|;
@@ -6457,7 +6740,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * ((DTLB_STORE_MISSES.STLB_HIT * 7) + 	 * DTLB_STORE_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P (t 	 *>= .1) 	 */
+comment|/*  	 * ((DTLB_STORE_MISSES.STLB_HIT * 7) + DTLB_STORE_MISSES.WALK_DURATION) /  	 * CPU_CLK_UNHALTED.THREAD_P (t>= .1)  	 */
 name|int
 name|ret
 decl_stmt|;
@@ -6756,7 +7039,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * (7 * ITLB_MISSES.STLB_HIT_4K + ITLB_MISSES.WALK_DURATION) / 	 * CPU_CLK_UNTHREAD_P 	 */
+comment|/* (7 * ITLB_MISSES.STLB_HIT_4K + ITLB_MISSES.WALK_DURATION) / CPU_CLK_UNTHREAD_P   */
 name|int
 name|ret
 decl_stmt|;
@@ -6923,7 +7206,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * (ICACHE.IFETCH_STALL - ITLB_MISSES.WALK_DURATION) / 	 * CPU_CLK_UNHALTED.THREAD_P IB 	 */
+comment|/* (ICACHE.IFETCH_STALL - ITLB_MISSES.WALK_DURATION) / CPU_CLK_UNHALTED.THREAD_P IB */
 name|int
 name|ret
 decl_stmt|;
@@ -7348,7 +7631,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 12  -  IDQ_UOPS_NOT_DELIVERED.CORE / (CPU_CLK_UNHALTED.THREAD_P * 	 * 4) (thresh>= .15) 	 */
+comment|/* 12  -  IDQ_UOPS_NOT_DELIVERED.CORE / (CPU_CLK_UNHALTED.THREAD_P * 4) (thresh>= .15) */
 name|int
 name|ret
 decl_stmt|;
@@ -7484,7 +7767,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 13  - ((MACHINE_CLEARS.MEMORY_ORDERING + MACHINE_CLEARS.SMC + 	 * MACHINE_CLEARS.MASKMOV ) * 100 )  / CPU_CLK_UNHALTED.THREAD_P 	 * (thresh>= .02) 	 */
+comment|/* 13  - ((MACHINE_CLEARS.MEMORY_ORDERING + MACHINE_CLEARS.SMC + MACHINE_CLEARS.MASKMOV ) * 100 )   	 *         / CPU_CLK_UNHALTED.THREAD_P (thresh>= .02)*/
 name|int
 name|ret
 decl_stmt|;
@@ -8284,7 +8567,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh> .1) 	 */
+comment|/* 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / CPU_CLK_UNHALTED.THREAD_P (thresh> .1) */
 name|int
 name|ret
 decl_stmt|;
@@ -8420,7 +8703,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / 	 * CPU_CLK_UNHALTED.THREAD_P (thresh> .1) 	 */
+comment|/* 15  - (LD_BLOCKS_PARTIAL.ADDRESS_ALIAS * 5) / CPU_CLK_UNHALTED.THREAD_P (thresh> .1) */
 name|int
 name|ret
 decl_stmt|;
@@ -8682,7 +8965,7 @@ name|int
 name|pos
 parameter_list|)
 block|{
-comment|/* 	 * 17  - (OTHER_ASSISTS.AVX_TO_SSE * 75)/CPU_CLK_UNHALTED.THREAD_P 	 * thresh  .1 	 */
+comment|/* 17  - (OTHER_ASSISTS.AVX_TO_SSE * 75)/CPU_CLK_UNHALTED.THREAD_P thresh  .1*/
 name|int
 name|ret
 decl_stmt|;
@@ -8840,7 +9123,7 @@ name|con
 decl_stmt|,
 name|res
 decl_stmt|;
-comment|/* 	 * 18     (OTHER_ASSISTS.SSE_TO_AVX * 75)/CPU_CLK_UNHALTED.THREAD_P 	 * thresh .1 	 */
+comment|/* 18     (OTHER_ASSISTS.SSE_TO_AVX * 75)/CPU_CLK_UNHALTED.THREAD_P  thresh .1*/
 name|con
 operator|=
 literal|75.0
@@ -8976,7 +9259,7 @@ name|con
 decl_stmt|,
 name|res
 decl_stmt|;
-comment|/* 	 * 19 (UOPS_RETIRED.RETIRE_SLOTS/(4*CPU_CLK_UNHALTED.THREAD_P) look 	 * if thresh< .9 	 */
+comment|/* 19 (UOPS_RETIRED.RETIRE_SLOTS/(4*CPU_CLK_UNHALTED.THREAD_P) look if thresh< .9*/
 name|con
 operator|=
 literal|4.0
@@ -9110,7 +9393,7 @@ name|ot
 decl_stmt|,
 name|res
 decl_stmt|;
-comment|/* 	 * 20  - CPU_CLK_UNHALTED.THREAD_P/INST_RETIRED.ANY_P good if> 1. 	 * (comp factor) 	 */
+comment|/* 20  - CPU_CLK_UNHALTED.THREAD_P/INST_RETIRED.ANY_P good if> 1. (comp factor)*/
 name|unhalt
 operator|=
 name|find_counter
@@ -9228,17 +9511,21 @@ block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s PARTIAL_RAT_STALLS.SLOW_LEA_WINDOW -w 1"
 block|,
 name|allocstall1
+block|,
+literal|2
 block|}
 block|,
-comment|/*02*/
+comment|/* -- not defined for SB right (partial-rat_stalls) 02*/
 block|{
 literal|"allocstall2"
 block|,
 literal|"thresh> .05"
 block|,
-literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s PARTIAL_RAT_STALLS.FLAGS_MERGE_UOP_CYCLES -w 1"
+literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s PARTIAL_RAT_STALLS.FLAGS_MERGE_UOP -w 1"
 block|,
 name|allocstall2
+block|,
+literal|2
 block|}
 block|,
 comment|/*03*/
@@ -9250,6 +9537,8 @@ block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s BR_MISP_RETIRED.ALL_BRANCHES -w 1"
 block|,
 name|br_mispredict
+block|,
+literal|2
 block|}
 block|,
 comment|/*04*/
@@ -9260,10 +9549,12 @@ literal|"thresh>= .1"
 block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s MEM_UOP_RETIRED.SPLIT_LOADS -w 1"
 block|,
-name|splitload
+name|splitload_sb
+block|,
+literal|2
 block|}
 block|,
-comment|/*05*/
+comment|/* 05*/
 block|{
 literal|"splitstore"
 block|,
@@ -9271,7 +9562,9 @@ literal|"thresh>= .01"
 block|,
 literal|"pmcstat -s MEM_UOP_RETIRED.SPLIT_STORES -s MEM_UOP_RETIRED.ALL_STORES -w 1"
 block|,
-name|splitstore
+name|splitstore_sb
+block|,
+literal|2
 block|}
 block|,
 comment|/*06*/
@@ -9283,6 +9576,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM  -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|contested
+block|,
+literal|2
 block|}
 block|,
 comment|/*07*/
@@ -9294,6 +9589,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_STORE_FORWARD -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|blockstoreforward
+block|,
+literal|2
 block|}
 block|,
 comment|/*08*/
@@ -9305,6 +9602,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_RETIRED.LLC_HIT -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache2
+block|,
+literal|4
 block|}
 block|,
 comment|/*09*/
@@ -9316,6 +9615,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache1
+block|,
+literal|2
 block|}
 block|,
 comment|/*10*/
@@ -9327,6 +9628,8 @@ block|,
 literal|"pmcstat -s DTLB_LOAD_MISSES.STLB_HIT -s DTLB_LOAD_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|dtlb_missload
+block|,
+literal|3
 block|}
 block|,
 comment|/*11*/
@@ -9338,6 +9641,8 @@ block|,
 literal|"pmcstat -s DTLB_STORE_MISSES.STLB_HIT -s DTLB_STORE_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|dtlb_missstore
+block|,
+literal|3
 block|}
 block|,
 comment|/*12*/
@@ -9349,6 +9654,8 @@ block|,
 literal|"pmcstat -s IDQ_UOPS_NOT_DELIVERED.CORE -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|frontendstall
+block|,
+literal|2
 block|}
 block|,
 comment|/*13*/
@@ -9360,6 +9667,8 @@ block|,
 literal|"pmcstat -s MACHINE_CLEARS.MEMORY_ORDERING -s MACHINE_CLEARS.SMC -s MACHINE_CLEARS.MASKMOV -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|clears
+block|,
+literal|4
 block|}
 block|,
 comment|/*14*/
@@ -9371,6 +9680,8 @@ block|,
 literal|"pmcstat -s IDQ.MS_UOPS,cmask=1 -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|microassist
+block|,
+literal|2
 block|}
 block|,
 comment|/*15*/
@@ -9382,6 +9693,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_PARTIAL.ADDRESS_ALIAS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|aliasing
+block|,
+literal|2
 block|}
 block|,
 comment|/*16*/
@@ -9393,6 +9706,8 @@ block|,
 literal|"pmcstat -s FP_ASSIST.ANY -s INST_RETIRED.ANY_P -w 1"
 block|,
 name|fpassists
+block|,
+literal|2
 block|}
 block|,
 comment|/*17*/
@@ -9404,6 +9719,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.AVX_TO_SSE -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistavx
+block|,
+literal|2
 block|}
 block|,
 comment|/*18*/
@@ -9415,6 +9732,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.SSE_TO_AVX -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistsse
+block|,
+literal|2
 block|}
 block|,
 comment|/*19*/
@@ -9426,6 +9745,8 @@ block|,
 literal|"pmcstat -s UOPS_RETIRED.RETIRE_SLOTS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency1
+block|,
+literal|2
 block|}
 block|,
 comment|/*20*/
@@ -9437,6 +9758,8 @@ block|,
 literal|"pmcstat -s INST_RETIRED.ANY_P -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency2
+block|,
+literal|2
 block|}
 block|, }
 decl_stmt|;
@@ -9468,6 +9791,8 @@ block|,
 literal|"pmcstat -s UOPS_RETIRED.RETIRE_SLOTS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency1
+block|,
+literal|2
 block|}
 block|,
 comment|/*2*/
@@ -9479,6 +9804,8 @@ block|,
 literal|"pmcstat -s INST_RETIRED.ANY_P -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency2
+block|,
+literal|2
 block|}
 block|,
 comment|/*3*/
@@ -9490,6 +9817,8 @@ block|,
 literal|"pmcstat -s ITLB_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|itlb_miss
+block|,
+literal|2
 block|}
 block|,
 comment|/*4*/
@@ -9501,6 +9830,8 @@ block|,
 literal|"pmcstat -s ICACHE.IFETCH_STALL -s ITLB_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|icache_miss
+block|,
+literal|3
 block|}
 block|,
 comment|/*5*/
@@ -9512,6 +9843,8 @@ block|,
 literal|"pmcstat -s ILD_STALL.LCP -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|lcp_stall
+block|,
+literal|2
 block|}
 block|,
 comment|/*6*/
@@ -9523,6 +9856,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_MISS_RETIRED.LOCAL_DRAM -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache1ib
+block|,
+literal|2
 block|}
 block|,
 comment|/*7*/
@@ -9534,6 +9869,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_RETIRED.LLC_HIT -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache2ib
+block|,
+literal|2
 block|}
 block|,
 comment|/*8*/
@@ -9545,6 +9882,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM  -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|contested
+block|,
+literal|2
 block|}
 block|,
 comment|/*9*/
@@ -9556,6 +9895,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|datasharing
+block|,
+literal|2
 block|}
 block|,
 comment|/*10*/
@@ -9567,6 +9908,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_STORE_FORWARD -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|blockstoreforward
+block|,
+literal|2
 block|}
 block|,
 comment|/*11*/
@@ -9578,6 +9921,8 @@ block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s L1D_PEND_MISS.PENDING -s MEM_LOAD_UOPS_RETIRED.L1_MISS -s LD_BLOCKS.NO_SR -w 1"
 block|,
 name|splitloadib
+block|,
+literal|4
 block|}
 block|,
 comment|/*12*/
@@ -9586,9 +9931,11 @@ literal|"splitstore"
 block|,
 literal|"thresh>= .01"
 block|,
-literal|"pmcstat -s MEM_UOP_RETIRED.SPLIT_STORES -s MEM_UOP_RETIRED.ALL_STORES -w 1"
+literal|"pmcstat -s MEM_UOPS_RETIRED.SPLIT_STORES -s MEM_UOPS_RETIRED.ALL_STORES -w 1"
 block|,
 name|splitstore
+block|,
+literal|2
 block|}
 block|,
 comment|/*13*/
@@ -9600,6 +9947,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_PARTIAL.ADDRESS_ALIAS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|aliasing
+block|,
+literal|2
 block|}
 block|,
 comment|/*14*/
@@ -9611,6 +9960,8 @@ block|,
 literal|"pmcstat -s DTLB_LOAD_MISSES.STLB_HIT -s DTLB_LOAD_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|dtlb_missload
+block|,
+literal|3
 block|}
 block|,
 comment|/*15*/
@@ -9622,6 +9973,8 @@ block|,
 literal|"pmcstat -s DTLB_STORE_MISSES.STLB_HIT -s DTLB_STORE_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|dtlb_missstore
+block|,
+literal|3
 block|}
 block|,
 comment|/*16*/
@@ -9633,6 +9986,8 @@ block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s BR_MISP_RETIRED.ALL_BRANCHES -s MACHINE_CLEARS.MEMORY_ORDERING -s MACHINE_CLEARS.SMC -s MACHINE_CLEARS.MASKMOV -s UOPS_ISSUED.ANY -s UOPS_RETIRED.RETIRE_SLOTS -s INT_MISC.RECOVERY_CYCLES -w 1"
 block|,
 name|br_mispredictib
+block|,
+literal|8
 block|}
 block|,
 comment|/*17*/
@@ -9644,6 +9999,8 @@ block|,
 literal|"pmcstat -s MACHINE_CLEARS.MEMORY_ORDERING -s MACHINE_CLEARS.SMC -s MACHINE_CLEARS.MASKMOV -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|clears
+block|,
+literal|4
 block|}
 block|,
 comment|/*18*/
@@ -9655,6 +10012,8 @@ block|,
 literal|"pmcstat -s IDQ.MS_UOPS,cmask=1 -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|microassist
+block|,
+literal|2
 block|}
 block|,
 comment|/*19*/
@@ -9666,6 +10025,8 @@ block|,
 literal|"pmcstat -s FP_ASSIST.ANY -s INST_RETIRED.ANY_P -w 1"
 block|,
 name|fpassists
+block|,
+literal|2
 block|}
 block|,
 comment|/*20*/
@@ -9677,6 +10038,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.AVX_TO_SSE -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistavx
+block|,
+literal|2
 block|}
 block|,
 comment|/*21*/
@@ -9688,6 +10051,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.SSE_TO_AVX -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistsse
+block|,
+literal|2
 block|}
 block|, }
 decl_stmt|;
@@ -9719,6 +10084,8 @@ block|,
 literal|"pmcstat -s UOPS_RETIRED.RETIRE_SLOTS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency1
+block|,
+literal|2
 block|}
 block|,
 comment|/*2*/
@@ -9730,6 +10097,8 @@ block|,
 literal|"pmcstat -s INST_RETIRED.ANY_P -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency2
+block|,
+literal|2
 block|}
 block|,
 comment|/*3*/
@@ -9741,6 +10110,8 @@ block|,
 literal|"pmcstat -s ITLB_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|itlb_miss
+block|,
+literal|2
 block|}
 block|,
 comment|/*4*/
@@ -9749,9 +10120,11 @@ literal|"icachemiss"
 block|,
 literal|"thresh> .05"
 block|,
-literal|"pmcstat -s ICACHE.MISSES --s CPU_CLK_UNHALTED.THREAD_P -w 1"
+literal|"pmcstat -s ICACHE.MISSES -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|icache_miss_has
+block|,
+literal|2
 block|}
 block|,
 comment|/*5*/
@@ -9763,6 +10136,8 @@ block|,
 literal|"pmcstat -s ILD_STALL.LCP -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|lcp_stall
+block|,
+literal|2
 block|}
 block|,
 comment|/*6*/
@@ -9774,6 +10149,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_MISS_RETIRED.LOCAL_DRAM -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache1ib
+block|,
+literal|2
 block|}
 block|,
 comment|/*7*/
@@ -9785,6 +10162,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_RETIRED.LLC_HIT  -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache2has
+block|,
+literal|4
 block|}
 block|,
 comment|/*8*/
@@ -9796,6 +10175,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM  -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|contested_has
+block|,
+literal|2
 block|}
 block|,
 comment|/*9*/
@@ -9807,6 +10188,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|datasharing_has
+block|,
+literal|2
 block|}
 block|,
 comment|/*10*/
@@ -9818,6 +10201,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_STORE_FORWARD -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|blockstoreforward
+block|,
+literal|2
 block|}
 block|,
 comment|/*11*/
@@ -9826,9 +10211,11 @@ literal|"splitload"
 block|,
 literal|"thresh>= .1"
 block|,
-literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s MEM_UOP_RETIRED.SPLIT_LOADS -w 1"
+literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s MEM_UOPS_RETIRED.SPLIT_LOADS -w 1"
 block|,
 name|splitload
+block|,
+literal|2
 block|}
 block|,
 comment|/*12*/
@@ -9837,9 +10224,11 @@ literal|"splitstore"
 block|,
 literal|"thresh>= .01"
 block|,
-literal|"pmcstat -s MEM_UOP_RETIRED.SPLIT_STORES -s MEM_UOP_RETIRED.ALL_STORES -w 1"
+literal|"pmcstat -s MEM_UOPS_RETIRED.SPLIT_STORES -s MEM_UOPS_RETIRED.ALL_STORES -w 1"
 block|,
 name|splitstore
+block|,
+literal|2
 block|}
 block|,
 comment|/*13*/
@@ -9851,6 +10240,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_PARTIAL.ADDRESS_ALIAS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|aliasing
+block|,
+literal|2
 block|}
 block|,
 comment|/*14*/
@@ -9862,6 +10253,8 @@ block|,
 literal|"pmcstat -s DTLB_LOAD_MISSES.STLB_HIT -s DTLB_LOAD_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|dtlb_missload
+block|,
+literal|3
 block|}
 block|,
 comment|/*15*/
@@ -9873,6 +10266,8 @@ block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s BR_MISP_RETIRED.ALL_BRANCHES -w 1"
 block|,
 name|br_mispredict
+block|,
+literal|2
 block|}
 block|,
 comment|/*16*/
@@ -9884,6 +10279,8 @@ block|,
 literal|"pmcstat -s MACHINE_CLEARS.MEMORY_ORDERING -s MACHINE_CLEARS.SMC -s MACHINE_CLEARS.MASKMOV -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|clears
+block|,
+literal|4
 block|}
 block|,
 comment|/*17*/
@@ -9895,6 +10292,8 @@ block|,
 literal|"pmcstat -s IDQ.MS_UOPS,cmask=1 -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|microassist
+block|,
+literal|2
 block|}
 block|,
 comment|/*18*/
@@ -9906,6 +10305,8 @@ block|,
 literal|"pmcstat -s FP_ASSIST.ANY -s INST_RETIRED.ANY_P -w 1"
 block|,
 name|fpassists
+block|,
+literal|2
 block|}
 block|,
 comment|/*19*/
@@ -9917,6 +10318,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.AVX_TO_SSE -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistavx
+block|,
+literal|2
 block|}
 block|,
 comment|/*20*/
@@ -9928,6 +10331,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.SSE_TO_AVX -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistsse
+block|,
+literal|2
 block|}
 block|, }
 decl_stmt|;
@@ -10032,7 +10437,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Examine ( 36.0 * CACHE.MISSES)/ CPU_CLK_UNHALTED.THREAD_P ??? may not be right \n"
+literal|"Examine ( 36.0 * ICACHE.MISSES)/ CPU_CLK_UNHALTED.THREAD_P ??? may not be right \n"
 argument_list|)
 expr_stmt|;
 name|mythresh
@@ -10419,6 +10824,8 @@ block|,
 literal|"pmcstat -s UOPS_RETIRED.RETIRE_SLOTS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency1
+block|,
+literal|2
 block|}
 block|,
 comment|/*2*/
@@ -10430,6 +10837,8 @@ block|,
 literal|"pmcstat -s INST_RETIRED.ANY_P -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|efficiency2
+block|,
+literal|2
 block|}
 block|,
 comment|/*3*/
@@ -10441,6 +10850,8 @@ block|,
 literal|"pmcstat -s ITLB_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -s ITLB_MISSES.STLB_HIT_4K -w 1"
 block|,
 name|itlb_miss_broad
+block|,
+literal|3
 block|}
 block|,
 comment|/*4*/
@@ -10449,9 +10860,11 @@ literal|"icachemiss"
 block|,
 literal|"thresh> .05"
 block|,
-literal|"pmcstat -s ICACHE.MISSES --s CPU_CLK_UNHALTED.THREAD_P -w 1"
+literal|"pmcstat -s ICACHE.MISSES -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|icache_miss_has
+block|,
+literal|2
 block|}
 block|,
 comment|/*5*/
@@ -10463,6 +10876,8 @@ block|,
 literal|"pmcstat -s ILD_STALL.LCP -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|lcp_stall
+block|,
+literal|2
 block|}
 block|,
 comment|/*6*/
@@ -10474,6 +10889,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_RETIRED.L3_MISS  -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache1broad
+block|,
+literal|2
 block|}
 block|,
 comment|/*7*/
@@ -10485,6 +10902,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_RETIRED.L3_HIT  -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|cache2broad
+block|,
+literal|2
 block|}
 block|,
 comment|/*8*/
@@ -10496,6 +10915,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HITM  -s CPU_CLK_UNHALTED.THREAD_P  -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_MISS -w 1"
 block|,
 name|contestedbroad
+block|,
+literal|2
 block|}
 block|,
 comment|/*9*/
@@ -10507,6 +10928,8 @@ block|,
 literal|"pmcstat -s MEM_LOAD_UOPS_LLC_HIT_RETIRED.XSNP_HIT -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|datasharing_has
+block|,
+literal|2
 block|}
 block|,
 comment|/*10*/
@@ -10518,6 +10941,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_STORE_FORWARD -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|blockstoreforward
+block|,
+literal|2
 block|}
 block|,
 comment|/*11*/
@@ -10529,6 +10954,8 @@ block|,
 literal|"pmcstat -s LD_BLOCKS_PARTIAL.ADDRESS_ALIAS -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|aliasing_broad
+block|,
+literal|2
 block|}
 block|,
 comment|/*12*/
@@ -10537,9 +10964,11 @@ literal|"dtlbmissload"
 block|,
 literal|"thresh>= .1"
 block|,
-literal|"pmcstat -s DTLB_LOAD_MISSES.STLB_HIT -s DTLB_LOAD_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
+literal|"pmcstat -s DTLB_LOAD_MISSES.STLB_HIT_4K -s DTLB_LOAD_MISSES.WALK_DURATION -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|dtlb_missload
+block|,
+literal|3
 block|}
 block|,
 comment|/*13*/
@@ -10551,6 +10980,8 @@ block|,
 literal|"pmcstat -s CPU_CLK_UNHALTED.THREAD_P -s BR_MISP_RETIRED.ALL_BRANCHES -s MACHINE_CLEARS.CYCLES -s UOPS_ISSUED.ANY -s UOPS_RETIRED.RETIRE_SLOTS -s INT_MISC.RECOVERY_CYCLES -w 1"
 block|,
 name|br_mispredict_broad
+block|,
+literal|7
 block|}
 block|,
 comment|/*14*/
@@ -10562,6 +10993,8 @@ block|,
 literal|"pmcstat -s MACHINE_CLEARS.CYCLES -s MACHINE_CLEARS.MEMORY_ORDERING -s MACHINE_CLEARS.SMC -s MACHINE_CLEARS.MASKMOV -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|clears_broad
+block|,
+literal|5
 block|}
 block|,
 comment|/*15*/
@@ -10573,6 +11006,8 @@ block|,
 literal|"pmcstat -s FP_ASSIST.ANY -s INST_RETIRED.ANY_P -w 1"
 block|,
 name|fpassists
+block|,
+literal|2
 block|}
 block|,
 comment|/*16*/
@@ -10584,6 +11019,8 @@ block|,
 literal|"pmcstat -s OTHER_ASSISTS.AVX_TO_SSE -s CPU_CLK_UNHALTED.THREAD_P -w 1"
 block|,
 name|otherassistavx
+block|,
+literal|2
 block|}
 block|,
 comment|/*17*/
@@ -10595,6 +11032,8 @@ block|,
 literal|"pmcstat -s IDQ.MS_UOPS,cmask=1 -s CPU_CLK_UNHALTED.THREAD_P -s UOPS_ISSUED.ANY -s UOPS_RETIRED.RETIRE_SLOTS  -w 1"
 block|,
 name|microassist_broad
+block|,
+literal|4
 block|}
 block|, }
 decl_stmt|;
@@ -10754,9 +11193,10 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|set_expression
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -10841,6 +11281,74 @@ index|]
 operator|.
 name|thresh
 expr_stmt|;
+if|if
+condition|(
+name|the_cpu
+operator|.
+name|ents
+index|[
+name|i
+index|]
+operator|.
+name|counters_required
+operator|>
+name|max_pmc_counters
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Test %s requires that the CPU have %d counters and this CPU has only %d\n"
+argument_list|,
+name|the_cpu
+operator|.
+name|ents
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|the_cpu
+operator|.
+name|ents
+index|[
+name|i
+index|]
+operator|.
+name|counters_required
+argument_list|,
+name|max_pmc_counters
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Sorry this test can not be run\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|run_all
+operator|==
+literal|0
+condition|)
+block|{
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
 break|break;
 block|}
 block|}
@@ -10868,6 +11376,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -11012,7 +11525,7 @@ name|len
 decl_stmt|,
 name|nlen
 decl_stmt|;
-comment|/* 	 * Given header element idx, at p in form 's/NN/nameof' process the 	 * entry to pull out the name and the CPU number. 	 */
+comment|/*  	 * Given header element idx, at p in 	 * form 's/NN/nameof' 	 * process the entry to pull out the name and 	 * the CPU number. 	 */
 if|if
 condition|(
 name|strncmp
@@ -11194,7 +11707,7 @@ decl_stmt|;
 name|size_t
 name|mlen
 decl_stmt|;
-comment|/* 	 * We have a new start, lets setup our headers and cpus. 	 */
+comment|/* We have a new start, lets  	 * setup our headers and cpus. 	 */
 if|if
 condition|(
 name|fgets
@@ -11221,7 +11734,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Ok output is an array of counters. Once we start to read the 	 * values in we must put them in there slot to match there CPU and 	 * counter being updated. We create a mass array of the counters, 	 * filling in the CPU and counter name. 	 */
+comment|/* 	 * Ok output is an array of counters. Once 	 * we start to read the values in we must 	 * put them in there slot to match there CPU and  	 * counter being updated. We create a mass array 	 * of the counters, filling in the CPU and  	 * counter name.  	 */
 comment|/* How many do we get? */
 name|len
 operator|=
@@ -11931,22 +12444,6 @@ operator|&
 name|pid_of_command
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|io
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Can't popen the command %s\n"
-argument_list|,
-name|command
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 else|else
 block|{
@@ -11998,22 +12495,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|filename
+name|io
 condition|)
 block|{
 name|fclose
 argument_list|(
 name|io
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|my_pclose
-argument_list|(
-name|io
-argument_list|,
-name|pid_of_command
 argument_list|)
 expr_stmt|;
 block|}
@@ -12231,7 +12718,72 @@ define|\
 value|asm("cpuid": "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "a" (in));
 end_define
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|do_cpuid
+parameter_list|(
+name|u_int
+name|ax
+parameter_list|,
+name|u_int
+name|cx
+parameter_list|,
+name|u_int
+modifier|*
+name|p
+parameter_list|)
+block|{
+asm|__asm __volatile("cpuid"
+block|:
+literal|"=a"
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|)
+operator|,
+literal|"=b"
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|p
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"=d"
+operator|(
+name|p
+index|[
+literal|3
+index|]
+operator|)
+operator|:
+literal|"0"
+operator|(
+name|ax
+operator|)
+operator|,
+literal|"c"
+operator|(
+name|cx
+operator|)
+block|)
+function|;
+end_function
+
 begin_else
+unit|}
 else|#
 directive|else
 end_else
@@ -12252,6 +12804,25 @@ parameter_list|,
 name|d
 parameter_list|)
 end_define
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|do_cpuid
+parameter_list|(
+name|u_int
+name|ax
+parameter_list|,
+name|u_int
+name|cx
+parameter_list|,
+name|u_int
+modifier|*
+name|p
+parameter_list|)
+block|{ }
+end_function
 
 begin_endif
 endif|#
@@ -12301,6 +12872,12 @@ index|]
 decl_stmt|,
 modifier|*
 name|str
+decl_stmt|;
+name|u_int
+name|reg
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|eax
 operator|=
@@ -12609,11 +13186,11 @@ case|:
 case|case
 literal|0x1E
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages 				 * A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x1F
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages 				 * A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 name|printf
 argument_list|(
 literal|"Intel COREI7\n"
@@ -12787,7 +13364,7 @@ literal|0x56
 case|:
 name|printf
 argument_list|(
-literal|"Intel BROADWEL (Xeon)L\n"
+literal|"Intel BROADWEL (Xeon)\n"
 argument_list|)
 expr_stmt|;
 name|set_broadwell
@@ -12837,6 +13414,35 @@ name|not_supported
 goto|;
 break|break;
 block|}
+name|do_cpuid
+argument_list|(
+literal|0xa
+argument_list|,
+literal|0
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|max_pmc_counters
+operator|=
+operator|(
+name|reg
+index|[
+literal|3
+index|]
+operator|&
+literal|0x0000000f
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"We have %d PMC counters to work with\n"
+argument_list|,
+name|max_pmc_counters
+argument_list|)
+expr_stmt|;
 comment|/* Ok lets load the list of all known PMC's */
 name|io
 operator|=
@@ -13840,7 +14446,7 @@ modifier|*
 name|exp
 parameter_list|)
 block|{
-comment|/* 	 * Build the pmcstat command to handle the passed in expression. 	 * /usr/sbin/pmcstat -w 1 -s NNN -s QQQ where NNN and QQQ represent 	 * the PMC's in the expression uniquely.. 	 */
+comment|/* 	 * Build the pmcstat command to handle 	 * the passed in expression. 	 * /usr/sbin/pmcstat -w 1 -s NNN -s QQQ 	 * where NNN and QQQ represent the PMC's in the expression 	 * uniquely.. 	 */
 name|char
 name|forming
 index|[
@@ -14018,7 +14624,7 @@ name|mal
 operator|=
 literal|23
 expr_stmt|;
-comment|/* "/usr/sbin/pmcstat -w 1"  + \0 */
+comment|/*	"/usr/sbin/pmcstat -w 1"  + \0 */
 for|for
 control|(
 name|i
@@ -14527,6 +15133,7 @@ name|filename
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -14540,6 +15147,11 @@ literal|0
 decl_stmt|;
 name|int
 name|test_mode
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|test_at
 init|=
 literal|0
 decl_stmt|;
@@ -14569,7 +15181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"LHhvm:i:?e:TE:"
+literal|"ALHhvm:i:?e:TE:"
 argument_list|)
 operator|)
 operator|!=
@@ -14582,6 +15194,14 @@ condition|(
 name|i
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|run_all
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'L'
 case|:
@@ -14786,6 +15406,11 @@ argument_list|(
 literal|"-T -- Test all PMC's defined by this processor\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"-A -- Run all canned tests\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -14797,6 +15422,12 @@ empty_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|run_all
+operator|==
+literal|0
+operator|)
+operator|&&
 operator|(
 name|name
 operator|==
@@ -14838,6 +15469,20 @@ goto|;
 block|}
 if|if
 condition|(
+name|run_all
+operator|&&
+name|max_to_collect
+operator|>
+literal|10
+condition|)
+block|{
+name|max_to_collect
+operator|=
+literal|3
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|test_mode
 condition|)
 block|{
@@ -14857,9 +15502,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|master_exp
 operator|==
 name|NULL
+operator|)
+operator|&&
+name|name
 condition|)
 block|{
 call|(
@@ -14873,7 +15522,11 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|master_exp
+condition|)
 block|{
 name|printf
 argument_list|(
@@ -14901,6 +15554,73 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|run_all
+condition|)
+block|{
+name|more
+label|:
+name|name
+operator|=
+name|the_cpu
+operator|.
+name|ents
+index|[
+name|test_at
+index|]
+operator|.
+name|name
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"***Test %s (threshold %s)****\n"
+argument_list|,
+name|name
+argument_list|,
+name|the_cpu
+operator|.
+name|ents
+index|[
+name|test_at
+index|]
+operator|.
+name|thresh
+argument_list|)
+expr_stmt|;
+name|test_at
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|set_expression
+argument_list|(
+name|name
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|test_at
+operator|>=
+name|the_cpu
+operator|.
+name|number
+condition|)
+block|{
+goto|goto
+name|done
+goto|;
+block|}
+else|else
+goto|goto
+name|more
+goto|;
+block|}
 block|}
 name|process_file
 argument_list|(
@@ -15019,6 +15739,13 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|max_to_collect
+operator|>
+literal|1
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -15082,6 +15809,59 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+block|}
+if|if
+condition|(
+name|run_all
+operator|&&
+operator|(
+name|test_at
+operator|<
+name|the_cpu
+operator|.
+name|number
+operator|)
+condition|)
+block|{
+name|memset
+argument_list|(
+name|glob_cpu
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|glob_cpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ncnts
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"*********************************\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|more
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|run_all
+condition|)
+block|{
+name|done
+label|:
+name|printf
+argument_list|(
+literal|"*********************************\n"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
