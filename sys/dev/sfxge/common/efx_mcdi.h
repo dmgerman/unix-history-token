@@ -207,6 +207,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_MCDI_PROXY_AUTH
+specifier|extern
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_proxy_handle
