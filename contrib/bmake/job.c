@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2328,6 +2328,8 @@ operator|->
 name|node
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|cmdTemplate
@@ -2379,12 +2381,6 @@ break|break;
 case|case
 literal|'-'
 case|:
-name|job
-operator|->
-name|flags
-operator||=
-name|JOB_IGNERR
-expr_stmt|;
 name|errOff
 operator|=
 name|TRUE
@@ -2685,6 +2681,12 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * The shell has no error control, so we need to be 		 * weird to get it to ignore any errors from the command. 		 * If echoing is turned on, we turn it off and use the 		 * errCheck template to echo the command. Leave echoing 		 * off so the user doesn't see the weirdness we go through 		 * to ignore errors. Set cmdTemplate to use the weirdness 		 * instead of the simple "%s\n" template. 		 */
+name|job
+operator|->
+name|flags
+operator||=
+name|JOB_IGNERR
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3063,6 +3065,8 @@ operator|)
 name|gn
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4716,7 +4720,11 @@ name|node
 operator|->
 name|type
 operator|&
+operator|(
 name|OP_MAKE
+operator||
+name|OP_SUBMAKE
+operator|)
 operator|)
 condition|)
 block|{
@@ -6465,20 +6473,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * max is the last offset still in the buffer. Move any remaining 	 * characters to the start of the buffer and update the end marker 	 * curPos. 	 */
 if|if
 condition|(
 name|i
 operator|<
 name|max
-operator|-
-literal|1
 condition|)
 block|{
-comment|/* shift the remaining characters down */
 operator|(
 name|void
 operator|)
-name|memcpy
+name|memmove
 argument_list|(
 name|job
 operator|->
@@ -6518,7 +6524,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * We have written everything out, so we just start over 	     * from the start of the buffer. No copying. No nothing. 	     */
+name|assert
+argument_list|(
+name|i
+operator|==
+name|max
+argument_list|)
+expr_stmt|;
 name|job
 operator|->
 name|curPos
@@ -7489,7 +7501,9 @@ literal|"}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}

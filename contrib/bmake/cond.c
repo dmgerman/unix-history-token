@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cond.c,v 1.67 2012/11/03 13:59:27 christos Exp $	*/
+comment|/*	$NetBSD: cond.c,v 1.71 2015/12/02 00:28:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: cond.c,v 1.67 2012/11/03 13:59:27 christos Exp $"
+literal|"$NetBSD: cond.c,v 1.71 2015/12/02 00:28:24 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cond.c,v 1.67 2012/11/03 13:59:27 christos Exp $"
+literal|"$NetBSD: cond.c,v 1.71 2015/12/02 00:28:24 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -517,6 +517,17 @@ begin_comment
 comment|/* depth at makefile open */
 end_comment
 
+begin_comment
+comment|/*  * Indicate when we should be strict about lhs of comparisons.  * TRUE when Cond_EvalExpression is called from Cond_Eval (.if etc)  * FALSE when Cond_EvalExpression is called from var.c:ApplyModifiers  * since lhs is already expanded and we cannot tell if   * it was a variable reference or not.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|lhsStrict
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -763,6 +774,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1304,6 +1317,25 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|str
+condition|)
+block|{
+operator|*
+name|value
+operator|=
+operator|(
+name|double
+operator|)
+literal|0
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
 name|l_val
 operator|=
 name|strtoul
@@ -1441,6 +1473,9 @@ name|void
 modifier|*
 modifier|*
 name|freeIt
+parameter_list|,
+name|Boolean
+name|strictLHS
 parameter_list|)
 block|{
 name|Buffer
@@ -1640,6 +1675,8 @@ else|:
 name|doEval
 operator|)
 argument_list|,
+name|TRUE
+argument_list|,
 operator|&
 name|len
 argument_list|,
@@ -1778,6 +1815,57 @@ expr_stmt|;
 comment|/* don't skip over next char */
 break|break;
 default|default:
+if|if
+condition|(
+name|strictLHS
+operator|&&
+operator|!
+name|qt
+operator|&&
+operator|*
+name|start
+operator|!=
+literal|'$'
+operator|&&
+operator|!
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|start
+argument_list|)
+condition|)
+block|{
+comment|/* lhs must be quoted, a variable reference or number */
+if|if
+condition|(
+operator|*
+name|freeIt
+condition|)
+block|{
+name|free
+argument_list|(
+operator|*
+name|freeIt
+argument_list|)
+expr_stmt|;
+operator|*
+name|freeIt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 name|Buf_AddByte
 argument_list|(
 operator|&
@@ -1905,6 +1993,8 @@ name|lhsQuoted
 argument_list|,
 operator|&
 name|lhsFree
+argument_list|,
+name|lhsStrict
 argument_list|)
 expr_stmt|;
 if|if
@@ -2127,6 +2217,8 @@ name|rhsQuoted
 argument_list|,
 operator|&
 name|rhsFree
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2519,6 +2611,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|,
 operator|&
 name|length
@@ -3538,6 +3632,9 @@ name|value
 parameter_list|,
 name|int
 name|eprint
+parameter_list|,
+name|Boolean
+name|strictLHS
 parameter_list|)
 block|{
 specifier|static
@@ -3569,6 +3666,10 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
+name|lhsStrict
+operator|=
+name|strictLHS
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -4309,6 +4410,8 @@ operator|&
 name|value
 argument_list|,
 literal|1
+argument_list|,
+name|TRUE
 argument_list|)
 operator|==
 name|COND_INVALID

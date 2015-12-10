@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: nonints.h,v 1.65 2012/08/30 21:17:05 sjg Exp $	*/
+comment|/*	$NetBSD: nonints.h,v 1.69 2015/10/11 04:51:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -186,6 +186,8 @@ name|Boolean
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|Boolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1175,6 +1177,8 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|Boolean
+parameter_list|,
 name|int
 modifier|*
 parameter_list|,
@@ -1200,6 +1204,8 @@ modifier|*
 parameter_list|,
 name|GNode
 modifier|*
+parameter_list|,
+name|Boolean
 parameter_list|,
 name|Boolean
 parameter_list|)
