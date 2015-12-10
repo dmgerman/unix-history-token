@@ -89,18 +89,9 @@ comment|/* emco_poll_reboot */
 name|siena_mcdi_fini
 block|,
 comment|/* emco_fini */
-name|siena_mcdi_fw_update_supported
+name|siena_mcdi_feature_supported
 block|,
-comment|/* emco_fw_update_supported */
-name|siena_mcdi_macaddr_change_supported
-block|,
-comment|/* emco_macaddr_change_supported */
-name|siena_mcdi_link_control_supported
-block|,
-comment|/* emco_link_control_supported */
-name|NULL
-block|,
-comment|/* emco_mac_spoofing_supported */
+comment|/* emco_feature_supported */
 name|siena_mcdi_read_response
 block|,
 comment|/* emco_read_response */
@@ -147,18 +138,9 @@ comment|/* emco_poll_reboot */
 name|hunt_mcdi_fini
 block|,
 comment|/* emco_fini */
-name|hunt_mcdi_fw_update_supported
+name|hunt_mcdi_feature_supported
 block|,
-comment|/* emco_fw_update_supported */
-name|hunt_mcdi_macaddr_change_supported
-block|,
-comment|/* emco_macaddr_change_supported */
-name|hunt_mcdi_link_control_supported
-block|,
-comment|/* emco_link_control_supported */
-name|hunt_mcdi_mac_spoofing_supported
-block|,
-comment|/* emco_mac_spoofing_supported */
+comment|/* emco_feature_supported */
 name|hunt_mcdi_read_response
 block|,
 comment|/* emco_read_response */
@@ -5430,12 +5412,6 @@ condition|(
 name|emcop
 operator|!=
 name|NULL
-operator|&&
-name|emcop
-operator|->
-name|emco_fw_update_supported
-operator|!=
-name|NULL
 condition|)
 block|{
 if|if
@@ -5445,9 +5421,11 @@ name|rc
 operator|=
 name|emcop
 operator|->
-name|emco_fw_update_supported
+name|emco_feature_supported
 argument_list|(
 name|enp
+argument_list|,
+name|EFX_MCDI_FEATURE_FW_UPDATE
 argument_list|,
 name|supportedp
 argument_list|)
@@ -5526,12 +5504,6 @@ condition|(
 name|emcop
 operator|!=
 name|NULL
-operator|&&
-name|emcop
-operator|->
-name|emco_macaddr_change_supported
-operator|!=
-name|NULL
 condition|)
 block|{
 if|if
@@ -5541,9 +5513,11 @@ name|rc
 operator|=
 name|emcop
 operator|->
-name|emco_macaddr_change_supported
+name|emco_feature_supported
 argument_list|(
 name|enp
+argument_list|,
+name|EFX_MCDI_FEATURE_MACADDR_CHANGE
 argument_list|,
 name|supportedp
 argument_list|)
@@ -5622,12 +5596,6 @@ condition|(
 name|emcop
 operator|!=
 name|NULL
-operator|&&
-name|emcop
-operator|->
-name|emco_link_control_supported
-operator|!=
-name|NULL
 condition|)
 block|{
 if|if
@@ -5637,9 +5605,11 @@ name|rc
 operator|=
 name|emcop
 operator|->
-name|emco_link_control_supported
+name|emco_feature_supported
 argument_list|(
 name|enp
+argument_list|,
+name|EFX_MCDI_FEATURE_LINK_CONTROL
 argument_list|,
 name|supportedp
 argument_list|)
@@ -5718,12 +5688,6 @@ condition|(
 name|emcop
 operator|!=
 name|NULL
-operator|&&
-name|emcop
-operator|->
-name|emco_mac_spoofing_supported
-operator|!=
-name|NULL
 condition|)
 block|{
 if|if
@@ -5733,9 +5697,11 @@ name|rc
 operator|=
 name|emcop
 operator|->
-name|emco_mac_spoofing_supported
+name|emco_feature_supported
 argument_list|(
 name|enp
+argument_list|,
+name|EFX_MCDI_FEATURE_MAC_SPOOFING
 argument_list|,
 name|supportedp
 argument_list|)
