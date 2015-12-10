@@ -15930,29 +15930,10 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* All 2-endpoints configs have a high priority queue. */
-if|if
-condition|(
-operator|!
-name|hashq
-condition|)
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-if|if
-condition|(
-name|hasnq
-condition|)
+comment|/*  		 * All 2-endpoints configs have high and normal  		 * priority queues. 		 */
 name|reg
 operator||=
 name|R92C_TRXDMA_CTRL_QMAP_HQ_NQ
-expr_stmt|;
-else|else
-name|reg
-operator||=
-name|R92C_TRXDMA_CTRL_QMAP_HQ_LQ
 expr_stmt|;
 block|}
 else|else
