@@ -43349,6 +43349,21 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|IS_26XX
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|base
+operator|=
+literal|0x7fe7c000
+expr_stmt|;
+comment|/* XXX: Observation, may be wrong. */
+block|}
+elseif|else
+if|if
+condition|(
 name|IS_25XX
 argument_list|(
 name|isp
