@@ -6455,6 +6455,7 @@ name|ver
 operator|=
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|mod_version
 operator|*
@@ -7000,6 +7001,7 @@ name|nver
 operator|=
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|mod_version
 operator|*
@@ -9552,6 +9554,7 @@ name|ver
 operator|=
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|mod_version
 operator|*
