@@ -42,7 +42,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_data.c 3177 2015-03-30 18:19:41Z emaste $"
+literal|"$Id: elf_data.c 3258 2015-11-20 18:59:43Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1302,6 +1302,37 @@ condition|(
 name|sh_type
 operator|==
 name|SHT_NULL
+condition|)
+block|{
+name|LIBELF_SET_ERROR
+argument_list|(
+name|SECTION
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|sh_type
+operator|!=
+name|SHT_NOBITS
+operator|&&
+name|sh_offset
+operator|+
+name|sh_size
+operator|>
+operator|(
+name|uint64_t
+operator|)
+name|e
+operator|->
+name|e_rawsize
 condition|)
 block|{
 name|LIBELF_SET_ERROR

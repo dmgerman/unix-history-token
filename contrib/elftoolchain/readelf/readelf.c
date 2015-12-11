@@ -132,7 +132,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: readelf.c 3250 2015-10-06 13:56:15Z emaste $"
+literal|"$Id: readelf.c 3271 2015-12-11 18:53:08Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1616,6 +1616,10 @@ parameter_list|(
 name|uint8_t
 modifier|*
 name|p
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2306,6 +2310,10 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|p
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3018,6 +3026,10 @@ name|uint8_t
 modifier|*
 modifier|*
 name|dp
+parameter_list|,
+name|uint8_t
+modifier|*
+name|dpe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3031,6 +3043,10 @@ name|uint8_t
 modifier|*
 modifier|*
 name|dp
+parameter_list|,
+name|uint8_t
+modifier|*
+name|dpe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7088,8 +7104,9 @@ case|case
 literal|13
 case|:
 return|return
-literal|"R_ARM_SWI24"
+literal|"R_ARM_TLS_DESC"
 return|;
+comment|/* Obsolete R_ARM_SWI24 is also 13 */
 case|case
 literal|14
 case|:
@@ -7107,6 +7124,24 @@ literal|16
 case|:
 return|return
 literal|"R_ARM_THM_XPC22"
+return|;
+case|case
+literal|17
+case|:
+return|return
+literal|"R_ARM_TLS_DTPMOD32"
+return|;
+case|case
+literal|18
+case|:
+return|return
+literal|"R_ARM_TLS_DTPOFF32"
+return|;
+case|case
+literal|19
+case|:
+return|return
+literal|"R_ARM_TLS_TPOFF32"
 return|;
 case|case
 literal|20
@@ -7155,6 +7190,72 @@ literal|27
 case|:
 return|return
 literal|"R_ARM_PLT32"
+return|;
+case|case
+literal|28
+case|:
+return|return
+literal|"R_ARM_CALL"
+return|;
+case|case
+literal|29
+case|:
+return|return
+literal|"R_ARM_JUMP24"
+return|;
+case|case
+literal|30
+case|:
+return|return
+literal|"R_ARM_THM_JUMP24"
+return|;
+case|case
+literal|31
+case|:
+return|return
+literal|"R_ARM_BASE_ABS"
+return|;
+case|case
+literal|38
+case|:
+return|return
+literal|"R_ARM_TARGET1"
+return|;
+case|case
+literal|40
+case|:
+return|return
+literal|"R_ARM_V4BX"
+return|;
+case|case
+literal|42
+case|:
+return|return
+literal|"R_ARM_PREL31"
+return|;
+case|case
+literal|43
+case|:
+return|return
+literal|"R_ARM_MOVW_ABS_NC"
+return|;
+case|case
+literal|44
+case|:
+return|return
+literal|"R_ARM_MOVT_ABS"
+return|;
+case|case
+literal|45
+case|:
+return|return
+literal|"R_ARM_MOVW_PREL_NC"
+return|;
+case|case
+literal|46
+case|:
+return|return
+literal|"R_ARM_MOVT_PREL"
 return|;
 case|case
 literal|100
@@ -15728,11 +15829,11 @@ index|[
 name|j
 index|]
 operator|.
-name|off
+name|addr
 operator|>=
 name|phdr
 operator|.
-name|p_offset
+name|p_vaddr
 operator|&&
 name|re
 operator|->
@@ -15741,7 +15842,7 @@ index|[
 name|j
 index|]
 operator|.
-name|off
+name|addr
 operator|+
 name|re
 operator|->
@@ -15754,7 +15855,7 @@ name|sz
 operator|<=
 name|phdr
 operator|.
-name|p_offset
+name|p_vaddr
 operator|+
 name|phdr
 operator|.
@@ -23517,6 +23618,10 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|p
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pe
 parameter_list|)
 block|{
 name|uint64_t
@@ -23573,6 +23678,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -23603,6 +23710,10 @@ parameter_list|(
 name|uint8_t
 modifier|*
 name|p
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pe
 parameter_list|)
 block|{
 name|uint64_t
@@ -23614,6 +23725,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -23696,6 +23809,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|found
@@ -23777,6 +23892,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -23823,6 +23940,8 @@ argument_list|(
 name|tag
 argument_list|,
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -23883,6 +24002,8 @@ operator|=
 name|dump_compatibility_tag
 argument_list|(
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -23898,6 +24019,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -23916,6 +24039,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 comment|/* Must be Tag_CPU_arch */
@@ -23939,6 +24064,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -24028,6 +24155,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -24044,6 +24173,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -24066,6 +24197,8 @@ operator|=
 name|dump_compatibility_tag
 argument_list|(
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24077,6 +24210,8 @@ argument_list|(
 name|tag
 argument_list|,
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24153,6 +24288,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -24169,6 +24306,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -24191,6 +24330,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -24213,6 +24354,8 @@ operator|=
 name|dump_compatibility_tag
 argument_list|(
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24224,6 +24367,8 @@ argument_list|(
 name|tag
 argument_list|,
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24255,6 +24400,9 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|pe
 decl_stmt|,
 modifier|*
 name|sp
@@ -24396,6 +24544,14 @@ name|d
 operator|->
 name|d_buf
 expr_stmt|;
+name|pe
+operator|=
+name|p
+operator|+
+name|d
+operator|->
+name|d_size
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -24447,7 +24603,7 @@ argument_list|(
 literal|"truncated attribute section length"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 name|seclen
 operator|=
@@ -24473,7 +24629,7 @@ argument_list|(
 literal|"invalid attribute section length"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 name|len
 operator|-=
@@ -24506,7 +24662,7 @@ argument_list|(
 literal|"invalid attribute section name"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 name|printf
 argument_list|(
@@ -24571,7 +24727,7 @@ literal|"invalid attribute sub-section"
 literal|" length"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 name|seclen
 operator|-=
@@ -24615,6 +24771,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 if|if
@@ -26641,6 +26799,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|mtime
@@ -26649,6 +26809,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|fsize
@@ -26657,6 +26819,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26755,6 +26919,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26843,6 +27009,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|mtime
@@ -26851,6 +27019,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|fsize
@@ -26859,6 +27029,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26922,6 +27094,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 operator|*
 name|minlen
@@ -26955,6 +27129,8 @@ name|_decode_sleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|line
@@ -26986,6 +27162,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -27008,6 +27186,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -27139,6 +27319,8 @@ name|_decode_uleb128
 argument_list|(
 operator|&
 name|p
+argument_list|,
+name|pe
 argument_list|)
 expr_stmt|;
 name|printf
@@ -41046,6 +41228,10 @@ name|uint8_t
 modifier|*
 modifier|*
 name|dp
+parameter_list|,
+name|uint8_t
+modifier|*
+name|dpe
 parameter_list|)
 block|{
 name|int64_t
@@ -41070,6 +41256,13 @@ name|dp
 decl_stmt|;
 do|do
 block|{
+if|if
+condition|(
+name|src
+operator|>=
+name|dpe
+condition|)
+break|break;
 name|b
 operator|=
 operator|*
@@ -41149,6 +41342,10 @@ name|uint8_t
 modifier|*
 modifier|*
 name|dp
+parameter_list|,
+name|uint8_t
+modifier|*
+name|dpe
 parameter_list|)
 block|{
 name|uint64_t
@@ -41173,6 +41370,13 @@ name|dp
 decl_stmt|;
 do|do
 block|{
+if|if
+condition|(
+name|src
+operator|>=
+name|dpe
+condition|)
+break|break;
 name|b
 operator|=
 operator|*

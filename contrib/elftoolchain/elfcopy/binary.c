@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: binary.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: binary.c 3270 2015-12-11 18:48:56Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
