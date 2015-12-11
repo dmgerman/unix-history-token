@@ -2388,6 +2388,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|uhso_devs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct

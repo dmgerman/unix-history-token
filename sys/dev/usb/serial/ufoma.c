@@ -1337,6 +1337,29 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|ufoma_devs
+index|[]
+init|=
+block|{
+block|{
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_CDC
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UISUBCLASS_MCPC
+argument_list|)
+block|,}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -1397,28 +1420,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|STRUCT_USB_HOST_ID
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
 name|ufoma_devs
-index|[]
-init|=
-block|{
-block|{
-name|USB_IFACE_CLASS
-argument_list|(
-name|UICLASS_CDC
 argument_list|)
-block|,
-name|USB_IFACE_SUBCLASS
-argument_list|(
-name|UISUBCLASS_MCPC
-argument_list|)
-block|,}
-block|, }
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

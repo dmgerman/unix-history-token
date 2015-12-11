@@ -501,6 +501,28 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|ugold_devs
+index|[]
+init|=
+block|{
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_CHICONY2
+argument_list|,
+argument|USB_PRODUCT_CHICONY2_TEMPER
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -541,6 +563,14 @@ argument_list|(
 name|ugold
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|ugold_devs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -608,28 +638,6 @@ name|if_index
 operator|=
 literal|1
 block|, 	}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|STRUCT_USB_HOST_ID
-name|ugold_devs
-index|[]
-init|=
-block|{
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_CHICONY2
-argument_list|,
-argument|USB_PRODUCT_CHICONY2_TEMPER
-argument_list|,
-literal|0
-argument_list|)
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
