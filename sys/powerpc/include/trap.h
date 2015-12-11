@@ -435,6 +435,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXC_VECAST_E
+value|0x2f20
+end_define
+
+begin_comment
+comment|/* Altivec Assist (Book-E) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXC_LAST
 value|0x2f00
 end_define
