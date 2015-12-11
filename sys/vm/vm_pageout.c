@@ -2812,7 +2812,7 @@ operator|=
 name|initial_dom
 expr_stmt|;
 comment|/* 	 * Scan domains in round-robin order, first inactive queues, 	 * then active.  Since domain usually owns large physically 	 * contiguous chunk of memory, it makes sense to completely 	 * exhaust one domain before switching to next, while growing 	 * the pool of contiguous physical pages. 	 * 	 * Do not even start launder a domain which cannot contain 	 * the specified address range, as indicated by segments 	 * constituting the domain. 	 */
-name|again
+name|again_inact
 label|:
 if|if
 condition|(
@@ -2862,7 +2862,7 @@ name|inactl
 operator|++
 expr_stmt|;
 goto|goto
-name|again
+name|again_inact
 goto|;
 block|}
 if|if
@@ -2883,9 +2883,11 @@ operator|!=
 name|initial_dom
 condition|)
 goto|goto
-name|again
+name|again_inact
 goto|;
 block|}
+name|again_act
+label|:
 if|if
 condition|(
 name|actl
@@ -2934,7 +2936,7 @@ name|actl
 operator|++
 expr_stmt|;
 goto|goto
-name|again
+name|again_act
 goto|;
 block|}
 if|if
@@ -2955,7 +2957,7 @@ operator|!=
 name|initial_dom
 condition|)
 goto|goto
-name|again
+name|again_act
 goto|;
 block|}
 block|}
