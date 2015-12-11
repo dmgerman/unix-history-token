@@ -322,6 +322,9 @@ name|int
 name|msix
 decl_stmt|;
 name|int
+name|pf_version
+decl_stmt|;
+name|int
 name|if_flags
 decl_stmt|;
 name|bool

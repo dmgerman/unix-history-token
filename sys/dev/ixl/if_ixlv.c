@@ -68,7 +68,7 @@ name|char
 name|ixlv_driver_version
 index|[]
 init|=
-literal|"1.2.4"
+literal|"1.2.6"
 decl_stmt|;
 end_decl_stmt
 
@@ -8322,7 +8322,7 @@ argument_list|)
 expr_stmt|;
 name|reg
 operator||=
-name|I40E_PFINT_DYN_CTL0_CLEARPBA_MASK
+name|I40E_VFINT_DYN_CTL01_CLEARPBA_MASK
 expr_stmt|;
 name|wr32
 argument_list|(
@@ -8547,7 +8547,7 @@ name|hw
 argument_list|,
 name|I40E_VFINT_ICR0_ENA1
 argument_list|,
-name|I40E_VFINT_ICR0_ENA_ADMINQ_MASK
+name|I40E_VFINT_ICR0_ENA1_ADMINQ_MASK
 argument_list|)
 expr_stmt|;
 comment|/* flush */
@@ -8583,7 +8583,7 @@ name|reg
 operator|=
 name|I40E_VFINT_DYN_CTLN1_INTENA_MASK
 operator||
-name|I40E_VFINT_DYN_CTLN_CLEARPBA_MASK
+name|I40E_VFINT_DYN_CTLN1_CLEARPBA_MASK
 expr_stmt|;
 name|wr32
 argument_list|(
@@ -10532,9 +10532,9 @@ comment|/* 	** Check status on the queues for a hang 	*/
 name|mask
 operator|=
 operator|(
-name|I40E_VFINT_DYN_CTLN_INTENA_MASK
+name|I40E_VFINT_DYN_CTLN1_INTENA_MASK
 operator||
-name|I40E_VFINT_DYN_CTLN_SWINT_TRIG_MASK
+name|I40E_VFINT_DYN_CTLN1_SWINT_TRIG_MASK
 operator|)
 expr_stmt|;
 for|for
@@ -12287,7 +12287,7 @@ if|if
 condition|(
 name|reg
 operator|&
-name|I40E_VF_ARQLEN_ARQVFE_MASK
+name|I40E_VF_ARQLEN1_ARQVFE_MASK
 condition|)
 block|{
 name|device_printf
@@ -12300,14 +12300,14 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
-name|I40E_VF_ARQLEN_ARQVFE_MASK
+name|I40E_VF_ARQLEN1_ARQVFE_MASK
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|reg
 operator|&
-name|I40E_VF_ARQLEN_ARQOVFL_MASK
+name|I40E_VF_ARQLEN1_ARQOVFL_MASK
 condition|)
 block|{
 name|device_printf
@@ -12320,14 +12320,14 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
-name|I40E_VF_ARQLEN_ARQOVFL_MASK
+name|I40E_VF_ARQLEN1_ARQOVFL_MASK
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|reg
 operator|&
-name|I40E_VF_ARQLEN_ARQCRIT_MASK
+name|I40E_VF_ARQLEN1_ARQCRIT_MASK
 condition|)
 block|{
 name|device_printf
@@ -12340,7 +12340,7 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
-name|I40E_VF_ARQLEN_ARQCRIT_MASK
+name|I40E_VF_ARQLEN1_ARQCRIT_MASK
 expr_stmt|;
 block|}
 if|if
@@ -12385,7 +12385,7 @@ if|if
 condition|(
 name|reg
 operator|&
-name|I40E_VF_ATQLEN_ATQVFE_MASK
+name|I40E_VF_ATQLEN1_ATQVFE_MASK
 condition|)
 block|{
 name|device_printf
@@ -12398,14 +12398,14 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
-name|I40E_VF_ATQLEN_ATQVFE_MASK
+name|I40E_VF_ATQLEN1_ATQVFE_MASK
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|reg
 operator|&
-name|I40E_VF_ATQLEN_ATQOVFL_MASK
+name|I40E_VF_ATQLEN1_ATQOVFL_MASK
 condition|)
 block|{
 name|device_printf
@@ -12418,14 +12418,14 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
-name|I40E_VF_ATQLEN_ATQOVFL_MASK
+name|I40E_VF_ATQLEN1_ATQOVFL_MASK
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|reg
 operator|&
-name|I40E_VF_ATQLEN_ATQCRIT_MASK
+name|I40E_VF_ATQLEN1_ATQCRIT_MASK
 condition|)
 block|{
 name|device_printf
@@ -12438,7 +12438,7 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
-name|I40E_VF_ATQLEN_ATQCRIT_MASK
+name|I40E_VF_ATQLEN1_ATQCRIT_MASK
 expr_stmt|;
 block|}
 if|if
