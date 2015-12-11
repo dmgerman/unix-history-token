@@ -476,7 +476,7 @@ end_expr_stmt
 begin_expr_stmt
 name|PCCARD_PNP_INFO
 argument_list|(
-name|stg_pccard_products
+name|stg_products
 argument_list|)
 expr_stmt|;
 end_expr_stmt
