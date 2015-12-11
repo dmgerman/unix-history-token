@@ -2064,7 +2064,7 @@ name|stat2ascii
 argument_list|(
 name|e_ptr
 index|[
-name|i
+name|j
 index|]
 operator|.
 name|elm_type
