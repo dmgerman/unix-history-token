@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3196 2015-05-12 17:33:48Z emaste $"
+literal|"$Id: segments.c 3269 2015-12-11 18:38:43Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -184,25 +184,6 @@ operator|->
 name|type
 operator|!=
 name|SHT_NOBITS
-condition|)
-continue|continue;
-if|if
-condition|(
-name|s
-operator|->
-name|off
-operator|+
-name|s
-operator|->
-name|sz
-operator|>
-name|seg
-operator|->
-name|off
-operator|+
-name|seg
-operator|->
-name|msz
 condition|)
 continue|continue;
 if|if

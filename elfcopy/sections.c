@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 3225 2015-06-06 02:35:23Z kaiwang27 $"
+literal|"$Id: sections.c 3272 2015-12-11 20:00:54Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2427,7 +2427,7 @@ index|]
 operator|=
 name|newndx
 expr_stmt|;
-comment|/* 		 * If strip action is STRIP_NONDEBUG(only keep debug), 		 * change sections flags of loadable sections to SHF_NOBITS, 		 * and the content of those sections will be ignored. 		 */
+comment|/* 		 * If strip action is STRIP_NONDEBUG(only keep debug), 		 * change sections type of loadable sections and section 		 * groups to SHT_NOBITS, and the content of those sections 		 * will be discarded. However, SHT_NOTE sections should 		 * be kept. 		 */
 if|if
 condition|(
 name|ecp
@@ -2435,7 +2435,11 @@ operator|->
 name|strip
 operator|==
 name|STRIP_NONDEBUG
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|(
 operator|(
 name|ish
 operator|.
@@ -2443,6 +2447,21 @@ name|sh_flags
 operator|&
 name|SHF_ALLOC
 operator|)
+operator|||
+operator|(
+name|ish
+operator|.
+name|sh_flags
+operator|&
+name|SHF_GROUP
+operator|)
+operator|)
+operator|&&
+name|ish
+operator|.
+name|sh_type
+operator|!=
+name|SHT_NOTE
 condition|)
 name|s
 operator|->
@@ -2450,6 +2469,7 @@ name|type
 operator|=
 name|SHT_NOBITS
 expr_stmt|;
+block|}
 name|check_section_rename
 argument_list|(
 name|ecp
