@@ -954,6 +954,21 @@ index|]
 operator|->
 name|wake_queue
 expr_stmt|;
+name|priv
+operator|->
+name|port_stats
+operator|.
+name|oversized_packets
+operator|+=
+name|priv
+operator|->
+name|tx_ring
+index|[
+name|i
+index|]
+operator|->
+name|oversized_packets
+expr_stmt|;
 block|}
 comment|/* RX Statistics */
 name|priv

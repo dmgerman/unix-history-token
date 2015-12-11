@@ -216,6 +216,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|u8
+operator|*
+operator|)
 name|dest
 operator|+
 literal|4
