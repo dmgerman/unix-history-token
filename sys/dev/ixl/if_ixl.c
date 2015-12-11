@@ -24583,7 +24583,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+literal|128
 argument_list|,
 name|req
 argument_list|)
@@ -24785,6 +24785,21 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Error finishing sbuf: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 name|sbuf_delete
 argument_list|(
 name|buf
@@ -25104,7 +25119,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+literal|128
 argument_list|,
 name|req
 argument_list|)
@@ -25194,6 +25209,11 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Could not allocate sbuf for name output.\n"
+argument_list|)
+expr_stmt|;
+name|sbuf_delete
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -25413,6 +25433,21 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Error finishing sbuf: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 name|sbuf_delete
 argument_list|(
 name|buf
