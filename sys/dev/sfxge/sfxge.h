@@ -376,6 +376,13 @@ name|SFXGE_EV_BATCH
 value|16384
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFXGE_CALLOUT_TICKS
+value|100
+end_define
+
 begin_struct
 struct|struct
 name|sfxge_evq
@@ -859,6 +866,10 @@ decl_stmt|;
 name|uma_zone_t
 name|rx_buffer_zone
 decl_stmt|;
+name|struct
+name|callout
+name|tick_callout
+decl_stmt|;
 name|unsigned
 name|int
 name|evq_max
@@ -1332,6 +1343,19 @@ begin_function_decl
 specifier|extern
 name|int
 name|sfxge_port_ifmedia_init
+parameter_list|(
+name|struct
+name|sfxge_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|sfxge_port_update_stats
 parameter_list|(
 name|struct
 name|sfxge_softc
