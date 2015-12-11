@@ -818,6 +818,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|endptr
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|endptr
 operator|==
