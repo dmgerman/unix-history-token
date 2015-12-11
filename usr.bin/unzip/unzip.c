@@ -4280,7 +4280,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/*  	 * When more of the zipinfo mode options are implemented, this 	 * will need to change. 	 */
+comment|/* 	 * When more of the zipinfo mode options are implemented, this 	 * will need to change. 	 */
 if|if
 condition|(
 name|zipinfo_mode
