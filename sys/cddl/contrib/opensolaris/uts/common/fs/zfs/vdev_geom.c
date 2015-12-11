@@ -2515,10 +2515,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ZFS_LOG
+name|printf
 argument_list|(
-literal|1
-argument_list|,
 literal|"ZFS WARNING: Unable to "
 literal|"attach to %s.\n"
 argument_list|,
