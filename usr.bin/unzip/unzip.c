@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Joerg Sonnenberger<joerg@NetBSD.org>  * Copyright (c) 2007-2008 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * This file would be much shorter if we didn't care about command-line  * compatibility with Info-ZIP's UnZip, which requires us to duplicate  * parts of libarchive in order to gain more detailed control of its  * behaviour for the purpose of implementing the -n, -o, -L and -a  * options.  */
+comment|/*-  * Copyright (c) 2009, 2010 Joerg Sonnenberger<joerg@NetBSD.org>  * Copyright (c) 2007-2008 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * This file would be much shorter if we didn't care about command-line  * compatibility with Info-ZIP's UnZip, which requires us to duplicate  * parts of libarchive in order to gain more detailed control of its  * behaviour for the purpose of implementing the -n, -o, -L and -a  * options.  */
 end_comment
 
 begin_include
@@ -239,6 +239,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* verbose/list */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|y_str
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 4 digit year */
 end_comment
 
 begin_decl_stmt
@@ -1806,6 +1821,91 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Detect binary files by a combination of character white list and  * black list. NUL bytes and other control codes without use in text files  * result directly in switching the file to binary mode. Otherwise, at least  * one white-listed byte has to be found.  *  * Black-listed: 0..6, 14..25, 28..31  * White-listed: 9..10, 13,>= 32  *  * See the proginfo/txtvsbin.txt in the zip sources for a detailed discussion.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BYTE_IS_BINARY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)< 32&& (0xf3ffc07fU& (1U<< (x))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTE_IS_TEXT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 32 || (0x00002600U& (1U<< (x))))
+end_define
+
+begin_function
+specifier|static
+name|int
+name|check_binary
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+name|int
+name|rv
+decl_stmt|;
+for|for
+control|(
+name|rv
+operator|=
+literal|1
+init|;
+name|len
+operator|--
+condition|;
+operator|++
+name|buf
+control|)
+block|{
+if|if
+condition|(
+name|BYTE_IS_BINARY
+argument_list|(
+operator|*
+name|buf
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|BYTE_IS_TEXT
+argument_list|(
+operator|*
+name|buf
+argument_list|)
+condition|)
+name|rv
+operator|=
+literal|0
+expr_stmt|;
+block|}
+return|return
+name|rv
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Extract a regular file.  */
 end_comment
 
@@ -1861,6 +1961,11 @@ name|check
 decl_stmt|;
 name|ssize_t
 name|len
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|linkname
 decl_stmt|;
 name|unsigned
 name|char
@@ -1937,12 +2042,21 @@ block|{
 comment|/* check if up-to-date */
 if|if
 condition|(
+operator|(
 name|S_ISREG
 argument_list|(
 name|sb
 operator|.
 name|st_mode
 argument_list|)
+operator|||
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
 operator|&&
 operator|(
 name|sb
@@ -2050,6 +2164,53 @@ if|if
 condition|(
 name|f_opt
 condition|)
+return|return;
+block|}
+comment|/* process symlinks */
+name|linkname
+operator|=
+name|archive_entry_symlink
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|linkname
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|symlink
+argument_list|(
+name|linkname
+argument_list|,
+operator|*
+name|path
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"symlink('%s')"
+argument_list|,
+operator|*
+name|path
+argument_list|)
+expr_stmt|;
+name|info
+argument_list|(
+literal|" extracting: %s -> %s\n"
+argument_list|,
+operator|*
+name|path
+argument_list|,
+name|linkname
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -2238,41 +2399,19 @@ operator|==
 literal|0
 condition|)
 block|{
-for|for
-control|(
-name|p
-operator|=
-name|buffer
-init|;
-name|p
-operator|<
-name|end
-condition|;
-operator|++
-name|p
-control|)
-block|{
 if|if
 condition|(
-operator|!
-name|isascii
+name|check_binary
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|p
+name|buffer
+argument_list|,
+name|len
 argument_list|)
 condition|)
-block|{
 name|text
 operator|=
 literal|0
 expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 comment|/* simple case */
 if|if
@@ -2344,8 +2483,7 @@ condition|(
 operator|!
 name|warn
 operator|&&
-operator|!
-name|isascii
+name|BYTE_IS_BINARY
 argument_list|(
 operator|*
 name|q
@@ -2641,6 +2779,12 @@ name|S_ISREG
 argument_list|(
 name|filetype
 argument_list|)
+operator|&&
+operator|!
+name|S_ISLNK
+argument_list|(
+name|filetype
+argument_list|)
 condition|)
 block|{
 name|warningx
@@ -2892,6 +3036,12 @@ name|S_ISREG
 argument_list|(
 name|filetype
 argument_list|)
+operator|&&
+operator|!
+name|S_ISLNK
+argument_list|(
+name|filetype
+argument_list|)
 condition|)
 block|{
 name|warningx
@@ -3097,41 +3247,19 @@ operator|==
 literal|0
 condition|)
 block|{
-for|for
-control|(
-name|p
-operator|=
-name|buffer
-init|;
-name|p
-operator|<
-name|end
-condition|;
-operator|++
-name|p
-control|)
-block|{
 if|if
 condition|(
-operator|!
-name|isascii
+name|check_binary
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|p
+name|buffer
+argument_list|,
+name|len
 argument_list|)
 condition|)
-block|{
 name|text
 operator|=
 literal|0
 expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 comment|/* simple case */
 if|if
@@ -3207,8 +3335,7 @@ condition|(
 operator|!
 name|warn
 operator|&&
-operator|!
-name|isascii
+name|BYTE_IS_BINARY
 argument_list|(
 operator|*
 name|q
@@ -3337,6 +3464,11 @@ decl_stmt|;
 name|time_t
 name|mtime
 decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tm
+decl_stmt|;
 name|mtime
 operator|=
 name|archive_entry_mtime
@@ -3344,6 +3476,34 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+name|tm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|mtime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|y_str
+condition|)
+name|strftime
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%m-%d-%G %R"
+argument_list|,
+name|tm
+argument_list|)
+expr_stmt|;
+else|else
 name|strftime
 argument_list|(
 name|buf
@@ -3355,11 +3515,7 @@ argument_list|)
 argument_list|,
 literal|"%m-%d-%g %R"
 argument_list|,
-name|localtime
-argument_list|(
-operator|&
-name|mtime
-argument_list|)
+name|tm
 argument_list|)
 expr_stmt|;
 if|if
@@ -3682,12 +3838,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Length     Date   Time    Name\n"
+literal|"  Length     %sDate   Time    Name\n"
+argument_list|,
+name|y_str
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" --------    ----   ----    ----\n"
+literal|" --------    %s----   ----    ----\n"
+argument_list|,
+name|y_str
 argument_list|)
 expr_stmt|;
 block|}
@@ -3701,12 +3861,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" Length   Method    Size  Ratio   Date   Time   CRC-32    Name\n"
+literal|" Length   Method    Size  Ratio   %sDate   Time   CRC-32    Name\n"
+argument_list|,
+name|y_str
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"--------  ------  ------- -----   ----   ----   ------    ----\n"
+literal|"--------  ------  ------- -----   %s----   ----   ------    ----\n"
+argument_list|,
+name|y_str
 argument_list|)
 expr_stmt|;
 block|}
@@ -3844,14 +4008,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" --------                   -------\n"
+literal|" --------                   %s-------\n"
+argument_list|,
+name|y_str
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %8ju                   %ju file%s\n"
+literal|" %8ju                   %s%ju file%s\n"
 argument_list|,
 name|total_size
+argument_list|,
+name|y_str
 argument_list|,
 name|file_count
 argument_list|,
@@ -3875,16 +4043,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"--------          -------  ---                            -------\n"
+literal|"--------          -------  ---                            %s-------\n"
+argument_list|,
+name|y_str
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ju          %7ju   0%%                            %ju file%s\n"
+literal|"%8ju          %7ju   0%%                            %s%ju file%s\n"
 argument_list|,
 name|total_size
 argument_list|,
 name|total_size
+argument_list|,
+name|y_str
 argument_list|,
 name|file_count
 argument_list|,
@@ -3929,7 +4101,7 @@ condition|)
 block|{
 name|errorx
 argument_list|(
-literal|"%d checksum error(s) found."
+literal|"%ju checksum error(s) found."
 argument_list|,
 name|error_count
 argument_list|)
@@ -3961,7 +4133,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unzip [-aCcfjLlnopqtuvZ1] [-d dir] [-x pattern] zipfile\n"
+literal|"Usage: unzip [-aCcfjLlnopqtuvyZ1] [-d dir] [-x pattern] zipfile\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4006,7 +4178,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aCcd:fjLlnopqtuvx:Z1"
+literal|"aCcd:fjLlnopqtuvx:yZ1"
 argument_list|)
 operator|)
 operator|!=
@@ -4166,6 +4338,14 @@ name|exclude
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|y_str
+operator|=
+literal|"  "
 expr_stmt|;
 break|break;
 case|case
