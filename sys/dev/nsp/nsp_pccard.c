@@ -1002,6 +1002,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|PCCARD_PNP_INFO
+argument_list|(
+name|nsp_pccard_products
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
