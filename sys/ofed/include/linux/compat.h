@@ -15,26 +15,6 @@ directive|define
 name|_LINUX_COMPAT_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|is_multicast_ether_addr
-parameter_list|(
-name|x
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|is_broadcast_ether_addr
-parameter_list|(
-name|x
-parameter_list|)
-value|0
-end_define
-
 begin_endif
 endif|#
 directive|endif
