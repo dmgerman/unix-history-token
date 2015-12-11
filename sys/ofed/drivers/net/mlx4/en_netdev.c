@@ -11315,11 +11315,6 @@ name|IFCAP_TSO6
 operator||
 name|IFCAP_VLAN_HWTSO
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100000
 comment|/* set TSO limits so that we don't have to drop TX packets */
 name|dev
 operator|->
@@ -11349,8 +11344,6 @@ name|if_hw_tsomaxsegsize
 operator|=
 name|MLX4_EN_TX_MAX_MBUF_SIZE
 expr_stmt|;
-endif|#
-directive|endif
 name|dev
 operator|->
 name|if_capenable
