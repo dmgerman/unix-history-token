@@ -1962,6 +1962,9 @@ operator|->
 name|td_critnest
 operator|==
 literal|0
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 argument_list|,
 operator|(
 literal|"malloc: called with spinlock or critical section held"
@@ -2310,6 +2313,9 @@ operator|->
 name|td_critnest
 operator|==
 literal|0
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 argument_list|,
 operator|(
 literal|"free: called with spinlock or critical section held"
@@ -2587,6 +2593,9 @@ operator|->
 name|td_critnest
 operator|==
 literal|0
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 argument_list|,
 operator|(
 literal|"realloc: called with spinlock or critical section held"
