@@ -313,11 +313,19 @@ directive|include
 file|"i40e_prototype.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IXL_DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IXL_DEBUG_SYSCTL
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -352,6 +360,43 @@ name|is_set
 parameter_list|)
 value|((is_set) ? "On" : "Off")
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IXL_DEBUG || IXL_DEBUG_SYSCTL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXL_DEBUG
+end_ifdef
+
+begin_comment
+comment|/* Enable debug sysctls */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IXL_DEBUG_SYSCTL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IXL_DEBUG_SYSCTL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -531,6 +576,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* no IXL_DEBUG */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -646,6 +695,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* IXL_DEBUG */
+end_comment
 
 begin_comment
 comment|/* Tunables */
@@ -912,6 +965,13 @@ define|#
 directive|define
 name|IXL_QUEUE_HUNG
 value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_KEYSZ
+value|10
 end_define
 
 begin_comment
