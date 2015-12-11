@@ -1915,7 +1915,7 @@ begin_define
 define|#
 directive|define
 name|MIPS_CONFIG0_VI
-value|0x00000004
+value|0x00000008
 end_define
 
 begin_comment
