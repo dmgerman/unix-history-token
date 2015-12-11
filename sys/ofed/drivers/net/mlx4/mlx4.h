@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|DRV_VERSION
-value|"2.1"
+value|"2.1.6"
 end_define
 
 begin_define
@@ -2600,6 +2600,31 @@ end_struct
 
 begin_struct
 struct|struct
+name|mlx4_hca_info
+block|{
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+decl_stmt|;
+name|struct
+name|device_attribute
+name|firmware_attr
+decl_stmt|;
+name|struct
+name|device_attribute
+name|hca_attr
+decl_stmt|;
+name|struct
+name|device_attribute
+name|board_attr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|mlx4_port_info
 block|{
 name|struct
@@ -2921,6 +2946,10 @@ name|MLX4_MAX_PORTS
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|struct
+name|mlx4_hca_info
+name|hca_info
 decl_stmt|;
 name|struct
 name|mlx4_sense

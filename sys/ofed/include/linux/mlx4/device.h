@@ -1400,6 +1400,29 @@ name|MSTR_SM_CHANGE_MASK
 value|(MLX4_EQ_PORT_INFO_MSTR_SM_SL_CHANGE_MASK | \ 			     MLX4_EQ_PORT_INFO_MSTR_SM_LID_CHANGE_MASK)
 end_define
 
+begin_enum
+enum|enum
+name|mlx4_module_id
+block|{
+name|MLX4_MODULE_ID_SFP
+init|=
+literal|0x3
+block|,
+name|MLX4_MODULE_ID_QSFP
+init|=
+literal|0xC
+block|,
+name|MLX4_MODULE_ID_QSFP_PLUS
+init|=
+literal|0xD
+block|,
+name|MLX4_MODULE_ID_QSFP28
+init|=
+literal|0x11
+block|, }
+enum|;
+end_enum
+
 begin_function
 specifier|static
 specifier|inline

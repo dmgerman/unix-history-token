@@ -385,6 +385,10 @@ name|tx_timeout
 decl_stmt|;
 name|unsigned
 name|long
+name|oversized_packets
+decl_stmt|;
+name|unsigned
+name|long
 name|rx_alloc_failed
 decl_stmt|;
 name|unsigned
