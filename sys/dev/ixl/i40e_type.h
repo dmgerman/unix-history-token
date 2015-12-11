@@ -959,37 +959,8 @@ name|iscsi
 decl_stmt|;
 comment|/* Indicates iSCSI enabled */
 name|bool
-name|flex10_enable
+name|mfp_mode_1
 decl_stmt|;
-name|bool
-name|flex10_capable
-decl_stmt|;
-name|u32
-name|flex10_mode
-decl_stmt|;
-define|#
-directive|define
-name|I40E_FLEX10_MODE_UNKNOWN
-value|0x0
-define|#
-directive|define
-name|I40E_FLEX10_MODE_DCC
-value|0x1
-define|#
-directive|define
-name|I40E_FLEX10_MODE_DCI
-value|0x2
-name|u32
-name|flex10_status
-decl_stmt|;
-define|#
-directive|define
-name|I40E_FLEX10_STATUS_DCC_ERROR
-value|0x1
-define|#
-directive|define
-name|I40E_FLEX10_STATUS_VC_MODE
-value|0x2
 name|bool
 name|mgmt_cem
 decl_stmt|;
@@ -1079,9 +1050,6 @@ name|enabled_tcmap
 decl_stmt|;
 name|u32
 name|maxtc
-decl_stmt|;
-name|u64
-name|wr_csr_prot
 decl_stmt|;
 block|}
 struct|;
@@ -1889,7 +1857,7 @@ end_struct
 
 begin_function
 specifier|static
-name|INLINE
+specifier|inline
 name|bool
 name|i40e_is_vf
 parameter_list|(
@@ -4399,15 +4367,6 @@ name|fd_atr_match
 decl_stmt|;
 name|u64
 name|fd_sb_match
-decl_stmt|;
-name|u64
-name|fd_atr_tunnel_match
-decl_stmt|;
-name|u32
-name|fd_atr_status
-decl_stmt|;
-name|u32
-name|fd_sb_status
 decl_stmt|;
 comment|/* EEE LPI */
 name|u32

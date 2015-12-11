@@ -208,7 +208,7 @@ comment|/* DEV_NETMAP */
 end_comment
 
 begin_comment
-comment|/* ** Multiqueue Transmit driver ** */
+comment|/* ** Multiqueue Transmit driver */
 end_comment
 
 begin_function
@@ -2067,21 +2067,6 @@ modifier|*
 name|que
 parameter_list|)
 block|{
-name|struct
-name|tx_ring
-modifier|*
-name|txr
-init|=
-operator|&
-name|que
-operator|->
-name|txr
-decl_stmt|;
-name|struct
-name|ixl_tx_buf
-modifier|*
-name|buf
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_NETMAP
@@ -2107,6 +2092,21 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+init|=
+operator|&
+name|que
+operator|->
+name|txr
+decl_stmt|;
+name|struct
+name|ixl_tx_buf
+modifier|*
+name|buf
+decl_stmt|;
 comment|/* Clear the old ring contents */
 name|IXL_TX_LOCK
 argument_list|(
