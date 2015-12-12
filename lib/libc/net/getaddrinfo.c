@@ -7773,8 +7773,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|IN_LOOPBACK
-argument_list|(
 name|htonl
 argument_list|(
 name|sin
@@ -7783,7 +7781,8 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|)
-argument_list|)
+operator|==
+name|INADDR_LOOPBACK
 condition|)
 continue|continue;
 name|seen_inet
