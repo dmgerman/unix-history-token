@@ -165,7 +165,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Creates a new red black tree, intializes and returns a pointer to it.  *  * Return NULL on failure.  *  */
+comment|/*  * Creates a new red black tree, initializes and returns a pointer to it.  *  * Return NULL on failure.  *  */
 end_comment
 
 begin_function

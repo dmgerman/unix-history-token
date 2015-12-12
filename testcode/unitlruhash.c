@@ -2288,7 +2288,7 @@ modifier|*
 name|table
 parameter_list|)
 block|{
-comment|/* assuming it all fits in the hastable, this check will work */
+comment|/* assuming it all fits in the hashtable, this check will work */
 name|testdata_t
 modifier|*
 name|ref

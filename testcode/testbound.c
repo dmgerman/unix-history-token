@@ -4,7 +4,7 @@ comment|/*  * testcode/testbound.c - test program for unbound.  *  * Copyright (
 end_comment
 
 begin_comment
-comment|/**  * \file  * Exits with code 1 on a failure. 0 if all unit tests are successfull.  */
+comment|/**  * \file  * Exits with code 1 on a failure. 0 if all unit tests are successful.  */
 end_comment
 
 begin_include
@@ -1420,6 +1420,11 @@ operator|||
 name|defined
 argument_list|(
 name|HAVE_NSS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NETTLE
 argument_list|)
 operator|)
 operator|&&

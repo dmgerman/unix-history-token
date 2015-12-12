@@ -1461,6 +1461,11 @@ name|verbosity
 operator|+
 name|service_cmdline_verbose
 expr_stmt|;
+name|w_config_adjust_directory
+argument_list|(
+name|cfg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cfg
@@ -1475,13 +1480,19 @@ literal|0
 index|]
 condition|)
 block|{
+name|char
+modifier|*
+name|dir
+init|=
+name|cfg
+operator|->
+name|directory
+decl_stmt|;
 if|if
 condition|(
 name|chdir
 argument_list|(
-name|cfg
-operator|->
-name|directory
+name|dir
 argument_list|)
 condition|)
 block|{
@@ -1489,9 +1500,7 @@ name|log_err
 argument_list|(
 literal|"could not chdir to %s: %s"
 argument_list|,
-name|cfg
-operator|->
-name|directory
+name|dir
 argument_list|,
 name|strerror
 argument_list|(
@@ -1521,9 +1530,7 @@ name|VERB_QUERY
 argument_list|,
 literal|"chdir to %s"
 argument_list|,
-name|cfg
-operator|->
-name|directory
+name|dir
 argument_list|)
 expr_stmt|;
 block|}

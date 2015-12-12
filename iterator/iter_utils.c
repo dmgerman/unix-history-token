@@ -1077,7 +1077,7 @@ name|rtt
 operator|>=
 name|USEFUL_SERVER_TOP_TIMEOUT
 condition|)
-comment|/* server is unresponsive, 			 * we used to return TOP_TIMOUT, but fairly useless, 			 * because if == TOP_TIMEOUT is dropped because 			 * blacklisted later, instead, remove it here, so 			 * other choices (that are not blacklisted) can be 			 * tried */
+comment|/* server is unresponsive, 			 * we used to return TOP_TIMEOUT, but fairly useless, 			 * because if == TOP_TIMEOUT is dropped because 			 * blacklisted later, instead, remove it here, so 			 * other choices (that are not blacklisted) can be 			 * tried */
 return|return
 operator|-
 literal|1
@@ -1352,7 +1352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** filter the addres list, putting best targets at front,  * returns number of best targets (or 0, no suitable targets) */
+comment|/** filter the address list, putting best targets at front,  * returns number of best targets (or 0, no suitable targets) */
 end_comment
 
 begin_function

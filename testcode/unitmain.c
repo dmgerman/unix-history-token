@@ -4,7 +4,7 @@ comment|/*  * testcode/unitmain.c - unit test main program for unbound.  *  * Co
 end_comment
 
 begin_comment
-comment|/**  * \file  * Unit test main program. Calls all the other unit tests.  * Exits with code 1 on a failure. 0 if all unit tests are successfull.  */
+comment|/**  * \file  * Unit test main program. Calls all the other unit tests.  * Exits with code 1 on a failure. 0 if all unit tests are successful.  */
 end_comment
 
 begin_include

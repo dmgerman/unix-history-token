@@ -2884,6 +2884,11 @@ name|defined
 argument_list|(
 name|HAVE_NSS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NETTLE
+argument_list|)
 operator|)
 operator|&&
 name|defined
@@ -2924,6 +2929,11 @@ operator|||
 name|defined
 argument_list|(
 name|HAVE_NSS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NETTLE
 argument_list|)
 operator|)
 operator|&&

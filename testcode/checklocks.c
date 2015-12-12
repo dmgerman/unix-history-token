@@ -2213,7 +2213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Locking routine.  * @param type: as passed by user.  * @param lock: as passed by user.  * @param func: caller location.  * @param file: caller location.  * @param line: caller location.  * @param tryfunc: the pthread_mutex_trylock or similar function.  * @param timedfunc: the pthread_mutex_timedlock or similar function.  *	Uses absolute timeout value.  * @param arg: what to pass to tryfunc and timedlock.  * @param exclusive: if lock must be exlusive (only one allowed).  * @param getwr: if attempts to get writelock (or readlock) for rwlocks.  */
+comment|/**  * Locking routine.  * @param type: as passed by user.  * @param lock: as passed by user.  * @param func: caller location.  * @param file: caller location.  * @param line: caller location.  * @param tryfunc: the pthread_mutex_trylock or similar function.  * @param timedfunc: the pthread_mutex_timedlock or similar function.  *	Uses absolute timeout value.  * @param arg: what to pass to tryfunc and timedlock.  * @param exclusive: if lock must be exclusive (only one allowed).  * @param getwr: if attempts to get writelock (or readlock) for rwlocks.  */
 end_comment
 
 begin_function
@@ -2742,6 +2742,11 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|key_deleted
+condition|)
+return|return;
 name|log_assert
 argument_list|(
 name|type
@@ -2872,6 +2877,11 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|key_deleted
+condition|)
+return|return;
 name|log_assert
 argument_list|(
 name|type
@@ -3098,6 +3108,11 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|key_deleted
+condition|)
+return|return;
 name|log_assert
 argument_list|(
 name|type
@@ -3224,7 +3239,14 @@ name|struct
 name|thr_check
 modifier|*
 name|thr
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|key_deleted
+condition|)
+return|return;
+name|thr
+operator|=
 operator|(
 expr|struct
 name|thr_check
@@ -3234,7 +3256,7 @@ name|pthread_getspecific
 argument_list|(
 name|thr_debug_key
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|checktype
 argument_list|(
 name|type
@@ -4298,10 +4320,15 @@ condition|)
 return|return;
 name|log_info
 argument_list|(
-literal|"+++ Lock %x, %d %d create %s %s %d"
+literal|"+++ Lock %llx, %d %d create %s %s %d"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
+name|long
+operator|)
+operator|(
+name|size_t
 operator|)
 name|lock
 argument_list|,
@@ -4549,10 +4576,15 @@ argument_list|)
 expr_stmt|;
 name|log_info
 argument_list|(
-literal|"thread func is %x"
+literal|"thread func is %llx"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
+name|long
+operator|)
+operator|(
+name|size_t
 operator|)
 name|thr
 operator|->
@@ -4561,10 +4593,15 @@ argument_list|)
 expr_stmt|;
 name|log_info
 argument_list|(
-literal|"thread arg is %x (%d)"
+literal|"thread arg is %llx (%d)"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
+name|long
+operator|)
+operator|(
+name|size_t
 operator|)
 name|thr
 operator|->
@@ -4646,7 +4683,7 @@ name|holding_last
 expr_stmt|;
 name|log_info
 argument_list|(
-literal|"thread waiting for a lock: %s %x"
+literal|"thread waiting for a lock: %s %llx"
 argument_list|,
 name|w
 condition|?
@@ -4655,7 +4692,12 @@ else|:
 literal|"no"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
+name|long
+operator|)
+operator|(
+name|size_t
 operator|)
 name|w
 argument_list|)

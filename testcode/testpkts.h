@@ -219,7 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Read one entry from the data file.  * @param in: file to read from. Filepos must be at the start of a new line.  * @param name: name of the file for prettier errors.  * @param pstate: file parse state with lineno, default_ttl,  * 	oirigin and prev_rr name.  * @param skip_whitespace: skip leftside whitespace.  * @return: The entry read (malloced) or NULL if no entry could be read.  */
+comment|/**  * Read one entry from the data file.  * @param in: file to read from. Filepos must be at the start of a new line.  * @param name: name of the file for prettier errors.  * @param pstate: file parse state with lineno, default_ttl,  * 	origin and prev_rr name.  * @param skip_whitespace: skip leftside whitespace.  * @return: The entry read (malloced) or NULL if no entry could be read.  */
 end_comment
 
 begin_function_decl

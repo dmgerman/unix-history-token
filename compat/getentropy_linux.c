@@ -160,11 +160,40 @@ directive|include
 file|<time.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SSL
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<openssl/sha.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_NETTLE
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<nettle/sha.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -239,6 +268,44 @@ define|\
 value|do { \ 		if ((a)) \ 			HD(errno); \ 		else \ 			HD(b); \ 	} while (0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SSL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA512_CTX
+value|SHA512_CTX
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA512_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|SHA512_Init(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA512_FINAL
+parameter_list|(
+name|r
+parameter_list|,
+name|c
+parameter_list|)
+value|SHA512_Final(r, c)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -270,6 +337,81 @@ name|x
 parameter_list|)
 value|(SHA512_Update(&ctx, (char *)&(x), sizeof (void*)))
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_NETTLE
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA512_CTX
+value|struct sha512_ctx
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA512_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|sha512_init(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SHA512_FINAL
+parameter_list|(
+name|r
+parameter_list|,
+name|c
+parameter_list|)
+value|sha512_digest(c, SHA512_DIGEST_SIZE, r)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HR
+parameter_list|(
+name|x
+parameter_list|,
+name|l
+parameter_list|)
+value|(sha512_update(&ctx, (l), (uint8_t *)(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD
+parameter_list|(
+name|x
+parameter_list|)
+value|(sha512_update(&ctx, sizeof (x), (uint8_t *)&(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HF
+parameter_list|(
+name|x
+parameter_list|)
+value|(sha512_update(&ctx, sizeof (void*), (uint8_t *)&(x)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -506,7 +648,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|SYS__sysctl
-comment|/* 	 * Try to use sysctl CTL_KERN, KERN_RANDOM, RANDOM_UUID. 	 * sysctl is a failsafe API, so it guarantees a result.  This 	 * should work inside a chroot, or when file descriptors are 	 * exhuasted. 	 * 	 * However this can fail if the Linux kernel removes support 	 * for sysctl.  Starting in 2007, there have been efforts to 	 * deprecate the sysctl API/ABI, and push callers towards use 	 * of the chroot-unavailable fd-using /proc mechanism -- 	 * essentially the same problems as /dev/urandom. 	 * 	 * Numerous setbacks have been encountered in their deprecation 	 * schedule, so as of June 2014 the kernel ABI still exists on 	 * most Linux architectures. The sysctl() stub in libc is missing 	 * on some systems.  There are also reports that some kernels 	 * spew messages to the console. 	 */
+comment|/* 	 * Try to use sysctl CTL_KERN, KERN_RANDOM, RANDOM_UUID. 	 * sysctl is a failsafe API, so it guarantees a result.  This 	 * should work inside a chroot, or when file descriptors are 	 * exhausted. 	 * 	 * However this can fail if the Linux kernel removes support 	 * for sysctl.  Starting in 2007, there have been efforts to 	 * deprecate the sysctl API/ABI, and push callers towards use 	 * of the chroot-unavailable fd-using /proc mechanism -- 	 * essentially the same problems as /dev/urandom. 	 * 	 * Numerous setbacks have been encountered in their deprecation 	 * schedule, so as of June 2014 the kernel ABI still exists on 	 * most Linux architectures. The sysctl() stub in libc is missing 	 * on some systems.  There are also reports that some kernels 	 * spew messages to the console. 	 */
 name|ret
 operator|=
 name|getentropy_sysctl
@@ -1298,7 +1440,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|SHA512_CTX
+name|CRYPTO_SHA512_CTX
 name|ctx
 decl_stmt|;
 specifier|static
@@ -1370,7 +1512,7 @@ block|{
 name|int
 name|j
 decl_stmt|;
-name|SHA512_Init
+name|CRYPTO_SHA512_INIT
 argument_list|(
 operator|&
 name|ctx
@@ -2603,7 +2745,7 @@ directive|endif
 endif|#
 directive|endif
 comment|/* HAVE_GETAUXVAL */
-name|SHA512_Final
+name|CRYPTO_SHA512_FINAL
 argument_list|(
 name|results
 argument_list|,

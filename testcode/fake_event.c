@@ -3169,7 +3169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** perform exponential backoff on the timout */
+comment|/** perform exponential backoff on the timeout */
 end_comment
 
 begin_function
