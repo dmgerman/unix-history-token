@@ -240,6 +240,14 @@ decl_stmt|;
 name|time_t
 name|ln_ntick
 decl_stmt|;
+name|time_t
+name|lle_remtime
+decl_stmt|;
+comment|/* Real time remaining */
+name|time_t
+name|lle_hittime
+decl_stmt|;
+comment|/* Time when r_skip_req was unset */
 name|int
 name|lle_refcnt
 decl_stmt|;
@@ -1099,6 +1107,28 @@ end_function_decl
 begin_function_decl
 name|void
 name|lltable_set_entry_addr
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+name|lle
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|lladdr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lltable_try_set_entry_addr
 parameter_list|(
 name|struct
 name|ifnet
