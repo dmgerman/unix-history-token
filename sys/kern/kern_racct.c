@@ -3149,13 +3149,7 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|racct_lock
-argument_list|)
-expr_stmt|;
-name|racct_add_cred
+name|racct_add_cred_locked
 argument_list|(
 name|p
 operator|->
@@ -3164,6 +3158,12 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|racct_lock
 argument_list|)
 expr_stmt|;
 block|}
