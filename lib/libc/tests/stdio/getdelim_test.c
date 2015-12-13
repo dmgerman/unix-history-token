@@ -1021,11 +1021,6 @@ operator|=
 name|mkfilebuf
 argument_list|()
 expr_stmt|;
-name|free
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
 name|line
 operator|=
 name|NULL
