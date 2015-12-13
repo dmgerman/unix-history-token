@@ -26452,6 +26452,18 @@ name|offset
 operator|+
 name|length
 expr_stmt|;
+name|pe
+operator|=
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|d
+operator|->
+name|d_buf
+operator|+
+name|endoff
+expr_stmt|;
 name|version
 operator|=
 name|re
@@ -26869,18 +26881,6 @@ parameter_list|)
 value|((((x) - opbase) / lrange) * minlen)
 name|p
 operator|++
-expr_stmt|;
-name|pe
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|d
-operator|->
-name|d_buf
-operator|+
-name|endoff
 expr_stmt|;
 name|printf
 argument_list|(
@@ -41241,6 +41241,8 @@ literal|0
 decl_stmt|;
 name|uint8_t
 name|b
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|shift
