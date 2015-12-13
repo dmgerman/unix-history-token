@@ -1294,7 +1294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Special version of rctl_available() function for the %cpu resource.  * We slightly cheat here and return less than we normally would.  */
+comment|/*  * Special version of rctl_get_available() for the %CPU resource.  * We slightly cheat here and return less than we normally would.  */
 end_comment
 
 begin_function

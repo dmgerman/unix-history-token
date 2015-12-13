@@ -2593,7 +2593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increase consumption of 'resource' by 'amount' for 'racct'  * and all its parents.  Differently from other cases, 'amount' here  * may be less than zero.  */
+comment|/*  * Increase consumption of 'resource' by 'amount' for 'racct',  * but not its parents.  Differently from other cases, 'amount' here  * may be less than zero.  */
 end_comment
 
 begin_function
