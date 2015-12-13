@@ -271,7 +271,7 @@ name|int
 name|entry_len
 decl_stmt|;
 comment|/* Length of each entry in the table (may be */
-comment|/*   logner than descr descriebs). */
+comment|/*   longer than descr describes). */
 name|int
 name|num_entry
 decl_stmt|;
