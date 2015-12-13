@@ -770,6 +770,17 @@ name|dinfo
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Register bus */
+name|OF_device_register_xref
+argument_list|(
+name|OF_xref_from_node
+argument_list|(
+name|node
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bus_generic_attach
