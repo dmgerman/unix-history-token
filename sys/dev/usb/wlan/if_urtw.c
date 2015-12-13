@@ -25748,7 +25748,7 @@ name|sc
 argument_list|,
 name|URTW_SLOT
 argument_list|,
-literal|0x9
+name|IEEE80211_DUR_SHSLOT
 argument_list|)
 expr_stmt|;
 else|else
@@ -25758,7 +25758,7 @@ name|sc
 argument_list|,
 name|URTW_SLOT
 argument_list|,
-literal|0x14
+name|IEEE80211_DUR_SLOT
 argument_list|)
 expr_stmt|;
 name|urtw_write8_m
@@ -25811,7 +25811,7 @@ name|sc
 argument_list|,
 name|URTW_SLOT
 argument_list|,
-literal|0x9
+name|IEEE80211_DUR_SHSLOT
 argument_list|)
 expr_stmt|;
 else|else
@@ -25821,7 +25821,7 @@ name|sc
 argument_list|,
 name|URTW_SLOT
 argument_list|,
-literal|0x14
+name|IEEE80211_DUR_SLOT
 argument_list|)
 expr_stmt|;
 if|if

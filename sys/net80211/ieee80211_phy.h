@@ -125,6 +125,17 @@ begin_comment
 comment|/* OFDM slottime */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_GET_SLOTTIME
+parameter_list|(
+name|ic
+parameter_list|)
+define|\
+value|((ic->ic_flags& IEEE80211_F_SHSLOT) ? \ 	    IEEE80211_DUR_SHSLOT : IEEE80211_DUR_SLOT)
+end_define
+
 begin_comment
 comment|/*  * DIFS (microseconds).  */
 end_comment
