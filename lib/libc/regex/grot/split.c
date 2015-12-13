@@ -26,7 +26,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  - split - divide a string into fields, like awk split()  = int split(char *string, char *fields[], int nfields, char *sep);  */
+comment|/*  - split - divide a string into fields, like awk split()  == int split(char *string, char *fields[], int nfields, char *sep);  - fields: list is not NULL-terminated  - nfields: number of entries available in fields[]  - sep: "" white, "c" single char, "ab" [ab]+  */
 end_comment
 
 begin_function
@@ -34,33 +34,22 @@ name|int
 comment|/* number of fields, including overflow */
 name|split
 parameter_list|(
-name|string
-parameter_list|,
-name|fields
-parameter_list|,
-name|nfields
-parameter_list|,
-name|sep
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|fields
 index|[]
-decl_stmt|;
-comment|/* list is not NULL-terminated */
+parameter_list|,
 name|int
 name|nfields
-decl_stmt|;
-comment|/* number of entries available in fields[] */
+parameter_list|,
 name|char
 modifier|*
 name|sep
-decl_stmt|;
-comment|/* "" white, "c" single char, "ab" [ab]+ */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -668,18 +657,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -879,30 +864,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|dosplit
-argument_list|(
-argument|string
-argument_list|,
-argument|seps
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|string
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|seps
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -941,40 +914,23 @@ name|fields
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|print
-argument_list|(
-argument|nf
-argument_list|,
-argument|nfp
-argument_list|,
-argument|fields
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|nf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|nfp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|fields
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|fn
@@ -1037,7 +993,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1809,12 +1765,12 @@ block|, }
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|void
 name|regress
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2091,7 +2047,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
