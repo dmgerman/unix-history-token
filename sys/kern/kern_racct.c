@@ -2609,7 +2609,7 @@ parameter_list|,
 name|int
 name|resource
 parameter_list|,
-name|uint64_t
+name|int64_t
 name|amount
 parameter_list|)
 block|{
