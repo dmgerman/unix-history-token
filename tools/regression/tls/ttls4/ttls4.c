@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -73,7 +79,9 @@ end_function
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|pthread_t
 name|td

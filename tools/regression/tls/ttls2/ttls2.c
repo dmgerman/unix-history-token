@@ -6,13 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -73,6 +79,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -127,6 +138,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -186,6 +202,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
