@@ -6363,6 +6363,14 @@ index|]
 operator|=
 name|ndst
 expr_stmt|;
+comment|/* Do not delete existing PINNED(interface) routes */
+name|info
+operator|->
+name|rti_flags
+operator|&=
+operator|~
+name|RTF_PINNED
+expr_stmt|;
 name|rt_old
 operator|=
 name|rt_unlinkrte
@@ -6374,6 +6382,12 @@ argument_list|,
 operator|&
 name|error
 argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|rti_flags
+operator||=
+name|RTF_PINNED
 expr_stmt|;
 name|info
 operator|->
