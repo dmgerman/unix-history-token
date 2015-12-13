@@ -706,6 +706,9 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|uint32_t
+name|keys_bmap
+decl_stmt|;
 name|struct
 name|urtwn_cmdq
 name|cmdq
