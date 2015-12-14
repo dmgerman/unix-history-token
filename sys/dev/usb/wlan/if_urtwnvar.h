@@ -85,6 +85,9 @@ name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
 decl_stmt|;
+name|uint64_t
+name|wr_tsft
+decl_stmt|;
 name|uint8_t
 name|wr_flags
 decl_stmt|;
@@ -117,7 +120,7 @@ define|#
 directive|define
 name|URTWN_RX_RADIOTAP_PRESENT
 define|\
-value|(1<< IEEE80211_RADIOTAP_FLAGS |		\ 	 1<< IEEE80211_RADIOTAP_RATE |			\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |		\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL |	\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTNOISE)
+value|(1<< IEEE80211_RADIOTAP_TSFT |			\ 	 1<< IEEE80211_RADIOTAP_FLAGS |		\ 	 1<< IEEE80211_RADIOTAP_RATE |			\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |		\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL |	\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTNOISE)
 end_define
 
 begin_struct
