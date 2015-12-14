@@ -2444,7 +2444,14 @@ index|]
 operator|!=
 literal|4
 condition|)
+block|{
+operator|*
+name|dd_out
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
+block|}
 name|dd
 operator|->
 name|rr_len
@@ -2575,6 +2582,11 @@ argument_list|(
 literal|"no key"
 argument_list|)
 expr_stmt|;
+operator|*
+name|dd_out
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 name|dk
@@ -2618,6 +2630,11 @@ name|log_err
 argument_list|(
 literal|"out of memory"
 argument_list|)
+expr_stmt|;
+operator|*
+name|dd_out
+operator|=
+name|NULL
 expr_stmt|;
 return|return;
 block|}

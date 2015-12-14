@@ -26,6 +26,47 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/** Return size of nsec3 hash algorithm, 0 if not supported */
+end_comment
+
+begin_function_decl
+name|size_t
+name|nsec3_hash_algo_size_supported
+parameter_list|(
+name|int
+name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Hash a single hash call of an NSEC3 hash algorithm.  * Iterations and salt are done by the caller.  * @param algo: nsec3 hash algorithm.  * @param buf: the buffer to digest  * @param len: length of buffer to digest.  * @param res: result stored here (must have sufficient space).  * @return false on failure. */
+end_comment
+
+begin_function_decl
+name|int
+name|secalgo_nsec3_hash
+parameter_list|(
+name|int
+name|algo
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|res
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Return size of DS digest according to its hash algorithm.  * @param algo: DS digest algo.  * @return size in bytes of digest, or 0 if not supported.   */
 end_comment
 

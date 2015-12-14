@@ -1672,6 +1672,16 @@ literal|"edns-buffer-size larger than msg-buffer-size, "
 literal|"answers will not fit in processing buffer"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UB_ON_WINDOWS
+name|w_config_adjust_directory
+argument_list|(
+name|cfg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cfg

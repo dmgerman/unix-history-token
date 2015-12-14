@@ -164,7 +164,7 @@ comment|/*** SHA-256/384/512 Machine Architecture Definitions *****************/
 end_comment
 
 begin_comment
-comment|/*  * BYTE_ORDER NOTE:  *  * Please make sure that your system defines BYTE_ORDER.  If your  * architecture is little-endian, make sure it also defines  * LITTLE_ENDIAN and that the two (BYTE_ORDER and LITTLE_ENDIAN) are  * equivilent.  *  * If your system does not define the above, then you can do so by  * hand like this:  *  *   #define LITTLE_ENDIAN 1234  *   #define BIG_ENDIAN    4321  *  * And for little-endian machines, add:  *  *   #define BYTE_ORDER LITTLE_ENDIAN   *  * Or for big-endian machines:  *  *   #define BYTE_ORDER BIG_ENDIAN  *  * The FreeBSD machine this was written on defines BYTE_ORDER  * appropriately by including<sys/types.h> (which in turn includes  *<machine/endian.h> where the appropriate definitions are actually  * made).  */
+comment|/*  * BYTE_ORDER NOTE:  *  * Please make sure that your system defines BYTE_ORDER.  If your  * architecture is little-endian, make sure it also defines  * LITTLE_ENDIAN and that the two (BYTE_ORDER and LITTLE_ENDIAN) are  * equivalent.  *  * If your system does not define the above, then you can do so by  * hand like this:  *  *   #define LITTLE_ENDIAN 1234  *   #define BIG_ENDIAN    4321  *  * And for little-endian machines, add:  *  *   #define BYTE_ORDER LITTLE_ENDIAN   *  * Or for big-endian machines:  *  *   #define BYTE_ORDER BIG_ENDIAN  *  * The FreeBSD machine this was written on defines BYTE_ORDER  * appropriately by including<sys/types.h> (which in turn includes  *<machine/endian.h> where the appropriate definitions are actually  * made).  */
 end_comment
 
 begin_if

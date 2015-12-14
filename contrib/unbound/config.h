@@ -252,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_SSL_CTX_SET_ECDH_AUTO
-value|0
+value|1
 end_define
 
 begin_comment
@@ -270,6 +270,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_DECL_STRLCPY */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `XML_StopParser', and to 0 if    you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_XML_STOPPARSER
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
@@ -453,6 +464,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fsync' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSYNC
 value|1
 end_define
 
@@ -643,6 +665,17 @@ comment|/* #undef HAVE_IPHLPAPI_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `isblank' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISBLANK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `kill' function. */
 end_comment
 
@@ -737,6 +770,14 @@ directive|define
 name|HAVE_NETINET_IN_H
 value|1
 end_define
+
+begin_comment
+comment|/* Use libnettle for crypto */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NETTLE */
+end_comment
 
 begin_comment
 comment|/* Use libnss for crypto */
@@ -1622,7 +1663,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.5"
+value|"unbound 1.5.7"
 end_define
 
 begin_comment
@@ -1655,7 +1696,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.5"
+value|"1.5.7"
 end_define
 
 begin_comment
@@ -1718,7 +1759,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,5,0
+value|1,5,7,0
 end_define
 
 begin_comment
@@ -1753,6 +1794,14 @@ directive|define
 name|SIZEOF_TIME_T
 value|8
 end_define
+
+begin_comment
+comment|/* define if (v)snprintf does not return length needed, (but length used) */
+end_comment
+
+begin_comment
+comment|/* #undef SNPRINTF_RET_BROKEN */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
@@ -1858,9 +1907,12 @@ begin_comment
 comment|/* Define this to enable GOST support. */
 end_comment
 
-begin_comment
-comment|/* #undef USE_GOST */
-end_comment
+begin_define
+define|#
+directive|define
+name|USE_GOST
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you want to use internal select based events */
@@ -3016,11 +3068,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_SNPRINTF
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SNPRINTF_RET_BROKEN
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -3091,7 +3152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SNPRINTF */
+comment|/* HAVE_SNPRINTF or SNPRINTF_RET_BROKEN */
 end_comment
 
 begin_ifndef
@@ -3644,6 +3705,34 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ISBLANK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|isblank
+value|unbound_isblank
+end_define
+
+begin_function_decl
+name|int
+name|isblank
+parameter_list|(
+name|int
+name|c
 parameter_list|)
 function_decl|;
 end_function_decl
