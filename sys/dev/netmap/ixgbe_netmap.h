@@ -47,7 +47,11 @@ name|int
 name|ix_rx_miss
 decl_stmt|,
 name|ix_rx_miss_bufs
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ix_crcstrip
 decl_stmt|;
 end_decl_stmt
