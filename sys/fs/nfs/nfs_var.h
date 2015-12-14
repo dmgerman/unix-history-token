@@ -2647,6 +2647,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|ucred
+modifier|*
+name|nfsrv_getgrpscred
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nfs_clcomsubs.c */
 end_comment

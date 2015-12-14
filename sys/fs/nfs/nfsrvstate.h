@@ -88,19 +88,9 @@ comment|/*  * List head for nfsusrgrp.  */
 end_comment
 
 begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|nfsuserhashhead
-argument_list|,
-name|nfsusrgrp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
-name|nfsuserlruhead
+name|nfsuserhashhead
 argument_list|,
 name|nfsusrgrp
 argument_list|)
@@ -139,7 +129,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|(&nfsuserhash[(id) % NFSUSERHASHSIZE])
+value|(&nfsuserhash[(id) % nfsrv_lughashsize])
 end_define
 
 begin_define
@@ -152,7 +142,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|(&nfsusernamehash[((l)>=4?(*(p)+*((p)+1)+*((p)+2)+*((p)+3)):*(p)) \ 		% NFSUSERHASHSIZE])
+value|(&nfsusernamehash[((l)>=4?(*(p)+*((p)+1)+*((p)+2)+*((p)+3)):*(p)) \ 		% nfsrv_lughashsize])
 end_define
 
 begin_define
@@ -163,7 +153,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|(&nfsgrouphash[(id) % NFSGROUPHASHSIZE])
+value|(&nfsgrouphash[(id) % nfsrv_lughashsize])
 end_define
 
 begin_define
@@ -176,7 +166,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|(&nfsgroupnamehash[((l)>=4?(*(p)+*((p)+1)+*((p)+2)+*((p)+3)):*(p)) \ 		% NFSGROUPHASHSIZE])
+value|(&nfsgroupnamehash[((l)>=4?(*(p)+*((p)+1)+*((p)+2)+*((p)+3)):*(p)) \ 		% nfsrv_lughashsize])
 end_define
 
 begin_struct
@@ -824,17 +814,10 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|nfsusrgrp
 argument_list|)
-name|lug_lru
-expr_stmt|;
-comment|/* LRU list */
-name|LIST_ENTRY
-argument_list|(
-argument|nfsusrgrp
-argument_list|)
 name|lug_numhash
 expr_stmt|;
 comment|/* Hash by id# */
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|nfsusrgrp
 argument_list|)
@@ -857,6 +840,12 @@ decl_stmt|;
 block|}
 name|lug_un
 union|;
+name|struct
+name|ucred
+modifier|*
+name|lug_cred
+decl_stmt|;
+comment|/* Cred. with groups list */
 name|int
 name|lug_namelen
 decl_stmt|;
