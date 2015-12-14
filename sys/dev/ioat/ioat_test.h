@@ -121,6 +121,13 @@ decl_stmt|;
 name|bool
 name|raw_is_virtual
 decl_stmt|;
+name|bool
+name|zero_stats
+decl_stmt|;
+comment|/* Configure coalesce period */
+name|uint16_t
+name|coalesce_period
+decl_stmt|;
 comment|/* Internal usage -- not test inputs */
 name|TAILQ_HEAD
 argument_list|(

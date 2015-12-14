@@ -105,7 +105,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [-E|-f|-m] [-V]<channel #><txns> [<bufsize> "
+literal|"Usage: %s [-E|-f|-m] OPTIONS<channel #><txns> [<bufsize> "
 literal|"[<chain-len> [duration]]]\n"
 argument_list|,
 name|getprogname
@@ -114,10 +114,30 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       %s -r [-vV]<channel #><addr> [<bufsize>]\n"
+literal|"       %s -r [-v] OPTIONS<channel #><addr> [<bufsize>]\n\n"
 argument_list|,
 name|getprogname
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       OPTIONS:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -c<period> - Enable interrupt coalescing (us)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -V          - Enable verification\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -z          - Zero device stats before test\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -367,7 +387,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EfmrvVw"
+literal|"c:EfmrvVwz"
 argument_list|)
 operator|)
 operator|!=
@@ -380,6 +400,19 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+name|t
+operator|.
+name|coalesce_period
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'E'
 case|:
@@ -450,6 +483,16 @@ case|:
 name|t
 operator|.
 name|raw_write
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|t
+operator|.
+name|zero_stats
 operator|=
 name|true
 expr_stmt|;
