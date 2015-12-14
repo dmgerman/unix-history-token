@@ -2846,6 +2846,9 @@ case|case
 name|AUE_LSTAT
 case|:
 case|case
+name|AUE_LPATHCONF
+case|:
+case|case
 name|AUE_PATHCONF
 case|:
 case|case
