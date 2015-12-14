@@ -1429,6 +1429,13 @@ argument_list|)
 block|,
 name|RUN_DEV
 argument_list|(
+name|NETGEAR
+argument_list|,
+name|WNDA4100
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
 name|OVISLINK
 argument_list|,
 name|RT3072
@@ -1922,6 +1929,13 @@ argument_list|(
 name|ZYXEL
 argument_list|,
 name|RT2870_2
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
+name|ZYXEL
+argument_list|,
+name|RT3070
 argument_list|)
 block|,
 name|RUN_DEV_EJECT
