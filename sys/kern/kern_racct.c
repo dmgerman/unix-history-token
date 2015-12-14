@@ -2593,7 +2593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increase consumption of 'resource' by 'amount' for 'racct'  * and all its parents.  Differently from other cases, 'amount' here  * may be less than zero.  */
+comment|/*  * Increase consumption of 'resource' by 'amount' for 'racct',  * but not its parents.  Differently from other cases, 'amount' here  * may be less than zero.  */
 end_comment
 
 begin_function
@@ -2609,7 +2609,7 @@ parameter_list|,
 name|int
 name|resource
 parameter_list|,
-name|uint64_t
+name|int64_t
 name|amount
 parameter_list|)
 block|{
@@ -3149,13 +3149,7 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|racct_lock
-argument_list|)
-expr_stmt|;
-name|racct_add_cred
+name|racct_add_cred_locked
 argument_list|(
 name|p
 operator|->
@@ -3164,6 +3158,12 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|racct_lock
 argument_list|)
 expr_stmt|;
 block|}

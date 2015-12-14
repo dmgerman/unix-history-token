@@ -651,6 +651,29 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|ubtbcmfw_devs
+index|[]
+init|=
+block|{
+comment|/* Broadcom BCM2033 devices only */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_BROADCOM
+argument_list|,
+argument|USB_PRODUCT_BROADCOM_BCM2033
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -685,6 +708,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|ubtbcmfw_devs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Probe for a USB Bluetooth device  */
 end_comment
@@ -698,26 +729,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|STRUCT_USB_HOST_ID
-name|devs
-index|[]
-init|=
-block|{
-comment|/* Broadcom BCM2033 devices only */
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_BROADCOM
-argument_list|,
-argument|USB_PRODUCT_BROADCOM_BCM2033
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|, 	}
-decl_stmt|;
 name|struct
 name|usb_attach_arg
 modifier|*
@@ -760,11 +771,11 @@ return|return
 operator|(
 name|usbd_lookup_id_by_uaa
 argument_list|(
-name|devs
+name|ubtbcmfw_devs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|devs
+name|ubtbcmfw_devs
 argument_list|)
 argument_list|,
 name|uaa

@@ -227,28 +227,39 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|pccard_product_match_fn
-function_decl|)
+begin_comment
+comment|/**  * Note: There's no cis3 or cis4 reported for NOMATCH / pnpinfo events for pccard  * It's unclear if we actually need that for automatic loading or not. These stirngs  * are informative, according to the standard, but I have a dim memory of using these  * strings to match things, though I can't find the example right now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PNP_DESCR
+value|"D:human;V32:manufacturer;V32:product;Z:cisvendor;Z:cisproduct;"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PNP_INFO
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|MODULE_PNP_INFO(PCCARD_PNP_DESCR, pccard, t, t, sizeof(t[0]), sizeof(t) / sizeof(t[0])); \  typedef int (*pccard_product_match_fn) (device_t dev,
+end_define
+
+begin_decl_stmt
 specifier|const
 name|struct
 name|pccard_product
 modifier|*
 name|ent
-parameter_list|,
+decl_stmt|,
 name|int
 name|vpfmatch
-parameter_list|)
-function_decl|;
-end_typedef
+decl_stmt|);
+end_decl_stmt
 
 begin_include
 include|#

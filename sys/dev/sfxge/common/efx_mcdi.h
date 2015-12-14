@@ -1112,7 +1112,25 @@ parameter_list|,
 name|priv
 parameter_list|)
 define|\
-value|(((mask)&                                  \ 	(MC_CMD_PRIVILEGE_MASK_IN_GRP_ ## priv)) == \ 	(MC_CMD_PRIVILEGE_MASK_IN_GRP_ ## priv))
+value|(((mask)& (MC_CMD_PRIVILEGE_MASK_IN_GRP_ ## priv)) ==		\ 	(MC_CMD_PRIVILEGE_MASK_IN_GRP_ ## priv))
+typedef|typedef
+enum|enum
+name|efx_mcdi_feature_id_e
+block|{
+name|EFX_MCDI_FEATURE_FW_UPDATE
+init|=
+literal|0
+block|,
+name|EFX_MCDI_FEATURE_LINK_CONTROL
+block|,
+name|EFX_MCDI_FEATURE_MACADDR_CHANGE
+block|,
+name|EFX_MCDI_FEATURE_MAC_SPOOFING
+block|,
+name|EFX_MCDI_FEATURE_NIDS
+block|}
+name|efx_mcdi_feature_id_t
+typedef|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

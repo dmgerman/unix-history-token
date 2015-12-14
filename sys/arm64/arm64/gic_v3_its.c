@@ -212,13 +212,6 @@ argument_list|,
 name|gic_v3_its_alloc_msix
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|pic_map_msix
-argument_list|,
-name|gic_v3_its_map_msix
-argument_list|)
-block|,
 comment|/* MSI */
 name|DEVMETHOD
 argument_list|(
@@ -231,7 +224,7 @@ name|DEVMETHOD
 argument_list|(
 name|pic_map_msi
 argument_list|,
-name|gic_v3_its_map_msix
+name|gic_v3_its_map_msi
 argument_list|)
 block|,
 comment|/* End */
@@ -7033,7 +7026,7 @@ end_function
 
 begin_function
 name|int
-name|gic_v3_its_map_msix
+name|gic_v3_its_map_msi
 parameter_list|(
 name|device_t
 name|dev

@@ -6855,6 +6855,7 @@ name|buflen
 argument_list|,
 literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
+literal|"devproto=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
 literal|"mode=%s "
@@ -6899,6 +6900,14 @@ operator|->
 name|ddesc
 operator|.
 name|bDeviceSubClass
+argument_list|,
+name|res
+operator|.
+name|udev
+operator|->
+name|ddesc
+operator|.
+name|bDeviceProtocol
 argument_list|,
 name|usb_get_serial
 argument_list|(

@@ -97,10 +97,6 @@ name|rmx_rttvar
 decl_stmt|;
 comment|/* estimated rtt variance */
 name|u_long
-name|rmx_bandwidth
-decl_stmt|;
-comment|/* estimated bandwidth */
-name|u_long
 name|rmx_cwnd
 decl_stmt|;
 comment|/* congestion window */

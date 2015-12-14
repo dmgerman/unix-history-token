@@ -204,6 +204,12 @@ name|ALIAS_NTFS
 block|}
 block|,
 block|{
+literal|"prepboot"
+block|,
+name|ALIAS_PPCBOOT
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|ALIAS_NONE

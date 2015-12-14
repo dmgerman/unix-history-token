@@ -701,6 +701,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|PCCARD_PNP_INFO
+argument_list|(
+name|fe_pccard_products
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int

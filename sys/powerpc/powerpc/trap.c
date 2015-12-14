@@ -1106,6 +1106,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|EXC_VECAST_E
+case|:
+case|case
 name|EXC_VECAST_G4
 case|:
 case|case

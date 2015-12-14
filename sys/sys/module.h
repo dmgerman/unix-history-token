@@ -229,6 +229,7 @@ name|int
 name|md_type
 decl_stmt|;
 comment|/* type of entry MDT_* */
+specifier|const
 name|void
 modifier|*
 name|md_data
@@ -240,6 +241,41 @@ modifier|*
 name|md_cval
 decl_stmt|;
 comment|/* common string label */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mod_pnp_match_info
+block|{
+specifier|const
+name|char
+modifier|*
+name|descr
+decl_stmt|;
+comment|/* Description of the table */
+specifier|const
+name|char
+modifier|*
+name|bus
+decl_stmt|;
+comment|/* Name of the bus for this table */
+specifier|const
+name|void
+modifier|*
+name|table
+decl_stmt|;
+comment|/* Pointer to pnp table */
+name|int
+name|entry_len
+decl_stmt|;
+comment|/* Length of each entry in the table (may be */
+comment|/*   longer than descr describes). */
+name|int
+name|num_entry
+decl_stmt|;
+comment|/* Number of entries in the table */
 block|}
 struct|;
 end_struct
@@ -372,6 +408,35 @@ parameter_list|)
 define|\
 value|static struct mod_version _##module##_version			\ 	    __section(".data") = {					\ 		version							\ 	};								\ 	MODULE_METADATA(_##module##_version, MDT_VERSION,		\&_##module##_version, #module)
 end_define
+
+begin_comment
+comment|/**  * Generic macros to create pnp info hints that modules may export  * to allow external tools to parse their intenral device tables  * to make an informed guess about what driver(s) to load.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODULE_PNP_INFO
+parameter_list|(
+name|d
+parameter_list|,
+name|b
+parameter_list|,
+name|unique
+parameter_list|,
+name|t
+parameter_list|,
+name|l
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|static const struct mod_pnp_match_info _module_pnp_##b##_##unique = {	\ 		.descr = d,						\ 		.bus = #b,						\ 		.table = t,						\ 		.entry_len = l,						\ 		.num_entry = n						\ 	};								\ 	MODULE_METADATA(_md_##b##_pnpinfo_##unique, MDT_PNP_INFO,	\&_module_pnp_##b##_##unique, #b);
+end_define
+
+begin_comment
+comment|/**  * descr is a string that describes each entry in the table. The general  * form is (TYPE:pnp_name[/pnp_name];)*  * where TYPE is one of the following:  *	U8	uint8_t element  *	V8	like U8 and 0xff means match any  *	G16	uint16_t element, any value>= matches  *	L16	uint16_t element, any value<= matches  *	M16	uint16_t element, mask of which of the following fields to use.  *	U16	uint16_t element  *	V16	like U16 and 0xffff means match any  *	U32	uint32_t element  *	V32	like U32 and 0xffffffff means match any  *	W32	Two 16-bit values with first pnp_name in LSW and second in MSW.  *	Z	pointer to a string to match exactly  *	D	like Z, but is the string passed to device_set_descr()  *	P	A pointer that should be ignored  *	E	EISA PNP Identifier (in binary, but bus publishes string)  *	K	Key for whole table. pnp_name=value. must be last, if present.  *  * The pnp_name "#" is reserved for other fields that should be ignored.  */
+end_comment
 
 begin_decl_stmt
 specifier|extern

@@ -55,6 +55,8 @@ name|ALIAS_MBR
 block|,
 name|ALIAS_NTFS
 block|,
+name|ALIAS_PPCBOOT
+block|,
 comment|/* end */
 name|ALIAS_COUNT
 comment|/* Keep last! */

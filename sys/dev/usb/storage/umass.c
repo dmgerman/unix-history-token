@@ -3218,6 +3218,26 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|__used
+name|umass_devs
+index|[]
+init|=
+block|{
+comment|/* generic mass storage class */
+block|{
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_MASS
+argument_list|)
+block|,}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -3278,29 +3298,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|umass_devs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * USB device probe/attach/detach  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|STRUCT_USB_HOST_ID
-name|__used
-name|umass_devs
-index|[]
-init|=
-block|{
-comment|/* generic mass storage class */
-block|{
-name|USB_IFACE_CLASS
-argument_list|(
-name|UICLASS_MASS
-argument_list|)
-block|,}
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
