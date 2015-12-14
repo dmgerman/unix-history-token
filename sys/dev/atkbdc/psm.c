@@ -13207,6 +13207,9 @@ name|div_x
 decl_stmt|,
 name|div_y
 decl_stmt|;
+name|int
+name|exiting_scroll
+decl_stmt|;
 comment|/* Read sysctl. */
 comment|/* XXX Verify values? */
 name|max_width
@@ -13384,6 +13387,10 @@ operator|->
 name|syninfo
 operator|.
 name|two_finger_scroll
+expr_stmt|;
+name|exiting_scroll
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Palm detection. */
 if|if
@@ -14241,13 +14248,25 @@ operator|&&
 name|w
 operator|!=
 literal|0
+operator|&&
+name|synaction
+operator|->
+name|in_vscroll
+operator|!=
+literal|0
 condition|)
+block|{
 name|synaction
 operator|->
 name|in_vscroll
 operator|=
 literal|0
 expr_stmt|;
+name|exiting_scroll
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|VLOG
 argument_list|(
 literal|5
@@ -14791,6 +14810,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* On exit the x/y pos may jump, ignore this */
+if|if
+condition|(
+name|exiting_scroll
+condition|)
+operator|*
+name|x
+operator|=
+operator|*
+name|y
+operator|=
+literal|0
+expr_stmt|;
 name|VLOG
 argument_list|(
 literal|3
