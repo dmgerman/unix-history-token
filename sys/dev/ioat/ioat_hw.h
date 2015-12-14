@@ -114,6 +114,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOAT_INTRDELAY_SUPPORTED
+value|(1<< 15)
+end_define
+
+begin_comment
+comment|/* Reserved.				(1<< 14) */
+end_comment
+
+begin_comment
+comment|/* [13:0] is the coalesce period, in microseconds. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOAT_INTRDELAY_US_MASK
+value|((1<< 14) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOAT_CS_STATUS_OFFSET
 value|0x0E
 end_define

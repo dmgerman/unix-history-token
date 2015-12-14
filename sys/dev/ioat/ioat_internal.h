@@ -1341,6 +1341,12 @@ decl_stmt|;
 name|uint32_t
 name|capabilities
 decl_stmt|;
+name|uint16_t
+name|intrdelay_max
+decl_stmt|;
+name|uint16_t
+name|cached_intrdelay
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -1390,6 +1396,9 @@ name|is_reset_pending
 decl_stmt|;
 name|boolean_t
 name|is_channel_running
+decl_stmt|;
+name|boolean_t
+name|intrdelay_supported
 decl_stmt|;
 name|uint32_t
 name|head
