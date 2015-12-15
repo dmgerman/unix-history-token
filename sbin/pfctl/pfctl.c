@@ -11806,6 +11806,12 @@ name|debug_set
 operator|=
 literal|1
 expr_stmt|;
+name|level
+operator|=
+name|pf
+operator|->
+name|debug
+expr_stmt|;
 if|if
 condition|(
 operator|(
