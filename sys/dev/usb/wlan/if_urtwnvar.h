@@ -589,6 +589,8 @@ modifier|*
 name|node_list
 index|[
 name|R88E_MACID_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
