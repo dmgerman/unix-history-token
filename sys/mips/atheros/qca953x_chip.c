@@ -737,13 +737,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|ATH_WRITE_REG
-argument_list|(
-name|QCA953X_PLL_ETH_SGMII_CONTROL_REG
-argument_list|,
-name|pll
-argument_list|)
-expr_stmt|;
+comment|/* nothing */
 break|break;
 default|default:
 name|printf
