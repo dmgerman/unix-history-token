@@ -607,7 +607,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|SSL_CTX_set_options
 argument_list|(
@@ -618,6 +617,8 @@ argument_list|)
 operator|&
 name|SSL_OP_NO_SSLv2
 operator|)
+operator|!=
+name|SSL_OP_NO_SSLv2
 condition|)
 name|ssl_err
 argument_list|(
@@ -633,7 +634,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|SSL_CTX_set_options
 argument_list|(
@@ -644,6 +644,8 @@ argument_list|)
 operator|&
 name|SSL_OP_NO_SSLv3
 operator|)
+operator|!=
+name|SSL_OP_NO_SSLv3
 condition|)
 name|ssl_err
 argument_list|(
@@ -1884,6 +1886,16 @@ argument_list|(
 literal|"control-enable is 'no' in the config file."
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UB_ON_WINDOWS
+name|w_config_adjust_directory
+argument_list|(
+name|cfg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ctx
 operator|=
 name|setup_ctx

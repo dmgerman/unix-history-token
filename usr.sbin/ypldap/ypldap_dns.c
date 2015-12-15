@@ -697,6 +697,10 @@ operator|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|EAGAIN
 condition|)
 name|fatal
 argument_list|(

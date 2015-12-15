@@ -757,6 +757,13 @@ name|HAVE_NSS
 argument_list|)
 name|NSS_GetVersion
 argument_list|()
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_NETTLE
+argument_list|)
+literal|"nettle"
 endif|#
 directive|endif
 argument_list|)
@@ -2154,6 +2161,16 @@ argument_list|)
 expr_stmt|;
 comment|/* endpwent below, in case we need pwd for setusercontext */
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|UB_ON_WINDOWS
+name|w_config_adjust_directory
+argument_list|(
+name|cfg
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* init syslog (as root) if needed, before daemonize, otherwise 	 * a fork error could not be printed since daemonize closed stderr.*/

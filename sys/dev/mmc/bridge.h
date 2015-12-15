@@ -15,6 +15,12 @@ directive|define
 name|DEV_MMC_BRIDGE_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_comment
 comment|/*  * This file defines interfaces for the mmc bridge.  The names chosen  * are similar to or the same as the names used in Linux to allow for  * easy porting of what Linux calls mmc host drivers.  I use the  * FreeBSD terminology of bridge and bus for consistancy with other  * drivers in the system.  This file corresponds roughly to the Linux  * linux/mmc/host.h file.  *  * A mmc bridge is a chipset that can have one or more mmc and/or sd  * cards attached to it.  mmc cards are attached on a bus topology,  * while sd and sdio cards are attached using a star topology (meaning  * in practice each sd card has its own, independent slot).  Each  * mmcbr is assumed to be derived from the mmcbr.  This is done to  * allow for easier addition of bridges (as each bridge does not need  * to be added to the mmcbus file).  *  * Attached to the mmc bridge is an mmcbus.  The mmcbus is described  * in dev/mmc/bus.h.  */
 end_comment
@@ -249,6 +255,20 @@ comment|/* Current state of the host */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|driver_t
+name|mmc_driver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|mmc_devclass
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

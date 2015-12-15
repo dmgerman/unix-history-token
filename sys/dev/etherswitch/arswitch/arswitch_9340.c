@@ -503,7 +503,7 @@ name|info
 operator|.
 name|es_nports
 operator|=
-literal|4
+literal|5
 expr_stmt|;
 block|}
 else|else
@@ -525,7 +525,7 @@ name|info
 operator|.
 name|es_nports
 operator|=
-literal|5
+literal|6
 expr_stmt|;
 block|}
 comment|/* Settle time */

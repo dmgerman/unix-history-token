@@ -152,7 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Update the statistics with a new timout expired observation.  * @param rtt: round trip statistics structure.  * @param orig: original rtt time given for the query that timed out.  * 	Used to calculate the maximum responsible backed off time that  * 	can reasonably be applied.  */
+comment|/**  * Update the statistics with a new timeout expired observation.  * @param rtt: round trip statistics structure.  * @param orig: original rtt time given for the query that timed out.  * 	Used to calculate the maximum responsible backed off time that  * 	can reasonably be applied.  */
 end_comment
 
 begin_function_decl

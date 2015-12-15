@@ -1821,6 +1821,17 @@ index|[
 name|irq
 index|]
 expr_stmt|;
+comment|/* always count interrupts; spurious or otherwise */
+name|mips_intrcnt_inc
+argument_list|(
+name|sc
+operator|->
+name|sc_intr_counter
+index|[
+name|irq
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1872,16 +1883,6 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-name|mips_intrcnt_inc
-argument_list|(
-name|sc
-operator|->
-name|sc_intr_counter
-index|[
-name|irq
-index|]
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* Ignore timer interrupts */
@@ -1922,16 +1923,6 @@ name|curthread
 argument_list|)
 operator|->
 name|td_intr_frame
-argument_list|)
-expr_stmt|;
-name|mips_intrcnt_inc
-argument_list|(
-name|sc
-operator|->
-name|sc_intr_counter
-index|[
-name|irq
-index|]
 argument_list|)
 expr_stmt|;
 block|}

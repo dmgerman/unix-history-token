@@ -4717,5 +4717,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|mmc
+argument_list|,
+name|aml8726_mmc
+argument_list|,
+name|mmc_driver
+argument_list|,
+name|mmc_devclass
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

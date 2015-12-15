@@ -617,8 +617,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8655,13 +8653,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|if_link_state_change
+comment|/* 	 * Force state change to ensure ifnet_link_event is generated allowing 	 * protocols to notify other nodes of potential address move. 	 */
+name|if_link_state_change_cond
 argument_list|(
 name|sc
 operator|->
 name|sc_ifp
 argument_list|,
 name|new_link
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Update if_baudrate to reflect the max possible speed */
@@ -8754,9 +8755,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|int
-name|state
 parameter_list|)
 block|{
 name|struct
@@ -8825,6 +8823,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|lagg_port
 modifier|*

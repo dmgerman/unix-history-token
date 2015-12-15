@@ -3351,7 +3351,7 @@ name|kkey
 parameter_list|)
 block|{
 comment|/* Since we are here, there must be nothing in the ANSWER section to 	 * validate. */
-comment|/* (Note: CNAME/DNAME responses will not directly get here -- 	 * instead, they are chased down into indiviual CNAME validations, 	 * and at the end of the cname chain a POSITIVE, or CNAME_NOANSWER  	 * validation.) */
+comment|/* (Note: CNAME/DNAME responses will not directly get here -- 	 * instead, they are chased down into individual CNAME validations, 	 * and at the end of the cname chain a POSITIVE, or CNAME_NOANSWER  	 * validation.) */
 comment|/* validate the AUTHORITY section */
 name|int
 name|has_valid_nsec
@@ -7087,7 +7087,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* check if there is a cache entry : pick up an NSEC if 		 * there is no DS, check if that NSEC has DS-bit unset, and 		 * thus can disprove the secure delagation we seek. 		 * We can then use that NSEC even in the absence of a SOA 		 * record that would be required by the iterator to supply 		 * a completely protocol-correct response.  		 * Uses negative cache for NSEC3 lookup of DS responses. */
+comment|/* check if there is a cache entry : pick up an NSEC if 		 * there is no DS, check if that NSEC has DS-bit unset, and 		 * thus can disprove the secure delegation we seek. 		 * We can then use that NSEC even in the absence of a SOA 		 * record that would be required by the iterator to supply 		 * a completely protocol-correct response.  		 * Uses negative cache for NSEC3 lookup of DS responses. */
 comment|/* only if cache not blacklisted, of course */
 name|struct
 name|dns_msg
@@ -8179,7 +8179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Init DLV check.  * DLV is going to be decommissioned, but the code is still here for some time.  *  * Called when a query is determined by other trust anchors to be insecure  * (or indeterminate).  Then we look if there is a key in the DLV.  * Performs aggressive negative cache check to see if there is no key.  * Otherwise, spawns a DLV query, and changes to the DLV wait state.  *  * @param qstate: query state.  * @param vq: validator query state.  * @param ve: validator shared global environment.  * @param id: module id.  * @return  true if there is no DLV.  * 	false: processing is finished for the validator operate().  * 	This function may exit in three ways:  *         o	no DLV (agressive cache), so insecure. (true)  *         o	error - stop processing (false)  *         o	DLV lookup was started, stop processing (false)  */
+comment|/**  * Init DLV check.  * DLV is going to be decommissioned, but the code is still here for some time.  *  * Called when a query is determined by other trust anchors to be insecure  * (or indeterminate).  Then we look if there is a key in the DLV.  * Performs aggressive negative cache check to see if there is no key.  * Otherwise, spawns a DLV query, and changes to the DLV wait state.  *  * @param qstate: query state.  * @param vq: validator query state.  * @param ve: validator shared global environment.  * @param id: module id.  * @return  true if there is no DLV.  * 	false: processing is finished for the validator operate().  * 	This function may exit in three ways:  *         o	no DLV (aggressive cache), so insecure. (true)  *         o	error - stop processing (false)  *         o	DLV lookup was started, stop processing (false)  */
 end_comment
 
 begin_function

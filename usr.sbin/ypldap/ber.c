@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -6039,14 +6033,6 @@ modifier|*
 name|b
 parameter_list|)
 block|{
-if|if
-condition|(
-name|b
-operator|->
-name|br_wbuf
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|b

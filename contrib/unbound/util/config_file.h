@@ -532,7 +532,7 @@ name|config_strlist
 modifier|*
 name|local_zones_nodefault
 decl_stmt|;
-comment|/** local data RRs configged */
+comment|/** local data RRs configured */
 name|struct
 name|config_strlist
 modifier|*
@@ -688,6 +688,10 @@ decl_stmt|;
 comment|/** ratelimit factor, 0 blocks all, 10 allows 1/10 of traffic */
 name|int
 name|ratelimit_factor
+decl_stmt|;
+comment|/** minimise outgoing QNAME and hide original QTYPE if possible */
+name|int
+name|qname_minimisation
 decl_stmt|;
 block|}
 struct|;
@@ -1713,6 +1717,22 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** Modify directory in options for module file name */
+end_comment
+
+begin_function_decl
+name|void
+name|w_config_adjust_directory
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|cfg
 parameter_list|)
 function_decl|;
 end_function_decl

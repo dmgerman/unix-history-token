@@ -43,16 +43,6 @@ directive|include
 file|<machine/cpuconf.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/katelib.h>
-end_include
-
-begin_comment
-comment|/* For in[bwl] and out[bwl] */
-end_comment
-
 begin_function
 specifier|static
 name|__inline

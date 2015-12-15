@@ -688,15 +688,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_tlb_flush_ng
-parameter_list|(
-name|pmap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_dcache_wb_range
 parameter_list|(
 name|vm_paddr_t

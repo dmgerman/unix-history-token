@@ -1853,12 +1853,6 @@ modifier|*
 name|page
 parameter_list|)
 block|{
-if|if
-condition|(
-name|page
-operator|->
-name|cookie
-condition|)
 name|free
 argument_list|(
 name|page

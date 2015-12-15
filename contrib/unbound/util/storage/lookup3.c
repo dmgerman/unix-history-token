@@ -1038,7 +1038,7 @@ literal|3
 expr_stmt|;
 block|}
 comment|/*----------------------------- handle the last (probably partial) block */
-comment|/*       * "k[2]&0xffffff" actually reads beyond the end of the string, but      * then masks off the part it's not allowed to read.  Because the      * string is aligned, the masked-off tail is in the same word as the      * rest of the string.  Every machine with memory protection I've seen      * does it on word boundaries, so is OK with this.  But VALGRIND will      * still catch it and complain.  The masking trick does make the hash      * noticably faster for short strings (like English words).      */
+comment|/*       * "k[2]&0xffffff" actually reads beyond the end of the string, but      * then masks off the part it's not allowed to read.  Because the      * string is aligned, the masked-off tail is in the same word as the      * rest of the string.  Every machine with memory protection I've seen      * does it on word boundaries, so is OK with this.  But VALGRIND will      * still catch it and complain.  The masking trick does make the hash      * noticeably faster for short strings (like English words).      */
 ifndef|#
 directive|ifndef
 name|VALGRIND
@@ -2559,7 +2559,7 @@ literal|3
 expr_stmt|;
 block|}
 comment|/*----------------------------- handle the last (probably partial) block */
-comment|/*       * "k[2]&0xffffff" actually reads beyond the end of the string, but      * then masks off the part it's not allowed to read.  Because the      * string is aligned, the masked-off tail is in the same word as the      * rest of the string.  Every machine with memory protection I've seen      * does it on word boundaries, so is OK with this.  But VALGRIND will      * still catch it and complain.  The masking trick does make the hash      * noticably faster for short strings (like English words).      */
+comment|/*       * "k[2]&0xffffff" actually reads beyond the end of the string, but      * then masks off the part it's not allowed to read.  Because the      * string is aligned, the masked-off tail is in the same word as the      * rest of the string.  Every machine with memory protection I've seen      * does it on word boundaries, so is OK with this.  But VALGRIND will      * still catch it and complain.  The masking trick does make the hash      * noticeably faster for short strings (like English words).      */
 ifndef|#
 directive|ifndef
 name|VALGRIND
@@ -4005,7 +4005,7 @@ comment|/*----------------------------- handle the last (probably partial) block
 end_comment
 
 begin_comment
-comment|/*       * "k[2]<<8" actually reads beyond the end of the string, but      * then shifts out the part it's not allowed to read.  Because the      * string is aligned, the illegal read is in the same word as the      * rest of the string.  Every machine with memory protection I've seen      * does it on word boundaries, so is OK with this.  But VALGRIND will      * still catch it and complain.  The masking trick does make the hash      * noticably faster for short strings (like English words).      */
+comment|/*       * "k[2]<<8" actually reads beyond the end of the string, but      * then shifts out the part it's not allowed to read.  Because the      * string is aligned, the illegal read is in the same word as the      * rest of the string.  Every machine with memory protection I've seen      * does it on word boundaries, so is OK with this.  But VALGRIND will      * still catch it and complain.  The masking trick does make the hash      * noticeably faster for short strings (like English words).      */
 end_comment
 
 begin_ifndef
@@ -4436,7 +4436,7 @@ condition|;
 operator|++
 name|m
 control|)
-comment|/*------------ for serveral possible initvals, */
+comment|/*------------ for several possible initvals, */
 block|{
 for|for
 control|(

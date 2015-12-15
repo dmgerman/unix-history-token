@@ -152,7 +152,7 @@ name|comm_point
 modifier|*
 name|res_com
 decl_stmt|;
-comment|/** are we curently writing a result, 0 if not, else bytecount into 	 * the res_list first entry. */
+comment|/** are we currently writing a result, 0 if not, else bytecount into 	 * the res_list first entry. */
 name|size_t
 name|res_write
 decl_stmt|;
