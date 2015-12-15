@@ -443,6 +443,17 @@ parameter_list|()
 value|rm_wunlock(&in_ifaddr_lock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFA_IN
+parameter_list|(
+name|ifa
+parameter_list|)
+define|\
+value|(&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr)
+end_define
+
 begin_comment
 comment|/*  * Macro for finding the internet address structure (in_ifaddr)  * corresponding to one of our IP addresses (in_addr).  */
 end_comment

@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -461,6 +467,23 @@ begin_comment
 comment|/* max pkts cached in unresolved 					 * ND entries */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|nd6_on_link
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Send unsolicited ND's on link up */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -473,6 +496,13 @@ define|#
 directive|define
 name|V_nd6_maxqueuelen
 value|VNET(nd6_maxqueuelen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_nd6_on_link
+value|VNET(nd6_on_link)
 end_define
 
 begin_ifdef
@@ -519,6 +549,13 @@ begin_decl_stmt
 specifier|static
 name|eventhandler_tag
 name|lle_event_eh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|ifnet_link_event_eh
 decl_stmt|;
 end_decl_stmt
 
@@ -1107,6 +1144,41 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|nd6_ifnet_link_event
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|linkstate
+parameter_list|)
+block|{
+if|if
+condition|(
+name|linkstate
+operator|==
+name|LINK_STATE_UP
+operator|&&
+name|V_nd6_on_link
+condition|)
+name|nd6_na_output_unsolicited
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|nd6_init
 parameter_list|(
@@ -1159,6 +1231,7 @@ argument_list|(
 name|curvnet
 argument_list|)
 condition|)
+block|{
 name|lle_event_eh
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -1172,6 +1245,20 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
+name|ifnet_link_event_eh
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|ifnet_link_event
+argument_list|,
+name|nd6_ifnet_link_event
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1205,6 +1292,7 @@ argument_list|(
 name|curvnet
 argument_list|)
 condition|)
+block|{
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|lle_event
@@ -1212,6 +1300,14 @@ argument_list|,
 name|lle_event_eh
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|ifnet_link_event
+argument_list|,
+name|ifnet_link_event_eh
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -9113,7 +9209,7 @@ name|CTLFLAG_RD
 argument_list|,
 name|nd6_sysctl_drlist
 argument_list|,
-literal|""
+literal|"List default routers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9131,7 +9227,7 @@ name|CTLFLAG_RD
 argument_list|,
 name|nd6_sysctl_prlist
 argument_list|,
-literal|""
+literal|"List prefixes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9157,7 +9253,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-literal|""
+literal|"Max packets cached in unresolved ND entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9189,7 +9285,33 @@ operator|*
 literal|24
 operator|)
 argument_list|,
-literal|""
+literal|"Interface in seconds between garbage collection passes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_icmp6
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nd6_on_link
+argument_list|,
+name|CTLFLAG_VNET
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|nd6_on_link
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Send unsolicited neighbor discovery on interface link up events"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
