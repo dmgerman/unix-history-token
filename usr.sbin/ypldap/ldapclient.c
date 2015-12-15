@@ -1878,18 +1878,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ldapclient.c error\n"
-argument_list|)
-expr_stmt|;
 name|fatal
 argument_list|(
 literal|"getpwnam"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|socketpair
