@@ -620,6 +620,17 @@ begin_comment
 comment|/* number of input packets to keep */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCP_FUNCTION_BLK
+value|8192
+end_define
+
+begin_comment
+comment|/* Set the tcp function pointers to the specified stack */
+end_comment
+
 begin_comment
 comment|/* Start of reserved space for third-party user-settable options. */
 end_comment
@@ -846,6 +857,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TCP_FUNCTION_NAME_LEN_MAX
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|tcp_function_set
+block|{
+name|char
+name|function_set_name
+index|[
+name|TCP_FUNCTION_NAME_LEN_MAX
+index|]
+decl_stmt|;
+name|uint32_t
+name|pcbcnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
