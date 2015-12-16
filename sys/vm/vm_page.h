@@ -2272,7 +2272,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(vm_page_sbusied(m),					\ 	    ("vm_page_assert_sbusied: page %p not shared busy @ %s:%d", \ 	    (void *)m, __FILE__, __LINE__));
+value|KASSERT(vm_page_sbusied(m),					\ 	    ("vm_page_assert_sbusied: page %p not shared busy @ %s:%d", \ 	    (m), __FILE__, __LINE__))
 end_define
 
 begin_define
@@ -2283,7 +2283,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(!vm_page_busied(m),					\ 	    ("vm_page_assert_unbusied: page %p busy @ %s:%d",		\ 	    (void *)m, __FILE__, __LINE__));
+value|KASSERT(!vm_page_busied(m),					\ 	    ("vm_page_assert_unbusied: page %p busy @ %s:%d",		\ 	    (m), __FILE__, __LINE__))
 end_define
 
 begin_define
@@ -2294,7 +2294,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(vm_page_xbusied(m),					\ 	    ("vm_page_assert_xbusied: page %p not exclusive busy @ %s:%d", \ 	    (void *)m, __FILE__, __LINE__));
+value|KASSERT(vm_page_xbusied(m),					\ 	    ("vm_page_assert_xbusied: page %p not exclusive busy @ %s:%d", \ 	    (m), __FILE__, __LINE__))
 end_define
 
 begin_define
@@ -2315,7 +2315,7 @@ name|vm_page_sbusy
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	if (!vm_page_trysbusy(m))					\ 		panic("%s: page %p failed shared busing", __func__, m);	\ } while (0)
+value|do {						\ 	if (!vm_page_trysbusy(m))					\ 		panic("%s: page %p failed shared busying", __func__,	\ 		    (m));						\ } while (0)
 end_define
 
 begin_define
@@ -2326,7 +2326,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|(atomic_cmpset_acq_int(&m->busy_lock, VPB_UNBUSIED,		\ 	    VPB_SINGLE_EXCLUSIVER))
+value|(atomic_cmpset_acq_int(&(m)->busy_lock, VPB_UNBUSIED,		\ 	    VPB_SINGLE_EXCLUSIVER))
 end_define
 
 begin_define
@@ -2337,7 +2337,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m->busy_lock& VPB_SINGLE_EXCLUSIVER) != 0)
+value|(((m)->busy_lock& VPB_SINGLE_EXCLUSIVER) != 0)
 end_define
 
 begin_define
@@ -2347,7 +2347,7 @@ name|vm_page_xbusy
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	if (!vm_page_tryxbusy(m))					\ 		panic("%s: page %p failed exclusive busing", __func__,	\ 		    m);							\ } while (0)
+value|do {						\ 	if (!vm_page_tryxbusy(m))					\ 		panic("%s: page %p failed exclusive busying", __func__,	\ 		    (m));						\ } while (0)
 end_define
 
 begin_define
