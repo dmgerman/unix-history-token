@@ -5679,6 +5679,12 @@ name|if_flags
 operator|&
 name|IFF_NOARP
 operator|)
+operator|||
+name|ifp
+operator|->
+name|if_addr
+operator|==
+name|NULL
 condition|)
 return|return;
 name|entries
@@ -5847,6 +5853,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|>
+literal|0
+condition|)
+block|{
 name|lladdr
 operator|=
 name|IF_LLADDR
@@ -5879,6 +5892,7 @@ argument_list|,
 name|lladdr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(

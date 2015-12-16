@@ -5275,9 +5275,12 @@ name|ifa
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
 name|nd6_na_unsolicited_addr_delay
 argument_list|(
 name|ifa
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
