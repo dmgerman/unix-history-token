@@ -963,6 +963,12 @@ return|;
 block|}
 name|io
 operator|->
+name|bufpos
+operator|=
+literal|0
+expr_stmt|;
+name|io
+operator|->
 name|buflen
 operator|=
 name|nbytes
@@ -971,9 +977,7 @@ name|io
 operator|->
 name|chunksize
 operator|-=
-name|io
-operator|->
-name|buflen
+name|nbytes
 expr_stmt|;
 if|if
 condition|(
@@ -1029,12 +1033,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|io
-operator|->
-name|bufpos
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|io
