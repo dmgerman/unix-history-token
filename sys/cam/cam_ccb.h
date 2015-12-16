@@ -402,6 +402,20 @@ init|=
 literal|0x00000001
 block|,
 comment|/* 64bit lun field is valid      */
+name|CAM_USER_DATA_ADDR
+init|=
+literal|0x00000002
+block|,
+comment|/* Userspace data pointers */
+name|CAM_SG_FORMAT_IOVEC
+init|=
+literal|0x00000004
+block|,
+comment|/* iovec instead of busdma S/G*/
+name|CAM_UNMAPPED_BUF
+init|=
+literal|0x00000008
+comment|/* use unmapped I/O */
 block|}
 name|ccb_xflags
 typedef|;

@@ -186,6 +186,12 @@ name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Map and unmap a region of device bus space into CPU virtual address space.  */
 end_comment
@@ -3820,6 +3826,15 @@ directive|define
 name|bus_space_copy_region_stream_8
 value|bus_space_copy_region_8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_include
 include|#

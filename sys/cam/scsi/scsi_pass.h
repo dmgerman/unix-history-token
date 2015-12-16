@@ -46,6 +46,24 @@ name|CAMGETPASSTHRU
 value|_IOWR(CAM_VERSION, 3, union ccb)
 end_define
 
+begin_comment
+comment|/*  * These two ioctls take a union ccb *, but that is not explicitly declared  * to avoid having the ioctl handling code malloc and free their own copy  * of the CCB or the CCB pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMIOQUEUE
+value|_IO(CAM_VERSION, 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMIOGET
+value|_IO(CAM_VERSION, 5)
+end_define
+
 begin_endif
 endif|#
 directive|endif

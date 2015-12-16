@@ -31,11 +31,26 @@ directive|define
 name|_PC98_BUS_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_include
 include|#
@@ -97,6 +112,12 @@ directive|define
 name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * address relocation table  */
@@ -1723,6 +1744,15 @@ parameter_list|)
 define|\
 value|bus_space_copy_region_4((t), (h1), (o1), (h2), (o2), (c))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
