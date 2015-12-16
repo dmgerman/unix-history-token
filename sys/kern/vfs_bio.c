@@ -11707,8 +11707,11 @@ if|if
 condition|(
 name|reserved
 condition|)
-name|bufspace_release
+name|atomic_subtract_long
 argument_list|(
+operator|&
+name|bufspace
+argument_list|,
 name|maxsize
 argument_list|)
 expr_stmt|;
