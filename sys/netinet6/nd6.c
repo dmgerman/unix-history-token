@@ -6591,6 +6591,12 @@ name|ln
 operator|->
 name|la_expire
 operator|+
+name|ln
+operator|->
+name|lle_remtime
+operator|/
+name|hz
+operator|+
 operator|(
 name|time_second
 operator|-
