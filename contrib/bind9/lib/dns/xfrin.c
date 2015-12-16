@@ -5893,6 +5893,15 @@ name|tsigctx
 operator|=
 name|NULL
 expr_stmt|;
+name|dns_message_setclass
+argument_list|(
+name|msg
+argument_list|,
+name|xfr
+operator|->
+name|rdclass
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xfr

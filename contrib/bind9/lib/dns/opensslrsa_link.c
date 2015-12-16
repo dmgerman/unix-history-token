@@ -245,9 +245,21 @@ literal|0x00908000L
 operator|)
 operator|||
 expr|\
+operator|(
 name|OPENSSL_VERSION_NUMBER
 operator|>=
 literal|0x0090804fL
+operator|&&
+expr|\
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x10002000L
+operator|)
+operator|||
+expr|\
+name|OPENSSL_VERSION_NUMBER
+operator|>=
+literal|0x1000205fL
 operator|)
 end_if
 
