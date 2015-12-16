@@ -650,31 +650,6 @@ parameter_list|()
 value|mips_enable_auto_align()
 end_define
 
-begin_enum_decl
-enum_decl|enum
-name|dwarf2_format
-enum_decl|;
-end_enum_decl
-
-begin_function_decl
-specifier|extern
-name|enum
-name|dwarf2_format
-name|mips_dwarf2_format
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|DWARF2_FORMAT
-parameter_list|()
-value|mips_dwarf2_format ()
-end_define
-
 begin_function_decl
 specifier|extern
 name|int
