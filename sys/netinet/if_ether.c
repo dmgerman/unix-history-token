@@ -4027,7 +4027,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-comment|/* 		 * Reply to our address, but no lle exists yet. 		 * do we really have to create an entry? 		 */
+comment|/* 		 * Request/reply to our address, but no lle exists yet. 		 * Try to create new llentry. 		 */
 name|la
 operator|=
 name|lltable_alloc_entry
@@ -4048,9 +4048,12 @@ name|la
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* 			 * lle creation may fail if source address belongs 			 * to non-directly connected subnet. However, we 			 * will try to answer the request instead of dropping 			 * frame. 			 */
 goto|goto
-name|drop
+name|reply
 goto|;
+block|}
 name|lltable_set_entry_addr
 argument_list|(
 name|ifp
