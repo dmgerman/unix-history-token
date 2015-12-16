@@ -135,9 +135,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|mac
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|policy
 argument_list|,
 name|modevent
@@ -153,9 +151,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|mac
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|policy
 argument_list|,
 specifier|register
@@ -169,9 +165,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|mac
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|policy
 argument_list|,
 name|unregister
@@ -1268,25 +1262,15 @@ expr_stmt|;
 name|mac_policy_update
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|mac
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|policy
 argument_list|,
 specifier|register
 argument_list|,
 name|mpc
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1426,25 +1410,15 @@ expr_stmt|;
 name|mac_policy_xunlock
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|mac
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|policy
 argument_list|,
 name|unregister
 argument_list|,
 name|mpc
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1529,12 +1503,10 @@ return|;
 block|}
 endif|#
 directive|endif
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 name|mac
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|policy
 argument_list|,
 name|modevent
@@ -1542,12 +1514,6 @@ argument_list|,
 name|type
 argument_list|,
 name|mpc
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 switch|switch

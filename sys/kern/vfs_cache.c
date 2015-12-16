@@ -2307,9 +2307,6 @@ operator|->
 name|nc_vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
 if|if
 condition|(
 name|ncp
@@ -2367,8 +2364,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|vp
 operator|=
 name|NULL

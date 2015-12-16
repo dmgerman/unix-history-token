@@ -380,9 +380,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec
 argument_list|,
 literal|"char *"
@@ -394,9 +392,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__failure
 argument_list|,
 literal|"int"
@@ -408,9 +404,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__success
 argument_list|,
 literal|"char *"
@@ -2040,9 +2034,7 @@ block|}
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec
 argument_list|,
 name|args
@@ -3692,9 +3684,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__success
 argument_list|,
 name|args
@@ -3975,9 +3965,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__failure
 argument_list|,
 name|error

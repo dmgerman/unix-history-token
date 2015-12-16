@@ -334,9 +334,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|signal__send
 argument_list|,
 literal|"struct thread *"
@@ -352,9 +350,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|signal__clear
 argument_list|,
 literal|"int"
@@ -368,9 +364,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|signal__discard
 argument_list|,
 literal|"struct thread *"
@@ -6766,9 +6760,7 @@ block|{
 name|SDT_PROBE2
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|signal__clear
 argument_list|,
 name|sig
@@ -10898,9 +10890,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|signal__send
 argument_list|,
 name|td
@@ -10934,9 +10924,7 @@ block|{
 name|SDT_PROBE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|signal__discard
 argument_list|,
 name|td
