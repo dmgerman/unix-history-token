@@ -1855,7 +1855,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fabs
+name|fabsl
 argument_list|(
 name|nums
 index|[
@@ -1968,7 +1968,7 @@ name|CMPLXL
 argument_list|(
 name|acosh
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|nums
 index|[
@@ -2018,7 +2018,7 @@ argument_list|,
 operator|-
 name|acosh
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|nums
 index|[
@@ -2053,7 +2053,7 @@ argument_list|)
 argument_list|,
 name|acosh
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|nums
 index|[
