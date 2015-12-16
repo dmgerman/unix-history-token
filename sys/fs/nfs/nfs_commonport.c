@@ -2856,6 +2856,10 @@ operator|&
 name|newnfsd_callout
 argument_list|)
 expr_stmt|;
+comment|/* Clean out the name<-->id cache. */
+name|nfsrv_cleanusergroup
+argument_list|()
+expr_stmt|;
 comment|/* and get rid of the mutexes */
 name|mtx_destroy
 argument_list|(

@@ -2493,6 +2493,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|nfsrv_cleanusergroup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|nfsrv_checkutf8
 parameter_list|(
