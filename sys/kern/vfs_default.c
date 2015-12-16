@@ -2768,7 +2768,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int *a_rbehind; 		int *a_rahead; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2790,7 +2790,11 @@ name|a_count
 argument_list|,
 name|ap
 operator|->
-name|a_reqpage
+name|a_rbehind
+argument_list|,
+name|ap
+operator|->
+name|a_rahead
 argument_list|,
 name|NULL
 argument_list|,
@@ -2832,7 +2836,11 @@ name|a_count
 argument_list|,
 name|ap
 operator|->
-name|a_reqpage
+name|a_rbehind
+argument_list|,
+name|ap
+operator|->
+name|a_rahead
 argument_list|)
 expr_stmt|;
 name|ap
@@ -2849,7 +2857,7 @@ name|a_m
 argument_list|,
 name|ap
 operator|->
-name|a_reqpage
+name|a_count
 argument_list|,
 name|error
 argument_list|)
