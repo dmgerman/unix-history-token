@@ -351,11 +351,11 @@ name|size_t
 name|bufsize
 decl_stmt|;
 comment|/* size of chunk buffer */
-name|ssize_t
+name|size_t
 name|buflen
 decl_stmt|;
 comment|/* amount of data currently in buffer */
-name|int
+name|size_t
 name|bufpos
 decl_stmt|;
 comment|/* current read offset in buffer */
@@ -761,6 +761,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* not chunked: just fetch the requested amount */
 if|if
 condition|(
 name|io
@@ -844,6 +845,7 @@ name|buflen
 operator|)
 return|;
 block|}
+comment|/* chunked, but we ran out: get the next chunk header */
 if|if
 condition|(
 name|io
@@ -893,6 +895,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* fetch the requested amount, but no more than the current chunk */
 if|if
 condition|(
 name|len
