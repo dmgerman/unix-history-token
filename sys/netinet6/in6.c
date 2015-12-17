@@ -291,7 +291,7 @@ value|VNET(icmp6_nodeinfo_oldmcprefix)
 end_define
 
 begin_comment
-comment|/*  * Definitions of some constant IP6 addresses.  */
+comment|/*  * Definitions of some costant IP6 addresses.  */
 end_comment
 
 begin_decl_stmt
