@@ -507,7 +507,7 @@ name|NULL
 block|,
 literal|"ipsec"
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
@@ -528,7 +528,7 @@ name|NULL
 block|,
 literal|"ah"
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
@@ -549,7 +549,7 @@ name|NULL
 block|,
 literal|"esp"
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
@@ -570,7 +570,7 @@ name|NULL
 block|,
 literal|"ipcomp"
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
@@ -830,7 +830,7 @@ name|NULL
 block|,
 literal|"ipsec6"
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
