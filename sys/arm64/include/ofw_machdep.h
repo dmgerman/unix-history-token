@@ -42,6 +42,16 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* FDT follows ePAPR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFW_EPAPR
+end_define
+
 begin_endif
 endif|#
 directive|endif
