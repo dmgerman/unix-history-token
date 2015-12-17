@@ -773,25 +773,18 @@ operator|.
 name|q
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vm_page_replace
+name|vm_page_replace_checked
 argument_list|(
 name|page
 argument_list|,
 name|object
 argument_list|,
 name|offset
-argument_list|)
-operator|!=
+argument_list|,
 name|m
 index|[
 literal|0
 index|]
-condition|)
-name|panic
-argument_list|(
-literal|"sg_pager_getpages: invalid place replacement"
 argument_list|)
 expr_stmt|;
 name|m
