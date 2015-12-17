@@ -45,6 +45,23 @@ name|ksiginfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_enum
+enum|enum
+name|systrace_probe_t
+block|{
+name|SYSTRACE_ENTRY
+block|,
+name|SYSTRACE_RETURN
+block|, }
+enum|;
+end_enum
+
 begin_typedef
 typedef|typedef
 name|int
@@ -60,10 +77,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|/* Used by the machine dependent syscall() code. */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|void
@@ -72,25 +85,17 @@ modifier|*
 name|systrace_probe_func_t
 function_decl|)
 parameter_list|(
-name|u_int32_t
-parameter_list|,
-name|int
-parameter_list|,
 name|struct
-name|sysent
+name|syscall_args
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|enum
+name|systrace_probe_t
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/*  * Used by loaded syscalls to convert arguments to a DTrace array  * of 64-bit arguments.  */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -105,7 +110,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|int
@@ -247,12 +252,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|__sigset
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|syscall_args
 struct_decl|;
 end_struct_decl
 
