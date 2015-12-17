@@ -2621,6 +2621,29 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_function_decl
+name|int
+name|bnoreuselist
+parameter_list|(
+name|struct
+name|bufv
+modifier|*
+name|bufv
+parameter_list|,
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|,
+name|daddr_t
+name|startn
+parameter_list|,
+name|daddr_t
+name|endn
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment

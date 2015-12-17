@@ -179,15 +179,16 @@ name|u_int64_t
 name|td_hrtime
 decl_stmt|;
 comment|/* Last time on cpu. */
-name|int
-name|td_errno
-decl_stmt|;
-comment|/* Syscall return value. */
 name|void
 modifier|*
 name|td_dtrace_sscr
 decl_stmt|;
 comment|/* Saved scratch space location. */
+name|void
+modifier|*
+name|td_systrace_args
+decl_stmt|;
+comment|/* syscall probe arguments. */
 block|}
 name|kdtrace_thread_t
 typedef|;
@@ -314,6 +315,13 @@ define|#
 directive|define
 name|t_dtrace_sscr
 value|td_dtrace->td_dtrace_sscr
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_dtrace_systrace_args
+value|td_dtrace->td_systrace_args
 end_define
 
 begin_define

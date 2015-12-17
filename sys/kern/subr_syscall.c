@@ -493,7 +493,7 @@ goto|;
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
-comment|/* 		 * If the systrace module has registered it's probe 		 * callback and if there is a probe active for the 		 * syscall 'entry', process the probe. 		 */
+comment|/* Give the syscall:::entry DTrace probe a chance to fire. */
 if|if
 condition|(
 name|systrace_probe_func
@@ -514,22 +514,8 @@ name|systrace_probe_func
 call|)
 argument_list|(
 name|sa
-operator|->
-name|callp
-operator|->
-name|sy_entry
 argument_list|,
-name|sa
-operator|->
-name|code
-argument_list|,
-name|sa
-operator|->
-name|callp
-argument_list|,
-name|sa
-operator|->
-name|args
+name|SYSTRACE_ENTRY
 argument_list|,
 literal|0
 argument_list|)
@@ -591,7 +577,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
-comment|/* 		 * If the systrace module has registered it's probe 		 * callback and if there is a probe active for the 		 * syscall 'return', process the probe. 		 */
+comment|/* Give the syscall:::return DTrace probe a chance to fire. */
 if|if
 condition|(
 name|systrace_probe_func
@@ -612,24 +598,10 @@ name|systrace_probe_func
 call|)
 argument_list|(
 name|sa
-operator|->
-name|callp
-operator|->
-name|sy_return
 argument_list|,
-name|sa
-operator|->
-name|code
+name|SYSTRACE_RETURN
 argument_list|,
-name|sa
-operator|->
-name|callp
-argument_list|,
-name|NULL
-argument_list|,
-operator|(
 name|error
-operator|)
 condition|?
 operator|-
 literal|1

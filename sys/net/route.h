@@ -171,6 +171,17 @@ parameter_list|)
 value|((r) / (RTM_RTTUNIT / PR_SLOWHZ))
 end_define
 
+begin_comment
+comment|/* lle state is exported in rmx_state rt_metrics field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rmx_state
+value|rmx_weight
+end_define
+
 begin_define
 define|#
 directive|define

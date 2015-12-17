@@ -7384,13 +7384,8 @@ operator|==
 name|cnt
 condition|)
 break|break;
-name|DELAY
-argument_list|(
-name|ann1
-operator|->
-name|delay
-argument_list|)
-expr_stmt|;
+comment|/* XXX DELAY needs to be done in taskqueue to avoid stalling. */
+comment|//DELAY(ann1->delay);
 block|}
 name|free
 argument_list|(

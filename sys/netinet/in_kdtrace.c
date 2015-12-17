@@ -413,14 +413,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SDT_PROBE_DEFINE3_XLATE
 argument_list|(
-argument|tcp
-argument_list|,
-argument_list|,
-argument_list|,
-argument|debug__drop
+name|tcp
+argument_list|, , ,
+name|debug__drop
 argument_list|,
 literal|"struct tcpcb *"
 argument_list|,
@@ -434,7 +432,8 @@ literal|"uint8_t *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SDT_PROBE_DEFINE6_XLATE

@@ -3726,7 +3726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unbusy and handle the page queueing for a page from the VOP_GETPAGES()  * array which is not the request page.  */
+comment|/*  * Unbusy and handle the page queueing for a page from the VOP_GETPAGES()  * array which was optionally read ahead or behind.  */
 end_comment
 
 begin_function
@@ -3737,16 +3737,25 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-if|if
-condition|(
+comment|/* We shouldn't put invalid pages on queues. */
+name|KASSERT
+argument_list|(
 name|m
 operator|->
 name|valid
 operator|!=
 literal|0
-condition|)
-block|{
-comment|/* 		 * Since the page is not the requested page, whether 		 * it should be activated or deactivated is not 		 * obvious.  Empirical results have shown that 		 * deactivating the page is usually the best choice, 		 * unless the page is wanted by another thread. 		 */
+argument_list|,
+operator|(
+literal|"%s: %p is invalid"
+operator|,
+name|__func__
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Since the page is not the actually needed one, whether it should 	 * be activated or deactivated is not obvious.  Empirical results 	 * have shown that deactivating the page is usually the best choice, 	 * unless the page is wanted by another thread. 	 */
 name|vm_page_lock
 argument_list|(
 name|m
@@ -3785,26 +3794,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Free the completely invalid page.  Such page state 		 * occurs due to the short read operation which did 		 * not covered our page at all, or in case when a read 		 * error happens. 		 */
-name|vm_page_lock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

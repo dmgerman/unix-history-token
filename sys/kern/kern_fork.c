@@ -304,9 +304,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|create
 argument_list|,
 literal|"struct proc *"
@@ -3119,9 +3117,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|create
 argument_list|,
 name|p2

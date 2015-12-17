@@ -874,7 +874,9 @@ name|m
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2259,7 +2261,9 @@ name|m
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else

@@ -380,9 +380,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec
 argument_list|,
 literal|"char *"
@@ -394,9 +392,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__failure
 argument_list|,
 literal|"int"
@@ -408,9 +404,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__success
 argument_list|,
 literal|"char *"
@@ -2040,9 +2034,7 @@ block|}
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec
 argument_list|,
 name|args
@@ -3692,9 +3684,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__success
 argument_list|,
 name|args
@@ -3975,9 +3965,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exec__failure
 argument_list|,
 name|error
@@ -4066,8 +4054,9 @@ name|int
 name|rv
 decl_stmt|,
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
+name|after
+decl_stmt|,
 name|initial_pagein
 decl_stmt|;
 name|vm_page_t
@@ -4156,23 +4145,97 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|initial_pagein
-operator|=
-name|VM_INITIAL_PAGEIN
-expr_stmt|;
 if|if
 condition|(
-name|initial_pagein
-operator|>
+operator|!
+name|vm_pager_has_page
+argument_list|(
 name|object
-operator|->
-name|size
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|after
+argument_list|)
 condition|)
+block|{
+name|vm_page_lock
+argument_list|(
+name|ma
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|vm_page_free
+argument_list|(
+name|ma
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|ma
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|vm_page_xunbusy
+argument_list|(
+name|ma
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_WUNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 name|initial_pagein
 operator|=
+name|min
+argument_list|(
+name|after
+argument_list|,
+name|VM_INITIAL_PAGEIN
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|initial_pagein
+operator|<=
 name|object
 operator|->
 name|size
+argument_list|,
+operator|(
+literal|"%s: initial_pagein %d object->size %ju"
+operator|,
+name|__func__
+operator|,
+name|initial_pagein
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|object
+operator|->
+name|size
+operator|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -4276,7 +4339,9 @@ name|ma
 argument_list|,
 name|initial_pagein
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4286,11 +4351,25 @@ operator|!=
 name|VM_PAGER_OK
 condition|)
 block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|initial_pagein
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|vm_page_lock
 argument_list|(
 name|ma
 index|[
-literal|0
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -4298,7 +4377,7 @@ name|vm_page_free
 argument_list|(
 name|ma
 index|[
-literal|0
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -4306,10 +4385,19 @@ name|vm_page_unlock
 argument_list|(
 name|ma
 index|[
-literal|0
+name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|vm_page_xunbusy
+argument_list|(
+name|ma
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
@@ -4321,6 +4409,27 @@ name|EIO
 operator|)
 return|;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|initial_pagein
+condition|;
+name|i
+operator|++
+control|)
+name|vm_page_readahead_finish
+argument_list|(
+name|ma
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 name|vm_page_xunbusy
 argument_list|(
