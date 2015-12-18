@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit_kevents.h#10 $  */
+comment|/*-  * Copyright (c) 2005-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_BSM_AUDIT_KEVENTS_H_
 end_define
 
 begin_comment
-comment|/*  * The reserved event numbers for kernel events are 1...2047 and 43001..44900.  */
+comment|/*  * The reserved event numbers for kernel events are 1...2047 and 43001..44999.  */
 end_comment
 
 begin_define
@@ -26,7 +26,7 @@ name|AUE_IS_A_KEVENT
 parameter_list|(
 name|e
 parameter_list|)
-value|(((e)> 0&& (e)< 2048) || 	\     				 ((e)> 43000&& (e)< 45000))
+value|(((e)> 0&& (e)< 2048) ||	\ 				 ((e)> 43000&& (e)< 45000))
 end_define
 
 begin_comment
@@ -4713,13 +4713,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_CAP_GETRIGHTS
+name|AUE_CAP_RIGHTS_GET
 value|43187
 end_define
 
 begin_comment
 comment|/* TrustedBSD. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_GETRIGHTS
+value|AUE_CAP_RIGHTS_GET
+end_define
 
 begin_define
 define|#
@@ -4873,6 +4880,94 @@ end_define
 
 begin_comment
 comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_RIGHTS_LIMIT
+value|43202
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_IOCTLS_LIMIT
+value|43203
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_IOCTLS_GET
+value|43204
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_FCNTLS_LIMIT
+value|43205
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_FCNTLS_GET
+value|43206
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_BINDAT
+value|43207
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CONNECTAT
+value|43208
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CHFLAGSAT
+value|43209
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
 end_comment
 
 begin_comment
