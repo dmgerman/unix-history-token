@@ -1046,13 +1046,9 @@ name|NDBG_CDEV
 argument_list|,
 literal|"Strategy %s on chip %d [%p]\n"
 argument_list|,
-operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|&
-name|BIO_READ
-operator|)
 operator|==
 name|BIO_READ
 condition|?
@@ -1069,13 +1065,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|&
-name|BIO_READ
-operator|)
 operator|==
 name|BIO_READ
 condition|)
