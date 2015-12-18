@@ -2166,7 +2166,7 @@ name|fnp
 operator|!=
 literal|'!'
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|old_filename
 argument_list|,
@@ -2316,7 +2316,7 @@ condition|(
 operator|*
 name|fnp
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|old_filename
 argument_list|,
@@ -2994,7 +2994,7 @@ name|fnp
 operator|!=
 literal|'!'
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|old_filename
 argument_list|,
@@ -3667,7 +3667,7 @@ name|fnp
 operator|!=
 literal|'!'
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|old_filename
 argument_list|,
