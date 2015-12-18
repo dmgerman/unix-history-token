@@ -272,11 +272,22 @@ directive|define
 name|RESOLVSORT
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DEBUG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
