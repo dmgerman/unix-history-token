@@ -1012,14 +1012,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: GetMemoryMap() returned 0x%lx\n"
+literal|"%s: GetMemoryMap error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1089,12 +1095,18 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"ExitBootServices() returned 0x%lx\n"
+literal|"ExitBootServices error %lu\n"
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1336,14 +1348,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: AllocatePages() returned 0x%lx\n"
+literal|"%s: AllocatePages error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
