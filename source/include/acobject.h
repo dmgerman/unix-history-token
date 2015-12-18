@@ -136,14 +136,25 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Region is initialized, _REG was run */
+comment|/* Region is initialized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AOPOBJ_REG_CONNECTED
+value|0x10
+end_define
+
+begin_comment
+comment|/* _REG was run */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AOPOBJ_SETUP_COMPLETE
-value|0x10
+value|0x20
 end_define
 
 begin_comment
@@ -154,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|AOPOBJ_INVALID
-value|0x20
+value|0x40
 end_define
 
 begin_comment

@@ -1746,7 +1746,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_TYPE_OP
+name|AML_OBJECT_TYPE_OP
 case|:
 comment|/* ObjectType (SourceObject) */
 comment|/*          * Note: The operand is not resolved at this point because we want to          * get the associated object, not its value. For example, we don't          * want to resolve a FieldUnit to its value, we want the actual          * FieldUnit object.          */

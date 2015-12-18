@@ -207,10 +207,28 @@ modifier|*
 name|Arg
 parameter_list|,
 name|BOOLEAN
-name|MethodCall
+name|PossibleMethodCall
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Values for BOOLEAN above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOT_METHOD_CALL
+value|FALSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_POSSIBLE_METHOD_CALL
+value|TRUE
+end_define
 
 begin_function_decl
 name|ACPI_STATUS

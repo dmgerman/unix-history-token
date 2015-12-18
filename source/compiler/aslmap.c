@@ -2395,7 +2395,7 @@ block|,
 comment|/* OBJECTTYPE */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_TYPE_OP
+name|AML_OBJECT_TYPE_OP
 argument_list|,
 literal|0
 argument_list|,

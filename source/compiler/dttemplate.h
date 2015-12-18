@@ -20,58 +20,6 @@ name|__DTTEMPLATE_H
 end_define
 
 begin_comment
-comment|/* Special templates for the ASL/AML tables: DSDT, SSDT, and OSDT */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|char
-name|TemplateDsdt
-index|[]
-init|=
-literal|"DefinitionBlock (\"dsdt.aml\", \"DSDT\", 2, \"Intel\", \"Template\", 0x00000001)\n"
-literal|"{\n"
-literal|"    Method (MAIN, 0, NotSerialized)\n"
-literal|"    {\n"
-literal|"        Return (Zero)\n"
-literal|"    }\n"
-literal|"}\n\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-name|TemplateSsdt
-index|[]
-init|=
-literal|"DefinitionBlock (\"ssdt.aml\", \"SSDT\", 2, \"Intel\", \"Template\", 0x00000001)\n"
-literal|"{\n"
-literal|"    Method (MAIN, 0, NotSerialized)\n"
-literal|"    {\n"
-literal|"        Return (Zero)\n"
-literal|"    }\n"
-literal|"}\n\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-name|TemplateOsdt
-index|[]
-init|=
-literal|"DefinitionBlock (\"osdt.aml\", \"OSDT\", 2, \"Intel\", \"Template\", 0x00000001)\n"
-literal|"{\n"
-literal|"    Method (MAIN, 0, NotSerialized)\n"
-literal|"    {\n"
-literal|"        Return (Zero)\n"
-literal|"    }\n"
-literal|"}\n\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Templates for ACPI data tables */
 end_comment
 

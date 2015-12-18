@@ -265,18 +265,23 @@ name|FileChar
 decl_stmt|;
 name|UINT8
 name|Type
+init|=
+name|ASL_INPUT_TYPE_ASCII_DATA
 decl_stmt|;
+comment|/* default */
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* Check for a valid binary ACPI table */
+comment|/* Check for 100% ASCII source file (comments are ignored) */
 name|Status
 operator|=
-name|FlCheckForAcpiTable
+name|FlIsFileAsciiSource
 argument_list|(
 name|Info
 operator|->
-name|Handle
+name|Filename
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -287,59 +292,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|Type
-operator|=
-name|ASL_INPUT_TYPE_ACPI_TABLE
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
-comment|/* Check for 100% ASCII source file (comments are ignored) */
-name|Status
-operator|=
-name|FlCheckForAscii
-argument_list|(
-name|Info
-operator|->
-name|Filename
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Invalid characters in input file - %s\n"
-argument_list|,
-name|Info
-operator|->
-name|Filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Gbl_IgnoreErrors
-condition|)
-block|{
-name|Type
-operator|=
-name|ASL_INPUT_TYPE_BINARY
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
-block|}
-comment|/*      * File is ASCII. Determine if this is an ASL file or an ACPI data      * table file.      */
+comment|/*          * File contains ASCII source code. Determine if this is an ASL          * file or an ACPI data table file.          */
 while|while
 condition|(
 name|fgets
@@ -405,10 +358,64 @@ name|Cleanup
 goto|;
 block|}
 block|}
-comment|/* Not an ASL source file, default to a data table source file */
+comment|/* Appears to be an ASCII data table source file */
 name|Type
 operator|=
 name|ASL_INPUT_TYPE_ASCII_DATA
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* We have some sort of binary table, check for valid ACPI table */
+name|fseek
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcValidateTableHeader
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Binary file appears to be a valid ACPI table, disassembling\n"
+argument_list|)
+expr_stmt|;
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_BINARY
 expr_stmt|;
 name|Cleanup
 label|:
@@ -501,7 +508,7 @@ block|}
 comment|/* Handle additional output files for disassembler */
 name|Gbl_FileType
 operator|=
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 expr_stmt|;
 name|Status
 operator|=
@@ -977,7 +984,7 @@ operator|)
 return|;
 comment|/*      * Binary ACPI table was auto-detected, disassemble it      */
 case|case
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 case|:
 comment|/* We have what appears to be an ACPI table, disassemble it */
 name|FlCloseFile

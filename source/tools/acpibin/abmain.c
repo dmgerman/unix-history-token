@@ -101,6 +101,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-e<Sig><In><Out>"
+argument_list|,
+literal|"Extract binary AML table from acpidump file"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-h<File>"
 argument_list|,
 literal|"Display table header for binary AML file"

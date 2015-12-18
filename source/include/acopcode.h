@@ -265,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_COND_REF_OF_OP
-value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_SUPERNAME)
+value|ARGP_LIST2 (ARGP_NAME_OR_REF,ARGP_TARGET)
 end_define
 
 begin_define
@@ -684,6 +684,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_OBJECT_TYPE_OP
+value|ARGP_LIST1 (ARGP_NAME_OR_REF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_ONE_OP
 value|ARG_NONE
 end_define
@@ -727,7 +734,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_REF_OF_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
+value|ARGP_LIST1 (ARGP_NAME_OR_REF)
 end_define
 
 begin_define
@@ -910,13 +917,6 @@ define|#
 directive|define
 name|ARGP_TO_STRING_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_TYPE_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
 end_define
 
 begin_define
@@ -1130,7 +1130,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_CONCAT_OP
-value|ARGI_LIST3 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA,   ARGI_TARGETREF)
+value|ARGI_LIST3 (ARGI_ANYTYPE,    ARGI_ANYTYPE,       ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -1563,6 +1563,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGI_OBJECT_TYPE_OP
+value|ARGI_LIST1 (ARGI_ANYTYPE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGI_ONE_OP
 value|ARG_NONE
 end_define
@@ -1789,13 +1796,6 @@ define|#
 directive|define
 name|ARGI_TO_STRING_OP
 value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_FIXED_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_TYPE_OP
-value|ARGI_LIST1 (ARGI_ANYTYPE)
 end_define
 
 begin_define

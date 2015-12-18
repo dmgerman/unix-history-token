@@ -909,7 +909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSignature  *  * PARAMETERS:  Signature           - Sig string to be validated  *  * RETURN:      TRUE if signature is correct length and has valid characters  *  * DESCRIPTION: Validate an ACPI table signature.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSignature  *  * PARAMETERS:  Signature           - Sig string to be validated  *  * RETURN:      TRUE if signature is has 4 valid ACPI characters  *  * DESCRIPTION: Validate an ACPI table signature.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -924,23 +924,6 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
-comment|/* Validate the signature length */
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|Signature
-argument_list|)
-operator|!=
-name|ACPI_NAME_SIZE
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
 comment|/* Validate each character in the signature */
 for|for
 control|(

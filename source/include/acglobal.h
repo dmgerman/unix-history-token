@@ -217,6 +217,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_GroupModuleLevelCode
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*****************************************************************************  *  * Mutual exclusion within ACPICA subsystem  *  ****************************************************************************/
 end_comment
@@ -474,6 +486,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|BOOLEAN
+argument_list|,
+name|AcpiGbl_EarlyInitialization
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Global handlers */
 end_comment
@@ -595,11 +619,13 @@ comment|/* Initialization sequencing */
 end_comment
 
 begin_expr_stmt
-name|ACPI_GLOBAL
+name|ACPI_INIT_GLOBAL
 argument_list|(
 name|BOOLEAN
 argument_list|,
-name|AcpiGbl_RegMethodsExecuted
+name|AcpiGbl_RegMethodsEnabled
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

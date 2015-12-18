@@ -537,10 +537,6 @@ name|AcpiGbl_OsiMutex
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_RegMethodsExecuted
-operator|=
-name|FALSE
-expr_stmt|;
 name|AcpiGbl_MaxLoopIterations
 operator|=
 literal|0xFFFF

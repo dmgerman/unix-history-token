@@ -356,18 +356,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|FlCheckForAcpiTable
-parameter_list|(
-name|FILE
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|FlCheckForAscii
+name|FlIsFileAsciiSource
 parameter_list|(
 name|char
 modifier|*
@@ -1818,6 +1807,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|TrSetCurrentFilename
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|TrWalkTree
 parameter_list|(
 name|void
@@ -2265,6 +2265,17 @@ directive|define
 name|ASL_TREE_OUTPUT
 value|2
 end_define
+
+begin_function_decl
+name|BOOLEAN
+name|UtQueryForOverwrite
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -3248,7 +3259,8 @@ name|DtCreateTemplates
 parameter_list|(
 name|char
 modifier|*
-name|Signature
+modifier|*
+name|argv
 parameter_list|)
 function_decl|;
 end_function_decl

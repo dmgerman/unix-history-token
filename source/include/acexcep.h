@@ -458,8 +458,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_IO_ERROR
+value|EXCEP_ENV (0x001E)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x001D
+value|0x001E
 end_define
 
 begin_comment
@@ -1170,6 +1177,13 @@ argument_list|(
 literal|"AE_ACCESS"
 argument_list|,
 literal|"Permission denied for the requested operation"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_IO_ERROR"
+argument_list|,
+literal|"An I/O error occurred"
 argument_list|)
 block|}
 decl_stmt|;

@@ -363,6 +363,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-ed"
+argument_list|,
+literal|"Enable timer output for Debug Object"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-ef"
 argument_list|,
 literal|"Enable display of final memory statistics"
@@ -380,6 +387,13 @@ argument_list|(
 literal|"-el"
 argument_list|,
 literal|"Enable loading of additional test tables"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-em"
+argument_list|,
+literal|"Enable grouping of module-level code"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -671,6 +685,14 @@ index|]
 condition|)
 block|{
 case|case
+literal|'d'
+case|:
+name|AcpiGbl_DisplayDebugTimer
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 ifdef|#
@@ -695,6 +717,14 @@ case|case
 literal|'l'
 case|:
 name|AcpiGbl_LoadTestTables
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|AcpiGbl_GroupModuleLevelCode
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1132,6 +1162,10 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 comment|/* Init ACPICA and start debugger thread */
+name|AcpiGbl_OverrideDefaultRegionHandlers
+operator|=
+name|TRUE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -1278,7 +1312,7 @@ block|{
 comment|/* Get all ACPI AML tables in this file */
 name|Status
 operator|=
-name|AcpiAcGetAllTablesFromFile
+name|AcGetAllTablesFromFile
 argument_list|(
 name|argv
 index|[
@@ -1337,21 +1371,12 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
+comment|/* Install all of the ACPI tables */
 name|Status
 operator|=
 name|AeInstallTables
 argument_list|()
 expr_stmt|;
-comment|/*      * Exit namespace initialization for the "load namespace only" option.      * No control methods will be executed. However, still enter the      * the debugger.      */
-if|if
-condition|(
-name|AcpiGbl_AeLoadOnly
-condition|)
-block|{
-goto|goto
-name|EnterDebugger
-goto|;
-block|}
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1362,7 +1387,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"**** Could not load ACPI tables, %s\n"
+literal|"**** Could not install ACPI tables, %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1374,7 +1399,7 @@ goto|goto
 name|EnterDebugger
 goto|;
 block|}
-comment|/*      * Install most of the handlers.      * Override some default region handlers, especially SystemMemory      */
+comment|/*      * Install most of the handlers (Regions, Notify, Table, etc.)      * Override the default region handlers, especially SystemMemory,      * which is simulated in this utility.      */
 name|Status
 operator|=
 name|AeInstallEarlyHandlers
@@ -1434,6 +1459,43 @@ block|{
 name|printf
 argument_list|(
 literal|"**** Could not EnableSubsystem, %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|EnterDebugger
+goto|;
+block|}
+name|Status
+operator|=
+name|AeLoadTables
+argument_list|()
+expr_stmt|;
+comment|/*      * Exit namespace initialization for the "load namespace only" option.      * No control methods will be executed. However, still enter the      * the debugger.      */
+if|if
+condition|(
+name|AcpiGbl_AeLoadOnly
+condition|)
+block|{
+goto|goto
+name|EnterDebugger
+goto|;
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"**** Could not load ACPI tables, %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1553,6 +1615,12 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|void
+operator|)
+name|AcpiOsTerminate
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0

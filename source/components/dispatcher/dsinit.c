@@ -535,7 +535,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"Table [%4.4s:%8.8s] (id %.2X) - %4u Objects with %3u Devices, "
+literal|"Table [%4.4s: %-8.8s] (id %.2X) - %4u Objects with %3u Devices, "
 literal|"%3u Regions, %4u Methods (%u/%u/%u Serial/Non/Cvt)\n"
 operator|,
 name|Table

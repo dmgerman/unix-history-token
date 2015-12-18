@@ -1195,9 +1195,9 @@ name|ACPI_OP
 argument_list|(
 literal|"ObjectType"
 argument_list|,
-name|ARGP_TYPE_OP
+name|ARGP_OBJECT_TYPE_OP
 argument_list|,
-name|ARGI_TYPE_OP
+name|ARGI_OBJECT_TYPE_OP
 argument_list|,
 name|ACPI_TYPE_ANY
 argument_list|,

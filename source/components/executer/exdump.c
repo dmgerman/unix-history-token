@@ -2644,9 +2644,9 @@ argument_list|)
 argument_list|,
 name|Next
 operator|->
-name|Common
+name|AddressSpace
 operator|.
-name|Type
+name|SpaceId
 argument_list|)
 expr_stmt|;
 while|while
@@ -2700,9 +2700,9 @@ argument_list|)
 argument_list|,
 name|Next
 operator|->
-name|Common
+name|AddressSpace
 operator|.
-name|Type
+name|SpaceId
 argument_list|)
 expr_stmt|;
 if|if

@@ -449,6 +449,19 @@ argument_list|(
 name|UtRepairName
 argument_list|)
 expr_stmt|;
+comment|/*      * Special case for the root node. This can happen if we get an      * error during the execution of module-level code.      */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Name
+argument_list|,
+literal|"\\___"
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 name|ACPI_MOVE_NAME
 argument_list|(
 operator|&

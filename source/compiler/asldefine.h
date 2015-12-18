@@ -336,7 +336,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 value|1
 end_define
 

@@ -295,6 +295,17 @@ literal|"**** Completed Table Object Initialization\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      *      * This case executes the module-level code for each table immediately      * after the table has been loaded. This provides compatibility with      * other ACPI implementations. Optionally, the execution can be deferred      * until later, see AcpiInitializeObjects.      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_GroupModuleLevelCode
+condition|)
+block|{
+name|AcpiNsExecModuleCodeList
+argument_list|()
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

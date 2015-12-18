@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20151124
+value|0x20151218
 end_define
 
 begin_include
@@ -403,6 +403,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Optionally allow default region handlers to be overridden.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_OverrideDefaultRegionHandlers
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Optionally use 32-bit FADT addresses if and when there is a conflict  * (address mismatch) between the 32-bit and 64-bit versions of the  * address. Although ACPICA adheres to the ACPI specification which  * requires the use of the corresponding 64-bit address if it is non-zero,  * some machines have been found to have a corrupted non-zero 64-bit  * address. Default is FALSE, do not favor the 32-bit addresses.  */
 end_comment
 
@@ -636,6 +652,22 @@ argument_list|,
 name|AcpiDbgLayer
 argument_list|,
 name|ACPI_COMPONENT_DEFAULT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Optionally enable timer output with Debug Object output */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_DisplayDebugTimer
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

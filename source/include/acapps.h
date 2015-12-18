@@ -190,7 +190,7 @@ parameter_list|,
 name|Description
 parameter_list|)
 define|\
-value|AcpiOsPrintf ("  %-18s%s\n", Name, Description);
+value|AcpiOsPrintf ("  %-20s%s\n", Name, Description);
 end_define
 
 begin_comment
@@ -252,7 +252,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAcGetAllTablesFromFile
+name|AcGetAllTablesFromFile
 parameter_list|(
 name|char
 modifier|*
@@ -265,6 +265,31 @@ name|ACPI_NEW_TABLE_DESC
 modifier|*
 modifier|*
 name|ReturnListHead
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcIsFileBinary
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcValidateTableHeader
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|,
+name|long
+name|TableOffset
 parameter_list|)
 function_decl|;
 end_function_decl

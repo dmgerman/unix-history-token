@@ -3278,7 +3278,7 @@ name|NULL
 decl_stmt|;
 name|Status
 operator|=
-name|AcpiAcGetAllTablesFromFile
+name|AcGetAllTablesFromFile
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[

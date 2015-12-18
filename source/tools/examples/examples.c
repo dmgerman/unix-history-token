@@ -270,6 +270,10 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 comment|/* Initialize the ACPICA subsystem */
+name|AcpiGbl_OverrideDefaultRegionHandlers
+operator|=
+name|TRUE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -346,37 +350,6 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/* Create the ACPI namespace from ACPI tables */
-name|Status
-operator|=
-name|AcpiLoadTables
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Status
-operator|,
-literal|"While loading ACPI tables"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 comment|/* Install local handlers */
 name|Status
 operator|=
@@ -432,6 +405,37 @@ operator|,
 name|Status
 operator|,
 literal|"While enabling ACPICA"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+comment|/* Create the ACPI namespace from ACPI tables */
+name|Status
+operator|=
+name|AcpiLoadTables
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"While loading ACPI tables"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -556,6 +560,10 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 comment|/* Initialize the ACPICA subsystem */
+name|AcpiGbl_OverrideDefaultRegionHandlers
+operator|=
+name|TRUE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -579,26 +587,6 @@ comment|/* Copy the root table list to dynamic memory */
 name|Status
 operator|=
 name|AcpiReallocateRootTable
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-comment|/* Create the ACPI namespace from ACPI tables */
-name|Status
-operator|=
-name|AcpiLoadTables
 argument_list|()
 expr_stmt|;
 if|if
@@ -653,6 +641,26 @@ name|AcpiEnableSubsystem
 argument_list|(
 name|ACPI_FULL_INITIALIZATION
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+comment|/* Create the ACPI namespace from ACPI tables */
+name|Status
+operator|=
+name|AcpiLoadTables
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

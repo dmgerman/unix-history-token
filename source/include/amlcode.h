@@ -543,7 +543,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_TYPE_OP
+name|AML_OBJECT_TYPE_OP
 value|(UINT16) 0x8e
 end_define
 
@@ -1263,6 +1263,21 @@ directive|define
 name|ARGP_SIMPLENAME
 value|0x12
 end_define
+
+begin_comment
+comment|/* NameString | LocalTerm | ArgTerm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARGP_NAME_OR_REF
+value|0x13
+end_define
+
+begin_comment
+comment|/* For ObjectType only */
+end_comment
 
 begin_comment
 comment|/*  * Resolved argument types for the AML Interpreter  * Each field in the ArgTypes UINT32 is 5 bits, allowing for a maximum of 6 arguments.  * There can be up to 31 unique argument types (0 is end-of-arg-list indicator)  *  * Note1: These values are completely independent from the ACPI_TYPEs  *        i.e., ARGI_INTEGER != ACPI_TYPE_INTEGER  *  * Note2: If and when 5 bits becomes insufficient, it would probably be best  * to convert to a 6-byte array of argument types, allowing 8 bits per argument.  */

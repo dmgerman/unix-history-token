@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * ACPICA getopt() implementation  *  * Option strings:  *    "f"       - Option has no arguments  *    "f:"      - Option requires an argument  *    "f^"      - Option has optional single-char sub-options  *    "f|"      - Option has required single-char sub-options  */
+comment|/*  * ACPICA getopt() implementation  *  * Option strings:  *    "f"       - Option has no arguments  *    "f:"      - Option requires an argument  *    "f+"      - Option has an optional argument  *    "f^"      - Option has optional single-char sub-options  *    "f|"      - Option has required single-char sub-options  */
 end_comment
 
 begin_include

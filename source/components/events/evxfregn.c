@@ -172,47 +172,14 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * For the default SpaceIDs, (the IDs for which there are default region handlers      * installed) Only execute the _REG methods if the global initialization _REG      * methods have already been run (via AcpiInitializeObjects). In other words,      * we will defer the execution of the _REG methods for these SpaceIDs until      * execution of AcpiInitializeObjects. This is done because we need the handlers      * for the default spaces (mem/io/pci/table) to be installed before we can run      * any control methods (or _REG methods). There is known BIOS code that depends      * on this.      *      * For all other SpaceIDs, we can safely execute the _REG methods immediately.      * This means that for IDs like EmbeddedController, this function should be called      * only after AcpiEnableSubsystem has been called.      */
-switch|switch
-condition|(
-name|SpaceId
-condition|)
-block|{
-case|case
-name|ACPI_ADR_SPACE_SYSTEM_MEMORY
-case|:
-case|case
-name|ACPI_ADR_SPACE_SYSTEM_IO
-case|:
-case|case
-name|ACPI_ADR_SPACE_PCI_CONFIG
-case|:
-case|case
-name|ACPI_ADR_SPACE_DATA_TABLE
-case|:
-if|if
-condition|(
-operator|!
-name|AcpiGbl_RegMethodsExecuted
-condition|)
-block|{
-comment|/* We will defer execution of the _REG methods for this space */
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-break|break;
-default|default:
-break|break;
-block|}
 comment|/* Run all _REG methods for this address space */
-name|Status
-operator|=
 name|AcpiEvExecuteRegMethods
 argument_list|(
 name|Node
 argument_list|,
 name|SpaceId
+argument_list|,
+name|ACPI_REG_CONNECT
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit
@@ -402,7 +369,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;
@@ -411,7 +378,7 @@ operator|=
 operator|&
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;

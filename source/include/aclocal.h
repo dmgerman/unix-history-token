@@ -1263,6 +1263,11 @@ modifier|*
 name|ACPI_OBJECT_CONVERTER
 function_decl|)
 parameter_list|(
+name|struct
+name|acpi_namespace_node
+modifier|*
+name|Scope
+parameter_list|,
 name|union
 name|acpi_operand_object
 modifier|*
@@ -1384,6 +1389,9 @@ name|acpi_reg_walk_info
 block|{
 name|ACPI_ADR_SPACE_TYPE
 name|SpaceId
+decl_stmt|;
+name|UINT32
+name|Function
 decl_stmt|;
 name|UINT32
 name|RegRunCount
@@ -2966,6 +2974,13 @@ define|#
 directive|define
 name|ACPI_PARSEOP_ASSIGNMENT
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_ELSEIF
+value|0x80
 end_define
 
 begin_comment

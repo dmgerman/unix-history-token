@@ -175,7 +175,7 @@ name|Status
 operator|=
 name|DtCreateTemplates
 argument_list|(
-name|Gbl_TemplateSignature
+name|argv
 argument_list|)
 expr_stmt|;
 if|if
@@ -1390,10 +1390,6 @@ comment|/* Create a ACPI table template file */
 name|Gbl_DoTemplates
 operator|=
 name|TRUE
-expr_stmt|;
-name|Gbl_TemplateSignature
-operator|=
-name|AcpiGbl_Optarg
 expr_stmt|;
 break|break;
 case|case

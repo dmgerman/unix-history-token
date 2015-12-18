@@ -40,7 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<acapps.h>
+file|"acapps.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_define
@@ -92,6 +98,67 @@ name|Name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    UtQueryForOverwrite  *  * PARAMETERS:  Pathname            - Output filename  *  * RETURN:      TRUE if file does not exist or overwrite is authorized  *  * DESCRIPTION: Query for file overwrite if it already exists.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|UtQueryForOverwrite
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+block|{
+name|struct
+name|stat
+name|StatInfo
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|stat
+argument_list|(
+name|Pathname
+argument_list|,
+operator|&
+name|StatInfo
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Target file \"%s\" already exists, overwrite? [y|n] "
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getchar
+argument_list|()
+operator|!=
+literal|'y'
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySupportedTables  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print all supported ACPI table names.  *  ******************************************************************************/
@@ -901,7 +968,8 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%-14s %s - %u bytes, %u named objects, %u executable opcodes\n"
+literal|"%-14s %s - %u bytes, %u named objects, "
+literal|"%u executable opcodes\n"
 argument_list|,
 literal|"AML Output:"
 argument_list|,
@@ -912,7 +980,10 @@ index|]
 operator|.
 name|Filename
 argument_list|,
-name|Gbl_TableLength
+name|FlGetFileSize
+argument_list|(
+name|ASL_FILE_AML_OUTPUT
+argument_list|)
 argument_list|,
 name|TotalNamedObjects
 argument_list|,

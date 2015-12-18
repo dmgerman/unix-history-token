@@ -292,6 +292,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|AeLoadTables
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|AeDumpNamespace
 parameter_list|(

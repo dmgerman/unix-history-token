@@ -538,11 +538,14 @@ condition|)
 block|{
 if|if
 condition|(
+name|GET_CURRENT_ARG_TYPE
+argument_list|(
 name|WalkState
 operator|->
-name|Opcode
+name|ArgTypes
+argument_list|)
 operator|==
-name|AML_UNLOAD_OP
+name|ARGP_SUPERNAME
 condition|)
 block|{
 comment|/*              * AcpiPsGetNextNamestring has increased the AML pointer,              * so we need to restore the saved AML pointer for method call.              */
@@ -1715,7 +1718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextArg  *  * PARAMETERS:  WalkState           - Current state  *              ParserState         - Current parser state object  *              ArgType             - The argument type (AML_*_ARG)  *              ReturnArg           - Where the next arg is returned  *  * RETURN:      Status, and an op object containing the next argument.  *  * DESCRIPTION: Get next argument (including complex list arguments that require  *              pushing the parser stack)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextArg  *  * PARAMETERS:  WalkState           - Current state  *              ParserState         - Current parser state object  *              ArgType             - The parser argument type (ARGP_*)  *              ReturnArg           - Where the next arg is returned  *  * RETURN:      Status, and an op object containing the next argument.  *  * DESCRIPTION: Get next argument (including complex list arguments that require  *              pushing the parser stack)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2014,6 +2017,9 @@ case|:
 case|case
 name|ARGP_SIMPLENAME
 case|:
+case|case
+name|ARGP_NAME_OR_REF
+case|:
 name|Subop
 operator|=
 name|AcpiPsPeekOpcode
@@ -2067,14 +2073,12 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* To support SuperName arg of Unload */
+comment|/* SuperName allows argument to be a method call */
 if|if
 condition|(
-name|WalkState
-operator|->
-name|Opcode
+name|ArgType
 operator|==
-name|AML_UNLOAD_OP
+name|ARGP_SUPERNAME
 condition|)
 block|{
 name|Status
@@ -2087,10 +2091,10 @@ name|ParserState
 argument_list|,
 name|Arg
 argument_list|,
-literal|1
+name|ACPI_POSSIBLE_METHOD_CALL
 argument_list|)
 expr_stmt|;
-comment|/*                  * If the SuperName arg of Unload is a method call,                  * we have restored the AML pointer, just free this Arg                  */
+comment|/*                  * If the SuperName argument is a method call, we have                  * already restored the AML pointer, just free this Arg                  */
 if|if
 condition|(
 name|Arg
@@ -2125,7 +2129,7 @@ name|ParserState
 argument_list|,
 name|Arg
 argument_list|,
-literal|0
+name|ACPI_NOT_METHOD_CALL
 argument_list|)
 expr_stmt|;
 block|}

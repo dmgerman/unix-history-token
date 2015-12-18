@@ -379,7 +379,7 @@ block|{
 comment|/* Get the list of all AML tables in the file */
 name|Status
 operator|=
-name|AcpiAcGetAllTablesFromFile
+name|AcGetAllTablesFromFile
 argument_list|(
 name|Filename
 argument_list|,
@@ -397,6 +397,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not get ACPI tables from %s, %s\n"
+argument_list|,
+name|Filename
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -643,13 +655,26 @@ expr_stmt|;
 block|}
 name|Cleanup
 label|:
-comment|// check!
-if|#
-directive|if
-literal|0
-block|if (Table&& !AcpiGbl_ForceAmlDisassembly&& !AcpiUtIsAmlTable (Table))     {         ACPI_FREE (Table);     }
-endif|#
-directive|endif
+if|if
+condition|(
+name|Table
+operator|&&
+operator|!
+name|AcpiGbl_ForceAmlDisassembly
+operator|&&
+operator|!
+name|AcpiUtIsAmlTable
+argument_list|(
+name|Table
+argument_list|)
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|Table
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|File
@@ -1338,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAcGetAllTablesFromFile
+name|AcGetAllTablesFromFile
 argument_list|(
 name|ExternalFilename
 argument_list|,

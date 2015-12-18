@@ -260,6 +260,44 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|AcpiGbl_OverrideDefaultRegionHandlers
+condition|)
+block|{
+comment|/*          * Install the default operation region handlers. These are the          * handlers that are defined by the ACPI specification to be          * "always accessible" -- namely, SystemMemory, SystemIO, and          * PCI_Config. This also means that no _REG methods need to be          * run for these address spaces. We need to have these handlers          * installed before any AML code can be executed, especially any          * module-level code (11/2015).          */
+name|Status
+operator|=
+name|AcpiEvInstallRegionHandlers
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"During Region initialization"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -297,6 +335,48 @@ argument_list|(
 name|AcpiEnableSubsystem
 argument_list|)
 expr_stmt|;
+comment|/*      * The early initialization phase is complete. The namespace is loaded,      * and we can now support address spaces other than Memory, I/O, and      * PCI_Config.      */
+name|AcpiGbl_EarlyInitialization
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_OverrideDefaultRegionHandlers
+condition|)
+block|{
+comment|/*          * Install the default operation region handlers. These are the          * handlers that are defined by the ACPI specification to be          * "always accessible" -- namely, SystemMemory, SystemIO, and          * PCI_Config. This also means that no _REG methods need to be          * run for these address spaces. We need to have these handlers          * installed before any AML code can be executed, especially any          * module-level code (11/2015).          */
+name|Status
+operator|=
+name|AcpiEvInstallRegionHandlers
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"During Region initialization"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|#
 directive|if
 operator|(
@@ -397,55 +477,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* !ACPI_REDUCED_HARDWARE */
-comment|/*      * Install the default OpRegion handlers. These are installed unless      * other handlers have already been installed via the      * InstallAddressSpaceHandler interface.      */
-if|if
-condition|(
-operator|!
-operator|(
-name|Flags
-operator|&
-name|ACPI_NO_ADDRESS_SPACE_INIT
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"[Init] Installing default address space handlers\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiEvInstallRegionHandlers
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|#
-directive|if
-operator|(
-operator|!
-name|ACPI_REDUCED_HARDWARE
-operator|)
 comment|/*      * Initialize ACPI Event handling (Fixed and General Purpose)      *      * Note1: We must have the hardware and events initialized before we can      * execute any control methods safely. Any control method can require      * ACPI hardware support, so the hardware must be fully initialized before      * any method execution!      *      * Note2: Fixed events are initialized and enabled here. GPEs are      * initialized, but cannot be enabled until after the hardware is      * completely initialized (SCI and GlobalLock activated) and the various      * initialization control methods are run (_REG, _STA, _INI) on the      * entire namespace.      */
 if|if
 condition|(
@@ -615,10 +646,16 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      */
+comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      *      * This case executes the module-level code for all tables only after      * all of the tables have been loaded. It is a legacy option and is      * not compatible with other ACPI implementations. See AcpiNsLoadTable.      */
+if|if
+condition|(
+name|AcpiGbl_GroupModuleLevelCode
+condition|)
+block|{
 name|AcpiNsExecModuleCodeList
 argument_list|()
 expr_stmt|;
+block|}
 comment|/*      * Initialize the objects that remain uninitialized. This runs the      * executable AML that may be part of the declaration of these objects:      * OperationRegions, BufferFields, Buffers, and Packages.      */
 if|if
 condition|(

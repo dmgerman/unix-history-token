@@ -2098,22 +2098,9 @@ case|:
 case|case
 name|PARSEOP_INDEX
 case|:
-return|return;
 case|case
 name|PARSEOP_METHODCALL
 case|:
-comment|/*          * A target is not allowed to be a method call.          * It is technically allowed to be a method call, but this only          * makes sense in one case: if the method returns a reference object,          * which will then allow the Store to complete successfully.          * However, this is not supported by the ACPICA interpreter,          * and not supported by the MS ASL compiler          * at this time. (09/2015)          */
-name|AslError
-argument_list|(
-name|ASL_ERROR
-argument_list|,
-name|ASL_MSG_UNSUPPORTED
-argument_list|,
-name|TargetOperandOp
-argument_list|,
-literal|"Method invocation cannot be a target"
-argument_list|)
-expr_stmt|;
 return|return;
 default|default:
 break|break;

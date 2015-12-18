@@ -257,7 +257,31 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrUpdateNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Op                - An existing parse node  *  * RETURN:      The updated node  *  * DESCRIPTION: Change the parse opcode assigned to a node. Usually used to  *              change an opcode to DEFAULT_ARG so that the node is ignored  *              during the code generation. Also used to set generic integers  *              to a specific size (8, 16, 32, or 64 bits)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetCurrentFilename  *  * PARAMETERS:  Op                  - An existing parse node  *  * RETURN:      None  *  * DESCRIPTION: Save the include file filename. Used for debug output only.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|TrSetCurrentFilename
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Filename
+operator|=
+name|Gbl_PreviousIncludeFilename
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrUpdateNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Op                  - An existing parse node  *  * RETURN:      The updated node  *  * DESCRIPTION: Change the parse opcode assigned to a node. Usually used to  *              change an opcode to DEFAULT_ARG so that the node is ignored  *              during the code generation. Also used to set generic integers  *              to a specific size (8, 16, 32, or 64 bits)  *  ******************************************************************************/
 end_comment
 
 begin_function

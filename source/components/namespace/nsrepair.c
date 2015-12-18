@@ -146,6 +146,17 @@ block|,
 name|AcpiNsConvertToResource
 block|}
 block|,
+comment|/* Object reference conversions */
+block|{
+literal|"_DEP"
+block|,
+name|ACPI_RTYPE_STRING
+block|,
+name|ACPI_ALL_PACKAGE_ELEMENTS
+block|,
+name|AcpiNsConvertToReference
+block|}
+block|,
 comment|/* Unicode conversions */
 block|{
 literal|"_MLS"
@@ -290,6 +301,10 @@ name|Predefined
 operator|->
 name|ObjectConverter
 argument_list|(
+name|Info
+operator|->
+name|Node
+argument_list|,
 name|ReturnObject
 argument_list|,
 operator|&
@@ -789,6 +804,12 @@ name|UnexpectedBtypes
 operator|)
 operator|&&
 operator|(
+name|ThisName
+operator|->
+name|PackageIndex
+operator|==
+name|ACPI_ALL_PACKAGE_ELEMENTS
+operator|||
 name|PackageIndex
 operator|==
 name|ThisName

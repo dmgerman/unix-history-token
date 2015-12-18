@@ -221,7 +221,7 @@ operator|)
 argument_list|,
 name|Op
 argument_list|,
-literal|1
+name|ACPI_POSSIBLE_METHOD_CALL
 argument_list|)
 expr_stmt|;
 if|if

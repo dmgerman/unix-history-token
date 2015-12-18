@@ -432,6 +432,21 @@ comment|/*  * evhandler - Address space handling  */
 end_comment
 
 begin_function_decl
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiEvFindRegionHandler
+parameter_list|(
+name|ACPI_ADR_SPACE_TYPE
+name|SpaceId
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|HandlerObj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|BOOLEAN
 name|AcpiEvHasDefaultHandler
 parameter_list|(
@@ -552,7 +567,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
+name|AcpiEvAssociateRegMethod
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiEvExecuteRegMethods
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
@@ -561,6 +587,9 @@ name|Node
 parameter_list|,
 name|ACPI_ADR_SPACE_TYPE
 name|SpaceId
+parameter_list|,
+name|UINT32
+name|Function
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -315,7 +315,7 @@ block|{
 comment|/* Get all ACPI AML tables in this file */
 name|Status
 operator|=
-name|AcpiAcGetAllTablesFromFile
+name|AcGetAllTablesFromFile
 argument_list|(
 name|argv
 index|[

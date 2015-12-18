@@ -101,24 +101,76 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/*      * We will emit the current timer value (in microseconds) with each      * debug output. Only need the lower 26 bits. This allows for 67      * million microseconds or 67 seconds before rollover.      */
-name|Timer
-operator|=
+comment|/* Null string or newline -- don't emit the line header */
+if|if
+condition|(
+name|SourceDesc
+operator|&&
+operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|SourceDesc
+argument_list|)
+operator|==
+name|ACPI_DESC_TYPE_OPERAND
+operator|)
+operator|&&
+operator|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|==
+name|ACPI_TYPE_STRING
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|SourceDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|==
+literal|0
+operator|)
+operator|||
 operator|(
 operator|(
-name|UINT32
+name|SourceDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|==
+literal|1
 operator|)
-name|AcpiOsGetTimer
-argument_list|()
-operator|/
-literal|10
+operator|&&
+operator|(
+operator|*
+name|SourceDesc
+operator|->
+name|String
+operator|.
+name|Pointer
+operator|==
+literal|'\n'
 operator|)
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
-comment|/* (100 nanoseconds to microseconds) */
-name|Timer
-operator|&=
-literal|0x03FFFFFF
+name|return_VOID
 expr_stmt|;
+block|}
+block|}
 comment|/*      * Print line header as long as we are not in the middle of an      * object display      */
 if|if
 condition|(
@@ -136,9 +188,31 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|AcpiGbl_DisplayDebugTimer
+condition|)
+block|{
+comment|/*              * We will emit the current timer value (in microseconds) with each              * debug output. Only need the lower 26 bits. This allows for 67              * million microseconds or 67 seconds before rollover.              *              * Convert 100 nanosecond units to microseconds              */
+name|Timer
+operator|=
+operator|(
+operator|(
+name|UINT32
+operator|)
+name|AcpiOsGetTimer
+argument_list|()
+operator|/
+literal|10
+operator|)
+expr_stmt|;
+name|Timer
+operator|&=
+literal|0x03FFFFFF
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[ACPI Debug %.8u] %*s"
+literal|"[ACPI Debug T=0x%8.8X] %*s"
 argument_list|,
 name|Timer
 argument_list|,
@@ -147,6 +221,19 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[ACPI Debug] %*s"
+argument_list|,
+name|Level
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Display the index for package output only */
 if|if
@@ -190,9 +277,33 @@ operator|==
 name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
+comment|/* No object type prefix needed for integers and strings */
+if|if
+condition|(
+operator|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_INTEGER
+operator|)
+operator|&&
+operator|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_STRING
+operator|)
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s "
+literal|"%s  "
 argument_list|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -200,6 +311,7 @@ name|SourceDesc
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -233,7 +345,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s: %p\n"
+literal|"%s  (Node %p)\n"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -367,13 +479,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[0x%.2X] \"%s\"\n"
-argument_list|,
-name|SourceDesc
-operator|->
-name|String
-operator|.
-name|Length
+literal|"\"%s\"\n"
 argument_list|,
 name|SourceDesc
 operator|->
@@ -388,7 +494,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Contains 0x%.2X Elements]\n"
+literal|"(Contains 0x%.2X Elements):\n"
 argument_list|,
 name|SourceDesc
 operator|->
@@ -642,21 +748,19 @@ operator|==
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
+comment|/* Reference object is a namespace node */
 name|AcpiExDoDebugObject
 argument_list|(
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
 name|SourceDesc
 operator|->
 name|Reference
 operator|.
 name|Object
-operator|)
-operator|->
-name|Object
+argument_list|)
 argument_list|,
 name|Level
 operator|+
@@ -746,6 +850,27 @@ argument_list|,
 name|Value
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Where
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[Uninitialized Package Element]\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|AcpiExDoDebugObject
 argument_list|(
 operator|*
@@ -762,6 +887,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|AcpiOsPrintf
@@ -783,7 +909,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p\n"
+literal|"(Descriptor %p)\n"
 argument_list|,
 name|SourceDesc
 argument_list|)

@@ -166,6 +166,13 @@ name|ACPI_NOT_PACKAGE_ELEMENT
 value|ACPI_UINT32_MAX
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_ALL_PACKAGE_ELEMENTS
+value|(ACPI_UINT32_MAX-1)
+end_define
+
 begin_comment
 comment|/* Always emit warning message, not dependent on node flags */
 end_comment
@@ -531,6 +538,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiNsConvertToUnicode
 parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Scope
+parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|OriginalObject
@@ -547,6 +558,30 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiNsConvertToResource
 parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Scope
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|OriginalObject
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnObject
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsConvertToReference
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Scope
+parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|OriginalObject

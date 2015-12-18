@@ -1205,6 +1205,19 @@ operator|)
 operator|)
 operator|&&
 operator|(
+operator|!
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_ELSEIF
+operator|)
+operator|)
+operator|&&
+operator|(
 name|Op
 operator|->
 name|Common
@@ -1215,7 +1228,7 @@ name|AML_INT_BYTELIST_OP
 operator|)
 condition|)
 block|{
-comment|/*              * This is a first-level element of a term list,              * indent a new line              */
+comment|/*          * This is a first-level element of a term list,          * indent a new line          */
 switch|switch
 condition|(
 name|Op
@@ -1228,7 +1241,7 @@ block|{
 case|case
 name|AML_NOOP_OP
 case|:
-comment|/*                  * Optionally just ignore this opcode. Some tables use                  * NoOp opcodes for "padding" out packages that the BIOS                  * changes dynamically. This can leave hundreds or                  * thousands of NoOp opcodes that if disassembled,                  * cannot be compiled because they are syntactically                  * incorrect.                  */
+comment|/*              * Optionally just ignore this opcode. Some tables use              * NoOp opcodes for "padding" out packages that the BIOS              * changes dynamically. This can leave hundreds or              * thousands of NoOp opcodes that if disassembled,              * cannot be compiled because they are syntactically              * incorrect.              */
 if|if
 condition|(
 name|AcpiGbl_IgnoreNoopOperator

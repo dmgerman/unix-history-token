@@ -177,9 +177,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-T<sig>|ALL|*"
+literal|"-T<sig list>|ALL"
 argument_list|,
-literal|"Create table template file for ACPI<Sig>"
+literal|"Create ACPI table template/example files"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<count>"
+argument_list|,
+literal|"Emit DSDT and<count> SSDTs to same file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION

@@ -1235,7 +1235,7 @@ if|if
 condition|(
 name|Gbl_FileType
 operator|==
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 condition|)
 block|{
 return|return
