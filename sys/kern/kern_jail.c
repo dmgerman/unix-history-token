@@ -8039,7 +8039,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Give a default name of the jid. */
+comment|/* Give a default name of the jid.  Also allow the name to be 		 * explicitly the jid - but not any other number, and only in 		 * normal form (no leading zero/etc). 		 */
 if|if
 condition|(
 name|name
@@ -8068,11 +8068,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|*
-name|namelc
-operator|==
-literal|'0'
-operator|||
 operator|(
 name|strtoul
 argument_list|(
@@ -8085,12 +8080,26 @@ literal|10
 argument_list|)
 operator|!=
 name|jid
+operator|||
+name|namelc
+index|[
+literal|0
+index|]
+operator|<
+literal|'1'
+operator|||
+name|namelc
+index|[
+literal|0
+index|]
+operator|>
+literal|'9'
+operator|)
 operator|&&
 operator|*
 name|p
 operator|==
 literal|'\0'
-operator|)
 condition|)
 block|{
 name|error
