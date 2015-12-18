@@ -631,7 +631,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -658,7 +658,7 @@ modifier|*
 name|gic_intrhand
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 modifier|*
 name|gic_irqs
@@ -1122,7 +1122,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -1324,7 +1324,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 condition|)
 block|{
 if|if
@@ -2400,7 +2400,7 @@ directive|else
 comment|/* 	 * Now, when everything is initialized, it's right time to 	 * register interrupt controller to interrupt framefork. 	 */
 if|if
 condition|(
-name|arm_pic_register
+name|intr_pic_register
 argument_list|(
 name|dev
 argument_list|,
@@ -2445,7 +2445,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|arm_pic_claim_root
+name|intr_pic_claim_root
 argument_list|(
 name|dev
 argument_list|,
@@ -2472,7 +2472,7 @@ argument_list|,
 literal|"could not set PIC as a root\n"
 argument_list|)
 expr_stmt|;
-name|arm_pic_unregister
+name|intr_pic_unregister
 argument_list|(
 name|dev
 argument_list|,
@@ -2505,7 +2505,7 @@ argument_list|,
 literal|"not root PIC must have defined interrupt\n"
 argument_list|)
 expr_stmt|;
-name|arm_pic_unregister
+name|intr_pic_unregister
 argument_list|(
 name|dev
 argument_list|,
@@ -2551,7 +2551,7 @@ argument_list|,
 literal|"could not setup irq handler\n"
 argument_list|)
 expr_stmt|;
-name|arm_pic_unregister
+name|intr_pic_unregister
 argument_list|(
 name|dev
 argument_list|,
@@ -2640,7 +2640,7 @@ init|=
 name|arg
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -2790,7 +2790,7 @@ argument_list|,
 name|irq_active_reg
 argument_list|)
 expr_stmt|;
-name|arm_ipi_dispatch
+name|intr_ipi_dispatch
 argument_list|(
 name|isrc
 argument_list|,
@@ -2864,7 +2864,7 @@ argument_list|,
 name|irq_active_reg
 argument_list|)
 expr_stmt|;
-name|arm_irq_dispatch
+name|intr_irq_dispatch
 argument_list|(
 name|isrc
 argument_list|,
@@ -2923,7 +2923,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -3020,7 +3020,7 @@ name|irq
 operator|<=
 name|GIC_LAST_SGI
 condition|)
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -3040,7 +3040,7 @@ name|irq
 operator|<=
 name|GIC_LAST_PPI
 condition|)
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -3054,7 +3054,7 @@ name|GIC_FIRST_PPI
 argument_list|)
 expr_stmt|;
 else|else
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -3086,7 +3086,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -3162,7 +3162,7 @@ operator|->
 name|mutex
 argument_list|)
 expr_stmt|;
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -3521,7 +3521,7 @@ name|type
 condition|)
 block|{
 case|case
-name|ARM_IRQ_NSPC_PLAIN
+name|INTR_IRQ_NSPC_PLAIN
 case|:
 operator|*
 name|irqp
@@ -3543,7 +3543,7 @@ name|EINVAL
 operator|)
 return|;
 case|case
-name|ARM_IRQ_NSPC_IRQ
+name|INTR_IRQ_NSPC_IRQ
 case|:
 operator|*
 name|irqp
@@ -3567,7 +3567,7 @@ name|EINVAL
 operator|)
 return|;
 case|case
-name|ARM_IRQ_NSPC_IPI
+name|INTR_IRQ_NSPC_IPI
 case|:
 operator|*
 name|irqp
@@ -3609,7 +3609,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -3682,7 +3682,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -3875,7 +3875,7 @@ name|isrc
 operator|->
 name|isrc_nspc_type
 operator|=
-name|ARM_IRQ_NSPC_PLAIN
+name|INTR_IRQ_NSPC_PLAIN
 expr_stmt|;
 name|isrc
 operator|->
@@ -3922,7 +3922,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -3953,7 +3953,7 @@ name|isrc
 operator|->
 name|isrc_type
 operator|==
-name|ARM_ISRCT_NAMESPACE
+name|INTR_ISRCT_NAMESPACE
 condition|)
 name|error
 operator|=
@@ -3977,7 +3977,7 @@ name|isrc
 operator|->
 name|isrc_type
 operator|==
-name|ARM_ISRCT_FDT
+name|INTR_ISRCT_FDT
 condition|)
 name|error
 operator|=
@@ -4033,7 +4033,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4076,7 +4076,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_PERCPU
+name|INTR_ISRCF_PERCPU
 condition|)
 name|CPU_SET
 argument_list|(
@@ -4125,7 +4125,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4171,7 +4171,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4212,7 +4212,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4258,7 +4258,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4303,7 +4303,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4332,7 +4332,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4385,7 +4385,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -4431,7 +4431,7 @@ condition|)
 block|{
 name|gic_irq_cpu
 operator|=
-name|arm_irq_next_cpu
+name|intr_irq_next_cpu
 argument_list|(
 name|gic_irq_cpu
 argument_list|,
@@ -4483,7 +4483,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -5375,7 +5375,7 @@ end_ifdef
 
 begin_function
 name|void
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 parameter_list|(
 name|void
 parameter_list|)

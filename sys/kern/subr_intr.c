@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *	ARM Interrupt Framework  *  *  TODO: - to support IPI (PPI) enabling on other CPUs if already started  *        - to complete things for removable PICs  */
+comment|/*  *	New-style Interrupt Framework  *  *  TODO: - to support IPI (PPI) enabling on other CPUs if already started  *        - to complete things for removable PICs  */
 end_comment
 
 begin_include
@@ -249,20 +249,20 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_INTRNG
 argument_list|,
-literal|"intrng"
+literal|"intr"
 argument_list|,
-literal|"ARM interrupt handling"
+literal|"intr interrupt handling"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Main ARM interrupt handler called from assembler -> 'hidden' for C code. */
+comment|/* Main interrupt handler called from assembler -> 'hidden' for C code. */
 end_comment
 
 begin_function_decl
 name|void
-name|arm_irq_handler
+name|intr_irq_handler
 parameter_list|(
 name|struct
 name|trapframe
@@ -279,7 +279,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|irq_root_isrc
 decl_stmt|;
@@ -294,7 +294,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 modifier|*
 name|irq_root_filter
 decl_stmt|;
@@ -321,11 +321,11 @@ end_comment
 
 begin_struct
 struct|struct
-name|arm_pic
+name|intr_pic
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|arm_pic
+argument|intr_pic
 argument_list|)
 name|pic_next
 expr_stmt|;
@@ -353,7 +353,7 @@ specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|arm_pic
+argument|intr_pic
 argument_list|)
 name|pic_list
 expr_stmt|;
@@ -362,7 +362,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic_lookup
 parameter_list|(
@@ -390,7 +390,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|irq_sources
 index|[
@@ -430,10 +430,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 name|ipi_sources
 index|[
-name|ARM_IPI_COUNT
+name|INTR_IPI_COUNT
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -464,7 +464,7 @@ begin_define
 define|#
 directive|define
 name|INTRCNT_COUNT
-value|(NIRQ * 2 + ARM_IPI_COUNT * MAXCPU)
+value|(NIRQ * 2 + INTR_IPI_COUNT * MAXCPU)
 end_define
 
 begin_else
@@ -544,7 +544,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|arm_irq_init
+name|intr_irq_init
 parameter_list|(
 name|void
 modifier|*
@@ -563,7 +563,7 @@ argument_list|(
 operator|&
 name|pic_list_lock
 argument_list|,
-literal|"arm pic list"
+literal|"intr pic list"
 argument_list|,
 name|NULL
 argument_list|,
@@ -575,7 +575,7 @@ argument_list|(
 operator|&
 name|isrc_table_lock
 argument_list|,
-literal|"arm isrc table"
+literal|"intr isrc table"
 argument_list|,
 name|NULL
 argument_list|,
@@ -588,13 +588,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|arm_irq_init
+name|intr_irq_init
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|arm_irq_init
+name|intr_irq_init
 argument_list|,
 name|NULL
 argument_list|)
@@ -647,7 +647,7 @@ name|void
 name|intrcnt_updatename
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -688,7 +688,7 @@ name|void
 name|isrc_increment_count
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -717,7 +717,7 @@ name|void
 name|isrc_increment_straycount
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -743,7 +743,7 @@ name|void
 name|isrc_update_name
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -887,7 +887,7 @@ name|void
 name|isrc_setup_counters
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -949,7 +949,7 @@ name|void
 name|isrc_increment_ipi_count
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -978,7 +978,7 @@ name|void
 name|isrc_setup_ipi_counters
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -1072,12 +1072,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Main ARM interrupt dispatch handler. It's called straight  *  from the assembler, where CPU interrupt is served.  */
+comment|/*  *  Main interrupt dispatch handler. It's called straight  *  from the assembler, where CPU interrupt is served.  */
 end_comment
 
 begin_function
 name|void
-name|arm_irq_handler
+name|intr_irq_handler
 parameter_list|(
 name|struct
 name|trapframe
@@ -1152,15 +1152,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  ARM interrupt controller dispatch function for interrupts. It should  *  be called straight from the interrupt controller, when associated interrupt  *  source is learned.  */
+comment|/*  *  interrupt controller dispatch function for interrupts. It should  *  be called straight from the interrupt controller, when associated interrupt  *  source is learned.  */
 end_comment
 
 begin_function
 name|void
-name|arm_irq_dispatch
+name|intr_irq_dispatch
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -1297,7 +1297,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc_alloc
 parameter_list|(
@@ -1309,7 +1309,7 @@ name|extsize
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -1349,7 +1349,7 @@ name|isrc
 operator|->
 name|isrc_nspc_type
 operator|=
-name|ARM_IRQ_NSPC_NONE
+name|INTR_IRQ_NSPC_NONE
 expr_stmt|;
 name|isrc
 operator|->
@@ -1389,7 +1389,7 @@ name|void
 name|isrc_free
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1406,10 +1406,10 @@ end_function
 
 begin_function
 name|void
-name|arm_irq_set_name
+name|intr_irq_set_name
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -1437,7 +1437,7 @@ name|isrc
 operator|->
 name|isrc_name
 argument_list|,
-name|ARM_ISRC_NAMELEN
+name|INTR_ISRC_NAMELEN
 argument_list|,
 name|fmt
 argument_list|,
@@ -1462,7 +1462,7 @@ name|int
 name|isrc_alloc_irq_locked
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1576,7 +1576,7 @@ index|]
 operator|=
 name|isrc
 expr_stmt|;
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -1630,7 +1630,7 @@ name|int
 name|isrc_free_irq
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1738,7 +1738,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc_lookup
 parameter_list|(
@@ -1778,7 +1778,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc_namespace_lookup
 parameter_list|(
@@ -1796,7 +1796,7 @@ name|u_int
 name|irq
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -1876,7 +1876,7 @@ end_comment
 
 begin_function
 name|u_int
-name|arm_namespace_map_irq
+name|intr_namespace_map_irq
 parameter_list|(
 name|device_t
 name|dev
@@ -1889,7 +1889,7 @@ name|num
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|,
@@ -1903,7 +1903,7 @@ name|new_isrc
 operator|=
 name|isrc_alloc
 argument_list|(
-name|ARM_ISRCT_NAMESPACE
+name|INTR_ISRCT_NAMESPACE
 argument_list|,
 literal|0
 argument_list|)
@@ -2031,7 +2031,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc_fdt_lookup
 parameter_list|(
@@ -2052,7 +2052,7 @@ decl_stmt|,
 name|cellsize
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -2108,7 +2108,7 @@ name|isrc
 operator|->
 name|isrc_type
 operator|==
-name|ARM_ISRCT_FDT
+name|INTR_ISRCT_FDT
 operator|&&
 name|isrc
 operator|->
@@ -2155,7 +2155,7 @@ end_comment
 
 begin_function
 name|u_int
-name|arm_fdt_map_irq
+name|intr_fdt_map_irq
 parameter_list|(
 name|phandle_t
 name|node
@@ -2169,7 +2169,7 @@ name|ncells
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|,
@@ -2207,7 +2207,7 @@ name|new_isrc
 operator|=
 name|isrc_alloc
 argument_list|(
-name|ARM_ISRCT_FDT
+name|INTR_ISRCT_FDT
 argument_list|,
 name|cellsize
 argument_list|)
@@ -2342,13 +2342,13 @@ name|int
 name|isrc_register
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
 block|{
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic
 decl_stmt|;
@@ -2364,7 +2364,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_REGISTERED
+name|INTR_ISRCF_REGISTERED
 condition|)
 return|return
 operator|(
@@ -2452,7 +2452,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator||=
-name|ARM_ISRCF_REGISTERED
+name|INTR_ISRCF_REGISTERED
 expr_stmt|;
 if|if
 condition|(
@@ -2462,7 +2462,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator||=
-name|ARM_ISRCF_PERCPU
+name|INTR_ISRCF_PERCPU
 expr_stmt|;
 name|isrc_update_name
 argument_list|(
@@ -2501,7 +2501,7 @@ name|int
 name|iscr_setup_filter
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -2510,7 +2510,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 modifier|*
 name|filter
 parameter_list|,
@@ -2619,7 +2619,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|arm_isrc_pre_ithread
+name|intr_isrc_pre_ithread
 parameter_list|(
 name|void
 modifier|*
@@ -2627,7 +2627,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 init|=
@@ -2652,7 +2652,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|arm_isrc_post_ithread
+name|intr_isrc_post_ithread
 parameter_list|(
 name|void
 modifier|*
@@ -2660,7 +2660,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 init|=
@@ -2685,7 +2685,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|arm_isrc_post_filter
+name|intr_isrc_post_filter
 parameter_list|(
 name|void
 modifier|*
@@ -2693,7 +2693,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 init|=
@@ -2718,7 +2718,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|arm_isrc_assign_cpu
+name|intr_isrc_assign_cpu
 parameter_list|(
 name|void
 modifier|*
@@ -2732,7 +2732,7 @@ ifdef|#
 directive|ifdef
 name|SMP
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 init|=
@@ -2780,7 +2780,7 @@ operator|->
 name|isrc_flags
 operator|&=
 operator|~
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 expr_stmt|;
 block|}
 else|else
@@ -2799,7 +2799,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator||=
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 expr_stmt|;
 block|}
 comment|/* 	 * In NOCPU case, it's up to PIC to either leave ISRC on same CPU or 	 * re-balance it to another CPU or enable it on more CPUs. However, 	 * PIC is expected to change isrc_cpu appropriately to keep us well 	 * informed if the call is successfull. 	 */
@@ -2878,7 +2878,7 @@ name|int
 name|isrc_event_create
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -2906,13 +2906,13 @@ name|isrc
 operator|->
 name|isrc_irq
 argument_list|,
-name|arm_isrc_pre_ithread
+name|intr_isrc_pre_ithread
 argument_list|,
-name|arm_isrc_post_ithread
+name|intr_isrc_post_ithread
 argument_list|,
-name|arm_isrc_post_filter
+name|intr_isrc_post_filter
 argument_list|,
-name|arm_isrc_assign_cpu
+name|intr_isrc_assign_cpu
 argument_list|,
 literal|"%s:"
 argument_list|,
@@ -3013,7 +3013,7 @@ name|void
 name|isrc_event_destroy
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -3076,7 +3076,7 @@ name|int
 name|isrc_add_handler
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -3200,7 +3200,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic_lookup_locked
 parameter_list|(
@@ -3212,7 +3212,7 @@ name|xref
 parameter_list|)
 block|{
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic
 decl_stmt|;
@@ -3277,7 +3277,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic_lookup
 parameter_list|(
@@ -3289,7 +3289,7 @@ name|xref
 parameter_list|)
 block|{
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic
 decl_stmt|;
@@ -3329,7 +3329,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic_create
 parameter_list|(
@@ -3341,7 +3341,7 @@ name|xref
 parameter_list|)
 block|{
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic
 decl_stmt|;
@@ -3455,7 +3455,7 @@ name|xref
 parameter_list|)
 block|{
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic
 decl_stmt|;
@@ -3496,7 +3496,7 @@ name|pic_list
 argument_list|,
 name|pic
 argument_list|,
-name|arm_pic
+name|intr_pic
 argument_list|,
 name|pic_next
 argument_list|)
@@ -3528,7 +3528,7 @@ end_comment
 
 begin_function
 name|int
-name|arm_pic_register
+name|intr_pic_register
 parameter_list|(
 name|device_t
 name|dev
@@ -3538,7 +3538,7 @@ name|xref
 parameter_list|)
 block|{
 name|struct
-name|arm_pic
+name|intr_pic
 modifier|*
 name|pic
 decl_stmt|;
@@ -3604,7 +3604,7 @@ end_comment
 
 begin_function
 name|int
-name|arm_pic_unregister
+name|intr_pic_unregister
 parameter_list|(
 name|device_t
 name|dev
@@ -3629,7 +3629,7 @@ end_comment
 
 begin_function
 name|int
-name|arm_pic_claim_root
+name|intr_pic_claim_root
 parameter_list|(
 name|device_t
 name|dev
@@ -3637,7 +3637,7 @@ parameter_list|,
 name|intptr_t
 name|xref
 parameter_list|,
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 modifier|*
 name|filter
 parameter_list|,
@@ -3700,7 +3700,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Only one interrupt controllers could be on the root for now. 	 * Note that we further suppose that there is not threaded interrupt 	 * routine (handler) on the root. See arm_irq_handler(). 	 */
+comment|/* 	 * Only one interrupt controllers could be on the root for now. 	 * Note that we further suppose that there is not threaded interrupt 	 * routine (handler) on the root. See intr_irq_handler(). 	 */
 if|if
 condition|(
 name|irq_root_dev
@@ -3723,7 +3723,7 @@ return|;
 block|}
 name|rootirq
 operator|=
-name|arm_namespace_map_irq
+name|intr_namespace_map_irq
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -3768,11 +3768,11 @@ name|irq_root_isrc
 operator|->
 name|isrc_flags
 operator||=
-name|ARM_ISRCF_REGISTERED
+name|INTR_ISRCF_REGISTERED
 expr_stmt|;
 name|error
 operator|=
-name|arm_irq_add_handler
+name|intr_irq_add_handler
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -3852,7 +3852,7 @@ end_function
 
 begin_function
 name|int
-name|arm_irq_add_handler
+name|intr_irq_add_handler
 parameter_list|(
 name|device_t
 name|dev
@@ -3885,7 +3885,7 @@ modifier|*
 name|name
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -3902,7 +3902,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INTR_SOLO
-comment|/* 	 * Standard handling is done thru MI interrupt framework. However, 	 * some interrupts could request solely own special handling. This 	 * non standard handling can be used for interrupt controllers without 	 * handler (filter only), so in case that interrupt controllers are 	 * chained, MI interrupt framework is called only in leaf controller. 	 * 	 * Note that root interrupt controller routine is served as well, 	 * however in arm_irq_handler(), i.e. main system dispatch routine. 	 */
+comment|/* 	 * Standard handling is done thru MI interrupt framework. However, 	 * some interrupts could request solely own special handling. This 	 * non standard handling can be used for interrupt controllers without 	 * handler (filter only), so in case that interrupt controllers are 	 * chained, MI interrupt framework is called only in leaf controller. 	 * 	 * Note that root interrupt controller routine is served as well, 	 * however in intr_irq_handler(), i.e. main system dispatch routine. 	 */
 if|if
 condition|(
 name|flags
@@ -4010,7 +4010,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 operator|*
 operator|)
 name|filt
@@ -4133,7 +4133,7 @@ end_function
 
 begin_function
 name|int
-name|arm_irq_remove_handler
+name|intr_irq_remove_handler
 parameter_list|(
 name|device_t
 name|dev
@@ -4147,7 +4147,7 @@ name|cookie
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -4348,7 +4348,7 @@ end_function
 
 begin_function
 name|int
-name|arm_irq_config
+name|intr_irq_config
 parameter_list|(
 name|u_int
 name|irq
@@ -4363,7 +4363,7 @@ name|pol
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -4422,7 +4422,7 @@ end_function
 
 begin_function
 name|int
-name|arm_irq_describe
+name|intr_irq_describe
 parameter_list|(
 name|u_int
 name|irq
@@ -4438,7 +4438,7 @@ name|descr
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -4568,7 +4568,7 @@ end_ifdef
 
 begin_function
 name|int
-name|arm_irq_bind
+name|intr_irq_bind
 parameter_list|(
 name|u_int
 name|irq
@@ -4578,7 +4578,7 @@ name|cpu
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -4616,7 +4616,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|arm_isrc_assign_cpu
+name|intr_isrc_assign_cpu
 argument_list|(
 name|isrc
 argument_list|,
@@ -4645,7 +4645,7 @@ end_comment
 
 begin_function
 name|u_int
-name|arm_irq_next_cpu
+name|intr_irq_next_cpu
 parameter_list|(
 name|u_int
 name|last_cpu
@@ -4714,7 +4714,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|arm_irq_shuffle
+name|intr_irq_shuffle
 parameter_list|(
 name|void
 modifier|*
@@ -4723,7 +4723,7 @@ name|__unused
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -4784,7 +4784,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_PERCPU
+name|INTR_ISRCF_PERCPU
 condition|)
 continue|continue;
 if|if
@@ -4799,7 +4799,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 operator|&&
 name|isrc
 operator|->
@@ -4831,7 +4831,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 operator|)
 operator|==
 literal|0
@@ -4880,13 +4880,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|arm_irq_shuffle
+name|intr_irq_shuffle
 argument_list|,
 name|SI_SUB_SMP
 argument_list|,
 name|SI_ORDER_SECOND
 argument_list|,
-name|arm_irq_shuffle
+name|intr_irq_shuffle
 argument_list|,
 name|NULL
 argument_list|)
@@ -4900,7 +4900,7 @@ end_else
 
 begin_function
 name|u_int
-name|arm_irq_next_cpu
+name|intr_irq_next_cpu
 parameter_list|(
 name|u_int
 name|current_cpu
@@ -4944,27 +4944,6 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_comment
-comment|/*  * arm_irq_memory_barrier()  *  * Ensure all writes to device memory have reached devices before proceeding.  *  * This is intended to be called from the post-filter and post-thread routines  * of an interrupt controller implementation.  A peripheral device driver should  * use bus_space_barrier() if it needs to ensure a write has reached the  * hardware for some reason other than clearing interrupt conditions.  *  * The need for this function arises from the ARM weak memory ordering model.  * Writes to locations mapped with the Device attribute bypass any caches, but  * are buffered.  Multiple writes to the same device will be observed by that  * device in the order issued by the cpu.  Writes to different devices may  * appear at those devices in a different order than issued by the cpu.  That  * is, if the cpu writes to device A then device B, the write to device B could  * complete before the write to device A.  *  * Consider a typical device interrupt handler which services the interrupt and  * writes to a device status-acknowledge register to clear the interrupt before  * returning.  That write is posted to the L2 controller which "immediately"  * places it in a store buffer and automatically drains that buffer.  This can  * be less immediate than you'd think... There may be no free slots in the store  * buffers, so an existing buffer has to be drained first to make room.  The  * target bus may be busy with other traffic (such as DMA for various devices),  * delaying the drain of the store buffer for some indeterminate time.  While  * all this delay is happening, execution proceeds on the CPU, unwinding its way  * out of the interrupt call stack to the point where the interrupt driver code  * is ready to EOI and unmask the interrupt.  The interrupt controller may be  * accessed via a faster bus than the hardware whose handler just ran; the write  * to unmask and EOI the interrupt may complete quickly while the device write  * to ack and clear the interrupt source is still lingering in a store buffer  * waiting for access to a slower bus.  With the interrupt unmasked at the  * interrupt controller but still active at the device, as soon as interrupts  * are enabled on the core the device re-interrupts immediately: now you've got  * a spurious interrupt on your hands.  *  * The right way to fix this problem is for every device driver to use the  * proper bus_space_barrier() calls in its interrupt handler.  For ARM a single  * barrier call at the end of the handler would work.  This would have to be  * done to every driver in the system, not just arm-specific drivers.  *  * Another potential fix is to map all device memory as Strongly-Ordered rather  * than Device memory, which takes the store buffers out of the picture.  This  * has a pretty big impact on overall system performance, because each strongly  * ordered memory access causes all L2 store buffers to be drained.  *  * A compromise solution is to have the interrupt controller implementation call  * this function to establish a barrier between writes to the interrupt-source  * device and writes to the interrupt controller device.  *  * This takes the interrupt number as an argument, and currently doesn't use it.  * The plan is that maybe some day there is a way to flag certain interrupts as  * "memory barrier safe" and we can avoid this overhead with them.  */
-end_comment
-
-begin_function
-name|void
-name|arm_irq_memory_barrier
-parameter_list|(
-name|uintptr_t
-name|irq
-parameter_list|)
-block|{
-name|dsb
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_drain_writebuf
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4978,9 +4957,9 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
-name|arm_ipi_lookup
+name|intr_ipi_lookup
 parameter_list|(
 name|u_int
 name|ipi
@@ -4990,7 +4969,7 @@ if|if
 condition|(
 name|ipi
 operator|>=
-name|ARM_IPI_COUNT
+name|INTR_IPI_COUNT
 condition|)
 name|panic
 argument_list|(
@@ -5014,15 +4993,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  ARM interrupt controller dispatch function for IPIs. It should  *  be called straight from the interrupt controller, when associated  *  interrupt source is learned. Or from anybody who has an interrupt  *  source mapped.  */
+comment|/*  *  interrupt controller dispatch function for IPIs. It should  *  be called straight from the interrupt controller, when associated  *  interrupt source is learned. Or from anybody who has an interrupt  *  source mapped.  */
 end_comment
 
 begin_function
 name|void
-name|arm_ipi_dispatch
+name|intr_ipi_dispatch
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -5094,7 +5073,7 @@ name|int
 name|ipi_map
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -5112,7 +5091,7 @@ if|if
 condition|(
 name|ipi
 operator|>=
-name|ARM_IPI_COUNT
+name|INTR_IPI_COUNT
 condition|)
 name|panic
 argument_list|(
@@ -5140,13 +5119,13 @@ name|isrc
 operator|->
 name|isrc_type
 operator|=
-name|ARM_ISRCT_NAMESPACE
+name|INTR_ISRCT_NAMESPACE
 expr_stmt|;
 name|isrc
 operator|->
 name|isrc_nspc_type
 operator|=
-name|ARM_IRQ_NSPC_IPI
+name|INTR_IRQ_NSPC_IPI
 expr_stmt|;
 name|isrc
 operator|->
@@ -5208,12 +5187,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Setup IPI handler to interrupt source.  *  *  Note that there could be more ways how to send and receive IPIs  *  on a platform like fast interrupts for example. In that case,  *  one can call this function with ASIF_NOALLOC flag set and then  *  call arm_ipi_dispatch() when appropriate.  *  *  Not SMP coherent.  */
+comment|/*  *  Setup IPI handler to interrupt source.  *  *  Note that there could be more ways how to send and receive IPIs  *  on a platform like fast interrupts for example. In that case,  *  one can call this function with ASIF_NOALLOC flag set and then  *  call intr_ipi_dispatch() when appropriate.  *  *  Not SMP coherent.  */
 end_comment
 
 begin_function
 name|int
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 parameter_list|(
 name|u_int
 name|ipi
@@ -5223,7 +5202,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|arm_ipi_filter_t
+name|intr_ipi_filter_t
 modifier|*
 name|filter
 parameter_list|,
@@ -5236,7 +5215,7 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -5256,7 +5235,7 @@ operator|)
 return|;
 name|isrc
 operator|=
-name|arm_ipi_lookup
+name|intr_ipi_lookup
 argument_list|(
 name|ipi
 argument_list|)
@@ -5395,13 +5374,13 @@ name|ipi
 parameter_list|)
 block|{
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
 name|isrc
 operator|=
-name|arm_ipi_lookup
+name|intr_ipi_lookup
 argument_list|(
 name|ipi
 argument_list|)
@@ -5437,7 +5416,7 @@ end_comment
 
 begin_function
 name|void
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 parameter_list|(
 name|void
 parameter_list|)
@@ -5494,7 +5473,7 @@ decl_stmt|,
 name|irqsum
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 decl_stmt|;
@@ -5551,7 +5530,7 @@ literal|0
 init|;
 name|ipi
 operator|<
-name|ARM_IPI_COUNT
+name|INTR_IPI_COUNT
 condition|;
 name|ipi
 operator|++
@@ -5559,7 +5538,7 @@ control|)
 block|{
 name|isrc
 operator|=
-name|arm_ipi_lookup
+name|intr_ipi_lookup
 argument_list|(
 name|ipi
 argument_list|)
@@ -5661,7 +5640,7 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 condition|?
 literal|" (bound)"
 else|:

@@ -1543,7 +1543,7 @@ return|return;
 ifdef|#
 directive|ifdef
 name|ARM_INTRNG
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 argument_list|(
 name|IPI_RENDEZVOUS
 argument_list|,
@@ -1556,7 +1556,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 argument_list|(
 name|IPI_AST
 argument_list|,
@@ -1569,7 +1569,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 argument_list|(
 name|IPI_STOP
 argument_list|,
@@ -1582,7 +1582,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 argument_list|(
 name|IPI_PREEMPT
 argument_list|,
@@ -1595,7 +1595,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 argument_list|(
 name|IPI_HARDCLOCK
 argument_list|,
@@ -1608,7 +1608,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 argument_list|(
 name|IPI_TLB
 argument_list|,

@@ -80,7 +80,7 @@ end_define
 begin_typedef
 typedef|typedef
 name|int
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 parameter_list|(
 name|void
 modifier|*
@@ -102,7 +102,7 @@ end_else
 begin_typedef
 typedef|typedef
 name|int
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 parameter_list|(
 name|void
 modifier|*
@@ -119,14 +119,14 @@ end_endif
 begin_define
 define|#
 directive|define
-name|ARM_ISRC_NAMELEN
+name|INTR_ISRC_NAMELEN
 value|(MAXCOMLEN + 1)
 end_define
 
 begin_typedef
 typedef|typedef
 name|void
-name|arm_ipi_filter_t
+name|intr_ipi_filter_t
 parameter_list|(
 name|void
 modifier|*
@@ -137,11 +137,11 @@ end_typedef
 
 begin_enum
 enum|enum
-name|arm_isrc_type
+name|intr_isrc_type
 block|{
-name|ARM_ISRCT_NAMESPACE
+name|INTR_ISRCT_NAMESPACE
 block|,
-name|ARM_ISRCT_FDT
+name|INTR_ISRCT_FDT
 block|}
 enum|;
 end_enum
@@ -149,7 +149,7 @@ end_enum
 begin_define
 define|#
 directive|define
-name|ARM_ISRCF_REGISTERED
+name|INTR_ISRCF_REGISTERED
 value|0x01
 end_define
 
@@ -160,7 +160,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARM_ISRCF_PERCPU
+name|INTR_ISRCF_PERCPU
 value|0x02
 end_define
 
@@ -171,7 +171,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARM_ISRCF_BOUND
+name|INTR_ISRCF_BOUND
 value|0x04
 end_define
 
@@ -185,7 +185,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|arm_irqsrc
+name|intr_irqsrc
 block|{
 name|device_t
 name|isrc_dev
@@ -204,7 +204,7 @@ name|isrc_irq
 decl_stmt|;
 comment|/* unique identificator */
 name|enum
-name|arm_isrc_type
+name|intr_isrc_type
 name|isrc_type
 decl_stmt|;
 comment|/* how is isrc decribed */
@@ -214,7 +214,7 @@ decl_stmt|;
 name|char
 name|isrc_name
 index|[
-name|ARM_ISRC_NAMELEN
+name|INTR_ISRC_NAMELEN
 index|]
 decl_stmt|;
 name|uint16_t
@@ -250,11 +250,11 @@ name|intr_event
 modifier|*
 name|isrc_event
 decl_stmt|;
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 modifier|*
 name|isrc_filter
 decl_stmt|;
-name|arm_ipi_filter_t
+name|intr_ipi_filter_t
 modifier|*
 name|isrc_ipifilter
 decl_stmt|;
@@ -281,10 +281,10 @@ end_struct
 
 begin_function_decl
 name|void
-name|arm_irq_set_name
+name|intr_irq_set_name
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -309,10 +309,10 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|arm_irq_dispatch
+name|intr_irq_dispatch
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -327,34 +327,34 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ARM_IRQ_NSPC_NONE
+name|INTR_IRQ_NSPC_NONE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARM_IRQ_NSPC_PLAIN
+name|INTR_IRQ_NSPC_PLAIN
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARM_IRQ_NSPC_IRQ
+name|INTR_IRQ_NSPC_IRQ
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARM_IRQ_NSPC_IPI
+name|INTR_IRQ_NSPC_IPI
 value|3
 end_define
 
 begin_function_decl
 name|u_int
-name|arm_namespace_map_irq
+name|intr_namespace_map_irq
 parameter_list|(
 name|device_t
 name|dev
@@ -376,7 +376,7 @@ end_ifdef
 
 begin_function_decl
 name|u_int
-name|arm_fdt_map_irq
+name|intr_fdt_map_irq
 parameter_list|(
 name|phandle_t
 parameter_list|,
@@ -395,7 +395,7 @@ end_endif
 
 begin_function_decl
 name|int
-name|arm_pic_register
+name|intr_pic_register
 parameter_list|(
 name|device_t
 name|dev
@@ -408,7 +408,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_pic_unregister
+name|intr_pic_unregister
 parameter_list|(
 name|device_t
 name|dev
@@ -421,7 +421,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_pic_claim_root
+name|intr_pic_claim_root
 parameter_list|(
 name|device_t
 name|dev
@@ -429,7 +429,7 @@ parameter_list|,
 name|intptr_t
 name|xref
 parameter_list|,
-name|arm_irq_filter_t
+name|intr_irq_filter_t
 modifier|*
 name|filter
 parameter_list|,
@@ -445,7 +445,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_irq_add_handler
+name|intr_irq_add_handler
 parameter_list|(
 name|device_t
 name|dev
@@ -470,7 +470,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_irq_remove_handler
+name|intr_irq_remove_handler
 parameter_list|(
 name|device_t
 name|dev
@@ -485,7 +485,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_irq_config
+name|intr_irq_config
 parameter_list|(
 name|u_int
 parameter_list|,
@@ -500,7 +500,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_irq_describe
+name|intr_irq_describe
 parameter_list|(
 name|u_int
 parameter_list|,
@@ -516,7 +516,7 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|arm_irq_next_cpu
+name|intr_irq_next_cpu
 parameter_list|(
 name|u_int
 name|current_cpu
@@ -536,7 +536,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|arm_irq_bind
+name|intr_irq_bind
 parameter_list|(
 name|u_int
 parameter_list|,
@@ -547,10 +547,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm_ipi_dispatch
+name|intr_ipi_dispatch
 parameter_list|(
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -571,7 +571,7 @@ end_define
 
 begin_function_decl
 name|int
-name|arm_ipi_set_handler
+name|intr_ipi_set_handler
 parameter_list|(
 name|u_int
 name|ipi
@@ -581,7 +581,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|arm_ipi_filter_t
+name|intr_ipi_filter_t
 modifier|*
 name|filter
 parameter_list|,
@@ -597,7 +597,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 parameter_list|(
 name|void
 parameter_list|)
@@ -942,7 +942,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 parameter_list|(
 name|void
 parameter_list|)
@@ -978,7 +978,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arm_fdt_map_irq
+name|intr_fdt_map_irq
 parameter_list|(
 name|phandle_t
 parameter_list|,

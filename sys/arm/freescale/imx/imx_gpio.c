@@ -397,7 +397,7 @@ name|NGPIO
 index|]
 decl_stmt|;
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|gpio_pic_irqsrc
 index|[
@@ -690,7 +690,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -775,7 +775,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -839,7 +839,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1047,7 +1047,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1107,7 +1107,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1157,7 +1157,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1186,7 +1186,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1214,7 +1214,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|,
@@ -1400,7 +1400,7 @@ name|isrc
 operator|->
 name|isrc_nspc_type
 operator|=
-name|ARM_IRQ_NSPC_PLAIN
+name|INTR_IRQ_NSPC_PLAIN
 expr_stmt|;
 name|isrc
 operator|->
@@ -1477,7 +1477,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -1510,7 +1510,7 @@ name|device_t
 name|dev
 parameter_list|,
 name|struct
-name|arm_irqsrc
+name|intr_irqsrc
 modifier|*
 name|isrc
 parameter_list|)
@@ -1604,7 +1604,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|arm_irq_set_name
+name|intr_irq_set_name
 argument_list|(
 name|isrc
 argument_list|,
@@ -1713,7 +1713,7 @@ index|[
 name|i
 index|]
 condition|)
-name|arm_irq_dispatch
+name|intr_irq_dispatch
 argument_list|(
 name|sc
 operator|->
@@ -3113,7 +3113,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ARM_INTRNG
-name|arm_pic_register
+name|intr_pic_register
 argument_list|(
 name|dev
 argument_list|,

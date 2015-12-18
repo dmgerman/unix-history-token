@@ -274,7 +274,7 @@ end_macro
 
 begin_block
 block|{
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
 block|}

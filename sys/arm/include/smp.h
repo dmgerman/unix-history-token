@@ -55,7 +55,7 @@ name|IPI_TLB
 block|,
 name|IPI_CACHE
 block|,
-name|ARM_IPI_COUNT
+name|INTR_IPI_COUNT
 block|}
 enum|;
 end_enum
