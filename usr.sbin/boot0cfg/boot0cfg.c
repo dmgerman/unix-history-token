@@ -1771,6 +1771,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|mbr
 operator|==
 name|NULL
