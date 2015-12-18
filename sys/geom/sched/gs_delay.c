@@ -641,7 +641,6 @@ name|g_delay_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* XXX check whether we can sleep */
 name|sc
 operator|=
 name|malloc
@@ -652,7 +651,7 @@ name|sc
 argument_list|,
 name|M_GEOM_SCHED
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
