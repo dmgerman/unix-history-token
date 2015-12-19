@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -61,6 +65,19 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|struct
+name|timespec
+name|conf_mtim
+decl_stmt|;
+comment|/* mod time of loaded resolv.conf */
+name|time_t
+name|conf_stat
+decl_stmt|;
+comment|/* time of last stat(resolv.conf) */
+name|u_short
+name|reload_period
+decl_stmt|;
+comment|/* seconds between stat(resolv.conf) */
 block|}
 struct|;
 end_struct
