@@ -3110,7 +3110,9 @@ comment|/* ADCX + ADOX */
 literal|"\024ADX"
 comment|/* Supervisor Mode Access Prevention */
 literal|"\025SMAP"
+literal|"\027PCOMMIT"
 literal|"\030CLFLUSHOPT"
+literal|"\031CLWB"
 literal|"\032PROCTRACE"
 literal|"\033AVX512PF"
 literal|"\034AVX512ER"
