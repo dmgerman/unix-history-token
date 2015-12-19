@@ -636,6 +636,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SIMPLEBUS_PNP_INFO
+argument_list|(
+name|compat_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|arm_get_next_irq

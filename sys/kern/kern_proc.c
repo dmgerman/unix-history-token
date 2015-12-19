@@ -1591,6 +1591,12 @@ operator|=
 name|pstats_alloc
 argument_list|()
 expr_stmt|;
+name|p
+operator|->
+name|p_pgrp
+operator|=
+name|NULL
+expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 argument|proc

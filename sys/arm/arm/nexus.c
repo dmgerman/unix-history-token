@@ -1182,7 +1182,7 @@ directive|ifdef
 name|ARM_INTRNG
 name|ret
 operator|=
-name|arm_irq_config
+name|intr_irq_config
 argument_list|(
 name|irq
 argument_list|,
@@ -1301,7 +1301,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|ARM_INTRNG
-name|arm_irq_add_handler
+name|intr_irq_add_handler
 argument_list|(
 name|child
 argument_list|,
@@ -1382,7 +1382,7 @@ directive|ifdef
 name|ARM_INTRNG
 return|return
 operator|(
-name|arm_irq_remove_handler
+name|intr_irq_remove_handler
 argument_list|(
 name|child
 argument_list|,
@@ -1449,7 +1449,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_irq_describe
+name|intr_irq_describe
 argument_list|(
 name|rman_get_start
 argument_list|(
@@ -1493,7 +1493,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_irq_bind
+name|intr_irq_bind
 argument_list|(
 name|rman_get_start
 argument_list|(
@@ -1862,7 +1862,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_fdt_map_irq
+name|intr_fdt_map_irq
 argument_list|(
 name|iparent
 argument_list|,

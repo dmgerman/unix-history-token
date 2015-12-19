@@ -2717,12 +2717,6 @@ index|]
 decl_stmt|;
 comment|/* (b) Process name. */
 name|struct
-name|pgrp
-modifier|*
-name|p_pgrp
-decl_stmt|;
-comment|/* (c + e) Pointer to process group. */
-name|struct
 name|sysentvec
 modifier|*
 name|p_sysent
@@ -2764,6 +2758,12 @@ define|#
 directive|define
 name|p_endcopy
 value|p_xsig
+name|struct
+name|pgrp
+modifier|*
+name|p_pgrp
+decl_stmt|;
+comment|/* (c + e) Pointer to process group. */
 name|struct
 name|knlist
 name|p_klist

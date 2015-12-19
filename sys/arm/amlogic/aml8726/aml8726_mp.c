@@ -1271,7 +1271,7 @@ name|void
 parameter_list|)
 block|{
 comment|/* 	 * Consider modifying the timer driver to support 	 * per-cpu timers and then enabling the timer for 	 * each AP. 	 */
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
 block|}

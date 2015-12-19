@@ -1769,6 +1769,22 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|mbr
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: unable to allocate MBR buffer"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|*

@@ -1999,7 +1999,12 @@ operator|=
 operator|-
 name|IICBUS_TRANSFER
 argument_list|(
-name|adapter
+name|dev_priv
+operator|->
+name|bbbus
+index|[
+name|unit
+index|]
 argument_list|,
 name|msgs
 argument_list|,

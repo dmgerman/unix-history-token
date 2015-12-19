@@ -102,7 +102,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|arm_pic_init_secondary
+name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
 block|}

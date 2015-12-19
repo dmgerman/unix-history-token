@@ -2230,7 +2230,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|ld_path_elf_hints
+name|ld_elf_hints_default
 init|=
 name|_PATH_ELF_HINTS
 decl_stmt|;
@@ -3298,7 +3298,7 @@ literal|0
 condition|)
 name|ld_elf_hints_path
 operator|=
-name|ld_path_elf_hints
+name|ld_elf_hints_default
 expr_stmt|;
 if|if
 condition|(

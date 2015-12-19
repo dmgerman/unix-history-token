@@ -1652,9 +1652,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vm_page_replace
+name|vm_page_replace_checked
 argument_list|(
 name|page
 argument_list|,
@@ -1666,14 +1664,9 @@ name|mres
 operator|)
 operator|->
 name|pindex
-argument_list|)
-operator|!=
+argument_list|,
 operator|*
 name|mres
-condition|)
-name|panic
-argument_list|(
-literal|"old_dev_pager_fault: invalid page replacement"
 argument_list|)
 expr_stmt|;
 name|vm_page_lock

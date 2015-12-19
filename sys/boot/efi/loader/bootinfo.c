@@ -148,6 +148,14 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
+name|EFI_SYSTEM_TABLE
+modifier|*
+name|ST
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -1012,14 +1020,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: GetMemoryMap() returned 0x%lx\n"
+literal|"%s: GetMemoryMap error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1089,12 +1103,18 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"ExitBootServices() returned 0x%lx\n"
+literal|"ExitBootServices error %lu\n"
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1336,14 +1356,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: AllocatePages() returned 0x%lx\n"
+literal|"%s: AllocatePages error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1809,6 +1835,19 @@ name|kernend
 argument_list|,
 operator|&
 name|kernend
+argument_list|)
+expr_stmt|;
+name|file_addmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_FW_HANDLE
+argument_list|,
+sizeof|sizeof
+name|ST
+argument_list|,
+operator|&
+name|ST
 argument_list|)
 expr_stmt|;
 name|bi_load_efi_data

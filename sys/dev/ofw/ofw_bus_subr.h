@@ -85,6 +85,24 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SIMPLEBUS_PNP_DESCR
+value|"Z:compat;P:private;"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIMPLEBUS_PNP_INFO
+parameter_list|(
+name|t
+parameter_list|)
+define|\
+value|MODULE_PNP_INFO(SIMPLEBUS_PNP_DESCR, simplebus, t, t, sizeof(t[0]), sizeof(t) / sizeof(t[0]));
+end_define
+
 begin_comment
 comment|/* Generic implementation of ofw_bus_if.m methods and helper routines */
 end_comment

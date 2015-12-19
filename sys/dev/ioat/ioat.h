@@ -68,6 +68,31 @@ name|DMA_ALL_FLAGS
 value|(DMA_INT_EN | DMA_NO_WAIT)
 end_define
 
+begin_comment
+comment|/*  * Hardware revision number.  Different hardware revisions support different  * features.  For example, 3.2 cannot read from MMIO space, while 3.3 can.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOAT_VER_3_0
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_VER_3_2
+value|0x32
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_VER_3_3
+value|0x33
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -121,6 +146,20 @@ end_comment
 begin_function_decl
 name|void
 name|ioat_put_dmaengine
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Check the DMA engine's HW version */
+end_comment
+
+begin_function_decl
+name|int
+name|ioat_get_hwversion
 parameter_list|(
 name|bus_dmaengine_t
 name|dmaengine
