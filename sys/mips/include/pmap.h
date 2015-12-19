@@ -719,15 +719,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_grow_direct_page_cache
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_page_set_memattr
 parameter_list|(
 name|vm_page_t
