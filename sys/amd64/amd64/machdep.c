@@ -828,6 +828,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Physical address of the EFI System Table. Stashed from the metadata hints  * passed into the kernel and used by the EFI code to call runtime services.  */
+end_comment
+
+begin_decl_stmt
+name|vm_paddr_t
+name|efi_systbl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Intel ICH registers */
 end_comment
 
@@ -7046,6 +7056,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|efi_systbl
+operator|=
+name|MD_FETCH
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFOMD_FW_HANDLE
+argument_list|,
+name|vm_paddr_t
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|kmdp
@@ -7899,7 +7920,7 @@ comment|/* 	 * Initialize the clock before the console so that console 	 * initi
 name|clock_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 */
+comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 * Once bootblocks have updated, we can test directly for 	 * efi_systbl != NULL here... 	 */
 if|if
 condition|(
 name|preload_search_info
