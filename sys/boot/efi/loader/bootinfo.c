@@ -148,6 +148,14 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
+name|EFI_SYSTEM_TABLE
+modifier|*
+name|ST
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -1827,6 +1835,19 @@ name|kernend
 argument_list|,
 operator|&
 name|kernend
+argument_list|)
+expr_stmt|;
+name|file_addmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_FW_HANDLE
+argument_list|,
+sizeof|sizeof
+name|ST
+argument_list|,
+operator|&
+name|ST
 argument_list|)
 expr_stmt|;
 name|bi_load_efi_data
