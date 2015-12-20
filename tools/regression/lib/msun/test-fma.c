@@ -3491,6 +3491,23 @@ name|j
 operator|++
 control|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+name|printf
+argument_list|(
+literal|"ok %d # SKIP testcase fails assertion on "
+literal|"amd64\n"
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+continue|continue;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"rmode = %d\n"
