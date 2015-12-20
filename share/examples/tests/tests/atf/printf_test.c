@@ -289,6 +289,12 @@ argument_list|,
 name|fprintf__simple_string
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|atf_no_error
+argument_list|()
+operator|)
+return|;
 block|}
 end_block
 
