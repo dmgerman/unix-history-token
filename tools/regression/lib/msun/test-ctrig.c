@@ -3067,6 +3067,13 @@ name|DBL_ULP
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|z
 operator|=
 name|CMPLXL
@@ -3121,6 +3128,8 @@ name|DBL_ULP
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|z
 operator|=
 name|CMPLXL
