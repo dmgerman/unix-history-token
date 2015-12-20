@@ -51,6 +51,12 @@ directive|include
 file|"btxv86.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"smbios.h"
+end_include
+
 begin_decl_stmt
 name|vm_offset_t
 name|memtop
