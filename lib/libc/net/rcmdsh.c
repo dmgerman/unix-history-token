@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -89,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -372,7 +384,7 @@ block|}
 comment|/* Get a socketpair we'll use for stdin and stdout. */
 if|if
 condition|(
-name|socketpair
+name|_socketpair
 argument_list|(
 name|AF_UNIX
 argument_list|,
@@ -436,7 +448,7 @@ comment|/* 		 * Child.  We use sp[1] to be stdin/stdout, and close sp[0]. 		 */
 operator|(
 name|void
 operator|)
-name|close
+name|_close
 argument_list|(
 name|sp
 index|[
@@ -446,7 +458,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dup2
+name|_dup2
 argument_list|(
 name|sp
 index|[
@@ -459,7 +471,7 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|dup2
+name|_dup2
 argument_list|(
 literal|0
 argument_list|,
@@ -703,7 +715,7 @@ comment|/* Parent. close sp[1], return sp[0]. */
 operator|(
 name|void
 operator|)
-name|close
+name|_close
 argument_list|(
 name|sp
 index|[
@@ -715,9 +727,13 @@ comment|/* Reap child. */
 operator|(
 name|void
 operator|)
-name|wait
+name|_waitpid
 argument_list|(
+name|cpid
+argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
