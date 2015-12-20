@@ -1691,8 +1691,10 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|__sys_open
+name|__sys_openat
 argument_list|(
+name|AT_FDCWD
+argument_list|,
 name|_PATH_CONSOLE
 argument_list|,
 name|O_RDWR
