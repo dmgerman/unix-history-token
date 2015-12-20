@@ -26175,6 +26175,11 @@ name|defined
 argument_list|(
 name|BRIDGE_IPF
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 else|else
 block|{
 comment|/* 		 * Strictly speaking, this isn't necessary on BSD 		 * kernels because they do checksum calculation after 		 * this code has run BUT if ipfilter is being used 		 * to do NAT as a bridge, that code doesn't exist. 		 */
@@ -26674,6 +26679,11 @@ operator|||
 name|defined
 argument_list|(
 name|BRIDGE_IPF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD
 argument_list|)
 name|ipf_fix_outcksum
 argument_list|(
