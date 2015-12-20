@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -3382,6 +3388,8 @@ block|}
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|printf
 argument_list|(
@@ -3396,12 +3404,28 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|nitems
+argument_list|(
+name|rmodes
+argument_list|)
 condition|;
 name|i
 operator|++
+operator|,
+name|j
+operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"rmode = %d\n"
+argument_list|,
+name|rmodes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|fesetround
 argument_list|(
 name|rmodes
@@ -3431,12 +3455,28 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|nitems
+argument_list|(
+name|rmodes
+argument_list|)
 condition|;
 name|i
 operator|++
+operator|,
+name|j
+operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"rmode = %d\n"
+argument_list|,
+name|rmodes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|fesetround
 argument_list|(
 name|rmodes
@@ -3452,9 +3492,7 @@ name|printf
 argument_list|(
 literal|"ok %d - fma infinities\n"
 argument_list|,
-name|i
-operator|+
-literal|5
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -3479,12 +3517,28 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|nitems
+argument_list|(
+name|rmodes
+argument_list|)
 condition|;
 name|i
 operator|++
+operator|,
+name|j
+operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"rmode = %d\n"
+argument_list|,
+name|rmodes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|fesetround
 argument_list|(
 name|rmodes
@@ -3500,9 +3554,7 @@ name|printf
 argument_list|(
 literal|"ok %d - fma small z\n"
 argument_list|,
-name|i
-operator|+
-literal|10
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -3514,12 +3566,28 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|nitems
+argument_list|(
+name|rmodes
+argument_list|)
 condition|;
 name|i
 operator|++
+operator|,
+name|j
+operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"rmode = %d\n"
+argument_list|,
+name|rmodes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|fesetround
 argument_list|(
 name|rmodes
@@ -3535,9 +3603,7 @@ name|printf
 argument_list|(
 literal|"ok %d - fma big z\n"
 argument_list|,
-name|i
-operator|+
-literal|14
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -3551,16 +3617,26 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 18 - fma accuracy\n"
+literal|"ok %d - fma accuracy\n"
+argument_list|,
+name|j
 argument_list|)
+expr_stmt|;
+name|j
+operator|++
 expr_stmt|;
 name|test_double_rounding
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 19 - fma double rounding\n"
+literal|"ok %d - fma double rounding\n"
+argument_list|,
+name|j
 argument_list|)
+expr_stmt|;
+name|j
+operator|++
 expr_stmt|;
 comment|/* 	 * TODO: 	 * - Tests for subnormals 	 * - Cancellation tests (e.g., z = (double)x*y, but x*y is inexact) 	 */
 return|return
