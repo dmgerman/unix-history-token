@@ -3104,12 +3104,14 @@ comment|/* Intel Memory Protection Extensions */
 literal|"\017MPX"
 comment|/* AVX512 Foundation */
 literal|"\021AVX512F"
+literal|"\022AVX512DQ"
 comment|/* Enhanced NRBG */
 literal|"\023RDSEED"
 comment|/* ADCX + ADOX */
 literal|"\024ADX"
 comment|/* Supervisor Mode Access Prevention */
 literal|"\025SMAP"
+literal|"\026AVX512IFMA"
 literal|"\027PCOMMIT"
 literal|"\030CLFLUSHOPT"
 literal|"\031CLWB"
@@ -3118,6 +3120,7 @@ literal|"\033AVX512PF"
 literal|"\034AVX512ER"
 literal|"\035AVX512CD"
 literal|"\036SHA"
+literal|"\037AVX512BW"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3136,6 +3139,7 @@ name|cpu_stdext_feature2
 argument_list|,
 literal|"\020"
 literal|"\001PREFETCHWT1"
+literal|"\002AVX512VBMI"
 literal|"\004PKU"
 literal|"\005OSPKE"
 argument_list|)
