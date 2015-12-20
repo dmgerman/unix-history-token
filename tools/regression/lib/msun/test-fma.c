@@ -3415,6 +3415,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|j
+operator|=
+literal|1
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"1..19\n"
@@ -3465,9 +3469,7 @@ name|printf
 argument_list|(
 literal|"ok %d - fma zeroes\n"
 argument_list|,
-name|i
-operator|+
-literal|1
+name|j
 argument_list|)
 expr_stmt|;
 block|}
