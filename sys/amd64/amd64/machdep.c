@@ -6327,12 +6327,10 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * Find insertion point while checking for overlap.  Start off by 	 * assuming the new entry will be added to the end. 	 */
+comment|/* 	 * Find insertion point while checking for overlap.  Start off by 	 * assuming the new entry will be added to the end. 	 * 	 * NB: physmap_idx points to the next free slot. 	 */
 name|insert_idx
 operator|=
 name|physmap_idx
-operator|+
-literal|2
 expr_stmt|;
 for|for
 control|(
@@ -6491,7 +6489,11 @@ for|for
 control|(
 name|i
 operator|=
+operator|(
 name|physmap_idx
+operator|-
+literal|2
+operator|)
 init|;
 name|i
 operator|>
@@ -7213,10 +7215,6 @@ name|physmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|basemem
-operator|=
-literal|0
-expr_stmt|;
 name|physmap_idx
 operator|=
 literal|0
@@ -7322,6 +7320,10 @@ literal|"No BIOS smap or EFI map info from loader!"
 argument_list|)
 expr_stmt|;
 block|}
+name|physmap_idx
+operator|-=
+literal|2
+expr_stmt|;
 comment|/* 	 * Find the 'base memory' segment for SMP 	 */
 name|basemem
 operator|=
@@ -7348,8 +7350,8 @@ name|physmap
 index|[
 name|i
 index|]
-operator|==
-literal|0x00000000
+operator|<=
+literal|0xA0000
 condition|)
 block|{
 name|basemem
@@ -7371,16 +7373,44 @@ condition|(
 name|basemem
 operator|==
 literal|0
+operator|||
+name|basemem
+operator|>
+literal|640
 condition|)
-name|panic
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
-literal|"BIOS smap did not include a basemem segment!"
+literal|"Memory map doesn't contain a basemem segment, faking it"
 argument_list|)
 expr_stmt|;
+name|basemem
+operator|=
+literal|640
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SMP
 comment|/* make hole for AP bootstrap code */
+if|if
+condition|(
+name|physmap
+index|[
+literal|1
+index|]
+operator|>=
+literal|0x100000000
+condition|)
+name|panic
+argument_list|(
+literal|"Basemem segment is not suitable for AP bootstrap code!"
+argument_list|)
+expr_stmt|;
 name|physmap
 index|[
 literal|1
@@ -7540,6 +7570,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|physmap
+index|[
+literal|0
+index|]
+operator|<
+name|physmem_start
+condition|)
+block|{
+if|if
+condition|(
 name|physmem_start
 operator|<
 name|PAGE_SIZE
@@ -7587,6 +7627,7 @@ argument_list|(
 name|physmem_start
 argument_list|)
 expr_stmt|;
+block|}
 name|pa_indx
 operator|=
 literal|0
