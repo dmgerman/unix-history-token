@@ -2323,6 +2323,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  	 * Consider the filesystem to be mounted if: 	 * It has the same mountpoint as a mounted filesytem, and 	 * It has the same type as that same mounted filesystem, and 	 * It has the same device name as that same mounted filesystem, OR 	 *     It is a nonremountable filesystem 	 */
 for|for
 control|(
 name|i
@@ -2354,6 +2355,22 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_vfstype
+argument_list|,
+name|mntbuf
+index|[
+name|i
+index|]
+operator|.
+name|f_fstypename
+argument_list|)
+operator|==
+literal|0
+operator|&&
 operator|(
 operator|!
 name|isremountable
@@ -2363,6 +2380,7 @@ operator|->
 name|fs_vfstype
 argument_list|)
 operator|||
+operator|(
 name|strcmp
 argument_list|(
 name|fs
@@ -2378,6 +2396,7 @@ name|f_mntfromname
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|)
 condition|)
 return|return
