@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<grp.h>
 end_include
 
@@ -79,28 +85,6 @@ begin_comment
 comment|/*  * Starting point for a regression test for mac_bsdextended(4) and the  * supporting libugidfw(3).  */
 end_comment
 
-begin_function
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"test_ugidfw\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * This section of the regression test passes some test cases through the  * rule<->string routines to confirm they work approximately as desired.  */
 end_comment
@@ -132,25 +116,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|int
-name|test_users_len
-init|=
-sizeof|sizeof
-argument_list|(
-name|test_users
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
 name|char
 modifier|*
 name|test_groups
@@ -169,21 +134,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-specifier|const
 name|int
-name|test_groups_len
-init|=
-sizeof|sizeof
-argument_list|(
-name|test_groups
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
+name|test_num
 decl_stmt|;
 end_decl_stmt
 
@@ -315,25 +267,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|test_strings_len
-init|=
-sizeof|sizeof
-argument_list|(
-name|test_strings
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -359,9 +292,9 @@ literal|256
 index|]
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -371,9 +304,15 @@ literal|0
 init|;
 name|i
 operator|<
-name|test_users_len
+name|nitems
+argument_list|(
+name|test_users
+argument_list|)
 condition|;
 name|i
+operator|++
+operator|,
+name|test_num
 operator|++
 control|)
 block|{
@@ -389,16 +328,30 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # test_libugidfw_strings: getpwnam(%s) "
+literal|"failed: %s\n"
 argument_list|,
-literal|"test_libugidfw_strings: getpwnam: %s"
+name|test_num
 argument_list|,
 name|test_users
 index|[
 name|i
 index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d\n"
+argument_list|,
+name|test_num
 argument_list|)
 expr_stmt|;
 block|}
@@ -410,9 +363,15 @@ literal|0
 init|;
 name|i
 operator|<
-name|test_groups_len
+name|nitems
+argument_list|(
+name|test_groups
+argument_list|)
 condition|;
 name|i
+operator|++
+operator|,
+name|test_num
 operator|++
 control|)
 block|{
@@ -428,16 +387,30 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # test_libugidfw_strings: getgrnam(%s) "
+literal|"failed: %s\n"
 argument_list|,
-literal|"test_libugidfw_strings: getgrnam: %s"
+name|test_num
 argument_list|,
 name|test_groups
 index|[
 name|i
 index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d\n"
+argument_list|,
+name|test_num
 argument_list|)
 expr_stmt|;
 block|}
@@ -449,7 +422,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|test_strings_len
+name|nitems
+argument_list|(
+name|test_strings
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -482,11 +458,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # bsde_parse_rule_string: '%s' (%d) "
+literal|"failed: %s\n"
 argument_list|,
-literal|"bsde_parse_rule_string: '%s' (%d): %s"
+name|test_num
 argument_list|,
 name|test_strings
 index|[
@@ -497,6 +474,17 @@ name|i
 argument_list|,
 name|errorstr
 argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d\n"
+argument_list|,
+name|test_num
+argument_list|)
+expr_stmt|;
+name|test_num
+operator|++
 expr_stmt|;
 name|error
 operator|=
@@ -519,12 +507,12 @@ name|error
 operator|<
 literal|0
 condition|)
-name|errx
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # bsde_rule_to_string: rule for '%s' "
+literal|"returned %d\n"
 argument_list|,
-literal|"bsde_rule_to_string: rule for '%s' "
-literal|"returned %d"
+name|test_num
 argument_list|,
 name|test_strings
 index|[
@@ -533,6 +521,17 @@ index|]
 argument_list|,
 name|error
 argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d\n"
+argument_list|,
+name|test_num
+argument_list|)
+expr_stmt|;
+name|test_num
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -548,11 +547,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # test_libugidfw: '%s' in, '%s' "
+literal|"out\n"
 argument_list|,
-literal|"test_libugidfw: '%s' in, '%s' out"
+name|test_num
 argument_list|,
 name|test_strings
 index|[
@@ -562,6 +562,17 @@ argument_list|,
 name|rulestr
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d\n"
+argument_list|,
+name|test_num
+argument_list|)
+expr_stmt|;
+name|test_num
+operator|++
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -570,13 +581,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|char
@@ -590,14 +595,9 @@ name|count
 decl_stmt|,
 name|slots
 decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|!=
+name|test_num
+operator|=
 literal|1
-condition|)
-name|usage
-argument_list|()
 expr_stmt|;
 comment|/* Print an error if a non-root user attemps to run the tests. */
 if|if
@@ -608,19 +608,41 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Error!  Only root may run this utility\n"
+literal|"1..0 # SKIP you must be root\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EXIT_FAILURE
+literal|0
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"1..%lu\n"
+argument_list|,
+name|nitems
+argument_list|(
+name|test_users
+argument_list|)
+operator|+
+name|nitems
+argument_list|(
+name|test_groups
+argument_list|)
+operator|+
+literal|3
+operator|*
+name|nitems
+argument_list|(
+name|test_strings
+argument_list|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We can test some parts of the library without the MAC Framework 	 * and policy loaded, so run those tests before calling 	 * mac_is_present(). 	 */
 name|test_libugidfw_strings
 argument_list|()
@@ -637,13 +659,21 @@ case|case
 operator|-
 literal|1
 case|:
-name|err
+name|printf
 argument_list|(
-literal|1
+literal|"1..0 # SKIP mac_is_present failed: %s\n"
 argument_list|,
-literal|"mac_is_present"
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 literal|1
 case|:
@@ -652,13 +682,16 @@ case|case
 literal|0
 case|:
 default|default:
-name|errx
+name|printf
 argument_list|(
-literal|1
-argument_list|,
-literal|"mac_bsdextended not loaded"
+literal|"1..0 # SKIP mac_bsdextended not loaded\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Some simple up-front checks to see if we're able to query the 	 * policy for basic state.  We want the rule count to be 0 before 	 * starting, but "slots" is a property of prior runs and so we ignore 	 * the return value. 	 */
 name|count
@@ -680,29 +713,25 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # bsde_get_rule_count: %s\n"
 argument_list|,
-literal|"bsde_get_rule_count: %s"
+name|test_num
 argument_list|,
 name|errorstr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|count
-operator|!=
-literal|0
-condition|)
-name|errx
+else|else
+name|printf
 argument_list|(
-literal|1
+literal|"ok %d\n"
 argument_list|,
-literal|"bsde_get_rule_count: %d rules"
-argument_list|,
-name|count
+name|test_num
 argument_list|)
+expr_stmt|;
+name|test_num
+operator|++
 expr_stmt|;
 name|slots
 operator|=
@@ -723,13 +752,21 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|printf
 argument_list|(
-literal|1
+literal|"not ok %d # bsde_get_rule_slots: %s\n"
 argument_list|,
-literal|"bsde_get_rule_slots: %s"
+name|test_num
 argument_list|,
 name|errorstr
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d\n"
+argument_list|,
+name|test_num
 argument_list|)
 expr_stmt|;
 return|return
