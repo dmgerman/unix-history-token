@@ -1380,6 +1380,63 @@ name|dc_linesize
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"  L2 cache: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|l2
+operator|.
+name|dc_linesize
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%d ways of %d sets, %d bytes per line, "
+literal|"%d KiB total size\n"
+argument_list|,
+name|cpuinfo
+operator|.
+name|l2
+operator|.
+name|dc_nways
+argument_list|,
+name|cpuinfo
+operator|.
+name|l2
+operator|.
+name|dc_nsets
+argument_list|,
+name|cpuinfo
+operator|.
+name|l2
+operator|.
+name|dc_linesize
+argument_list|,
+name|cpuinfo
+operator|.
+name|l2
+operator|.
+name|dc_size
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+block|}
 name|cfg0
 operator|=
 name|mips_rd_config
@@ -1427,6 +1484,13 @@ name|mips_rd_config2
 argument_list|()
 expr_stmt|;
 comment|/*  	 * Config2 contains no useful information other then Config3  	 * existence flag 	 */
+name|printf
+argument_list|(
+literal|"  Config2=0x%08x\n"
+argument_list|,
+name|cfg2
+argument_list|)
+expr_stmt|;
 comment|/* If config register selection 3 does not exist, exit. */
 if|if
 condition|(
