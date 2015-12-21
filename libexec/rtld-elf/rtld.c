@@ -7889,13 +7889,13 @@ name|note
 operator|->
 name|n_type
 operator|!=
-name|ABI_NOTETYPE
+name|NT_FREEBSD_ABI_TAG
 operator|&&
 name|note
 operator|->
 name|n_type
 operator|!=
-name|CRT_NOINIT_NOTETYPE
+name|NT_FREEBSD_NOINIT_TAG
 condition|)
 continue|continue;
 name|note_name
@@ -7936,7 +7936,7 @@ name|n_type
 condition|)
 block|{
 case|case
-name|ABI_NOTETYPE
+name|NT_FREEBSD_ABI_TAG
 case|:
 comment|/* FreeBSD osrel note */
 name|p
@@ -7989,7 +7989,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CRT_NOINIT_NOTETYPE
+name|NT_FREEBSD_NOINIT_TAG
 case|:
 comment|/* FreeBSD 'crt does not call init' note */
 name|obj
