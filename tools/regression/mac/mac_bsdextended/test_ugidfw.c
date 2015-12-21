@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ugidfw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -67,6 +61,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ugidfw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -89,7 +95,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -386,7 +391,6 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"test_libugidfw_strings: getpwnam: %s"
@@ -426,7 +430,6 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"test_libugidfw_strings: getgrnam: %s"
@@ -481,7 +484,6 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bsde_parse_rule_string: '%s' (%d): %s"
@@ -519,7 +521,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bsde_rule_to_string: rule for '%s' "
@@ -549,7 +550,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"test_libugidfw: '%s' in, '%s' out"
@@ -639,7 +639,6 @@ literal|1
 case|:
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"mac_is_present"
@@ -655,7 +654,6 @@ case|:
 default|default:
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"mac_bsdextended not loaded"
@@ -684,7 +682,6 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bsde_get_rule_count: %s"
@@ -700,7 +697,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bsde_get_rule_count: %d rules"
@@ -729,7 +725,6 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"bsde_get_rule_slots: %s"
