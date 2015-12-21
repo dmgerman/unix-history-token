@@ -1648,6 +1648,20 @@ operator|&
 name|loaderhandle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"LoadImage failed with error %lx\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|systab
@@ -1670,6 +1684,20 @@ operator|&
 name|loaded_image
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"HandleProtocol failed with error %lx\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 name|loaded_image
 operator|->
 name|DeviceHandle
@@ -1689,6 +1717,20 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"StartImage failed with error %lx\n"
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 block|}
