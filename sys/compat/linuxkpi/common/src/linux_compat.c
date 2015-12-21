@@ -4496,6 +4496,16 @@ operator|->
 name|taskqueue
 argument_list|)
 expr_stmt|;
+name|atomic_set
+argument_list|(
+operator|&
+name|wq
+operator|->
+name|draining
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|taskqueue_start_threads
 argument_list|(
 operator|&
