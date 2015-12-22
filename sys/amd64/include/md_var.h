@@ -23,14 +23,6 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|ctx_switch_xsave
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|uint64_t
 modifier|*
 name|vm_page_dump
