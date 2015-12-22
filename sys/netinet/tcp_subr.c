@@ -2815,6 +2815,11 @@ expr_stmt|;
 if|if
 condition|(
 name|bootverbose
+operator|&&
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
 condition|)
 name|printf
 argument_list|(
