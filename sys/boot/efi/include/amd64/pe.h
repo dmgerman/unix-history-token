@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*      PE32+ header file  */
+comment|/*     PE32+ header file  */
 end_comment
 
 begin_ifndef

@@ -642,7 +642,7 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX EFI1.1 and the E1000 card returns a different  		 * address than we gave.  Sigh. 		 */
+comment|/* 		 * XXX EFI1.1 and the E1000 card returns a different 		 * address than we gave.  Sigh. 		 */
 block|}
 do|while
 condition|(

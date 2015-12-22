@@ -72,7 +72,6 @@ typedef|typedef
 enum|enum
 block|{
 name|DefaultStopBits
-block|,
 name|OneStopBit
 block|,
 comment|// 1 stop bit
