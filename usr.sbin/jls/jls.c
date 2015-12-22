@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Mike Barcroft<mike@FreeBSD.org>  * Copyright (c) 2008 Bjoern A. Zeeb<bz@FreeBSD.org>  * Copyright (c) 2009 James Gritton<jamie@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003 Mike Barcroft<mike@FreeBSD.org>  * Copyright (c) 2008 Bjoern A. Zeeb<bz@FreeBSD.org>  * Copyright (c) 2009 James Gritton<jamie@FreeBSD.org>  * Copyright (c) 2015 Emmanuel Vadot<manu@bocal.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -101,6 +101,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -113,6 +119,13 @@ define|#
 directive|define
 name|JP_OPT
 value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|JLS_XO_VERSION
+value|"1"
 end_define
 
 begin_define
@@ -317,9 +330,16 @@ specifier|static
 name|void
 name|quoted_print
 parameter_list|(
+name|int
+name|pflags
+parameter_list|,
 name|char
 modifier|*
-name|str
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,6 +385,31 @@ name|pflags
 decl_stmt|,
 name|spc
 decl_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_set_version
+argument_list|(
+name|JLS_XO_VERSION
+argument_list|)
+expr_stmt|;
 name|jname
 operator|=
 name|NULL
@@ -539,7 +584,7 @@ name|PRINT_VERBOSE
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1091,14 +1136,40 @@ name|pflags
 operator|&
 name|PRINT_VERBOSE
 condition|)
-name|printf
+block|{
+name|xo_emit
 argument_list|(
-literal|"   JID  Hostname                      Path\n"
-literal|"        Name                          State\n"
-literal|"        CPUSetID\n"
-literal|"        IP Address(es)\n"
+literal|"{T:/%3s}{T:JID}{P:  }{T:Hostname}{Pd:/%22s}{T:Path}\n"
+argument_list|,
+literal|""
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{P:/%8s}{T:Name}{Pd:/%26s}{T:State}\n"
+argument_list|,
+literal|""
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{P:/%8s}{T:CPUSetID}\n"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{P:/%8s}{T:IP Address(es)}\n"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1112,17 +1183,21 @@ name|pflags
 operator|&
 name|PRINT_JAIL_NAME
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" JID             IP Address      "
-literal|"Hostname                      Path\n"
+literal|"{P: }{T:JID/%-15s}{P: }{T:IP Address/%-15s}"
+literal|"{P: }{T:Hostname/%-29s}{P: }{T:Path}\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   JID  IP Address      "
-literal|"Hostname                      Path\n"
+literal|"{T:JID/%6s}{P:  }{T:IP Address}{P:/%6s}"
+literal|"{T:Hostname}{P:/%22s}{T:Path}\n"
+argument_list|,
+literal|""
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1164,9 +1239,9 @@ if|if
 condition|(
 name|spc
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|' '
+literal|"{P: }"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1174,7 +1249,7 @@ name|spc
 operator|=
 literal|1
 expr_stmt|;
-name|fputs
+name|xo_emit
 argument_list|(
 name|params
 index|[
@@ -1182,17 +1257,25 @@ name|i
 index|]
 operator|.
 name|jp_name
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"{P:\n}"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_open_container
+argument_list|(
+literal|"jail-information"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"jail"
+argument_list|)
+expr_stmt|;
 comment|/* Fetch the jail(s) and print the parameters. */
 if|if
 condition|(
@@ -1216,7 +1299,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1259,7 +1342,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1269,6 +1352,19 @@ name|jail_errmsg
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"jail"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"jail-information"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1346,7 +1442,7 @@ name|tnparams
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1468,7 +1564,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1550,7 +1646,7 @@ name|param_parent
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -1610,7 +1706,7 @@ name|param_parent
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -1712,7 +1808,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1878,7 +1974,7 @@ name|nname
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2004,7 +2100,7 @@ name|nname
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2070,6 +2166,9 @@ block|{
 name|char
 modifier|*
 name|nname
+decl_stmt|,
+modifier|*
+name|xo_nname
 decl_stmt|;
 name|char
 modifier|*
@@ -2115,6 +2214,11 @@ condition|)
 return|return
 name|jid
 return|;
+name|xo_open_instance
+argument_list|(
+literal|"jail"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pflags
@@ -2122,11 +2226,10 @@ operator|&
 name|PRINT_VERBOSE
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6d  %-29.29s %.74s\n"
-literal|"%6s  %-29.29s %.74s\n"
-literal|"%6s  %-6d\n"
+literal|"{:jid/%6d}{P:  }{:hostname/%-29.29s/%s}{P: }"
+literal|"{:path/%.74s/%s}\n"
 argument_list|,
 operator|*
 operator|(
@@ -2161,8 +2264,11 @@ literal|2
 index|]
 operator|.
 name|jp_value
-argument_list|,
-literal|""
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{P:        }{:name/%-29.29s/%s}{P: }{:state/%.74s}\n"
 argument_list|,
 operator|(
 name|char
@@ -2190,8 +2296,11 @@ condition|?
 literal|"DYING"
 else|:
 literal|"ACTIVE"
-argument_list|,
-literal|""
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{P:        }{:cpusetid/%d}\n"
 argument_list|,
 operator|*
 operator|(
@@ -2293,7 +2402,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2301,15 +2410,15 @@ literal|"inet_ntop"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+block|{
+name|xo_emit
 argument_list|(
-literal|"%6s  %-15.15s\n"
-argument_list|,
-literal|""
+literal|"{P:        }{l:ipv4_addrs}{P:\n}"
 argument_list|,
 name|ipbuf
 argument_list|)
 expr_stmt|;
+block|}
 name|n
 operator|++
 expr_stmt|;
@@ -2399,7 +2508,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2407,11 +2516,9 @@ literal|"inet_ntop"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6s  %s\n"
-argument_list|,
-literal|""
+literal|"{P:        }{l:ipv6_addrs}{P:\n}"
 argument_list|,
 name|ipbuf
 argument_list|)
@@ -2437,9 +2544,9 @@ name|pflags
 operator|&
 name|PRINT_JAIL_NAME
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-15s "
+literal|"{P: }{:name/%-15s/%s}{P: }"
 argument_list|,
 operator|(
 name|char
@@ -2454,9 +2561,9 @@ name|jp_value
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6d  "
+literal|"{:jid/%6d}{P:  }"
 argument_list|,
 operator|*
 operator|(
@@ -2471,9 +2578,9 @@ operator|.
 name|jp_value
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-15.15s %-29.29s %.74s\n"
+literal|"{:ipv4/%-15.15s/%s}{P: }{:hostname/%-29.29s/%s}{P: }{:path/%.74s/%s}\n"
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -2492,7 +2599,7 @@ operator|==
 literal|0
 operator|)
 condition|?
-literal|"-"
+literal|""
 else|:
 name|inet_ntoa
 argument_list|(
@@ -2637,7 +2744,7 @@ index|]
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2737,9 +2844,9 @@ if|if
 condition|(
 name|spc
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|' '
+literal|"{P: }"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2785,9 +2892,13 @@ index|]
 operator|.
 name|jp_value
 condition|)
-name|printf
+block|{
+name|asprintf
 argument_list|(
-literal|"%s"
+operator|&
+name|xo_nname
+argument_list|,
+literal|"{en:%s/true}"
 argument_list|,
 name|params
 index|[
@@ -2797,6 +2908,24 @@ operator|.
 name|jp_name
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+name|xo_nname
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{d:/%s}"
+argument_list|,
+name|params
+index|[
+name|i
+index|]
+operator|.
+name|jp_name
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|nname
@@ -2832,9 +2961,65 @@ operator|.
 name|jp_name
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|params
+index|[
+name|i
+index|]
+operator|.
+name|jp_flags
+operator|&
+name|JP_NOBOOL
+condition|)
+block|{
+name|asprintf
 argument_list|(
-literal|"%s"
+operator|&
+name|xo_nname
+argument_list|,
+literal|"{en:%s/true}"
+argument_list|,
+name|params
+index|[
+name|i
+index|]
+operator|.
+name|jp_name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|xo_nname
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|asprintf
+argument_list|(
+operator|&
+name|xo_nname
+argument_list|,
+literal|"{en:%s/false}"
+argument_list|,
+name|params
+index|[
+name|i
+index|]
+operator|.
+name|jp_name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|xo_nname
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_emit
+argument_list|(
+literal|"{d:/%s}"
 argument_list|,
 name|nname
 argument_list|)
@@ -2845,11 +3030,16 @@ name|nname
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|xo_nname
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s="
+literal|"{d:%s}="
 argument_list|,
 name|params
 index|[
@@ -2878,9 +3068,9 @@ name|pflags
 operator|&
 name|PRINT_QUOTED
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\"\""
+literal|"{P:\"\"}"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2893,15 +3083,25 @@ operator|&
 name|PRINT_NAMEVAL
 operator|)
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'-'
+literal|"{P:-}"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|quoted_print
 argument_list|(
+name|pflags
+argument_list|,
+name|params
+index|[
+name|i
+index|]
+operator|.
+name|jp_name
+argument_list|,
 name|param_values
 index|[
 name|i
@@ -2909,9 +3109,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+block|}
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"{P:\n}"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2949,6 +3150,14 @@ expr_stmt|;
 block|}
 end_else
 
+begin_expr_stmt
+name|xo_close_instance
+argument_list|(
+literal|"jail"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
@@ -2962,21 +3171,30 @@ unit|}  static
 name|void
 name|quoted_print
 parameter_list|(
+name|int
+name|pflags
+parameter_list|,
 name|char
 modifier|*
-name|str
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|value
 parameter_list|)
 block|{
 name|int
-name|c
-decl_stmt|,
 name|qc
 decl_stmt|;
 name|char
 modifier|*
 name|p
 init|=
-name|str
+name|value
+decl_stmt|;
+name|char
+modifier|*
+name|param_name_value
 decl_stmt|;
 comment|/* An empty string needs quoting. */
 if|if
@@ -2986,15 +3204,40 @@ operator|*
 name|p
 condition|)
 block|{
-name|fputs
+name|asprintf
 argument_list|(
-literal|"\"\""
+operator|&
+name|param_name_value
 argument_list|,
-name|stdout
+literal|"{k:%s}{d:%s/\"\"}"
+argument_list|,
+name|name
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|param_name_value
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|param_name_value
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|asprintf
+argument_list|(
+operator|&
+name|param_name_value
+argument_list|,
+literal|"{:%s/%%s}"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The value will be surrounded by quotes if it contains spaces 	 * or quotes. 	 */
 name|qc
 operator|=
@@ -3037,50 +3280,42 @@ expr_stmt|;
 if|if
 condition|(
 name|qc
+operator|&&
+name|pflags
+operator|&
+name|PRINT_QUOTED
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
+literal|"{P:/%c}"
+argument_list|,
 name|qc
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|c
-operator|=
-operator|*
-name|p
-operator|++
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|c
-operator|==
-literal|'\\'
-operator|||
-name|c
-operator|==
-name|qc
-condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\\'
+name|param_name_value
+argument_list|,
+name|value
 argument_list|)
 expr_stmt|;
-name|putchar
+name|free
 argument_list|(
-name|c
+name|param_name_value
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|qc
+operator|&&
+name|pflags
+operator|&
+name|PRINT_QUOTED
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
+literal|"{P:/%c}"
+argument_list|,
 name|qc
 argument_list|)
 expr_stmt|;
