@@ -2732,9 +2732,29 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
+begin_assert
+assert|_Static_assert
+argument_list|(
+operator|(
+operator|(
+name|FMASK
+operator||
+name|FCNTLFLAGS
+operator|)
+operator|&
+operator|(
+name|FLASTCLOSE
+operator||
+name|FREVOKE
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+literal|"devfs-only flag reuse failed"
+argument_list|)
+assert|;
+end_assert
 
 begin_function
 specifier|static
@@ -2788,11 +2808,13 @@ modifier|*
 name|dsw
 decl_stmt|;
 name|int
-name|vp_locked
+name|dflags
 decl_stmt|,
 name|error
 decl_stmt|,
 name|ref
+decl_stmt|,
+name|vp_locked
 decl_stmt|;
 comment|/* 	 * XXX: Don't call d_close() if we were called because of 	 * XXX: insmntque1() failure. 	 */
 if|if
@@ -2977,6 +2999,10 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|dflags
+operator|=
+literal|0
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -2992,6 +3018,12 @@ name|VI_DOOMED
 condition|)
 block|{
 comment|/* Forced close. */
+name|dflags
+operator||=
+name|FREVOKE
+operator||
+name|FNONBLOCK
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3034,6 +3066,19 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|count_dev
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|dflags
+operator||=
+name|FLASTCLOSE
+expr_stmt|;
 name|vholdl
 argument_list|(
 name|vp
@@ -3087,6 +3132,8 @@ argument_list|,
 name|ap
 operator|->
 name|a_fflag
+operator||
+name|dflags
 argument_list|,
 name|S_IFCHR
 argument_list|,
