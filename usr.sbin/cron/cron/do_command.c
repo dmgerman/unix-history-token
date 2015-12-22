@@ -385,6 +385,7 @@ name|appdata_ptr
 operator|=
 name|NULL
 block|}
+decl_stmt|;
 name|Debug
 argument_list|(
 argument|DPROC
