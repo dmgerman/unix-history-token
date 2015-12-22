@@ -158,16 +158,14 @@ modifier|*
 name|dst
 parameter_list|)
 block|{
-name|char
-name|tmp
-index|[
-name|NS_INADDRSZ
-index|]
-decl_stmt|;
-comment|/* Stash a temporary copy so our caller can update in place. */
-name|memcpy
+comment|/* Our caller may update in place. */
+name|memmove
 argument_list|(
-name|tmp
+operator|&
+name|dst
+index|[
+literal|12
+index|]
 argument_list|,
 name|src
 argument_list|,
@@ -175,19 +173,6 @@ name|NS_INADDRSZ
 argument_list|)
 expr_stmt|;
 comment|/* Mark this ipv6 addr as a mapped ipv4. */
-name|memset
-argument_list|(
-operator|&
-name|dst
-index|[
-literal|0
-index|]
-argument_list|,
-literal|0
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -201,18 +186,17 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* Retrieve the saved copy and we're done. */
-name|memcpy
+name|memset
 argument_list|(
 operator|&
 name|dst
 index|[
-literal|12
+literal|0
 index|]
 argument_list|,
-name|tmp
+literal|0
 argument_list|,
-name|NS_INADDRSZ
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
