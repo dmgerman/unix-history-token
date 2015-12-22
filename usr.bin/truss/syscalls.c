@@ -12266,7 +12266,7 @@ index|]
 expr_stmt|;
 name|temp
 operator|=
-name|ioctlname
+name|sysdecode_ioctlname
 argument_list|(
 name|cmd
 argument_list|)
