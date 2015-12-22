@@ -445,12 +445,23 @@ begin_comment
 comment|/* Type used for ptrdiff_t, as a string used in a declaration.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTRDIFF_TYPE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PTRDIFF_TYPE
 value|"int"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Type used for wchar_t, as a string used in a declaration.  */
