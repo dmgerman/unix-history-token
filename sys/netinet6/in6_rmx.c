@@ -892,6 +892,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|rn_detachhead
+argument_list|(
+name|head
+argument_list|)
+operator|)
+return|;
+return|return
+operator|(
 literal|1
 operator|)
 return|;
