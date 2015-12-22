@@ -108,7 +108,7 @@ typedef|typedef
 struct|struct
 name|node
 block|{
-name|char
+name|void
 modifier|*
 name|key
 decl_stmt|;
@@ -119,6 +119,10 @@ name|llink
 decl_stmt|,
 modifier|*
 name|rlink
+decl_stmt|;
+name|signed
+name|char
+name|balance
 decl_stmt|;
 block|}
 name|node_t
