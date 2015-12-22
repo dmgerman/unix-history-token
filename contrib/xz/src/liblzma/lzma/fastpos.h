@@ -60,15 +60,15 @@ name|LZMA_FASTPOS_H
 end_define
 
 begin_comment
-comment|// LZMA encodes match distances (positions) by storing the highest two
+comment|// LZMA encodes match distances by storing the highest two bits using
 end_comment
 
 begin_comment
-comment|// bits using a six-bit value [0, 63], and then the missing lower bits.
+comment|// a six-bit value [0, 63], and then the missing lower bits.
 end_comment
 
 begin_comment
-comment|// Dictionary size is also stored using this encoding in the new .lzma
+comment|// Dictionary size is also stored using this encoding in the .xz
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//      pos   return
+comment|//     dist   return
 end_comment
 
 begin_comment
@@ -196,19 +196,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// get_pos_slot(pos) is the basic version. get_pos_slot_2(pos)
+comment|// get_dist_slot(dist) is the basic version. get_dist_slot_2(dist)
 end_comment
 
 begin_comment
-comment|// assumes that pos>= FULL_DISTANCES, thus the result is at least
+comment|// assumes that dist>= FULL_DISTANCES, thus the result is at least
 end_comment
 
 begin_comment
-comment|// FULL_DISTANCES_BITS * 2. Using get_pos_slot(pos) instead of
+comment|// FULL_DISTANCES_BITS * 2. Using get_dist_slot(dist) instead of
 end_comment
 
 begin_comment
-comment|// get_pos_slot_2(pos) would give the same result, but get_pos_slot_2(pos)
+comment|// get_dist_slot_2(dist) would give the same result, but get_dist_slot_2(dist)
 end_comment
 
 begin_comment
@@ -308,21 +308,22 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|get_pos_slot
+name|get_dist_slot
 parameter_list|(
-name|pos
+name|dist
 parameter_list|)
-value|((pos)<= 4 ? (pos) : get_pos_slot_2(pos))
+define|\
+value|((dist)<= 4 ? (dist) : get_dist_slot_2(dist))
 end_define
 
 begin_function
 specifier|static
 specifier|inline
 name|uint32_t
-name|get_pos_slot_2
+name|get_dist_slot_2
 parameter_list|(
 name|uint32_t
-name|pos
+name|dist
 parameter_list|)
 block|{
 specifier|const
@@ -331,7 +332,7 @@ name|i
 init|=
 name|bsr32
 argument_list|(
-name|pos
+name|dist
 argument_list|)
 decl_stmt|;
 return|return
@@ -343,7 +344,7 @@ operator|)
 operator|+
 operator|(
 operator|(
-name|pos
+name|dist
 operator|>>
 operator|(
 name|i
@@ -414,31 +415,31 @@ define|#
 directive|define
 name|fastpos_result
 parameter_list|(
-name|pos
+name|dist
 parameter_list|,
 name|extra
 parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|lzma_fastpos[(pos)>> fastpos_shift(extra, n)] \ 			+ 2 * fastpos_shift(extra, n)
+value|lzma_fastpos[(dist)>> fastpos_shift(extra, n)] \ 			+ 2 * fastpos_shift(extra, n)
 end_define
 
 begin_function
 specifier|static
 specifier|inline
 name|uint32_t
-name|get_pos_slot
+name|get_dist_slot
 parameter_list|(
 name|uint32_t
-name|pos
+name|dist
 parameter_list|)
 block|{
 comment|// If it is small enough, we can pick the result directly from
 comment|// the precalculated table.
 if|if
 condition|(
-name|pos
+name|dist
 operator|<
 name|fastpos_limit
 argument_list|(
@@ -450,12 +451,12 @@ condition|)
 return|return
 name|lzma_fastpos
 index|[
-name|pos
+name|dist
 index|]
 return|;
 if|if
 condition|(
-name|pos
+name|dist
 operator|<
 name|fastpos_limit
 argument_list|(
@@ -467,7 +468,7 @@ condition|)
 return|return
 name|fastpos_result
 argument_list|(
-name|pos
+name|dist
 argument_list|,
 literal|0
 argument_list|,
@@ -477,7 +478,7 @@ return|;
 return|return
 name|fastpos_result
 argument_list|(
-name|pos
+name|dist
 argument_list|,
 literal|0
 argument_list|,
@@ -497,22 +498,22 @@ begin_function
 specifier|static
 specifier|inline
 name|uint32_t
-name|get_pos_slot_2
+name|get_dist_slot_2
 parameter_list|(
 name|uint32_t
-name|pos
+name|dist
 parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|pos
+name|dist
 operator|>=
 name|FULL_DISTANCES
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
+name|dist
 operator|<
 name|fastpos_limit
 argument_list|(
@@ -526,7 +527,7 @@ condition|)
 return|return
 name|fastpos_result
 argument_list|(
-name|pos
+name|dist
 argument_list|,
 name|FULL_DISTANCES_BITS
 operator|-
@@ -537,7 +538,7 @@ argument_list|)
 return|;
 if|if
 condition|(
-name|pos
+name|dist
 operator|<
 name|fastpos_limit
 argument_list|(
@@ -551,7 +552,7 @@ condition|)
 return|return
 name|fastpos_result
 argument_list|(
-name|pos
+name|dist
 argument_list|,
 name|FULL_DISTANCES_BITS
 operator|-
@@ -563,7 +564,7 @@ return|;
 return|return
 name|fastpos_result
 argument_list|(
-name|pos
+name|dist
 argument_list|,
 name|FULL_DISTANCES_BITS
 operator|-

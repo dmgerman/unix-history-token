@@ -77,7 +77,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* 		 * MSVC has no C99 support, and thus it cannot be used to 		 * compile liblzma. The liblzma API has to still be usable 		 * from MSVC, so we need to define the required standard 		 * integer types here. 		 */
+comment|/* 		 * MSVC versions older than 2013 have no C99 support, and 		 * thus they cannot be used to compile liblzma. Using an 		 * existing liblzma.dll with old MSVC can work though(*), 		 * but we need to define the required standard integer 		 * types here in a MSVC-specific way. 		 * 		 * (*) If you do this, the existing liblzma.dll probably uses 		 *     a different runtime library than your MSVC-built 		 *     application. Mixing runtimes is generally bad, but 		 *     in this case it should work as long as you avoid 		 *     the few rarely-needed liblzma functions that allocate 		 *     memory and expect the caller to free it using free(). 		 */
 end_comment
 
 begin_if
@@ -92,6 +92,10 @@ name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1800
 end_if
 
 begin_typedef
@@ -806,7 +810,7 @@ directive|include
 file|"lzma/delta.h"
 include|#
 directive|include
-file|"lzma/lzma.h"
+file|"lzma/lzma12.h"
 comment|/* Container formats */
 include|#
 directive|include

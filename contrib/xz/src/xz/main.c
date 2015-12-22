@@ -678,7 +678,7 @@ comment|// Process the files given on the command line. Note that if no names
 comment|// were given, args_parse() gave us a fake "-" filename.
 for|for
 control|(
-name|size_t
+name|unsigned
 name|i
 init|=
 literal|0
@@ -888,6 +888,17 @@ name|list_totals
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|coder_free
+argument_list|()
+expr_stmt|;
+name|args_free
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|// If we have got a signal, raise it to kill the program instead
 comment|// of calling tuklib_exit().
 name|signals_exit

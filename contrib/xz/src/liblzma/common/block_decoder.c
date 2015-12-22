@@ -107,6 +107,10 @@ comment|/// Check of the uncompressed data
 name|lzma_check_state
 name|check
 decl_stmt|;
+comment|/// True if the integrity check won't be calculated and verified.
+name|bool
+name|ignore_check
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -200,6 +204,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -348,6 +353,13 @@ condition|)
 return|return
 name|LZMA_DATA_ERROR
 return|;
+if|if
+condition|(
+operator|!
+name|coder
+operator|->
+name|ignore_check
+condition|)
 name|lzma_check_update
 argument_list|(
 operator|&
@@ -504,6 +516,13 @@ condition|)
 return|return
 name|LZMA_STREAM_END
 return|;
+if|if
+condition|(
+operator|!
+name|coder
+operator|->
+name|ignore_check
+condition|)
 name|lzma_check_finish
 argument_list|(
 operator|&
@@ -580,6 +599,11 @@ comment|// coder->check.buffer may be uninitialized
 comment|// when the Check ID is not supported.
 if|if
 condition|(
+operator|!
+name|coder
+operator|->
+name|ignore_check
+operator|&&
 name|lzma_check_is_supported
 argument_list|(
 name|coder
@@ -633,6 +657,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -668,6 +693,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -865,6 +891,24 @@ name|block
 operator|->
 name|check
 argument_list|)
+expr_stmt|;
+name|next
+operator|->
+name|coder
+operator|->
+name|ignore_check
+operator|=
+name|block
+operator|->
+name|version
+operator|>=
+literal|1
+condition|?
+name|block
+operator|->
+name|ignore_check
+else|:
+name|false
 expr_stmt|;
 comment|// Initialize the filter chain.
 return|return

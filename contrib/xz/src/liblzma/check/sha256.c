@@ -87,42 +87,6 @@ begin_comment
 comment|///////////////////////////////////////////////////////////////////////////////
 end_comment
 
-begin_comment
-comment|// Avoid bogus warnings in transform().
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__GNUC__
-operator|==
-literal|4
-operator|&&
-name|__GNUC_MINOR__
-operator|>=
-literal|2
-operator|)
-operator|||
-name|__GNUC__
-operator|>
-literal|4
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|diagnostic
-name|ignored
-literal|"-Wuninitialized"
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -130,20 +94,45 @@ file|"check.h"
 end_include
 
 begin_comment
-comment|// At least on x86, GCC is able to optimize this to a rotate instruction.
+comment|// Rotate a uint32_t. GCC can optimize this to a rotate instruction
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|// at least on x86.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
 name|rotr_32
 parameter_list|(
+name|uint32_t
 name|num
 parameter_list|,
+name|unsigned
 name|amount
 parameter_list|)
-value|((num)>> (amount) | (num)<< (32 - (amount)))
-end_define
+block|{
+return|return
+operator|(
+name|num
+operator|>>
+name|amount
+operator|)
+operator||
+operator|(
+name|num
+operator|<<
+operator|(
+literal|32
+operator|-
+name|amount
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -152,7 +141,7 @@ name|blk0
 parameter_list|(
 name|i
 parameter_list|)
-value|(W[i] = data[i])
+value|(W[i] = conv32be(data[i]))
 end_define
 
 begin_define
@@ -190,7 +179,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|((x& y) | (z& (x | y)))
+value|((x& (y ^ z)) + (y& z))
 end_define
 
 begin_define
@@ -279,9 +268,33 @@ directive|define
 name|R
 parameter_list|(
 name|i
+parameter_list|,
+name|j
+parameter_list|,
+name|blk
 parameter_list|)
 define|\
-value|h(i) += S1(e(i)) + Ch(e(i), f(i), g(i)) + SHA256_K[i + j] \ 		+ (j ? blk2(i) : blk0(i)); \ 	d(i) += h(i); \ 	h(i) += S0(a(i)) + Maj(a(i), b(i), c(i))
+value|h(i) += S1(e(i)) + Ch(e(i), f(i), g(i)) + SHA256_K[i + j] + blk; \ 	d(i) += h(i); \ 	h(i) += S0(a(i)) + Maj(a(i), b(i), c(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|R0
+parameter_list|(
+name|i
+parameter_list|)
+value|R(i, 0, blk0(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|R2
+parameter_list|(
+name|i
+parameter_list|)
+value|R(i, j, blk2(i))
 end_define
 
 begin_define
@@ -291,7 +304,7 @@ name|S0
 parameter_list|(
 name|x
 parameter_list|)
-value|(rotr_32(x, 2) ^ rotr_32(x, 13) ^ rotr_32(x, 22))
+value|rotr_32(x ^ rotr_32(x ^ rotr_32(x, 9), 11), 2)
 end_define
 
 begin_define
@@ -301,7 +314,7 @@ name|S1
 parameter_list|(
 name|x
 parameter_list|)
-value|(rotr_32(x, 6) ^ rotr_32(x, 11) ^ rotr_32(x, 25))
+value|rotr_32(x ^ rotr_32(x ^ rotr_32(x, 14), 5), 6)
 end_define
 
 begin_define
@@ -311,7 +324,7 @@ name|s0
 parameter_list|(
 name|x
 parameter_list|)
-value|(rotr_32(x, 7) ^ rotr_32(x, 18) ^ (x>> 3))
+value|(rotr_32(x ^ rotr_32(x, 11), 7) ^ (x>> 3))
 end_define
 
 begin_define
@@ -321,7 +334,7 @@ name|s1
 parameter_list|(
 name|x
 parameter_list|)
-value|(rotr_32(x, 17) ^ rotr_32(x, 19) ^ (x>> 10))
+value|(rotr_32(x ^ rotr_32(x, 2), 17) ^ (x>> 10))
 end_define
 
 begin_decl_stmt
@@ -509,14 +522,95 @@ name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// 64 operations, partially loop unrolled
+comment|// The first 16 operations unrolled
+name|R0
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|7
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|9
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|11
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|12
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|13
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|14
+argument_list|)
+expr_stmt|;
+name|R0
+argument_list|(
+literal|15
+argument_list|)
+expr_stmt|;
+comment|// The remaining 48 operations partially unrolled
 for|for
 control|(
 name|unsigned
 name|int
 name|j
 init|=
-literal|0
+literal|16
 init|;
 name|j
 operator|<
@@ -527,82 +621,82 @@ operator|+=
 literal|16
 control|)
 block|{
-name|R
+name|R2
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|6
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|7
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|8
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|9
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|11
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|12
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|13
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|14
 argument_list|)
 expr_stmt|;
-name|R
+name|R2
 argument_list|(
 literal|15
 argument_list|)
@@ -702,9 +796,6 @@ modifier|*
 name|check
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|WORDS_BIGENDIAN
 name|transform
 argument_list|(
 name|check
@@ -722,60 +813,6 @@ operator|.
 name|u32
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|uint32_t
-name|data
-index|[
-literal|16
-index|]
-decl_stmt|;
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-operator|++
-name|i
-control|)
-name|data
-index|[
-name|i
-index|]
-operator|=
-name|bswap32
-argument_list|(
-name|check
-operator|->
-name|buffer
-operator|.
-name|u32
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|transform
-argument_list|(
-name|check
-operator|->
-name|state
-operator|.
-name|sha256
-operator|.
-name|state
-argument_list|,
-name|data
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function

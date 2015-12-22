@@ -59,7 +59,7 @@ name|lzma_block_buffer_decode
 argument_list|(
 argument|lzma_block *block
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,

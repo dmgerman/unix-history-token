@@ -59,7 +59,7 @@ name|lzma_raw_buffer_encode
 argument_list|(
 argument|const lzma_filter *filters
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,

@@ -118,6 +118,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -156,6 +157,19 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|out
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|lzma_lzma2_block_size
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|options
 parameter_list|)
 function_decl|;
 end_function_decl

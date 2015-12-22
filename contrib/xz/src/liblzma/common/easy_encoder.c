@@ -49,12 +49,6 @@ directive|include
 file|"easy_preset.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"stream_encoder.h"
-end_include
-
 begin_extern
 extern|extern LZMA_API(lzma_ret
 end_extern

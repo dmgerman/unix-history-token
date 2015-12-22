@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file        lzma/lzma.h  * \brief       LZMA1 and LZMA2 filters  */
+comment|/**  * \file        lzma/lzma12.h  * \brief       LZMA1 and LZMA2 filters  */
 end_comment
 
 begin_comment

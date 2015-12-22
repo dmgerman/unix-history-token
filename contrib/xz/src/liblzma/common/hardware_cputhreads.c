@@ -8,11 +8,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|/// \file       stream_encoder.h
+comment|/// \file       hardware_cputhreads.c
 end_comment
 
 begin_comment
-comment|/// \brief      Encodes .xz Streams
+comment|/// \brief      Get the number of CPU threads or cores
 end_comment
 
 begin_comment
@@ -43,52 +43,38 @@ begin_comment
 comment|///////////////////////////////////////////////////////////////////////////////
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LZMA_STREAM_ENCODER_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LZMA_STREAM_ENCODER_H
-end_define
-
 begin_include
 include|#
 directive|include
 file|"common.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|lzma_ret
-name|lzma_stream_encoder_init
-parameter_list|(
-name|lzma_next_coder
-modifier|*
-name|next
-parameter_list|,
-name|lzma_allocator
-modifier|*
-name|allocator
-parameter_list|,
-specifier|const
-name|lzma_filter
-modifier|*
-name|filters
-parameter_list|,
-name|lzma_check
-name|check
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"tuklib_cpucores.h"
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_extern
+extern|extern LZMA_API(uint32_t
+end_extern
+
+begin_macro
+unit|)
+name|lzma_cputhreads
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|tuklib_cpucores
+argument_list|()
+return|;
+block|}
+end_block
 
 end_unit
 

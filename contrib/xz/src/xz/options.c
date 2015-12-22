@@ -104,11 +104,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/// Parses option=value pairs that are separated with colons, semicolons,
+comment|/// Parses option=value pairs that are separated with commas:
 end_comment
 
 begin_comment
-comment|/// or commas: opt=val:opt=val;opt=val,opt=val
+comment|/// opt=val,opt=val,opt=val
 end_comment
 
 begin_comment
@@ -228,7 +228,7 @@ name|void
 modifier|*
 name|filter_options
 parameter_list|,
-name|uint32_t
+name|unsigned
 name|key
 parameter_list|,
 name|uint64_t
@@ -365,7 +365,7 @@ name|str
 argument_list|)
 expr_stmt|;
 comment|// Look for the option name from the option map.
-name|size_t
+name|unsigned
 name|i
 init|=
 literal|0
@@ -432,7 +432,7 @@ condition|)
 block|{
 comment|// value is a string which we should map
 comment|// to an integer.
-name|size_t
+name|unsigned
 name|j
 decl_stmt|;
 for|for
@@ -650,7 +650,7 @@ name|void
 operator|*
 name|options
 argument_list|,
-name|uint32_t
+name|unsigned
 name|key
 argument_list|,
 name|uint64_t
@@ -811,7 +811,7 @@ name|void
 operator|*
 name|options
 argument_list|,
-name|uint32_t
+name|unsigned
 name|key
 argument_list|,
 name|uint64_t
@@ -1012,7 +1012,7 @@ name|void
 modifier|*
 name|options
 parameter_list|,
-name|uint32_t
+name|unsigned
 name|key
 parameter_list|,
 name|uint64_t

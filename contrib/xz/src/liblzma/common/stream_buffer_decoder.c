@@ -61,7 +61,7 @@ argument|uint64_t *memlimit
 argument_list|,
 argument|uint32_t flags
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,

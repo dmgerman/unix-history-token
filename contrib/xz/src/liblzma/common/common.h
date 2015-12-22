@@ -241,6 +241,29 @@ value|4096
 end_define
 
 begin_comment
+comment|/// Maximum number of worker threads within one multithreaded component.
+end_comment
+
+begin_comment
+comment|/// The limit exists solely to make it simpler to prevent integer overflows
+end_comment
+
+begin_comment
+comment|/// when allocating structures etc. This should be big enough for now...
+end_comment
+
+begin_comment
+comment|/// the code won't scale anywhere close to this number anyway.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LZMA_THREADS_MAX
+value|16384
+end_define
+
+begin_comment
 comment|/// Starting value for memory usage estimates. Instead of calculating size
 end_comment
 
@@ -291,7 +314,41 @@ define|#
 directive|define
 name|LZMA_SUPPORTED_FLAGS
 define|\
-value|( LZMA_TELL_NO_CHECK \ 	| LZMA_TELL_UNSUPPORTED_CHECK \ 	| LZMA_TELL_ANY_CHECK \ 	| LZMA_CONCATENATED )
+value|( LZMA_TELL_NO_CHECK \ 	| LZMA_TELL_UNSUPPORTED_CHECK \ 	| LZMA_TELL_ANY_CHECK \ 	| LZMA_IGNORE_CHECK \ 	| LZMA_CONCATENATED )
+end_define
+
+begin_comment
+comment|/// Largest valid lzma_action value as unsigned integer.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LZMA_ACTION_MAX
+value|((unsigned int)(LZMA_FULL_BARRIER))
+end_define
+
+begin_comment
+comment|/// Special return value (lzma_ret) to indicate that a timeout was reached
+end_comment
+
+begin_comment
+comment|/// and lzma_code() must not return LZMA_BUF_ERROR. This is converted to
+end_comment
+
+begin_comment
+comment|/// LZMA_OK in lzma_code(). This is not in the lzma_ret enumeration because
+end_comment
+
+begin_comment
+comment|/// there's no need to have it in the public API.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LZMA_TIMED_OUT
+value|32
 end_define
 
 begin_comment
@@ -342,6 +399,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -382,6 +440,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -435,6 +494,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -512,6 +572,27 @@ comment|/// lzma_next_coder.coder.
 name|lzma_end_function
 name|end
 decl_stmt|;
+comment|/// Pointer to a function to get progress information. If this is NULL,
+comment|/// lzma_stream.total_in and .total_out are used instead.
+name|void
+function_decl|(
+modifier|*
+name|get_progress
+function_decl|)
+parameter_list|(
+name|lzma_coder
+modifier|*
+name|coder
+parameter_list|,
+name|uint64_t
+modifier|*
+name|progress_in
+parameter_list|,
+name|uint64_t
+modifier|*
+name|progress_out
+parameter_list|)
+function_decl|;
 comment|/// Pointer to function to return the type of the integrity check.
 comment|/// Most coders won't support this.
 name|lzma_check
@@ -562,6 +643,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -590,7 +672,7 @@ define|#
 directive|define
 name|LZMA_NEXT_CODER_INIT
 define|\
-value|(lzma_next_coder){ \ 		.coder = NULL, \ 		.init = (uintptr_t)(NULL), \ 		.id = LZMA_VLI_UNKNOWN, \ 		.code = NULL, \ 		.end = NULL, \ 		.get_check = NULL, \ 		.memconfig = NULL, \ 		.update = NULL, \ 	}
+value|(lzma_next_coder){ \ 		.coder = NULL, \ 		.init = (uintptr_t)(NULL), \ 		.id = LZMA_VLI_UNKNOWN, \ 		.code = NULL, \ 		.end = NULL, \ 		.get_progress = NULL, \ 		.get_check = NULL, \ 		.memconfig = NULL, \ 		.update = NULL, \ 	}
 end_define
 
 begin_comment
@@ -623,6 +705,8 @@ name|ISEQ_FULL_FLUSH
 block|,
 name|ISEQ_FINISH
 block|,
+name|ISEQ_FULL_BARRIER
+block|,
 name|ISEQ_END
 block|,
 name|ISEQ_ERROR
@@ -639,7 +723,9 @@ comment|/// Indicates which lzma_action values are allowed by next.code.
 name|bool
 name|supported_actions
 index|[
-literal|4
+name|LZMA_ACTION_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/// If true, lzma_code will return LZMA_BUF_ERROR if no progress was
@@ -664,6 +750,7 @@ parameter_list|(
 name|size_t
 name|size
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -683,6 +770,45 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Allocates memory and zeroes it (like calloc()). This can be faster
+end_comment
+
+begin_comment
+comment|/// than lzma_alloc() + memzero() while being backward compatible with
+end_comment
+
+begin_comment
+comment|/// custom allocators.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|lzma_attribute
+argument_list|(
+operator|(
+name|__malloc__
+operator|)
+argument_list|)
+name|lzma_attr_alloc_size
+argument_list|(
+literal|1
+argument_list|)
+name|lzma_alloc_zero
+argument_list|(
+name|size_t
+name|size
+argument_list|,
+specifier|const
+name|lzma_allocator
+operator|*
+name|allocator
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Frees memory
 end_comment
 
@@ -695,6 +821,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -747,6 +874,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -776,6 +904,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -805,6 +934,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

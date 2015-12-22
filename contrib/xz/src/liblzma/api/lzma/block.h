@@ -32,7 +32,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-comment|/** 	 * \brief       Block format version 	 * 	 * To prevent API and ABI breakages if new features are needed in 	 * the Block field, a version number is used to indicate which 	 * fields in this structure are in use. For now, version must always 	 * be zero. With non-zero version, most Block related functions will 	 * return LZMA_OPTIONS_ERROR. 	 * 	 * Read by: 	 *  - All functions that take pointer to lzma_block as argument, 	 *    including lzma_block_header_decode(). 	 * 	 * Written by: 	 *  - lzma_block_header_decode() 	 */
+comment|/** 	 * \brief       Block format version 	 * 	 * To prevent API and ABI breakages when new features are needed, 	 * a version number is used to indicate which fields in this 	 * structure are in use: 	 *   - liblzma>= 5.0.0: version = 0 is supported. 	 *   - liblzma>= 5.1.4beta: Support for version = 1 was added, 	 *     which adds the ignore_check field. 	 * 	 * If version is greater than one, most Block related functions 	 * will return LZMA_OPTIONS_ERROR (lzma_block_header_decode() works 	 * with any version value). 	 * 	 * Read by: 	 *  - All functions that take pointer to lzma_block as argument, 	 *    including lzma_block_header_decode(). 	 * 	 * Written by: 	 *  - lzma_block_header_decode() 	 */
 name|uint32_t
 name|version
 decl_stmt|;
@@ -121,8 +121,9 @@ decl_stmt|;
 name|lzma_reserved_enum
 name|reserved_enum4
 decl_stmt|;
+comment|/** 	 * \brief       A flag to Block decoder to not verify the Check field 	 * 	 * This field is supported by liblzma>= 5.1.4beta if .version>= 1. 	 * 	 * If this is set to true, the integrity check won't be calculated 	 * and verified. Unless you know what you are doing, you should 	 * leave this to false. (A reason to set this to true is when the 	 * file integrity is verified externally anyway and you want to 	 * speed up the decompression, which matters mostly when using 	 * SHA-256 as the integrity check.) 	 * 	 * If .version>= 1, read by: 	 *   - lzma_block_decoder() 	 *   - lzma_block_buffer_decode() 	 * 	 * Written by (.version is ignored): 	 *   - lzma_block_header_decode() always sets this to false 	 */
 name|lzma_bool
-name|reserved_bool1
+name|ignore_check
 decl_stmt|;
 name|lzma_bool
 name|reserved_bool2
@@ -211,7 +212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Decode Block Header  *  * block->version should be set to the highest value supported by the  * application; currently the only possible version is zero. This function  * will set version to the lowest value that still supports all the features  * required by the Block Header.  *  * The size of the Block Header must have already been decoded with  * lzma_block_header_size_decode() macro and stored to block->header_size.  *  * The integrity check type from Stream Header must have been stored  * to block->check.  *  * block->filters must have been allocated, but they don't need to be  * initialized (possible existing filter options are not freed).  *  * \param       block       Destination for Block options.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() (and also free()  *                          if an error occurs).  * \param       in          Beginning of the input buffer. This must be  *                          at least block->header_size bytes.  *  * \return      - LZMA_OK: Decoding was successful. block->header_size  *                bytes were read from the input buffer.  *              - LZMA_OPTIONS_ERROR: The Block Header specifies some  *                unsupported options such as unsupported filters. This can  *                happen also if block->version was set to a too low value  *                compared to what would be required to properly represent  *                the information stored in the Block Header.  *              - LZMA_DATA_ERROR: Block Header is corrupt, for example,  *                the CRC32 doesn't match.  *              - LZMA_PROG_ERROR: Invalid arguments, for example  *                block->header_size is invalid or block->filters is NULL.  */
+comment|/**  * \brief       Decode Block Header  *  * block->version should (usually) be set to the highest value supported  * by the application. If the application sets block->version to a value  * higher than supported by the current liblzma version, this function will  * downgrade block->version to the highest value supported by it. Thus one  * should check the value of block->version after calling this function if  * block->version was set to a non-zero value and the application doesn't  * otherwise know that the liblzma version being used is new enough to  * support the specified block->version.  *  * The size of the Block Header must have already been decoded with  * lzma_block_header_size_decode() macro and stored to block->header_size.  *  * The integrity check type from Stream Header must have been stored  * to block->check.  *  * block->filters must have been allocated, but they don't need to be  * initialized (possible existing filter options are not freed).  *  * \param       block       Destination for Block options.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() (and also free()  *                          if an error occurs).  * \param       in          Beginning of the input buffer. This must be  *                          at least block->header_size bytes.  *  * \return      - LZMA_OK: Decoding was successful. block->header_size  *                bytes were read from the input buffer.  *              - LZMA_OPTIONS_ERROR: The Block Header specifies some  *                unsupported options such as unsupported filters. This can  *                happen also if block->version was set to a too low value  *                compared to what would be required to properly represent  *                the information stored in the Block Header.  *              - LZMA_DATA_ERROR: Block Header is corrupt, for example,  *                the CRC32 doesn't match.  *              - LZMA_PROG_ERROR: Invalid arguments, for example  *                block->header_size is invalid or block->filters is NULL.  */
 end_comment
 
 begin_extern
@@ -224,7 +225,7 @@ name|lzma_block_header_decode
 argument_list|(
 argument|lzma_block *block
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|)
@@ -387,7 +388,39 @@ name|lzma_block_buffer_encode
 argument_list|(
 argument|lzma_block *block
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
+argument_list|,
+argument|const uint8_t *in
+argument_list|,
+argument|size_t in_size
+argument_list|,
+argument|uint8_t *out
+argument_list|,
+argument|size_t *out_pos
+argument_list|,
+argument|size_t out_size
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|lzma_nothrow
+name|lzma_attr_warn_unused_result
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**  * \brief       Single-call uncompressed .xz Block encoder  *  * This is like lzma_block_buffer_encode() except this doesn't try to  * compress the data and instead encodes the data using LZMA2 uncompressed  * chunks. The required output buffer size can be determined with  * lzma_block_buffer_bound().  *  * Since the data won't be compressed, this function ignores block->filters.  * This function doesn't take lzma_allocator because this function doesn't  * allocate any memory from the heap.  */
+end_comment
+
+begin_extern
+extern|extern LZMA_API(lzma_ret
+end_extern
+
+begin_macro
+unit|)
+name|lzma_block_uncomp_encode
+argument_list|(
+argument|lzma_block *block
 argument_list|,
 argument|const uint8_t *in
 argument_list|,
@@ -421,7 +454,7 @@ name|lzma_block_buffer_decode
 argument_list|(
 argument|lzma_block *block
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,

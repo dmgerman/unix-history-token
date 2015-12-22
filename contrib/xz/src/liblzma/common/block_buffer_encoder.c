@@ -46,6 +46,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"block_buffer_encoder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"block_encoder.h"
 end_include
 
@@ -108,10 +114,10 @@ end_define
 
 begin_function
 specifier|static
-name|lzma_vli
+name|uint64_t
 name|lzma2_bound
 parameter_list|(
-name|lzma_vli
+name|uint64_t
 name|uncompressed_size
 parameter_list|)
 block|{
@@ -130,7 +136,7 @@ comment|// uncompressed_size up to the next multiple of LZMA2_CHUNK_MAX,
 comment|// multiply by the size of per-chunk header, and add one byte for
 comment|// the end marker.
 specifier|const
-name|lzma_vli
+name|uint64_t
 name|overhead
 init|=
 operator|(
@@ -169,26 +175,18 @@ return|;
 block|}
 end_function
 
-begin_extern
-extern|extern LZMA_API(size_t
-end_extern
-
-begin_macro
-unit|)
-name|lzma_block_buffer_bound
-argument_list|(
-argument|size_t uncompressed_size
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|extern
+name|uint64_t
+name|lzma_block_buffer_bound64
+parameter_list|(
+name|uint64_t
+name|uncompressed_size
+parameter_list|)
 block|{
-comment|// For now, if the data doesn't compress, we always use uncompressed
-comment|// chunks of LZMA2. In future we may use Subblock filter too, but
-comment|// but for simplicity we probably will still use the same bound
-comment|// calculation even though Subblock filter would have slightly less
-comment|// overhead.
-name|lzma_vli
+comment|// If the data doesn't compress, we always use uncompressed
+comment|// LZMA2 chunks.
+name|uint64_t
 name|lzma2_size
 init|=
 name|lzma2_bound
@@ -215,26 +213,54 @@ literal|3
 operator|)
 operator|&
 operator|~
-name|LZMA_VLI_C
+name|UINT64_C
 argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
+comment|// No risk of integer overflow because lzma2_bound() already takes
+comment|// into account the size of the headers in the Block.
+return|return
+name|HEADERS_BOUND
+operator|+
+name|lzma2_size
+return|;
+block|}
+end_function
+
+begin_extern
+extern|extern LZMA_API(size_t
+end_extern
+
+begin_macro
+unit|)
+name|lzma_block_buffer_bound
+argument_list|(
+argument|size_t uncompressed_size
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|uint64_t
+name|ret
+init|=
+name|lzma_block_buffer_bound64
+argument_list|(
+name|uncompressed_size
+argument_list|)
+decl_stmt|;
 if|#
 directive|if
 name|SIZE_MAX
 operator|<
-name|LZMA_VLI_MAX
-comment|// Catch the possible integer overflow on 32-bit systems. There's no
-comment|// overflow on 64-bit systems, because lzma2_bound() already takes
-comment|// into account the size of the headers in the Block.
+name|UINT64_MAX
+comment|// Catch the possible integer overflow on 32-bit systems.
 if|if
 condition|(
+name|ret
+operator|>
 name|SIZE_MAX
-operator|-
-name|HEADERS_BOUND
-operator|<
-name|lzma2_size
 condition|)
 return|return
 literal|0
@@ -242,9 +268,7 @@ return|;
 endif|#
 directive|endif
 return|return
-name|HEADERS_BOUND
-operator|+
-name|lzma2_size
+name|ret
 return|;
 block|}
 end_block
@@ -278,8 +302,6 @@ name|size_t
 name|out_size
 parameter_list|)
 block|{
-comment|// TODO: Figure out if the last filter is LZMA2 or Subblock and use
-comment|// that filter to encode the uncompressed chunks.
 comment|// Use LZMA2 uncompressed chunks. We wouldn't need a dictionary at
 comment|// all, but LZMA2 always requires a dictionary, so use the minimum
 comment|// value to minimize memory usage of the decoder.
@@ -599,6 +621,7 @@ name|lzma_block
 modifier|*
 name|block
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -624,32 +647,6 @@ name|out_size
 parameter_list|)
 block|{
 comment|// Find out the size of the Block Header.
-name|block
-operator|->
-name|compressed_size
-operator|=
-name|lzma2_bound
-argument_list|(
-name|in_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|block
-operator|->
-name|compressed_size
-operator|==
-literal|0
-condition|)
-return|return
-name|LZMA_DATA_ERROR
-return|;
-name|block
-operator|->
-name|uncompressed_size
-operator|=
-name|in_size
-expr_stmt|;
 name|return_if_error
 argument_list|(
 name|lzma_block_header_size
@@ -858,31 +855,42 @@ return|;
 block|}
 end_function
 
-begin_extern
-extern|extern LZMA_API(lzma_ret
-end_extern
-
-begin_macro
-unit|)
-name|lzma_block_buffer_encode
-argument_list|(
-argument|lzma_block *block
-argument_list|,
-argument|lzma_allocator *allocator
-argument_list|,
-argument|const uint8_t *in
-argument_list|,
-argument|size_t in_size
-argument_list|,
-argument|uint8_t *out
-argument_list|,
-argument|size_t *out_pos
-argument_list|,
-argument|size_t out_size
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|lzma_ret
+name|block_buffer_encode
+parameter_list|(
+name|lzma_block
+modifier|*
+name|block
+parameter_list|,
+specifier|const
+name|lzma_allocator
+modifier|*
+name|allocator
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|in
+parameter_list|,
+name|size_t
+name|in_size
+parameter_list|,
+name|uint8_t
+modifier|*
+name|out
+parameter_list|,
+name|size_t
+modifier|*
+name|out_pos
+parameter_list|,
+name|size_t
+name|out_size
+parameter_list|,
+name|bool
+name|try_to_compress
+parameter_list|)
 block|{
 comment|// Validate the arguments.
 if|if
@@ -924,8 +932,8 @@ condition|(
 name|block
 operator|->
 name|version
-operator|!=
-literal|0
+operator|>
+literal|1
 condition|)
 return|return
 name|LZMA_OPTIONS_ERROR
@@ -944,11 +952,15 @@ argument_list|)
 operator|>
 name|LZMA_CHECK_ID_MAX
 operator|||
+operator|(
+name|try_to_compress
+operator|&&
 name|block
 operator|->
 name|filters
 operator|==
 name|NULL
+operator|)
 condition|)
 return|return
 name|LZMA_PROG_ERROR
@@ -1016,11 +1028,46 @@ name|out_size
 operator|-=
 name|check_size
 expr_stmt|;
+comment|// Initialize block->uncompressed_size and calculate the worst-case
+comment|// value for block->compressed_size.
+name|block
+operator|->
+name|uncompressed_size
+operator|=
+name|in_size
+expr_stmt|;
+name|block
+operator|->
+name|compressed_size
+operator|=
+name|lzma2_bound
+argument_list|(
+name|in_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|block
+operator|->
+name|compressed_size
+operator|==
+literal|0
+condition|)
+return|return
+name|LZMA_DATA_ERROR
+return|;
 comment|// Do the actual compression.
-specifier|const
 name|lzma_ret
 name|ret
 init|=
+name|LZMA_BUF_ERROR
+decl_stmt|;
+if|if
+condition|(
+name|try_to_compress
+condition|)
+name|ret
+operator|=
 name|block_encode_normal
 argument_list|(
 name|block
@@ -1037,7 +1084,7 @@ name|out_pos
 argument_list|,
 name|out_size
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -1220,6 +1267,104 @@ expr_stmt|;
 block|}
 return|return
 name|LZMA_OK
+return|;
+block|}
+end_function
+
+begin_extern
+extern|extern LZMA_API(lzma_ret
+end_extern
+
+begin_macro
+unit|)
+name|lzma_block_buffer_encode
+argument_list|(
+argument|lzma_block *block
+argument_list|,
+argument|const lzma_allocator *allocator
+argument_list|,
+argument|const uint8_t *in
+argument_list|,
+argument|size_t in_size
+argument_list|,
+argument|uint8_t *out
+argument_list|,
+argument|size_t *out_pos
+argument_list|,
+argument|size_t out_size
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|block_buffer_encode
+argument_list|(
+name|block
+argument_list|,
+name|allocator
+argument_list|,
+name|in
+argument_list|,
+name|in_size
+argument_list|,
+name|out
+argument_list|,
+name|out_pos
+argument_list|,
+name|out_size
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_extern
+extern|extern LZMA_API(lzma_ret
+end_extern
+
+begin_macro
+unit|)
+name|lzma_block_uncomp_encode
+argument_list|(
+argument|lzma_block *block
+argument_list|,
+argument|const uint8_t *in
+argument_list|,
+argument|size_t in_size
+argument_list|,
+argument|uint8_t *out
+argument_list|,
+argument|size_t *out_pos
+argument_list|,
+argument|size_t out_size
+argument_list|)
+end_macro
+
+begin_block
+block|{
+comment|// It won't allocate any memory from heap so no need
+comment|// for lzma_allocator.
+return|return
+name|block_buffer_encode
+argument_list|(
+name|block
+argument_list|,
+name|NULL
+argument_list|,
+name|in
+argument_list|,
+name|in_size
+argument_list|,
+name|out
+argument_list|,
+name|out_pos
+argument_list|,
+name|out_size
+argument_list|,
+name|false
+argument_list|)
 return|;
 block|}
 end_block

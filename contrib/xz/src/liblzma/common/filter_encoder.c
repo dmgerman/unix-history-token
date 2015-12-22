@@ -106,14 +106,14 @@ modifier|*
 name|options
 parameter_list|)
 function_decl|;
-comment|/// Calculates the minimum sane size for Blocks (or other types of
-comment|/// chunks) to which the input data can be split to make
-comment|/// multithreaded encoding possible. If this is NULL, it is assumed
-comment|/// that the encoder is fast enough with single thread.
-name|lzma_vli
+comment|/// Calculates the recommended Uncompressed Size for .xz Blocks to
+comment|/// which the input data can be split to make multithreaded
+comment|/// encoding possible. If this is NULL, it is assumed that
+comment|/// the encoder is fast enough with single thread.
+name|uint64_t
 function_decl|(
 modifier|*
-name|chunk_size
+name|block_size
 function_decl|)
 parameter_list|(
 specifier|const
@@ -201,7 +201,7 @@ operator|&
 name|lzma_lzma_encoder_memusage
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -247,9 +247,10 @@ operator|&
 name|lzma_lzma2_encoder_memusage
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
-name|NULL
+operator|&
+name|lzma_lzma2_block_size
 block|,
 comment|// FIXME
 operator|.
@@ -292,7 +293,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -332,7 +333,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -372,7 +373,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -412,7 +413,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -452,7 +453,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -492,7 +493,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -533,7 +534,7 @@ operator|&
 name|lzma_delta_coder_memusage
 block|,
 operator|.
-name|chunk_size
+name|block_size
 operator|=
 name|NULL
 block|,
@@ -783,6 +784,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -921,9 +923,109 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* extern LZMA_API(lzma_vli) lzma_chunk_size(const lzma_filter *filters) { 	lzma_vli max = 0;  	for (size_t i = 0; filters[i].id != LZMA_VLI_UNKNOWN; ++i) { 		const lzma_filter_encoder *const fe 				= encoder_find(filters[i].id); 		if (fe->chunk_size != NULL) { 			const lzma_vli size 					= fe->chunk_size(filters[i].options); 			if (size == LZMA_VLI_UNKNOWN) 				return LZMA_VLI_UNKNOWN;  			if (size> max) 				max = size; 		} 	}  	return max; } */
-end_comment
+begin_function
+specifier|extern
+name|uint64_t
+name|lzma_mt_block_size
+parameter_list|(
+specifier|const
+name|lzma_filter
+modifier|*
+name|filters
+parameter_list|)
+block|{
+name|uint64_t
+name|max
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|!=
+name|LZMA_VLI_UNKNOWN
+condition|;
+operator|++
+name|i
+control|)
+block|{
+specifier|const
+name|lzma_filter_encoder
+modifier|*
+specifier|const
+name|fe
+init|=
+name|encoder_find
+argument_list|(
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|id
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|fe
+operator|->
+name|block_size
+operator|!=
+name|NULL
+condition|)
+block|{
+specifier|const
+name|uint64_t
+name|size
+init|=
+name|fe
+operator|->
+name|block_size
+argument_list|(
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|options
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|size
+operator|>
+name|max
+condition|)
+name|max
+operator|=
+name|size
+expr_stmt|;
+block|}
+block|}
+return|return
+name|max
+return|;
+block|}
+end_function
 
 begin_extern
 extern|extern LZMA_API(lzma_ret

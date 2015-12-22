@@ -90,7 +90,7 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|bool
+name|lzma_ret
 name|rc_read_init
 parameter_list|(
 name|lzma_range_decoder
@@ -129,7 +129,29 @@ operator|==
 name|in_size
 condition|)
 return|return
-name|false
+name|LZMA_OK
+return|;
+comment|// The first byte is always 0x00. It could have been omitted
+comment|// in LZMA2 but it wasn't, so one byte is wasted in every
+comment|// LZMA2 chunk.
+if|if
+condition|(
+name|rc
+operator|->
+name|init_bytes_left
+operator|==
+literal|5
+operator|&&
+name|in
+index|[
+operator|*
+name|in_pos
+index|]
+operator|!=
+literal|0x00
+condition|)
+return|return
+name|LZMA_DATA_ERROR
 return|;
 name|rc
 operator|->
@@ -160,7 +182,7 @@ name|init_bytes_left
 expr_stmt|;
 block|}
 return|return
-name|true
+name|LZMA_STREAM_END
 return|;
 block|}
 end_function

@@ -62,13 +62,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Set custom value for maximum number of coder threads.
+comment|/// Set the maximum number of worker threads.
 end_comment
 
 begin_function_decl
 specifier|extern
 name|void
-name|hardware_threadlimit_set
+name|hardware_threads_set
 parameter_list|(
 name|uint32_t
 name|threadlimit
@@ -77,17 +77,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Get the maximum number of coder threads. Some additional helper threads
-end_comment
-
-begin_comment
-comment|/// are allowed on top of this).
+comment|/// Get the maximum number of worker threads.
 end_comment
 
 begin_function_decl
 specifier|extern
 name|uint32_t
-name|hardware_threadlimit_get
+name|hardware_threads_get
 parameter_list|(
 name|void
 parameter_list|)

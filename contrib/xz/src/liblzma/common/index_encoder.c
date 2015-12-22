@@ -114,6 +114,7 @@ name|lzma_coder
 operator|*
 name|coder
 argument_list|,
+specifier|const
 name|lzma_allocator
 operator|*
 name|allocator
@@ -586,6 +587,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -664,6 +666,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

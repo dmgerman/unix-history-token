@@ -54,7 +54,8 @@ modifier|*
 name|arg_names
 decl_stmt|;
 comment|/// Number of filenames from command line
-name|size_t
+name|unsigned
+name|int
 name|arg_count
 decl_stmt|;
 comment|/// Name of the file from which to read filenames. This is NULL
@@ -112,6 +113,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|bool
+name|opt_ignore_check
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 name|stdin_filename
@@ -135,6 +143,16 @@ name|char
 modifier|*
 modifier|*
 name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|args_free
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -128,6 +128,7 @@ name|lzma_coder
 operator|*
 name|coder
 argument_list|,
+specifier|const
 name|lzma_allocator
 operator|*
 name|allocator
@@ -706,6 +707,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -810,6 +812,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -906,6 +909,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1106,7 +1110,7 @@ argument|lzma_index **i
 argument_list|,
 argument|uint64_t *memlimit
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,
