@@ -2171,8 +2171,7 @@ name|cuse_client_command
 modifier|*
 name|pccmd
 parameter_list|,
-name|unsigned
-name|long
+name|uintptr_t
 name|data_ptr
 parameter_list|,
 name|unsigned
@@ -6487,8 +6486,7 @@ argument_list|(
 name|pccmd
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|uio
 operator|->
@@ -6749,8 +6747,7 @@ argument_list|(
 name|pccmd
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|uio
 operator|->

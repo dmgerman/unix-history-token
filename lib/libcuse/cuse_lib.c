@@ -2912,8 +2912,7 @@ operator|.
 name|local_ptr
 operator|=
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|src
 expr_stmt|;
@@ -2922,8 +2921,7 @@ operator|.
 name|peer_ptr
 operator|=
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|user_dst
 expr_stmt|;
@@ -3082,8 +3080,7 @@ operator|.
 name|local_ptr
 operator|=
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|dst
 expr_stmt|;
@@ -3092,8 +3089,7 @@ operator|.
 name|peer_ptr
 operator|=
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|user_src
 expr_stmt|;

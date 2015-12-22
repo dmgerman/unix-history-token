@@ -91,12 +91,10 @@ begin_struct
 struct|struct
 name|cuse_data_chunk
 block|{
-name|unsigned
-name|long
+name|uintptr_t
 name|local_ptr
 decl_stmt|;
-name|unsigned
-name|long
+name|uintptr_t
 name|peer_ptr
 decl_stmt|;
 name|unsigned
@@ -139,8 +137,7 @@ decl_stmt|;
 name|uintptr_t
 name|per_file_handle
 decl_stmt|;
-name|unsigned
-name|long
+name|uintptr_t
 name|data_pointer
 decl_stmt|;
 name|unsigned
