@@ -1422,19 +1422,6 @@ name|num_rcvq
 init|=
 literal|0
 decl_stmt|;
-name|QL_DPRINT2
-argument_list|(
-name|ha
-argument_list|,
-operator|(
-name|dev
-operator|,
-literal|"%s: enter\n"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
