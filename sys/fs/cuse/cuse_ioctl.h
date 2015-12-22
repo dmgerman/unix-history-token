@@ -136,8 +136,7 @@ name|unsigned
 name|long
 name|fflags
 decl_stmt|;
-name|unsigned
-name|long
+name|uintptr_t
 name|per_file_handle
 decl_stmt|;
 name|unsigned
@@ -243,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|CUSE_IOCTL_SET_PFH
-value|_IOW('C', 7, unsigned long)
+value|_IOW('C', 7, uintptr_t)
 end_define
 
 begin_define

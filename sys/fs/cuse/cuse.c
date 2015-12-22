@@ -4814,8 +4814,7 @@ name|per_file_handle
 operator|=
 operator|*
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|*
 operator|)
 name|data
