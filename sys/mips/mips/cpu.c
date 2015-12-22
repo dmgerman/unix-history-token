@@ -804,6 +804,25 @@ name|l1
 operator|.
 name|dc_nways
 expr_stmt|;
+comment|/* 	 * Probe PageMask register to see what sizes of pages are supported 	 * by writing all one's and then reading it back. 	 */
+name|mips_wr_pagemask
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+expr_stmt|;
+name|cpuinfo
+operator|->
+name|tlb_pgmask
+operator|=
+name|mips_rd_pagemask
+argument_list|()
+expr_stmt|;
+name|mips_wr_pagemask
+argument_list|(
+name|MIPS3_PGMASK_4K
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|CPU_CNMIPS
@@ -1226,7 +1245,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|", %d entries\n"
+literal|", %d entries "
 argument_list|,
 name|cpuinfo
 operator|.
@@ -1234,6 +1253,138 @@ name|tlb_nentries
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"("
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_MASKX
+condition|)
+name|printf
+argument_list|(
+literal|"1K "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"4K "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_16K
+condition|)
+name|printf
+argument_list|(
+literal|"16K "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_64K
+condition|)
+name|printf
+argument_list|(
+literal|"64K "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_256K
+condition|)
+name|printf
+argument_list|(
+literal|"256K "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_1M
+condition|)
+name|printf
+argument_list|(
+literal|"1M "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_16M
+condition|)
+name|printf
+argument_list|(
+literal|"16M "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_64M
+condition|)
+name|printf
+argument_list|(
+literal|"64M "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|tlb_pgmask
+operator|&
+name|MIPS3_PGMASK_256M
+condition|)
+name|printf
+argument_list|(
+literal|"256M "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"pg sizes)"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"  L1 i-cache: "
