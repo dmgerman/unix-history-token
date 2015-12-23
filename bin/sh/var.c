@@ -1496,7 +1496,9 @@ name|vp
 operator|->
 name|name_len
 argument_list|,
-name|s
+name|vp
+operator|->
+name|text
 argument_list|)
 expr_stmt|;
 block|}
