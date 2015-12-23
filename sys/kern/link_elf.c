@@ -2134,6 +2134,7 @@ operator|=
 name|ef
 operator|->
 name|address
+operator|+
 operator|*
 name|ctors_addrp
 expr_stmt|;
@@ -4871,10 +4872,10 @@ argument_list|)
 expr_stmt|;
 name|kmupetext
 argument_list|(
-operator|(
+call|(
 name|uintfptr_t
-operator|)
-operator|(
+call|)
+argument_list|(
 name|mapbase
 operator|+
 name|segs
@@ -4885,13 +4886,14 @@ operator|->
 name|p_vaddr
 operator|-
 name|base_vaddr
+operator|+
 name|segs
 index|[
 literal|0
 index|]
 operator|->
 name|p_memsz
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
