@@ -60,11 +60,33 @@ end_include
 begin_define
 define|#
 directive|define
+name|ATF_REQUIRE_FEATURE
+parameter_list|(
+name|_feature_name
+parameter_list|)
+value|do {				\ 	if (feature_present(_feature_name) == 0) {			\ 		atf_tc_skip("kernel feature (%s) not present",		\ 		    _feature_name);					\ 	}								\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATF_REQUIRE_KERNEL_MODULE
 parameter_list|(
 name|_mod_name
 parameter_list|)
 value|do {			\ 	if (modfind(_mod_name) == -1) {					\ 		atf_tc_skip("module %s could not be resolved: %s",	\ 		    _mod_name, strerror(errno));			\ 	}								\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLAIN_REQUIRE_FEATURE
+parameter_list|(
+name|_feature_name
+parameter_list|,
+name|_exit_code
+parameter_list|)
+value|do {		\ 	if (feature_present(_feature_name) == 0) {			\ 		printf("kernel feature (%s) not present\n",		\ 		    _feature_name);					\ 		_exit(_exit_code);					\ 	}								\ } while(0)
 end_define
 
 begin_define
