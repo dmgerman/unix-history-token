@@ -3549,8 +3549,13 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 9 - fma NaNs\n"
+literal|"ok %d - fma NaNs\n"
+argument_list|,
+name|j
 argument_list|)
+expr_stmt|;
+name|j
+operator|++
 expr_stmt|;
 for|for
 control|(
