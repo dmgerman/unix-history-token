@@ -689,7 +689,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We can test some parts of the library without the MAC Framework 	 * and policy loaded, so run those tests before calling 	 * mac_is_present(). 	 */
 name|test_libugidfw_strings
 argument_list|()
 expr_stmt|;
