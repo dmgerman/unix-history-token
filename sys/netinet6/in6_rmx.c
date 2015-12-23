@@ -898,11 +898,6 @@ name|head
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
