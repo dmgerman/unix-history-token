@@ -597,10 +597,20 @@ name|cell_t
 argument_list|)
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__powerpc64__
-comment|/* On 32-bit PPC, ignore regions starting above 4 GB */
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+comment|/* On 32-bit PPC (OEA), ignore regions starting above 4 GB */
 if|if
 condition|(
 name|address_cells
@@ -645,9 +655,6 @@ operator|==
 literal|2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__powerpc64__
 name|output
 index|[
 name|j
@@ -657,8 +664,6 @@ name|mr_start
 operator|<<=
 literal|32
 expr_stmt|;
-endif|#
-directive|endif
 name|output
 index|[
 name|j
@@ -693,9 +698,6 @@ operator|==
 literal|2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__powerpc64__
 name|output
 index|[
 name|j
@@ -705,8 +707,6 @@ name|mr_size
 operator|<<=
 literal|32
 expr_stmt|;
-endif|#
-directive|endif
 name|output
 index|[
 name|j
@@ -721,9 +721,20 @@ operator|++
 index|]
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__powerpc64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+comment|/* Book-E can support 36-bit addresses. */
 comment|/* 		 * Check for memory regions extending above 32-bit 		 * memory space, and restrict them to stay there. 		 */
 if|if
 condition|(

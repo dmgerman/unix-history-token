@@ -4993,7 +4993,7 @@ name|vm_offset_t
 name|kernelend
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_kernelend
 decl_stmt|;
 name|struct
@@ -5011,21 +5011,22 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|u_int
+name|vm_paddr_t
 name|s
 decl_stmt|,
 name|e
 decl_stmt|,
 name|sz
 decl_stmt|;
+name|vm_paddr_t
+name|physsz
+decl_stmt|,
+name|hwphyssz
+decl_stmt|;
 name|u_int
 name|phys_avail_count
 decl_stmt|;
 name|vm_size_t
-name|physsz
-decl_stmt|,
-name|hwphyssz
-decl_stmt|,
 name|kstack0_sz
 decl_stmt|;
 name|vm_offset_t
@@ -5568,10 +5569,16 @@ name|mr_size
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" %08x-%08x -> "
+literal|" %09jx-%09jx -> "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|s
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|e
 argument_list|)
 expr_stmt|;
@@ -5698,12 +5705,21 @@ name|s
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"%08x-%08x = %x\n"
+literal|"%09jx-%09jx = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|s
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|e
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sz
 argument_list|)
 expr_stmt|;
@@ -5931,6 +5947,9 @@ name|debugf
 argument_list|(
 literal|" region: 0x%jx - 0x%jx (0x%jx)\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|availmem_regions
 index|[
 name|i
@@ -5938,6 +5957,9 @@ index|]
 operator|.
 name|mr_start
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|availmem_regions
 index|[
 name|i
@@ -5952,6 +5974,9 @@ index|]
 operator|.
 name|mr_size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|availmem_regions
 index|[
 name|i
