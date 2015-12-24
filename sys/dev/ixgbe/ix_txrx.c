@@ -3263,6 +3263,9 @@ literal|8
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -3296,6 +3299,8 @@ operator||=
 name|IXGBE_ADVTXD_TUCMD_IPV6
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|offload
 operator|=
