@@ -6574,7 +6574,6 @@ name|__mips__
 case|case
 name|DT_DEBUG
 case|:
-comment|/* XXX - not implemented yet */
 if|if
 condition|(
 operator|!
