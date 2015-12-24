@@ -50,8 +50,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
 
 begin_function
 specifier|static
@@ -95,6 +109,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -116,6 +135,11 @@ block|{
 name|uint64_t
 name|val
 decl_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 comment|/* 	 * Userspace gettimeofday() is only enabled on ARMv7 CPUs, but 	 * libc is compiled for ARMv6.  Due to clang issues, .arch 	 * armv7-a directive does not work. 	 */
 asm|__asm __volatile(".word\t0xf57ff06f" : : : "memory");
 comment|/* isb */
@@ -133,6 +157,14 @@ else|:
 name|cp15_cntpct_get
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|val
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|val
