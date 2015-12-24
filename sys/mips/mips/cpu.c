@@ -1549,7 +1549,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"disabled"
+literal|"disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
