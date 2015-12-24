@@ -5514,7 +5514,7 @@ begin_define
 define|#
 directive|define
 name|ICB_LOGIN_TOV
-value|30
+value|10
 end_define
 
 begin_define
