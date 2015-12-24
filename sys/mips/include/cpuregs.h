@@ -381,6 +381,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_MIPS1004KC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UNCACHED
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|0x05
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -717,6 +745,11 @@ directive|elif
 name|defined
 argument_list|(
 name|CPU_MIPS74KC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MIPS1004KC
 argument_list|)
 end_elif
 
@@ -2189,6 +2222,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIPS_CONFIG3_CMGCR_MASK
+value|(1<< 29)
+end_define
+
+begin_comment
+comment|/* Coherence manager present */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIPS_CONFIG4_MMUSIZEEXT
 value|0x000000FF
 end_define
@@ -2574,6 +2618,24 @@ define|#
 directive|define
 name|MIPS_OPCODE_C1
 value|0x11
+end_define
+
+begin_comment
+comment|/* Coherence manager constants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CMGCRB_BASE
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CMGCRF_BASE
+value|(~((1<< MIPS_CMGCRB_BASE) - 1))
 end_define
 
 begin_endif
