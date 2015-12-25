@@ -327,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|0
+value|1
 end_define
 
 begin_comment
@@ -338,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.7.0"
+value|"3.7.1"
 end_define
 
 begin_endif
