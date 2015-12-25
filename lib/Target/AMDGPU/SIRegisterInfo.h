@@ -91,6 +91,19 @@ range|:
 name|public
 name|AMDGPURegisterInfo
 block|{
+name|private
+operator|:
+name|void
+name|reserveRegisterTuples
+argument_list|(
+argument|BitVector&
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+name|public
+operator|:
 name|SIRegisterInfo
 argument_list|()
 block|;

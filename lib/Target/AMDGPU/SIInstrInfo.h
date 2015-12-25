@@ -1305,7 +1305,12 @@ name|uint64_t
 name|getDefaultRsrcDataFormat
 argument_list|()
 specifier|const
-block|;  }
+block|;
+name|uint64_t
+name|getScratchRsrcWords23
+argument_list|()
+specifier|const
+block|; }
 decl_stmt|;
 name|namespace
 name|AMDGPU

@@ -8849,6 +8849,8 @@ argument_list|)
 argument_list|,
 name|Ty
 argument_list|,
+name|PersFn
+argument_list|,
 name|Int_val
 argument_list|(
 name|NumClauses
