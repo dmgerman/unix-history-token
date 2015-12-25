@@ -1202,6 +1202,10 @@ name|void
 name|pf_change_ap
 parameter_list|(
 name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
 name|pf_addr
 modifier|*
 parameter_list|,
@@ -8340,7 +8344,9 @@ argument|); 	case PF_ADDR_TABLE: 		return (aw1->p.tbl != aw2->p.tbl); 	case PF_A
 literal|"invalid address type: %d\n"
 argument|, aw1->type); 		return (
 literal|1
-argument|); 	} }  u_int16_t pf_cksum_fixup(u_int16_t cksum, u_int16_t old, u_int16_t new, u_int8_t udp) { 	u_int32_t	l;  	if (udp&& !cksum) 		return (
+argument|); 	} }
+comment|/**  * Checksum updates are a little complicated because the checksum in the TCP/UDP  * header isn't always a full checksum. In some cases (i.e. output) it's a  * pseudo-header checksum, which is a partial checksum over src/dst IP  * addresses, protocol number and length.  *  * That means we have the following cases:  *  * Input or forwarding: we don't have TSO, the checksum fields are full  *  	checksums, we need to update the checksum whenever we change anything.  *  * Output (i.e. the checksum is a pseudo-header checksum):  *  	x The field being updated is src/dst address or affects the length of  *  	the packet. We need to update the pseudo-header checksum (note that this  *  	checksum is not ones' complement).  *  	x Some other field is being modified (e.g. src/dst port numbers): We  *  	don't have to update anything.  **/
+argument|u_int16_t pf_cksum_fixup(u_int16_t cksum, u_int16_t old, u_int16_t new, u_int8_t udp) { 	u_int32_t	l;  	if (udp&& !cksum) 		return (
 literal|0x0000
 argument|); 	l = cksum + old - new; 	l = (l>>
 literal|16
@@ -8350,7 +8356,7 @@ argument|); 	l = l&
 literal|65535
 argument|; 	if (udp&& !l) 		return (
 literal|0xFFFF
-argument|); 	return (l); }  void pf_change_ap(struct pf_addr *a, u_int16_t *p, u_int16_t *ic, u_int16_t *pc,     struct pf_addr *an, u_int16_t pn, u_int8_t u, sa_family_t af) { 	struct pf_addr	ao; 	u_int16_t	po = *p;  	PF_ACPY(&ao, a, af); 	PF_ACPY(a, an, af);  	*p = pn;  	switch (af) {
+argument|); 	return (l); }  u_int16_t pf_proto_cksum_fixup(struct mbuf *m, u_int16_t cksum, u_int16_t old,         u_int16_t new, u_int8_t udp) { 	if (m->m_pkthdr.csum_flags& (CSUM_DELAY_DATA | CSUM_DELAY_DATA_IPV6)) 		return (cksum);  	return (pf_cksum_fixup(cksum, old, new, udp)); }  void pf_change_ap(struct mbuf *m, struct pf_addr *a, u_int16_t *p, u_int16_t *ic,         u_int16_t *pc, struct pf_addr *an, u_int16_t pn, u_int8_t u,         sa_family_t af) { 	struct pf_addr	ao; 	u_int16_t	po = *p;  	PF_ACPY(&ao, a, af); 	PF_ACPY(a, an, af);  	if (m->m_pkthdr.csum_flags& (CSUM_DELAY_DATA | CSUM_DELAY_DATA_IPV6)) 		*pc = ~*pc;  	*p = pn;  	switch (af) {
 ifdef|#
 directive|ifdef
 name|INET
@@ -8366,7 +8372,7 @@ argument|], an->addr16[
 literal|1
 argument|],
 literal|0
-argument|); 		*p = pn; 		*pc = pf_cksum_fixup(pf_cksum_fixup(pf_cksum_fixup(*pc, 		    ao.addr16[
+argument|); 		*p = pn;  		*pc = pf_cksum_fixup(pf_cksum_fixup(*pc, 		    ao.addr16[
 literal|0
 argument|], an->addr16[
 literal|0
@@ -8374,14 +8380,14 @@ argument|], u), 		    ao.addr16[
 literal|1
 argument|], an->addr16[
 literal|1
-argument|], u), 		    po, pn, u); 		break;
+argument|], u);  		*pc = pf_proto_cksum_fixup(m, *pc, po, pn, u); 		break;
 endif|#
 directive|endif
 comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case AF_INET6: 		*pc = pf_cksum_fixup(pf_cksum_fixup(pf_cksum_fixup( 		    pf_cksum_fixup(pf_cksum_fixup(pf_cksum_fixup( 		    pf_cksum_fixup(pf_cksum_fixup(pf_cksum_fixup(*pc, 		    ao.addr16[
+argument|case AF_INET6: 		*pc = pf_cksum_fixup(pf_cksum_fixup(pf_cksum_fixup( 		    pf_cksum_fixup(pf_cksum_fixup(pf_cksum_fixup( 		    pf_cksum_fixup(pf_cksum_fixup(*pc, 		    ao.addr16[
 literal|0
 argument|], an->addr16[
 literal|0
@@ -8413,11 +8419,13 @@ argument|], u), 		    ao.addr16[
 literal|7
 argument|], an->addr16[
 literal|7
-argument|], u), 		    po, pn, u); 		break;
+argument|], u);  		*pc = pf_proto_cksum_fixup(m, *pc, po, pn, u); 		break;
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|} }
+argument|}  	if (m->m_pkthdr.csum_flags& (CSUM_DELAY_DATA |  	    CSUM_DELAY_DATA_IPV6)) { 		*pc = ~*pc; 		if (! *pc) 			*pc =
+literal|0xffff
+argument|; 	} }
 comment|/* Changes a u_int32_t.  Uses a void * so there are no align restrictions */
 argument|void pf_change_a(void *a, u_int16_t *c, u_int32_t an, u_int8_t u) { 	u_int32_t	ao;  	memcpy(&ao, a, sizeof(ao)); 	memcpy(a,&an, sizeof(u_int32_t)); 	*c = pf_cksum_fixup(pf_cksum_fixup(*c, ao /
 literal|65536
@@ -8427,7 +8435,15 @@ argument|, u), 	    ao %
 literal|65536
 argument|, an %
 literal|65536
-argument|, u); }
+argument|, u); }  void pf_change_proto_a(struct mbuf *m, void *a, u_int16_t *c, u_int32_t an, u_int8_t udp) { 	u_int32_t	ao;  	memcpy(&ao, a, sizeof(ao)); 	memcpy(a,&an, sizeof(u_int32_t));  	*c = pf_proto_cksum_fixup(m, 	    pf_proto_cksum_fixup(m, *c, ao /
+literal|65536
+argument|, an /
+literal|65536
+argument|, udp), 	    ao %
+literal|65536
+argument|, an %
+literal|65536
+argument|, udp); }
 ifdef|#
 directive|ifdef
 name|INET6
@@ -8638,9 +8654,9 @@ argument|]; 		switch (*opt) { 		case TCPOPT_EOL:
 comment|/* FALLTHROUGH */
 argument|case TCPOPT_NOP: 			opt++; 			hlen--; 			break; 		case TCPOPT_SACK: 			if (olen> hlen) 				olen = hlen; 			if (olen>= TCPOLEN_SACKLEN) { 				for (i =
 literal|2
-argument|; i + TCPOLEN_SACK<= olen; 				    i += TCPOLEN_SACK) { 					memcpy(&sack,&opt[i], sizeof(sack)); 					pf_change_a(&sack.start,&th->th_sum, 					    htonl(ntohl(sack.start) - 					    dst->seqdiff),
+argument|; i + TCPOLEN_SACK<= olen; 				    i += TCPOLEN_SACK) { 					memcpy(&sack,&opt[i], sizeof(sack)); 					pf_change_proto_a(m,&sack.start,&th->th_sum, 					    htonl(ntohl(sack.start) - dst->seqdiff),
 literal|0
-argument|); 					pf_change_a(&sack.end,&th->th_sum, 					    htonl(ntohl(sack.end) - 					    dst->seqdiff),
+argument|); 					pf_change_proto_a(m,&sack.end,&th->th_sum, 					    htonl(ntohl(sack.end) - dst->seqdiff),
 literal|0
 argument|); 					memcpy(&opt[i],&sack, sizeof(sack)); 				} 				copyback =
 literal|1
@@ -9832,13 +9848,13 @@ argument|default: 		sport = dport = hdrlen =
 literal|0
 argument|; 		break; 	}  	r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);
 comment|/* check packet for BINAT/NAT/RDR */
-argument|if ((nr = pf_get_translation(pd, m, off, direction, kif,&nsn,&skw,&sks,&sk,&nk, saddr, daddr, sport, dport)) != NULL) { 		if (nk == NULL || sk == NULL) { 			REASON_SET(&reason, PFRES_MEMORY); 			goto cleanup; 		}  		if (pd->ip_sum) 			bip_sum = *pd->ip_sum;  		switch (pd->proto) { 		case IPPROTO_TCP: 			bproto_sum = th->th_sum; 			pd->proto_sum =&th->th_sum;  			if (PF_ANEQ(saddr,&nk->addr[pd->sidx], af) || 			    nk->port[pd->sidx] != sport) { 				pf_change_ap(saddr,&th->th_sport, pd->ip_sum,&th->th_sum,&nk->addr[pd->sidx], 				    nk->port[pd->sidx],
+argument|if ((nr = pf_get_translation(pd, m, off, direction, kif,&nsn,&skw,&sks,&sk,&nk, saddr, daddr, sport, dport)) != NULL) { 		if (nk == NULL || sk == NULL) { 			REASON_SET(&reason, PFRES_MEMORY); 			goto cleanup; 		}  		if (pd->ip_sum) 			bip_sum = *pd->ip_sum;  		switch (pd->proto) { 		case IPPROTO_TCP: 			bproto_sum = th->th_sum; 			pd->proto_sum =&th->th_sum;  			if (PF_ANEQ(saddr,&nk->addr[pd->sidx], af) || 			    nk->port[pd->sidx] != sport) { 				pf_change_ap(m, saddr,&th->th_sport, pd->ip_sum,&th->th_sum,&nk->addr[pd->sidx], 				    nk->port[pd->sidx],
 literal|0
-argument|, af); 				pd->sport =&th->th_sport; 				sport = th->th_sport; 			}  			if (PF_ANEQ(daddr,&nk->addr[pd->didx], af) || 			    nk->port[pd->didx] != dport) { 				pf_change_ap(daddr,&th->th_dport, pd->ip_sum,&th->th_sum,&nk->addr[pd->didx], 				    nk->port[pd->didx],
+argument|, af); 				pd->sport =&th->th_sport; 				sport = th->th_sport; 			}  			if (PF_ANEQ(daddr,&nk->addr[pd->didx], af) || 			    nk->port[pd->didx] != dport) { 				pf_change_ap(m, daddr,&th->th_dport, pd->ip_sum,&th->th_sum,&nk->addr[pd->didx], 				    nk->port[pd->didx],
 literal|0
-argument|, af); 				dport = th->th_dport; 				pd->dport =&th->th_dport; 			} 			rewrite++; 			break; 		case IPPROTO_UDP: 			bproto_sum = pd->hdr.udp->uh_sum; 			pd->proto_sum =&pd->hdr.udp->uh_sum;  			if (PF_ANEQ(saddr,&nk->addr[pd->sidx], af) || 			    nk->port[pd->sidx] != sport) { 				pf_change_ap(saddr,&pd->hdr.udp->uh_sport, 				    pd->ip_sum,&pd->hdr.udp->uh_sum,&nk->addr[pd->sidx], 				    nk->port[pd->sidx],
+argument|, af); 				dport = th->th_dport; 				pd->dport =&th->th_dport; 			} 			rewrite++; 			break; 		case IPPROTO_UDP: 			bproto_sum = pd->hdr.udp->uh_sum; 			pd->proto_sum =&pd->hdr.udp->uh_sum;  			if (PF_ANEQ(saddr,&nk->addr[pd->sidx], af) || 			    nk->port[pd->sidx] != sport) { 				pf_change_ap(m, saddr,&pd->hdr.udp->uh_sport, 				    pd->ip_sum,&pd->hdr.udp->uh_sum,&nk->addr[pd->sidx], 				    nk->port[pd->sidx],
 literal|1
-argument|, af); 				sport = pd->hdr.udp->uh_sport; 				pd->sport =&pd->hdr.udp->uh_sport; 			}  			if (PF_ANEQ(daddr,&nk->addr[pd->didx], af) || 			    nk->port[pd->didx] != dport) { 				pf_change_ap(daddr,&pd->hdr.udp->uh_dport, 				    pd->ip_sum,&pd->hdr.udp->uh_sum,&nk->addr[pd->didx], 				    nk->port[pd->didx],
+argument|, af); 				sport = pd->hdr.udp->uh_sport; 				pd->sport =&pd->hdr.udp->uh_sport; 			}  			if (PF_ANEQ(daddr,&nk->addr[pd->didx], af) || 			    nk->port[pd->didx] != dport) { 				pf_change_ap(m, daddr,&pd->hdr.udp->uh_dport, 				    pd->ip_sum,&pd->hdr.udp->uh_sum,&nk->addr[pd->didx], 				    nk->port[pd->didx],
 literal|1
 argument|, af); 				dport = pd->hdr.udp->uh_dport; 				pd->dport =&pd->hdr.udp->uh_dport; 			} 			rewrite++; 			break;
 ifdef|#
@@ -11387,8 +11403,10 @@ name|seqdiff
 operator|=
 literal|1
 expr_stmt|;
-name|pf_change_a
+name|pf_change_proto_a
 argument_list|(
+name|m
+argument_list|,
 operator|&
 name|th
 operator|->
@@ -12501,9 +12519,9 @@ argument|if (dst->seqdiff&& !src->seqdiff) {
 comment|/* use random iss for the TCP server */
 argument|while ((src->seqdiff = arc4random() - seq) ==
 literal|0
-argument|) 				; 			ack = ntohl(th->th_ack) - dst->seqdiff; 			pf_change_a(&th->th_seq,&th->th_sum, htonl(seq + 			    src->seqdiff),
+argument|) 				; 			ack = ntohl(th->th_ack) - dst->seqdiff; 			pf_change_proto_a(m,&th->th_seq,&th->th_sum, htonl(seq + 			    src->seqdiff),
 literal|0
-argument|); 			pf_change_a(&th->th_ack,&th->th_sum, htonl(ack),
+argument|); 			pf_change_proto_a(m,&th->th_ack,&th->th_sum, htonl(ack),
 literal|0
 argument|); 			*copyback =
 literal|1
@@ -12529,9 +12547,9 @@ argument|, dst->max_win<< dws), src->seqhi)) 			src->seqhi = end + MAX(
 literal|1
 argument|, dst->max_win<< dws); 		if (win> src->max_win) 			src->max_win = win;  	} else { 		ack = ntohl(th->th_ack) - dst->seqdiff; 		if (src->seqdiff) {
 comment|/* Modulate sequence numbers */
-argument|pf_change_a(&th->th_seq,&th->th_sum, htonl(seq + 			    src->seqdiff),
+argument|pf_change_proto_a(m,&th->th_seq,&th->th_sum, htonl(seq + 			    src->seqdiff),
 literal|0
-argument|); 			pf_change_a(&th->th_ack,&th->th_sum, htonl(ack),
+argument|); 			pf_change_proto_a(m,&th->th_ack,&th->th_sum, htonl(ack),
 literal|0
 argument|); 			*copyback =
 literal|1
@@ -12897,9 +12915,9 @@ argument|); 		}
 comment|/* XXX make sure it's the same direction ?? */
 argument|(*state)->src.state = (*state)->dst.state = TCPS_CLOSED; 		pf_unlink_state(*state); 		*state = NULL; 		return (PF_DROP); 	}  	if ((*state)->state_flags& PFSTATE_SLOPPY) { 		if (pf_tcp_track_sloppy(src, dst, state, pd, reason) == PF_DROP) 			return (PF_DROP); 	} else { 		if (pf_tcp_track_full(src, dst, state, kif, m, off, pd, reason,&copyback) == PF_DROP) 			return (PF_DROP); 	}
 comment|/* translate source/destination address, if necessary */
-argument|if ((*state)->key[PF_SK_WIRE] != (*state)->key[PF_SK_STACK]) { 		struct pf_state_key *nk = (*state)->key[pd->didx];  		if (PF_ANEQ(pd->src,&nk->addr[pd->sidx], pd->af) || 		    nk->port[pd->sidx] != th->th_sport) 			pf_change_ap(pd->src,&th->th_sport, pd->ip_sum,&th->th_sum,&nk->addr[pd->sidx], 			    nk->port[pd->sidx],
+argument|if ((*state)->key[PF_SK_WIRE] != (*state)->key[PF_SK_STACK]) { 		struct pf_state_key *nk = (*state)->key[pd->didx];  		if (PF_ANEQ(pd->src,&nk->addr[pd->sidx], pd->af) || 		    nk->port[pd->sidx] != th->th_sport) 			pf_change_ap(m, pd->src,&th->th_sport, 			    pd->ip_sum,&th->th_sum,&nk->addr[pd->sidx], 			    nk->port[pd->sidx],
 literal|0
-argument|, pd->af);  		if (PF_ANEQ(pd->dst,&nk->addr[pd->didx], pd->af) || 		    nk->port[pd->didx] != th->th_dport) 			pf_change_ap(pd->dst,&th->th_dport, pd->ip_sum,&th->th_sum,&nk->addr[pd->didx], 			    nk->port[pd->didx],
+argument|, pd->af);  		if (PF_ANEQ(pd->dst,&nk->addr[pd->didx], pd->af) || 		    nk->port[pd->didx] != th->th_dport) 			pf_change_ap(m, pd->dst,&th->th_dport, 			    pd->ip_sum,&th->th_sum,&nk->addr[pd->didx], 			    nk->port[pd->didx],
 literal|0
 argument|, pd->af); 		copyback =
 literal|1
@@ -12951,9 +12969,9 @@ argument|if (src->state< PFUDPS_SINGLE) 		src->state = PFUDPS_SINGLE; 	if (dst->
 comment|/* update expire time */
 argument|(*state)->expire = time_second; 	if (src->state == PFUDPS_MULTIPLE&& dst->state == PFUDPS_MULTIPLE) 		(*state)->timeout = PFTM_UDP_MULTIPLE; 	else 		(*state)->timeout = PFTM_UDP_SINGLE;
 comment|/* translate source/destination address, if necessary */
-argument|if ((*state)->key[PF_SK_WIRE] != (*state)->key[PF_SK_STACK]) { 		struct pf_state_key *nk = (*state)->key[pd->didx];  		if (PF_ANEQ(pd->src,&nk->addr[pd->sidx], pd->af) || 		    nk->port[pd->sidx] != uh->uh_sport) 			pf_change_ap(pd->src,&uh->uh_sport, pd->ip_sum,&uh->uh_sum,&nk->addr[pd->sidx], 			    nk->port[pd->sidx],
+argument|if ((*state)->key[PF_SK_WIRE] != (*state)->key[PF_SK_STACK]) { 		struct pf_state_key *nk = (*state)->key[pd->didx];  		if (PF_ANEQ(pd->src,&nk->addr[pd->sidx], pd->af) || 		    nk->port[pd->sidx] != uh->uh_sport) 			pf_change_ap(m, pd->src,&uh->uh_sport, pd->ip_sum,&uh->uh_sum,&nk->addr[pd->sidx], 			    nk->port[pd->sidx],
 literal|1
-argument|, pd->af);  		if (PF_ANEQ(pd->dst,&nk->addr[pd->didx], pd->af) || 		    nk->port[pd->didx] != uh->uh_dport) 			pf_change_ap(pd->dst,&uh->uh_dport, pd->ip_sum,&uh->uh_sum,&nk->addr[pd->didx], 			    nk->port[pd->didx],
+argument|, pd->af);  		if (PF_ANEQ(pd->dst,&nk->addr[pd->didx], pd->af) || 		    nk->port[pd->didx] != uh->uh_dport) 			pf_change_ap(m, pd->dst,&uh->uh_dport, pd->ip_sum,&uh->uh_sum,&nk->addr[pd->didx], 			    nk->port[pd->didx],
 literal|1
 argument|, pd->af);
 ifdef|#
