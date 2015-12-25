@@ -12679,7 +12679,7 @@ operator|==
 name|PTE2_NM
 condition|)
 block|{
-comment|/* 		 * When page is not modified, PTE2_RO can be set without 		 * a TLB invalidation. 		 * 		 * Note: When modified bit is being set, then in harware case, 		 *       the TLB entry is re-read (updated) from PT2, and in 		 *       software case (abort), the PTE2 is read from PT2 and 		 *       TLB flushed if changed. The following cmpset() solves 		 *       any race with setting this bit in both cases. 		 */
+comment|/* 		 * When page is not modified, PTE2_RO can be set without 		 * a TLB invalidation. 		 * 		 * Note: When modified bit is being set, then in hardware case, 		 *       the TLB entry is re-read (updated) from PT2, and in 		 *       software case (abort), the PTE2 is read from PT2 and 		 *       TLB flushed if changed. The following cmpset() solves 		 *       any race with setting this bit in both cases. 		 */
 if|if
 condition|(
 operator|!
@@ -25671,7 +25671,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Handle modify bits for page and section. Note that the modify 	 * bit is emulated by software. So PTEx_RO is software read only 	 * bit and PTEx_NM flag is real harware read only bit. 	 * 	 * QQQ: This is hardware emulation, we do not call userret() 	 *      for aborts from user mode. 	 *      We do not lock PMAP, so cmpset() is a need. Hopefully, 	 *      no one removes the mapping when we are here. 	 */
+comment|/* 	 * Handle modify bits for page and section. Note that the modify 	 * bit is emulated by software. So PTEx_RO is software read only 	 * bit and PTEx_NM flag is real hardware read only bit. 	 * 	 * QQQ: This is hardware emulation, we do not call userret() 	 *      for aborts from user mode. 	 *      We do not lock PMAP, so cmpset() is a need. Hopefully, 	 *      no one removes the mapping when we are here. 	 */
 if|if
 condition|(
 operator|(

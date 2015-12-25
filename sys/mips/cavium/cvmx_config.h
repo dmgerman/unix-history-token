@@ -97,7 +97,7 @@ name|CVMX_ENABLE_PKO_FUNCTIONS
 end_define
 
 begin_comment
-comment|/* Define to enable the use of simple executive helper functions. These ** include many harware setup functions.  See cvmx-helper.[ch] for ** details. */
+comment|/* Define to enable the use of simple executive helper functions. These ** include many hardware setup functions.  See cvmx-helper.[ch] for ** details. */
 end_comment
 
 begin_define
