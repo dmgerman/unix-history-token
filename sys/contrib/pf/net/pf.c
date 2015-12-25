@@ -14146,7 +14146,7 @@ endif|#
 directive|endif
 argument|if (m0->m_len< sizeof(struct ip6_hdr)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
 literal|"pf_route6: m0->m_len< sizeof(struct ip6_hdr)\n"
-argument|)); 			goto bad; 		} 		ip6 = mtod(m0, struct ip6_hdr *); 	}
+argument|)); 			goto bad; 		} 		ip6 = mtod(m0, struct ip6_hdr *); 	}  	if (m0->m_pkthdr.csum_flags& CSUM_DELAY_DATA_IPV6& 	    ~ifp->if_hwassist) { 		uint32_t plen = m0->m_pkthdr.len - sizeof(*ip6); 		in6_delayed_cksum(m0, plen, sizeof(struct ip6_hdr)); 		m0->m_pkthdr.csum_flags&= ~CSUM_DELAY_DATA_IPV6; 	}
 comment|/* 	 * If the packet is too large for the outgoing interface, 	 * send back an icmp6 error. 	 */
 argument|if (IN6_IS_SCOPE_EMBED(&dst->sin6_addr)) 		dst->sin6_addr.s6_addr16[
 literal|1
