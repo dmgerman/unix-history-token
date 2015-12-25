@@ -5901,7 +5901,7 @@ condition|)
 block|{
 name|xs
 operator|=
-name|isp_find_xs_tgt
+name|isp_find_xs
 argument_list|(
 name|isp
 argument_list|,
@@ -6367,7 +6367,7 @@ condition|)
 block|{
 name|xs
 operator|=
-name|isp_find_xs_tgt
+name|isp_find_xs
 argument_list|(
 name|isp
 argument_list|,

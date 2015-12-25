@@ -24683,8 +24683,6 @@ modifier|*
 name|isp
 decl_stmt|;
 name|uint32_t
-name|handle
-decl_stmt|,
 name|cdblen
 decl_stmt|;
 name|uint8_t
@@ -26322,17 +26320,27 @@ operator|=
 literal|0x1999
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|isp_allocate_xs
+comment|/* Whew. Thankfully the same for type 7 requests */
+name|reqp
+operator|->
+name|req_handle
+operator|=
+name|isp_allocate_handle
 argument_list|(
 name|isp
 argument_list|,
 name|xs
 argument_list|,
-operator|&
-name|handle
+name|ISP_HANDLE_INITIATOR
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reqp
+operator|->
+name|req_handle
+operator|==
+literal|0
 condition|)
 block|{
 name|isp_prt
@@ -26357,13 +26365,6 @@ name|CMD_EAGAIN
 operator|)
 return|;
 block|}
-comment|/* Whew. Thankfully the same for type 7 requests */
-name|reqp
-operator|->
-name|req_handle
-operator|=
-name|handle
-expr_stmt|;
 comment|/* 	 * Set up DMA and/or do any platform dependent swizzling of the request entry 	 * so that the Qlogic F/W understands what is being asked of it. 	 * 	 * The callee is responsible for adding all requests at this point. 	 */
 name|dmaresult
 operator|=
@@ -26387,7 +26388,9 @@ name|isp_destroy_handle
 argument_list|(
 name|isp
 argument_list|,
-name|handle
+name|reqp
+operator|->
+name|req_handle
 argument_list|)
 expr_stmt|;
 comment|/* 		 * dmasetup sets actual error in packet, and 		 * return what we were given to return. 		 */
@@ -30526,48 +30529,6 @@ name|etype
 expr_stmt|;
 continue|continue;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|ISP_VALID_HANDLE
-argument_list|(
-name|isp
-argument_list|,
-name|sp
-operator|->
-name|req_handle
-argument_list|)
-condition|)
-block|{
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"bad request handle 0x%x (iocb type 0x%x)"
-argument_list|,
-name|sp
-operator|->
-name|req_handle
-argument_list|,
-name|etype
-argument_list|)
-expr_stmt|;
-name|ISP_MEMZERO
-argument_list|(
-name|hp
-argument_list|,
-name|QENTRY_LEN
-argument_list|)
-expr_stmt|;
-comment|/* PERF */
-name|last_etype
-operator|=
-name|etype
-expr_stmt|;
-continue|continue;
 block|}
 name|xs
 operator|=
