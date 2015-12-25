@@ -279,20 +279,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|isp_fc_change_role
-parameter_list|(
-name|ispsoftc_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Cleanup  */
 end_comment
