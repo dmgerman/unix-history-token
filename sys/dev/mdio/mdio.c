@@ -24,7 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/etherswitch/mdio.h>
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mdio/mdio.h>
 end_include
 
 begin_include
@@ -352,6 +358,16 @@ name|devclass_t
 name|mdio_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|mdio
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

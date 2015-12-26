@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__DEV_ETHERSWITCH_MDIO_H__
+name|__DEV_MDIO_MDIO_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__DEV_ETHERSWITCH_MDIO_H__
+name|__DEV_MDIO_MDIO_H__
 end_define
 
 begin_decl_stmt
@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __DEV_ETHERSWITCH_MDIO_H__ */
+comment|/* __DEV_MDIO_MDIO_H__ */
 end_comment
 
 end_unit
