@@ -2801,8 +2801,9 @@ decl_stmt|;
 comment|/* (struct c4iw_dev *) */
 name|void
 modifier|*
-name|iscsi_softc
+name|iscsi_ulp_softc
 decl_stmt|;
+comment|/* (struct cxgbei_data *) */
 endif|#
 directive|endif
 name|struct
