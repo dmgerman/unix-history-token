@@ -29,6 +29,17 @@ name|mdio_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MDIO_DEVADDR_NONE
+value|-1
+end_define
+
+begin_comment
+comment|/**< Use clause 22 register access */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
