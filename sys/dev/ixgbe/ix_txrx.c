@@ -3204,6 +3204,9 @@ condition|(
 name|etype
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|ETHERTYPE_IP
 case|:
@@ -3263,6 +3266,8 @@ literal|8
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
