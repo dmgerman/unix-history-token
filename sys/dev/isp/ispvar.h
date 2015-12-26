@@ -1338,6 +1338,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HANDLE_CTRL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_HANDLE_SEQ_MASK
 value|0xffff0000
 end_define
@@ -1369,7 +1376,7 @@ parameter_list|,
 name|hdl
 parameter_list|)
 define|\
-value|((ISP_H2HT(hdl) == ISP_HANDLE_INITIATOR || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_TARGET)&& \ 	 ((hdl)& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 (hdl) == ((c)->isp_xflist[(hdl)& ISP_HANDLE_CMD_MASK].handle))
+value|((ISP_H2HT(hdl) == ISP_HANDLE_INITIATOR || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_TARGET || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_CTRL)&& \ 	 ((hdl)& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 (hdl) == ((c)->isp_xflist[(hdl)& ISP_HANDLE_CMD_MASK].handle))
 end_define
 
 begin_define
