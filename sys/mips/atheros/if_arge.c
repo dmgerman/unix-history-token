@@ -254,7 +254,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<dev/etherswitch/mdio.h>
+file|<dev/mdio/mdio.h>
 end_include
 
 begin_include
