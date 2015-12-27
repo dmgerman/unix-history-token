@@ -4133,6 +4133,13 @@ name|bounce_page
 modifier|*
 name|bpage
 decl_stmt|;
+if|if
+condition|(
+name|map
+operator|==
+name|NULL
+condition|)
+return|return;
 while|while
 condition|(
 operator|(
@@ -4192,6 +4199,10 @@ name|bpage
 decl_stmt|;
 if|if
 condition|(
+name|map
+operator|==
+name|NULL
+operator|||
 operator|(
 name|bpage
 operator|=
@@ -4203,11 +4214,11 @@ operator|->
 name|bpages
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
-comment|/* 		 * Handle data bouncing.  We might also 		 * want to add support for invalidating 		 * the caches on broken hardware 		 */
+return|return;
+comment|/* 	 * Handle data bouncing.  We might also want to add support for 	 * invalidating the caches on broken hardware. 	 */
 name|CTR4
 argument_list|(
 name|KTR_BUSDMA
@@ -4228,9 +4239,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|op
 operator|&
 name|BUS_DMASYNC_PREWRITE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 while|while
@@ -4248,6 +4263,7 @@ name|datavaddr
 operator|!=
 literal|0
 condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -4271,7 +4287,9 @@ operator|->
 name|datacount
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|physcopyout
 argument_list|(
 name|bpage
@@ -4291,6 +4309,7 @@ operator|->
 name|datacount
 argument_list|)
 expr_stmt|;
+block|}
 name|bpage
 operator|=
 name|STAILQ_NEXT
@@ -4311,9 +4330,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|op
 operator|&
 name|BUS_DMASYNC_POSTREAD
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 while|while
@@ -4331,6 +4354,7 @@ name|datavaddr
 operator|!=
 literal|0
 condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -4354,7 +4378,9 @@ operator|->
 name|datacount
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|physcopyin
 argument_list|(
 operator|(
@@ -4374,6 +4400,7 @@ operator|->
 name|datacount
 argument_list|)
 expr_stmt|;
+block|}
 name|bpage
 operator|=
 name|STAILQ_NEXT
@@ -4391,7 +4418,6 @@ operator|->
 name|total_bounced
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
