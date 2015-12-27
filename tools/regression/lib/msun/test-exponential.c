@@ -112,6 +112,46 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_testall0
+parameter_list|(
+name|x
+parameter_list|,
+name|result
+parameter_list|,
+name|exceptmask
+parameter_list|,
+name|excepts
+parameter_list|)
+value|do {		\ 	test(exp, x, result, exceptmask, excepts);			\ 	test(expf, x, result, exceptmask, excepts);			\ 	test(exp2, x, result, exceptmask, excepts);			\ 	test(exp2f, x, result, exceptmask, excepts);			\ } while (0)
+end_define
+
+begin_comment
+comment|/* Skip over exp2l on platforms that don't support it. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LDBL_PREC
+operator|==
+literal|53
+end_if
+
+begin_define
+define|#
+directive|define
+name|testall0
+value|_testall0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|testall0
 parameter_list|(
 name|x
@@ -122,8 +162,13 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	test(exp, x, result, exceptmask, excepts);			\ 	test(expf, x, result, exceptmask, excepts);			\ 	test(exp2, x, result, exceptmask, excepts);			\ 	test(exp2f, x, result, exceptmask, excepts);			\ 	test(exp2l, x, result, exceptmask, excepts);			\ } while (0)
+value|do {		\ 	_testall0(x, result, exceptmask, excepts); 			\ 	test(exp2l, x, result, exceptmask, excepts);			\ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Test all the functions that compute b^x - 1. */
@@ -323,6 +368,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 comment|/* exp(big) == Inf, overflow exception */
 name|testall0
 argument_list|(
@@ -367,6 +419,8 @@ operator||
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|testall1
 argument_list|(
 operator|-
