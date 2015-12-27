@@ -627,7 +627,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* atfork is reinitializeded by _libpthread_init()! */
+comment|/* atfork is reinitialized by _libpthread_init()! */
 name|_thr_rwl_rdlock
 argument_list|(
 operator|&
