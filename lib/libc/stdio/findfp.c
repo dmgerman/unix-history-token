@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -365,6 +371,22 @@ name|FILE
 modifier|*
 name|p
 decl_stmt|;
+name|size_t
+name|align
+decl_stmt|;
+comment|/* 	 * FILE has a mbstate_t variable. This variable tries to be int64_t 	 * aligned through its definition. int64_t may be larger than void *, 	 * which is the size traditionally used for ALIGNBYTES.  So, use our own 	 * rounding instead of the MI ALIGN macros. If for some reason 	 * ALIGNBYTES is larger than int64_t, respect that too. There appears to 	 * be no portable way to ask for FILE's alignment requirements other 	 * than just knowing here. 	 */
+name|align
+operator|=
+name|MAX
+argument_list|(
+name|ALIGNBYTES
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int64_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|g
 operator|=
 operator|(
@@ -380,7 +402,7 @@ operator|*
 name|g
 argument_list|)
 operator|+
-name|ALIGNBYTES
+name|align
 operator|+
 name|n
 operator|*
@@ -407,11 +429,18 @@ operator|(
 name|FILE
 operator|*
 operator|)
-name|ALIGN
+name|roundup
+argument_list|(
+call|(
+name|uintptr_t
+call|)
 argument_list|(
 name|g
 operator|+
 literal|1
+argument_list|)
+argument_list|,
+name|align
 argument_list|)
 expr_stmt|;
 name|g
