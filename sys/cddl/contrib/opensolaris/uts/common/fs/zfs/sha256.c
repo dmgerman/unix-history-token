@@ -32,7 +32,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<crypto/sha2/sha2.h>
+file|<crypto/sha2/sha256.h>
 end_include
 
 begin_else

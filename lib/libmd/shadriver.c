@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sha384.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sha512.h"
 end_include
 
@@ -125,6 +131,27 @@ define|#
 directive|define
 name|SHA_Data
 value|SHA256_Data
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SHA
+operator|==
+literal|384
+end_elif
+
+begin_undef
+undef|#
+directive|undef
+name|SHA_Data
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SHA_Data
+value|SHA384_Data
 end_define
 
 begin_elif
