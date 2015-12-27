@@ -29,13 +29,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FIRE_NRANGE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|FIRE_NREG
 value|2
 end_define
