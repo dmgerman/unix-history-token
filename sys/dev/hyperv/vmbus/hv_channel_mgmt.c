@@ -166,20 +166,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|hv_vmbus_channel
-modifier|*
-name|vmbus_select_outgoing_channel
-parameter_list|(
-name|struct
-name|hv_vmbus_channel
-modifier|*
-name|promary
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/**  * Channel message dispatch table  */
 end_comment
