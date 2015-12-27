@@ -77,6 +77,12 @@ directive|include
 file|"rtld.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"paths.h"
+end_include
+
 begin_function
 name|void
 name|init_pltgot
