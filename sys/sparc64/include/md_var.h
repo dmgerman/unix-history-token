@@ -100,18 +100,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|cpu_cpuid_prop
-parameter_list|(
-name|u_int
-name|cpu_impl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|uint32_t
 name|cpu_get_mid
 parameter_list|(
@@ -133,6 +121,18 @@ name|clock
 parameter_list|,
 name|u_int
 name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|cpu_portid_prop
+parameter_list|(
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl

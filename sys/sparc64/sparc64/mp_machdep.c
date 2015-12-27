@@ -342,13 +342,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vm_offset_t
-name|mp_tramp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|u_int
 name|cpuid_to_mid
 index|[
@@ -359,9 +352,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|u_int
+name|cpuids
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|volatile
 name|cpuset_t
 name|shutdown_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ipi_pbuf
+index|[
+name|CPUSETBUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vm_offset_t
+name|mp_tramp
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +751,7 @@ name|cpu_impl
 parameter_list|)
 parameter_list|)
 block|{
+specifier|static
 name|char
 name|type
 index|[
@@ -744,11 +764,10 @@ decl_stmt|;
 name|phandle_t
 name|child
 decl_stmt|;
-name|u_int
-name|cpuid
-decl_stmt|;
 name|uint32_t
 name|cpu_impl
+decl_stmt|,
+name|portid
 decl_stmt|;
 comment|/* There's no need to traverse the whole OFW tree twice. */
 if|if
@@ -757,11 +776,9 @@ name|mp_maxid
 operator|>
 literal|0
 operator|&&
-name|mp_ncpus
-operator|>=
+name|cpuids
+operator|>
 name|mp_maxid
-operator|+
-literal|1
 condition|)
 return|return;
 for|for
@@ -865,17 +882,17 @@ name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
-name|cpu_cpuid_prop
+name|cpu_portid_prop
 argument_list|(
 name|cpu_impl
 argument_list|)
 argument_list|,
 operator|&
-name|cpuid
+name|portid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|cpuid
+name|portid
 argument_list|)
 argument_list|)
 operator|<=
@@ -883,14 +900,14 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: couldn't determine CPU module ID"
+literal|"%s: couldn't determine CPU port ID"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpuid
+name|portid
 operator|==
 name|PCPU_GET
 argument_list|(
@@ -905,7 +922,7 @@ call|)
 argument_list|(
 name|node
 argument_list|,
-name|cpuid
+name|portid
 argument_list|,
 name|cpu_impl
 argument_list|)
@@ -938,10 +955,6 @@ name|mp_ncpus
 operator|=
 literal|1
 expr_stmt|;
-name|mp_maxid
-operator|=
-literal|0
-expr_stmt|;
 name|foreach_ap
 argument_list|(
 name|OF_child
@@ -954,6 +967,21 @@ argument_list|)
 argument_list|,
 name|ap_count
 argument_list|)
+expr_stmt|;
+name|mp_ncpus
+operator|=
+name|MIN
+argument_list|(
+name|mp_ncpus
+argument_list|,
+name|MAXCPU
+argument_list|)
+expr_stmt|;
+name|mp_maxid
+operator|=
+name|mp_ncpus
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -976,7 +1004,7 @@ name|cpu_impl
 name|__unused
 parameter_list|)
 block|{
-name|mp_maxid
+name|mp_ncpus
 operator|++
 expr_stmt|;
 block|}
@@ -1352,9 +1380,9 @@ name|clock
 decl_stmt|;
 if|if
 condition|(
-name|mp_ncpus
+name|cpuids
 operator|>
-name|MAXCPU
+name|mp_maxid
 condition|)
 return|return;
 if|if
@@ -1507,7 +1535,7 @@ argument_list|)
 expr_stmt|;
 name|cpuid
 operator|=
-name|mp_ncpus
+name|cpuids
 operator|++
 expr_stmt|;
 name|cpuid_to_mid
@@ -2993,12 +3021,6 @@ name|u_long
 name|d2
 parameter_list|)
 block|{
-name|char
-name|pbuf
-index|[
-name|CPUSETBUFSIZ
-index|]
-decl_stmt|;
 name|register_t
 name|s
 decl_stmt|;
@@ -3092,7 +3114,7 @@ name|i
 operator|<
 name|IPI_RETRIES
 operator|*
-name|mp_ncpus
+name|smp_cpus
 condition|;
 name|i
 operator|++
@@ -3147,7 +3169,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|smp_cpus
 condition|;
 name|cpu
 operator|++
@@ -3240,7 +3262,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|smp_cpus
 condition|;
 name|cpu
 operator|++
@@ -3316,7 +3338,7 @@ name|__func__
 argument_list|,
 name|cpusetobj_strprint
 argument_list|(
-name|pbuf
+name|ipi_pbuf
 argument_list|,
 operator|&
 name|cpus
@@ -3334,7 +3356,7 @@ name|__func__
 argument_list|,
 name|cpusetobj_strprint
 argument_list|(
-name|pbuf
+name|ipi_pbuf
 argument_list|,
 operator|&
 name|cpus
@@ -3612,12 +3634,6 @@ name|u_long
 name|d2
 parameter_list|)
 block|{
-name|char
-name|pbuf
-index|[
-name|CPUSETBUFSIZ
-index|]
-decl_stmt|;
 name|register_t
 name|s
 decl_stmt|;
@@ -3708,7 +3724,7 @@ name|i
 operator|<
 name|IPI_RETRIES
 operator|*
-name|mp_ncpus
+name|smp_cpus
 condition|;
 name|i
 operator|++
@@ -3759,7 +3775,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|smp_cpus
 condition|;
 name|cpu
 operator|++
@@ -3849,7 +3865,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|smp_cpus
 condition|;
 name|cpu
 operator|++
@@ -3912,7 +3928,7 @@ name|__func__
 argument_list|,
 name|cpusetobj_strprint
 argument_list|(
-name|pbuf
+name|ipi_pbuf
 argument_list|,
 operator|&
 name|cpus
@@ -3930,7 +3946,7 @@ name|__func__
 argument_list|,
 name|cpusetobj_strprint
 argument_list|(
-name|pbuf
+name|ipi_pbuf
 argument_list|,
 operator|&
 name|cpus
