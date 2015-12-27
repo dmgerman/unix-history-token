@@ -1268,6 +1268,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8168H
+value|0x54000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8411B
 value|0x5C800000
 end_define
@@ -4958,12 +4965,8 @@ name|RL_FLAG_EARLYOFF
 value|0x00020000
 define|#
 directive|define
-name|RL_FLAG_EARLYOFFV2
+name|RL_FLAG_8168G_PLUS
 value|0x00040000
-define|#
-directive|define
-name|RL_FLAG_RXDV_GATED
-value|0x00080000
 define|#
 directive|define
 name|RL_FLAG_PCIE
