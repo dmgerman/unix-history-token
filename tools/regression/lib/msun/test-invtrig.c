@@ -117,6 +117,44 @@ end_define
 begin_define
 define|#
 directive|define
+name|_testall_tol
+parameter_list|(
+name|prefix
+parameter_list|,
+name|x
+parameter_list|,
+name|result
+parameter_list|,
+name|tol
+parameter_list|,
+name|excepts
+parameter_list|)
+value|do {		\ 	test_tol(prefix, (double)(x), (double)(result),			\ 		 (tol) * ldexp(1.0, 1 - DBL_MANT_DIG), (excepts));	\ 	test_tol(prefix##f, (float)(x), (float)(result),		\ 		 (tol) * ldexpf(1.0, 1 - FLT_MANT_DIG), (excepts));	\ } while (0)
+end_define
+
+begin_if
+if|#
+directive|if
+name|LDBL_PREC
+operator|==
+literal|53
+end_if
+
+begin_define
+define|#
+directive|define
+name|testall_tol
+value|_testall_tol
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|testall_tol
 parameter_list|(
 name|prefix
@@ -129,8 +167,13 @@ name|tol
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	test_tol(prefix, (double)(x), (double)(result),			\ 		 (tol) * ldexp(1.0, 1 - DBL_MANT_DIG), (excepts));	\ 	test_tol(prefix##f, (float)(x), (float)(result),		\ 		 (tol) * ldexpf(1.0, 1 - FLT_MANT_DIG), (excepts));	\ 	test_tol(prefix##l, (x), (result),				\ 		 (tol) * ldexpl(1.0, 1 - LDBL_MANT_DIG), (excepts));	\ } while (0)
+value|do {		\ 	_testall_tol(prefix, x, result, tol, excepts);			\ 	test_tol(prefix##l, (x), (result),				\ 		 (tol) * ldexpl(1.0, 1 - LDBL_MANT_DIG), (excepts));	\ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -191,6 +234,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|_testall2_tol
+parameter_list|(
+name|prefix
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|,
+name|result
+parameter_list|,
+name|tol
+parameter_list|,
+name|excepts
+parameter_list|)
+value|do {		\ 	test2_tol(prefix, (double)(y), (double)(x), (double)(result),	\ 		  (tol) * ldexp(1.0, 1 - DBL_MANT_DIG), (excepts));	\ 	test2_tol(prefix##f, (float)(y), (float)(x), (float)(result),	\ 		  (tol) * ldexpf(1.0, 1 - FLT_MANT_DIG), (excepts));	\ } while (0)
+end_define
+
+begin_if
+if|#
+directive|if
+name|LDBL_PREC
+operator|==
+literal|53
+end_if
+
+begin_define
+define|#
+directive|define
+name|testall2_tol
+value|_testall2_tol
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|testall2_tol
 parameter_list|(
 name|prefix
@@ -205,8 +288,13 @@ name|tol
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	test2_tol(prefix, (double)(y), (double)(x), (double)(result),	\ 		  (tol) * ldexp(1.0, 1 - DBL_MANT_DIG), (excepts));	\ 	test2_tol(prefix##f, (float)(y), (float)(x), (float)(result),	\ 		  (tol) * ldexpf(1.0, 1 - FLT_MANT_DIG), (excepts));	\ 	test2_tol(prefix##l, (y), (x), (result),			\ 		  (tol) * ldexpl(1.0, 1 - LDBL_MANT_DIG), (excepts));	\ } while (0)
+value|do {		\ 	_testall2_tol(prefix, y, x, result, tol, excepts);		\ 	test2_tol(prefix##l, (y), (x), (result),			\ 		  (tol) * ldexpl(1.0, 1 - LDBL_MANT_DIG), (excepts));	\ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3435,6 +3523,24 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|printf
+argument_list|(
+literal|"1..0 # SKIP fails all assertions on i386\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"1..7\n"
