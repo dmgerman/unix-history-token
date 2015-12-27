@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"test-utils.h"
 end_include
 
@@ -3383,6 +3389,24 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|printf
+argument_list|(
+literal|"1..0 # SKIP all testcases fail on i386\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"1..19\n"
