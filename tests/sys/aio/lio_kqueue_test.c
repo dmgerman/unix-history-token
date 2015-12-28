@@ -142,10 +142,6 @@ index|]
 decl_stmt|,
 modifier|*
 modifier|*
-name|lio_element
-decl_stmt|,
-modifier|*
-modifier|*
 name|kq_lio
 decl_stmt|;
 name|int
@@ -199,8 +195,6 @@ sizeof|sizeof
 argument_list|(
 name|PATH_TEMPLATE
 argument_list|)
-operator|-
-literal|1
 index|]
 decl_stmt|;
 name|int
@@ -408,13 +402,6 @@ name|j
 operator|)
 operator|+
 name|i
-expr_stmt|;
-name|lio_element
-operator|=
-name|lio
-index|[
-name|j
-index|]
 expr_stmt|;
 name|lio
 index|[
