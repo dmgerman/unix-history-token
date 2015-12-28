@@ -3775,11 +3775,16 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|TEST_SEQ_PACKET_SOURCE_ADDRESS
 specifier|const
 name|char
 modifier|*
 name|path
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_storage
 name|from
@@ -3821,8 +3826,13 @@ name|socklen_t
 name|fromlen
 decl_stmt|;
 comment|/* setup the socket pair */
+ifdef|#
+directive|ifdef
+name|TEST_SEQ_PACKET_SOURCE_ADDRESS
 name|path
 operator|=
+endif|#
+directive|endif
 name|mk_pair_of_sockets
 argument_list|(
 name|sv
@@ -3949,9 +3959,38 @@ argument_list|,
 name|rsize
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TEST_SEQ_PACKET_SOURCE_ADDRESS
 comment|/* 	 * FreeBSD does not currently provide the source address for SEQ_PACKET 	 * AF_UNIX sockets, and POSIX does not require it, so these two checks 	 * are disabled.  If FreeBSD gains that feature in the future, then 	 * these checks may be reenabled 	 */
-comment|/* ATF_CHECK_EQ(PF_LOCAL, from.ss_family); */
-comment|/* ATF_CHECK_STREQ(path, ((struct sockaddr_un*)&from)->sun_path); */
+name|ATF_CHECK_EQ
+argument_list|(
+name|PF_LOCAL
+argument_list|,
+name|from
+operator|.
+name|ss_family
+argument_list|)
+expr_stmt|;
+name|ATF_CHECK_STREQ
+argument_list|(
+name|path
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+operator|)
+operator|&
+name|from
+operator|)
+operator|->
+name|sun_path
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|sv
@@ -4439,9 +4478,6 @@ name|data
 init|=
 literal|"data"
 decl_stmt|;
-name|ssize_t
-name|ssize
-decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -4627,8 +4663,9 @@ name|shutdown_send_sigpipe_handler
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ssize
-operator|=
+operator|(
+name|void
+operator|)
 name|send
 argument_list|(
 name|s2
