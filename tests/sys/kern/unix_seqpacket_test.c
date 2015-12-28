@@ -268,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Returns a pair of sockets made the hard way: bind, listen, connect& accept  * @return	const char* The path to the socket  */
+comment|/*  * Returns a pair of sockets made the hard way: bind, listen, connect& accept  * @return	const char* The path to the socket  */
 end_comment
 
 begin_function
@@ -1207,7 +1207,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/*  				 * XXX: This is bug-compatible with the kernel. 				 * The kernel returns EMSGSIZE when it should 				 * return EAGAIN 				 */
+comment|/* 				 * XXX: This is bug-compatible with the kernel. 				 * The kernel returns EMSGSIZE when it should 				 * return EAGAIN 				 */
 if|if
 condition|(
 name|errno
@@ -1852,7 +1852,7 @@ name|writer_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Give the writer time to start writing, and hopefully block, before 	 * starting the reader.  This increases the likelihood of the test case 	 * failing due to PR kern/185812 	 */
+comment|/* 	 * Give the writer time to start writing, and hopefully block, before 	 * starting the reader.  This increases the likelihood of the test case 	 * failing due to PR kern/185812 	 */
 name|usleep
 argument_list|(
 literal|1000
@@ -3949,7 +3949,7 @@ argument_list|,
 name|rsize
 argument_list|)
 expr_stmt|;
-comment|/*  	 * FreeBSD does not currently provide the source address for SEQ_PACKET 	 * AF_UNIX sockets, and POSIX does not require it, so these two checks 	 * are disabled.  If FreeBSD gains that feature in the future, then 	 * these checks may be reenabled 	 */
+comment|/* 	 * FreeBSD does not currently provide the source address for SEQ_PACKET 	 * AF_UNIX sockets, and POSIX does not require it, so these two checks 	 * are disabled.  If FreeBSD gains that feature in the future, then 	 * these checks may be reenabled 	 */
 comment|/* ATF_CHECK_EQ(PF_LOCAL, from.ss_family); */
 comment|/* ATF_CHECK_STREQ(path, ((struct sockaddr_un*)&from)->sun_path); */
 name|close
@@ -3972,7 +3972,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * send(2) and recv(2) a single short record with sockets created the  * traditional way, involving bind, listen, connect, and accept  */
+comment|/*  * send(2) and recv(2) a single short record with sockets created the  * traditional way, involving bind, listen, connect, and accept  */
 end_comment
 
 begin_expr_stmt
@@ -4858,7 +4858,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * We should get EMSGSIZE if we try to send a message larger than the socket  * buffer, with blocking sockets  */
+comment|/*  * We should get EMSGSIZE if we try to send a message larger than the socket  * buffer, with blocking sockets  */
 end_comment
 
 begin_expr_stmt
@@ -5027,7 +5027,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * We should get EMSGSIZE if we try to send a message larger than the socket  * buffer, with nonblocking sockets  */
+comment|/*  * We should get EMSGSIZE if we try to send a message larger than the socket  * buffer, with nonblocking sockets  */
 end_comment
 
 begin_expr_stmt
@@ -5196,7 +5196,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * We should get EAGAIN if we try to send a message larger than the socket  * buffer, with nonblocking sockets.  Test with several different sockbuf sizes  */
+comment|/*  * We should get EAGAIN if we try to send a message larger than the socket  * buffer, with nonblocking sockets.  Test with several different sockbuf sizes  */
 end_comment
 
 begin_expr_stmt
@@ -5316,7 +5316,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * nonblocking send(2) and recv(2) of several records, which should collectively  * fill up the send buffer but not the receive buffer  */
+comment|/*  * nonblocking send(2) and recv(2) of several records, which should collectively  * fill up the send buffer but not the receive buffer  */
 end_comment
 
 begin_expr_stmt
@@ -5452,7 +5452,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Send and receive packets that are collectively greater than the send 	 * buffer, but less than the receive buffer 	 */
+comment|/* 	 * Send and receive packets that are collectively greater than the send 	 * buffer, but less than the receive buffer 	 */
 for|for
 control|(
 name|i
@@ -5643,7 +5643,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * Simulate the behavior of a blocking pipe.  The sender will send until his  * buffer fills up, then we'll simulate a scheduler switch that will allow the  * receiver to read until his buffer empties.  Repeat the process until the  * transfer is complete.  * Repeat the test with multiple send and receive buffer sizes  */
+comment|/*  * Simulate the behavior of a blocking pipe.  The sender will send until his  * buffer fills up, then we'll simulate a scheduler switch that will allow the  * receiver to read until his buffer empties.  Repeat the process until the  * transfer is complete.  * Repeat the test with multiple send and receive buffer sizes  */
 end_comment
 
 begin_expr_stmt
@@ -5763,7 +5763,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * Test blocking I/O by passing data between two threads.  The total amount of  * data will be>> buffer size to force blocking.  Repeat the test with multiple  * send and receive buffer sizes  */
+comment|/*  * Test blocking I/O by passing data between two threads.  The total amount of  * data will be>> buffer size to force blocking.  Repeat the test with multiple  * send and receive buffer sizes  */
 end_comment
 
 begin_expr_stmt
