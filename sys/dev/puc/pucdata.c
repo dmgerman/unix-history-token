@@ -2806,6 +2806,30 @@ literal|0x1415
 block|,
 literal|0x950a
 block|,
+literal|0x131f
+block|,
+literal|0x2061
+block|,
+literal|"SIIG Cyber 2SP1 PCIe"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|10
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x950a
+block|,
 literal|0xffff
 block|,
 literal|0
