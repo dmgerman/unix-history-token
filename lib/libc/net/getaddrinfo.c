@@ -10726,10 +10726,22 @@ operator|.
 name|ai_next
 return|;
 block|}
+comment|/* 	 * We could have walked a CNAME chain, but the ultimate target 	 * may not have what we looked for. 	 */
 name|RES_SET_H_ERRNO
 argument_list|(
 name|res
 argument_list|,
+name|ntohs
+argument_list|(
+name|hp
+operator|->
+name|ancount
+argument_list|)
+operator|>
+literal|0
+condition|?
+name|NO_DATA
+else|:
 name|NO_RECOVERY
 argument_list|)
 expr_stmt|;
@@ -11789,6 +11801,9 @@ condition|)
 block|{
 case|case
 name|HOST_NOT_FOUND
+case|:
+case|case
+name|NO_DATA
 case|:
 return|return
 name|NS_NOTFOUND
