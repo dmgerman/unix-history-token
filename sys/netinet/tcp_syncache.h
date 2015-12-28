@@ -94,7 +94,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|syncache_add
 parameter_list|(
 name|struct
@@ -303,6 +303,16 @@ modifier|*
 name|sc_cred
 decl_stmt|;
 comment|/* cred cache for jail checks */
+ifdef|#
+directive|ifdef
+name|TCP_RFC7413
+name|void
+modifier|*
+name|sc_tfo_cookie
+decl_stmt|;
+comment|/* for TCP Fast Open response */
+endif|#
+directive|endif
 name|void
 modifier|*
 name|sc_pspare
