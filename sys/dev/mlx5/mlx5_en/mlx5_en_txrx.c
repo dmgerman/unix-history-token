@@ -67,14 +67,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|mlx5_cqwq_pop
-argument_list|(
-operator|&
-name|cq
-operator|->
-name|wq
-argument_list|)
-expr_stmt|;
 comment|/* ensure cqe content is read after cqe ownership bit */
 name|rmb
 argument_list|()
