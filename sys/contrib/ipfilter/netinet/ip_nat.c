@@ -26683,7 +26683,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__FreeBSD
+name|__FreeBSD__
 argument_list|)
 name|ipf_fix_outcksum
 argument_list|(
