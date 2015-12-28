@@ -62175,19 +62175,19 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+while|while
+condition|(
+operator|(
 name|mp
 operator|=
 name|td
 operator|->
 name|td_su
-expr_stmt|;
-if|if
-condition|(
-name|mp
-operator|==
+operator|)
+operator|!=
 name|NULL
 condition|)
-return|return;
+block|{
 name|td
 operator|->
 name|td_su
@@ -62383,6 +62383,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
