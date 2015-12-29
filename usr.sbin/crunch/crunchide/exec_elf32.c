@@ -886,6 +886,10 @@ name|EM_ARM
 case|:
 break|break;
 case|case
+name|EM_IA_64
+case|:
+break|break;
+case|case
 name|EM_MIPS
 case|:
 break|break;
