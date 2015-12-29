@@ -1261,7 +1261,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|char
+name|wchar_t
 operator|*
 argument_list|)
 argument_list|)
