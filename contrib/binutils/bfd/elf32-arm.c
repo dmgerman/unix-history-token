@@ -21653,10 +21653,10 @@ operator|=
 operator|(
 name|addend
 operator|^
-literal|0x10000
+literal|0x8000
 operator|)
 operator|-
-literal|0x10000
+literal|0x8000
 expr_stmt|;
 block|}
 name|value
