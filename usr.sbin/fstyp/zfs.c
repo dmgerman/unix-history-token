@@ -26,6 +26,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cddl/compat/opensolaris/sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cddl/compat/opensolaris/sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 

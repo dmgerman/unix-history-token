@@ -311,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
-value|256
+value|1024
 end_define
 
 begin_endif
@@ -1338,6 +1338,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HANDLE_CTRL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_HANDLE_SEQ_MASK
 value|0xffff0000
 end_define
@@ -1362,38 +1369,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_VALID_INI_HANDLE
-parameter_list|(
-name|c
-parameter_list|,
-name|hdl
-parameter_list|)
-define|\
-value|(ISP_H2HT(hdl) == ISP_HANDLE_INITIATOR&& (hdl& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 ISP_H2SEQ(hdl) == ISP_H2SEQ((c)->isp_xflist[hdl& ISP_HANDLE_CMD_MASK].handle))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_VALID_TGT_HANDLE
-parameter_list|(
-name|c
-parameter_list|,
-name|hdl
-parameter_list|)
-define|\
-value|(ISP_H2HT(hdl) == ISP_HANDLE_TARGET&& (hdl& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 ISP_H2SEQ(hdl) == ISP_H2SEQ((c)->isp_tgtlist[hdl& ISP_HANDLE_CMD_MASK].handle))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISP_VALID_HANDLE
 parameter_list|(
 name|c
@@ -1401,25 +1376,8 @@ parameter_list|,
 name|hdl
 parameter_list|)
 define|\
-value|(ISP_VALID_INI_HANDLE((c), hdl) || ISP_VALID_TGT_HANDLE((c), hdl))
+value|((ISP_H2HT(hdl) == ISP_HANDLE_INITIATOR || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_TARGET || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_CTRL)&& \ 	 ((hdl)& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 (hdl) == ((c)->isp_xflist[(hdl)& ISP_HANDLE_CMD_MASK].handle))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_VALID_HANDLE
-value|ISP_VALID_INI_HANDLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1694,6 +1652,12 @@ name|isp_scratch
 decl_stmt|;
 name|XS_DMA_ADDR_T
 name|isp_scdma
+decl_stmt|;
+name|uint8_t
+name|isp_scanscratch
+index|[
+name|ISP_FC_SCRLEN
+index|]
 decl_stmt|;
 block|}
 name|fcparam
@@ -2132,20 +2096,6 @@ name|isp_hdl_t
 modifier|*
 name|isp_xffree
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-comment|/* 	 * Active target commands are stored here, indexed by handle functions. 	 */
-name|isp_hdl_t
-modifier|*
-name|isp_tgtlist
-decl_stmt|;
-name|isp_hdl_t
-modifier|*
-name|isp_tgtfree
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * request/result queue pointers and DMA handles for them. 	 */
 name|void
 modifier|*

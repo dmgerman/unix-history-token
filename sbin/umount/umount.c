@@ -2175,7 +2175,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|char
+name|int
 modifier|*
 name|mntcheck
 init|=

@@ -469,10 +469,6 @@ begin_comment
 comment|/* really max datagram size */
 end_comment
 
-begin_comment
-comment|/* 40 1K datagrams */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
@@ -523,6 +519,10 @@ directive|endif
 operator|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 40 1K datagrams */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_ULONG

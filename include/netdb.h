@@ -294,7 +294,7 @@ comment|/* AI_PASSIVE, AI_CANONNAME, AI_NUMERICHOST */
 name|int
 name|ai_family
 decl_stmt|;
-comment|/* PF_xxx */
+comment|/* AF_xxx */
 name|int
 name|ai_socktype
 decl_stmt|;

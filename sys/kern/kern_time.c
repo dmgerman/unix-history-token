@@ -1934,6 +1934,12 @@ operator|->
 name|tv_nsec
 operator|>=
 literal|1000000000
+operator|||
+name|ats
+operator|->
+name|tv_sec
+operator|<
+literal|0
 condition|)
 return|return
 operator|(
@@ -3064,6 +3070,12 @@ operator|->
 name|tv_usec
 operator|>=
 literal|1000000
+operator|||
+name|tv
+operator|->
+name|tv_sec
+operator|<
+literal|0
 condition|)
 return|return
 operator|(

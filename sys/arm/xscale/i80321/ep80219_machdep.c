@@ -1210,7 +1210,9 @@ name|arm_physmem_exclude_region
 argument_list|(
 name|freemem_pt
 argument_list|,
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|-
 name|freemem_pt
 argument_list|,
@@ -1221,7 +1223,9 @@ name|arm_physmem_exclude_region
 argument_list|(
 name|freemempos
 argument_list|,
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|-
 literal|0x100000
 operator|-

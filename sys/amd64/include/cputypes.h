@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_CPUTYPES_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<x86/cputypes.h>
+end_include
+
 begin_comment
 comment|/*  * Classes of processor.  */
 end_comment
@@ -77,75 +83,6 @@ end_define
 begin_comment
 comment|/* AMD Sledgehammer */
 end_comment
-
-begin_comment
-comment|/*  * Vendors of processor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_AMD
-value|0x1022
-end_define
-
-begin_comment
-comment|/* AMD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_IDT
-value|0x111d
-end_define
-
-begin_comment
-comment|/* Centaur/IDT/VIA */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_INTEL
-value|0x8086
-end_define
-
-begin_comment
-comment|/* Intel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_CENTAUR
-value|CPU_VENDOR_IDT
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu_class
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

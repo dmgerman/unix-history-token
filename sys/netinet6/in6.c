@@ -8573,6 +8573,10 @@ name|IFT_IEEE80211
 case|:
 comment|/* ditto */
 case|case
+name|IFT_BRIDGE
+case|:
+comment|/* bridge(4) only does Ethernet-like links */
+case|case
 name|IFT_INFINIBAND
 case|:
 return|return

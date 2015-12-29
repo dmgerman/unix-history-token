@@ -584,11 +584,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_NLM
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MIPS1004KC
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|MIPS_RW32_COP0_SEL
@@ -678,6 +686,18 @@ argument_list|(
 name|status
 argument_list|,
 name|MIPS_COP_0_STATUS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RW32_COP0_SEL
+argument_list|(
+name|cmgcrbase
+argument_list|,
+literal|15
+argument_list|,
+literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1434,7 +1434,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * There's no reliable way to detect the frame buffer or the 	 * offset within the frame buffer of the visible region, nor 	 * the stride. Our only option is to look at the system and 	 * fill in the blanks based on that. Luckily, UGA was mostly 	 * only used on Apple hardware.  	 */
+comment|/* 	 * There's no reliable way to detect the frame buffer or the 	 * offset within the frame buffer of the visible region, nor 	 * the stride. Our only option is to look at the system and 	 * fill in the blanks based on that. Luckily, UGA was mostly 	 * only used on Apple hardware. 	 */
 name|offset
 operator|=
 operator|-

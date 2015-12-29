@@ -2012,6 +2012,16 @@ operator|!
 name|cqe
 condition|)
 break|break;
+name|mlx5_cqwq_pop
+argument_list|(
+operator|&
+name|sq
+operator|->
+name|cq
+operator|.
+name|wq
+argument_list|)
+expr_stmt|;
 name|ci
 operator|=
 name|sqcc

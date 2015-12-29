@@ -29,6 +29,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/_bus.h>
+end_include
+
 begin_comment
 comment|/*  * Prototypes for Open Firmware Interface Routines  */
 end_comment
@@ -752,6 +758,42 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Decode the Nth register property of the given device node and create a bus  * space tag and handle for accessing it.  This is for use in setting up things  * like early console output before newbus is available.  The implementation is  * machine-dependent, and sparc uses a different function signature as well.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
+begin_function_decl
+name|int
+name|OF_decode_addr
+parameter_list|(
+name|phandle_t
+name|dev
+parameter_list|,
+name|int
+name|regno
+parameter_list|,
+name|bus_space_tag_t
+modifier|*
+name|ptag
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+name|phandle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

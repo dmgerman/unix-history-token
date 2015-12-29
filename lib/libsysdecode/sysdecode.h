@@ -16,6 +16,19 @@ name|__SYSDECODE_H__
 end_define
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|sysdecode_ioctlname
+parameter_list|(
+name|unsigned
+name|long
+name|_val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sysdecode_utrace
 parameter_list|(

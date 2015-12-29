@@ -4604,7 +4604,7 @@ condition|)
 block|{
 name|xo_emit
 argument_list|(
-literal|"{T:procs}  {T:memory}       ${T:/page%*s}"
+literal|"{T:procs}  {T:memory}       {T:/page%*s}"
 argument_list|,
 literal|19
 argument_list|,
@@ -4616,7 +4616,7 @@ else|else
 block|{
 name|xo_emit
 argument_list|(
-literal|"{T:procs}     {T:memory}        ${T:/page%*s}"
+literal|"{T:procs}     {T:memory}        {T:/page%*s}"
 argument_list|,
 literal|19
 argument_list|,

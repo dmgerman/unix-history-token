@@ -337,6 +337,34 @@ name|TCPOLEN_SIGNATURE
 value|18
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCPOPT_FAST_OPEN
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_FAST_OPEN_EMPTY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_FAST_OPEN_MIN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_FAST_OPEN_MAX
+value|18
+end_define
+
 begin_comment
 comment|/* Miscellaneous constants */
 end_comment
@@ -596,6 +624,17 @@ end_define
 
 begin_comment
 comment|/* L,N number of keepalives before close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_FASTOPEN
+value|1025
+end_define
+
+begin_comment
+comment|/* enable TFO / was created via TFO */
 end_comment
 
 begin_define

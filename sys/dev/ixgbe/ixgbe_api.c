@@ -19,6 +19,12 @@ directive|include
 file|"ixgbe_common.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|IXGBE_EMPTY_PARAM
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -30,7 +36,9 @@ index|]
 init|=
 block|{
 name|IXGBE_MVALS_INIT
-argument_list|()
+argument_list|(
+argument|IXGBE_EMPTY_PARAM
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -252,6 +260,14 @@ name|IXGBE_ERR_DEVICE_NOT_SUPPORTED
 expr_stmt|;
 break|break;
 block|}
+name|hw
+operator|->
+name|mac
+operator|.
+name|max_link_up_time
+operator|=
+name|IXGBE_LINK_UP_TIME
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -483,6 +499,9 @@ expr_stmt|;
 break|break;
 case|case
 name|IXGBE_DEV_ID_X550T
+case|:
+case|case
+name|IXGBE_DEV_ID_X550T1
 case|:
 name|hw
 operator|->

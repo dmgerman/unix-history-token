@@ -462,7 +462,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|1
+name|rn_detachhead
+argument_list|(
+name|head
+argument_list|)
 operator|)
 return|;
 block|}

@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm//MC/SubtargetFeature.h"
+file|"llvm/MC/SubtargetFeature.h"
 end_include
 
 begin_include

@@ -399,6 +399,9 @@ name|struct
 name|selinfo
 name|selinfo
 decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
 name|int
 name|is_closing
 decl_stmt|;
@@ -2168,8 +2171,7 @@ name|cuse_client_command
 modifier|*
 name|pccmd
 parameter_list|,
-name|unsigned
-name|long
+name|uintptr_t
 name|data_ptr
 parameter_list|,
 name|unsigned
@@ -2968,6 +2970,15 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+comment|/* store current process ID */
+name|pcs
+operator|->
+name|pid
+operator|=
+name|curproc
+operator|->
+name|p_pid
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -4802,8 +4813,7 @@ name|per_file_handle
 operator|=
 operator|*
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|*
 operator|)
 name|data
@@ -5721,6 +5731,7 @@ name|pcsd
 operator|->
 name|user_dev
 expr_stmt|;
+comment|/* 		 * Check that the refcount didn't wrap and that the 		 * same process is not both client and server. This 		 * can easily lead to deadlocks when destroying the 		 * CUSE character device nodes: 		 */
 name|pcs
 operator|->
 name|refs
@@ -5733,9 +5744,17 @@ operator|->
 name|refs
 operator|<
 literal|0
+operator|||
+name|pcs
+operator|->
+name|pid
+operator|==
+name|curproc
+operator|->
+name|p_pid
 condition|)
 block|{
-comment|/* overflow */
+comment|/* overflow or wrong PID */
 name|pcs
 operator|->
 name|refs
@@ -6467,8 +6486,7 @@ argument_list|(
 name|pccmd
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|uio
 operator|->
@@ -6729,8 +6747,7 @@ argument_list|(
 name|pccmd
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|uio
 operator|->

@@ -94,6 +94,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|imx_ccm_hdmi_enable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|imx_ccm_ipu_enable
+parameter_list|(
+name|int
+name|ipu
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Routines to get and set the arm clock root divisor register. */
 end_comment

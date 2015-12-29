@@ -411,6 +411,7 @@ comment|/* list of all known USM users */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|usm_userlist
 name|usm_userlist
@@ -427,6 +428,7 @@ comment|/* A list of all VACM users configured, including v1, v2c and v3 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vacm_userlist
 name|vacm_userlist
@@ -443,6 +445,7 @@ comment|/* A list of all VACM groups */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vacm_grouplist
 name|vacm_grouplist
@@ -474,6 +477,7 @@ comment|/* The list of configured access entries */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vacm_accesslist
 name|vacm_accesslist
@@ -490,6 +494,7 @@ comment|/* The list of configured views */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vacm_viewlist
 name|vacm_viewlist
@@ -506,6 +511,7 @@ comment|/* The list of configured contexts */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vacm_contextlist
 name|vacm_contextlist

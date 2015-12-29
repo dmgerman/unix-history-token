@@ -51,6 +51,9 @@ decl_stmt|;
 name|u_int8_t
 name|tlb_type
 decl_stmt|;
+name|u_int32_t
+name|tlb_pgmask
+decl_stmt|;
 name|u_int16_t
 name|tlb_nentries
 decl_stmt|;

@@ -861,6 +861,30 @@ name|u_int
 name|t_flags2
 decl_stmt|;
 comment|/* More tcpcb flags storage */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TCP_RFC7413
+argument_list|)
+name|uint32_t
+name|t_ispare
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* 5 UTO, 1 TBD */
+name|uint64_t
+name|t_tfo_cookie
+decl_stmt|;
+comment|/* TCP Fast Open cookie */
+else|#
+directive|else
 name|uint32_t
 name|t_ispare
 index|[
@@ -868,6 +892,8 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* 5 UTO, 3 TBD */
+endif|#
+directive|endif
 name|struct
 name|tcp_function_block
 modifier|*
@@ -879,6 +905,33 @@ modifier|*
 name|t_fb_ptr
 decl_stmt|;
 comment|/* Pointer to t_fb specific data */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TCP_RFC7413
+argument_list|)
+name|unsigned
+name|int
+modifier|*
+name|t_tfo_pending
+decl_stmt|;
+comment|/* TCP Fast Open pending counter */
+name|void
+modifier|*
+name|t_pspare2
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* 1 TCP_SIGNATURE */
+else|#
+directive|else
 name|void
 modifier|*
 name|t_pspare2
@@ -887,6 +940,8 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* 1 TCP_SIGNATURE, 1 TBD */
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -1271,6 +1326,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TF_FASTOPEN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* TCP Fast Open indication */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN_FASTRECOVERY
 parameter_list|(
 name|t_flags
@@ -1532,8 +1598,13 @@ value|0x0080
 comment|/* Peer sent SACK option */
 define|#
 directive|define
-name|TOF_MAXOPT
+name|TOF_FASTOPEN
 value|0x0100
+comment|/* TCP Fast Open (TFO) cookie */
+define|#
+directive|define
+name|TOF_MAXOPT
+value|0x0200
 name|u_int32_t
 name|to_tsval
 decl_stmt|;
@@ -1552,6 +1623,11 @@ modifier|*
 name|to_signature
 decl_stmt|;
 comment|/* pointer to the TCP-MD5 signature */
+name|u_char
+modifier|*
+name|to_tfo_cookie
+decl_stmt|;
+comment|/* pointer to the TFO cookie */
 name|u_int16_t
 name|to_mss
 decl_stmt|;
@@ -1564,6 +1640,10 @@ name|u_int8_t
 name|to_nsacks
 decl_stmt|;
 comment|/* number of SACK blocks */
+name|u_int8_t
+name|to_tfo_len
+decl_stmt|;
+comment|/* TFO cookie length */
 name|u_int32_t
 name|to_spare
 decl_stmt|;

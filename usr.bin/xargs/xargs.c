@@ -1122,7 +1122,6 @@ sizeof|sizeof
 argument_list|(
 name|char
 operator|*
-operator|*
 argument_list|)
 argument_list|)
 operator|)
@@ -2033,7 +2032,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|char
-operator|*
 operator|*
 argument_list|)
 argument_list|)

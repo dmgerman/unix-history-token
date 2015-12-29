@@ -1682,7 +1682,7 @@ expr_stmt|;
 if|if
 condition|(
 call|(
-name|dp
+name|sdp
 operator|->
 name|put
 call|)

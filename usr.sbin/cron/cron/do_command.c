@@ -547,18 +547,41 @@ endif|#
 directive|endif
 comment|/*BSD*/
 comment|/* create some pipes to talk to our future child 	 */
+if|if
+condition|(
 name|pipe
 argument_list|(
 name|stdin_pipe
 argument_list|)
-expr_stmt|;
-comment|/* child's stdin */
+operator|!=
+literal|0
+operator|||
 name|pipe
 argument_list|(
 name|stdout_pipe
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|log_it
+argument_list|(
+literal|"CRON"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+literal|"error"
+argument_list|,
+literal|"can't pipe"
+argument_list|)
 expr_stmt|;
-comment|/* child's stdout */
+name|exit
+argument_list|(
+name|ERROR_EXIT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* since we are a forked process, we can diddle the command string 	 * we were passed -- nobody else is going to use it again, right? 	 * 	 * if a % is present in the command, previous characters are the 	 * command, and subsequent characters are the additional input to 	 * the command.  Subsequent %'s will be transformed into newlines, 	 * but that happens later. 	 * 	 * If there are escaped %'s, remove the escape character. 	 */
 comment|/*local*/
 block|{

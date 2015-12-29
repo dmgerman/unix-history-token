@@ -501,6 +501,17 @@ operator|)
 name|IXGBE_DCB_MAX_CREDIT_REFILL
 argument_list|)
 expr_stmt|;
+comment|/* Refill at least minimum credit */
+if|if
+condition|(
+name|credit_refill
+operator|<
+name|min_credit
+condition|)
+name|credit_refill
+operator|=
+name|min_credit
+expr_stmt|;
 name|p
 operator|->
 name|data_credits_refill
@@ -525,12 +536,8 @@ comment|/* 		 * Adjustment based on rule checking, if the percentage 		 * of a T
 if|if
 condition|(
 name|credit_max
-operator|&&
-operator|(
-name|credit_max
 operator|<
 name|min_credit
-operator|)
 condition|)
 name|credit_max
 operator|=

@@ -3467,6 +3467,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|relpbuf
+argument_list|(
+name|bp
+argument_list|,
+name|freecnt
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

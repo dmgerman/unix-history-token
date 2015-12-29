@@ -633,15 +633,21 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %lu (%lu MB)\n"
+literal|"real memory  = %ju (%ju MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|physmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|physmem
 argument_list|)
 operator|/
@@ -707,7 +713,7 @@ operator|+=
 literal|2
 control|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|size1
 init|=
 name|phys_avail
@@ -727,22 +733,22 @@ directive|ifdef
 name|__powerpc64__
 name|printf
 argument_list|(
-literal|"0x%016lx - 0x%016lx, %ld bytes (%ld pages)\n"
+literal|"0x%016jx - 0x%016jx, %jd bytes (%jd pages)\n"
 argument_list|,
 else|#
 directive|else
 argument|printf(
-literal|"0x%08x - 0x%08x, %u bytes (%lu pages)\n"
+literal|"0x%09jx - 0x%09jx, %ju bytes (%ju pages)\n"
 argument|,
 endif|#
 directive|endif
-argument|phys_avail[indx], phys_avail[indx +
+argument|(uintmax_t)phys_avail[indx], 			    (uintmax_t)phys_avail[indx +
 literal|1
 argument|] -
 literal|1
-argument|, size1, 			    size1 / PAGE_SIZE); 		} 	}  	vm_ksubmap_init(&kmi);  	printf(
-literal|"avail memory = %lu (%lu MB)\n"
-argument|, ptoa(vm_cnt.v_free_count), 	    ptoa(vm_cnt.v_free_count) /
+argument|, 			    (uintmax_t)size1, (uintmax_t)size1 / PAGE_SIZE); 		} 	}  	vm_ksubmap_init(&kmi);  	printf(
+literal|"avail memory = %ju (%ju MB)\n"
+argument|, 	    ptoa((uintmax_t)vm_cnt.v_free_count), 	    ptoa((uintmax_t)vm_cnt.v_free_count) /
 literal|1048576
 argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */

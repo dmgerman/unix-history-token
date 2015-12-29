@@ -329,14 +329,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|FILE
-modifier|*
-name|infp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 name|line
 index|[
@@ -454,7 +446,8 @@ specifier|static
 name|int
 name|readline
 parameter_list|(
-name|void
+name|FILE
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -506,6 +499,10 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|FILE
+modifier|*
+name|infp
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -516,10 +513,6 @@ name|error
 argument_list|(
 literal|"usage: mknodes file"
 argument_list|)
-expr_stmt|;
-name|infp
-operator|=
-name|stdin
 expr_stmt|;
 if|if
 condition|(
@@ -557,7 +550,9 @@ expr_stmt|;
 while|while
 condition|(
 name|readline
-argument_list|()
+argument_list|(
+name|infp
+argument_list|)
 condition|)
 block|{
 if|if
@@ -593,6 +588,11 @@ name|parsenode
 argument_list|()
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|infp
+argument_list|)
+expr_stmt|;
 name|output
 argument_list|(
 name|argv
@@ -1437,6 +1437,30 @@ argument_list|,
 name|hfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|hfile
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"Can't write to nodes.h"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|hfile
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"Can't close nodes.h"
+argument_list|)
+expr_stmt|;
 name|fputs
 argument_list|(
 name|writer
@@ -1542,6 +1566,35 @@ name|cfile
 argument_list|)
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|patfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|cfile
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"Can't write to nodes.c"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|cfile
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"Can't close nodes.c"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2223,7 +2276,9 @@ specifier|static
 name|int
 name|readline
 parameter_list|(
-name|void
+name|FILE
+modifier|*
+name|infp
 parameter_list|)
 block|{
 name|char

@@ -1934,10 +1934,11 @@ name|calloc
 argument_list|(
 literal|1
 argument_list|,
-sizeof|sizeof
-argument_list|(
+expr|sizeof
+operator|(
+name|unsigned
 name|char
-argument_list|)
+operator|)
 operator|*
 name|size
 argument_list|)

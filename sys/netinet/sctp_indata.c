@@ -19177,6 +19177,7 @@ argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 else|else
 block|{

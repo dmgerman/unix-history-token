@@ -400,6 +400,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_DEV_ID_X550T1
+value|0x15D1
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_X550EM_X_KX4
 value|0x15AA
 end_define
@@ -11161,8 +11168,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|X550_PHY_ID
+name|X550_PHY_ID1
 value|0x01540220
+end_define
+
+begin_define
+define|#
+directive|define
+name|X550_PHY_ID2
+value|0x01540223
+end_define
+
+begin_define
+define|#
+directive|define
+name|X550_PHY_ID3
+value|0x01540221
 end_define
 
 begin_define
@@ -14109,7 +14130,7 @@ comment|/* bit 31 */
 end_comment
 
 begin_comment
-comment|/*  * ETQF filter list: one static filter per filter consumer. This is  *		   to avoid filter collisions later. Add new filters  *		   here!!  *  * Current filters:  *	EAPOL 802.1x (0x888e): Filter 0  *	FCoE (0x8906):	 Filter 2  *	1588 (0x88f7):	 Filter 3  *	FIP  (0x8914):	 Filter 4  *	LLDP (0x88CC):	 Filter 5  *	LACP (0x8809):	 Filter 6  */
+comment|/*  * ETQF filter list: one static filter per filter consumer. This is  *		   to avoid filter collisions later. Add new filters  *		   here!!  *  * Current filters:  *	EAPOL 802.1x (0x888e): Filter 0  *	FCoE (0x8906):	 Filter 2  *	1588 (0x88f7):	 Filter 3  *	FIP  (0x8914):	 Filter 4  *	LLDP (0x88CC):	 Filter 5  *	LACP (0x8809):	 Filter 6  *	FC   (0x8808):	 Filter 7  */
 end_comment
 
 begin_define
@@ -14152,6 +14173,13 @@ define|#
 directive|define
 name|IXGBE_ETQF_FILTER_LACP
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ETQF_FILTER_FC
+value|7
 end_define
 
 begin_comment
@@ -20271,8 +20299,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_FDIRCTRL_DROP_Q_MASK
+value|0x00007F00
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_FDIRCTRL_FLEX_SHIFT
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FDIRCTRL_DROP_NO_MATCH
+value|0x00008000
 end_define
 
 begin_define
@@ -21005,6 +21047,34 @@ name|FW_PHY_MGMT_REQ_CMD
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|FW_INT_PHY_REQ_CMD
+value|0xB
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_INT_PHY_REQ_LEN
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_INT_PHY_REQ_READ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_INT_PHY_REQ_WRITE
+value|1
+end_define
+
 begin_comment
 comment|/* Host Interface Command Structures */
 end_comment
@@ -21203,6 +21273,51 @@ name|pad2
 decl_stmt|;
 name|u16
 name|pad3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ixgbe_hic_internal_phy_req
+block|{
+name|struct
+name|ixgbe_hic_hdr
+name|hdr
+decl_stmt|;
+name|u8
+name|port_number
+decl_stmt|;
+name|u8
+name|command_type
+decl_stmt|;
+name|u16
+name|address
+decl_stmt|;
+name|u16
+name|rsv1
+decl_stmt|;
+name|u32
+name|write_data
+decl_stmt|;
+name|u16
+name|pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ixgbe_hic_internal_phy_resp
+block|{
+name|struct
+name|ixgbe_hic_hdr
+name|hdr
+decl_stmt|;
+name|u32
+name|read_data
 decl_stmt|;
 block|}
 struct|;
@@ -22782,7 +22897,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|IXGBE_CAT(EEC, m),		\ 	IXGBE_CAT(FLA, m),		\ 	IXGBE_CAT(GRC, m),		\ 	IXGBE_CAT(SRAMREL, m),		\ 	IXGBE_CAT(FACTPS, m),		\ 	IXGBE_CAT(SWSM, m),		\ 	IXGBE_CAT(FWSM, m),		\ 	IXGBE_CAT(SDP0_GPIEN, m),	\ 	IXGBE_CAT(SDP1_GPIEN, m),	\ 	IXGBE_CAT(SDP2_GPIEN, m),	\ 	IXGBE_CAT(EICR_GPI_SDP0, m),	\ 	IXGBE_CAT(EICR_GPI_SDP1, m),	\ 	IXGBE_CAT(EICR_GPI_SDP2, m),	\ 	IXGBE_CAT(CIAA, m),		\ 	IXGBE_CAT(CIAD, m),		\ 	IXGBE_CAT(I2C_CLK_IN, m),	\ 	IXGBE_CAT(I2C_CLK_OUT, m),	\ 	IXGBE_CAT(I2C_DATA_IN, m),	\ 	IXGBE_CAT(I2C_DATA_OUT, m),	\ 	IXGBE_CAT(I2C_DATA_OE_N_EN, m),	\ 	IXGBE_CAT(I2C_BB_EN, m),	\ 	IXGBE_CAT(I2C_CLK_OE_N_EN, m),	\ 	IXGBE_CAT(I2CCTL, m)
+value|IXGBE_CAT(EEC, m),		\ 	IXGBE_CAT(FLA, m),		\ 	IXGBE_CAT(GRC, m),		\ 	IXGBE_CAT(SRAMREL, m),		\ 	IXGBE_CAT(FACTPS, m),		\ 	IXGBE_CAT(SWSM, m),		\ 	IXGBE_CAT(SWFW_SYNC, m),	\ 	IXGBE_CAT(FWSM, m),		\ 	IXGBE_CAT(SDP0_GPIEN, m),	\ 	IXGBE_CAT(SDP1_GPIEN, m),	\ 	IXGBE_CAT(SDP2_GPIEN, m),	\ 	IXGBE_CAT(EICR_GPI_SDP0, m),	\ 	IXGBE_CAT(EICR_GPI_SDP1, m),	\ 	IXGBE_CAT(EICR_GPI_SDP2, m),	\ 	IXGBE_CAT(CIAA, m),		\ 	IXGBE_CAT(CIAD, m),		\ 	IXGBE_CAT(I2C_CLK_IN, m),	\ 	IXGBE_CAT(I2C_CLK_OUT, m),	\ 	IXGBE_CAT(I2C_DATA_IN, m),	\ 	IXGBE_CAT(I2C_DATA_OUT, m),	\ 	IXGBE_CAT(I2C_DATA_OE_N_EN, m),	\ 	IXGBE_CAT(I2C_BB_EN, m),	\ 	IXGBE_CAT(I2C_CLK_OE_N_EN, m),	\ 	IXGBE_CAT(I2CCTL, m)
 end_define
 
 begin_enum
@@ -25398,6 +25513,9 @@ decl_stmt|;
 name|bool
 name|set_lben
 decl_stmt|;
+name|u32
+name|max_link_up_time
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -25442,6 +25560,9 @@ name|reset_disable
 decl_stmt|;
 name|ixgbe_autoneg_advertised
 name|autoneg_advertised
+decl_stmt|;
+name|ixgbe_link_speed
+name|speeds_supported
 decl_stmt|;
 name|enum
 name|ixgbe_smart_speed
@@ -26052,7 +26173,7 @@ name|IXGBE_KRM_PORT_CAR_GEN_CTRL
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x4010) : (0x8010))
+value|((P) ? 0x8010 : 0x4010)
 end_define
 
 begin_define
@@ -26062,7 +26183,7 @@ name|IXGBE_KRM_LINK_CTRL_1
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x420C) : (0x820C))
+value|((P) ? 0x820C : 0x420C)
 end_define
 
 begin_define
@@ -26072,7 +26193,7 @@ name|IXGBE_KRM_AN_CNTL_1
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x422C) : (0x822C))
+value|((P) ? 0x822C : 0x422C)
 end_define
 
 begin_define
@@ -26082,7 +26203,7 @@ name|IXGBE_KRM_DSP_TXFFE_STATE_4
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x4634) : (0x8634))
+value|((P) ? 0x8634 : 0x4634)
 end_define
 
 begin_define
@@ -26092,7 +26213,7 @@ name|IXGBE_KRM_DSP_TXFFE_STATE_5
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x4638) : (0x8638))
+value|((P) ? 0x8638 : 0x4638)
 end_define
 
 begin_define
@@ -26102,7 +26223,7 @@ name|IXGBE_KRM_RX_TRN_LINKUP_CTRL
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x4B00) : (0x8B00))
+value|((P) ? 0x8B00 : 0x4B00)
 end_define
 
 begin_define
@@ -26112,7 +26233,7 @@ name|IXGBE_KRM_PMD_DFX_BURNIN
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x4E00) : (0x8E00))
+value|((P) ? 0x8E00 : 0x4E00)
 end_define
 
 begin_define
@@ -26122,7 +26243,7 @@ name|IXGBE_KRM_TX_COEFF_CTRL_1
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x5520) : (0x9520))
+value|((P) ? 0x9520 : 0x5520)
 end_define
 
 begin_define
@@ -26132,7 +26253,7 @@ name|IXGBE_KRM_RX_ANA_CTL
 parameter_list|(
 name|P
 parameter_list|)
-value|((P == 0) ? (0x5A00) : (0x9A00))
+value|((P) ? 0x9A00 : 0x5A00)
 end_define
 
 begin_define
@@ -26313,62 +26434,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_KX4_LINK_CNTL_1
-value|0x4C
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_AN_CAP_KX
-value|(1<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_AN_CAP_KX4
-value|(1<< 17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_EEE_CAP_KX
-value|(1<< 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_EEE_CAP_KX4
-value|(1<< 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_AN_ENABLE
-value|(1<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_FORCE_LINK_UP
-value|(1<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_KX4_LINK_CNTL_1_TETH_AN_RESTART
-value|(1<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_SB_IOSF_INDIRECT_CTRL
 value|0x00011144
 end_define
@@ -26457,20 +26522,6 @@ define|#
 directive|define
 name|IXGBE_SB_IOSF_TARGET_KR_PHY
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_SB_IOSF_TARGET_KX4_PHY
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_SB_IOSF_TARGET_KX4_PCS
-value|2
 end_define
 
 begin_define

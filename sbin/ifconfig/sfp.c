@@ -799,7 +799,7 @@ block|{
 block|{
 literal|0x80
 block|,
-literal|"Reserved"
+literal|"Extended"
 block|}
 block|,
 block|{
@@ -848,6 +848,190 @@ block|{
 literal|0
 block|,
 name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SFF_8636_EXT_COMPLIANCE
+value|0x80
+end_define
+
+begin_comment
+comment|/* SFF-8024 Rev. 3.4 table 4.4: Extended Specification Compliance */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|_nv
+name|eth_extended_comp
+index|[]
+init|=
+block|{
+block|{
+literal|0xFF
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+literal|0x1A
+block|,
+literal|"2 lambda DWDM 100G"
+block|}
+block|,
+block|{
+literal|0x19
+block|,
+literal|"100G ACC or 25GAUI C2M ACC"
+block|}
+block|,
+block|{
+literal|0x18
+block|,
+literal|"100G AOC or 25GAUI C2M AOC"
+block|}
+block|,
+block|{
+literal|0x17
+block|,
+literal|"100G CLR4"
+block|}
+block|,
+block|{
+literal|0x16
+block|,
+literal|"10GBASE-T with SFI electrical interface"
+block|}
+block|,
+block|{
+literal|0x15
+block|,
+literal|"G959.1 profile P1L1-2D2"
+block|}
+block|,
+block|{
+literal|0x14
+block|,
+literal|"G959.1 profile P1S1-2D2"
+block|}
+block|,
+block|{
+literal|0x13
+block|,
+literal|"G959.1 profile P1I1-2D1"
+block|}
+block|,
+block|{
+literal|0x12
+block|,
+literal|"40G PSM4 Parallel SMF"
+block|}
+block|,
+block|{
+literal|0x11
+block|,
+literal|"4 x 10GBASE-SR"
+block|}
+block|,
+block|{
+literal|0x10
+block|,
+literal|"40GBASE-ER4"
+block|}
+block|,
+block|{
+literal|0x0F
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+literal|0x0D
+block|,
+literal|"25GBASE-CR CA-N"
+block|}
+block|,
+block|{
+literal|0x0C
+block|,
+literal|"25GBASE-CR CA-S"
+block|}
+block|,
+block|{
+literal|0x0B
+block|,
+literal|"100GBASE-CR4 or 25GBASE-CR CA-L"
+block|}
+block|,
+block|{
+literal|0x0A
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+literal|0x09
+block|,
+literal|"100G CWDM4 MSA without FEC"
+block|}
+block|,
+block|{
+literal|0x08
+block|,
+literal|"100G ACC (Active Copper Cable)"
+block|}
+block|,
+block|{
+literal|0x07
+block|,
+literal|"100G PSM4 Parallel SMF"
+block|}
+block|,
+block|{
+literal|0x06
+block|,
+literal|"100G CWDM4 MSA with FEC"
+block|}
+block|,
+block|{
+literal|0x05
+block|,
+literal|"100GBASE-SR10"
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|"100GBASE-ER4"
+block|}
+block|,
+block|{
+literal|0x03
+block|,
+literal|"100GBASE-LR4"
+block|}
+block|,
+block|{
+literal|0x02
+block|,
+literal|"100GBASE-SR4"
+block|}
+block|,
+block|{
+literal|0x01
+block|,
+literal|"100G AOC (Active Optical Cable) or 25GAUI C2M ACC"
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|"Unspecified"
 block|}
 block|}
 decl_stmt|;
@@ -1854,14 +2038,13 @@ decl_stmt|;
 name|uint8_t
 name|code
 decl_stmt|;
-comment|/* Check 10/40G Ethernet class only */
 name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
 name|SFF_8436_BASE
 argument_list|,
-name|SFF_8436_CODE_E1040G
+name|SFF_8436_CODE_E1040100G
 argument_list|,
 literal|1
 argument_list|,
@@ -1869,6 +2052,40 @@ operator|&
 name|code
 argument_list|)
 expr_stmt|;
+comment|/* Check for extended specification compliance */
+if|if
+condition|(
+name|code
+operator|&
+name|SFF_8636_EXT_COMPLIANCE
+condition|)
+block|{
+name|read_i2c
+argument_list|(
+name|ii
+argument_list|,
+name|SFF_8436_BASE
+argument_list|,
+name|SFF_8436_OPTIONS_START
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|code
+argument_list|)
+expr_stmt|;
+name|tech_class
+operator|=
+name|find_value
+argument_list|(
+name|eth_extended_comp
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* Check 10/40G Ethernet class only */
 name|tech_class
 operator|=
 name|find_zero_bit
@@ -4691,6 +4908,9 @@ name|SFF_8024_ID_QSFP
 case|:
 case|case
 name|SFF_8024_ID_QSFPPLUS
+case|:
+case|case
+name|SFF_8024_ID_QSFP28
 case|:
 name|print_qsfp_status
 argument_list|(

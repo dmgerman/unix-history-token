@@ -2073,6 +2073,11 @@ name|resource
 modifier|*
 name|sc_irq_res
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|sc_msix_res
+decl_stmt|;
 name|void
 modifier|*
 name|sc_intr_hdl

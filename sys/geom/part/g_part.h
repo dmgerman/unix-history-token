@@ -53,6 +53,9 @@ block|{
 name|G_PART_ALIAS_APPLE_BOOT
 block|,
 comment|/* An Apple boot partition entry. */
+name|G_PART_ALIAS_APPLE_CORE_STORAGE
+block|,
+comment|/* An Apple Core Storage partition. */
 name|G_PART_ALIAS_APPLE_HFS
 block|,
 comment|/* An HFS+ file system entry. */
@@ -71,6 +74,51 @@ comment|/* An Apple TV recovery part entry. */
 name|G_PART_ALIAS_APPLE_UFS
 block|,
 comment|/* An Apple UFS partition entry. */
+name|G_PART_ALIAS_BIOS_BOOT
+block|,
+comment|/* A GRUB 2 boot partition entry. */
+name|G_PART_ALIAS_CHROMEOS_FIRMWARE
+block|,
+comment|/* A ChromeOS firmware part. entry. */
+name|G_PART_ALIAS_CHROMEOS_KERNEL
+block|,
+comment|/* A ChromeOS Kernel part. entry. */
+name|G_PART_ALIAS_CHROMEOS_RESERVED
+block|,
+comment|/* ChromeOS. Reserved for future use. */
+name|G_PART_ALIAS_CHROMEOS_ROOT
+block|,
+comment|/* A ChromeOS root part. entry. */
+name|G_PART_ALIAS_DFBSD
+block|,
+comment|/* A DfBSD label32 partition entry */
+name|G_PART_ALIAS_DFBSD64
+block|,
+comment|/* A DfBSD label64 partition entry */
+name|G_PART_ALIAS_DFBSD_CCD
+block|,
+comment|/* A DfBSD CCD partition entry */
+name|G_PART_ALIAS_DFBSD_HAMMER
+block|,
+comment|/* A DfBSD HAMMER FS partition entry */
+name|G_PART_ALIAS_DFBSD_HAMMER2
+block|,
+comment|/* A DfBSD HAMMER2 FS partition entry */
+name|G_PART_ALIAS_DFBSD_LEGACY
+block|,
+comment|/* A DfBSD legacy partition entry */
+name|G_PART_ALIAS_DFBSD_SWAP
+block|,
+comment|/* A DfBSD swap partition entry */
+name|G_PART_ALIAS_DFBSD_UFS
+block|,
+comment|/* A DfBSD UFS partition entry */
+name|G_PART_ALIAS_DFBSD_VINUM
+block|,
+comment|/* A DfBSD Vinum partition entry */
+name|G_PART_ALIAS_EBR
+block|,
+comment|/* A EBR partition entry. */
 name|G_PART_ALIAS_EFI
 block|,
 comment|/* A EFI system partition entry. */
@@ -95,9 +143,6 @@ comment|/* A Vinum partition entry. */
 name|G_PART_ALIAS_FREEBSD_ZFS
 block|,
 comment|/* A ZFS file system entry. */
-name|G_PART_ALIAS_MBR
-block|,
-comment|/* A MBR (extended) partition entry. */
 name|G_PART_ALIAS_LINUX_DATA
 block|,
 comment|/* A Linux data partition entry. */
@@ -110,21 +155,36 @@ comment|/* A Linux RAID partition entry. */
 name|G_PART_ALIAS_LINUX_SWAP
 block|,
 comment|/* A Linux swap partition entry. */
+name|G_PART_ALIAS_MBR
+block|,
+comment|/* A MBR (extended) partition entry. */
 name|G_PART_ALIAS_MS_BASIC_DATA
 block|,
 comment|/* A Microsoft Data part. entry. */
+name|G_PART_ALIAS_MS_FAT16
+block|,
+comment|/* A Microsoft FAT16 partition entry. */
+name|G_PART_ALIAS_MS_FAT32
+block|,
+comment|/* A Microsoft FAT32 partition entry. */
 name|G_PART_ALIAS_MS_LDM_DATA
 block|,
 comment|/* A Microsoft LDM Data part. entry. */
 name|G_PART_ALIAS_MS_LDM_METADATA
 block|,
 comment|/* A Microsoft LDM Metadata entry. */
-name|G_PART_ALIAS_MS_RESERVED
-block|,
-comment|/* A Microsoft Reserved part. entry. */
 name|G_PART_ALIAS_MS_NTFS
 block|,
 comment|/* A Microsoft NTFS partition entry */
+name|G_PART_ALIAS_MS_RECOVERY
+block|,
+comment|/* A Microsoft recovery part. entry. */
+name|G_PART_ALIAS_MS_RESERVED
+block|,
+comment|/* A Microsoft Reserved part. entry. */
+name|G_PART_ALIAS_MS_SPACES
+block|,
+comment|/* A Microsoft Spaces part. entry. */
 name|G_PART_ALIAS_NETBSD_CCD
 block|,
 comment|/* A NetBSD CCD partition entry. */
@@ -134,27 +194,21 @@ comment|/* A NetBSD CGD partition entry. */
 name|G_PART_ALIAS_NETBSD_FFS
 block|,
 comment|/* A NetBSD FFS partition entry. */
+name|G_PART_ALIAS_NETBSD_LFS
+block|,
+comment|/* A NetBSD LFS partition entry. */
 name|G_PART_ALIAS_NETBSD_RAID
 block|,
 comment|/* A NetBSD RAID partition entry. */
 name|G_PART_ALIAS_NETBSD_SWAP
 block|,
 comment|/* A NetBSD swap partition entry. */
-name|G_PART_ALIAS_NETBSD_LFS
+name|G_PART_ALIAS_OPENBSD_DATA
 block|,
-comment|/* A NetBSD LFS partition entry. */
-name|G_PART_ALIAS_EBR
+comment|/* An OpenBSD data partition entry. */
+name|G_PART_ALIAS_PREP_BOOT
 block|,
-comment|/* A EBR partition entry. */
-name|G_PART_ALIAS_MS_FAT16
-block|,
-comment|/* A Microsoft FAT16 partition entry. */
-name|G_PART_ALIAS_MS_FAT32
-block|,
-comment|/* A Microsoft FAT32 partition entry. */
-name|G_PART_ALIAS_BIOS_BOOT
-block|,
-comment|/* A GRUB 2 boot partition entry. */
+comment|/* A PREP/CHRP boot partition entry. */
 name|G_PART_ALIAS_VMFS
 block|,
 comment|/* A VMware VMFS partition entry */
@@ -167,39 +221,6 @@ comment|/* A VMware reserved partition entry */
 name|G_PART_ALIAS_VMVSANHDR
 block|,
 comment|/* A VMware vSAN header partition entry */
-name|G_PART_ALIAS_DFBSD
-block|,
-comment|/* A DfBSD label32 partition entry */
-name|G_PART_ALIAS_DFBSD64
-block|,
-comment|/* A DfBSD label64 partition entry */
-name|G_PART_ALIAS_DFBSD_SWAP
-block|,
-comment|/* A DfBSD swap partition entry */
-name|G_PART_ALIAS_DFBSD_UFS
-block|,
-comment|/* A DfBSD UFS partition entry */
-name|G_PART_ALIAS_DFBSD_VINUM
-block|,
-comment|/* A DfBSD Vinum partition entry */
-name|G_PART_ALIAS_DFBSD_CCD
-block|,
-comment|/* A DfBSD CCD partition entry */
-name|G_PART_ALIAS_DFBSD_LEGACY
-block|,
-comment|/* A DfBSD legacy partition entry */
-name|G_PART_ALIAS_DFBSD_HAMMER
-block|,
-comment|/* A DfBSD HAMMER FS partition entry */
-name|G_PART_ALIAS_DFBSD_HAMMER2
-block|,
-comment|/* A DfBSD HAMMER2 FS partition entry */
-name|G_PART_ALIAS_PREP_BOOT
-block|,
-comment|/* A PREP/CHRP boot partition entry. */
-name|G_PART_ALIAS_APPLE_CORE_STORAGE
-block|,
-comment|/* An Apple Core Storage partition. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}

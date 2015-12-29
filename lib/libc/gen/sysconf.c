@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -125,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -2300,7 +2312,7 @@ name|errno
 expr_stmt|;
 name|value
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|PF_INET6
 argument_list|,
@@ -2320,7 +2332,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|value
 argument_list|)

@@ -43,8 +43,6 @@ name|pipes
 index|[
 literal|10000
 index|]
-decl_stmt|,
-name|returnval
 decl_stmt|;
 name|unsigned
 name|int
@@ -66,9 +64,9 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|returnval
-operator|=
+operator|(
+name|void
+operator|)
 name|pipe
 argument_list|(
 operator|&
@@ -78,7 +76,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"PASS\n"

@@ -3985,6 +3985,26 @@ goto|goto
 name|ret
 goto|;
 block|}
+if|if
+condition|(
+name|interp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"Multiple PT_INTERP headers\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|ret
+goto|;
+block|}
 name|interp_name_len
 operator|=
 name|phdr
@@ -4964,6 +4984,25 @@ operator|&&
 name|newinterp
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|brand_info
+operator|->
+name|interp_path
+operator|==
+name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|interp
+argument_list|,
+name|brand_info
+operator|->
+name|interp_path
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|error
@@ -5056,9 +5095,11 @@ condition|)
 block|{
 name|uprintf
 argument_list|(
-literal|"ELF interpreter %s not found\n"
+literal|"ELF interpreter %s not found, error %d\n"
 argument_list|,
 name|interp
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 goto|goto

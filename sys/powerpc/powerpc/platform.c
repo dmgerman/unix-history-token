@@ -303,7 +303,7 @@ name|end
 decl_stmt|;
 name|end
 operator|=
-name|ulmax
+name|uqmax
 argument_list|(
 name|to
 operator|->
@@ -326,7 +326,7 @@ name|to
 operator|->
 name|mr_start
 operator|=
-name|ulmin
+name|uqmin
 argument_list|(
 name|from
 operator|->

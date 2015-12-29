@@ -618,6 +618,30 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
+name|bool
+name|isNoopAddrSpaceCast
+argument_list|(
+argument|unsigned SrcAS
+argument_list|,
+argument|unsigned DestAS
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// Mips doesn't have any special address spaces so we just reserve
+comment|// the first 256 for software use (e.g. OpenCL) and treat casts
+comment|// between them as noops.
+return|return
+name|SrcAS
+operator|<
+literal|256
+operator|&&
+name|DestAS
+operator|<
+literal|256
+return|;
+block|}
 name|protected
 operator|:
 name|SDValue

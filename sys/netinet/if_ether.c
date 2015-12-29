@@ -2761,7 +2761,7 @@ name|layer
 operator|=
 literal|"firewire"
 expr_stmt|;
-comment|/* 		 * Restrict too long harware addresses. 		 * Currently we are capable of handling 20-byte 		 * addresses ( sizeof(lle->ll_addr) ) 		 */
+comment|/* 		 * Restrict too long hardware addresses. 		 * Currently we are capable of handling 20-byte 		 * addresses ( sizeof(lle->ll_addr) ) 		 */
 if|if
 condition|(
 name|ar
@@ -2780,7 +2780,8 @@ name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"packet with unknown harware format 0x%02d received on %s\n"
+literal|"packet with unknown hardware format 0x%02d received on "
+literal|"%s\n"
 argument_list|,
 name|ntohs
 argument_list|(

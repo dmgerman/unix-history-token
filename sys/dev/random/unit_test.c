@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2000-2015 Mark R V Murray  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  Build this by going:  cc -g -O0 -pthread -DRANDOM_<alg> -I../.. -lstdthreads -Wall \ 	unit_test.c \ 	yarrow.c \ 	fortuna.c \ 	hash.c \ 	../../crypto/rijndael/rijndael-api-fst.c \ 	../../crypto/rijndael/rijndael-alg-fst.c \ 	../../crypto/sha2/sha2.c \         -lz \ 	-o unit_test ./unit_test  Where<alg> is YARROW or FORTUNA. */
+comment|/*  Build this by going:  cc -g -O0 -pthread -DRANDOM_<alg> -I../.. -lstdthreads -Wall \ 	unit_test.c \ 	yarrow.c \ 	fortuna.c \ 	hash.c \ 	../../crypto/rijndael/rijndael-api-fst.c \ 	../../crypto/rijndael/rijndael-alg-fst.c \ 	../../crypto/sha2/sha256c.c \         -lz \ 	-o unit_test ./unit_test  Where<alg> is YARROW or FORTUNA. */
 end_comment
 
 begin_include
