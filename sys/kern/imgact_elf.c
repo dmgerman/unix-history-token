@@ -4976,9 +4976,11 @@ condition|)
 block|{
 name|uprintf
 argument_list|(
-literal|"ELF interpreter %s not found\n"
+literal|"ELF interpreter %s not found, error %d\n"
 argument_list|,
 name|interp
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 goto|goto
