@@ -958,9 +958,9 @@ block|{
 comment|/* Select which fields to match against */
 if|#
 directive|if
-name|_BYTE_ORDER
+name|BYTE_ORDER
 operator|==
-name|_LITTLE_ENDIAN
+name|LITTLE_ENDIAN
 name|uint16_t
 name|match_flag_vendor
 range|:
@@ -1088,12 +1088,6 @@ decl_stmt|;
 name|uint8_t
 name|bInterfaceProtocol
 decl_stmt|;
-comment|/* Hook for driver specific information */
-name|unsigned
-name|long
-name|driver_info
-decl_stmt|;
-comment|/*  * XXX can't currently participate in auto driver loading  * XXX making it a union with the match_flag_* above messes up init  */
 if|#
 directive|if
 name|USB_HAVE_COMPAT_LINUX
@@ -1143,6 +1137,11 @@ name|USB_DEVICE_ID_MATCH_INT_PROTOCOL
 value|0x0200
 endif|#
 directive|endif
+comment|/* Hook for driver specific information */
+name|unsigned
+name|long
+name|driver_info
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
