@@ -4523,7 +4523,10 @@ name|INET6
 if|if
 condition|(
 name|isipv6
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|inp
 operator|->
 name|inp_ip_minttl
@@ -4535,6 +4538,7 @@ condition|)
 goto|goto
 name|dropunlock
 goto|;
+block|}
 elseif|else
 endif|#
 directive|endif
