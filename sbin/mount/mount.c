@@ -2680,6 +2680,7 @@ name|a
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|sa
 operator|->
 name|a
