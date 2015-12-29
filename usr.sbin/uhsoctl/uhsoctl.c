@@ -2178,6 +2178,12 @@ operator|->
 name|ns
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|->
+name|ns
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|fd
 operator|=
