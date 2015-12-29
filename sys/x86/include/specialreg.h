@@ -1703,6 +1703,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID_STDEXT_FDP_EXC
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID_STDEXT_SMEP
 value|0x00000080
 end_define
