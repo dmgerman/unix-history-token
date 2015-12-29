@@ -742,7 +742,7 @@ name|FSL_E500mc
 block|,
 name|REVFMT_MAJMIN
 block|,
-literal|0
+name|PPC_FEATURE_HAS_FPU
 block|,
 name|cpu_booke_setup
 block|}
@@ -754,7 +754,25 @@ name|FSL_E5500
 block|,
 name|REVFMT_MAJMIN
 block|,
-literal|0
+name|PPC_FEATURE_64
+operator||
+name|PPC_FEATURE_HAS_FPU
+block|,
+name|cpu_booke_setup
+block|}
+block|,
+block|{
+literal|"Freescale e6500 core"
+block|,
+name|FSL_E6500
+block|,
+name|REVFMT_MAJMIN
+block|,
+name|PPC_FEATURE_64
+operator||
+name|PPC_FEATURE_HAS_ALTIVEC
+operator||
+name|PPC_FEATURE_HAS_FPU
 block|,
 name|cpu_booke_setup
 block|}
