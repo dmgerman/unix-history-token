@@ -270,6 +270,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_LWP_EVENTS
+value|24
+end_define
+
+begin_comment
+comment|/* report LWP birth and exit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
@@ -518,6 +529,16 @@ directive|define
 name|PL_FLAG_CHILD
 value|0x80
 comment|/* I am from child */
+define|#
+directive|define
+name|PL_FLAG_BORN
+value|0x100
+comment|/* new LWP */
+define|#
+directive|define
+name|PL_FLAG_EXITED
+value|0x200
+comment|/* exiting LWP */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
