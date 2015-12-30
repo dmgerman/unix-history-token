@@ -4,10 +4,6 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* include/llvm/Support/DataTypes.h.  Generated from DataTypes.h.in by configure.  */
-end_comment
-
-begin_comment
 comment|/*===-- include/Support/DataTypes.h - Define fixed size types -----*- C -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This file contains definitions to figure out the size of _HOST_ data types.*| |* This file is important because different host OS's define different macros,*| |* which makes portability tough.  This file exports the following            *| |* definitions:                                                               *| |*                                                                            *| |*   [u]int(32|64)_t : typedefs for signed and unsigned 32/64 bit system types*| |*   [U]INT(8|16|32|64)_(MIN|MAX) : Constants for the min and max values.     *| |*                                                                            *| |* No library is required when using these functions.                         *| |*                                                                            *| |*===----------------------------------------------------------------------===*/
 end_comment
 
@@ -16,7 +12,7 @@ comment|/* Please leave this file C-compatible. */
 end_comment
 
 begin_comment
-comment|/* Please keep this file in sync with DataTypes.h.cmake */
+comment|/* Please keep this file in sync with DataTypes.h.in */
 end_comment
 
 begin_ifndef
@@ -52,9 +48,12 @@ name|HAVE_UINT64_T
 value|1
 end_define
 
-begin_comment
-comment|/* #undef HAVE_U_INT64_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT64_T
+value|1
+end_define
 
 begin_ifdef
 ifdef|#
@@ -394,6 +393,48 @@ define|#
 directive|define
 name|PRIX64
 value|"I64X"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRId32
+value|"d"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIi32
+value|"i"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIo32
+value|"o"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIu32
+value|"u"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIx32
+value|"x"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIX32
+value|"X"
 end_define
 
 begin_endif
