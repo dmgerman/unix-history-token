@@ -116,7 +116,7 @@ specifier|const
 name|unsigned
 name|MAX_SUBTARGET_FEATURES
 init|=
-literal|64
+literal|128
 decl_stmt|;
 name|class
 name|FeatureBitset

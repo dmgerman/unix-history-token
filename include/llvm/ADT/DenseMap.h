@@ -1657,6 +1657,7 @@ condition|;
 operator|++
 name|B
 control|)
+operator|::
 name|new
 argument_list|(
 argument|&B->getFirst()
@@ -1797,6 +1798,7 @@ name|getFirst
 argument_list|()
 argument_list|)
 expr_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&DestBucket->getSecond()
@@ -1948,6 +1950,7 @@ operator|++
 name|i
 control|)
 block|{
+operator|::
 name|new
 argument_list|(
 argument|&getBuckets()[i].getFirst()
@@ -2004,6 +2007,7 @@ name|getTombstoneKey
 argument_list|()
 argument_list|)
 condition|)
+operator|::
 name|new
 argument_list|(
 argument|&getBuckets()[i].getSecond()
@@ -2453,6 +2457,7 @@ argument_list|()
 operator|=
 name|Key
 expr_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&TheBucket->getSecond()
@@ -2503,6 +2508,7 @@ argument_list|()
 operator|=
 name|Key
 expr_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&TheBucket->getSecond()
@@ -2562,6 +2568,7 @@ argument_list|(
 name|Key
 argument_list|)
 expr_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&TheBucket->getSecond()
@@ -4327,6 +4334,7 @@ condition|(
 name|hasLHSValue
 condition|)
 block|{
+operator|::
 name|new
 argument_list|(
 argument|&RHSB->getSecond()
@@ -4360,6 +4368,7 @@ condition|(
 name|hasRHSValue
 condition|)
 block|{
+operator|::
 name|new
 argument_list|(
 argument|&LHSB->getSecond()
@@ -4575,6 +4584,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&NewB->getFirst()
@@ -4630,6 +4640,7 @@ name|TombstoneKey
 argument_list|)
 condition|)
 block|{
+operator|::
 name|new
 argument_list|(
 argument|&NewB->getSecond()
@@ -5040,6 +5051,7 @@ operator|&&
 literal|"Too many inline buckets!"
 argument_list|)
 expr_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&TmpEnd->getFirst()
@@ -5057,6 +5069,7 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|::
 name|new
 argument_list|(
 argument|&TmpEnd->getSecond()

@@ -81,6 +81,9 @@ decl_stmt|;
 name|class
 name|MCExpr
 decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 struct_decl|struct
 name|WinEHFuncInfo
 struct_decl|;
@@ -115,9 +118,34 @@ name|useImageRel32
 operator|=
 name|false
 block|;
+comment|/// Pointer to the current funclet entry BB.
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|CurrentFuncletEntry
+operator|=
+name|nullptr
+block|;
 name|void
 name|emitCSpecificHandlerTable
-argument_list|()
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+name|void
+name|emitSEHActionsForRange
+argument_list|(
+argument|const WinEHFuncInfo&FuncInfo
+argument_list|,
+argument|const MCSymbol *BeginLabel
+argument_list|,
+argument|const MCSymbol *EndLabel
+argument_list|,
+argument|int State
+argument_list|)
 block|;
 comment|/// Emit the EH table data for 32-bit and 64-bit functions using
 comment|/// the __CxxFrameHandler3 personality.
@@ -143,7 +171,16 @@ name|MF
 argument_list|)
 block|;
 name|void
-name|extendIP2StateTable
+name|emitCLRExceptionTable
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+name|void
+name|computeIP2StateTable
 argument_list|(
 specifier|const
 name|MachineFunction
@@ -151,13 +188,24 @@ operator|*
 name|MF
 argument_list|,
 specifier|const
-name|Function
-operator|*
-name|ParentF
-argument_list|,
 name|WinEHFuncInfo
 operator|&
 name|FuncInfo
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MCExpr
+operator|*
+argument_list|,
+name|int
+operator|>>
+operator|&
+name|IPToStateTable
 argument_list|)
 block|;
 comment|/// Emits the label used with llvm.x86.seh.recoverfp, which is used by
@@ -190,6 +238,61 @@ specifier|const
 name|GlobalValue
 operator|*
 name|GV
+argument_list|)
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getLabelPlusOne
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Label
+argument_list|)
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getOffset
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|OffsetOf
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|OffsetFrom
+argument_list|)
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getOffsetPlusOne
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|OffsetOf
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|OffsetFrom
+argument_list|)
+block|;
+comment|/// Gets the offset that we should use in a table for a stack object with the
+comment|/// given index. For targets using CFI (Win64, etc), this is relative to the
+comment|/// established SP at the end of the prologue. For targets without CFI (Win32
+comment|/// only), it is relative to the frame pointer.
+name|int
+name|getFrameIndexOffset
+argument_list|(
+argument|int FrameIndex
+argument_list|,
+argument|const WinEHFuncInfo&FuncInfo
 argument_list|)
 block|;
 name|public
@@ -230,6 +333,21 @@ name|endFunction
 argument_list|(
 argument|const MachineFunction *
 argument_list|)
+name|override
+block|;
+comment|/// \brief Emit target-specific EH funclet machinery.
+name|void
+name|beginFunclet
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|,
+argument|MCSymbol *Sym
+argument_list|)
+name|override
+block|;
+name|void
+name|endFunclet
+argument_list|()
 name|override
 block|; }
 decl_stmt|;

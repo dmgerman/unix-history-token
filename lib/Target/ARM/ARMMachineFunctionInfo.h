@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMMachineFuctionInfo.h - ARM machine function info -----*- C++ -*-===//
+comment|//===-- ARMMachineFunctionInfo.h - ARM machine function info ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ name|unsigned
 name|ReturnRegsCount
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
-comment|/// processFunctionBeforeCalleeSavedScan().
+comment|/// determineCalleeSaves().
 name|bool
 name|HasStackFrame
 block|;
@@ -224,12 +224,6 @@ block|,
 name|unsigned
 operator|>
 name|CPEClones
-block|;
-comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
-comment|/// use as the global base register. This is used for PIC in some PIC
-comment|/// relocation models.
-name|unsigned
-name|GlobalBaseReg
 block|;
 comment|/// ArgumentStackSize - amount of bytes on stack consumed by the arguments
 comment|/// being passed on the stack
@@ -345,12 +339,7 @@ argument_list|)
 block|,
 name|HasITBlocks
 argument_list|(
-name|false
-argument_list|)
-block|,
-name|GlobalBaseReg
-argument_list|(
-literal|0
+argument|false
 argument_list|)
 block|{}
 name|explicit
@@ -762,25 +751,6 @@ block|{
 name|HasITBlocks
 operator|=
 name|h
-block|; }
-name|unsigned
-name|getGlobalBaseReg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GlobalBaseReg
-return|;
-block|}
-name|void
-name|setGlobalBaseReg
-argument_list|(
-argument|unsigned Reg
-argument_list|)
-block|{
-name|GlobalBaseReg
-operator|=
-name|Reg
 block|; }
 name|void
 name|recordCPEClone

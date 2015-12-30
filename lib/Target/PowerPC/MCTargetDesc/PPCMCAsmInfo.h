@@ -98,7 +98,7 @@ argument|bool is64Bit
 argument_list|,
 argument|const Triple&
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|PPCELFMCAsmInfo
@@ -120,7 +120,7 @@ argument|bool is64Bit
 argument_list|,
 argument|const Triple&
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

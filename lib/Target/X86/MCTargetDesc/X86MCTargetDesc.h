@@ -329,6 +329,9 @@ name|CE
 parameter_list|,
 name|bool
 name|RelaxAll
+parameter_list|,
+name|bool
+name|IncrementalLinkerCompatible
 parameter_list|)
 function_decl|;
 comment|/// Construct an X86 Mach-O object writer.
@@ -400,6 +403,37 @@ parameter_list|(
 name|MCContext
 modifier|&
 name|Ctx
+parameter_list|)
+function_decl|;
+comment|/// Returns the sub or super register of a specific X86 register.
+comment|/// e.g. getX86SubSuperRegister(X86::EAX, 16) returns X86::AX.
+comment|/// Aborts on error.
+name|unsigned
+name|getX86SubSuperRegister
+parameter_list|(
+name|unsigned
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|bool
+name|High
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Returns the sub or super register of a specific X86 register.
+comment|/// Like getX86SubSuperRegister() but returns 0 on error.
+name|unsigned
+name|getX86SubSuperRegisterOrZero
+parameter_list|(
+name|unsigned
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|bool
+name|High
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

@@ -4590,6 +4590,63 @@ block|}
 end_function
 
 begin_comment
+comment|/* llvalue -> bool */
+end_comment
+
+begin_function
+name|CAMLprim
+name|value
+name|llvm_unnamed_addr
+parameter_list|(
+name|LLVMValueRef
+name|Global
+parameter_list|)
+block|{
+return|return
+name|Val_bool
+argument_list|(
+name|LLVMHasUnnamedAddr
+argument_list|(
+name|Global
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* bool -> llvalue -> unit */
+end_comment
+
+begin_function
+name|CAMLprim
+name|value
+name|llvm_set_unnamed_addr
+parameter_list|(
+name|value
+name|UseUnnamedAddr
+parameter_list|,
+name|LLVMValueRef
+name|Global
+parameter_list|)
+block|{
+name|LLVMSetUnnamedAddr
+argument_list|(
+name|Global
+argument_list|,
+name|Bool_val
+argument_list|(
+name|UseUnnamedAddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|Val_unit
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* llvalue -> string */
 end_comment
 

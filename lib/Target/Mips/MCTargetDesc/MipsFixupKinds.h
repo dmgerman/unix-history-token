@@ -67,10 +67,13 @@ comment|//
 enum|enum
 name|Fixups
 block|{
-comment|// Branch fixups resulting in R_MIPS_16.
-name|fixup_Mips_16
+comment|// Branch fixups resulting in R_MIPS_NONE.
+name|fixup_Mips_NONE
 init|=
 name|FirstTargetFixupKind
+block|,
+comment|// Branch fixups resulting in R_MIPS_16.
+name|fixup_Mips_16
 block|,
 comment|// Pure 32 bit data fixup resulting in - R_MIPS_32.
 name|fixup_Mips_32

@@ -130,9 +130,7 @@ comment|/// and refinement steps for all operations.
 name|void
 name|setDefaults
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Key
 parameter_list|,
 name|bool
@@ -148,9 +146,7 @@ comment|/// by default or from the command-line.
 name|bool
 name|isEnabled
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Key
 argument_list|)
 decl|const
@@ -160,9 +156,7 @@ comment|/// the result of a machine instruction for the given reciprocal operati
 name|unsigned
 name|getRefinementSteps
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Key
 argument_list|)
 decl|const

@@ -101,11 +101,20 @@ name|public
 operator|:
 name|PDBContext
 argument_list|(
-argument|const object::COFFObjectFile&Object
+specifier|const
+name|object
+operator|::
+name|COFFObjectFile
+operator|&
+name|Object
 argument_list|,
-argument|std::unique_ptr<IPDBSession> PDBSession
-argument_list|,
-argument|bool RelativeAddress
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBSession
+operator|>
+name|PDBSession
 argument_list|)
 block|;
 specifier|static

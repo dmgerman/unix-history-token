@@ -82,6 +82,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator.h"
 end_include
 
@@ -151,6 +157,20 @@ name|void
 name|anchor
 argument_list|()
 block|;
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+specifier|inline
+specifier|static
+name|void
+operator|*
+name|allocateFixedOperandUser
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|)
+block|;
 name|protected
 operator|:
 comment|/// Allocate a User with an operand pointer co-allocated.
@@ -178,13 +198,33 @@ argument_list|,
 argument|unsigned Us
 argument_list|)
 block|;
+comment|/// Allocate a User with the operands co-allocated.  If DescBytes is non-zero
+comment|/// then allocate an additional DescBytes bytes before the operands. These
+comment|/// bytes can be accessed by calling getDescriptor.
+comment|///
+comment|/// DescBytes needs to be divisible by sizeof(void *).  The allocated
+comment|/// descriptor, if any, is aligned to sizeof(void *) bytes.
+comment|///
+comment|/// This is used for subclasses which have a fixed number of operands.
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t Size
+argument_list|,
+argument|unsigned Us
+argument_list|,
+argument|unsigned DescBytes
+argument_list|)
+block|;
 name|User
 argument_list|(
 argument|Type *ty
 argument_list|,
 argument|unsigned vty
 argument_list|,
-argument|Use *OpList
+argument|Use *
 argument_list|,
 argument|unsigned NumOps
 argument_list|)
@@ -648,6 +688,24 @@ return|return
 name|NumUserOperands
 return|;
 block|}
+comment|/// Returns the descriptor co-allocated with this User instance.
+name|ArrayRef
+operator|<
+specifier|const
+name|uint8_t
+operator|>
+name|getDescriptor
+argument_list|()
+specifier|const
+block|;
+comment|/// Returns the descriptor co-allocated with this User instance.
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|getDescriptor
+argument_list|()
+block|;
 comment|/// Set the number of operands on a GlobalVariable.
 comment|///
 comment|/// GlobalVariable always allocates space for a single operands, but
@@ -669,33 +727,6 @@ operator|<=
 literal|1
 operator|&&
 literal|"GlobalVariable can only have 0 or 1 operands"
-argument_list|)
-block|;
-name|NumUserOperands
-operator|=
-name|NumOps
-block|;   }
-comment|/// Set the number of operands on a Function.
-comment|///
-comment|/// Function always allocates space for a single operands, but
-comment|/// doesn't always use it.
-comment|///
-comment|/// FIXME: As that the number of operands is used to find the start of
-comment|/// the allocated memory in operator delete, we need to always think we have
-comment|/// 1 operand before delete.
-name|void
-name|setFunctionNumOperands
-argument_list|(
-argument|unsigned NumOps
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|NumOps
-operator|<=
-literal|1
-operator|&&
-literal|"Function can only have 0 or 1 operands"
 argument_list|)
 block|;
 name|NumUserOperands
@@ -951,17 +982,14 @@ name|operand_values
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|value_op_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|value_op_begin
 argument_list|()
-operator|,
+argument_list|,
 name|value_op_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt

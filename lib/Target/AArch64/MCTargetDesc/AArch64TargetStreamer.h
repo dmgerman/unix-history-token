@@ -89,6 +89,8 @@ argument_list|(
 argument|const MCExpr *
 argument_list|,
 argument|unsigned Size
+argument_list|,
+argument|SMLoc Loc
 argument_list|)
 block|;
 comment|/// Callback used to implemnt the .ltorg directive.

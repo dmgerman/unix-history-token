@@ -671,6 +671,14 @@ specifier|const
 name|override
 block|;
 name|bool
+name|aggressivelyPreferBuildVectorSources
+argument_list|(
+argument|EVT VecVT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|isCheapToSpeculateCttz
 argument_list|()
 specifier|const
@@ -711,6 +719,15 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
 name|override
+block|;
+name|SDValue
+name|LowerDYNAMIC_STACKALLOC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerOperation
@@ -780,27 +797,6 @@ argument_list|,
 argument|SDValue CC
 argument_list|,
 argument|DAGCombinerInfo&DCI
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|CombineIMinMax
-argument_list|(
-argument|SDLoc DL
-argument_list|,
-argument|EVT VT
-argument_list|,
-argument|SDValue LHS
-argument_list|,
-argument|SDValue RHS
-argument_list|,
-argument|SDValue True
-argument_list|,
-argument|SDValue False
-argument_list|,
-argument|SDValue CC
-argument_list|,
-argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -915,7 +911,7 @@ block|}
 block|;
 comment|/// \brief Helper function that returns the byte offset of the given
 comment|/// type of implicit parameter.
-name|unsigned
+name|uint32_t
 name|getImplicitParameterOffset
 argument_list|(
 argument|const AMDGPUMachineFunction *MFI
@@ -1022,9 +1018,6 @@ comment|// (src0& src1) | (~src0& src2)
 name|BFM
 block|,
 comment|// Insert a range of bits into a 32-bit word.
-name|BREV
-block|,
-comment|// Reverse bits.
 name|MUL_U24
 block|,
 name|MUL_I24

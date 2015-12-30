@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -166,9 +160,15 @@ name|DK_OptimizationRemarkMissed
 block|,
 name|DK_OptimizationRemarkAnalysis
 block|,
+name|DK_OptimizationRemarkAnalysisFPCommute
+block|,
+name|DK_OptimizationRemarkAnalysisAliasing
+block|,
 name|DK_OptimizationFailure
 block|,
 name|DK_MIRParser
+block|,
+name|DK_PGOProfile
 block|,
 name|DK_FirstPluginKind
 block|}
@@ -267,6 +267,12 @@ argument_list|)
 decl|const
 init|=
 literal|0
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AlwaysPrint
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -656,7 +662,7 @@ name|public
 operator|:
 name|DiagnosticInfoSampleProfile
 argument_list|(
-argument|const char *FileName
+argument|StringRef FileName
 argument_list|,
 argument|unsigned LineNum
 argument_list|,
@@ -689,7 +695,7 @@ argument_list|)
 block|{}
 name|DiagnosticInfoSampleProfile
 argument_list|(
-argument|const char *FileName
+argument|StringRef FileName
 argument_list|,
 argument|const Twine&Msg
 argument_list|,
@@ -730,11 +736,6 @@ argument_list|(
 name|DK_SampleProfile
 argument_list|,
 name|Severity
-argument_list|)
-block|,
-name|FileName
-argument_list|(
-name|nullptr
 argument_list|)
 block|,
 name|LineNum
@@ -772,9 +773,7 @@ operator|==
 name|DK_SampleProfile
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFileName
 argument_list|()
 specifier|const
@@ -806,15 +805,110 @@ block|}
 name|private
 operator|:
 comment|/// Name of the input file associated with this diagnostic.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|FileName
 block|;
 comment|/// Line number where the diagnostic occurred. If 0, no line number will
 comment|/// be emitted in the message.
 name|unsigned
 name|LineNum
+block|;
+comment|/// Message to report.
+specifier|const
+name|Twine
+operator|&
+name|Msg
+block|; }
+block|;
+comment|/// Diagnostic information for the PGO profiler.
+name|class
+name|DiagnosticInfoPGOProfile
+operator|:
+name|public
+name|DiagnosticInfo
+block|{
+name|public
+operator|:
+name|DiagnosticInfoPGOProfile
+argument_list|(
+argument|const char *FileName
+argument_list|,
+argument|const Twine&Msg
+argument_list|,
+argument|DiagnosticSeverity Severity = DS_Error
+argument_list|)
+operator|:
+name|DiagnosticInfo
+argument_list|(
+name|DK_PGOProfile
+argument_list|,
+name|Severity
+argument_list|)
+block|,
+name|FileName
+argument_list|(
+name|FileName
+argument_list|)
+block|,
+name|Msg
+argument_list|(
+argument|Msg
+argument_list|)
+block|{}
+comment|/// \see DiagnosticInfo::print.
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_PGOProfile
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getFileName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileName
+return|;
+block|}
+specifier|const
+name|Twine
+operator|&
+name|getMsg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Msg
+return|;
+block|}
+name|private
+operator|:
+comment|/// Name of the input file associated with this diagnostic.
+specifier|const
+name|char
+operator|*
+name|FileName
 block|;
 comment|/// Message to report.
 specifier|const
@@ -890,22 +984,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DiagnosticInfo *DI
-argument_list|)
-block|{
-return|return
-name|DI
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|DK_OptimizationRemark
-return|;
-block|}
 comment|/// Return true if this optimization remark is enabled by one of
 comment|/// of the LLVM command line flags (-pass-remarks, -pass-remarks-missed,
 comment|/// or -pass-remarks-analysis). Note that this only handles the LLVM
@@ -1255,7 +1333,186 @@ name|isEnabled
 argument_list|()
 specifier|const
 name|override
-block|; }
+block|;
+name|protected
+operator|:
+name|DiagnosticInfoOptimizationRemarkAnalysis
+argument_list|(
+argument|enum DiagnosticKind Kind
+argument_list|,
+argument|const char *PassName
+argument_list|,
+argument|const Function&Fn
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|const Twine&Msg
+argument_list|)
+operator|:
+name|DiagnosticInfoOptimizationBase
+argument_list|(
+argument|Kind
+argument_list|,
+argument|DS_Remark
+argument_list|,
+argument|PassName
+argument_list|,
+argument|Fn
+argument_list|,
+argument|DLoc
+argument_list|,
+argument|Msg
+argument_list|)
+block|{}
+block|}
+block|;
+comment|/// Diagnostic information for optimization analysis remarks related to
+comment|/// floating-point non-commutativity.
+name|class
+name|DiagnosticInfoOptimizationRemarkAnalysisFPCommute
+operator|:
+name|public
+name|DiagnosticInfoOptimizationRemarkAnalysis
+block|{
+name|public
+operator|:
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If
+comment|/// this name matches the regular expression given in -Rpass-analysis=, then
+comment|/// the diagnostic will be emitted. \p Fn is the function where the diagnostic
+comment|/// is being emitted. \p DLoc is the location information to use in the
+comment|/// diagnostic. If line table information is available, the diagnostic will
+comment|/// include the source code location. \p Msg is the message to show. The
+comment|/// front-end will append its own message related to options that address
+comment|/// floating-point non-commutativity. Note that this class does not copy this
+comment|/// message, so this reference must be valid for the whole life time of the
+comment|/// diagnostic.
+name|DiagnosticInfoOptimizationRemarkAnalysisFPCommute
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|PassName
+argument_list|,
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|,
+specifier|const
+name|DebugLoc
+operator|&
+name|DLoc
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Msg
+argument_list|)
+operator|:
+name|DiagnosticInfoOptimizationRemarkAnalysis
+argument_list|(
+argument|DK_OptimizationRemarkAnalysisFPCommute
+argument_list|,
+argument|PassName
+argument_list|,
+argument|Fn
+argument_list|,
+argument|DLoc
+argument_list|,
+argument|Msg
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_OptimizationRemarkAnalysisFPCommute
+return|;
+block|}
+expr|}
+block|;
+comment|/// Diagnostic information for optimization analysis remarks related to
+comment|/// pointer aliasing.
+name|class
+name|DiagnosticInfoOptimizationRemarkAnalysisAliasing
+operator|:
+name|public
+name|DiagnosticInfoOptimizationRemarkAnalysis
+block|{
+name|public
+operator|:
+comment|/// \p PassName is the name of the pass emitting this diagnostic. If
+comment|/// this name matches the regular expression given in -Rpass-analysis=, then
+comment|/// the diagnostic will be emitted. \p Fn is the function where the diagnostic
+comment|/// is being emitted. \p DLoc is the location information to use in the
+comment|/// diagnostic. If line table information is available, the diagnostic will
+comment|/// include the source code location. \p Msg is the message to show. The
+comment|/// front-end will append its own message related to options that address
+comment|/// pointer aliasing legality. Note that this class does not copy this
+comment|/// message, so this reference must be valid for the whole life time of the
+comment|/// diagnostic.
+name|DiagnosticInfoOptimizationRemarkAnalysisAliasing
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|PassName
+argument_list|,
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|,
+specifier|const
+name|DebugLoc
+operator|&
+name|DLoc
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Msg
+argument_list|)
+operator|:
+name|DiagnosticInfoOptimizationRemarkAnalysis
+argument_list|(
+argument|DK_OptimizationRemarkAnalysisAliasing
+argument_list|,
+argument|PassName
+argument_list|,
+argument|Fn
+argument_list|,
+argument|DLoc
+argument_list|,
+argument|Msg
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_OptimizationRemarkAnalysisAliasing
+return|;
+block|}
+expr|}
 block|;
 comment|/// Diagnostic information for machine IR parser.
 name|class
@@ -1409,6 +1666,74 @@ comment|/// location where the diagnostic is generated. \p Msg is the message st
 comment|/// to use.
 name|void
 name|emitOptimizationRemarkAnalysis
+argument_list|(
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|PassName
+argument_list|,
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|,
+specifier|const
+name|DebugLoc
+operator|&
+name|DLoc
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Msg
+argument_list|)
+block|;
+comment|/// Emit an optimization analysis remark related to messages about
+comment|/// floating-point non-commutativity. \p PassName is the name of the pass
+comment|/// emitting the message. If -Rpass-analysis= is given and \p PassName matches
+comment|/// the regular expression in -Rpass, then the remark will be emitted. \p Fn is
+comment|/// the function triggering the remark, \p DLoc is the debug location where the
+comment|/// diagnostic is generated. \p Msg is the message string to use.
+name|void
+name|emitOptimizationRemarkAnalysisFPCommute
+argument_list|(
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|PassName
+argument_list|,
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|,
+specifier|const
+name|DebugLoc
+operator|&
+name|DLoc
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Msg
+argument_list|)
+block|;
+comment|/// Emit an optimization analysis remark related to messages about
+comment|/// pointer aliasing. \p PassName is the name of the pass emitting the message.
+comment|/// If -Rpass-analysis= is given and \p PassName matches the regular expression
+comment|/// in -Rpass, then the remark will be emitted. \p Fn is the function triggering
+comment|/// the remark, \p DLoc is the debug location where the diagnostic is generated.
+comment|/// \p Msg is the message string to use.
+name|void
+name|emitOptimizationRemarkAnalysisAliasing
 argument_list|(
 name|LLVMContext
 operator|&

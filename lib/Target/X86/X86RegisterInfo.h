@@ -221,6 +221,17 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// getGPRsForTailCall - Returns a register class with registers that can be
+comment|/// used in forming tail calls.
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getGPRsForTailCall
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|getRegPressureLimit
 argument_list|(
@@ -261,6 +272,16 @@ operator|*
 name|getNoPreservedMask
 argument_list|()
 specifier|const
+name|override
+block|;
+comment|// Calls involved in thread-local variable lookup save more registers than
+comment|// normal calls, so they need a different mask to represent this.
+specifier|const
+name|uint32_t
+operator|*
+name|getDarwinTLSCallPreservedMask
+argument_list|()
+specifier|const
 block|;
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
 comment|/// indicating if a register is a special register that has particular uses and
@@ -291,13 +312,6 @@ specifier|const
 block|;
 name|bool
 name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|needsStackRealignment
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -375,31 +389,6 @@ name|SlotSize
 return|;
 block|}
 expr|}
-block|;
-comment|/// Returns the sub or super register of a specific X86 register.
-comment|/// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) returns X86::AX.
-comment|/// Aborts on error.
-name|unsigned
-name|getX86SubSuperRegister
-argument_list|(
-argument|unsigned
-argument_list|,
-argument|MVT::SimpleValueType
-argument_list|,
-argument|bool High=false
-argument_list|)
-block|;
-comment|/// Returns the sub or super register of a specific X86 register.
-comment|/// Like getX86SubSuperRegister() but returns 0 on error.
-name|unsigned
-name|getX86SubSuperRegisterOrZero
-argument_list|(
-argument|unsigned
-argument_list|,
-argument|MVT::SimpleValueType
-argument_list|,
-argument|bool High = false
-argument_list|)
 block|;
 comment|//get512BitRegister - X86 utility - returns 512-bit super register
 name|unsigned

@@ -182,11 +182,13 @@ specifier|const
 name|override
 block|;
 name|int
-name|getFrameIndexOffset
+name|getFrameIndexReference
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
 argument_list|)
 specifier|const
 name|override

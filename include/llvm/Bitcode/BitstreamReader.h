@@ -1280,6 +1280,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|CurWord
+operator|=
+literal|0
+expr_stmt|;
+name|BitsInCurWord
+operator|=
+literal|0
+expr_stmt|;
 name|Size
 operator|=
 name|NextChar

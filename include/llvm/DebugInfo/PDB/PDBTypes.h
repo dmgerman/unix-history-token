@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -1570,6 +1576,141 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|namespace
+name|PDB
+block|{
+specifier|static
+specifier|const
+name|char
+name|Magic
+index|[]
+init|=
+block|{
+literal|'M'
+block|,
+literal|'i'
+block|,
+literal|'c'
+block|,
+literal|'r'
+block|,
+literal|'o'
+block|,
+literal|'s'
+block|,
+literal|'o'
+block|,
+literal|'f'
+block|,
+literal|'t'
+block|,
+literal|' '
+block|,
+literal|'C'
+block|,
+literal|'/'
+block|,
+literal|'C'
+block|,
+literal|'+'
+block|,
+literal|'+'
+block|,
+literal|' '
+block|,
+literal|'M'
+block|,
+literal|'S'
+block|,
+literal|'F'
+block|,
+literal|' '
+block|,
+literal|'7'
+block|,
+literal|'.'
+block|,
+literal|'0'
+block|,
+literal|'0'
+block|,
+literal|'\r'
+block|,
+literal|'\n'
+block|,
+literal|'\x1a'
+block|,
+literal|'D'
+block|,
+literal|'S'
+block|,
+literal|'\0'
+block|,
+literal|'\0'
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
+comment|// The superblock is overlaid at the beginning of the file (offset 0).
+comment|// It starts with a magic header and is followed by information which describes
+comment|// the layout of the file system.
+struct|struct
+name|SuperBlock
+block|{
+name|char
+name|MagicBytes
+index|[
+sizeof|sizeof
+argument_list|(
+name|Magic
+argument_list|)
+index|]
+decl_stmt|;
+comment|// The file system is split into a variable number of fixed size elements.
+comment|// These elements are referred to as blocks.  The size of a block may vary
+comment|// from system to system.
+name|support
+operator|::
+name|ulittle32_t
+name|BlockSize
+expr_stmt|;
+comment|// This field's purpose is not yet known.
+name|support
+operator|::
+name|ulittle32_t
+name|Unknown0
+expr_stmt|;
+comment|// This contains the number of blocks resident in the file system.  In
+comment|// practice, NumBlocks * BlockSize is equivalent to the size of the PDB file.
+name|support
+operator|::
+name|ulittle32_t
+name|NumBlocks
+expr_stmt|;
+comment|// This contains the number of bytes which make up the directory.
+name|support
+operator|::
+name|ulittle32_t
+name|NumDirectoryBytes
+expr_stmt|;
+comment|// This field's purpose is not yet known.
+name|support
+operator|::
+name|ulittle32_t
+name|Unknown1
+expr_stmt|;
+comment|// This contains the block # of the block map.
+name|support
+operator|::
+name|ulittle32_t
+name|BlockMapAddr
+expr_stmt|;
+block|}
+struct|;
+block|}
+end_decl_stmt
 
 begin_comment
 unit|}

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BranchProbability.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
@@ -143,9 +149,6 @@ name|TargetRegisterClass
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|BranchProbability
 decl_stmt|;
 name|class
 name|TargetSubtargetInfo
@@ -203,6 +206,9 @@ literal|0u
 argument_list|,
 argument|unsigned CFDestroyOpcode = ~
 literal|0u
+argument_list|,
+argument|unsigned CatchRetOpcode = ~
+literal|0u
 argument_list|)
 operator|:
 name|CallFrameSetupOpcode
@@ -212,14 +218,34 @@ argument_list|)
 block|,
 name|CallFrameDestroyOpcode
 argument_list|(
-argument|CFDestroyOpcode
+name|CFDestroyOpcode
 argument_list|)
-block|{   }
+block|,
+name|CatchRetOpcode
+argument_list|(
+argument|CatchRetOpcode
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|TargetInstrInfo
 argument_list|()
 block|;
+specifier|static
+name|bool
+name|isGenericOpcode
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+block|{
+return|return
+name|Opc
+operator|<=
+name|TargetOpcode
+operator|::
+name|GENERIC_OP_END
+return|;
+block|}
 comment|/// Given a machine instruction descriptor, returns the register
 comment|/// class constraint for OpNum, or NULL.
 specifier|const
@@ -311,6 +337,59 @@ return|return
 name|false
 return|;
 block|}
+comment|/// This method commutes the operands of the given machine instruction MI.
+comment|/// The operands to be commuted are specified by their indices OpIdx1 and
+comment|/// OpIdx2.
+comment|///
+comment|/// If a target has any instructions that are commutable but require
+comment|/// converting to different instructions or making non-trivial changes
+comment|/// to commute them, this method can be overloaded to do that.
+comment|/// The default implementation simply swaps the commutable operands.
+comment|///
+comment|/// If NewMI is false, MI is modified in place and returned; otherwise, a
+comment|/// new machine instruction is created and returned.
+comment|///
+comment|/// Do not call this method for a non-commutable instruction.
+comment|/// Even though the instruction is commutable, the method may still
+comment|/// fail to commute the operands, null pointer is returned in such cases.
+name|virtual
+name|MachineInstr
+operator|*
+name|commuteInstructionImpl
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool NewMI
+argument_list|,
+argument|unsigned OpIdx1
+argument_list|,
+argument|unsigned OpIdx2
+argument_list|)
+specifier|const
+block|;
+comment|/// Assigns the (CommutableOpIdx1, CommutableOpIdx2) pair of commutable
+comment|/// operand indices to (ResultIdx1, ResultIdx2).
+comment|/// One or both input values of the pair: (ResultIdx1, ResultIdx2) may be
+comment|/// predefined to some indices or be undefined (designated by the special
+comment|/// value 'CommuteAnyOperandIndex').
+comment|/// The predefined result indices cannot be re-defined.
+comment|/// The function returns true iff after the result pair redefinition
+comment|/// the fixed result pair is equal to or equivalent to the source pair of
+comment|/// indices: (CommutableOpIdx1, CommutableOpIdx2). It is assumed here that
+comment|/// the pairs (x,y) and (y,x) are equivalent.
+specifier|static
+name|bool
+name|fixCommutedOpIndices
+argument_list|(
+argument|unsigned&ResultIdx1
+argument_list|,
+argument|unsigned&ResultIdx2
+argument_list|,
+argument|unsigned CommutableOpIdx1
+argument_list|,
+argument|unsigned CommutableOpIdx2
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// For instructions with opcodes for which the M_REMATERIALIZABLE flag is
@@ -349,6 +428,15 @@ specifier|const
 block|{
 return|return
 name|CallFrameDestroyOpcode
+return|;
+block|}
+name|unsigned
+name|getCatchReturnOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CatchRetOpcode
 return|;
 block|}
 comment|/// Returns the actual stack pointer adjustment made by an instruction
@@ -625,15 +713,34 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// If a target has any instructions that are commutable but require
-comment|/// converting to different instructions or making non-trivial changes to
-comment|/// commute them, this method can overloaded to do that.
-comment|/// The default implementation simply swaps the commutable operands.
+comment|// This constant can be used as an input value of operand index passed to
+comment|// the method findCommutedOpIndices() to tell the method that the
+comment|// corresponding operand index is not pre-defined and that the method
+comment|// can pick any commutable operand.
+specifier|static
+specifier|const
+name|unsigned
+name|CommuteAnyOperandIndex
+operator|=
+operator|~
+literal|0U
+block|;
+comment|/// This method commutes the operands of the given machine instruction MI.
+comment|///
+comment|/// The operands to be commuted are specified by their indices OpIdx1 and
+comment|/// OpIdx2. OpIdx1 and OpIdx2 arguments may be set to a special value
+comment|/// 'CommuteAnyOperandIndex', which means that the method is free to choose
+comment|/// any arbitrarily chosen commutable operand. If both arguments are set to
+comment|/// 'CommuteAnyOperandIndex' then the method looks for 2 different commutable
+comment|/// operands; then commutes them if such operands could be found.
+comment|///
 comment|/// If NewMI is false, MI is modified in place and returned; otherwise, a
-comment|/// new machine instruction is created and returned.  Do not call this
-comment|/// method for a non-commutable instruction, but there may be some cases
-comment|/// where this method fails and returns null.
-name|virtual
+comment|/// new machine instruction is created and returned.
+comment|///
+comment|/// Do not call this method for a non-commutable instruction or
+comment|/// for non-commuable operands.
+comment|/// Even though the instruction is commutable, the method may still
+comment|/// fail to commute the operands, null pointer is returned in such cases.
 name|MachineInstr
 operator|*
 name|commuteInstruction
@@ -641,12 +748,30 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|bool NewMI = false
+argument_list|,
+argument|unsigned OpIdx1 = CommuteAnyOperandIndex
+argument_list|,
+argument|unsigned OpIdx2 = CommuteAnyOperandIndex
 argument_list|)
 specifier|const
 block|;
-comment|/// If specified MI is commutable, return the two operand indices that would
-comment|/// swap value. Return false if the instruction
-comment|/// is not in a form which this routine understands.
+comment|/// Returns true iff the routine could find two commutable operands in the
+comment|/// given machine instruction.
+comment|/// The 'SrcOpIdx1' and 'SrcOpIdx2' are INPUT and OUTPUT arguments.
+comment|/// If any of the INPUT values is set to the special value
+comment|/// 'CommuteAnyOperandIndex' then the method arbitrarily picks a commutable
+comment|/// operand, then returns its index in the corresponding argument.
+comment|/// If both of INPUT values are set to 'CommuteAnyOperandIndex' then method
+comment|/// looks for 2 commutable operands.
+comment|/// If INPUT values refer to some operands of MI, then the method simply
+comment|/// returns true if the corresponding operands are commutable and returns
+comment|/// false otherwise.
+comment|///
+comment|/// For example, calling this method this way:
+comment|///     unsigned Op1 = 1, Op2 = CommuteAnyOperandIndex;
+comment|///     findCommutedOpIndices(MI, Op1, Op2);
+comment|/// can be interpreted as a query asking to find an operand that would be
+comment|/// commutable with the operand#1.
 name|virtual
 name|bool
 name|findCommutedOpIndices
@@ -1143,7 +1268,7 @@ argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 block|{
@@ -1173,7 +1298,7 @@ argument|unsigned NumFCycles
 argument_list|,
 argument|unsigned ExtraFCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 block|{
@@ -1195,7 +1320,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|unsigned NumCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 block|{
@@ -1540,14 +1665,37 @@ comment|/// returned in the \p Pattern vector. Pattern should be sorted in prior
 comment|/// order since the pattern evaluator stops checking as soon as it finds a
 comment|/// faster sequence.
 comment|/// \param Root - Instruction that could be combined with one of its operands
-comment|/// \param Pattern - Vector of possible combination patterns
+comment|/// \param Patterns - Vector of possible combination patterns
 name|virtual
 name|bool
 name|getMachineCombinerPatterns
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|SmallVectorImpl<MachineCombinerPattern::MC_PATTERN>&Pattern
+argument|SmallVectorImpl<MachineCombinerPattern>&Patterns
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true if the input \P Inst is part of a chain of dependent ops
+comment|/// that are suitable for reassociation, otherwise return false.
+comment|/// If the instruction's operands must be commuted to have a previous
+comment|/// instruction of the same type define the first source operand, \P Commuted
+comment|/// will be set to true.
+name|bool
+name|isReassociationCandidate
+argument_list|(
+argument|const MachineInstr&Inst
+argument_list|,
+argument|bool&Commuted
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true when \P Inst is both associative and commutative.
+name|virtual
+name|bool
+name|isAssociativeAndCommutative
+argument_list|(
+argument|const MachineInstr&Inst
 argument_list|)
 specifier|const
 block|{
@@ -1555,6 +1703,27 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true when \P Inst has reassociable operands in the same \P MBB.
+name|virtual
+name|bool
+name|hasReassociableOperands
+argument_list|(
+argument|const MachineInstr&Inst
+argument_list|,
+argument|const MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true when \P Inst has reassociable sibling.
+name|bool
+name|hasReassociableSibling
+argument_list|(
+argument|const MachineInstr&Inst
+argument_list|,
+argument|bool&Commuted
+argument_list|)
+specifier|const
+block|;
 comment|/// When getMachineCombinerPatterns() finds patterns, this function generates
 comment|/// the instructions that could replace the original code sequence. The client
 comment|/// has to decide whether the actual replacement is beneficial or not.
@@ -1571,7 +1740,7 @@ name|genAlternativeCodeSequence
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|MachineCombinerPattern::MC_PATTERN Pattern
+argument|MachineCombinerPattern Pattern
 argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&InsInstrs
 argument_list|,
@@ -1582,9 +1751,47 @@ argument_list|,
 argument|unsigned>&InstrIdxForVirtReg
 argument_list|)
 specifier|const
+block|;
+comment|/// Attempt to reassociate \P Root and \P Prev according to \P Pattern to
+comment|/// reduce critical path length.
+name|void
+name|reassociateOps
+argument_list|(
+argument|MachineInstr&Root
+argument_list|,
+argument|MachineInstr&Prev
+argument_list|,
+argument|MachineCombinerPattern Pattern
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&InsInstrs
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&DelInstrs
+argument_list|,
+argument|DenseMap<unsigned
+argument_list|,
+argument|unsigned>&InstrIdxForVirtReg
+argument_list|)
+specifier|const
+block|;
+comment|/// This is an architecture-specific helper function of reassociateOps.
+comment|/// Set special operand attributes for new instructions after reassociation.
+name|virtual
+name|void
+name|setSpecialOperandAttr
+argument_list|(
+argument|MachineInstr&OldMI1
+argument_list|,
+argument|MachineInstr&OldMI2
+argument_list|,
+argument|MachineInstr&NewMI1
+argument_list|,
+argument|MachineInstr&NewMI2
+argument_list|)
+specifier|const
 block|{
 return|return;
 block|}
+block|;
 comment|/// Return true when a target supports MachineCombiner.
 name|virtual
 name|bool
@@ -1726,17 +1933,6 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// Returns true for the specified load / store if folding is possible.
-name|virtual
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|ArrayRef<unsigned> Ops
-argument_list|)
-specifier|const
-block|;
 comment|/// unfoldMemoryOperand - Separate a single instruction which folded a load or
 comment|/// a store or a load and a store into two or more instruction. If this is
 comment|/// possible, returns true as well as the new instructions by reference.
@@ -2706,14 +2902,282 @@ return|return
 literal|5
 return|;
 block|}
+comment|/// Return an array that contains the ids of the target indices (used for the
+comment|/// TargetIndex machine operand) and their names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target indices that are
+comment|/// defined by this method.
+name|virtual
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableTargetIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|None
+return|;
+block|}
+comment|/// Decompose the machine operand's target flags into two values - the direct
+comment|/// target flag value and any of bit flags that are applied.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|decomposeMachineOperandsTargetFlags
+argument_list|(
+argument|unsigned
+comment|/*TF*/
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+literal|0u
+argument_list|,
+literal|0u
+argument_list|)
+return|;
+block|}
+comment|/// Return an array that contains the direct target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target flags that are
+comment|/// defined by this method.
+name|virtual
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableDirectMachineOperandTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|None
+return|;
+block|}
+comment|/// Return an array that contains the bitmask target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target flags that are
+comment|/// defined by this method.
+name|virtual
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableBitmaskMachineOperandTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|None
+return|;
+block|}
 name|private
 operator|:
 name|unsigned
 name|CallFrameSetupOpcode
 block|,
 name|CallFrameDestroyOpcode
+block|;
+name|unsigned
+name|CatchRetOpcode
 block|; }
 decl_stmt|;
+comment|/// \brief Provide DenseMapInfo for TargetInstrInfo::RegSubRegPair.
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|TargetInstrInfo
+operator|::
+name|RegSubRegPair
+operator|>
+block|{
+typedef|typedef
+name|DenseMapInfo
+operator|<
+name|unsigned
+operator|>
+name|RegInfo
+expr_stmt|;
+specifier|static
+specifier|inline
+name|TargetInstrInfo
+operator|::
+name|RegSubRegPair
+name|getEmptyKey
+argument_list|()
+block|{
+return|return
+name|TargetInstrInfo
+operator|::
+name|RegSubRegPair
+argument_list|(
+name|RegInfo
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|,
+name|RegInfo
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|TargetInstrInfo
+operator|::
+name|RegSubRegPair
+name|getTombstoneKey
+argument_list|()
+block|{
+return|return
+name|TargetInstrInfo
+operator|::
+name|RegSubRegPair
+argument_list|(
+name|RegInfo
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|,
+name|RegInfo
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Reuse getHashValue implementation from
+comment|/// std::pair<unsigned, unsigned>.
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|const TargetInstrInfo::RegSubRegPair&Val
+argument_list|)
+block|{
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|PairVal
+operator|=
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Val
+operator|.
+name|Reg
+argument_list|,
+name|Val
+operator|.
+name|SubReg
+argument_list|)
+block|;
+return|return
+name|DenseMapInfo
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>>
+operator|::
+name|getHashValue
+argument_list|(
+name|PairVal
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|const TargetInstrInfo::RegSubRegPair&LHS
+argument_list|,
+argument|const TargetInstrInfo::RegSubRegPair&RHS
+argument_list|)
+block|{
+return|return
+name|RegInfo
+operator|::
+name|isEqual
+argument_list|(
+name|LHS
+operator|.
+name|Reg
+argument_list|,
+name|RHS
+operator|.
+name|Reg
+argument_list|)
+operator|&&
+name|RegInfo
+operator|::
+name|isEqual
+argument_list|(
+name|LHS
+operator|.
+name|SubReg
+argument_list|,
+name|RHS
+operator|.
+name|SubReg
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

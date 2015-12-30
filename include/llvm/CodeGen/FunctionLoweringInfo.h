@@ -223,6 +223,10 @@ comment|/// registers.
 name|bool
 name|CanLowerReturn
 decl_stmt|;
+comment|/// True if part of the CSRs will be handled via explicit copies.
+name|bool
+name|SplitCSR
+decl_stmt|;
 comment|/// DemoteRegister - if CanLowerReturn is false, DemoteRegister is a vreg
 comment|/// allocated to hold a pointer to the hidden sret parameter.
 name|unsigned
@@ -252,6 +256,17 @@ operator|,
 name|unsigned
 operator|>
 name|ValueMap
+expr_stmt|;
+comment|/// Track virtual registers created for exception pointers.
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|CatchPadExceptionPointers
 expr_stmt|;
 comment|// Keep track of frame indices allocated for statepoints as they could be used
 comment|// across basic block boundaries.
@@ -349,31 +364,6 @@ operator|::
 name|iterator
 name|InsertPt
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|SmallPtrSet
-operator|<
-specifier|const
-name|Instruction
-operator|*
-operator|,
-literal|8
-operator|>
-name|CatchInfoLost
-expr_stmt|;
-name|SmallPtrSet
-operator|<
-specifier|const
-name|Instruction
-operator|*
-operator|,
-literal|8
-operator|>
-name|CatchInfoFound
-expr_stmt|;
-endif|#
-directive|endif
 struct|struct
 name|LiveOutInfo
 block|{
@@ -549,6 +539,20 @@ modifier|*
 name|V
 parameter_list|)
 block|{
+comment|// Tokens never live in vregs.
+if|if
+condition|(
+name|V
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isTokenTy
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
 name|unsigned
 modifier|&
 name|R
@@ -821,6 +825,20 @@ specifier|const
 name|Argument
 modifier|*
 name|A
+parameter_list|)
+function_decl|;
+name|unsigned
+name|getCatchPadExceptionPointerVReg
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|CPI
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
 parameter_list|)
 function_decl|;
 name|private

@@ -207,16 +207,19 @@ return|return
 literal|""
 return|;
 block|}
-comment|/// hasNodeAddressLabel - If this method returns true, the address of the node
-comment|/// is added to the label of the node.
+comment|// getNodeIdentifierLabel - Returns a string representing the
+comment|// address or other unique identifier of the node. (Only used if
+comment|// non-empty.)
 name|template
 operator|<
 name|typename
 name|GraphType
 operator|>
 specifier|static
-name|bool
-name|hasNodeAddressLabel
+name|std
+operator|::
+name|string
+name|getNodeIdentifierLabel
 argument_list|(
 argument|const void *
 argument_list|,
@@ -224,7 +227,7 @@ argument|const GraphType&
 argument_list|)
 block|{
 return|return
-name|false
+literal|""
 return|;
 block|}
 name|template

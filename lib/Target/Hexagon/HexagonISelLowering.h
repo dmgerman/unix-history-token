@@ -127,12 +127,12 @@ name|ALLOCA
 block|,
 name|ARGEXTEND
 block|,
-name|PIC_ADD
-block|,
 name|AT_GOT
 block|,
+comment|// Index in GOT.
 name|AT_PCREL
 block|,
+comment|// Offset relative to PC.
 name|CALLv3
 block|,
 comment|// A V3+ call instruction.
@@ -144,9 +144,6 @@ block|,
 name|RET_FLAG
 block|,
 comment|// Return with a flag operand.
-name|BR_JT
-block|,
-comment|// Branch through jump table.
 name|BARRIER
 block|,
 comment|// Memory barrier.
@@ -215,6 +212,8 @@ block|,
 name|EXTRACTU
 block|,
 name|EXTRACTURP
+block|,
+name|VCOMBINE
 block|,
 name|TC_RETURN
 block|,
@@ -406,15 +405,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerBR_JT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerDYNAMIC_STACKALLOC
 argument_list|(
 argument|SDValue Op
@@ -481,6 +471,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerBlockAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGLOBAL_OFFSET_TABLE
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -625,6 +624,38 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to an EH pad.
+name|unsigned
+name|getExceptionPointerRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Hexagon
+operator|::
+name|R0
+return|;
+block|}
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
+name|unsigned
+name|getExceptionSelectorRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Hexagon
+operator|::
+name|R1
+return|;
+block|}
 name|SDValue
 name|LowerVASTART
 argument_list|(
@@ -636,6 +667,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerConstantPool
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerJumpTable
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -807,6 +847,19 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+comment|/// Return true if folding a constant offset with the given GlobalAddress
+comment|/// is legal.  It is frequently not legal in PIC relocation models.
+name|bool
+name|isOffsetFoldingLegal
+argument_list|(
+specifier|const
+name|GlobalAddressSDNode
+operator|*
+name|GA
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|bool
 name|isFPImmLegal
 argument_list|(
@@ -834,17 +887,21 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|// Handling of atomic RMW instructions.
-name|bool
-name|hasLoadLinkedStoreConditional
-argument_list|()
-specifier|const
+comment|/// Returns relocation base for the given PIC jumptable.
+name|SDValue
+name|getPICJumpTableRelocBase
+argument_list|(
+name|SDValue
+name|Table
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
 name|override
-block|{
-return|return
-name|true
-return|;
-block|}
+decl_stmt|;
+comment|// Handling of atomic RMW instructions.
 name|Value
 modifier|*
 name|emitLoadLinked
@@ -889,7 +946,7 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-name|bool
+name|AtomicExpansionKind
 name|shouldExpandAtomicLoadInIR
 argument_list|(
 name|LoadInst
@@ -909,7 +966,7 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-name|AtomicRMWExpansionKind
+name|AtomicExpansionKind
 name|shouldExpandAtomicRMWInIR
 argument_list|(
 name|AtomicRMWInst
@@ -920,11 +977,32 @@ decl|const
 name|override
 block|{
 return|return
-name|AtomicRMWExpansionKind
+name|AtomicExpansionKind
 operator|::
 name|LLSC
 return|;
 block|}
+name|protected
+label|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|,
+name|uint8_t
+operator|>
+name|findRepresentativeClass
+argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|MVT VT
+argument_list|)
+specifier|const
+name|override
+expr_stmt|;
 block|}
 end_decl_stmt
 

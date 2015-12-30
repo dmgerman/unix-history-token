@@ -98,9 +98,6 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|class
 name|SymbolTableListTraits
@@ -122,8 +119,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|GlobalAlias
-operator|,
-name|Module
 operator|>
 expr_stmt|;
 name|void
@@ -156,7 +151,9 @@ parameter_list|)
 function_decl|;
 name|GlobalAlias
 argument_list|(
-argument|PointerType *Ty
+argument|Type *Ty
+argument_list|,
+argument|unsigned AddressSpace
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
@@ -198,9 +195,12 @@ name|GlobalAlias
 modifier|*
 name|create
 parameter_list|(
-name|PointerType
+name|Type
 modifier|*
 name|Ty
+parameter_list|,
+name|unsigned
+name|AddressSpace
 parameter_list|,
 name|LinkageTypes
 name|Linkage
@@ -225,9 +225,12 @@ name|GlobalAlias
 modifier|*
 name|create
 parameter_list|(
-name|PointerType
+name|Type
 modifier|*
 name|Ty
+parameter_list|,
+name|unsigned
+name|AddressSpace
 parameter_list|,
 name|LinkageTypes
 name|Linkage
@@ -248,9 +251,12 @@ name|GlobalAlias
 modifier|*
 name|create
 parameter_list|(
-name|PointerType
+name|Type
 modifier|*
 name|Ty
+parameter_list|,
+name|unsigned
+name|AddressSpace
 parameter_list|,
 name|LinkageTypes
 name|Linkage

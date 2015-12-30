@@ -1295,6 +1295,7 @@ block|{}
 operator|~
 name|TypedInit
 argument_list|()
+name|override
 block|{
 comment|// If this is a DefInit we need to delete the RecordRecTy.
 if|if
@@ -2130,12 +2131,7 @@ block|;
 name|explicit
 name|StringInit
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|V
+argument|StringRef V
 argument_list|)
 operator|:
 name|TypedInit
@@ -3585,33 +3581,6 @@ name|Init
 operator|*
 name|VarName
 block|;
-name|explicit
-name|VarInit
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|VN
-argument_list|,
-name|RecTy
-operator|*
-name|T
-argument_list|)
-operator|:
-name|TypedInit
-argument_list|(
-name|IK_VarInit
-argument_list|,
-name|T
-argument_list|)
-block|,
-name|VarName
-argument_list|(
-argument|StringInit::get(VN)
-argument_list|)
-block|{}
 name|explicit
 name|VarInit
 argument_list|(
@@ -7557,13 +7526,17 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end llvm namespace
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TABLEGEN_RECORD_H
+end_comment
 
 end_unit
 

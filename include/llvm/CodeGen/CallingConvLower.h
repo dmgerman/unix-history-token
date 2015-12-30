@@ -811,6 +811,9 @@ decl_stmt|;
 name|unsigned
 name|StackOffset
 decl_stmt|;
+name|unsigned
+name|MaxStackArgAlign
+decl_stmt|;
 name|SmallVector
 operator|<
 name|uint32_t
@@ -990,6 +993,8 @@ return|return
 name|IsVarArg
 return|;
 block|}
+comment|/// getNextStackOffset - Return the next stack offset such that all stack
+comment|/// slots satisfy their alignment requirements.
 name|unsigned
 name|getNextStackOffset
 argument_list|()
@@ -997,6 +1002,23 @@ specifier|const
 block|{
 return|return
 name|StackOffset
+return|;
+block|}
+comment|/// getAlignedCallFrameSize - Return the size of the call frame needed to
+comment|/// be able to store all arguments and such that the alignment requirement
+comment|/// of each of the arguments is satisfied.
+name|unsigned
+name|getAlignedCallFrameSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RoundUpToAlignment
+argument_list|(
+name|StackOffset
+argument_list|,
+name|MaxStackArgAlign
+argument_list|)
 return|;
 block|}
 comment|/// isAllocated - Return true if the specified register (or an alias) is
@@ -1336,7 +1358,7 @@ name|AllocateRegBlock
 argument_list|(
 name|ArrayRef
 operator|<
-name|uint16_t
+name|MCPhysReg
 operator|>
 name|Regs
 argument_list|,
@@ -1561,22 +1583,12 @@ expr_stmt|;
 comment|// Align is power of 2.
 name|StackOffset
 operator|=
-operator|(
-operator|(
+name|RoundUpToAlignment
+argument_list|(
 name|StackOffset
-operator|+
+argument_list|,
 name|Align
-operator|-
-literal|1
-operator|)
-operator|&
-operator|~
-operator|(
-name|Align
-operator|-
-literal|1
-operator|)
-operator|)
+argument_list|)
 expr_stmt|;
 name|unsigned
 name|Result
@@ -1586,6 +1598,17 @@ decl_stmt|;
 name|StackOffset
 operator|+=
 name|Size
+expr_stmt|;
+name|MaxStackArgAlign
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|Align
+argument_list|,
+name|MaxStackArgAlign
+argument_list|)
 expr_stmt|;
 name|MF
 operator|.

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -780,7 +786,6 @@ name|PMTopLevelManager
 argument_list|()
 expr_stmt|;
 comment|/// Add immutable pass and initialize it.
-specifier|inline
 name|void
 name|addImmutablePass
 parameter_list|(
@@ -788,20 +793,7 @@ name|ImmutablePass
 modifier|*
 name|P
 parameter_list|)
-block|{
-name|P
-operator|->
-name|initializePass
-argument_list|()
-expr_stmt|;
-name|ImmutablePasses
-operator|.
-name|push_back
-argument_list|(
-name|P
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 specifier|inline
 name|SmallVectorImpl
 operator|<
@@ -931,6 +923,172 @@ literal|16
 operator|>
 name|ImmutablePasses
 expr_stmt|;
+comment|/// Map from ID to immutable passes.
+name|SmallDenseMap
+operator|<
+name|AnalysisID
+operator|,
+name|ImmutablePass
+operator|*
+operator|,
+literal|8
+operator|>
+name|ImmutablePassMap
+expr_stmt|;
+comment|/// A wrapper around AnalysisUsage for the purpose of uniqueing.  The wrapper
+comment|/// is used to avoid needing to make AnalysisUsage itself a folding set node.
+name|struct
+name|AUFoldingSetNode
+range|:
+name|public
+name|FoldingSetNode
+block|{
+name|AnalysisUsage
+name|AU
+block|;
+name|AUFoldingSetNode
+argument_list|(
+specifier|const
+name|AnalysisUsage
+operator|&
+name|AU
+argument_list|)
+operator|:
+name|AU
+argument_list|(
+argument|AU
+argument_list|)
+block|{}
+name|void
+name|Profile
+argument_list|(
+argument|FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|AU
+argument_list|)
+block|;     }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|FoldingSetNodeID&ID
+argument_list|,
+argument|const AnalysisUsage&AU
+argument_list|)
+block|{
+comment|// TODO: We could consider sorting the dependency arrays within the
+comment|// AnalysisUsage (since they are conceptually unordered).
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|AU
+operator|.
+name|getPreservesAll
+argument_list|()
+argument_list|)
+block|;
+name|auto
+name|ProfileVec
+operator|=
+index|[
+operator|&
+index|]
+operator|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|AnalysisID
+operator|>
+operator|&
+name|Vec
+operator|)
+block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Vec
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+for|for
+control|(
+name|AnalysisID
+name|AID
+range|:
+name|Vec
+control|)
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|AID
+argument_list|)
+expr_stmt|;
+block|}
+block|;
+name|ProfileVec
+argument_list|(
+name|AU
+operator|.
+name|getRequiredSet
+argument_list|()
+argument_list|)
+block|;
+name|ProfileVec
+argument_list|(
+name|AU
+operator|.
+name|getRequiredTransitiveSet
+argument_list|()
+argument_list|)
+block|;
+name|ProfileVec
+argument_list|(
+name|AU
+operator|.
+name|getPreservedSet
+argument_list|()
+argument_list|)
+block|;
+name|ProfileVec
+argument_list|(
+name|AU
+operator|.
+name|getUsedSet
+argument_list|()
+argument_list|)
+block|;     }
+block|}
+decl_stmt|;
+comment|// Contains all of the unique combinations of AnalysisUsage.  This is helpful
+comment|// when we have multiple instances of the same pass since they'll usually
+comment|// have the same analysis usage and can share storage.
+name|FoldingSet
+operator|<
+name|AUFoldingSetNode
+operator|>
+name|UniqueAnalysisUsages
+expr_stmt|;
+comment|// Allocator used for allocating UAFoldingSetNodes.  This handles deletion of
+comment|// all allocated nodes in one fell swoop.
+name|SpecificBumpPtrAllocator
+operator|<
+name|AUFoldingSetNode
+operator|>
+name|AUFoldingSetNodeAllocator
+expr_stmt|;
+comment|// Maps from a pass to it's associated entry in UniqueAnalysisUsages.  Does
+comment|// not own the storage associated with either key or value..
 name|DenseMap
 operator|<
 name|Pass
@@ -1144,11 +1302,11 @@ modifier|*
 name|P
 parameter_list|)
 function_decl|;
-comment|/// Populate RequiredPasses with analysis pass that are required by
-comment|/// pass P and are available. Populate ReqPassNotAvailable with analysis
-comment|/// pass that are required by pass P but are not available.
+comment|/// Populate UsedPasses with analysis pass that are used or required by pass
+comment|/// P and are available. Populate ReqPassNotAvailable with analysis pass that
+comment|/// are required by pass P but are not available.
 name|void
-name|collectRequiredAnalysis
+name|collectRequiredAndUsedAnalyses
 argument_list|(
 name|SmallVectorImpl
 operator|<
@@ -1156,7 +1314,7 @@ name|Pass
 operator|*
 operator|>
 operator|&
-name|RequiredPasses
+name|UsedPasses
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -1288,6 +1446,16 @@ decl|const
 decl_stmt|;
 name|void
 name|dumpPreservedSet
+argument_list|(
+specifier|const
+name|Pass
+operator|*
+name|P
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|dumpUsedSet
 argument_list|(
 specifier|const
 name|Pass

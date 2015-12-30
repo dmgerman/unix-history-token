@@ -2258,11 +2258,15 @@ comment|/// getNode - return the (Post)DominatorTree node for the specified basi
 end_comment
 
 begin_comment
-comment|/// block.  This is the same as using operator[] on this class.
+comment|/// block.  This is the same as using operator[] on this class.  The result
 end_comment
 
 begin_comment
-comment|///
+comment|/// may (but is not required to) be null for a forward (backwards)
+end_comment
+
+begin_comment
+comment|/// statically unreachable block.
 end_comment
 
 begin_expr_stmt
@@ -2312,8 +2316,13 @@ name|nullptr
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// See getNode.
+end_comment
+
 begin_expr_stmt
-unit|}    DomTreeNodeBase
+unit|DomTreeNodeBase
 operator|<
 name|NodeT
 operator|>
@@ -4305,6 +4314,8 @@ name|TraitsTy
 operator|::
 name|child_begin
 argument_list|(
+operator|&
+operator|*
 name|I
 argument_list|)
 operator|==
@@ -4312,11 +4323,15 @@ name|TraitsTy
 operator|::
 name|child_end
 argument_list|(
+operator|&
+operator|*
 name|I
 argument_list|)
 condition|)
 name|addRoot
 argument_list|(
+operator|&
+operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -4326,6 +4341,8 @@ name|this
 operator|->
 name|IDoms
 index|[
+operator|&
+operator|*
 name|I
 index|]
 operator|=
@@ -4335,6 +4352,8 @@ name|this
 operator|->
 name|DomTreeNodes
 index|[
+operator|&
+operator|*
 name|I
 index|]
 operator|=

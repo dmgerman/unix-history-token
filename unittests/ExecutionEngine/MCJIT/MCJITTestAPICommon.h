@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/LegacyPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/InitializePasses.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Host.h"
 end_include
 
@@ -129,6 +141,17 @@ argument_list|()
 block|;
 name|InitializeNativeTargetAsmPrinter
 argument_list|()
+block|;
+comment|// FIXME: It isn't at all clear why this is necesasry, but without it we
+comment|// fail to initialize the AssumptionCacheTracker.
+name|initializeAssumptionCacheTrackerPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
 block|;
 ifdef|#
 directive|ifdef

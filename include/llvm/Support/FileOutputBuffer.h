@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/FileSystem.h"
 end_include
 
@@ -111,16 +117,19 @@ comment|/// Factory method to create an OutputBuffer object which manages a read
 comment|/// buffer of the specified size. When committed, the buffer will be written
 comment|/// to the file at the specified path.
 specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|FileOutputBuffer
+operator|>>
 name|create
 argument_list|(
 argument|StringRef FilePath
 argument_list|,
 argument|size_t Size
-argument_list|,
-argument|std::unique_ptr<FileOutputBuffer>&Result
 argument_list|,
 argument|unsigned Flags =
 literal|0

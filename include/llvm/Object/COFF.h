@@ -3042,14 +3042,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|section_iterator
+operator|>
 name|getSymbolSection
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|section_iterator&Res
 argument_list|)
 specifier|const
 name|override
@@ -3981,6 +3980,14 @@ argument|const coff_section *Sec
 argument_list|,
 argument|ArrayRef<uint8_t>&Res
 argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|uint64_t
+name|getImageBase
+argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt

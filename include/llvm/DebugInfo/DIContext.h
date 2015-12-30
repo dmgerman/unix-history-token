@@ -273,6 +273,32 @@ name|Index
 index|]
 return|;
 block|}
+name|DILineInfo
+modifier|*
+name|getMutableFrame
+parameter_list|(
+name|unsigned
+name|Index
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|Frames
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+operator|&
+name|Frames
+index|[
+name|Index
+index|]
+return|;
+block|}
 name|uint32_t
 name|getNumberOfFrames
 argument_list|()
@@ -304,6 +330,41 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// DIGlobal - container for description of a global variable.
+struct|struct
+name|DIGlobal
+block|{
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|uint64_t
+name|Start
+decl_stmt|;
+name|uint64_t
+name|Size
+decl_stmt|;
+name|DIGlobal
+argument_list|()
+operator|:
+name|Name
+argument_list|(
+literal|"<invalid>"
+argument_list|)
+operator|,
+name|Start
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// A DINameKind is passed to name search methods to specify a
 comment|/// preference regarding the type of name resolution the caller wants.
 name|enum
@@ -394,6 +455,8 @@ name|DIDT_Loc
 block|,
 name|DIDT_LocDwo
 block|,
+name|DIDT_Macro
+block|,
 name|DIDT_Ranges
 block|,
 name|DIDT_Pubnames
@@ -417,7 +480,11 @@ block|,
 name|DIDT_AppleNamespaces
 block|,
 name|DIDT_AppleObjC
-block|}
+block|,
+name|DIDT_CUIndex
+block|,
+name|DIDT_TUIndex
+block|, }
 enum|;
 name|class
 name|DIContext
@@ -532,6 +599,22 @@ comment|/// on the fly.
 name|class
 name|LoadedObjectInfo
 block|{
+name|protected
+label|:
+name|LoadedObjectInfo
+argument_list|(
+specifier|const
+name|LoadedObjectInfo
+operator|&
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+name|LoadedObjectInfo
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|public
 label|:
 name|virtual
@@ -541,19 +624,23 @@ argument_list|()
 operator|=
 expr|default
 expr_stmt|;
-comment|/// Obtain the Load Address of a section by Name.
+comment|/// Obtain the Load Address of a section by SectionRef.
 comment|///
-comment|/// Calculate the address of the section identified by the passed in Name.
+comment|/// Calculate the address of the given section.
 comment|/// The section need not be present in the local address space. The addresses
 comment|/// need to be consistent with the addresses used to query the DIContext and
 comment|/// the output of this function should be deterministic, i.e. repeated calls with
-comment|/// the same Name should give the same address.
+comment|/// the same Sec should give the same address.
 name|virtual
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-name|StringRef
-name|Name
+specifier|const
+name|object
+operator|::
+name|SectionRef
+operator|&
+name|Sec
 argument_list|)
 decl|const
 init|=
@@ -573,8 +660,12 @@ name|virtual
 name|bool
 name|getLoadedSectionContents
 argument_list|(
-name|StringRef
-name|Name
+specifier|const
+name|object
+operator|::
+name|SectionRef
+operator|&
+name|Sec
 argument_list|,
 name|StringRef
 operator|&

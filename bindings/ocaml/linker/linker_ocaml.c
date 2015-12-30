@@ -63,22 +63,13 @@ name|LLVMModuleRef
 name|Src
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|Message
-decl_stmt|;
 if|if
 condition|(
-name|LLVMLinkModules
+name|LLVMLinkModules2
 argument_list|(
 name|Dst
 argument_list|,
 name|Src
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|Message
 argument_list|)
 condition|)
 name|llvm_raise
@@ -89,7 +80,7 @@ argument_list|(
 literal|"Llvm_linker.Error"
 argument_list|)
 argument_list|,
-name|Message
+literal|"Linking failed"
 argument_list|)
 expr_stmt|;
 return|return

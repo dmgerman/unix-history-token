@@ -105,10 +105,6 @@ comment|/// to make use of both though. The choice comes down to whether
 comment|/// relocation modifiers apply to the closest symbol or the whole
 comment|/// expression.
 comment|///
-comment|/// In the general form, SymbolB can only be defined if SymbolA is, and both
-comment|/// must be in the same (non-external) section. The latter constraint is not
-comment|/// enforced, since a symbol's section may not be known at construction.
-comment|///
 comment|/// Note that this class must remain a simple POD value class, because we need
 comment|/// it to live in unions etc.
 name|class
@@ -237,18 +233,6 @@ block|{
 name|MCValue
 name|R
 decl_stmt|;
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|SymB
-operator|||
-name|SymA
-operator|)
-operator|&&
-literal|"Invalid relocatable MCValue!"
-argument_list|)
-expr_stmt|;
 name|R
 operator|.
 name|Cst

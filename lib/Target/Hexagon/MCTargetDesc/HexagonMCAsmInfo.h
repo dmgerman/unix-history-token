@@ -99,7 +99,7 @@ name|Triple
 operator|&
 name|TT
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

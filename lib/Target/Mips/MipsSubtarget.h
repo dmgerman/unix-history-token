@@ -188,10 +188,21 @@ name|Mips64r5
 block|,
 name|Mips64r6
 block|}
+block|;    enum
+name|class
+name|CPU
+block|{
+name|P5600
+block|}
 block|;
 comment|// Mips architecture version
 name|MipsArchEnum
 name|MipsArchVersion
+block|;
+comment|// Processor implementation (unused but required to exist by
+comment|// tablegen-erated code).
+name|CPU
+name|ProcImpl
 block|;
 comment|// IsLittle - The target is Little Endian
 name|bool
@@ -285,11 +296,13 @@ comment|// InMicroMips -- can process MicroMips instructions
 name|bool
 name|InMicroMipsMode
 block|;
-comment|// HasDSP, HasDSPR2 -- supports DSP ASE.
+comment|// HasDSP, HasDSPR2, HasDSPR3 -- supports DSP ASE.
 name|bool
 name|HasDSP
 block|,
 name|HasDSPR2
+block|,
+name|HasDSPR3
 block|;
 comment|// Allow mixed Mips16 and Mips32 in one source file
 name|bool
@@ -304,6 +317,14 @@ block|;
 comment|// HasMSA -- supports MSA ASE.
 name|bool
 name|HasMSA
+block|;
+comment|// UseTCCInDIV -- Enables the use of trapping in the assembler.
+name|bool
+name|UseTCCInDIV
+block|;
+comment|// HasEVA -- supports EVA ASE.
+name|bool
+name|HasEVA
 block|;
 name|InstrItineraryData
 name|InstrItins
@@ -598,7 +619,7 @@ operator|<
 name|Mips32Max
 operator|)
 operator|||
-name|hasMips64r2
+name|hasMips64r5
 argument_list|()
 return|;
 block|}
@@ -858,6 +879,18 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|inMicroMips64r6Mode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InMicroMipsMode
+operator|&&
+name|hasMips64r6
+argument_list|()
+return|;
+block|}
+name|bool
 name|hasDSP
 argument_list|()
 specifier|const
@@ -876,12 +909,30 @@ name|HasDSPR2
 return|;
 block|}
 name|bool
+name|hasDSPR3
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDSPR3
+return|;
+block|}
+name|bool
 name|hasMSA
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasMSA
+return|;
+block|}
+name|bool
+name|hasEVA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEVA
 return|;
 block|}
 name|bool

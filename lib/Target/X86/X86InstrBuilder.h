@@ -915,6 +915,8 @@ name|MachinePointerInfo
 operator|::
 name|getFixedStack
 argument_list|(
+name|MF
+argument_list|,
 name|FI
 argument_list|,
 name|Offset

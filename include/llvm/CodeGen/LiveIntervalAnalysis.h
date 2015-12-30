@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/LiveInterval.h"
 end_include
 
@@ -154,9 +160,6 @@ name|namespace
 name|llvm
 block|{
 extern|extern cl::opt<bool> UseSegmentSetForPhysRegs;
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|BitVector
 decl_stmt|;
@@ -519,13 +522,12 @@ argument_list|,
 argument|MachineInstr* startInst
 argument_list|)
 block|;
-comment|/// shrinkToUses - After removing some uses of a register, shrink its live
-comment|/// range to just the remaining uses. This method does not compute reaching
-comment|/// defs for new uses, and it doesn't remove dead defs.
-comment|/// Dead PHIDef values are marked as unused.
-comment|/// New dead machine instructions are added to the dead vector.
-comment|/// Return true if the interval may have been separated into multiple
-comment|/// connected components.
+comment|/// After removing some uses of a register, shrink its live range to just
+comment|/// the remaining uses. This method does not compute reaching defs for new
+comment|/// uses, and it doesn't remove dead defs.
+comment|/// Dead PHIDef values are marked as unused. New dead machine instructions
+comment|/// are added to the dead vector. Returns true if the interval may have been
+comment|/// separated into multiple connected components.
 name|bool
 name|shrinkToUses
 argument_list|(
@@ -548,6 +550,8 @@ comment|/// Specialized version of
 comment|/// shrinkToUses(LiveInterval *li, SmallVectorImpl<MachineInstr*> *dead)
 comment|/// that works on a subregister live range and only looks at uses matching
 comment|/// the lane mask of the subregister range.
+comment|/// This may leave the subrange empty which needs to be cleaned up with
+comment|/// LiveInterval::removeEmptySubranges() afterwards.
 name|void
 name|shrinkToUses
 argument_list|(
@@ -890,30 +894,6 @@ argument_list|,
 name|NewMI
 argument_list|)
 block|;     }
-name|bool
-name|findLiveInMBBs
-argument_list|(
-argument|SlotIndex Start
-argument_list|,
-argument|SlotIndex End
-argument_list|,
-argument|SmallVectorImpl<MachineBasicBlock*>&MBBs
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Indexes
-operator|->
-name|findLiveInMBBs
-argument_list|(
-name|Start
-argument_list|,
-name|End
-argument_list|,
-name|MBBs
-argument_list|)
-return|;
-block|}
 name|VNInfo
 operator|::
 name|Allocator
@@ -1306,6 +1286,23 @@ argument_list|,
 argument|SlotIndex Pos
 argument_list|)
 block|;
+comment|/// Split separate components in LiveInterval \p LI into separate intervals.
+name|void
+name|splitSeparateComponents
+argument_list|(
+name|LiveInterval
+operator|&
+name|LI
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|&
+name|SplitLIs
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// Compute live intervals for all virtual registers.
@@ -1397,7 +1394,7 @@ argument|LiveRange&LR
 argument_list|,
 argument|unsigned Reg
 argument_list|,
-argument|unsigned LaneMask = ~
+argument|LaneBitmask LaneMask = ~
 literal|0u
 argument_list|)
 block|;

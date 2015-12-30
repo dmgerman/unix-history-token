@@ -113,163 +113,6 @@ name|size_t
 name|FreeListSize
 parameter_list|)
 function_decl|;
-comment|/// RecyclerStruct - Implementation detail for Recycler. This is a
-comment|/// class that the recycler imposes on free'd memory to carve out
-comment|/// next/prev pointers.
-struct|struct
-name|RecyclerStruct
-block|{
-name|RecyclerStruct
-modifier|*
-name|Prev
-decl_stmt|,
-modifier|*
-name|Next
-decl_stmt|;
-block|}
-struct|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|RecyclerStruct
-operator|>
-operator|:
-name|public
-name|ilist_default_traits
-operator|<
-name|RecyclerStruct
-operator|>
-block|{
-specifier|static
-name|RecyclerStruct
-operator|*
-name|getPrev
-argument_list|(
-argument|const RecyclerStruct *t
-argument_list|)
-block|{
-return|return
-name|t
-operator|->
-name|Prev
-return|;
-block|}
-specifier|static
-name|RecyclerStruct
-operator|*
-name|getNext
-argument_list|(
-argument|const RecyclerStruct *t
-argument_list|)
-block|{
-return|return
-name|t
-operator|->
-name|Next
-return|;
-block|}
-specifier|static
-name|void
-name|setPrev
-argument_list|(
-argument|RecyclerStruct *t
-argument_list|,
-argument|RecyclerStruct *p
-argument_list|)
-block|{
-name|t
-operator|->
-name|Prev
-operator|=
-name|p
-block|; }
-specifier|static
-name|void
-name|setNext
-argument_list|(
-argument|RecyclerStruct *t
-argument_list|,
-argument|RecyclerStruct *n
-argument_list|)
-block|{
-name|t
-operator|->
-name|Next
-operator|=
-name|n
-block|; }
-name|mutable
-name|RecyclerStruct
-name|Sentinel
-block|;
-name|RecyclerStruct
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|Sentinel
-return|;
-block|}
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|RecyclerStruct *
-argument_list|)
-block|{}
-name|RecyclerStruct
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|RecyclerStruct
-operator|*
-name|ensureHead
-argument_list|(
-argument|RecyclerStruct*
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|RecyclerStruct*
-argument_list|,
-argument|RecyclerStruct*
-argument_list|)
-block|{}
-specifier|static
-name|void
-name|deleteNode
-argument_list|(
-argument|RecyclerStruct *
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Recycler's ilist_traits shouldn't see a deleteNode call!"
-argument_list|)
-block|;   }
-expr|}
-block|;
 comment|/// Recycler - This class manages a linked-list of deallocated nodes
 comment|/// and facilitates reusing deallocated memory in place of allocating
 comment|/// new memory.
@@ -278,7 +121,7 @@ name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|size_t
 name|Size
 operator|=
@@ -286,7 +129,7 @@ sizeof|sizeof
 argument_list|(
 name|T
 argument_list|)
-block|,
+operator|,
 name|size_t
 name|Align
 operator|=
@@ -299,16 +142,58 @@ name|Alignment
 operator|>
 name|class
 name|Recycler
+block|{   struct
+name|FreeNode
 block|{
-comment|/// FreeList - Doubly-linked list of nodes that have deleted contents and
-comment|/// are not in active use.
-comment|///
-name|iplist
-operator|<
-name|RecyclerStruct
-operator|>
+name|FreeNode
+operator|*
+name|Next
+block|;   }
+block|;
+comment|/// List of nodes that have deleted contents and are not in active use.
+name|FreeNode
+operator|*
+name|FreeList
+operator|=
+name|nullptr
+block|;
+name|FreeNode
+operator|*
+name|pop_val
+argument_list|()
+block|{
+name|auto
+operator|*
+name|Val
+operator|=
 name|FreeList
 block|;
+name|FreeList
+operator|=
+name|FreeList
+operator|->
+name|Next
+block|;
+return|return
+name|Val
+return|;
+block|}
+name|void
+name|push
+argument_list|(
+argument|FreeNode *N
+argument_list|)
+block|{
+name|N
+operator|->
+name|Next
+operator|=
+name|FreeList
+block|;
+name|FreeList
+operator|=
+name|N
+block|;   }
 name|public
 operator|:
 operator|~
@@ -320,10 +205,8 @@ comment|// or the callee isn't tracking allocations and should just call
 comment|// clear() before deleting the Recycler.
 name|assert
 argument_list|(
+operator|!
 name|FreeList
-operator|.
-name|empty
-argument_list|()
 operator|&&
 literal|"Non-empty recycler deleted!"
 argument_list|)
@@ -344,11 +227,7 @@ argument_list|)
 block|{
 while|while
 condition|(
-operator|!
 name|FreeList
-operator|.
-name|empty
-argument_list|()
 condition|)
 block|{
 name|T
@@ -361,15 +240,8 @@ name|T
 operator|*
 operator|>
 operator|(
-name|FreeList
-operator|.
-name|remove
-argument_list|(
-name|FreeList
-operator|.
-name|begin
+name|pop_val
 argument_list|()
-argument_list|)
 operator|)
 decl_stmt|;
 name|Allocator
@@ -393,10 +265,9 @@ argument|BumpPtrAllocator&
 argument_list|)
 block|{
 name|FreeList
-operator|.
-name|clearAndLeakNodesUnsafely
-argument_list|()
-block|;   }
+operator|=
+name|nullptr
+block|; }
 name|template
 operator|<
 name|class
@@ -439,11 +310,7 @@ literal|"Recycler allocation size is less than object size!"
 argument_list|)
 block|;
 return|return
-operator|!
 name|FreeList
-operator|.
-name|empty
-argument_list|()
 condition|?
 name|reinterpret_cast
 operator|<
@@ -451,15 +318,8 @@ name|SubClass
 operator|*
 operator|>
 operator|(
-name|FreeList
-operator|.
-name|remove
-argument_list|(
-name|FreeList
-operator|.
-name|begin
+name|pop_val
 argument_list|()
-argument_list|)
 operator|)
 else|:
 name|static_cast
@@ -518,13 +378,11 @@ argument_list|,
 argument|SubClass* Element
 argument_list|)
 block|{
-name|FreeList
-operator|.
-name|push_front
+name|push
 argument_list|(
 name|reinterpret_cast
 operator|<
-name|RecyclerStruct
+name|FreeNode
 operator|*
 operator|>
 operator|(
@@ -535,24 +393,70 @@ block|;   }
 name|void
 name|PrintStats
 argument_list|()
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|size_t
+name|Size
+operator|,
+name|size_t
+name|Align
+operator|>
+name|void
+name|Recycler
+operator|<
+name|T
+operator|,
+name|Size
+operator|,
+name|Align
+operator|>
+operator|::
+name|PrintStats
+argument_list|()
 block|{
+name|size_t
+name|S
+operator|=
+literal|0
+block|;
+for|for
+control|(
+name|auto
+operator|*
+name|I
+operator|=
+name|FreeList
+init|;
+name|I
+condition|;
+name|I
+operator|=
+name|I
+operator|->
+name|Next
+control|)
+operator|++
+name|S
+expr_stmt|;
 name|PrintRecyclerStats
 argument_list|(
 name|Size
 argument_list|,
 name|Align
 argument_list|,
-name|FreeList
-operator|.
-name|size
-argument_list|()
+name|S
 argument_list|)
-block|;   }
+expr_stmt|;
 block|}
-block|;  }
 end_decl_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

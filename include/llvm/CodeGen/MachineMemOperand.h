@@ -115,6 +115,9 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
+name|MachineFunction
+decl_stmt|;
+name|class
 name|ModuleSlotTracker
 decl_stmt|;
 comment|/// MachinePointerInfo - This class contains a discriminated union of
@@ -263,7 +266,11 @@ comment|/// constant pool.
 specifier|static
 name|MachinePointerInfo
 name|getConstantPool
-parameter_list|()
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
 function_decl|;
 comment|/// getFixedStack - Return a MachinePointerInfo record that refers to the
 comment|/// the specified FrameIndex.
@@ -271,11 +278,15 @@ specifier|static
 name|MachinePointerInfo
 name|getFixedStack
 parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
 name|int
 name|FI
 parameter_list|,
 name|int64_t
-name|offset
+name|Offset
 init|=
 literal|0
 parameter_list|)
@@ -285,20 +296,32 @@ comment|/// jump table entry.
 specifier|static
 name|MachinePointerInfo
 name|getJumpTable
-parameter_list|()
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
 function_decl|;
 comment|/// getGOT - Return a MachinePointerInfo record that refers to a
 comment|/// GOT entry.
 specifier|static
 name|MachinePointerInfo
 name|getGOT
-parameter_list|()
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
 function_decl|;
 comment|/// getStack - stack pointer relative access.
 specifier|static
 name|MachinePointerInfo
 name|getStack
 parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
 name|int64_t
 name|Offset
 parameter_list|)

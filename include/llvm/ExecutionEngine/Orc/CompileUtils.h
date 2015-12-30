@@ -182,11 +182,6 @@ argument_list|(
 name|M
 argument_list|)
 expr_stmt|;
-name|ObjStream
-operator|.
-name|flush
-argument_list|()
-expr_stmt|;
 name|std
 operator|::
 name|unique_ptr

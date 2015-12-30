@@ -235,17 +235,6 @@ operator|&
 name|FirstActions
 argument_list|)
 decl_stmt|;
-comment|/// Return `true' if this is a call to a function marked `nounwind'. Return
-comment|/// `false' otherwise.
-name|bool
-name|callToNoUnwindFunction
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
 name|void
 name|computePadMap
 argument_list|(
@@ -418,6 +407,18 @@ name|endInstruction
 parameter_list|()
 function|override
 block|{}
+comment|/// Return `true' if this is a call to a function marked `nounwind'. Return
+comment|/// `false' otherwise.
+specifier|static
+name|bool
+name|callToNoUnwindFunction
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

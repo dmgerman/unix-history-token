@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCObjectWriter.h"
 end_include
 
@@ -358,6 +364,11 @@ comment|/// \name Symbol Table Data
 comment|/// @{
 name|StringTableBuilder
 name|StringTable
+block|{
+name|StringTableBuilder
+operator|::
+name|MachO
+block|}
 block|;
 name|std
 operator|::
@@ -545,6 +556,8 @@ comment|/// @}
 name|void
 name|writeHeader
 argument_list|(
+argument|MachO::HeaderFileType Type
+argument_list|,
 argument|unsigned NumLoadCommands
 argument_list|,
 argument|unsigned LoadCommandsSize
@@ -559,25 +572,35 @@ comment|/// \param SectionDataSize The total size of the sections.
 name|void
 name|writeSegmentLoadCommand
 argument_list|(
+argument|StringRef Name
+argument_list|,
 argument|unsigned NumSections
+argument_list|,
+argument|uint64_t VMAddr
 argument_list|,
 argument|uint64_t VMSize
 argument_list|,
 argument|uint64_t SectionDataStartOffset
 argument_list|,
 argument|uint64_t SectionDataSize
+argument_list|,
+argument|uint32_t MaxProt
+argument_list|,
+argument|uint32_t InitProt
 argument_list|)
 block|;
 name|void
 name|writeSection
 argument_list|(
-argument|const MCAssembler&Asm
-argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|,
 argument|const MCSection&Sec
 argument_list|,
+argument|uint64_t VMAddr
+argument_list|,
 argument|uint64_t FileOffset
+argument_list|,
+argument|unsigned Flags
 argument_list|,
 argument|uint64_t RelocationsStart
 argument_list|,
@@ -819,6 +842,20 @@ argument|MCAssembler&Asm
 argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|)
+name|override
+block|;
+name|bool
+name|isSymbolRefDifferenceFullyResolvedImpl
+argument_list|(
+argument|const MCAssembler&Asm
+argument_list|,
+argument|const MCSymbol&A
+argument_list|,
+argument|const MCSymbol&B
+argument_list|,
+argument|bool InSet
+argument_list|)
+specifier|const
 name|override
 block|;
 name|bool

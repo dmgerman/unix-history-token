@@ -207,6 +207,23 @@ argument|bool&IsResolved
 argument_list|)
 name|override
 block|;
+name|unsigned
+name|adjustFixupValue
+argument_list|(
+argument|const MCFixup&Fixup
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|bool IsPCRel
+argument_list|,
+argument|MCContext *Ctx
+argument_list|,
+argument|bool IsLittleEndian
+argument_list|,
+argument|bool IsResolved
+argument_list|)
+specifier|const
+block|;
 name|void
 name|applyFixup
 argument_list|(
@@ -237,6 +254,17 @@ argument|const MCInst&Inst
 argument_list|)
 specifier|const
 name|override
+block|;
+specifier|const
+name|char
+operator|*
+name|reasonForFixupRelaxation
+argument_list|(
+argument|const MCFixup&Fixup
+argument_list|,
+argument|uint64_t Value
+argument_list|)
+specifier|const
 block|;
 name|bool
 name|fixupNeedsRelaxation

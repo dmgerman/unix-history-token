@@ -66,13 +66,9 @@ block|{
 name|LLVMModuleRef
 name|M
 decl_stmt|;
-name|char
-modifier|*
-name|Message
-decl_stmt|;
 if|if
 condition|(
-name|LLVMGetBitcodeModuleInContext
+name|LLVMGetBitcodeModuleInContext2
 argument_list|(
 name|C
 argument_list|,
@@ -80,9 +76,6 @@ name|MemBuf
 argument_list|,
 operator|&
 name|M
-argument_list|,
-operator|&
-name|Message
 argument_list|)
 condition|)
 name|llvm_raise
@@ -93,7 +86,7 @@ argument_list|(
 literal|"Llvm_bitreader.Error"
 argument_list|)
 argument_list|,
-name|Message
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -121,13 +114,9 @@ block|{
 name|LLVMModuleRef
 name|M
 decl_stmt|;
-name|char
-modifier|*
-name|Message
-decl_stmt|;
 if|if
 condition|(
-name|LLVMParseBitcodeInContext
+name|LLVMParseBitcodeInContext2
 argument_list|(
 name|C
 argument_list|,
@@ -135,9 +124,6 @@ name|MemBuf
 argument_list|,
 operator|&
 name|M
-argument_list|,
-operator|&
-name|Message
 argument_list|)
 condition|)
 name|llvm_raise
@@ -148,7 +134,7 @@ argument_list|(
 literal|"Llvm_bitreader.Error"
 argument_list|)
 argument_list|,
-name|Message
+literal|""
 argument_list|)
 expr_stmt|;
 return|return

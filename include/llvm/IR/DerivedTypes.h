@@ -281,6 +281,26 @@ return|;
 block|}
 expr|}
 block|;
+name|unsigned
+name|Type
+operator|::
+name|getIntegerBitWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|IntegerType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getBitWidth
+argument_list|()
+return|;
+block|}
 comment|/// FunctionType - Class to represent function types
 comment|///
 name|class
@@ -518,6 +538,71 @@ argument_list|,
 literal|"Alignment sufficient for objects appended to FunctionType"
 argument_list|)
 block|;
+name|bool
+name|Type
+operator|::
+name|isFunctionVarArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|isVarArg
+argument_list|()
+return|;
+block|}
+name|Type
+operator|*
+name|Type
+operator|::
+name|getFunctionParamType
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getParamType
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|Type
+operator|::
+name|getFunctionNumParams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNumParams
+argument_list|()
+return|;
+block|}
 comment|/// CompositeType - Common super class of ArrayType, StructType, PointerType
 comment|/// and VectorType.
 name|class
@@ -542,7 +627,7 @@ argument|C
 argument_list|,
 argument|tid
 argument_list|)
-block|{ }
+block|{}
 name|public
 operator|:
 comment|/// getTypeAtIndex - Given an index value into the type, return the type of
@@ -552,11 +637,9 @@ name|Type
 operator|*
 name|getTypeAtIndex
 argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
+argument|const Value *V
 argument_list|)
+specifier|const
 block|;
 name|Type
 operator|*
@@ -564,6 +647,7 @@ name|getTypeAtIndex
 argument_list|(
 argument|unsigned Idx
 argument_list|)
+specifier|const
 block|;
 name|bool
 name|indexValid
@@ -744,7 +828,7 @@ name|StructType
 operator|*
 name|create
 argument_list|(
-argument|ArrayRef<Type*> Elements
+argument|ArrayRef<Type *> Elements
 argument_list|,
 argument|StringRef Name
 argument_list|,
@@ -771,7 +855,7 @@ name|create
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|ArrayRef<Type*> Elements
+argument|ArrayRef<Type *> Elements
 argument_list|,
 argument|StringRef Name
 argument_list|,
@@ -905,7 +989,7 @@ comment|/// isSized - Return true if this is a sized type.
 name|bool
 name|isSized
 argument_list|(
-argument|SmallPtrSetImpl<const Type*> *Visited = nullptr
+argument|SmallPtrSetImpl<Type *> *Visited = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1080,6 +1164,71 @@ return|;
 block|}
 expr|}
 block|;
+name|StringRef
+name|Type
+operator|::
+name|getStructName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|StructType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getName
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|Type
+operator|::
+name|getStructNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|StructType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNumElements
+argument_list|()
+return|;
+block|}
+name|Type
+operator|*
+name|Type
+operator|::
+name|getStructElementType
+argument_list|(
+argument|unsigned N
+argument_list|)
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|StructType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getElementType
+argument_list|(
+name|N
+argument_list|)
+return|;
+block|}
 comment|/// SequentialType - This is the superclass of the array, pointer and vector
 comment|/// type classes.  All of these represent "arrays" in memory.  The array type
 comment|/// represents a specifically sized array, pointer types are unsized/unknown
@@ -1203,6 +1352,27 @@ return|;
 block|}
 expr|}
 block|;
+name|Type
+operator|*
+name|Type
+operator|::
+name|getSequentialElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|SequentialType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+return|;
+block|}
 comment|/// ArrayType - Class to represent array types.
 comment|///
 name|class
@@ -1298,6 +1468,26 @@ return|;
 block|}
 expr|}
 block|;
+name|uint64_t
+name|Type
+operator|::
+name|getArrayNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNumElements
+argument_list|()
+return|;
+block|}
 comment|/// VectorType - Class to represent vector types.
 comment|///
 name|class
@@ -1679,6 +1869,26 @@ return|;
 block|}
 expr|}
 block|;
+name|unsigned
+name|Type
+operator|::
+name|getVectorNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|VectorType
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNumElements
+argument_list|()
+return|;
+block|}
 comment|/// PointerType - Class to represent pointers.
 comment|///
 name|class
@@ -1804,7 +2014,29 @@ name|PointerTyID
 return|;
 block|}
 expr|}
-block|;  }
+block|;
+name|unsigned
+name|Type
+operator|::
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getAddressSpace
+argument_list|()
+return|;
+block|}
+expr|}
 end_decl_stmt
 
 begin_comment

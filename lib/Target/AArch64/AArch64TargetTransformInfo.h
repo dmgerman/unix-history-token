@@ -202,6 +202,7 @@ name|AArch64TargetMachine
 operator|*
 name|TM
 argument_list|,
+specifier|const
 name|Function
 operator|&
 name|F
@@ -317,14 +318,14 @@ name|BaseT
 operator|::
 name|getIntImmCost
 expr_stmt|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 name|int64_t
 name|Val
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 specifier|const
@@ -337,7 +338,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 name|unsigned
@@ -356,7 +357,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 name|Intrinsic
@@ -388,6 +389,14 @@ expr_stmt|;
 comment|/// @}
 comment|/// \name Vector TTI Implementations
 comment|/// @{
+name|bool
+name|enableInterleavedAccessVectorization
+parameter_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
 name|unsigned
 name|getNumberOfRegisters
 parameter_list|(
@@ -455,7 +464,7 @@ name|unsigned
 name|VF
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getCastInstrCost
 parameter_list|(
 name|unsigned
@@ -470,7 +479,7 @@ modifier|*
 name|Src
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getVectorInstrCost
 parameter_list|(
 name|unsigned
@@ -484,7 +493,7 @@ name|unsigned
 name|Index
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getArithmeticInstrCost
 argument_list|(
 name|unsigned
@@ -531,7 +540,7 @@ operator|::
 name|OP_None
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|int
 name|getAddressComputationCost
 parameter_list|(
 name|Type
@@ -542,7 +551,7 @@ name|bool
 name|IsComplex
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getCmpSelInstrCost
 parameter_list|(
 name|unsigned
@@ -557,7 +566,7 @@ modifier|*
 name|CondTy
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getMemoryOpCost
 parameter_list|(
 name|unsigned
@@ -574,7 +583,7 @@ name|unsigned
 name|AddressSpace
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getCostOfKeepingLiveOverCall
 argument_list|(
 name|ArrayRef
@@ -624,7 +633,7 @@ modifier|&
 name|Info
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getInterleavedMemoryOpCost
 argument_list|(
 name|unsigned

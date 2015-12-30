@@ -1283,6 +1283,7 @@ name|Config
 operator|>
 name|class
 name|ValueMapCallbackVH
+name|final
 operator|:
 name|public
 name|CallbackVH

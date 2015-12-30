@@ -332,41 +332,11 @@ name|TargetAddr
 argument_list|)
 expr_stmt|;
 block|}
-comment|// Ownership hack.
-comment|// FIXME: Remove this as soon as RuntimeDyldELF can apply relocations without
-comment|//        referencing the original object.
-name|template
-operator|<
-name|typename
-name|OwningMBSet
-operator|>
-name|void
-name|takeOwnershipOfBuffers
-argument_list|(
-argument|ObjSetHandleT H
-argument_list|,
-argument|OwningMBSet MBs
-argument_list|)
-block|{
-name|BaseLayer
-operator|.
-name|takeOwnershipOfBuffers
-argument_list|(
-name|H
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MBs
-argument_list|)
-argument_list|)
-block|;   }
 comment|/// @brief Access the transform functor directly.
 name|TransformFtor
-operator|&
+modifier|&
 name|getTransform
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Transform

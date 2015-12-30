@@ -177,7 +177,7 @@ operator|::
 name|getPassRegistry
 argument_list|()
 argument_list|)
-block|;     }
+block|;   }
 typedef|typedef
 name|SS2IntervalMap
 operator|::

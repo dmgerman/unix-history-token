@@ -153,7 +153,7 @@ comment|// Size of bitvector in bits.
 name|unsigned
 name|Capacity
 decl_stmt|;
-comment|// Size of allocated memory in BitWord.
+comment|// Number of BitWords allocated in the Bits array.
 name|public
 label|:
 typedef|typedef
@@ -3487,10 +3487,49 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+begin_comment
+unit|}  public:
+comment|/// Return the size (in bytes) of the bit vector.
+end_comment
+
+begin_expr_stmt
+name|size_t
+name|getMemorySize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Capacity
+operator|*
+sizeof|sizeof
+argument_list|(
+name|BitWord
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+unit|};
+specifier|static
+specifier|inline
+name|size_t
+name|capacity_in_bytes
+parameter_list|(
+specifier|const
+name|BitVector
+modifier|&
+name|X
+parameter_list|)
+block|{
+return|return
+name|X
+operator|.
+name|getMemorySize
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 unit|}

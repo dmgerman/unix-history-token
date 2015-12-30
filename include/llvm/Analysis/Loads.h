@@ -62,16 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|DataLayout
 decl_stmt|;
@@ -97,6 +106,9 @@ name|unsigned
 name|Align
 parameter_list|)
 function_decl|;
+comment|/// DefMaxInstsToScan - the default number of maximum instructions
+comment|/// to scan in the block, used by FindAvailableLoadedValue().
+extern|extern cl::opt<unsigned> DefMaxInstsToScan;
 comment|/// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at
 comment|/// the instruction before ScanFrom) checking to see if we have the value at
 comment|/// the memory address *Ptr locally available within a small number of
@@ -135,7 +147,7 @@ argument_list|,
 name|unsigned
 name|MaxInstsToScan
 operator|=
-literal|6
+name|DefMaxInstsToScan
 argument_list|,
 name|AliasAnalysis
 operator|*

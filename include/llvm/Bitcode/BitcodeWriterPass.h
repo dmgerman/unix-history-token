@@ -91,6 +91,9 @@ comment|/// manager.
 comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
 comment|/// reproduced when deserialized.
+comment|///
+comment|/// If \c EmitFunctionSummary, emit the function summary index (currently
+comment|/// for use in ThinLTO optimization).
 name|ModulePass
 modifier|*
 name|createBitcodeWriterPass
@@ -101,6 +104,11 @@ name|Str
 parameter_list|,
 name|bool
 name|ShouldPreserveUseListOrder
+init|=
+name|false
+parameter_list|,
+name|bool
+name|EmitFunctionSummary
 init|=
 name|false
 parameter_list|)
@@ -119,18 +127,26 @@ decl_stmt|;
 name|bool
 name|ShouldPreserveUseListOrder
 decl_stmt|;
+name|bool
+name|EmitFunctionSummary
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Construct a bitcode writer pass around a particular output stream.
 comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
 comment|/// reproduced when deserialized.
+comment|///
+comment|/// If \c EmitFunctionSummary, emit the function summary index (currently
+comment|/// for use in ThinLTO optimization).
 name|explicit
 name|BitcodeWriterPass
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
 argument|bool ShouldPreserveUseListOrder = false
+argument_list|,
+argument|bool EmitFunctionSummary = false
 argument_list|)
 block|:
 name|OS
@@ -140,7 +156,12 @@ argument_list|)
 operator|,
 name|ShouldPreserveUseListOrder
 argument_list|(
-argument|ShouldPreserveUseListOrder
+name|ShouldPreserveUseListOrder
+argument_list|)
+operator|,
+name|EmitFunctionSummary
+argument_list|(
+argument|EmitFunctionSummary
 argument_list|)
 block|{}
 comment|/// \brief Run the bitcode writer pass, and output the module to the selected

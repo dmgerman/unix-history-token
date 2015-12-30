@@ -78,9 +78,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|XCoreInstPrinter
 range|:
 name|public

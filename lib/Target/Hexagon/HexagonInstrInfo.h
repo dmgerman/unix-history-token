@@ -126,17 +126,8 @@ specifier|const
 name|HexagonRegisterInfo
 name|RI
 block|;
-specifier|const
-name|HexagonSubtarget
-operator|&
-name|Subtarget
-block|;
 name|public
 operator|:
-typedef|typedef
-name|unsigned
-name|Opcode_t
-typedef|;
 name|explicit
 name|HexagonInstrInfo
 argument_list|(
@@ -144,10 +135,445 @@ name|HexagonSubtarget
 operator|&
 name|ST
 argument_list|)
-decl_stmt|;
-comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
-comment|/// such, whenever a client has an instance of instruction info, it should
-comment|/// always be able to get register info as well (through this method).
+block|;
+comment|/// TargetInstrInfo overrides.
+comment|///
+comment|/// If the specified machine instruction is a direct
+comment|/// load from a stack slot, return the virtual or physical register number of
+comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
+comment|/// not, return 0.  This predicate must return 0 if the instruction has
+comment|/// any side effects other than loading from the stack slot.
+name|unsigned
+name|isLoadFromStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// If the specified machine instruction is a direct
+comment|/// store to a stack slot, return the virtual or physical register number of
+comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
+comment|/// not, return 0.  This predicate must return 0 if the instruction has
+comment|/// any side effects other than storing to the stack slot.
+name|unsigned
+name|isStoreToStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Analyze the branching code at the end of MBB, returning
+comment|/// true if it cannot be understood (e.g. it's a switch dispatch or isn't
+comment|/// implemented for a target).  Upon success, this returns false and returns
+comment|/// with the following information in various cases:
+comment|///
+comment|/// 1. If this block ends with no branches (it just falls through to its succ)
+comment|///    just return false, leaving TBB/FBB null.
+comment|/// 2. If this block ends with only an unconditional branch, it sets TBB to be
+comment|///    the destination block.
+comment|/// 3. If this block ends with a conditional branch and it falls through to a
+comment|///    successor block, it sets TBB to be the branch destination block and a
+comment|///    list of operands that evaluate the condition. These operands can be
+comment|///    passed to other TargetInstrInfo methods to create new branches.
+comment|/// 4. If this block ends with a conditional branch followed by an
+comment|///    unconditional branch, it returns the 'true' destination in TBB, the
+comment|///    'false' destination in FBB, and a list of operands that evaluate the
+comment|///    condition.  These operands can be passed to other TargetInstrInfo
+comment|///    methods to create new branches.
+comment|///
+comment|/// Note that RemoveBranch and InsertBranch must be implemented to support
+comment|/// cases where this method returns success.
+comment|///
+comment|/// If AllowModify is true, then this routine is allowed to modify the basic
+comment|/// block (e.g. delete instructions after the unconditional branch).
+comment|///
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Remove the branching code at the end of the specific MBB.
+comment|/// This is only invoked in cases where AnalyzeBranch returns success. It
+comment|/// returns the number of instructions that were removed.
+name|unsigned
+name|RemoveBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Insert branch code into the end of the specified MachineBasicBlock.
+comment|/// The operands to this method are the same as those
+comment|/// returned by AnalyzeBranch.  This is only invoked in cases where
+comment|/// AnalyzeBranch returns success. It returns the number of instructions
+comment|/// inserted.
+comment|///
+comment|/// It is also invoked by tail merging to add unconditional branches in
+comment|/// cases where AnalyzeBranch doesn't apply because there was no original
+comment|/// branch to analyze.  At least this much must be implemented, else tail
+comment|/// merging needs to be disabled.
+name|unsigned
+name|InsertBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|MachineBasicBlock *FBB
+argument_list|,
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|DebugLoc DL
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true if it's profitable to predicate
+comment|/// instructions with accumulated instruction latency of "NumCycles"
+comment|/// of the specified basic block, where the probability of the instructions
+comment|/// being executed is given by Probability, and Confidence is a measure
+comment|/// of our confidence that it will be properly predicted.
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumCycles
+argument_list|,
+argument|unsigned ExtraPredCycles
+argument_list|,
+argument|BranchProbability Probability
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Second variant of isProfitableToIfCvt. This one
+comment|/// checks for the case where two basic blocks from true and false path
+comment|/// of a if-then-else (diamond) are predicated on mutally exclusive
+comment|/// predicates, where the probability of the true path being taken is given
+comment|/// by Probability, and Confidence is a measure of our confidence that it
+comment|/// will be properly predicted.
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|unsigned NumTCycles
+argument_list|,
+argument|unsigned ExtraTCycles
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|,
+argument|unsigned NumFCycles
+argument_list|,
+argument|unsigned ExtraFCycles
+argument_list|,
+argument|BranchProbability Probability
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true if it's profitable for if-converter to duplicate instructions
+comment|/// of specified accumulated instruction latencies in the specified MBB to
+comment|/// enable if-conversion.
+comment|/// The probability of the instructions being executed is given by
+comment|/// Probability, and Confidence is a measure of our confidence that it
+comment|/// will be properly predicted.
+name|bool
+name|isProfitableToDupForIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumCycles
+argument_list|,
+argument|BranchProbability Probability
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Emit instructions to copy a pair of physical registers.
+comment|///
+comment|/// This function should support copies within any legal register class as
+comment|/// well as any cross-class copies created during instruction selection.
+comment|///
+comment|/// The source and destination registers may overlap, which may require a
+comment|/// careful implementation when multiple copy instructions are required for
+comment|/// large registers. See for example the ARM target.
+name|void
+name|copyPhysReg
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool KillSrc
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Store the specified register of the given register class to the specified
+comment|/// stack frame index. The store instruction is to be added to the given
+comment|/// machine basic block before the specified machine instruction. If isKill
+comment|/// is true, the register operand is the last use and must be marked kill.
+name|void
+name|storeRegToStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Load the specified register of the given register class from the specified
+comment|/// stack frame index. The load instruction is to be added to the given
+comment|/// machine basic block before the specified machine instruction.
+name|void
+name|loadRegFromStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// This function is called for all pseudo instructions
+comment|/// that remain after register allocation. Many pseudo instructions are
+comment|/// created to help register allocation. This is the place to convert them
+comment|/// into real instructions. The target can edit MI in place, or it can insert
+comment|/// new instructions and erase MI. The function should return true if
+comment|/// anything was changed.
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Reverses the branch condition of the specified condition list,
+comment|/// returning false on success and true if it cannot be reversed.
+name|bool
+name|ReverseBranchCondition
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Insert a noop into the instruction stream at the specified point.
+name|void
+name|insertNoop
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Returns true if the instruction is already predicated.
+name|bool
+name|isPredicated
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Convert the instruction into a predicated instruction.
+comment|/// It returns true if the operation was successful.
+name|bool
+name|PredicateInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|ArrayRef<MachineOperand> Cond
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Returns true if the first specified predicate
+comment|/// subsumes the second, e.g. GE subsumes GT.
+name|bool
+name|SubsumesPredicate
+argument_list|(
+argument|ArrayRef<MachineOperand> Pred1
+argument_list|,
+argument|ArrayRef<MachineOperand> Pred2
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// If the specified instruction defines any predicate
+comment|/// or condition code register(s) used for predication, returns true as well
+comment|/// as the definition predicate(s) by reference.
+name|bool
+name|DefinesPredicate
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|std::vector<MachineOperand>&Pred
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true if the specified instruction can be predicated.
+comment|/// By default, this returns true for every instruction with a
+comment|/// PredicateOperand.
+name|bool
+name|isPredicable
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Test if the given instruction should be considered a scheduling boundary.
+comment|/// This primarily includes labels and terminators.
+name|bool
+name|isSchedulingBoundary
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Measure the specified inline asm to determine an approximation of its
+comment|/// length.
+name|unsigned
+name|getInlineAsmLength
+argument_list|(
+argument|const char *Str
+argument_list|,
+argument|const MCAsmInfo&MAI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Allocate and return a hazard recognizer to use for this target when
+comment|/// scheduling the machine instructions after register allocation.
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData*
+argument_list|,
+argument|const ScheduleDAG *DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// For a comparison instruction, return the source registers
+comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
+comment|/// compares against in CmpValue. Return true if the comparison instruction
+comment|/// can be analyzed.
+name|bool
+name|analyzeCompare
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&SrcReg2
+argument_list|,
+argument|int&Mask
+argument_list|,
+argument|int&Value
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Compute the instruction latency of a given instruction.
+comment|/// If the instruction has higher cost when predicated, it's returned via
+comment|/// PredCost.
+name|unsigned
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned *PredCost =
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Create machine specific model for scheduling.
+name|DFAPacketizer
+operator|*
+name|CreateTargetScheduleState
+argument_list|(
+argument|const TargetSubtargetInfo&STI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Sometimes, it is possible for the target
+comment|// to tell, even without aliasing information, that two MIs access different
+comment|// memory addresses. This function returns true if two MIs access different
+comment|// memory addresses and false otherwise.
+name|bool
+name|areMemAccessesTriviallyDisjoint
+argument_list|(
+argument|MachineInstr *MIa
+argument_list|,
+argument|MachineInstr *MIb
+argument_list|,
+argument|AliasAnalysis *AA = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// HexagonInstrInfo specifics.
 comment|///
 specifier|const
 name|HexagonRegisterInfo
@@ -160,1206 +586,857 @@ return|return
 name|RI
 return|;
 block|}
-comment|/// isLoadFromStackSlot - If the specified machine instruction is a direct
-comment|/// load from a stack slot, return the virtual or physical register number of
-comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
-comment|/// not, return 0.  This predicate must return 0 if the instruction has
-comment|/// any side effects other than loading from the stack slot.
-name|unsigned
-name|isLoadFromStackSlot
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|int
-operator|&
-name|FrameIndex
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
-comment|/// store to a stack slot, return the virtual or physical register number of
-comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
-comment|/// not, return 0.  This predicate must return 0 if the instruction has
-comment|/// any side effects other than storing to the stack slot.
-name|unsigned
-name|isStoreToStackSlot
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|int
-operator|&
-name|FrameIndex
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|AnalyzeBranch
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|&
-name|TBB
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|&
-name|FBB
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Cond
-argument_list|,
-name|bool
-name|AllowModify
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|unsigned
-name|RemoveBranch
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|unsigned
-name|InsertBranch
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|TBB
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|FBB
-argument_list|,
-name|ArrayRef
-operator|<
-name|MachineOperand
-operator|>
-name|Cond
-argument_list|,
-name|DebugLoc
-name|DL
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|analyzeCompare
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|unsigned
-operator|&
-name|SrcReg
-argument_list|,
-name|unsigned
-operator|&
-name|SrcReg2
-argument_list|,
-name|int
-operator|&
-name|Mask
-argument_list|,
-name|int
-operator|&
-name|Value
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|void
-name|copyPhysReg
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|,
-name|DebugLoc
-name|DL
-argument_list|,
-name|unsigned
-name|DestReg
-argument_list|,
-name|unsigned
-name|SrcReg
-argument_list|,
-name|bool
-name|KillSrc
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|void
-name|storeRegToStackSlot
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MBBI
-argument_list|,
-name|unsigned
-name|SrcReg
-argument_list|,
-name|bool
-name|isKill
-argument_list|,
-name|int
-name|FrameIndex
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|void
-name|storeRegToAddr
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|unsigned
-name|SrcReg
-argument_list|,
-name|bool
-name|isKill
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Addr
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|NewMIs
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|loadRegFromStackSlot
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MBBI
-argument_list|,
-name|unsigned
-name|DestReg
-argument_list|,
-name|int
-name|FrameIndex
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|void
-name|loadRegFromAddr
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|unsigned
-name|DestReg
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Addr
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|NewMIs
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// expandPostRAPseudo - This function is called for all pseudo instructions
-comment|/// that remain after register allocation. Many pseudo instructions are
-comment|/// created to help register allocation. This is the place to convert them
-comment|/// into real instructions. The target can edit MI in place, or it can insert
-comment|/// new instructions and erase MI. The function should return true if
-comment|/// anything was changed.
-name|bool
-name|expandPostRAPseudo
-argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|MachineInstr
-modifier|*
-name|foldMemoryOperandImpl
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|Ops
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|InsertPt
-argument_list|,
-name|int
-name|FrameIndex
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|MachineInstr
-modifier|*
-name|foldMemoryOperandImpl
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|Ops
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|InsertPt
-argument_list|,
-name|MachineInstr
-operator|*
-name|LoadMI
-argument_list|)
-decl|const
-name|override
-block|{
-return|return
-name|nullptr
-return|;
-block|}
 name|unsigned
 name|createVR
 argument_list|(
-name|MachineFunction
-operator|*
-name|MF
+argument|MachineFunction* MF
 argument_list|,
-name|MVT
-name|VT
+argument|MVT VT
 argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isBranch
-argument_list|(
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
-name|isPredicable
+name|isAbsoluteSet
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr* MI
 argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|PredicateInstruction
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|ArrayRef
-operator|<
-name|MachineOperand
-operator|>
-name|Cond
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|isProfitableToIfCvt
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|unsigned
-name|NumCycles
-argument_list|,
-name|unsigned
-name|ExtraPredCycles
-argument_list|,
 specifier|const
-name|BranchProbability
-operator|&
-name|Probability
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
+block|;
 name|bool
-name|isProfitableToIfCvt
+name|isAccumulator
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|TMBB
-argument_list|,
-name|unsigned
-name|NumTCycles
-argument_list|,
-name|unsigned
-name|ExtraTCycles
-argument_list|,
-name|MachineBasicBlock
-operator|&
-name|FMBB
-argument_list|,
-name|unsigned
-name|NumFCycles
-argument_list|,
-name|unsigned
-name|ExtraFCycles
-argument_list|,
+argument|const MachineInstr *MI
+argument_list|)
 specifier|const
-name|BranchProbability
-operator|&
-name|Probability
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
+block|;
 name|bool
-name|isPredicated
+name|isComplex
 argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
+block|;
 name|bool
-name|isPredicated
+name|isCompoundBranchInstr
 argument_list|(
-name|unsigned
-name|Opcode
+argument|const MachineInstr *MI
 argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isPredicatedTrue
-argument_list|(
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
-name|isPredicatedTrue
+name|isCondInst
 argument_list|(
-name|unsigned
-name|Opcode
+argument|const MachineInstr *MI
 argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isPredicatedNew
-argument_list|(
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isPredicatedNew
-argument_list|(
-name|unsigned
-name|Opcode
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|DefinesPredicate
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Pred
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|SubsumesPredicate
-argument_list|(
-name|ArrayRef
-operator|<
-name|MachineOperand
-operator|>
-name|Pred1
-argument_list|,
-name|ArrayRef
-operator|<
-name|MachineOperand
-operator|>
-name|Pred2
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|ReverseBranchCondition
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Cond
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|isProfitableToDupForIfCvt
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|unsigned
-name|NumCycles
-argument_list|,
-specifier|const
-name|BranchProbability
-operator|&
-name|Probability
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|DFAPacketizer
-modifier|*
-name|CreateTargetScheduleState
-argument_list|(
-specifier|const
-name|TargetSubtargetInfo
-operator|&
-name|STI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|isSchedulingBoundary
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|bool
-name|isValidOffset
-argument_list|(
-name|unsigned
-name|Opcode
-argument_list|,
-name|int
-name|Offset
-argument_list|,
-name|bool
-name|Extend
-operator|=
-name|true
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isValidAutoIncImm
-argument_list|(
-specifier|const
-name|EVT
-name|VT
-argument_list|,
-specifier|const
-name|int
-name|Offset
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isMemOp
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isSpillPredRegOp
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isU6_3Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isU6_2Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isU6_1Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isU6_0Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS4_3Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS4_2Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS4_1Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS4_0Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS12_Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isU6_Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS8_Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isS6_Immediate
-argument_list|(
-specifier|const
-name|int
-name|value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isSaveCalleeSavedRegsCall
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isConditionalTransfer
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
 name|isConditionalALU32
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr* MI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|isConditionalLoad
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr* MI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
 name|isConditionalStore
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr* MI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
-name|isNewValueInst
+name|isConditionalTransfer
 argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValue
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValue
-argument_list|(
-name|Opcode_t
-name|Opcode
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isDotNewInst
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|int
-name|GetDotOldOp
-argument_list|(
-specifier|const
-name|int
-name|opc
-argument_list|)
-decl|const
-decl_stmt|;
-name|int
-name|GetDotNewOp
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|int
-name|GetDotNewPredOp
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-specifier|const
-name|MachineBranchProbabilityInfo
-operator|*
-name|MBPI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|mayBeNewStore
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isDeallocRet
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|getInvertedPredicatedOpcode
-argument_list|(
-specifier|const
-name|int
-name|Opc
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isExtendable
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isExtended
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isPostIncrement
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValueStore
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValueStore
-argument_list|(
-name|unsigned
-name|Opcode
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValueJump
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValueJump
-argument_list|(
-name|Opcode_t
-name|Opcode
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isNewValueJumpCandidate
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|immediateExtend
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
 name|isConstExtended
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|getSize
-argument_list|(
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|int
-name|getDotNewPredJumpOp
+block|;
+name|bool
+name|isDeallocRet
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isDependent
+argument_list|(
+argument|const MachineInstr *ProdMI
 argument_list|,
-specifier|const
-name|MachineBranchProbabilityInfo
-operator|*
-name|MBPI
+argument|const MachineInstr *ConsMI
 argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|getAddrMode
-argument_list|(
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
-name|isOperandExtended
+name|isDotCurInst
 argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
+block|;
+name|bool
+name|isDotNewInst
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isDuplexPair
+argument_list|(
+argument|const MachineInstr *MIa
 argument_list|,
-name|unsigned
-name|short
-name|OperandNum
+argument|const MachineInstr *MIb
 argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|short
-name|getCExtOpNum
-argument_list|(
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|int
-name|getMinValue
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|int
-name|getMaxValue
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
-name|NonExtEquivalentExists
+name|isEarlySourceInstr
 argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
 specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|short
-name|getNonExtOpcode
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|PredOpcodeHasJMP_c
-argument_list|(
-name|Opcode_t
-name|Opcode
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|predOpcodeHasNot
-argument_list|(
-name|ArrayRef
-operator|<
-name|MachineOperand
-operator|>
-name|Cond
-argument_list|)
-decl|const
-decl_stmt|;
+block|;
 name|bool
 name|isEndLoopN
 argument_list|(
-name|Opcode_t
-name|Opcode
+argument|unsigned Opcode
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|bool
-name|getPredReg
+name|isExpr
 argument_list|(
-name|ArrayRef
-operator|<
-name|MachineOperand
-operator|>
-name|Cond
-argument_list|,
-name|unsigned
-operator|&
-name|PredReg
-argument_list|,
-name|unsigned
-operator|&
-name|PredRegPos
-argument_list|,
-name|unsigned
-operator|&
-name|PredRegFlags
+argument|unsigned OpType
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
+name|bool
+name|isExtendable
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isExtended
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isFloat
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isHVXMemWithAIndirect
+argument_list|(
+argument|const MachineInstr *I
+argument_list|,
+argument|const MachineInstr *J
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isIndirectCall
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isIndirectL4Return
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isJumpR
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isJumpWithinBranchRange
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned offset
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isLateInstrFeedsEarlyInstr
+argument_list|(
+argument|const MachineInstr *LRMI
+argument_list|,
+argument|const MachineInstr *ESMI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isLateResultInstr
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isLateSourceInstr
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isLoopN
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isMemOp
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValue
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValue
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValueInst
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValueJump
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValueJump
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValueStore
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNewValueStore
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isOperandExtended
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OperandNum
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPostIncrement
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredicatedNew
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredicatedNew
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredicatedTrue
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredicatedTrue
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredicated
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredicateLate
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isPredictedTaken
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isSaveCalleeSavedRegsCall
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isSolo
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isSpillPredRegOp
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTC1
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTC2
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTC2Early
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTC4x
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isV60VectorInstruction
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isValidAutoIncImm
+argument_list|(
+argument|const EVT VT
+argument_list|,
+argument|const int Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isValidOffset
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|int Offset
+argument_list|,
+argument|bool Extend = true
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isVecAcc
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isVecALU
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isVecUsableNextPacket
+argument_list|(
+argument|const MachineInstr *ProdMI
+argument_list|,
+argument|const MachineInstr *ConsMI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|canExecuteInBundle
+argument_list|(
+argument|const MachineInstr *First
+argument_list|,
+argument|const MachineInstr *Second
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasEHLabel
+argument_list|(
+argument|const MachineBasicBlock *B
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasNonExtEquivalent
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasPseudoInstrPair
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasUncondBranch
+argument_list|(
+argument|const MachineBasicBlock *B
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|mayBeCurLoad
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|mayBeNewStore
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|producesStall
+argument_list|(
+argument|const MachineInstr *ProdMI
+argument_list|,
+argument|const MachineInstr *ConsMI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|producesStall
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock::const_instr_iterator MII
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|predCanBeUsedAsDotNew
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned PredReg
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|PredOpcodeHasJMP_c
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|predOpcodeHasNot
+argument_list|(
+argument|ArrayRef<MachineOperand> Cond
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getAddrMode
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getBaseAndOffset
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|unsigned&AccessSize
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|getBaseAndOffsetPosition
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&BasePos
+argument_list|,
+argument|unsigned&OffsetPos
+argument_list|)
+specifier|const
+block|;
+name|SmallVector
+operator|<
+name|MachineInstr
+operator|*
+block|,
+literal|2
+operator|>
+name|getBranchingInstrs
+argument_list|(
+argument|MachineBasicBlock& MBB
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getCExtOpNum
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|HexagonII
+operator|::
+name|CompoundGroup
+name|getCompoundCandidateGroup
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getCompoundOpcode
+argument_list|(
+argument|const MachineInstr *GA
+argument_list|,
+argument|const MachineInstr *GB
+argument_list|)
+specifier|const
+block|;
 name|int
 name|getCondOpcode
 argument_list|(
-name|int
-name|Opc
+argument|int Opc
 argument_list|,
-name|bool
-name|sense
+argument|bool sense
 argument_list|)
-decl|const
+specifier|const
+block|;
+name|int
+name|getDotCurOp
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getDotNewOp
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getDotNewPredJumpOp
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineBranchProbabilityInfo *MBPI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getDotNewPredOp
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineBranchProbabilityInfo *MBPI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getDotOldOp
+argument_list|(
+argument|const int opc
+argument_list|)
+specifier|const
+block|;
+name|HexagonII
+operator|::
+name|SubInstructionGroup
+name|getDuplexCandidateGroup
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getEquivalentHWInstr
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|MachineInstr
+operator|*
+name|getFirstNonDbgInst
+argument_list|(
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getInstrTimingClassLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|getInvertedPredSense
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getInvertedPredicatedOpcode
+argument_list|(
+argument|const int Opc
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getMaxValue
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemAccessSize
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getMinValue
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getNonExtOpcode
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|getPredReg
+argument_list|(
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|unsigned&PredReg
+argument_list|,
+argument|unsigned&PredRegPos
+argument_list|,
+argument|unsigned&PredRegFlags
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getPseudoInstrPair
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getRegForm
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getSize
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|uint64_t
+name|getType
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getUnits
+argument_list|(
+argument|const MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getValidSubTargets
+argument_list|(
+argument|const unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+comment|/// getInstrTimingClassLatency - Compute the instruction latency of a given
+comment|/// instruction using Timing Class information, if available.
+name|unsigned
+name|nonDbgBBSize
+argument_list|(
+argument|const MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|nonDbgBundleSize
+argument_list|(
+argument|MachineBasicBlock::const_iterator BundleHead
+argument_list|)
+specifier|const
+block|;
+name|void
+name|immediateExtend
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|invertAndChangeJumpTarget
+argument_list|(
+argument|MachineInstr* MI
+argument_list|,
+argument|MachineBasicBlock* NewTarget
+argument_list|)
+specifier|const
+block|;
+name|void
+name|genAllInsnTimingClasses
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|reversePredSense
+argument_list|(
+argument|MachineInstr* MI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|reversePrediction
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|validateBranchCond
+argument_list|(
+argument|const ArrayRef<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

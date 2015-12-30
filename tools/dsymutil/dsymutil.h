@@ -113,6 +113,16 @@ name|bool
 name|NoOutput
 decl_stmt|;
 comment|///< Skip emitting output
+name|bool
+name|NoODR
+decl_stmt|;
+comment|///< Do not unique types according to ODR
+name|std
+operator|::
+name|string
+name|PrependPath
+expr_stmt|;
+comment|///< -oso-prepend-path
 name|LinkOptions
 argument_list|()
 operator|:
@@ -128,21 +138,28 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// \brief Extract the DebugMap from the given file.
-comment|/// The file has to be a MachO object file.
+comment|/// \brief Extract the DebugMaps from the given file.
+comment|/// The file has to be a MachO object file. Multiple debug maps can be
+comment|/// returned when the file is universal (aka fat) binary.
 name|llvm
 operator|::
 name|ErrorOr
 operator|<
 name|std
 operator|::
+name|vector
+operator|<
+name|std
+operator|::
 name|unique_ptr
 operator|<
 name|DebugMap
-operator|>>
+operator|>>>
 name|parseDebugMap
 argument_list|(
 argument|StringRef InputFile
+argument_list|,
+argument|ArrayRef<std::string> Archs
 argument_list|,
 argument|StringRef PrependPath
 argument_list|,
@@ -151,6 +168,27 @@ argument_list|,
 argument|bool InputIsYAML
 argument_list|)
 expr_stmt|;
+comment|/// \brief Dump the symbol table
+name|bool
+name|dumpStab
+argument_list|(
+name|StringRef
+name|InputFile
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Archs
+argument_list|,
+name|StringRef
+name|PrependPath
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
 comment|/// \brief Link the Dwarf debuginfo as directed by the passed DebugMap
 comment|/// \p DM into a DwarfFile named \p OutputFilename.
 comment|/// \returns false if the link failed.
@@ -169,6 +207,44 @@ specifier|const
 name|LinkOptions
 modifier|&
 name|Options
+parameter_list|)
+function_decl|;
+comment|/// \brief Exit the dsymutil process, cleaning up every temporary
+comment|/// files that we created.
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|exitDsymutil
+parameter_list|(
+name|int
+name|ExitStatus
+parameter_list|)
+function_decl|;
+name|void
+name|warn
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Warning
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+name|bool
+name|error
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Error
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Context
 parameter_list|)
 function_decl|;
 block|}

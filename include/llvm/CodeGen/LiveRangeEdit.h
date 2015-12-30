@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/LiveInterval.h"
 end_include
 
@@ -121,9 +127,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|LiveIntervals
 decl_stmt|;

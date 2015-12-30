@@ -156,14 +156,12 @@ struct|;
 name|private
 label|:
 comment|/// \brief The static option information table.
-specifier|const
+name|ArrayRef
+operator|<
 name|Info
-modifier|*
+operator|>
 name|OptionInfos
-decl_stmt|;
-name|unsigned
-name|NumOptionInfos
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|IgnoreCase
 decl_stmt|;
@@ -239,9 +237,7 @@ name|protected
 label|:
 name|OptTable
 argument_list|(
-argument|const Info *OptionInfos
-argument_list|,
-argument|unsigned NumOptionInfos
+argument|ArrayRef<Info> OptionInfos
 argument_list|,
 argument|bool IgnoreCase = false
 argument_list|)
@@ -259,7 +255,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumOptionInfos
+name|OptionInfos
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// \brief Get the given Opt's Option instance, lazily creating it

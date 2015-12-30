@@ -1009,7 +1009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Reverses the forground and background colors.
+comment|/// Reverses the foreground and background colors.
 end_comment
 
 begin_function
@@ -1345,7 +1345,7 @@ comment|/// An abstract base class for streams implementations that also support
 end_comment
 
 begin_comment
-comment|/// pwrite operation. This is usefull for code that can mostly stream out data,
+comment|/// pwrite operation. This is useful for code that can mostly stream out data,
 end_comment
 
 begin_comment
@@ -1473,11 +1473,6 @@ comment|///
 name|bool
 name|Error
 block|;
-comment|/// Controls whether the stream should attempt to use atomic writes, when
-comment|/// possible.
-name|bool
-name|UseAtomicWrites
-block|;
 name|uint64_t
 name|pos
 block|;
@@ -1592,22 +1587,6 @@ argument_list|(
 argument|uint64_t off
 argument_list|)
 block|;
-comment|/// Set the stream to attempt to use atomic writes for individual output
-comment|/// routines where possible.
-comment|///
-comment|/// Note that because raw_ostream's are typically buffered, this flag is only
-comment|/// sensible when used on unbuffered streams which will flush their output
-comment|/// immediately.
-name|void
-name|SetUseAtomicWrites
-argument_list|(
-argument|bool Value
-argument_list|)
-block|{
-name|UseAtomicWrites
-operator|=
-name|Value
-block|;   }
 name|raw_ostream
 operator|&
 name|changeColor
@@ -1780,6 +1759,9 @@ expr|}
 block|;
 comment|/// A raw_ostream that writes to an SmallVector or SmallString.  This is a
 comment|/// simple adaptor class. This class does not encounter output errors.
+comment|/// raw_svector_ostream operates without a buffer, delegating all memory
+comment|/// management to the SmallString. Thus the SmallString is always up-to-date,
+comment|/// may be used directly and there is no need to call flush().
 name|class
 name|raw_svector_ostream
 operator|:
@@ -1814,33 +1796,12 @@ argument|uint64_t Offset
 argument_list|)
 name|override
 block|;
-comment|/// Return the current position within the stream, not counting the bytes
-comment|/// currently in the buffer.
+comment|/// Return the current position within the stream.
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
 name|override
-block|;
-name|protected
-operator|:
-comment|// Like the regular constructor, but doesn't call init.
-name|explicit
-name|raw_svector_ostream
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|O
-argument_list|,
-name|unsigned
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|()
 block|;
 name|public
 operator|:
@@ -1858,25 +1819,47 @@ operator|>
 operator|&
 name|O
 argument_list|)
-block|;
+operator|:
+name|OS
+argument_list|(
+argument|O
+argument_list|)
+block|{
+name|SetUnbuffered
+argument_list|()
+block|;   }
 operator|~
 name|raw_svector_ostream
 argument_list|()
 name|override
-block|;
-comment|/// This is called when the SmallVector we're appending to is changed outside
-comment|/// of the raw_svector_ostream's control.  It is only safe to do this if the
-comment|/// raw_svector_ostream has previously been flushed.
+block|{}
 name|void
-name|resync
+name|flush
 argument_list|()
+operator|=
+name|delete
 block|;
-comment|/// Flushes the stream contents to the target vector and return a StringRef
-comment|/// for the vector contents.
+comment|/// Return a StringRef for the vector contents.
 name|StringRef
 name|str
 argument_list|()
-block|; }
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|OS
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|OS
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// A raw_ostream that discards all output.
 name|class
@@ -1956,21 +1939,17 @@ operator|:
 name|raw_svector_ostream
 argument_list|(
 name|Buffer
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|OS
 argument_list|(
 argument|OS
 argument_list|)
-block|{
-name|init
-argument_list|()
-block|;   }
+block|{}
 operator|~
 name|buffer_ostream
 argument_list|()
+name|override
 block|{
 name|OS
 operator|<<
@@ -1989,6 +1968,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_RAW_OSTREAM_H
+end_comment
 
 end_unit
 

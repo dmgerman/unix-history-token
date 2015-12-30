@@ -258,7 +258,12 @@ name|Target
 modifier|&
 name|TheTarget
 decl_stmt|;
-comment|/// For ABI type size and alignment.
+comment|/// DataLayout for the target: keep ABI type size and alignment.
+comment|///
+comment|/// The DataLayout is created based on the string representation provided
+comment|/// during construction. It is kept here only to avoid reparsing the string
+comment|/// but should not really be used during compilation, because it has an
+comment|/// internal cache that is context specific.
 specifier|const
 name|DataLayout
 name|DL
@@ -310,6 +315,28 @@ name|RequireStructuredCFG
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|O0WantsFastISel
+range|:
+literal|1
+decl_stmt|;
+comment|/// This API is here to support the C API, deprecated in 3.7 release.
+comment|/// This should never be used outside of legacy existing client.
+specifier|const
+name|DataLayout
+operator|&
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DL
+return|;
+block|}
+name|friend
+struct_decl|struct
+name|C_API_PRIVATE_ACCESS
+struct_decl|;
 name|public
 label|:
 name|mutable
@@ -423,22 +450,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/// Deprecated in 3.7, will be removed in 3.8. Use createDataLayout() instead.
-comment|///
-comment|/// This method returns a pointer to the DataLayout for the target. It should
-comment|/// be unchanging for every subtarget.
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
 comment|/// Create a DataLayout.
 specifier|const
 name|DataLayout
@@ -448,6 +459,42 @@ specifier|const
 block|{
 return|return
 name|DL
+return|;
+block|}
+comment|/// Test if a DataLayout if compatible with the CodeGen for this target.
+comment|///
+comment|/// The LLVM Module owns a DataLayout that is used for the target independent
+comment|/// optimizations and code generation. This hook provides a target specific
+comment|/// check on the validity of this DataLayout.
+name|bool
+name|isCompatibleDataLayout
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|Candidate
+argument_list|)
+decl|const
+block|{
+return|return
+name|DL
+operator|==
+name|Candidate
+return|;
+block|}
+comment|/// Get the pointer size for this target.
+comment|///
+comment|/// This is the only time the DataLayout in the TargetMachine is used.
+name|unsigned
+name|getPointerSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DL
+operator|.
+name|getPointerSize
+argument_list|()
 return|;
 block|}
 comment|/// \brief Reset the target options based on the function's attributes.
@@ -599,6 +646,26 @@ block|{
 name|Options
 operator|.
 name|EnableFastISel
+operator|=
+name|Enable
+expr_stmt|;
+block|}
+name|bool
+name|getO0WantsFastISel
+parameter_list|()
+block|{
+return|return
+name|O0WantsFastISel
+return|;
+block|}
+name|void
+name|setO0WantsFastISel
+parameter_list|(
+name|bool
+name|Enable
+parameter_list|)
+block|{
+name|O0WantsFastISel
 operator|=
 name|Enable
 expr_stmt|;
@@ -766,6 +833,22 @@ return|return
 name|true
 return|;
 block|}
+comment|/// True if subtarget inserts the final scheduling pass on its own.
+comment|///
+comment|/// Branch relaxation, which must happen after block placement, can
+comment|/// on some targets (e.g. SystemZ) expose additional post-RA
+comment|/// scheduling opportunities.
+name|virtual
+name|bool
+name|targetSchedulesPostRAScheduling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+empty_stmt|;
 name|void
 name|getNameWithPrefix
 argument_list|(

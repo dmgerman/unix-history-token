@@ -326,15 +326,6 @@ operator|=
 name|O
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|void
-name|dump
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 specifier|inline

@@ -117,89 +117,21 @@ decl_stmt|;
 name|class
 name|Function
 decl_stmt|;
-comment|// Traits for intrusive list of basic blocks...
 name|template
 operator|<
 operator|>
 expr|struct
-name|ilist_traits
+name|SymbolTableListSentinelTraits
 operator|<
 name|BasicBlock
 operator|>
 operator|:
 name|public
-name|SymbolTableListTraits
-operator|<
-name|BasicBlock
-operator|,
-name|Function
-operator|>
-block|{
-name|BasicBlock
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|;
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|BasicBlock*
-argument_list|)
-block|{}
-name|BasicBlock
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|BasicBlock
-operator|*
-name|ensureHead
-argument_list|(
-argument|BasicBlock*
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|BasicBlock*
-argument_list|,
-argument|BasicBlock*
-argument_list|)
-block|{}
-specifier|static
-name|ValueSymbolTable
-operator|*
-name|getSymTab
-argument_list|(
-name|Function
-operator|*
-name|ItemParent
-argument_list|)
-block|;
-name|private
-operator|:
-name|mutable
-name|ilist_half_node
+name|ilist_half_embedded_sentinel_traits
 operator|<
 name|BasicBlock
 operator|>
-name|Sentinel
-block|; }
+block|{}
 expr_stmt|;
 comment|/// \brief LLVM Basic Block Representation
 comment|///
@@ -224,9 +156,11 @@ name|Value
 decl_stmt|,
 comment|// Basic blocks are data objects also
 name|public
-name|ilist_node
+name|ilist_node_with_parent
 decl|<
 name|BasicBlock
+decl_stmt|,
+name|Function
 decl|>
 block|{
 name|friend
@@ -236,7 +170,7 @@ decl_stmt|;
 name|public
 label|:
 typedef|typedef
-name|iplist
+name|SymbolTableList
 operator|<
 name|Instruction
 operator|>
@@ -264,8 +198,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|BasicBlock
-operator|,
-name|Function
 operator|>
 expr_stmt|;
 name|BasicBlock
@@ -610,7 +542,7 @@ function_decl|;
 comment|/// \brief Unlink 'this' from the containing function and delete it.
 comment|///
 comment|// \returns an iterator pointing to the element after the erased one.
-name|iplist
+name|SymbolTableList
 operator|<
 name|BasicBlock
 operator|>
@@ -990,10 +922,7 @@ return|;
 block|}
 comment|/// \brief Returns a pointer to a member of the instruction list.
 specifier|static
-name|iplist
-operator|<
-name|Instruction
-operator|>
+name|InstListType
 name|BasicBlock
 operator|::
 operator|*
@@ -1069,6 +998,11 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+name|bool
+name|canSplitPredecessors
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Split the basic block into two basic blocks at the specified
 comment|/// instruction.
 comment|///
@@ -1100,6 +1034,34 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
+name|BasicBlock
+modifier|*
+name|splitBasicBlock
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|BBName
+init|=
+literal|""
+parameter_list|)
+block|{
+return|return
+name|splitBasicBlock
+argument_list|(
+name|I
+operator|->
+name|getIterator
+argument_list|()
+argument_list|,
+name|BBName
+argument_list|)
+return|;
+block|}
 comment|/// \brief Returns true if there are any uses of this basic block other than
 comment|/// direct branches, switches, etc. to it.
 name|bool
@@ -1124,6 +1086,20 @@ modifier|*
 name|New
 parameter_list|)
 function_decl|;
+comment|/// \brief Return true if this basic block is an exception handling block.
+name|bool
+name|isEHPad
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstNonPHI
+argument_list|()
+operator|->
+name|isEHPad
+argument_list|()
+return|;
+block|}
 comment|/// \brief Return true if this basic block is a landing pad.
 comment|///
 comment|/// Being a ``landing pad'' means that the basic block is the destination of
@@ -1206,32 +1182,6 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|// createSentinel is used to get hold of the node that marks the end of the
-comment|// list... (same trick used here as in ilist_traits<Instruction>)
-specifier|inline
-name|BasicBlock
-operator|*
-name|ilist_traits
-operator|<
-name|BasicBlock
-operator|>
-operator|::
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(

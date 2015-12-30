@@ -494,7 +494,7 @@ function_decl|;
 comment|/// \brief Simulates liveness when stepping forward over an
 comment|/// instruction(bundle): Remove killed-uses, add defs. This is the not
 comment|/// recommended way, because it depends on accurate kill flags. If possible
-comment|/// use stepBackwards() instead of this function.
+comment|/// use stepBackward() instead of this function.
 comment|/// The clobbers set will be the list of registers either defined or clobbered
 comment|/// by a regmask.  The operand will identify whether this is a regmask or
 comment|/// register operand.
@@ -540,8 +540,7 @@ name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Adds all live-out registers of basic block @p MBB; After prologue/
-comment|/// epilogue insertion \p AddPristines should be set to true to insert the
-comment|/// pristine registers.
+comment|/// epilogue insertion \p AddPristinesAndCSRs should be set to true.
 name|void
 name|addLiveOuts
 parameter_list|(
@@ -551,7 +550,7 @@ modifier|*
 name|MBB
 parameter_list|,
 name|bool
-name|AddPristines
+name|AddPristinesAndCSRs
 init|=
 name|false
 parameter_list|)

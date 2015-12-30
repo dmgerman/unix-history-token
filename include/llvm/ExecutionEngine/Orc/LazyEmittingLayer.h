@@ -313,10 +313,10 @@ return|;
 case|case
 name|Emitting
 case|:
-comment|// Calling "emit" can trigger external symbol lookup (e.g. to check for
-comment|// pre-existing definitions of common-symbol), but it will never find in
-comment|// this module that it would not have found already, so return null from
-comment|// here.
+comment|// Calling "emit" can trigger a recursive call to 'find' (e.g. to check
+comment|// for pre-existing definitions of common-symbol), but any symbol in
+comment|// this module would already have been found internally (in the
+comment|// RuntimeDyld that did the lookup), so just return a nullptr here.
 return|return
 name|nullptr
 return|;

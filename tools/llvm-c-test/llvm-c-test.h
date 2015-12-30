@@ -15,6 +15,12 @@ directive|define
 name|LLVM_C_TEST_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
 begin_comment
 comment|// helpers.c
 end_comment
@@ -49,7 +55,11 @@ begin_function_decl
 name|int
 name|module_dump
 parameter_list|(
-name|void
+name|bool
+name|Lazy
+parameter_list|,
+name|bool
+name|New
 parameter_list|)
 function_decl|;
 end_function_decl

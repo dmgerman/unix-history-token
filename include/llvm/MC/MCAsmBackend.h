@@ -216,6 +216,22 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Map a relocation name used in .reloc to a fixup kind.
+comment|/// Returns true and sets MappedKind if Name is successfully mapped.
+comment|/// Otherwise returns false and leaves MappedKind unchanged.
+name|virtual
+name|bool
+name|getFixupKind
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|MCFixupKind
+operator|&
+name|MappedKind
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Get information on a fixup kind.
 name|virtual
 specifier|const

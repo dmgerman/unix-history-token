@@ -104,25 +104,25 @@ name|_WIN32_IE
 end_undef
 
 begin_comment
-comment|// Require at least Windows XP(5.1) API.
+comment|// Require at least Windows 7 API.
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_WIN32_WINNT
-value|0x0501
+value|0x0601
 end_define
 
 begin_define
 define|#
 directive|define
 name|_WIN32_IE
-value|0x0600
+value|0x0800
 end_define
 
 begin_comment
-comment|// MinGW at it again.
+comment|// MinGW at it again. FIXME: verify if still needed.
 end_comment
 
 begin_define
@@ -135,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
@@ -235,6 +241,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|DWORD
+name|LastError
+init|=
+name|GetLastError
+argument_list|()
+decl_stmt|;
+name|DWORD
 name|R
 init|=
 name|FormatMessage
@@ -242,11 +254,12 @@ argument_list|(
 name|FORMAT_MESSAGE_ALLOCATE_BUFFER
 operator||
 name|FORMAT_MESSAGE_FROM_SYSTEM
+operator||
+name|FORMAT_MESSAGE_MAX_WIDTH_MASK
 argument_list|,
 name|NULL
 argument_list|,
-name|GetLastError
-argument_list|()
+name|LastError
 argument_list|,
 literal|0
 argument_list|,
@@ -270,6 +283,8 @@ name|ErrMsg
 operator|=
 name|prefix
 operator|+
+literal|": "
+operator|+
 name|buffer
 expr_stmt|;
 else|else
@@ -278,7 +293,21 @@ name|ErrMsg
 operator|=
 name|prefix
 operator|+
-literal|"Unknown error"
+literal|": Unknown error"
+expr_stmt|;
+operator|*
+name|ErrMsg
+operator|+=
+literal|" (0x"
+operator|+
+name|llvm
+operator|::
+name|utohexstr
+argument_list|(
+name|LastError
+argument_list|)
+operator|+
+literal|")"
 expr_stmt|;
 name|LocalFree
 argument_list|(

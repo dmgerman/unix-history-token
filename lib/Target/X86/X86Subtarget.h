@@ -169,9 +169,7 @@ operator|:
 expr|enum
 name|X86SSEEnum
 block|{
-name|NoMMXSSE
-block|,
-name|MMX
+name|NoSSE
 block|,
 name|SSE1
 block|,
@@ -195,6 +193,8 @@ block|;    enum
 name|X863DNowEnum
 block|{
 name|NoThreeDNow
+block|,
+name|MMX
 block|,
 name|ThreeDNow
 block|,
@@ -220,11 +220,11 @@ operator|::
 name|Style
 name|PICStyle
 block|;
-comment|/// MMX, SSE1, SSE2, SSE3, SSSE3, SSE41, SSE42, or none supported.
+comment|/// SSE1, SSE2, SSE3, SSSE3, SSE41, SSE42, or none supported.
 name|X86SSEEnum
 name|X86SSELevel
 block|;
-comment|/// 3DNow, 3DNow Athlon, or none supported.
+comment|/// MMX, 3DNow, 3DNow Athlon, or none supported.
 name|X863DNowEnum
 name|X863DNowLevel
 block|;
@@ -248,6 +248,26 @@ block|;
 comment|/// Target has AES instructions
 name|bool
 name|HasAES
+block|;
+comment|/// Target has FXSAVE/FXRESTOR instructions
+name|bool
+name|HasFXSR
+block|;
+comment|/// Target has XSAVE instructions
+name|bool
+name|HasXSAVE
+block|;
+comment|/// Target has XSAVEOPT instructions
+name|bool
+name|HasXSAVEOPT
+block|;
+comment|/// Target has XSAVEC instructions
+name|bool
+name|HasXSAVEC
+block|;
+comment|/// Target has XSAVES instructions
+name|bool
+name|HasXSAVES
 block|;
 comment|/// Target has carry-less multiplication
 name|bool
@@ -321,6 +341,10 @@ comment|/// Processor has RDSEED instructions.
 name|bool
 name|HasRDSEED
 block|;
+comment|/// Processor has LAHF/SAHF instructions.
+name|bool
+name|HasLAHFSAHF
+block|;
 comment|/// True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
@@ -329,11 +353,11 @@ comment|/// True if SHLD instructions are slow.
 name|bool
 name|IsSHLDSlow
 block|;
-comment|/// True if unaligned memory access is fast.
+comment|/// True if unaligned memory accesses of 16-bytes are slow.
 name|bool
-name|IsUAMemFast
+name|IsUAMem16Slow
 block|;
-comment|/// True if unaligned 32-byte memory accesses are slow.
+comment|/// True if unaligned memory accesses of 32-bytes are slow.
 name|bool
 name|IsUAMem32Slow
 block|;
@@ -408,6 +432,10 @@ block|;
 comment|/// Processor has AVX-512 Vector Length eXtenstions
 name|bool
 name|HasVLX
+block|;
+comment|/// Processor has PKU extenstions
+name|bool
+name|HasPKU
 block|;
 comment|/// Processot supports MPX - Memory Protection Extensions
 name|bool
@@ -726,17 +754,6 @@ name|HasCMov
 return|;
 block|}
 name|bool
-name|hasMMX
-argument_list|()
-specifier|const
-block|{
-return|return
-name|X86SSELevel
-operator|>=
-name|MMX
-return|;
-block|}
-name|bool
 name|hasSSE1
 argument_list|()
 specifier|const
@@ -865,6 +882,17 @@ name|HasSSE4A
 return|;
 block|}
 name|bool
+name|hasMMX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|X863DNowLevel
+operator|>=
+name|MMX
+return|;
+block|}
+name|bool
 name|has3DNow
 argument_list|()
 specifier|const
@@ -905,6 +933,51 @@ name|HasAES
 return|;
 block|}
 name|bool
+name|hasFXSR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFXSR
+return|;
+block|}
+name|bool
+name|hasXSAVE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasXSAVE
+return|;
+block|}
+name|bool
+name|hasXSAVEOPT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasXSAVEOPT
+return|;
+block|}
+name|bool
+name|hasXSAVEC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasXSAVEC
+return|;
+block|}
+name|bool
+name|hasXSAVES
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasXSAVES
+return|;
+block|}
+name|bool
 name|hasPCLMUL
 argument_list|()
 specifier|const
@@ -913,6 +986,8 @@ return|return
 name|HasPCLMUL
 return|;
 block|}
+comment|// Prefer FMA4 to FMA - its better for commutation/memory folding and
+comment|// has equal or better performance on all supported targets.
 name|bool
 name|hasFMA
 argument_list|()
@@ -920,9 +995,11 @@ specifier|const
 block|{
 return|return
 name|HasFMA
+operator|&&
+operator|!
+name|HasFMA4
 return|;
 block|}
-comment|// FIXME: Favor FMA when both are enabled. Is this the right thing to do?
 name|bool
 name|hasFMA4
 argument_list|()
@@ -930,9 +1007,22 @@ specifier|const
 block|{
 return|return
 name|HasFMA4
-operator|&&
-operator|!
-name|HasFMA
+return|;
+block|}
+name|bool
+name|hasAnyFMA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFMA
+argument_list|()
+operator|||
+name|hasFMA4
+argument_list|()
+operator|||
+name|hasAVX512
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1071,6 +1161,15 @@ name|HasRDSEED
 return|;
 block|}
 name|bool
+name|hasLAHFSAHF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasLAHFSAHF
+return|;
+block|}
+name|bool
 name|isBTMemSlow
 argument_list|()
 specifier|const
@@ -1089,12 +1188,12 @@ name|IsSHLDSlow
 return|;
 block|}
 name|bool
-name|isUnalignedMemAccessFast
+name|isUnalignedMem16Slow
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsUAMemFast
+name|IsUAMem16Slow
 return|;
 block|}
 name|bool
@@ -1248,6 +1347,15 @@ specifier|const
 block|{
 return|return
 name|HasVLX
+return|;
+block|}
+name|bool
+name|hasPKU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPKU
 return|;
 block|}
 name|bool
@@ -1410,6 +1518,18 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|isTargetAndroid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isAndroid
+argument_list|()
+return|;
+block|}
+name|bool
 name|isTargetNaCl
 argument_list|()
 specifier|const
@@ -1449,6 +1569,18 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|isTargetMCU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSIAMCU
+argument_list|()
+return|;
+block|}
+name|bool
 name|isTargetWindowsMSVC
 argument_list|()
 specifier|const
@@ -1469,6 +1601,18 @@ return|return
 name|TargetTriple
 operator|.
 name|isKnownWindowsMSVCEnvironment
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetWindowsCoreCLR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isWindowsCoreCLREnvironment
 argument_list|()
 return|;
 block|}

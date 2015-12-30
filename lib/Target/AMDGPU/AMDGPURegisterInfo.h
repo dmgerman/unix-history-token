@@ -141,26 +141,6 @@ argument_list|()
 return|;
 block|}
 name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getCFGStructurizerRegClass
-argument_list|(
-argument|MVT VT
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-literal|"Unimplemented"
-argument_list|)
-block|;
-return|return
-name|nullptr
-return|;
-block|}
-name|virtual
 name|unsigned
 name|getHWRegIndex
 argument_list|(

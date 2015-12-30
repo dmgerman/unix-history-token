@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/GlobalValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -77,9 +83,6 @@ name|llvm
 block|{
 name|class
 name|DataLayout
-decl_stmt|;
-name|class
-name|GlobalValue
 decl_stmt|;
 name|template
 operator|<

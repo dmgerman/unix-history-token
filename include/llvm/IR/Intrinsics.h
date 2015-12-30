@@ -266,6 +266,8 @@ name|VarArg
 block|,
 name|MMX
 block|,
+name|Token
+block|,
 name|Metadata
 block|,
 name|Half

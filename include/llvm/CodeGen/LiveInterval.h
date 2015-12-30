@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -2316,13 +2322,13 @@ name|SubRange
 operator|*
 name|Next
 block|;
-name|unsigned
+name|LaneBitmask
 name|LaneMask
 block|;
 comment|/// Constructs a new SubRange object.
 name|SubRange
 argument_list|(
-argument|unsigned LaneMask
+argument|LaneBitmask LaneMask
 argument_list|)
 operator|:
 name|Next
@@ -2338,7 +2344,7 @@ block|{       }
 comment|/// Constructs a new SubRange object by copying liveness from @p Other.
 name|SubRange
 argument_list|(
-argument|unsigned LaneMask
+argument|LaneBitmask LaneMask
 argument_list|,
 argument|const LiveRange&Other
 argument_list|,
@@ -2709,7 +2715,7 @@ name|BumpPtrAllocator
 modifier|&
 name|Allocator
 parameter_list|,
-name|unsigned
+name|LaneBitmask
 name|LaneMask
 parameter_list|)
 block|{
@@ -2754,7 +2760,7 @@ name|BumpPtrAllocator
 modifier|&
 name|Allocator
 parameter_list|,
-name|unsigned
+name|LaneBitmask
 name|LaneMask
 parameter_list|,
 specifier|const
@@ -3492,21 +3498,6 @@ decl_stmt|;
 name|IntEqClasses
 name|EqClass
 decl_stmt|;
-comment|// Note that values a and b are connected.
-name|void
-name|Connect
-parameter_list|(
-name|unsigned
-name|a
-parameter_list|,
-name|unsigned
-name|b
-parameter_list|)
-function_decl|;
-name|unsigned
-name|Renumber
-parameter_list|()
-function_decl|;
 name|public
 label|:
 name|explicit
@@ -3554,13 +3545,17 @@ name|id
 index|]
 return|;
 block|}
-comment|/// Distribute - Distribute values in LIV[0] into a separate LiveInterval
-comment|/// for each connected component. LIV must have a LiveInterval for each
-comment|/// connected component. The LiveIntervals in Liv[1..] must be empty.
-comment|/// Instructions using LIV[0] are rewritten.
+comment|/// Distribute values in \p LI into a separate LiveIntervals
+comment|/// for each connected component. LIV must have an empty LiveInterval for
+comment|/// each additional connected component. The first connected component is
+comment|/// left in \p LI.
 name|void
 name|Distribute
 parameter_list|(
+name|LiveInterval
+modifier|&
+name|LI
+parameter_list|,
 name|LiveInterval
 modifier|*
 name|LIV

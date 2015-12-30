@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
@@ -107,9 +113,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|SUnit
 decl_stmt|;
@@ -373,67 +376,7 @@ argument_list|(
 argument|const SDep&Other
 argument_list|)
 specifier|const
-block|{
-if|if
-condition|(
-name|Dep
-operator|!=
-name|Other
-operator|.
-name|Dep
-condition|)
-return|return
-name|false
-return|;
-switch|switch
-condition|(
-name|Dep
-operator|.
-name|getInt
-argument_list|()
-condition|)
-block|{
-case|case
-name|Data
-case|:
-case|case
-name|Anti
-case|:
-case|case
-name|Output
-case|:
-return|return
-name|Contents
-operator|.
-name|Reg
-operator|==
-name|Other
-operator|.
-name|Contents
-operator|.
-name|Reg
-return|;
-case|case
-name|Order
-case|:
-return|return
-name|Contents
-operator|.
-name|OrdKind
-operator|==
-name|Other
-operator|.
-name|Contents
-operator|.
-name|OrdKind
-return|;
-block|}
-name|llvm_unreachable
-argument_list|(
-literal|"Invalid dependency kind!"
-argument_list|)
 expr_stmt|;
-block|}
 name|bool
 name|operator
 operator|==
@@ -510,14 +453,7 @@ operator|*
 name|getSUnit
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Dep
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 comment|//// setSUnit - Assign the SUnit to which this edge points.
 name|void
 name|setSUnit
@@ -526,28 +462,13 @@ name|SUnit
 modifier|*
 name|SU
 parameter_list|)
-block|{
-name|Dep
-operator|.
-name|setPointer
-argument_list|(
-name|SU
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// getKind - Return an enum value representing the kind of the dependence.
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Dep
-operator|.
-name|getInt
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 comment|/// isCtrl - Shorthand for getKind() != SDep::Data.
 name|bool
 name|isCtrl
@@ -840,13 +761,7 @@ name|Reg
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -864,13 +779,7 @@ operator|=
 name|true
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// SUnit - Scheduling unit. This is a node in the scheduling DAG.
-end_comment
-
-begin_decl_stmt
 name|class
 name|SUnit
 block|{
@@ -1783,7 +1692,6 @@ operator|==
 name|BoundaryID
 return|;
 block|}
-empty_stmt|;
 comment|/// setNode - Assign the representative SDNode for this SUnit.
 comment|/// This may be used during pre-regalloc scheduling.
 name|void
@@ -1938,17 +1846,8 @@ return|return
 name|Depth
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getHeight - Return the height of this node, which is the length of the
-end_comment
-
-begin_comment
 comment|/// maximum path down to any node which has no successors.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getHeight
 argument_list|()
@@ -1971,16 +1870,13 @@ operator|->
 name|ComputeHeight
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Height
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// setDepthToAtLeast - If NewDepth is greater than this node's
 end_comment
 
@@ -1992,17 +1888,15 @@ begin_comment
 comment|/// recursively marks successor nodes dirty.
 end_comment
 
-begin_macro
-unit|void
+begin_function_decl
+name|void
 name|setDepthToAtLeast
-argument_list|(
-argument|unsigned NewDepth
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+parameter_list|(
+name|unsigned
+name|NewDepth
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// setDepthToAtLeast - If NewDepth is greater than this node's
@@ -2287,6 +2181,153 @@ end_function_decl
 
 begin_comment
 unit|};
+comment|/// Return true if the specified SDep is equivalent except for latency.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|bool
+name|SDep
+operator|::
+name|overlaps
+argument_list|(
+argument|const SDep&Other
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|Dep
+operator|!=
+name|Other
+operator|.
+name|Dep
+condition|)
+return|return
+name|false
+return|;
+end_expr_stmt
+
+begin_switch
+switch|switch
+condition|(
+name|Dep
+operator|.
+name|getInt
+argument_list|()
+condition|)
+block|{
+case|case
+name|Data
+case|:
+case|case
+name|Anti
+case|:
+case|case
+name|Output
+case|:
+return|return
+name|Contents
+operator|.
+name|Reg
+operator|==
+name|Other
+operator|.
+name|Contents
+operator|.
+name|Reg
+return|;
+case|case
+name|Order
+case|:
+return|return
+name|Contents
+operator|.
+name|OrdKind
+operator|==
+name|Other
+operator|.
+name|Contents
+operator|.
+name|OrdKind
+return|;
+block|}
+end_switch
+
+begin_expr_stmt
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid dependency kind!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
+comment|//// getSUnit - Return the SUnit to which this edge points.
+end_comment
+
+begin_expr_stmt
+unit|inline
+name|SUnit
+operator|*
+name|SDep
+operator|::
+name|getSUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Dep
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|//// setSUnit - Assign the SUnit to which this edge points.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|void
+name|SDep
+operator|::
+name|setSUnit
+argument_list|(
+argument|SUnit *SU
+argument_list|)
+block|{
+name|Dep
+operator|.
+name|setPointer
+argument_list|(
+name|SU
+argument_list|)
+block|; }
+comment|/// getKind - Return an enum value representing the kind of the dependence.
+specifier|inline
+name|SDep
+operator|::
+name|Kind
+name|SDep
+operator|::
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Dep
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 

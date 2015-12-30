@@ -868,10 +868,6 @@ comment|// The last byte of the opcode, not counting any ModR/M extension
 name|uint8_t
 name|opcode
 decl_stmt|;
-comment|// The ModR/M byte of the instruction, if it is an opcode extension
-name|uint8_t
-name|modRMExtension
-decl_stmt|;
 comment|// decode state
 comment|// The type of opcode, used for indexing into the array of decode tables
 name|OpcodeType

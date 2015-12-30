@@ -476,7 +476,7 @@ block|{}
 block|}
 struct|;
 comment|/// \brief A Counter expression builder is used to construct the
-comment|/// counter expressions. It avoids unecessary duplication
+comment|/// counter expressions. It avoids unnecessary duplication
 comment|/// and simplifies algebraic expressions.
 name|class
 name|CounterExpressionBuilder
@@ -1026,12 +1026,7 @@ name|uint64_t
 operator|>
 name|CounterValues
 operator|=
-name|ArrayRef
-operator|<
-name|uint64_t
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 operator|:
 name|Expressions
@@ -1972,7 +1967,7 @@ return|;
 block|}
 comment|/// \brief Get the list of function instantiations in the file.
 comment|///
-comment|/// Fucntions that are instantiated more than once, such as C++ template
+comment|/// Functions that are instantiated more than once, such as C++ template
 comment|/// specializations, have distinct coverage records for each instantiation.
 name|std
 operator|::

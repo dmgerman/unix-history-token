@@ -193,150 +193,195 @@ name|v2i1
 init|=
 literal|13
 block|,
-comment|//  2 x i1
+comment|//    2 x i1
 name|v4i1
 init|=
 literal|14
 block|,
-comment|//  4 x i1
+comment|//    4 x i1
 name|v8i1
 init|=
 literal|15
 block|,
-comment|//  8 x i1
+comment|//    8 x i1
 name|v16i1
 init|=
 literal|16
 block|,
-comment|// 16 x i1
+comment|//   16 x i1
 name|v32i1
 init|=
 literal|17
 block|,
-comment|// 32 x i1
+comment|//   32 x i1
 name|v64i1
 init|=
 literal|18
 block|,
-comment|// 64 x i1
-name|v1i8
+comment|//   64 x i1
+name|v512i1
 init|=
 literal|19
+block|,
+comment|//  512 x i1
+name|v1024i1
+init|=
+literal|20
+block|,
+comment|// 1024 x i1
+name|v1i8
+init|=
+literal|21
 block|,
 comment|//  1 x i8
 name|v2i8
 init|=
-literal|20
+literal|22
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|21
+literal|23
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|22
+literal|24
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|23
+literal|25
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|24
+literal|26
 block|,
 comment|// 32 x i8
 name|v64i8
 init|=
-literal|25
+literal|27
 block|,
 comment|// 64 x i8
+name|v128i8
+init|=
+literal|28
+block|,
+comment|//128 x i8
+name|v256i8
+init|=
+literal|29
+block|,
+comment|//256 x i8
 name|v1i16
 init|=
-literal|26
+literal|30
 block|,
 comment|//  1 x i16
 name|v2i16
 init|=
-literal|27
+literal|31
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|28
+literal|32
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|29
+literal|33
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|30
+literal|34
 block|,
 comment|// 16 x i16
 name|v32i16
 init|=
-literal|31
+literal|35
 block|,
 comment|// 32 x i16
+name|v64i16
+init|=
+literal|36
+block|,
+comment|// 64 x i16
+name|v128i16
+init|=
+literal|37
+block|,
+comment|//128 x i16
 name|v1i32
 init|=
-literal|32
+literal|38
 block|,
 comment|//  1 x i32
 name|v2i32
 init|=
-literal|33
+literal|39
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|34
+literal|40
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|35
+literal|41
 block|,
 comment|//  8 x i32
 name|v16i32
 init|=
-literal|36
+literal|42
 block|,
 comment|// 16 x i32
+name|v32i32
+init|=
+literal|43
+block|,
+comment|// 32 x i32
+name|v64i32
+init|=
+literal|44
+block|,
+comment|// 64 x i32
 name|v1i64
 init|=
-literal|37
+literal|45
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|38
+literal|46
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|39
+literal|47
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|40
+literal|48
 block|,
 comment|//  8 x i64
 name|v16i64
 init|=
-literal|41
+literal|49
 block|,
 comment|// 16 x i64
+name|v32i64
+init|=
+literal|50
+block|,
+comment|// 32 x i64
 name|v1i128
 init|=
-literal|42
+literal|51
 block|,
 comment|//  1 x i128
 name|FIRST_INTEGER_VECTOR_VALUETYPE
@@ -349,62 +394,62 @@ name|v1i128
 block|,
 name|v2f16
 init|=
-literal|43
+literal|52
 block|,
 comment|//  2 x f16
 name|v4f16
 init|=
-literal|44
+literal|53
 block|,
 comment|//  4 x f16
 name|v8f16
 init|=
-literal|45
+literal|54
 block|,
 comment|//  8 x f16
 name|v1f32
 init|=
-literal|46
+literal|55
 block|,
 comment|//  1 x f32
 name|v2f32
 init|=
-literal|47
+literal|56
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|48
+literal|57
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|49
+literal|58
 block|,
 comment|//  8 x f32
 name|v16f32
 init|=
-literal|50
+literal|59
 block|,
 comment|// 16 x f32
 name|v1f64
 init|=
-literal|51
+literal|60
 block|,
 comment|//  1 x f64
 name|v2f64
 init|=
-literal|52
+literal|61
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|53
+literal|62
 block|,
 comment|//  4 x f64
 name|v8f64
 init|=
-literal|54
+literal|63
 block|,
 comment|//  8 x f64
 name|FIRST_FP_VECTOR_VALUETYPE
@@ -425,22 +470,22 @@ name|v8f64
 block|,
 name|x86mmx
 init|=
-literal|55
+literal|64
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|56
+literal|65
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|57
+literal|66
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|58
+literal|67
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
@@ -452,7 +497,7 @@ block|,
 comment|// This is always the beginning of the list.
 name|LAST_VALUETYPE
 init|=
-literal|59
+literal|68
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -460,7 +505,12 @@ comment|// MVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vector
 comment|// This value must be a multiple of 32.
 name|MAX_ALLOWED_VALUETYPE
 init|=
-literal|64
+literal|96
+block|,
+comment|// Token - A value of type llvm::TokenTy
+name|token
+init|=
+literal|249
 block|,
 comment|// Metadata - This is MDNode or MDString.
 name|Metadata
@@ -1001,13 +1051,19 @@ name|SimpleTy
 operator|==
 name|MVT
 operator|::
+name|v16f32
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
 name|v8f64
 operator|||
 name|SimpleTy
 operator|==
 name|MVT
 operator|::
-name|v16f32
+name|v512i1
 operator|||
 name|SimpleTy
 operator|==
@@ -1025,13 +1081,13 @@ name|SimpleTy
 operator|==
 name|MVT
 operator|::
-name|v8i64
+name|v16i32
 operator|||
 name|SimpleTy
 operator|==
 name|MVT
 operator|::
-name|v16i32
+name|v8i64
 operator|)
 return|;
 block|}
@@ -1047,7 +1103,65 @@ name|SimpleTy
 operator|==
 name|MVT
 operator|::
+name|v1024i1
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v128i8
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v64i16
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v32i32
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
 name|v16i64
+operator|)
+return|;
+block|}
+comment|/// is2048BitVector - Return true if this is a 1024-bit vector type.
+name|bool
+name|is2048BitVector
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v256i8
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v128i16
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v64i32
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v32i64
 operator|)
 return|;
 block|}
@@ -1212,6 +1326,12 @@ case|:
 case|case
 name|v64i1
 case|:
+case|case
+name|v512i1
+case|:
+case|case
+name|v1024i1
+case|:
 return|return
 name|i1
 return|;
@@ -1236,6 +1356,12 @@ case|:
 case|case
 name|v64i8
 case|:
+case|case
+name|v128i8
+case|:
+case|case
+name|v256i8
+case|:
 return|return
 name|i8
 return|;
@@ -1257,6 +1383,12 @@ case|:
 case|case
 name|v32i16
 case|:
+case|case
+name|v64i16
+case|:
+case|case
+name|v128i16
+case|:
 return|return
 name|i16
 return|;
@@ -1275,6 +1407,12 @@ case|:
 case|case
 name|v16i32
 case|:
+case|case
+name|v32i32
+case|:
+case|case
+name|v64i32
+case|:
 return|return
 name|i32
 return|;
@@ -1292,6 +1430,9 @@ name|v8i64
 case|:
 case|case
 name|v16i64
+case|:
+case|case
+name|v32i64
 case|:
 return|return
 name|i64
@@ -1366,6 +1507,48 @@ literal|"Not a vector MVT!"
 argument_list|)
 expr_stmt|;
 case|case
+name|v1024i1
+case|:
+return|return
+literal|1024
+return|;
+case|case
+name|v512i1
+case|:
+return|return
+literal|512
+return|;
+case|case
+name|v256i8
+case|:
+return|return
+literal|256
+return|;
+case|case
+name|v128i8
+case|:
+case|case
+name|v128i16
+case|:
+return|return
+literal|128
+return|;
+case|case
+name|v64i1
+case|:
+case|case
+name|v64i8
+case|:
+case|case
+name|v64i16
+case|:
+case|case
+name|v64i32
+case|:
+return|return
+literal|64
+return|;
+case|case
 name|v32i1
 case|:
 case|case
@@ -1374,17 +1557,14 @@ case|:
 case|case
 name|v32i16
 case|:
+case|case
+name|v32i32
+case|:
+case|case
+name|v32i64
+case|:
 return|return
 literal|32
-return|;
-case|case
-name|v64i1
-case|:
-case|case
-name|v64i8
-case|:
-return|return
-literal|64
 return|;
 case|case
 name|v16i1
@@ -1564,6 +1744,15 @@ case|:
 name|llvm_unreachable
 argument_list|(
 literal|"Value type is overloaded."
+argument_list|)
+expr_stmt|;
+case|case
+name|token
+case|:
+name|llvm_unreachable
+argument_list|(
+literal|"Token type is a sentinel that cannot be used "
+literal|"in codegen and has no size"
 argument_list|)
 expr_stmt|;
 case|case
@@ -1749,6 +1938,9 @@ return|return
 literal|256
 return|;
 case|case
+name|v512i1
+case|:
+case|case
 name|v64i8
 case|:
 case|case
@@ -1770,10 +1962,37 @@ return|return
 literal|512
 return|;
 case|case
+name|v1024i1
+case|:
+case|case
+name|v128i8
+case|:
+case|case
+name|v64i16
+case|:
+case|case
+name|v32i32
+case|:
+case|case
 name|v16i64
 case|:
 return|return
 literal|1024
+return|;
+case|case
+name|v256i8
+case|:
+case|case
+name|v128i16
+case|:
+case|case
+name|v64i32
+case|:
+case|case
+name|v32i64
+case|:
+return|return
+literal|2048
 return|;
 block|}
 block|}
@@ -2126,6 +2345,28 @@ name|MVT
 operator|::
 name|v64i1
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|512
+condition|)
+return|return
+name|MVT
+operator|::
+name|v512i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1024
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1024i1
+return|;
 break|break;
 case|case
 name|MVT
@@ -2209,6 +2450,28 @@ name|MVT
 operator|::
 name|v64i8
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|128
+condition|)
+return|return
+name|MVT
+operator|::
+name|v128i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|256
+condition|)
+return|return
+name|MVT
+operator|::
+name|v256i8
+return|;
 break|break;
 case|case
 name|MVT
@@ -2281,6 +2544,28 @@ name|MVT
 operator|::
 name|v32i16
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|64
+condition|)
+return|return
+name|MVT
+operator|::
+name|v64i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|128
+condition|)
+return|return
+name|MVT
+operator|::
+name|v128i16
+return|;
 break|break;
 case|case
 name|MVT
@@ -2342,6 +2627,28 @@ name|MVT
 operator|::
 name|v16i32
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|v32i32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|64
+condition|)
+return|return
+name|MVT
+operator|::
+name|v64i32
+return|;
 break|break;
 case|case
 name|MVT
@@ -2402,6 +2709,17 @@ return|return
 name|MVT
 operator|::
 name|v16i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|v32i64
 return|;
 break|break;
 case|case

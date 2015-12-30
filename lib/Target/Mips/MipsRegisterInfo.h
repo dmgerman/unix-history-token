@@ -228,13 +228,6 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
-name|bool
-name|needsStackRealignment
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
 name|override
 block|;
 comment|/// Debug information queries.

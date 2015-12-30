@@ -116,78 +116,17 @@ name|template
 operator|<
 operator|>
 expr|struct
-name|ilist_traits
+name|SymbolTableListSentinelTraits
 operator|<
 name|Instruction
 operator|>
 operator|:
 name|public
-name|SymbolTableListTraits
-operator|<
-name|Instruction
-operator|,
-name|BasicBlock
-operator|>
-block|{
-comment|/// \brief Return a node that marks the end of a list.
-comment|///
-comment|/// The sentinel is relative to this instance, so we use a non-static
-comment|/// method.
-name|Instruction
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|;
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|Instruction *
-argument_list|)
-block|{}
-name|Instruction
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|Instruction
-operator|*
-name|ensureHead
-argument_list|(
-argument|Instruction *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|Instruction *
-argument_list|,
-argument|Instruction *
-argument_list|)
-block|{}
-name|private
-operator|:
-name|mutable
-name|ilist_half_node
+name|ilist_half_embedded_sentinel_traits
 operator|<
 name|Instruction
 operator|>
-name|Sentinel
-block|; }
+block|{}
 expr_stmt|;
 name|class
 name|Instruction
@@ -196,9 +135,11 @@ name|public
 name|User
 decl_stmt|,
 name|public
-name|ilist_node
+name|ilist_node_with_parent
 decl|<
 name|Instruction
+decl_stmt|,
+name|BasicBlock
 decl|>
 block|{
 name|void
@@ -325,6 +266,22 @@ modifier|*
 name|getModule
 parameter_list|()
 function_decl|;
+comment|/// \brief Return the function this instruction belongs to.
+comment|///
+comment|/// Note: it is undefined behavior to call this on an instruction not
+comment|/// currently inserted into a function.
+specifier|const
+name|Function
+operator|*
+name|getFunction
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Function
+modifier|*
+name|getFunction
+parameter_list|()
+function_decl|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing basic
 comment|/// block, but does not delete it.
 comment|///
@@ -336,7 +293,7 @@ comment|/// eraseFromParent - This method unlinks 'this' from the containing bas
 comment|/// block and deletes it.
 comment|///
 comment|/// \returns an iterator pointing to the element after the erased one
-name|iplist
+name|SymbolTableList
 operator|<
 name|Instruction
 operator|>
@@ -452,6 +409,19 @@ specifier|const
 block|{
 return|return
 name|isCast
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|bool
+name|isFuncletPad
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isFuncletPad
 argument_list|(
 name|getOpcode
 argument_list|()
@@ -578,6 +548,26 @@ operator|&&
 name|OpCode
 operator|<
 name|CastOpsEnd
+return|;
+block|}
+comment|/// @brief Determine if the OpCode is one of the FuncletPadInst instructions.
+specifier|static
+specifier|inline
+name|bool
+name|isFuncletPad
+parameter_list|(
+name|unsigned
+name|OpCode
+parameter_list|)
+block|{
+return|return
+name|OpCode
+operator|>=
+name|FuncletPadOpsBegin
+operator|&&
+name|OpCode
+operator|<
+name|FuncletPadOpsEnd
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -770,11 +760,12 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
-comment|/// \brief Drop unknown metadata.
+comment|/// Drop all unknown metadata except for debug locations.
+comment|/// @{
 comment|/// Passes are required to drop metadata they don't understand. This is a
 comment|/// convenience method for passes to do so.
 name|void
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 argument_list|(
 name|ArrayRef
 operator|<
@@ -784,25 +775,25 @@ name|KnownIDs
 argument_list|)
 decl_stmt|;
 name|void
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 parameter_list|()
 block|{
 return|return
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 argument_list|(
 name|None
 argument_list|)
 return|;
 block|}
 name|void
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 parameter_list|(
 name|unsigned
 name|ID1
 parameter_list|)
 block|{
 return|return
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 argument_list|(
 name|makeArrayRef
 argument_list|(
@@ -812,7 +803,7 @@ argument_list|)
 return|;
 block|}
 name|void
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 parameter_list|(
 name|unsigned
 name|ID1
@@ -832,12 +823,13 @@ name|ID2
 block|}
 decl_stmt|;
 return|return
-name|dropUnknownMetadata
+name|dropUnknownNonDebugMetadata
 argument_list|(
 name|IDs
 argument_list|)
 return|;
 block|}
+comment|/// @}
 comment|/// setAAMetadata - Sets the metadata on this instruction from the
 comment|/// AAMDNodes structure.
 name|void
@@ -1262,6 +1254,47 @@ name|mayReturn
 argument_list|()
 return|;
 block|}
+comment|/// \brief Return true if the instruction is a variety of EH-block.
+name|bool
+name|isEHPad
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+case|case
+name|Instruction
+operator|::
+name|CatchSwitch
+case|:
+case|case
+name|Instruction
+operator|::
+name|CatchPad
+case|:
+case|case
+name|Instruction
+operator|::
+name|CleanupPad
+case|:
+case|case
+name|Instruction
+operator|::
+name|LandingPad
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 comment|/// clone() - Create a copy of 'this' instruction that is identical in all
 comment|/// ways except the following:
 comment|///   * The instruction has no parent
@@ -1517,6 +1550,39 @@ file|"llvm/IR/Instruction.def"
 block|}
 enum|;
 enum|enum
+name|FuncletPadOps
+block|{
+define|#
+directive|define
+name|FIRST_FUNCLETPAD_INST
+parameter_list|(
+name|N
+parameter_list|)
+value|FuncletPadOpsBegin = N,
+define|#
+directive|define
+name|HANDLE_FUNCLETPAD_INST
+parameter_list|(
+name|N
+parameter_list|,
+name|OPC
+parameter_list|,
+name|CLASS
+parameter_list|)
+value|OPC = N,
+define|#
+directive|define
+name|LAST_FUNCLETPAD_INST
+parameter_list|(
+name|N
+parameter_list|)
+value|FuncletPadOpsEnd = N+1
+include|#
+directive|include
+file|"llvm/IR/Instruction.def"
+block|}
+enum|;
+enum|enum
 name|OtherOps
 block|{
 define|#
@@ -1614,8 +1680,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|Instruction
-operator|,
-name|BasicBlock
 operator|>
 expr_stmt|;
 name|void
@@ -1715,37 +1779,6 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-specifier|inline
-name|Instruction
-operator|*
-name|ilist_traits
-operator|<
-name|Instruction
-operator|>
-operator|::
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-comment|// Since i(p)lists always publicly derive from their corresponding traits,
-comment|// placing a data member in this class will augment the i(p)list.  But since
-comment|// the NodeTy is expected to be publicly derive from ilist_node<NodeTy>,
-comment|// there is a legal viable downcast from it to NodeTy. We use this trick to
-comment|// superimpose an i(p)list with a "ghostly" NodeTy, which becomes the
-comment|// sentinel. Dereferencing the sentinel is forbidden (save the
-comment|// ilist_node<NodeTy>), so no one will ever notice the superposition.
-return|return
-name|static_cast
-operator|<
-name|Instruction
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
 comment|// Instruction* is only 4-byte aligned.
 name|template
 operator|<

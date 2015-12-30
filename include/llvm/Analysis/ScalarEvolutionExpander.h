@@ -405,12 +405,18 @@ argument_list|()
 block|;     }
 comment|/// \brief Return true for expressions that may incur non-trivial cost to
 comment|/// evaluate at runtime.
+comment|///
+comment|/// At is an optional parameter which specifies point in code where user is
+comment|/// going to expand this expression. Sometimes this knowledge can lead to a
+comment|/// more accurate cost estimation.
 name|bool
 name|isHighCostExpansion
 argument_list|(
 argument|const SCEV *Expr
 argument_list|,
 argument|Loop *L
+argument_list|,
+argument|const Instruction *At = nullptr
 argument_list|)
 block|{
 name|SmallPtrSet
@@ -429,6 +435,8 @@ argument_list|(
 name|Expr
 argument_list|,
 name|L
+argument_list|,
+name|At
 argument_list|,
 name|Processed
 argument_list|)
@@ -530,6 +538,56 @@ parameter_list|,
 name|Instruction
 modifier|*
 name|I
+parameter_list|)
+function_decl|;
+comment|/// \brief Generates a code sequence that evaluates this predicate.
+comment|/// The inserted instructions will be at position \p Loc.
+comment|/// The result will be of type i1 and will have a value of 0 when the
+comment|/// predicate is false and 1 otherwise.
+name|Value
+modifier|*
+name|expandCodeForPredicate
+parameter_list|(
+specifier|const
+name|SCEVPredicate
+modifier|*
+name|Pred
+parameter_list|,
+name|Instruction
+modifier|*
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// \brief A specialized variant of expandCodeForPredicate, handling the
+comment|/// case when we are expanding code for a SCEVEqualPredicate.
+name|Value
+modifier|*
+name|expandEqualPredicate
+parameter_list|(
+specifier|const
+name|SCEVEqualPredicate
+modifier|*
+name|Pred
+parameter_list|,
+name|Instruction
+modifier|*
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// \brief A specialized variant of expandCodeForPredicate, handling the
+comment|/// case when we are expanding code for a SCEVUnionPredicate.
+name|Value
+modifier|*
+name|expandUnionPredicate
+parameter_list|(
+specifier|const
+name|SCEVUnionPredicate
+modifier|*
+name|Pred
+parameter_list|,
+name|Instruction
+modifier|*
+name|Loc
 parameter_list|)
 function_decl|;
 comment|/// \brief Set the current IV increment loop and position.
@@ -682,6 +740,33 @@ name|PN
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Try to find LLVM IR value for S available at the point At.
+comment|///
+comment|/// L is a hint which tells in which loop to look for the suitable value.
+comment|/// On success return value which is equivalent to the expanded S at point
+comment|/// At. Return nullptr if value was not found.
+comment|///
+comment|/// Note that this function does not perform an exhaustive search. I.e if it
+comment|/// didn't find any value it does not mean that there is no such value.
+name|Value
+modifier|*
+name|findExistingExpansion
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|At
+parameter_list|,
+name|Loop
+modifier|*
+name|L
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|LLVMContext
@@ -709,6 +794,11 @@ argument_list|,
 name|Loop
 operator|*
 name|L
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|At
 argument_list|,
 name|SmallPtrSetImpl
 operator|<

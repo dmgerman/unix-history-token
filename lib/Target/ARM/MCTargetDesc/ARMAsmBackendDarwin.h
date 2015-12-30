@@ -68,6 +68,11 @@ range|:
 name|public
 name|ARMAsmBackend
 block|{
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|MRI
+block|;
 name|public
 operator|:
 specifier|const
@@ -82,6 +87,8 @@ argument|const Target&T
 argument_list|,
 argument|const Triple&TT
 argument_list|,
+argument|const MCRegisterInfo&MRI
+argument_list|,
 argument|MachO::CPUSubTypeARM st
 argument_list|)
 operator|:
@@ -93,6 +100,11 @@ name|TT
 argument_list|,
 comment|/* IsLittleEndian */
 name|true
+argument_list|)
+block|,
+name|MRI
+argument_list|(
+name|MRI
 argument_list|)
 block|,
 name|Subtype
@@ -129,8 +141,16 @@ name|Subtype
 argument_list|)
 return|;
 block|}
-expr|}
+name|uint32_t
+name|generateCompactUnwindEncoding
+argument_list|(
+argument|ArrayRef<MCCFIInstruction> Instrs
+argument_list|)
+specifier|const
+name|override
 block|; }
+decl_stmt|;
+block|}
 end_block
 
 begin_endif

@@ -135,10 +135,12 @@ comment|/// this with a block that is not a successor.
 name|unsigned
 name|GetSuccessorNumber
 parameter_list|(
+specifier|const
 name|BasicBlock
 modifier|*
 name|BB
 parameter_list|,
+specifier|const
 name|BasicBlock
 modifier|*
 name|Succ

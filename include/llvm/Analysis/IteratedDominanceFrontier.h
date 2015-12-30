@@ -145,9 +145,14 @@ name|BasicBlock
 operator|>
 name|DomTreeNode
 expr_stmt|;
+name|template
+operator|<
 name|class
-name|DominatorTree
-decl_stmt|;
+name|T
+operator|>
+name|class
+name|DominatorTreeBase
+expr_stmt|;
 comment|/// \brief Determine the iterated dominance frontier, given a set of defining
 comment|/// blocks, and optionally, a set of live-in blocks.
 comment|///
@@ -163,7 +168,10 @@ name|public
 label|:
 name|IDFCalculator
 argument_list|(
-name|DominatorTree
+name|DominatorTreeBase
+operator|<
+name|BasicBlock
+operator|>
 operator|&
 name|DT
 argument_list|)
@@ -248,10 +256,13 @@ argument_list|)
 expr_stmt|;
 name|private
 label|:
-name|DominatorTree
-modifier|&
+name|DominatorTreeBase
+operator|<
+name|BasicBlock
+operator|>
+operator|&
 name|DT
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|useLiveIn
 decl_stmt|;

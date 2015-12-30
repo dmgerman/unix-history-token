@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
 end_include
 
@@ -96,6 +102,9 @@ name|Function
 decl_stmt|;
 name|class
 name|GlobalValue
+decl_stmt|;
+name|class
+name|Metadata
 decl_stmt|;
 name|class
 name|Module
@@ -118,21 +127,6 @@ operator|~
 name|GVMaterializer
 argument_list|()
 expr_stmt|;
-comment|/// True if GV has been materialized and can be dematerialized back to
-comment|/// whatever backing store this GVMaterializer uses.
-name|virtual
-name|bool
-name|isDematerializable
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 comment|/// Make sure the given GlobalValue is fully read.
 comment|///
 name|virtual
@@ -148,19 +142,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// If the given GlobalValue is read in, and if the GVMaterializer supports
-comment|/// it, release the memory for the GV, and set it up to be materialized
-comment|/// lazily. If the Materializer doesn't support this capability, this method
-comment|/// is a noop.
-comment|///
-name|virtual
-name|void
-name|dematerialize
-parameter_list|(
-name|GlobalValue
-modifier|*
-parameter_list|)
-block|{}
 comment|/// Make sure the entire Module has been completely read.
 comment|///
 name|virtual
@@ -168,11 +149,7 @@ name|std
 operator|::
 name|error_code
 name|materializeModule
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|)
+argument_list|()
 operator|=
 literal|0
 expr_stmt|;
@@ -192,6 +169,29 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|/// Client should define this interface if the mapping between metadata
+comment|/// values and value ids needs to be preserved, e.g. across materializer
+comment|/// instantiations. If OnlyTempMD is true, only those that have remained
+comment|/// temporary metadata are recorded in the map.
+name|virtual
+name|void
+name|saveMetadataList
+argument_list|(
+name|DenseMap
+operator|<
+specifier|const
+name|Metadata
+operator|*
+argument_list|,
+name|unsigned
+operator|>
+operator|&
+name|MetadataToIDs
+argument_list|,
+name|bool
+name|OnlyTempMD
+argument_list|)
+block|{}
 name|virtual
 name|std
 operator|::

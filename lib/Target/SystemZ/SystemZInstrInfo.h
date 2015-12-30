@@ -624,7 +624,7 @@ argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override
@@ -644,7 +644,7 @@ argument|unsigned NumCyclesF
 argument_list|,
 argument|unsigned ExtraPredCyclesF
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override

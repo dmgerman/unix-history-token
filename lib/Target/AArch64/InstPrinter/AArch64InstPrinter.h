@@ -68,28 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCInstPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MCOperand
-decl_stmt|;
 name|class
 name|AArch64InstPrinter
 range|:
@@ -228,6 +213,11 @@ specifier|const
 name|MCInst
 operator|*
 name|MI
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|,
 name|raw_ostream
 operator|&
@@ -603,6 +593,18 @@ argument_list|)
 block|;
 name|void
 name|printPrefetchOp
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printPSBHintOp
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

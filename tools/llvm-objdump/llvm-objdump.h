@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -81,8 +87,9 @@ extern|extern cl::opt<std::string> TripleName;
 extern|extern cl::opt<std::string> ArchName;
 extern|extern cl::opt<std::string> MCPU;
 extern|extern cl::list<std::string> MAttrs;
-extern|extern cl::list<std::string> DumpSections;
+extern|extern cl::list<std::string> FilterSections;
 extern|extern cl::opt<bool> Disassemble;
+extern|extern cl::opt<bool> DisassembleAll;
 extern|extern cl::opt<bool> NoShowRawInsn;
 extern|extern cl::opt<bool> PrivateHeaders;
 extern|extern cl::opt<bool> ExportsTrie;
@@ -109,7 +116,7 @@ extern|extern cl::opt<bool> SymbolTable;
 extern|extern cl::opt<bool> UnwindInfo;
 extern|extern cl::opt<bool> PrintImmHex;
 comment|// Various helper functions.
-name|bool
+name|void
 name|error
 argument_list|(
 name|std
@@ -239,6 +246,17 @@ name|o
 argument_list|)
 decl_stmt|;
 name|void
+name|printCOFFSymbolTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|COFFObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
 name|printMachOFileHeader
 argument_list|(
 specifier|const
@@ -357,6 +375,19 @@ operator|::
 name|ObjectFile
 operator|*
 name|o
+argument_list|)
+decl_stmt|;
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|report_error
+argument_list|(
+name|StringRef
+name|File
+argument_list|,
+name|std
+operator|::
+name|error_code
+name|EC
 argument_list|)
 decl_stmt|;
 block|}

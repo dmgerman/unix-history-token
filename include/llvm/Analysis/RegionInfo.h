@@ -197,7 +197,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// RegionTraits - Class to be specialized for different users of RegionInfo
+comment|// Class to be specialized for different users of RegionInfo
 comment|// (i.e. BasicBlocks or MachineBasicBlocks). This is only to avoid needing to
 comment|// pass around an unreasonable number of template parameters.
 name|template
@@ -1252,7 +1252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// verifyBBInRegion - Check if a BB is in this Region. This check also works
+comment|/// Check if a BB is in this Region. This check also works
 end_comment
 
 begin_comment
@@ -1272,7 +1272,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// verifyWalk - Walk over all the BBs of the region starting from BB and
+comment|/// Walk over all the BBs of the region starting from BB and
 end_comment
 
 begin_comment
@@ -1306,11 +1306,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// verifyRegionNest - Verify if the region and its children are valid
-end_comment
-
-begin_comment
-comment|/// regions (EXPENSIVE!)
+comment|/// Verify if the region and its children are valid regions (EXPENSIVE!)
 end_comment
 
 begin_expr_stmt
@@ -3362,7 +3358,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// isCommonDomFrontier - Returns true if BB is in the dominance frontier of
+comment|// Check whether the entries of BBtoRegion for the BBs of region
+end_comment
+
+begin_comment
+comment|// SR are correct. Triggers an assertion if not. Calls itself recursively for
+end_comment
+
+begin_comment
+comment|// subregions.
+end_comment
+
+begin_decl_stmt
+name|void
+name|verifyBBMap
+argument_list|(
+specifier|const
+name|RegionT
+operator|*
+name|SR
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Returns true if BB is in the dominance frontier of
 end_comment
 
 begin_comment
@@ -3394,7 +3415,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// isRegion - Check if entry and exit surround a valid region, based on
+comment|// Check if entry and exit surround a valid region, based on
 end_comment
 
 begin_comment
@@ -3418,7 +3439,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// insertShortCut - Saves a shortcut pointing from entry to exit.
+comment|// Saves a shortcut pointing from entry to exit.
 end_comment
 
 begin_comment
@@ -3446,7 +3467,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// getNextPostDom - Returns the next BB that postdominates N, while skipping
+comment|// Returns the next BB that postdominates N, while skipping
 end_comment
 
 begin_comment
@@ -3471,7 +3492,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// isTrivialRegion - A region is trivial, if it contains only one BB.
+comment|// A region is trivial, if it contains only one BB.
 end_comment
 
 begin_decl_stmt
@@ -3491,7 +3512,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// createRegion - Creates a single entry single exit region.
+comment|// Creates a single entry single exit region.
 end_comment
 
 begin_function_decl
@@ -3511,7 +3532,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// findRegionsWithEntry - Detect all regions starting with bb 'entry'.
+comment|// Detect all regions starting with bb 'entry'.
 end_comment
 
 begin_function_decl
@@ -3530,7 +3551,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// scanForRegions - Detects regions in F.
+comment|// Detects regions in F.
 end_comment
 
 begin_function_decl
@@ -3549,7 +3570,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// getTopMostParent - Get the top most parent with the same entry block.
+comment|// Get the top most parent with the same entry block.
 end_comment
 
 begin_function_decl
@@ -3565,7 +3586,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// buildRegionsTree - build the region hierarchy after all region detected.
+comment|// Build the region hierarchy after all region detected.
 end_comment
 
 begin_function_decl
@@ -3584,7 +3605,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// updateStatistics - Update statistic about created regions.
+comment|// Update statistic about created regions.
 end_comment
 
 begin_function_decl
@@ -3602,7 +3623,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// calculate - detect all regions in function and build the region tree.
+comment|// Detect all regions in function and build the region tree.
 end_comment
 
 begin_function_decl
@@ -3981,37 +4002,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @brief Update RegionInfo after a basic block was split.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param NewBB The basic block that was created before OldBB.
-end_comment
-
-begin_comment
-comment|/// @param OldBB The old basic block.
-end_comment
-
-begin_function_decl
-name|void
-name|splitBlock
-parameter_list|(
-name|BlockT
-modifier|*
-name|NewBB
-parameter_list|,
-name|BlockT
-modifier|*
-name|OldBB
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// @brief Clear the Node Cache for all Regions.
 end_comment
 
@@ -4240,7 +4230,28 @@ name|DominanceFrontier
 operator|*
 name|DF
 argument_list|)
-block|; }
+block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|/// @brief Opens a viewer to show the GraphViz visualization of the regions.
+comment|///
+comment|/// Useful during debugging as an alternative to dump().
+name|void
+name|view
+argument_list|()
+block|;
+comment|/// @brief Opens a viewer to show the GraphViz visualization of this region
+comment|/// without instructions in the BasicBlocks.
+comment|///
+comment|/// Useful during debugging as an alternative to dump().
+name|void
+name|viewOnly
+argument_list|()
+block|;
+endif|#
+directive|endif
+block|}
 block|;
 name|class
 name|RegionInfoPass

@@ -767,17 +767,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|arg_begin
 argument_list|()
-operator|,
+argument_list|,
 name|arg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if the call or the callee has the given attribute.
@@ -942,17 +939,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|gc_transition_args_begin
 argument_list|()
-operator|,
+argument_list|,
 name|gc_transition_args_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Number of additional arguments excluding those intended
@@ -1065,17 +1059,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|vm_state_begin
 argument_list|()
-operator|,
+argument_list|,
 name|vm_state_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|typename
@@ -1107,6 +1098,22 @@ name|arg_end
 argument_list|()
 return|;
 block|}
+name|unsigned
+name|gcArgsStartIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|gc_args_begin
+argument_list|()
+operator|-
+name|getInstruction
+argument_list|()
+operator|->
+name|op_begin
+argument_list|()
+return|;
+block|}
 comment|/// range adapter for gc arguments
 name|iterator_range
 operator|<
@@ -1117,17 +1124,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|gc_args_begin
 argument_list|()
-operator|,
+argument_list|,
 name|gc_args_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Get list of all gc reloactes linked to this statepoint
@@ -1526,7 +1530,7 @@ block|;
 return|return
 name|isa
 operator|<
-name|ExtractValueInst
+name|LandingPadInst
 operator|>
 operator|(
 name|Token
@@ -1576,7 +1580,7 @@ condition|(
 operator|!
 name|isa
 operator|<
-name|ExtractValueInst
+name|LandingPadInst
 operator|>
 operator|(
 name|Token
@@ -1877,11 +1881,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Search for extract value from landingpad instruction to which
-end_comment
-
-begin_comment
-comment|// gc relocates will be attached
+comment|// Search for gc relocates that are attached to this landingpad.
 end_comment
 
 begin_for
@@ -1900,34 +1900,9 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|isa
-operator|<
-name|ExtractValueInst
-operator|>
-operator|(
-name|LandingPadUser
-operator|)
-condition|)
-continue|continue;
-comment|// gc relocates should be attached to this extract value
-for|for
-control|(
-specifier|const
-name|User
-modifier|*
-name|U
-range|:
-name|LandingPadUser
-operator|->
-name|users
-argument_list|()
-control|)
-if|if
-condition|(
 name|isGCRelocate
 argument_list|(
-name|U
+name|LandingPadUser
 argument_list|)
 condition|)
 name|Result
@@ -1936,7 +1911,7 @@ name|push_back
 argument_list|(
 name|GCRelocateOperands
 argument_list|(
-name|U
+name|LandingPadUser
 argument_list|)
 argument_list|)
 expr_stmt|;

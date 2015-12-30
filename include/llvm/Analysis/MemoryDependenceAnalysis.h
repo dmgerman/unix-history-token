@@ -124,9 +124,6 @@ name|class
 name|CallSite
 decl_stmt|;
 name|class
-name|AliasAnalysis
-decl_stmt|;
-name|class
 name|AssumptionCache
 decl_stmt|;
 name|class
@@ -1283,6 +1280,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|PredIteratorCache
 name|PredCache
 decl_stmt|;
@@ -1581,27 +1586,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getPointerDependencyFrom - Return the instruction on which a memory
+comment|/// \brief Return the instruction on which a memory location depends.
 end_comment
 
 begin_comment
-comment|/// location depends.  If isLoad is true, this routine ignores may-aliases
+comment|/// If isLoad is true, this routine ignores may-aliases with read-only
 end_comment
 
 begin_comment
-comment|/// with read-only operations.  If isLoad is false, this routine ignores
+comment|/// operations.  If isLoad is false, this routine ignores may-aliases
 end_comment
 
 begin_comment
-comment|/// may-aliases with reads from read-only locations. If possible, pass
+comment|/// with reads from read-only locations. If possible, pass the query
 end_comment
 
 begin_comment
-comment|/// the query instruction as well; this function may take advantage of
+comment|/// instruction as well; this function may take advantage of the metadata
 end_comment
 
 begin_comment
-comment|/// the metadata annotated to the query instruction to refine the result.
+comment|/// annotated to the query instruction to refine the result.
 end_comment
 
 begin_comment
@@ -1645,6 +1650,73 @@ name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|MemDepResult
+name|getSimplePointerDependencyFrom
+argument_list|(
+specifier|const
+name|MemoryLocation
+operator|&
+name|MemLoc
+argument_list|,
+name|bool
+name|isLoad
+argument_list|,
+name|BasicBlock
+operator|::
+name|iterator
+name|ScanIt
+argument_list|,
+name|BasicBlock
+operator|*
+name|BB
+argument_list|,
+name|Instruction
+operator|*
+name|QueryInst
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// This analysis looks for other loads and stores with invariant.group
+end_comment
+
+begin_comment
+comment|/// metadata and the same pointer operand. Returns Unknown if it does not
+end_comment
+
+begin_comment
+comment|/// find anything, and Def if it can be assumed that 2 instructions load or
+end_comment
+
+begin_comment
+comment|/// store the same value.
+end_comment
+
+begin_comment
+comment|/// FIXME: This analysis works only on single block because of restrictions
+end_comment
+
+begin_comment
+comment|/// at the call site.
+end_comment
+
+begin_function_decl
+name|MemDepResult
+name|getInvariantGroupPointerDependency
+parameter_list|(
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// getLoadLoadClobberFullWidthSize - This is a little bit of analysis that

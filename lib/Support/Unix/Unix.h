@@ -139,6 +139,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -199,23 +205,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SYS_WAIT_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_DLFCN_H
 end_ifdef
 
@@ -224,48 +213,6 @@ include|#
 directive|include
 file|<dlfcn.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WEXITSTATUS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WEXITSTATUS
-parameter_list|(
-name|stat_val
-parameter_list|)
-value|((unsigned)(stat_val)>> 8)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIFEXITED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WIFEXITED
-parameter_list|(
-name|stat_val
-parameter_list|)
-value|(((stat_val)& 255) == 0)
-end_define
 
 begin_endif
 endif|#

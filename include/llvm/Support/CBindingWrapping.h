@@ -65,6 +65,12 @@ directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm-c/Types.h"
+end_include
+
 begin_define
 define|#
 directive|define

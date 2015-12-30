@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
+file|"llvm-c/Types.h"
 end_include
 
 begin_ifdef
@@ -34,7 +34,7 @@ block|{
 endif|#
 directive|endif
 comment|/**  * @defgroup LLVMCBitReader Bit Reader  * @ingroup LLVMC  *  * @{  */
-comment|/* Builds a module from the bitcode in the specified memory buffer, returning a    reference to the module via the OutModule parameter. Returns 0 on success.    Optionally returns a human-readable error message via OutMessage. */
+comment|/* Builds a module from the bitcode in the specified memory buffer, returning a    reference to the module via the OutModule parameter. Returns 0 on success.    Optionally returns a human-readable error message via OutMessage.     This is deprecated. Use LLVMParseBitcode2. */
 name|LLVMBool
 name|LLVMParseBitcode
 parameter_list|(
@@ -51,6 +51,19 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
+comment|/* Builds a module from the bitcode in the specified memory buffer, returning a    reference to the module via the OutModule parameter. Returns 0 on success. */
+name|LLVMBool
+name|LLVMParseBitcode2
+parameter_list|(
+name|LLVMMemoryBufferRef
+name|MemBuf
+parameter_list|,
+name|LLVMModuleRef
+modifier|*
+name|OutModule
+parameter_list|)
+function_decl|;
+comment|/* This is deprecated. Use LLVMParseBitcodeInContext2. */
 name|LLVMBool
 name|LLVMParseBitcodeInContext
 parameter_list|(
@@ -70,7 +83,21 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
-comment|/** Reads a module from the specified path, returning via the OutMP parameter     a module provider which performs lazy deserialization. Returns 0 on success.     Optionally returns a human-readable error message via OutMessage. */
+name|LLVMBool
+name|LLVMParseBitcodeInContext2
+parameter_list|(
+name|LLVMContextRef
+name|ContextRef
+parameter_list|,
+name|LLVMMemoryBufferRef
+name|MemBuf
+parameter_list|,
+name|LLVMModuleRef
+modifier|*
+name|OutModule
+parameter_list|)
+function_decl|;
+comment|/** Reads a module from the specified path, returning via the OutMP parameter     a module provider which performs lazy deserialization. Returns 0 on success.     Optionally returns a human-readable error message via OutMessage.     This is deprecated. Use LLVMGetBitcodeModuleInContext2. */
 name|LLVMBool
 name|LLVMGetBitcodeModuleInContext
 parameter_list|(
@@ -90,6 +117,22 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
+comment|/** Reads a module from the specified path, returning via the OutMP parameter a  * module provider which performs lazy deserialization. Returns 0 on success. */
+name|LLVMBool
+name|LLVMGetBitcodeModuleInContext2
+parameter_list|(
+name|LLVMContextRef
+name|ContextRef
+parameter_list|,
+name|LLVMMemoryBufferRef
+name|MemBuf
+parameter_list|,
+name|LLVMModuleRef
+modifier|*
+name|OutM
+parameter_list|)
+function_decl|;
+comment|/* This is deprecated. Use LLVMGetBitcodeModule2. */
 name|LLVMBool
 name|LLVMGetBitcodeModule
 parameter_list|(
@@ -106,41 +149,15 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
-comment|/** Deprecated: Use LLVMGetBitcodeModuleInContext instead. */
 name|LLVMBool
-name|LLVMGetBitcodeModuleProviderInContext
-parameter_list|(
-name|LLVMContextRef
-name|ContextRef
-parameter_list|,
-name|LLVMMemoryBufferRef
-name|MemBuf
-parameter_list|,
-name|LLVMModuleProviderRef
-modifier|*
-name|OutMP
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|OutMessage
-parameter_list|)
-function_decl|;
-comment|/** Deprecated: Use LLVMGetBitcodeModule instead. */
-name|LLVMBool
-name|LLVMGetBitcodeModuleProvider
+name|LLVMGetBitcodeModule2
 parameter_list|(
 name|LLVMMemoryBufferRef
 name|MemBuf
 parameter_list|,
-name|LLVMModuleProviderRef
+name|LLVMModuleRef
 modifier|*
-name|OutMP
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|OutMessage
+name|OutM
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

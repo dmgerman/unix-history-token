@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/ConstantRange.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instruction.h"
 end_include
 
@@ -86,34 +92,40 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Value
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
 name|APInt
 decl_stmt|;
 name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|MDNode
+name|AddOperator
 decl_stmt|;
 name|class
 name|AssumptionCache
 decl_stmt|;
 name|class
+name|DataLayout
+decl_stmt|;
+name|class
 name|DominatorTree
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|Loop
+decl_stmt|;
+name|class
+name|LoopInfo
+decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|LoopInfo
+name|Value
 decl_stmt|;
 comment|/// Determine which bits of V are known to be either zero or one and return
 comment|/// them in the KnownZero/KnownOne bit sets.
@@ -171,6 +183,7 @@ parameter_list|)
 function_decl|;
 comment|/// Compute known bits from the range metadata.
 comment|/// \p KnownZero the set of bits that are known to be zero
+comment|/// \p KnownOne the set of bits that are known to be one
 name|void
 name|computeKnownBitsFromRangeMetadata
 parameter_list|(
@@ -182,9 +195,13 @@ parameter_list|,
 name|APInt
 modifier|&
 name|KnownZero
+parameter_list|,
+name|APInt
+modifier|&
+name|KnownOne
 parameter_list|)
 function_decl|;
-comment|/// Returns true if LHS and RHS have no common bits set.
+comment|/// Return true if LHS and RHS have no common bits set.
 name|bool
 name|haveNoCommonBitsSet
 parameter_list|(
@@ -274,7 +291,7 @@ comment|/// isKnownToBeAPowerOfTwo - Return true if the given value is known to 
 comment|/// exactly one bit set when defined. For vectors return true if every
 comment|/// element is known to be a power of two when defined.  Supports values with
 comment|/// integer or pointer type and vectors of integers.  If 'OrZero' is set then
-comment|/// returns true if the given value is either a power of two or zero.
+comment|/// return true if the given value is either a power of two or zero.
 name|bool
 name|isKnownToBeAPowerOfTwo
 parameter_list|(
@@ -338,6 +355,84 @@ name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the give value is known to be non-negative.
+name|bool
+name|isKnownNonNegative
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// isKnownNonEqual - Return true if the given values are known to be
+comment|/// non-equal when defined. Supports scalar integer types only.
+name|bool
+name|isKnownNonEqual
+parameter_list|(
+name|Value
+modifier|*
+name|V1
+parameter_list|,
+name|Value
+modifier|*
+name|V2
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|,
 name|AssumptionCache
 modifier|*
@@ -839,6 +934,48 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Returns true if V is always a dereferenceable pointer with alignment
+comment|/// greater or equal than requested. If the context instruction is specified
+comment|/// performs context-sensitive analysis and returns true if the pointer is
+comment|/// dereferenceable at the specified instruction.
+name|bool
+name|isDereferenceableAndAlignedPointer
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
 comment|/// have any effects besides calculating the result and does not have
 comment|/// undefined behavior.
@@ -891,6 +1028,23 @@ modifier|*
 name|TLI
 init|=
 name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the result or effects of the given instructions \p I
+comment|/// depend on or influence global memory.
+comment|/// Memory dependence arises for example if the instruction reads from
+comment|/// memory or may produce effects or undefined behaviour. Memory dependent
+comment|/// instructions generally cannot be reorderd with respect to other memory
+comment|/// dependent instructions or moved into non-dominated basic blocks.
+comment|/// Instructions which just compute a value based on the values of their
+comment|/// operands are not memory dependent.
+name|bool
+name|mayBeMemoryDependent
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|&
+name|I
 parameter_list|)
 function_decl|;
 comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
@@ -1043,6 +1197,164 @@ modifier|*
 name|DT
 parameter_list|)
 function_decl|;
+name|OverflowResult
+name|computeOverflowForSignedAdd
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// This version also leverages the sign bit of Add if known.
+name|OverflowResult
+name|computeOverflowForSignedAdd
+parameter_list|(
+name|AddOperator
+modifier|*
+name|Add
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Return true if this function can prove that the instruction I will
+comment|/// always transfer execution to one of its successors (including the next
+comment|/// instruction that follows within a basic block). E.g. this is not
+comment|/// guaranteed for function calls that could loop infinitely.
+comment|///
+comment|/// In other words, this function returns false for instructions that may
+comment|/// transfer execution or fail to transfer execution in a way that is not
+comment|/// captured in the CFG nor in the sequence of instructions within a basic
+comment|/// block.
+comment|///
+comment|/// Undefined behavior is assumed not to happen, so e.g. division is
+comment|/// guaranteed to transfer execution to the following instruction even
+comment|/// though division by zero might cause undefined behavior.
+name|bool
+name|isGuaranteedToTransferExecutionToSuccessor
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
+comment|/// Return true if this function can prove that the instruction I
+comment|/// is executed for every iteration of the loop L.
+comment|///
+comment|/// Note that this currently only considers the loop header.
+name|bool
+name|isGuaranteedToExecuteForEveryIteration
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|)
+function_decl|;
+comment|/// Return true if this function can prove that I is guaranteed to yield
+comment|/// full-poison (all bits poison) if at least one of its operands are
+comment|/// full-poison (all bits poison).
+comment|///
+comment|/// The exact rules for how poison propagates through instructions have
+comment|/// not been settled as of 2015-07-10, so this function is conservative
+comment|/// and only considers poison to be propagated in uncontroversial
+comment|/// cases. There is no attempt to track values that may be only partially
+comment|/// poison.
+name|bool
+name|propagatesFullPoison
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
+comment|/// Return either nullptr or an operand of I such that I will trigger
+comment|/// undefined behavior if I is executed and that operand has a full-poison
+comment|/// value (all bits poison).
+specifier|const
+name|Value
+modifier|*
+name|getGuaranteedNonFullPoisonOp
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
+comment|/// Return true if this function can prove that if PoisonI is executed
+comment|/// and yields a full-poison value (all bits poison), then that will
+comment|/// trigger undefined behavior.
+comment|///
+comment|/// Note that this currently only considers the basic block that is
+comment|/// the parent of I.
+name|bool
+name|isKnownNotFullPoison
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|PoisonI
+parameter_list|)
+function_decl|;
 comment|/// \brief Specific patterns of select instructions we can match.
 enum|enum
 name|SelectPatternFlavor
@@ -1053,23 +1365,96 @@ literal|0
 block|,
 name|SPF_SMIN
 block|,
-comment|// Signed minimum
+comment|/// Signed minimum
 name|SPF_UMIN
 block|,
-comment|// Unsigned minimum
+comment|/// Unsigned minimum
 name|SPF_SMAX
 block|,
-comment|// Signed maximum
+comment|/// Signed maximum
 name|SPF_UMAX
 block|,
-comment|// Unsigned maximum
+comment|/// Unsigned maximum
+name|SPF_FMINNUM
+block|,
+comment|/// Floating point minnum
+name|SPF_FMAXNUM
+block|,
+comment|/// Floating point maxnum
 name|SPF_ABS
 block|,
-comment|// Absolute value
+comment|/// Absolute value
 name|SPF_NABS
-comment|// Negated absolute value
+comment|/// Negated absolute value
 block|}
 enum|;
+comment|/// \brief Behavior when a floating point min/max is given one NaN and one
+comment|/// non-NaN as input.
+enum|enum
+name|SelectPatternNaNBehavior
+block|{
+name|SPNB_NA
+init|=
+literal|0
+block|,
+comment|/// NaN behavior not applicable.
+name|SPNB_RETURNS_NAN
+block|,
+comment|/// Given one NaN input, returns the NaN.
+name|SPNB_RETURNS_OTHER
+block|,
+comment|/// Given one NaN input, returns the non-NaN.
+name|SPNB_RETURNS_ANY
+comment|/// Given one NaN input, can return either (or
+comment|/// it has been determined that no operands can
+comment|/// be NaN).
+block|}
+enum|;
+struct|struct
+name|SelectPatternResult
+block|{
+name|SelectPatternFlavor
+name|Flavor
+decl_stmt|;
+name|SelectPatternNaNBehavior
+name|NaNBehavior
+decl_stmt|;
+comment|/// Only applicable if Flavor is
+comment|/// SPF_FMINNUM or SPF_FMAXNUM.
+name|bool
+name|Ordered
+decl_stmt|;
+comment|/// When implementing this min/max pattern as
+comment|/// fcmp; select, does the fcmp have to be
+comment|/// ordered?
+comment|/// \brief Return true if \p SPF is a min or a max pattern.
+specifier|static
+name|bool
+name|isMinOrMax
+parameter_list|(
+name|SelectPatternFlavor
+name|SPF
+parameter_list|)
+block|{
+return|return
+operator|!
+operator|(
+name|SPF
+operator|==
+name|SPF_UNKNOWN
+operator|||
+name|SPF
+operator|==
+name|SPF_ABS
+operator|||
+name|SPF
+operator|==
+name|SPF_NABS
+operator|)
+return|;
+block|}
+block|}
+struct|;
 comment|/// Pattern match integer [SU]MIN, [SU]MAX and ABS idioms, returning the kind
 comment|/// and providing the out parameter results if we successfully match.
 comment|///
@@ -1085,7 +1470,7 @@ comment|///   %3 = select i1 %1, i64 %2, i64 4
 comment|///
 comment|/// -> LHS = %a, RHS = i32 4, *CastOp = Instruction::SExt
 comment|///
-name|SelectPatternFlavor
+name|SelectPatternResult
 name|matchSelectPattern
 argument_list|(
 name|Value
@@ -1111,6 +1496,67 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
+comment|/// Parse out a conservative ConstantRange from !range metadata.
+comment|///
+comment|/// E.g. if RangeMD is !{i32 0, i32 10, i32 15, i32 20} then return [0, 20).
+name|ConstantRange
+name|getConstantRangeFromMetadata
+parameter_list|(
+name|MDNode
+modifier|&
+name|RangeMD
+parameter_list|)
+function_decl|;
+comment|/// Return true if RHS is known to be implied by LHS.  A& B must be i1
+comment|/// (boolean) values or a vector of such values. Note that the truth table for
+comment|/// implication is the same as<=u on i1 values (but not<=s!).  The truth
+comment|/// table for both is:
+comment|///    | T | F (B)
+comment|///  T | T | F
+comment|///  F | T | T
+comment|/// (A)
+name|bool
+name|isImpliedCondition
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

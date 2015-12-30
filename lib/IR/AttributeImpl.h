@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/TrailingObjects.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -585,10 +591,22 @@ comment|/// \brief This class represents a group of attributes that apply to one
 comment|/// element: function, return type, or parameter.
 name|class
 name|AttributeSetNode
+name|final
 operator|:
 name|public
 name|FoldingSetNode
+block|,
+name|private
+name|TrailingObjects
+operator|<
+name|AttributeSetNode
+block|,
+name|Attribute
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
 name|unsigned
 name|NumAttrs
 block|;
@@ -622,15 +640,11 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Attribute
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 argument_list|)
 block|;   }
@@ -753,14 +767,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-name|iterator
+name|Attribute
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -840,41 +851,6 @@ expr_stmt|;
 block|}
 expr|}
 block|;
-name|static_assert
-argument_list|(
-name|AlignOf
-operator|<
-name|AttributeSetNode
-operator|>
-operator|::
-name|Alignment
-operator|>=
-name|AlignOf
-operator|<
-name|Attribute
-operator|>
-operator|::
-name|Alignment
-argument_list|,
-literal|"Alignment is insufficient for objects appended to AttributeSetNode"
-argument_list|)
-block|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// \class
-comment|/// \brief This class represents a set of attributes that apply to the function,
-comment|/// return type, and parameters.
-name|class
-name|AttributeSetImpl
-operator|:
-name|public
-name|FoldingSetNode
-block|{
-name|friend
-name|class
-name|AttributeSet
-block|;
-name|public
-operator|:
 typedef|typedef
 name|std
 operator|::
@@ -887,6 +863,32 @@ operator|*
 operator|>
 name|IndexAttrPair
 expr_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// \class
+comment|/// \brief This class represents a set of attributes that apply to the function,
+comment|/// return type, and parameters.
+name|class
+name|AttributeSetImpl
+name|final
+operator|:
+name|public
+name|FoldingSetNode
+block|,
+name|private
+name|TrailingObjects
+operator|<
+name|AttributeSetImpl
+block|,
+name|IndexAttrPair
+operator|>
+block|{
+name|friend
+name|class
+name|AttributeSet
+block|;
+name|friend
+name|TrailingObjects
+block|;
 name|private
 operator|:
 name|LLVMContext
@@ -897,6 +899,17 @@ name|unsigned
 name|NumAttrs
 block|;
 comment|///< Number of entries in this set.
+comment|// Helper fn for TrailingObjects class.
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<IndexAttrPair>
+argument_list|)
+block|{
+return|return
+name|NumAttrs
+return|;
+block|}
 comment|/// \brief Return a pointer to the IndexAttrPair for the specified slot.
 specifier|const
 name|IndexAttrPair
@@ -908,16 +921,11 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|IndexAttrPair
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 operator|+
 name|Slot
@@ -1064,15 +1072,11 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|IndexAttrPair
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1296,27 +1300,6 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-block|;
-name|static_assert
-argument_list|(
-name|AlignOf
-operator|<
-name|AttributeSetImpl
-operator|>
-operator|::
-name|Alignment
-operator|>=
-name|AlignOf
-operator|<
-name|AttributeSetImpl
-operator|::
-name|IndexAttrPair
-operator|>
-operator|::
-name|Alignment
-argument_list|,
-literal|"Alignment is insufficient for objects appended to AttributeSetImpl"
-argument_list|)
 block|;  }
 end_decl_stmt
 

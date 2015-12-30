@@ -105,7 +105,7 @@ name|Triple
 operator|&
 name|TheTriple
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|ARMELFMCAsmInfo
@@ -135,7 +135,7 @@ argument_list|(
 argument|bool Value
 argument_list|)
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|ARMCOFFMCAsmInfoMicrosoft
@@ -153,7 +153,7 @@ operator|:
 name|explicit
 name|ARMCOFFMCAsmInfoMicrosoft
 argument_list|()
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|ARMCOFFMCAsmInfoGNU
@@ -171,7 +171,7 @@ operator|:
 name|explicit
 name|ARMCOFFMCAsmInfoGNU
 argument_list|()
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

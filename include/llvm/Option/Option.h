@@ -658,6 +658,15 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
 name|dump
 argument_list|()
 specifier|const

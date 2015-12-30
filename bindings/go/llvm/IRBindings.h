@@ -250,6 +250,16 @@ name|LLVMMetadataRef
 name|InlinedAt
 parameter_list|)
 function_decl|;
+name|void
+name|LLVMSetSubprogram
+parameter_list|(
+name|LLVMValueRef
+name|Fn
+parameter_list|,
+name|LLVMMetadataRef
+name|SP
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

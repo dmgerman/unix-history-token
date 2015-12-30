@@ -311,6 +311,38 @@ operator|::
 name|i32
 return|;
 block|}
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to an EH pad.
+name|unsigned
+name|getExceptionPointerRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|SP
+operator|::
+name|I0
+return|;
+block|}
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
+name|unsigned
+name|getExceptionSelectorRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|SP
+operator|::
+name|I1
+return|;
+block|}
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|EVT
 name|getSetCCResultType

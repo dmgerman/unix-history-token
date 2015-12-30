@@ -1791,6 +1791,8 @@ name|Traits
 operator|::
 name|InstrIsPHI
 argument_list|(
+operator|&
+operator|*
 name|BBI
 argument_list|)
 decl_stmt|;

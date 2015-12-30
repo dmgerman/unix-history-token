@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DebugLocStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -79,9 +85,6 @@ name|llvm
 block|{
 name|class
 name|AsmPrinter
-decl_stmt|;
-name|class
-name|DebugLocStream
 decl_stmt|;
 comment|/// \brief This struct describes location entries emitted in the .debug_loc
 comment|/// section.

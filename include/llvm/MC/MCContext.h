@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSubtargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -253,6 +259,24 @@ comment|/// objects.
 name|BumpPtrAllocator
 name|Allocator
 decl_stmt|;
+name|SpecificBumpPtrAllocator
+operator|<
+name|MCSectionCOFF
+operator|>
+name|COFFAllocator
+expr_stmt|;
+name|SpecificBumpPtrAllocator
+operator|<
+name|MCSectionELF
+operator|>
+name|ELFAllocator
+expr_stmt|;
+name|SpecificBumpPtrAllocator
+operator|<
+name|MCSectionMachO
+operator|>
+name|MachOAllocator
+expr_stmt|;
 comment|/// Bindings of names to symbols.
 name|SymbolTable
 name|Symbols
@@ -347,10 +371,14 @@ modifier|*
 name|SecureLogFile
 decl_stmt|;
 comment|/// The stream that gets written to for the .secure_log_unique directive.
-name|raw_ostream
-modifier|*
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_fd_ostream
+operator|>
 name|SecureLog
-decl_stmt|;
+expr_stmt|;
 comment|/// Boolean toggled when .secure_log_unique / .secure_log_reset is seen to
 comment|/// catch errors if .secure_log_unique appears twice without
 comment|/// .secure_log_reset appearing between them.
@@ -677,6 +705,15 @@ name|ELFRelSecNames
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SpecificBumpPtrAllocator
+operator|<
+name|MCSubtargetInfo
+operator|>
+name|MCSubtargetAllocator
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// Do automatic reset in destructor
 end_comment
@@ -684,6 +721,12 @@ end_comment
 begin_decl_stmt
 name|bool
 name|AutoReset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|HadError
 decl_stmt|;
 end_decl_stmt
 
@@ -1666,6 +1709,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|// Create and save a copy of STI and return a reference to the copy.
+end_comment
+
+begin_function_decl
+name|MCSubtargetInfo
+modifier|&
+name|getSubtargetCopy
+parameter_list|(
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @}
 end_comment
 
@@ -2408,13 +2468,16 @@ block|}
 end_function
 
 begin_function
-name|raw_ostream
+name|raw_fd_ostream
 modifier|*
 name|getSecureLog
 parameter_list|()
 block|{
 return|return
 name|SecureLog
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 end_function
@@ -2430,21 +2493,30 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|void
 name|setSecureLog
-parameter_list|(
-name|raw_ostream
-modifier|*
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_fd_ostream
+operator|>
 name|Value
-parameter_list|)
+argument_list|)
 block|{
 name|SecureLog
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|Value
+argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void
@@ -2499,6 +2571,32 @@ parameter_list|)
 block|{}
 end_function
 
+begin_function
+name|bool
+name|hadError
+parameter_list|()
+block|{
+return|return
+name|HadError
+return|;
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|reportError
+parameter_list|(
+name|SMLoc
+name|L
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// Unrecoverable error has occurred. Display the best diagnostic we can
 end_comment
@@ -2511,22 +2609,21 @@ begin_comment
 comment|// FIXME: We should really do something about that.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|reportFatalError
-argument_list|(
+parameter_list|(
 name|SMLoc
 name|L
-argument_list|,
+parameter_list|,
 specifier|const
 name|Twine
-operator|&
+modifier|&
 name|Msg
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};  }
@@ -2650,8 +2747,7 @@ name|Alignment
 operator|=
 literal|8
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 block|{
 return|return
 name|C
@@ -2708,8 +2804,7 @@ name|C
 argument_list|,
 name|size_t
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 block|{
 name|C
 operator|.
@@ -2819,8 +2914,7 @@ name|Alignment
 operator|=
 literal|8
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 block|{
 return|return
 name|C
@@ -2876,8 +2970,7 @@ name|MCContext
 operator|&
 name|C
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 block|{
 name|C
 operator|.

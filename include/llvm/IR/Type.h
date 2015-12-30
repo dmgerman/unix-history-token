@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/APFloat.h"
 end_include
 
@@ -194,25 +188,28 @@ comment|///<  8: Metadata
 name|X86_MMXTyID
 block|,
 comment|///<  9: MMX vectors (64 bits, X86 specific)
+name|TokenTyID
+block|,
+comment|///< 10: Tokens
 comment|// Derived types... see DerivedTypes.h file.
 comment|// Make sure FirstDerivedTyID stays up to date!
 name|IntegerTyID
 block|,
-comment|///< 10: Arbitrary bit width integers
+comment|///< 11: Arbitrary bit width integers
 name|FunctionTyID
 block|,
-comment|///< 11: Functions
+comment|///< 12: Functions
 name|StructTyID
 block|,
-comment|///< 12: Structures
+comment|///< 13: Structures
 name|ArrayTyID
 block|,
-comment|///< 13: Arrays
+comment|///< 14: Arrays
 name|PointerTyID
 block|,
-comment|///< 14: Pointers
+comment|///< 15: Pointers
 name|VectorTyID
-comment|///< 15: SIMD 'packed' format, or other vector type
+comment|///< 16: SIMD 'packed' format, or other vector type
 block|}
 enum|;
 name|private
@@ -222,13 +219,18 @@ name|LLVMContext
 modifier|&
 name|Context
 decl_stmt|;
-comment|// Due to Ubuntu GCC bug 910363:
-comment|// https://bugs.launchpad.net/ubuntu/+source/gcc-4.5/+bug/910363
-comment|// Bitpack ID and SubclassData manually.
-comment|// Note: TypeID : low 8 bit; SubclassData : high 24 bit.
-name|uint32_t
-name|IDAndSubclassData
+name|TypeID
+name|ID
+range|:
+literal|8
 decl_stmt|;
+comment|// The current base type of this type.
+name|unsigned
+name|SubclassData
+range|:
+literal|24
+decl_stmt|;
+comment|// Space for subclasses to store data.
 name|protected
 label|:
 name|friend
@@ -248,7 +250,12 @@ argument_list|(
 name|C
 argument_list|)
 operator|,
-name|IDAndSubclassData
+name|ID
+argument_list|(
+name|tid
+argument_list|)
+operator|,
+name|SubclassData
 argument_list|(
 literal|0
 argument_list|)
@@ -262,59 +269,20 @@ name|ContainedTys
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{
-name|setTypeID
-argument_list|(
-name|tid
-argument_list|)
-block|;   }
+block|{}
 operator|~
 name|Type
 argument_list|()
 operator|=
 expr|default
 expr_stmt|;
-name|void
-name|setTypeID
-parameter_list|(
-name|TypeID
-name|ID
-parameter_list|)
-block|{
-name|IDAndSubclassData
-operator|=
-operator|(
-name|ID
-operator|&
-literal|0xFF
-operator|)
-operator||
-operator|(
-name|IDAndSubclassData
-operator|&
-literal|0xFFFFFF00
-operator|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|getTypeID
-argument_list|()
-operator|==
-name|ID
-operator|&&
-literal|"TypeID data too large for field"
-argument_list|)
-expr_stmt|;
-block|}
 name|unsigned
 name|getSubclassData
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IDAndSubclassData
-operator|>>
-literal|8
+name|SubclassData
 return|;
 block|}
 name|void
@@ -324,19 +292,9 @@ name|unsigned
 name|val
 parameter_list|)
 block|{
-name|IDAndSubclassData
+name|SubclassData
 operator|=
-operator|(
-name|IDAndSubclassData
-operator|&
-literal|0xFF
-operator|)
-operator||
-operator|(
 name|val
-operator|<<
-literal|8
-operator|)
 expr_stmt|;
 comment|// Ensure we don't have any accidental truncation.
 name|assert
@@ -374,6 +332,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|O
+argument_list|,
+name|bool
+name|IsForDebug
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -405,14 +368,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-call|(
-name|TypeID
-call|)
-argument_list|(
-name|IDAndSubclassData
-operator|&
-literal|0xFF
-argument_list|)
+name|ID
 return|;
 block|}
 comment|/// isVoidTy - Return true if this is 'void'.
@@ -668,6 +624,19 @@ operator|==
 name|MetadataTyID
 return|;
 block|}
+comment|/// isTokenTy - Return true if this is 'token'.
+name|bool
+name|isTokenTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeID
+argument_list|()
+operator|==
+name|TokenTyID
+return|;
+block|}
 comment|/// isIntegerTy - True if this is an instance of IntegerType.
 comment|///
 name|bool
@@ -891,7 +860,6 @@ name|isSized
 argument_list|(
 name|SmallPtrSetImpl
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -991,18 +959,11 @@ specifier|const
 expr_stmt|;
 comment|/// getScalarType - If this is a vector type, return the element type,
 comment|/// otherwise return 'this'.
-specifier|const
 name|Type
 operator|*
 name|getScalarType
 argument_list|()
 specifier|const
-name|LLVM_READONLY
-expr_stmt|;
-name|Type
-operator|*
-name|getScalarType
-argument_list|()
 name|LLVM_READONLY
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -1138,11 +1099,13 @@ comment|// the specified subclass and calls its accessor.  "getVectorNumElements
 comment|// example) is shorthand for cast<VectorType>(Ty)->getNumElements().  This is
 comment|// only intended to cover the core methods that are frequently used, helper
 comment|// methods should not be added here.
+specifier|inline
 name|unsigned
 name|getIntegerBitWidth
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|inline
 name|Type
 modifier|*
 name|getFunctionParamType
@@ -1152,26 +1115,31 @@ name|i
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|inline
 name|unsigned
 name|getFunctionNumParams
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|inline
 name|bool
 name|isFunctionVarArg
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|inline
 name|StringRef
 name|getStructName
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|inline
 name|unsigned
 name|getStructNumElements
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|inline
 name|Type
 modifier|*
 name|getStructElementType
@@ -1181,12 +1149,14 @@ name|N
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|inline
 name|Type
 operator|*
 name|getSequentialElementType
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|inline
 name|uint64_t
 name|getArrayNumElements
 argument_list|()
@@ -1203,6 +1173,7 @@ name|getSequentialElementType
 argument_list|()
 return|;
 block|}
+specifier|inline
 name|unsigned
 name|getVectorNumElements
 argument_list|()
@@ -1231,6 +1202,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Get the address space of this pointer or pointer vector type.
+specifier|inline
 name|unsigned
 name|getPointerAddressSpace
 argument_list|()
@@ -1351,6 +1323,16 @@ specifier|static
 name|Type
 modifier|*
 name|getX86_MMXTy
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+specifier|static
+name|Type
+modifier|*
+name|getTokenTy
 parameter_list|(
 name|LLVMContext
 modifier|&
@@ -1637,13 +1619,14 @@ comment|/// to PointerType::get(Foo, AddrSpace).
 name|PointerType
 modifier|*
 name|getPointerTo
-parameter_list|(
+argument_list|(
 name|unsigned
 name|AddrSpace
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 comment|/// isSizedDerivedType - Derived types like structures and arrays are sized
@@ -1654,7 +1637,6 @@ name|isSizedDerivedType
 argument_list|(
 name|SmallPtrSetImpl
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>

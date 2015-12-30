@@ -84,6 +84,9 @@ name|class
 name|MCStreamer
 decl_stmt|;
 name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|SMLoc
 decl_stmt|;
 name|class
@@ -119,6 +122,9 @@ comment|// Rewrite should be ignored.
 name|AOK_Align
 block|,
 comment|// Rewrite align as .align.
+name|AOK_EVEN
+block|,
+comment|// Rewrite even as .even.
 name|AOK_DotOperator
 block|,
 comment|// Rewrite a dot operator expression as an immediate.
@@ -160,6 +166,9 @@ comment|// AOK_Delete
 literal|2
 block|,
 comment|// AOK_Align
+literal|2
+block|,
+comment|// AOK_EVEN
 literal|2
 block|,
 comment|// AOK_DotOperator
@@ -363,6 +372,21 @@ name|protected
 operator|:
 comment|// Can only create subclasses.
 name|MCTargetAsmParser
+argument_list|(
+name|MCTargetOptions
+specifier|const
+operator|&
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
+block|;
+comment|/// Create a copy of STI and return a non-const reference to it.
+name|MCSubtargetInfo
+operator|&
+name|copySTI
 argument_list|()
 block|;
 comment|/// AvailableFeatures - The current set of available features.
@@ -383,12 +407,25 @@ comment|/// Set of options which affects instrumentation of inline assembly.
 name|MCTargetOptions
 name|MCOptions
 block|;
+comment|/// Current STI.
+specifier|const
+name|MCSubtargetInfo
+operator|*
+name|STI
+block|;
 name|public
 operator|:
 operator|~
 name|MCTargetAsmParser
 argument_list|()
 name|override
+block|;
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|getSTI
+argument_list|()
+specifier|const
 block|;
 name|uint64_t
 name|getAvailableFeatures
@@ -501,6 +538,35 @@ argument_list|)
 operator|=
 literal|0
 block|;
+name|virtual
+name|bool
+name|ParseInstruction
+argument_list|(
+argument|ParseInstructionInfo&Info
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|AsmToken Token
+argument_list|,
+argument|OperandVector&Operands
+argument_list|)
+block|{
+return|return
+name|ParseInstruction
+argument_list|(
+name|Info
+argument_list|,
+name|Name
+argument_list|,
+name|Token
+operator|.
+name|getLoc
+argument_list|()
+argument_list|,
+name|Operands
+argument_list|)
+return|;
+block|}
 comment|/// ParseDirective - Parse a target specific assembler directive
 comment|///
 comment|/// The parser is positioned following the directive name.  The target
@@ -516,19 +582,6 @@ name|bool
 name|ParseDirective
 argument_list|(
 argument|AsmToken DirectiveID
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// mnemonicIsValid - This returns true if this is a valid mnemonic and false
-comment|/// otherwise.
-name|virtual
-name|bool
-name|mnemonicIsValid
-argument_list|(
-argument|StringRef Mnemonic
-argument_list|,
-argument|unsigned VariantID
 argument_list|)
 operator|=
 literal|0
@@ -611,6 +664,30 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|// Return whether this parser uses assignment statements with equals tokens
+name|virtual
+name|bool
+name|equalIsAsmAssignment
+argument_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
+block|;
+comment|// Return whether this start of statement identifier is a label
+name|virtual
+name|bool
+name|isLabel
+argument_list|(
+argument|AsmToken&Token
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+block|;
 name|virtual
 specifier|const
 name|MCExpr
@@ -635,9 +712,8 @@ argument_list|(
 argument|MCSymbol *Symbol
 argument_list|)
 block|{ }
-block|; }
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MCJITTestBase.h - Common base class for MCJIT Unit tests  ----------===//
+comment|//===- MCJITTestBase.h - Common base class for MCJIT Unit tests -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -333,34 +333,23 @@ literal|1
 operator|>
 name|CallArgs
 block|;
-name|Function
-operator|::
-name|arg_iterator
-name|arg_iter
-operator|=
-name|Result
-operator|->
-name|arg_begin
-argument_list|()
-block|;
 for|for
 control|(
-init|;
-name|arg_iter
-operator|!=
+name|Argument
+modifier|&
+name|A
+range|:
 name|Result
 operator|->
-name|arg_end
+name|args
 argument_list|()
-condition|;
-operator|++
-name|arg_iter
 control|)
 name|CallArgs
 operator|.
 name|push_back
 argument_list|(
-name|arg_iter
+operator|&
+name|A
 argument_list|)
 expr_stmt|;
 name|Value
@@ -498,12 +487,16 @@ name|Value
 modifier|*
 name|Arg1
 init|=
+operator|&
+operator|*
 name|args
 decl_stmt|;
 name|Value
 modifier|*
 name|Arg2
 init|=
+operator|&
+operator|*
 operator|++
 name|args
 decl_stmt|;
@@ -766,7 +759,7 @@ name|Function
 modifier|*
 name|Helper
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|StringRef
 name|Name
@@ -793,9 +786,8 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|Helper
-operator|==
-literal|0
 condition|)
 name|Helper
 operator|=
@@ -836,6 +828,8 @@ name|Value
 modifier|*
 name|Param
 init|=
+operator|&
+operator|*
 name|Result
 operator|->
 name|arg_begin
@@ -1029,7 +1023,7 @@ operator|.
 name|get
 argument_list|()
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 literal|"FB1"
 argument_list|)
@@ -1946,6 +1940,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_UNITTESTS_EXECUTIONENGINE_MCJIT_MCJITTESTBASE_H
+end_comment
 
 end_unit
 

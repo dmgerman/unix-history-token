@@ -126,7 +126,7 @@ name|ImmutableListImpl
 operator|*
 name|tail
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Head
@@ -287,7 +287,7 @@ operator|>
 operator|*
 name|x
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|X
@@ -327,7 +327,7 @@ argument_list|()
 operator|:
 name|L
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|iterator
@@ -585,7 +585,7 @@ operator|->
 name|getTail
 argument_list|()
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|void
@@ -889,7 +889,7 @@ operator|<
 name|T
 operator|>
 operator|(
-literal|0
+name|nullptr
 operator|)
 return|;
 block|}
@@ -1132,6 +1132,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_IMMUTABLELIST_H
+end_comment
 
 end_unit
 

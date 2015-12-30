@@ -176,10 +176,11 @@ name|StringRef
 name|LexUntilEndOfLine
 argument_list|()
 block|;
-specifier|const
-name|AsmToken
-name|peekTok
+name|size_t
+name|peekTokens
 argument_list|(
+argument|MutableArrayRef<AsmToken> Buf
+argument_list|,
 argument|bool ShouldSkipSpace = true
 argument_list|)
 name|override

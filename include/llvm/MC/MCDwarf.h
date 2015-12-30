@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -141,9 +147,6 @@ name|MCContext
 decl_stmt|;
 name|class
 name|MCObjectStreamer
-decl_stmt|;
-name|class
-name|MCSection
 decl_stmt|;
 name|class
 name|MCStreamer
@@ -598,6 +601,34 @@ block|}
 block|}
 empty_stmt|;
 struct|struct
+name|MCDwarfLineTableParams
+block|{
+comment|/// First special line opcode - leave room for the standard opcodes.
+comment|/// Note: If you want to change this, you'll have to update the
+comment|/// "StandardOpcodeLengths" table that is emitted in
+comment|/// \c Emit().
+name|uint8_t
+name|DWARF2LineOpcodeBase
+init|=
+literal|13
+decl_stmt|;
+comment|/// Minimum line offset in a special line info. opcode.  The value
+comment|/// -5 was chosen to give a reasonable range of values.
+name|int8_t
+name|DWARF2LineBase
+init|=
+operator|-
+literal|5
+decl_stmt|;
+comment|/// Range of line offsets in a special line info. opcode.
+name|uint8_t
+name|DWARF2LineRange
+init|=
+literal|14
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|MCDwarfLineTableHeader
 block|{
 name|MCSymbol
@@ -663,6 +694,8 @@ operator|>
 name|Emit
 argument_list|(
 argument|MCStreamer *MCOS
+argument_list|,
+argument|MCDwarfLineTableParams Params
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -679,6 +712,8 @@ operator|>
 name|Emit
 argument_list|(
 argument|MCStreamer *MCOS
+argument_list|,
+argument|MCDwarfLineTableParams Params
 argument_list|,
 argument|ArrayRef<char> SpecialOpcodeLengths
 argument_list|)
@@ -735,6 +770,9 @@ argument_list|(
 name|MCStreamer
 operator|&
 name|MCOS
+argument_list|,
+name|MCDwarfLineTableParams
+name|Params
 argument_list|)
 decl|const
 decl_stmt|;
@@ -759,6 +797,9 @@ parameter_list|(
 name|MCObjectStreamer
 modifier|*
 name|MCOS
+parameter_list|,
+name|MCDwarfLineTableParams
+name|Params
 parameter_list|)
 function_decl|;
 comment|// This emits the Dwarf file and the line tables for a given Compile Unit.
@@ -768,6 +809,9 @@ argument_list|(
 name|MCObjectStreamer
 operator|*
 name|MCOS
+argument_list|,
+name|MCDwarfLineTableParams
+name|Params
 argument_list|)
 decl|const
 decl_stmt|;
@@ -929,6 +973,9 @@ name|MCContext
 modifier|&
 name|Context
 parameter_list|,
+name|MCDwarfLineTableParams
+name|Params
+parameter_list|,
 name|int64_t
 name|LineDelta
 parameter_list|,
@@ -948,6 +995,9 @@ parameter_list|(
 name|MCStreamer
 modifier|*
 name|MCOS
+parameter_list|,
+name|MCDwarfLineTableParams
+name|Params
 parameter_list|,
 name|int64_t
 name|LineDelta
@@ -1132,6 +1182,8 @@ block|,
 name|OpRegister
 block|,
 name|OpWindowSave
+block|,
+name|OpGnuArgsSize
 block|}
 enum|;
 name|private
@@ -1657,6 +1709,34 @@ name|Vals
 argument_list|)
 return|;
 block|}
+comment|/// \brief A special wrapper for .cfi_escape that indicates GNU_ARGS_SIZE
+specifier|static
+name|MCCFIInstruction
+name|createGnuArgsSize
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|L
+parameter_list|,
+name|int
+name|Size
+parameter_list|)
+block|{
+return|return
+name|MCCFIInstruction
+argument_list|(
+name|OpGnuArgsSize
+argument_list|,
+name|L
+argument_list|,
+literal|0
+argument_list|,
+name|Size
+argument_list|,
+literal|""
+argument_list|)
+return|;
+block|}
 name|OpType
 name|getOperation
 argument_list|()
@@ -1762,6 +1842,10 @@ operator|||
 name|Operation
 operator|==
 name|OpAdjustCfaOffset
+operator|||
+name|Operation
+operator|==
+name|OpGnuArgsSize
 argument_list|)
 block|;
 return|return

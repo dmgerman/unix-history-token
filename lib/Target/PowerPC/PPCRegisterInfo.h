@@ -476,6 +476,7 @@ operator|*
 name|getNoPreservedMask
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|adjustStackMapLiveOutMask
@@ -544,6 +545,13 @@ return|;
 block|}
 name|void
 name|lowerDynamicAlloc
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerDynamicAreaOffset
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|)
@@ -701,21 +709,6 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
-name|bool
-name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|needsStackRealignment
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
 block|; }
 decl_stmt|;
 block|}

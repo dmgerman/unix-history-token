@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
@@ -100,7 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/MetadataTracking.h"
+file|"llvm/IR/LLVMContext.h"
 end_include
 
 begin_include
@@ -134,17 +140,6 @@ decl_stmt|;
 name|class
 name|ModuleSlotTracker
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
-operator|>
-name|class
-name|SymbolTableListTraits
-expr_stmt|;
 enum|enum
 name|LLVMConstants
 enum|:
@@ -255,6 +250,10 @@ block|,
 name|LocalAsMetadataKind
 block|,
 name|MDStringKind
+block|,
+name|DIMacroKind
+block|,
+name|DIMacroFileKind
 block|}
 enum|;
 name|protected
@@ -368,6 +367,11 @@ operator|*
 name|M
 operator|=
 name|nullptr
+argument_list|,
+name|bool
+name|IsForDebug
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -388,6 +392,11 @@ operator|*
 name|M
 operator|=
 name|nullptr
+argument_list|,
+name|bool
+name|IsForDebug
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -613,6 +622,260 @@ name|untrack
 argument_list|()
 block|; }
 decl_stmt|;
+comment|/// \brief API for tracking metadata references through RAUW and deletion.
+comment|///
+comment|/// Shared API for updating \a Metadata pointers in subclasses that support
+comment|/// RAUW.
+comment|///
+comment|/// This API is not meant to be used directly.  See \a TrackingMDRef for a
+comment|/// user-friendly tracking reference.
+name|class
+name|MetadataTracking
+block|{
+name|public
+label|:
+comment|/// \brief Track the reference to metadata.
+comment|///
+comment|/// Register \c MD with \c *MD, if the subclass supports tracking.  If \c *MD
+comment|/// gets RAUW'ed, \c MD will be updated to the new address.  If \c *MD gets
+comment|/// deleted, \c MD will be set to \c nullptr.
+comment|///
+comment|/// If tracking isn't supported, \c *MD will not change.
+comment|///
+comment|/// \return true iff tracking is supported by \c MD.
+specifier|static
+name|bool
+name|track
+parameter_list|(
+name|Metadata
+modifier|*
+modifier|&
+name|MD
+parameter_list|)
+block|{
+return|return
+name|track
+argument_list|(
+operator|&
+name|MD
+argument_list|,
+operator|*
+name|MD
+argument_list|,
+name|static_cast
+operator|<
+name|Metadata
+operator|*
+operator|>
+operator|(
+name|nullptr
+operator|)
+argument_list|)
+return|;
+block|}
+comment|/// \brief Track the reference to metadata for \a Metadata.
+comment|///
+comment|/// As \a track(Metadata*&), but with support for calling back to \c Owner to
+comment|/// tell it that its operand changed.  This could trigger \c Owner being
+comment|/// re-uniqued.
+specifier|static
+name|bool
+name|track
+parameter_list|(
+name|void
+modifier|*
+name|Ref
+parameter_list|,
+name|Metadata
+modifier|&
+name|MD
+parameter_list|,
+name|Metadata
+modifier|&
+name|Owner
+parameter_list|)
+block|{
+return|return
+name|track
+argument_list|(
+name|Ref
+argument_list|,
+name|MD
+argument_list|,
+operator|&
+name|Owner
+argument_list|)
+return|;
+block|}
+comment|/// \brief Track the reference to metadata for \a MetadataAsValue.
+comment|///
+comment|/// As \a track(Metadata*&), but with support for calling back to \c Owner to
+comment|/// tell it that its operand changed.  This could trigger \c Owner being
+comment|/// re-uniqued.
+specifier|static
+name|bool
+name|track
+parameter_list|(
+name|void
+modifier|*
+name|Ref
+parameter_list|,
+name|Metadata
+modifier|&
+name|MD
+parameter_list|,
+name|MetadataAsValue
+modifier|&
+name|Owner
+parameter_list|)
+block|{
+return|return
+name|track
+argument_list|(
+name|Ref
+argument_list|,
+name|MD
+argument_list|,
+operator|&
+name|Owner
+argument_list|)
+return|;
+block|}
+comment|/// \brief Stop tracking a reference to metadata.
+comment|///
+comment|/// Stops \c *MD from tracking \c MD.
+specifier|static
+name|void
+name|untrack
+parameter_list|(
+name|Metadata
+modifier|*
+modifier|&
+name|MD
+parameter_list|)
+block|{
+name|untrack
+argument_list|(
+operator|&
+name|MD
+argument_list|,
+operator|*
+name|MD
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|untrack
+parameter_list|(
+name|void
+modifier|*
+name|Ref
+parameter_list|,
+name|Metadata
+modifier|&
+name|MD
+parameter_list|)
+function_decl|;
+comment|/// \brief Move tracking from one reference to another.
+comment|///
+comment|/// Semantically equivalent to \c untrack(MD) followed by \c track(New),
+comment|/// except that ownership callbacks are maintained.
+comment|///
+comment|/// Note: it is an error if \c *MD does not equal \c New.
+comment|///
+comment|/// \return true iff tracking is supported by \c MD.
+specifier|static
+name|bool
+name|retrack
+parameter_list|(
+name|Metadata
+modifier|*
+modifier|&
+name|MD
+parameter_list|,
+name|Metadata
+modifier|*
+modifier|&
+name|New
+parameter_list|)
+block|{
+return|return
+name|retrack
+argument_list|(
+operator|&
+name|MD
+argument_list|,
+operator|*
+name|MD
+argument_list|,
+operator|&
+name|New
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|retrack
+parameter_list|(
+name|void
+modifier|*
+name|Ref
+parameter_list|,
+name|Metadata
+modifier|&
+name|MD
+parameter_list|,
+name|void
+modifier|*
+name|New
+parameter_list|)
+function_decl|;
+comment|/// \brief Check whether metadata is replaceable.
+specifier|static
+name|bool
+name|isReplaceable
+parameter_list|(
+specifier|const
+name|Metadata
+modifier|&
+name|MD
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|PointerUnion
+operator|<
+name|MetadataAsValue
+operator|*
+operator|,
+name|Metadata
+operator|*
+operator|>
+name|OwnerTy
+expr_stmt|;
+name|private
+label|:
+comment|/// \brief Track a reference to metadata for an owner.
+comment|///
+comment|/// Generalized version of tracking.
+specifier|static
+name|bool
+name|track
+parameter_list|(
+name|void
+modifier|*
+name|Ref
+parameter_list|,
+name|Metadata
+modifier|&
+name|MD
+parameter_list|,
+name|OwnerTy
+name|Owner
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// \brief Shared implementation of use-lists for replaceable metadata.
 comment|///
 comment|/// Most metadata cannot be RAUW'ed.  This is a shared implementation of
@@ -2425,9 +2688,9 @@ operator|::
 name|getEmptyKey
 argument_list|()
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -2449,9 +2712,9 @@ operator|::
 name|getTombstoneKey
 argument_list|()
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -3835,7 +4098,11 @@ comment|/// Once all forward declarations have been resolved, force cycles to be
 end_comment
 
 begin_comment
-comment|/// resolved.
+comment|/// resolved. If \p MDMaterialized is true, then any temporary metadata
+end_comment
+
+begin_comment
+comment|/// is ignored, otherwise it asserts when encountering temporary metadata.
 end_comment
 
 begin_comment
@@ -3849,7 +4116,12 @@ end_comment
 begin_function_decl
 name|void
 name|resolveCycles
-parameter_list|()
+parameter_list|(
+name|bool
+name|MDMaterialized
+init|=
+name|true
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -4158,6 +4430,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+specifier|static
+name|T
+operator|*
+name|storeImpl
+argument_list|(
+argument|T *N
+argument_list|,
+argument|StorageType Storage
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -4326,7 +4616,7 @@ specifier|static
 name|void
 name|dispatchRecalculateHash
 argument_list|(
-argument|NodeTy *N
+argument|NodeTy *
 argument_list|,
 argument|std::false_type
 argument_list|)
@@ -4361,7 +4651,7 @@ specifier|static
 name|void
 name|dispatchResetHash
 argument_list|(
-argument|NodeTy *N
+argument|NodeTy *
 argument_list|,
 argument|std::false_type
 argument_list|)
@@ -4646,6 +4936,23 @@ specifier|static
 name|MDNode
 modifier|*
 name|getMostGenericAliasScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|A
+parameter_list|,
+name|MDNode
+modifier|*
+name|B
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|MDNode
+modifier|*
+name|getMostGenericAlignmentOrDereferenceable
 parameter_list|(
 name|MDNode
 modifier|*
@@ -5443,15 +5750,6 @@ name|NamedMDNode
 operator|>
 block|{
 name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
-name|NamedMDNode
-block|,
-name|Module
-operator|>
-block|;
-name|friend
 expr|struct
 name|ilist_traits
 operator|<
@@ -5784,6 +6082,8 @@ name|void
 name|print
 argument_list|(
 argument|raw_ostream&ROS
+argument_list|,
+argument|bool IsForDebug = false
 argument_list|)
 specifier|const
 block|;
@@ -5881,17 +6181,14 @@ name|operands
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|op_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|op_begin
 argument_list|()
-expr|,
+argument_list|,
 name|op_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 specifier|inline
@@ -5904,17 +6201,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_op_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|op_begin
 argument_list|()
-expr|,
+argument_list|,
 name|op_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 expr|}
@@ -5929,6 +6223,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_METADATA_H
+end_comment
 
 end_unit
 

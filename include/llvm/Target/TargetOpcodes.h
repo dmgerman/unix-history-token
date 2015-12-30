@@ -225,10 +225,16 @@ block|,
 comment|/// Loading instruction that may page fault, bundled with associated
 comment|/// information on how to handle such a page fault.  It is intended to support
 comment|/// "zero cost" null checks in managed languages by allowing LLVM to fold
-comment|/// comparisions into existing memory operations.
+comment|/// comparisons into existing memory operations.
 name|FAULTING_LOAD_OP
 init|=
 literal|22
+block|,
+comment|/// BUILTIN_OP_END - This must be the last enum value in this list.
+comment|/// The target-specific post-isel opcode values start here.
+name|GENERIC_OP_END
+init|=
+name|FAULTING_LOAD_OP
 block|, }
 enum|;
 block|}
