@@ -107,9 +107,5 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* FIXME: rsub for ARM EABI */
-end_comment
-
 end_unit
 

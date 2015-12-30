@@ -262,7 +262,31 @@ comment|// CHECK-SYMBOLS-NOT: _getenv
 end_comment
 
 begin_comment
+comment|// CHECK-SYMBOLS-NOT: getenv
+end_comment
+
+begin_comment
 comment|// CHECK-SYMBOLS-NOT: _malloc
+end_comment
+
+begin_comment
+comment|// CHECK-SYMBOLS-NOT: malloc
+end_comment
+
+begin_comment
+comment|// CHECK-SYMBOLS-NOT: _calloc
+end_comment
+
+begin_comment
+comment|// CHECK-SYMBOLS-NOT: calloc
+end_comment
+
+begin_comment
+comment|// CHECK-SYMBOLS-NOT: _free
+end_comment
+
+begin_comment
+comment|// CHECK-SYMBOLS-NOT: free
 end_comment
 
 begin_comment

@@ -528,8 +528,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|WEAK
-value|SANITIZER_WEAK_ATTRIBUTE
+name|SANITIZER_WEAK_DEFAULT_IMPL
+define|\
+value|extern "C" SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE NOINLINE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_WEAK_CXX_DEFAULT_IMPL
+define|\
+value|extern "C++" SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE NOINLINE
 end_define
 
 begin_comment
@@ -605,12 +614,6 @@ define|#
 directive|define
 name|THREADLOCAL
 value|__declspec(thread)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTHROW
 end_define
 
 begin_define
@@ -721,13 +724,6 @@ define|#
 directive|define
 name|THREADLOCAL
 value|__thread
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOTHROW
-value|throw()
 end_define
 
 begin_define
@@ -851,6 +847,50 @@ begin_define
 define|#
 directive|define
 name|USED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+name|MSC_PREREQ
+argument_list|(
+literal|1900
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NOEXCEPT
+value|noexcept
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NOEXCEPT
+value|throw()
 end_define
 
 begin_endif

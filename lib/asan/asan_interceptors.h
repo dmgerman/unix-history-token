@@ -576,6 +576,19 @@ define|\
 value|do {                                                                   \     if ((!INTERCEPT_FUNCTION(name) || !REAL(name)))                      \       VReport(1, "AddressSanitizer: failed to intercept '" #name "'\n"); \   } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ASAN_INTERCEPT_FUNC_VER
+parameter_list|(
+name|name
+parameter_list|,
+name|ver
+parameter_list|)
+define|\
+value|do {                                                                         \     if ((!INTERCEPT_FUNCTION_VER(name, ver) || !REAL(name)))                   \       VReport(                                                                 \           1, "AddressSanitizer: failed to intercept '" #name "@@" #ver "'\n"); \   } while (0)
+end_define
+
 begin_else
 else|#
 directive|else

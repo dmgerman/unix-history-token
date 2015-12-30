@@ -174,7 +174,7 @@ typedef|;
 end_typedef
 
 begin_function
-specifier|inline
+name|__inline
 specifier|static
 name|void
 name|unlock
@@ -231,7 +231,7 @@ block|}
 end_function
 
 begin_function
-specifier|inline
+name|__inline
 specifier|static
 name|void
 name|lock
@@ -350,7 +350,7 @@ typedef|;
 end_typedef
 
 begin_function
-specifier|inline
+name|__inline
 specifier|static
 name|void
 name|unlock
@@ -377,7 +377,7 @@ comment|/// unbounded in the contended case.
 end_comment
 
 begin_function
-specifier|inline
+name|__inline
 specifier|static
 name|void
 name|lock
@@ -429,7 +429,7 @@ comment|/// Unlock a lock.  This is a release operation.
 end_comment
 
 begin_function
-specifier|inline
+name|__inline
 specifier|static
 name|void
 name|unlock
@@ -460,7 +460,7 @@ comment|/// unbounded in the contended case.
 end_comment
 
 begin_function
-specifier|inline
+name|__inline
 specifier|static
 name|void
 name|lock
@@ -524,7 +524,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|Lock
 modifier|*
 name|lock_for_pointer

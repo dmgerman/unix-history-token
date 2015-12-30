@@ -179,7 +179,7 @@ parameter_list|,
 name|symver
 parameter_list|)
 define|\
-value|::__interception::real_##func = (func##_f)(unsigned long) \          ::__interception::GetFuncAddrVer(#func, symver)
+value|(::__interception::real_##func = (func##_f)(                \        unsigned long)::__interception::GetFuncAddrVer(#func, symver))
 end_define
 
 begin_else

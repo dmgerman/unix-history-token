@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_tsan -O1 %s -o %t&& %deflake %run %t | FileCheck %s
 end_comment
 
+begin_comment
+comment|// pthread barriers are not available on OS X
+end_comment
+
+begin_comment
+comment|// UNSUPPORTED: darwin
+end_comment
+
 begin_include
 include|#
 directive|include

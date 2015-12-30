@@ -293,7 +293,7 @@ literal|.23456789abcdefp
 operator|+
 literal|40
 argument_list|,
-literal|0x80000001
+literal|0x80000000
 argument_list|)
 condition|)
 return|return

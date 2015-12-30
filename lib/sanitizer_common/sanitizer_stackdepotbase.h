@@ -128,7 +128,7 @@ name|bool
 modifier|*
 name|inserted
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Retrieves a stored stack trace by the id.
@@ -352,7 +352,7 @@ end_expr_stmt
 
 begin_expr_stmt
 unit|}   return
-literal|0
+name|nullptr
 expr_stmt|;
 end_expr_stmt
 

@@ -15,6 +15,14 @@ begin_comment
 comment|// CHECK: OK
 end_comment
 
+begin_comment
+comment|// OS X doesn't have pthread_condattr_setclock.
+end_comment
+
+begin_comment
+comment|// UNSUPPORTED: darwin
+end_comment
+
 begin_include
 include|#
 directive|include

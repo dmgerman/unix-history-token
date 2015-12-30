@@ -4,11 +4,11 @@ comment|// RUN: %clang_asan -O2 %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:check_printf=1 %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=check_printf=1 %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:check_printf=0 %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=check_printf=0 %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

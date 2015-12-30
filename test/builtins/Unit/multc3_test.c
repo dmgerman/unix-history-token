@@ -57,6 +57,8 @@ begin_if
 if|#
 directive|if
 name|_ARCH_PPC
+operator|||
+name|__aarch64__
 end_if
 
 begin_include
@@ -1805,6 +1807,8 @@ block|{
 if|#
 directive|if
 name|_ARCH_PPC
+operator|||
+name|__aarch64__
 specifier|const
 name|unsigned
 name|N

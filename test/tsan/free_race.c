@@ -8,7 +8,7 @@ comment|// RUN: %deflake %run %t | FileCheck %s --check-prefix=CHECK-NOZUPP
 end_comment
 
 begin_comment
-comment|// RUN: TSAN_OPTIONS="suppressions='%s.supp' print_suppressions=1" %run %t 2>&1 | FileCheck %s --check-prefix=CHECK-SUPP
+comment|// RUN: %env_tsan_opts=suppressions='%s.supp':print_suppressions=1 %run %t 2>&1 | FileCheck %s --check-prefix=CHECK-SUPP
 end_comment
 
 begin_include

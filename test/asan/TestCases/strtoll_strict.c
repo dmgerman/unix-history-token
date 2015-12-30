@@ -4,7 +4,7 @@ comment|// Test strict_string_checks option in strtoll function
 end_comment
 
 begin_comment
-comment|// RUN: %clang_asan -DTEST1 %s -o %t
+comment|// RUN: %clang_asan %s -o %t
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|// RUN: %run %t test1 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test1 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test1 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|// RUN: %run %t test2 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test2 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test2 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2
 end_comment
 
 begin_comment
@@ -36,11 +36,11 @@ comment|// RUN: %run %t test3 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test3 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test3 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test3 2>&1 | FileCheck %s --check-prefix=CHECK3
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test3 2>&1 | FileCheck %s --check-prefix=CHECK3
 end_comment
 
 begin_comment
@@ -48,11 +48,11 @@ comment|// RUN: %run %t test4 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test4 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test4 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test4 2>&1 | FileCheck %s --check-prefix=CHECK4
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test4 2>&1 | FileCheck %s --check-prefix=CHECK4
 end_comment
 
 begin_comment
@@ -60,11 +60,11 @@ comment|// RUN: %run %t test5 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test5 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test5 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test5 2>&1 | FileCheck %s --check-prefix=CHECK5
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test5 2>&1 | FileCheck %s --check-prefix=CHECK5
 end_comment
 
 begin_comment
@@ -72,11 +72,11 @@ comment|// RUN: %run %t test6 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test6 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test6 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test6 2>&1 | FileCheck %s --check-prefix=CHECK6
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test6 2>&1 | FileCheck %s --check-prefix=CHECK6
 end_comment
 
 begin_comment
@@ -84,11 +84,19 @@ comment|// RUN: %run %t test7 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test7 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test7 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test7 2>&1 | FileCheck %s --check-prefix=CHECK7
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test7 2>&1 | FileCheck %s --check-prefix=CHECK7
+end_comment
+
+begin_comment
+comment|// FIXME: Enable strtoll interceptor.
+end_comment
+
+begin_comment
+comment|// XFAIL: win32
 end_comment
 
 begin_include

@@ -11,6 +11,38 @@ begin_comment
 comment|// CHECK: OK
 end_comment
 
+begin_comment
+comment|// This test is failing on powerpc64 (VMA=44). After calling pthread_cancel,
+end_comment
+
+begin_comment
+comment|// the Thread-specific data destructors are not called, so the destructor
+end_comment
+
+begin_comment
+comment|// "thread_finalize" (defined in tsan_interceptors.cc) can not set the status
+end_comment
+
+begin_comment
+comment|// of the thread to "ThreadStatusFinished" failing a check in "SetJoined"
+end_comment
+
+begin_comment
+comment|// (defined in sanitizer_thread_registry.cc). It might seem a bug on glibc,
+end_comment
+
+begin_comment
+comment|// however the same version GLIBC-2.17 will not make fail the test on
+end_comment
+
+begin_comment
+comment|// powerpc64 BE (VMA=46)
+end_comment
+
+begin_comment
+comment|// XFAIL: powerpc64-unknown-linux-gnu
+end_comment
+
 begin_include
 include|#
 directive|include

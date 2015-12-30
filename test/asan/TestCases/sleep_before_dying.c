@@ -4,7 +4,7 @@ comment|// RUN: %clang_asan -O2 %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS="$ASAN_OPTIONS:sleep_before_dying=1" not %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=sleep_before_dying=1 not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_include

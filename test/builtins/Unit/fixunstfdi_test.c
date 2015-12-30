@@ -57,6 +57,8 @@ begin_if
 if|#
 directive|if
 name|_ARCH_PPC
+operator|||
+name|__aarch64__
 end_if
 
 begin_include
@@ -74,7 +76,7 @@ comment|//          Negative values all become zero.
 end_comment
 
 begin_comment
-comment|// Assumption: long double is a ppc 128 bit floating point type
+comment|// Assumption: long double is a 128 bit floating point type
 end_comment
 
 begin_comment
@@ -223,6 +225,8 @@ block|{
 if|#
 directive|if
 name|_ARCH_PPC
+operator|||
+name|__aarch64__
 if|if
 condition|(
 name|test__fixunstfdi
@@ -615,6 +619,22 @@ operator|+
 literal|62L
 argument_list|,
 literal|0x7FFFFFFFFFFFFFFELL
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|test__fixunstfdi
+argument_list|(
+literal|0x1
+operator|.
+name|p
+operator|+
+literal|64L
+argument_list|,
+literal|0xFFFFFFFFFFFFFFFFLL
 argument_list|)
 condition|)
 return|return

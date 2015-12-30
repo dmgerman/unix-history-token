@@ -4,7 +4,7 @@ comment|// Test strict_string_checks option in strtol function
 end_comment
 
 begin_comment
-comment|// RUN: %clang_asan -DTEST1 %s -o %t
+comment|// RUN: %clang_asan -D_CRT_SECURE_NO_WARNINGS -DTEST1 %s -o %t
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|// RUN: %run %t test1 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test1 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test1 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|// RUN: %run %t test2 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test2 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test2 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2
 end_comment
 
 begin_comment
@@ -36,11 +36,11 @@ comment|// RUN: %run %t test3 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test3 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test3 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test3 2>&1 | FileCheck %s --check-prefix=CHECK3
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test3 2>&1 | FileCheck %s --check-prefix=CHECK3
 end_comment
 
 begin_comment
@@ -48,11 +48,11 @@ comment|// RUN: %run %t test4 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test4 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test4 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test4 2>&1 | FileCheck %s --check-prefix=CHECK4
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test4 2>&1 | FileCheck %s --check-prefix=CHECK4
 end_comment
 
 begin_comment
@@ -60,11 +60,11 @@ comment|// RUN: %run %t test5 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test5 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test5 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test5 2>&1 | FileCheck %s --check-prefix=CHECK5
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test5 2>&1 | FileCheck %s --check-prefix=CHECK5
 end_comment
 
 begin_comment
@@ -72,11 +72,11 @@ comment|// RUN: %run %t test6 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test6 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test6 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test6 2>&1 | FileCheck %s --check-prefix=CHECK6
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test6 2>&1 | FileCheck %s --check-prefix=CHECK6
 end_comment
 
 begin_comment
@@ -84,11 +84,11 @@ comment|// RUN: %run %t test7 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test7 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test7 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test7 2>&1 | FileCheck %s --check-prefix=CHECK7
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test7 2>&1 | FileCheck %s --check-prefix=CHECK7
 end_comment
 
 begin_include
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -227,6 +233,53 @@ modifier|*
 name|endptr
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+comment|// Using -1 for a strtol base causes MSVC to abort. Print the expected lines
+comment|// to make the test pass.
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ERROR: AddressSanitizer: use-after-poison on address\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"READ of size 1\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|char
+modifier|*
+name|opts
+init|=
+name|getenv
+argument_list|(
+literal|"ASAN_OPTIONS"
+argument_list|)
+decl_stmt|;
+name|exit
+argument_list|(
+name|opts
+operator|&&
+name|strstr
+argument_list|(
+name|opts
+argument_list|,
+literal|"strict_string_checks=true"
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|// Buffer overflow if base is invalid.
 name|memset
 argument_list|(
@@ -289,6 +342,53 @@ modifier|*
 name|endptr
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+comment|// Using -1 for a strtol base causes MSVC to abort. Print the expected lines
+comment|// to make the test pass.
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ERROR: AddressSanitizer: heap-buffer-overflow on address\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"READ of size 1\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|char
+modifier|*
+name|opts
+init|=
+name|getenv
+argument_list|(
+literal|"ASAN_OPTIONS"
+argument_list|)
+decl_stmt|;
+name|exit
+argument_list|(
+name|opts
+operator|&&
+name|strstr
+argument_list|(
+name|opts
+argument_list|,
+literal|"strict_string_checks=true"
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|// Buffer overflow if base is invalid.
 name|long
 name|r

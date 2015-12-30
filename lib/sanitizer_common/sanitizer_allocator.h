@@ -1802,9 +1802,8 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|b
-operator|==
-literal|0
 condition|)
 name|b
 operator|=
@@ -1981,7 +1980,7 @@ operator|!
 name|size
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|uptr
 name|chunk_idx
@@ -2032,7 +2031,7 @@ operator|>=
 name|kNumClasses
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|RegionInfo
 modifier|*
@@ -2064,7 +2063,7 @@ name|beg
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_function
@@ -4909,6 +4908,18 @@ parameter_list|()
 block|{   }
 end_function
 
+begin_function
+specifier|static
+name|uptr
+name|AdditionalSize
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_typedef
 typedef|typedef
 name|SizeClassMap
@@ -5241,7 +5252,7 @@ name|Batch
 modifier|*
 name|b
 init|=
-literal|0
+name|nullptr
 decl_stmt|;
 for|for
 control|(
@@ -5265,9 +5276,8 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
 name|b
-operator|==
-literal|0
 condition|)
 block|{
 if|if
@@ -5363,7 +5373,7 @@ argument_list|)
 expr_stmt|;
 name|b
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 block|}
@@ -6632,7 +6642,7 @@ name|memory_order_acquire
 argument_list|)
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|ReportAllocatorCannotReturnNull
 argument_list|()
@@ -6897,7 +6907,7 @@ argument_list|(
 name|p
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_function
@@ -7090,7 +7100,7 @@ operator|!
 name|nearest_chunk
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|Header
 modifier|*
@@ -7147,7 +7157,7 @@ operator|<=
 name|p
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|GetUser
@@ -7203,7 +7213,7 @@ operator|!
 name|n
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 if|if
 condition|(
@@ -7302,7 +7312,7 @@ operator|>=
 name|max_mmap_
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|uptr
 name|beg
@@ -7432,7 +7442,7 @@ operator|->
 name|map_beg
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|GetUser
@@ -8193,7 +8203,7 @@ name|MayReturnNull
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|ReportAllocatorCannotReturnNull
 argument_list|()
@@ -8375,7 +8385,7 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|CHECK

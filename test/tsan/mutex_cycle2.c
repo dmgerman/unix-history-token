@@ -8,11 +8,11 @@ comment|// RUN:                                 not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: TSAN_OPTIONS=detect_deadlocks=1 not %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_tsan_opts=detect_deadlocks=1 not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: TSAN_OPTIONS=detect_deadlocks=0     %run %t 2>&1 | FileCheck %s --check-prefix=DISABLED
+comment|// RUN: %env_tsan_opts=detect_deadlocks=0     %run %t 2>&1 | FileCheck %s --check-prefix=DISABLED
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: echo "deadlock:main"> %t.supp
 end_comment
 
 begin_comment
-comment|// RUN: TSAN_OPTIONS="suppressions='%t.supp'" %run %t 2>&1 | FileCheck %s --check-prefix=DISABLED
+comment|// RUN: %env_tsan_opts=suppressions='%t.supp' %run %t 2>&1 | FileCheck %s --check-prefix=DISABLED
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// RUN: echo "deadlock:zzzz"> %t.supp
 end_comment
 
 begin_comment
-comment|// RUN: TSAN_OPTIONS="suppressions='%t.supp'" not %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_tsan_opts=suppressions='%t.supp' not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_include

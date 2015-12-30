@@ -95,10 +95,15 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-comment|// Get the number of total unique covered entities (blocks, edges, calls).
+comment|// Get the number of unique covered blocks (or edges).
 comment|// This can be useful for coverage-directed in-process fuzzers.
 name|uintptr_t
 name|__sanitizer_get_total_unique_coverage
+parameter_list|()
+function_decl|;
+comment|// Get the number of unique indirect caller-callee pairs.
+name|uintptr_t
+name|__sanitizer_get_total_unique_caller_callee_pairs
 parameter_list|()
 function_decl|;
 comment|// Reset the basic-block (edge) coverage to the initial state.

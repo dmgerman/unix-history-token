@@ -83,26 +83,9 @@ operator|&&
 operator|(
 name|defined
 argument_list|(
-name|__aarch64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__sparc__
 argument_list|)
 operator|||
-expr|\
 name|defined
 argument_list|(
 name|__mips__
@@ -129,7 +112,7 @@ endif|#
 directive|endif
 comment|// Fast unwind is the only option on Mac for now; we will need to
 comment|// revisit this macro when slow unwind works on Mac, see
-comment|// https://code.google.com/p/address-sanitizer/issues/detail?id=137
+comment|// https://github.com/google/sanitizers/issues/137
 if|#
 directive|if
 name|SANITIZER_MAC

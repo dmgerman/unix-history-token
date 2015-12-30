@@ -256,9 +256,8 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
 name|t
-operator|==
-literal|0
 operator|&&
 operator|!
 name|fast

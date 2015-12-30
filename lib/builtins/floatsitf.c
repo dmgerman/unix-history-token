@@ -138,8 +138,14 @@ operator|=
 name|signBit
 expr_stmt|;
 name|aAbs
-operator|+=
-literal|0x80000000
+operator|=
+operator|~
+operator|(
+name|unsigned
+operator|)
+name|a
+operator|+
+literal|1U
 expr_stmt|;
 block|}
 comment|// Exponent of (fp_t)a is the width of abs(a).
@@ -155,15 +161,13 @@ operator|)
 operator|-
 name|__builtin_clz
 argument_list|(
-name|a
+name|aAbs
 argument_list|)
 decl_stmt|;
 name|rep_t
 name|result
 decl_stmt|;
-comment|// Shift a into the significand field and clear the implicit bit.  Extra
-comment|// cast to unsigned int is necessary to get the correct behavior for
-comment|// the input INT_MIN.
+comment|// Shift a into the significand field and clear the implicit bit.
 specifier|const
 name|int
 name|shift

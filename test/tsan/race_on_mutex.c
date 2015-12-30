@@ -3,6 +3,18 @@ begin_comment
 comment|// RUN: %clang_tsan -O1 %s -o %t&& %deflake %run %t | FileCheck %s
 end_comment
 
+begin_comment
+comment|// This test fails on powerpc64 (VMA=46).
+end_comment
+
+begin_comment
+comment|// The size of the write reported by Tsan for T1 is 8 instead of 1.
+end_comment
+
+begin_comment
+comment|// XFAIL: powerpc64-unknown-linux-gnu
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -199,7 +211,7 @@ comment|// CHECK-NEXT:     #0 pthread_mutex_lock
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 Thread2{{.*}} {{.*}}race_on_mutex.c:18{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 Thread2{{.*}} {{.*}}race_on_mutex.c:21{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
@@ -211,7 +223,7 @@ comment|// CHECK-NEXT:     #0 pthread_mutex_init {{.*}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 Thread1{{.*}} {{.*}}race_on_mutex.c:8{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 Thread1{{.*}} {{.*}}race_on_mutex.c:11{{(:3)?}} ({{.*}})
 end_comment
 
 end_unit

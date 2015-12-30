@@ -8,7 +8,7 @@ comment|// Regression test for
 end_comment
 
 begin_comment
-comment|// https://code.google.com/p/thread-sanitizer/issues/detail?id=61
+comment|// https://github.com/google/sanitizers/issues/468
 end_comment
 
 begin_comment

@@ -12,11 +12,11 @@ comment|// strlen() and memcpy() called by puts().
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:replace_str=0:replace_intrin=0:check_printf=1 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
+comment|// RUN: %env_asan_opts=replace_str=0:replace_intrin=0:check_printf=1 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:replace_str=0:replace_intrin=0 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
+comment|// RUN: %env_asan_opts=replace_str=0:replace_intrin=0 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
 end_comment
 
 begin_comment

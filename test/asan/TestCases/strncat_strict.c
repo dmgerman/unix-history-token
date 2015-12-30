@@ -12,11 +12,11 @@ comment|// RUN: not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1-NONS
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false not  %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1-NONSTRICT --check-prefix=CHECK1
+comment|// RUN: %env_asan_opts=strict_string_checks=false not  %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1-NONSTRICT --check-prefix=CHECK1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1-STRICT --check-prefix=CHECK1
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1-STRICT --check-prefix=CHECK1
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|// RUN: not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2-NONS
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false not  %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2-NONSTRICT --check-prefix=CHECK2
+comment|// RUN: %env_asan_opts=strict_string_checks=false not  %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2-NONSTRICT --check-prefix=CHECK2
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2-STRICT --check-prefix=CHECK2
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2-STRICT --check-prefix=CHECK2
 end_comment
 
 begin_include

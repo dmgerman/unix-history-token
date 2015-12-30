@@ -12,11 +12,11 @@ comment|// RUN: %run %t test1 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test1 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test1 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test1 2>&1 | FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|// RUN: %run %t test2 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test2 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test2 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test2 2>&1 | FileCheck %s --check-prefix=CHECK2
 end_comment
 
 begin_comment
@@ -36,11 +36,19 @@ comment|// RUN: %run %t test3 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t test3 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t test3 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t test3 2>&1 | FileCheck %s --check-prefix=CHECK3
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t test3 2>&1 | FileCheck %s --check-prefix=CHECK3
+end_comment
+
+begin_comment
+comment|// FIXME: Needs Windows interceptor.
+end_comment
+
+begin_comment
+comment|// XFAIL: win32
 end_comment
 
 begin_include

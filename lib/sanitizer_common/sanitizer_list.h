@@ -99,7 +99,7 @@ name|first_
 operator|=
 name|last_
 operator|=
-literal|0
+name|nullptr
 block|;
 name|size_
 operator|=
@@ -141,7 +141,7 @@ name|x
 operator|->
 name|next
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|first_
 operator|=
@@ -160,7 +160,7 @@ name|x
 operator|->
 name|next
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|last_
 operator|->
@@ -193,7 +193,7 @@ name|x
 operator|->
 name|next
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|first_
 operator|=
@@ -242,13 +242,12 @@ name|next
 block|;
 if|if
 condition|(
+operator|!
 name|first_
-operator|==
-literal|0
 condition|)
 name|last_
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|size_
 operator|--
@@ -560,7 +559,7 @@ block|{
 return|return
 name|current_
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|private

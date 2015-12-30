@@ -380,15 +380,6 @@ name|size_t
 name|access_size
 parameter_list|)
 function_decl|;
-comment|// Sets the exit code to use when reporting an error.
-comment|// Returns the old value.
-name|int
-name|__asan_set_error_exit_code
-parameter_list|(
-name|int
-name|exit_code
-parameter_list|)
-function_decl|;
 comment|// Deprecated. Call __sanitizer_set_death_callback instead.
 name|void
 name|__asan_set_death_callback

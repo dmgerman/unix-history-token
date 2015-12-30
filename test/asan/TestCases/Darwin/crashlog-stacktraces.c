@@ -7,6 +7,22 @@ begin_comment
 comment|// RUN: not %run %t 2>&1 | FileCheck %s
 end_comment
 
+begin_comment
+comment|// Since ASan is built with -fomit-frame-pointer, backtrace is not able to
+end_comment
+
+begin_comment
+comment|// symbolicate the trace past ASan runtime on i386. (This is fixed in
+end_comment
+
+begin_comment
+comment|// latest OS X.)
+end_comment
+
+begin_comment
+comment|// REQUIRES: asan-64-bits
+end_comment
+
 begin_include
 include|#
 directive|include

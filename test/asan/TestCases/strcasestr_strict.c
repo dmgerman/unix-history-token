@@ -8,11 +8,11 @@ comment|// RUN: %clang_asan %s -o %t&& %run %t 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=false %run %t 2>&1
+comment|// RUN: %env_asan_opts=strict_string_checks=false %run %t 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=strict_string_checks=true not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

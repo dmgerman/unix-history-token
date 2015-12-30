@@ -4,11 +4,11 @@ comment|// RUN: %clang_asan -O2 %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:check_printf=1 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
+comment|// RUN: %env_asan_opts=check_printf=1 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:check_printf=0 %run %t 2>&1 | FileCheck --check-prefix=CHECK-OFF %s
+comment|// RUN: %env_asan_opts=check_printf=0 %run %t 2>&1 | FileCheck --check-prefix=CHECK-OFF %s
 end_comment
 
 begin_comment
@@ -34,6 +34,15 @@ name|int
 name|main
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+comment|// FIXME: The test raises a dialog even though it's XFAILd.
+return|return
+literal|42
+return|;
+endif|#
+directive|endif
 specifier|volatile
 name|char
 name|c

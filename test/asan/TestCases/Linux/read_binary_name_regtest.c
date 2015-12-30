@@ -71,6 +71,24 @@ directive|include
 file|<linux/seccomp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NR_readlink
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__NR_readlink
+value|__NR_readlinkat
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

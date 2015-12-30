@@ -9,6 +9,12 @@ directive|include
 file|"InstrProfilingUtil.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"InstrProfiling.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -63,16 +69,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 name|void
 name|__llvm_profile_recursive_mkdir
 parameter_list|(

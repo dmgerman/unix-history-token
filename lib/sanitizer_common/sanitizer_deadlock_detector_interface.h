@@ -254,7 +254,7 @@ name|CreatePhysicalThread
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -276,7 +276,7 @@ name|ctx
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -376,7 +376,7 @@ name|cb
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 block|}

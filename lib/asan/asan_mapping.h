@@ -74,7 +74,7 @@ comment|// The full explanation of the memory mapping could be found here:
 end_comment
 
 begin_comment
-comment|// http://code.google.com/p/address-sanitizer/wiki/AddressSanitizerAlgorithm
+comment|// https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm
 end_comment
 
 begin_comment
@@ -291,6 +291,62 @@ end_comment
 
 begin_comment
 comment|// || `[0x0000000000, 0x1fffffffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Linux/AArch64 (39-bit VMA) mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x2000000000, 0x7fffffffff]` || highmem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x1400000000, 0x1fffffffff]` || highshadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x1200000000, 0x13ffffffff]` || shadowgap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x1000000000, 0x11ffffffff]` || lowshadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x0000000000, 0x0fffffffff]` || lowmem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Linux/AArch64 (42-bit VMA) mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x10000000000, 0x3ffffffffff]` || highmem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x0a000000000, 0x0ffffffffff]` || highshadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x09000000000, 0x09fffffffff]` || shadowgap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x08000000000, 0x08fffffffff]` || lowshadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000000, 0x07fffffffff]` || lowmem     ||
 end_comment
 
 begin_comment
@@ -589,6 +645,14 @@ end_define
 begin_if
 if|#
 directive|if
+name|SANITIZER_WORDSIZE
+operator|==
+literal|32
+end_if
+
+begin_if
+if|#
+directive|if
 name|SANITIZER_ANDROID
 end_if
 
@@ -599,27 +663,14 @@ name|SHADOW_OFFSET
 value|(0)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|SANITIZER_WORDSIZE
-operator|==
-literal|32
-end_if
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__mips__
 argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -824,11 +875,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -931,6 +977,13 @@ begin_define
 define|#
 directive|define
 name|kZeroBaseShadowStart
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|kZeroBaseMaxShadowStart
 value|(1<< 18)
 end_define
 

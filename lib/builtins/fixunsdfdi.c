@@ -57,8 +57,9 @@ name|high
 init|=
 name|a
 operator|/
-literal|0x1p32f
+literal|4294967296.f
 decl_stmt|;
+comment|/* a / 0x1p32f; */
 name|su_int
 name|low
 init|=
@@ -69,8 +70,9 @@ name|double
 operator|)
 name|high
 operator|*
-literal|0x1p32f
+literal|4294967296.f
 decl_stmt|;
+comment|/* high * 0x1p32f; */
 return|return
 operator|(
 operator|(

@@ -4,7 +4,7 @@ comment|// Test needle overflow in strstr function
 end_comment
 
 begin_comment
-comment|// RUN: %clang_asan %s -o %t&& env ASAN_OPTIONS=$ASAN_OPTIONS:strict_string_checks=true not %run %t 2>&1 | FileCheck %s
+comment|// RUN: %clang_asan %s -o %t&& %env_asan_opts=strict_string_checks=true not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// Disable other interceptors because strlen may be called inside strstr
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:intercept_strstr=false:replace_str=false %run %t 2>&1
+comment|// RUN: %env_asan_opts=intercept_strstr=false:replace_str=false %run %t 2>&1
 end_comment
 
 begin_include
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sanitizer/asan_interface.h>
 end_include
 
 begin_function
@@ -58,17 +64,27 @@ literal|"ab"
 decl_stmt|;
 name|char
 name|s2
-index|[]
+index|[
+literal|4
+index|]
 init|=
-block|{
-literal|'c'
-block|}
+literal|"cab"
 decl_stmt|;
+name|__asan_poison_memory_region
+argument_list|(
+operator|(
 name|char
-name|s3
-init|=
-literal|0
-decl_stmt|;
+operator|*
+operator|)
+operator|&
+name|s2
+index|[
+literal|2
+index|]
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|strstr
@@ -78,7 +94,7 @@ argument_list|,
 name|s2
 argument_list|)
 expr_stmt|;
-comment|// CHECK:'s{{[2|3]}}'<== Memory access at offset {{[0-9]+ .*}}flows this variable
+comment|// CHECK:'s2'<== Memory access at offset {{[0-9]+}} partially overflows this variable
 name|assert
 argument_list|(
 name|r

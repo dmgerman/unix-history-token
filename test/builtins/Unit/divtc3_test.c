@@ -53,12 +53,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|_ARCH_PPC
-end_if
-
 begin_include
 include|#
 directive|include
@@ -506,7 +500,7 @@ name|_Complex_I
 decl_stmt|;
 if|if
 condition|(
-name|cabs
+name|cabsl
 argument_list|(
 operator|(
 name|r
@@ -1832,19 +1826,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|main
 parameter_list|()
 block|{
-if|#
-directive|if
-name|_ARCH_PPC
 specifier|const
 name|unsigned
 name|N
@@ -1938,15 +1924,6 @@ return|;
 block|}
 block|}
 comment|//	printf("No errors found.\n");
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"skipped\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

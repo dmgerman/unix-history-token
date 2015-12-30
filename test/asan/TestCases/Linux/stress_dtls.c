@@ -4,6 +4,10 @@ comment|// REQUIRES: asan-64-bits
 end_comment
 
 begin_comment
+comment|// UNSUPPORTED: android
+end_comment
+
+begin_comment
 comment|// Stress test dynamic TLS + dlopen + threads.
 end_comment
 
@@ -56,15 +60,15 @@ comment|// RUN: %run %t 2 3
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:verbosity=2 %run %t 10 2 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=verbosity=2 %run %t 10 2 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:verbosity=2:intercept_tls_get_addr=1 %run %t 10 2 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=verbosity=2:intercept_tls_get_addr=1 %run %t 10 2 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS=$ASAN_OPTIONS:verbosity=2:intercept_tls_get_addr=0 %run %t 10 2 2>&1 | FileCheck %s --check-prefix=CHECK0
+comment|// RUN: %env_asan_opts=verbosity=2:intercept_tls_get_addr=0 %run %t 10 2 2>&1 | FileCheck %s --check-prefix=CHECK0
 end_comment
 
 begin_comment

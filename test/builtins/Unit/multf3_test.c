@@ -414,7 +414,7 @@ literal|0x1
 operator|.
 name|edcba524498724p
 operator|-
-literal|6383L
+literal|6497L
 argument_list|,
 name|UINT64_C
 argument_list|(

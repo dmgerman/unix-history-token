@@ -4,7 +4,7 @@ comment|// RUN: %clang_asan -O2 %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: env ASAN_OPTIONS="$ASAN_OPTIONS:strip_path_prefix='%S/'" not %run %t 2>&1 | FileCheck %s
+comment|// RUN: %env_asan_opts=strip_path_prefix='"%S/"' not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_include
@@ -49,7 +49,7 @@ index|]
 return|;
 comment|// Check that paths in error report don't start with slash.
 comment|// CHECK: heap-use-after-free
-comment|// CHECK: #0 0x{{.*}} in main strip_path_prefix.c:[[@LINE-3]]
+comment|// CHECK: #0 0x{{.*}} in main {{.*}}strip_path_prefix.c:[[@LINE-3]]
 block|}
 end_function
 

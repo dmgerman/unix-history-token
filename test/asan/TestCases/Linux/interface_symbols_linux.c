@@ -16,7 +16,7 @@ comment|// RUN:    | grep "__asan_" | sed "s/___asan_/__asan_/" \
 end_comment
 
 begin_comment
-comment|// RUN:    | sed -E "s/__asan_init_v[0-9]+/__asan_init/" \
+comment|// RUN:    | sed -E "s/__asan_version_mismatch_check_v[0-9]+/__asan_version_mismatch_check/" \
 end_comment
 
 begin_comment
@@ -97,6 +97,54 @@ end_comment
 
 begin_comment
 comment|// RUN: echo __asan_report_store_n>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_load1_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_load2_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_load4_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_load8_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_load16_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_store1_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_store2_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_store4_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_store8_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_store16_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_load_n_noabort>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_store_n_noabort>> %t.interface
 end_comment
 
 begin_comment

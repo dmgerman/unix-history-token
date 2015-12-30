@@ -23,6 +23,10 @@ begin_comment
 comment|// safe stack.
 end_comment
 
+begin_comment
+comment|// REQUIRES: stable-runtime
+end_comment
+
 begin_macro
 name|__attribute__
 argument_list|(
