@@ -486,7 +486,10 @@ name|UO_Imag
 block|,
 comment|// "__real expr"/"__imag expr" Extension.
 name|UO_Extension
+block|,
 comment|// __extension__ marker.
+name|UO_Coawait
+comment|// [C++ Coroutines] co_await operator
 block|}
 enum|;
 comment|/// \brief The kind of bridging performed by the Objective-C bridge cast.

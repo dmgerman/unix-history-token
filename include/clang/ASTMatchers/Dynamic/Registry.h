@@ -309,9 +309,7 @@ argument_list|(
 name|MatcherCtor
 name|Ctor
 argument_list|,
-specifier|const
 name|SourceRange
-operator|&
 name|NameRange
 argument_list|,
 name|ArrayRef
@@ -338,9 +336,7 @@ argument_list|(
 name|MatcherCtor
 name|Ctor
 argument_list|,
-specifier|const
 name|SourceRange
-operator|&
 name|NameRange
 argument_list|,
 name|StringRef

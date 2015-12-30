@@ -4,6 +4,38 @@ comment|// ================== Check default CPU on each major architecture
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=generic -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-GENERIC %s
+end_comment
+
+begin_comment
+comment|// CHECK-GENERIC: "-cc1"{{.*}} "-triple" "armv4t-{{.*}} "-target-cpu" "generic"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armeb -mcpu=generic -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-GENERIC %s
+end_comment
+
+begin_comment
+comment|// CHECK-BE-GENERIC: "-cc1"{{.*}} "-triple" "armebv4t-{{.*}} "-target-cpu" "generic"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mthumb -mcpu=generic -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-GENERIC-THUMB %s
+end_comment
+
+begin_comment
+comment|// CHECK-GENERIC-THUMB: "-cc1"{{.*}} "-triple" "thumbv4t-{{.*}} "-target-cpu" "generic"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armeb -mthumb -mcpu=generic -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-GENERIC-THUMB %s
+end_comment
+
+begin_comment
+comment|// CHECK-BE-GENERIC-THUMB: "-cc1"{{.*}} "-triple" "thumbebv4t-{{.*}} "-target-cpu" "generic"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv4t -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V4T %s
 end_comment
 
@@ -148,7 +180,7 @@ comment|// RUN: %clang -target arm -march=armv6j -### -c %s 2>&1 | FileCheck -ch
 end_comment
 
 begin_comment
-comment|// CHECK-V6J: "-cc1"{{.*}} "-triple" "armv6-{{.*}} "-target-cpu" "arm1136j-s"
+comment|// CHECK-V6J: "-cc1"{{.*}} "-triple" "armv6-{{.*}} "-target-cpu" "arm1136jf-s"
 end_comment
 
 begin_comment
@@ -160,7 +192,7 @@ comment|// RUN: %clang -target arm -march=armv6j -mthumb -### -c %s 2>&1 | FileC
 end_comment
 
 begin_comment
-comment|// CHECK-V6J-THUMB: "-cc1"{{.*}} "-triple" "thumbv6-{{.*}} "-target-cpu" "arm1136j-s"
+comment|// CHECK-V6J-THUMB: "-cc1"{{.*}} "-triple" "thumbv6-{{.*}} "-target-cpu" "arm1136jf-s"
 end_comment
 
 begin_comment
@@ -196,7 +228,7 @@ comment|// RUN: %clang -target arm -march=armv6k -### -c %s 2>&1 | FileCheck -ch
 end_comment
 
 begin_comment
-comment|// CHECK-V6K: "-cc1"{{.*}} "-triple" "armv6k-{{.*}} "-target-cpu" "arm1176jzf-s"
+comment|// CHECK-V6K: "-cc1"{{.*}} "-triple" "armv6k-{{.*}} "-target-cpu" "arm1176j-s"
 end_comment
 
 begin_comment
@@ -208,7 +240,7 @@ comment|// RUN: %clang -target arm -march=armv6k -mthumb -### -c %s 2>&1 | FileC
 end_comment
 
 begin_comment
-comment|// CHECK-V6K-THUMB: "-cc1"{{.*}} "-triple" "thumbv6k-{{.*}} "-target-cpu" "arm1176jzf-s"
+comment|// CHECK-V6K-THUMB: "-cc1"{{.*}} "-triple" "thumbv6k-{{.*}} "-target-cpu" "arm1176j-s"
 end_comment
 
 begin_comment
@@ -420,6 +452,50 @@ comment|// CHECK-V8A: "-cc1"{{.*}} "-triple" "armv8-{{.*}}" "-target-cpu" "corte
 end_comment
 
 begin_comment
+comment|// RUN: %clang -mcpu=generic -target armv8 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target armv8a -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8a -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8-a -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target armv8 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target armv8a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -mlittle-endian -march=armv8-a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
+end_comment
+
+begin_comment
+comment|// CHECK-V8A-GENERIC: "-cc1"{{.*}} "-triple" "armv8-{{.*}}" "-target-cpu" "generic"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armebv8 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-V8A %s
 end_comment
 
@@ -561,6 +637,34 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm -mlittle-endian -march=armv8.1-a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8.1a -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target armv8.1a -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8.1-a -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8.1a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target armv8.1a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -march=armv8.1a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=generic -target arm -mlittle-endian -march=armv8.1-a -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V81A %s
 end_comment
 
 begin_comment
@@ -716,14 +820,6 @@ comment|// CHECK-CPUV6: "-cc1"{{.*}} "-triple" "armv6-{{.*}}
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=arm1176jz-s -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV6K %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=arm1176jzf-s -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV6K %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=mpcore -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV6K %s
 end_comment
 
@@ -733,6 +829,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-CPUV6K: "-cc1"{{.*}} "-triple" "armv6k-{{.*}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=arm1176jz-s -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV6KZ %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=arm1176jzf-s -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV6KZ %s
+end_comment
+
+begin_comment
+comment|// CHECK-CPUV6KZ: "-cc1"{{.*}} "-triple" "armv6kz-{{.*}}
 end_comment
 
 begin_comment
@@ -1228,6 +1336,10 @@ comment|// CHECK-BE-CPUV7R-THUMB: "-cc1"{{.*}} "-triple" "thumbebv7r-{{.*}}
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-a35 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
 end_comment
 
@@ -1237,6 +1349,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a72 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-a35 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
 end_comment
 
 begin_comment
@@ -1256,6 +1372,10 @@ comment|// CHECK-CPUV8A: "-cc1"{{.*}} "-triple" "armv8-{{.*}}
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb -mcpu=cortex-a35 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armeb -mcpu=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
 end_comment
 
@@ -1265,6 +1385,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target armeb -mcpu=cortex-a72 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-a35 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
 end_comment
 
 begin_comment
@@ -1284,6 +1408,10 @@ comment|// CHECK-BE-CPUV8A: "-cc1"{{.*}} "-triple" "armebv8-{{.*}}
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-a35 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a53 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
 end_comment
 
@@ -1293,6 +1421,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a72 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-a35 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
 end_comment
 
 begin_comment
@@ -1312,6 +1444,10 @@ comment|// CHECK-CPUV8A-THUMB: "-cc1"{{.*}} "-triple" "thumbv8-{{.*}}
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb -mcpu=cortex-a35 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armeb -mcpu=cortex-a53 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
 end_comment
 
@@ -1321,6 +1457,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target armeb -mcpu=cortex-a72 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=cortex-a35 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
 end_comment
 
 begin_comment

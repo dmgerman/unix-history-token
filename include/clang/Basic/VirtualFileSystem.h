@@ -200,8 +200,6 @@ name|Status
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|StringRef RealName
-argument_list|,
 argument|llvm::sys::fs::UniqueID UID
 argument_list|,
 argument|llvm::sys::TimeValue MTime
@@ -217,6 +215,39 @@ argument_list|,
 argument|llvm::sys::fs::perms Perms
 argument_list|)
 empty_stmt|;
+comment|/// Get a copy of a Status with a different name.
+specifier|static
+name|Status
+name|copyWithNewName
+parameter_list|(
+specifier|const
+name|Status
+modifier|&
+name|In
+parameter_list|,
+name|StringRef
+name|NewName
+parameter_list|)
+function_decl|;
+specifier|static
+name|Status
+name|copyWithNewName
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|file_status
+operator|&
+name|In
+argument_list|,
+name|StringRef
+name|NewName
+argument_list|)
+decl_stmt|;
 comment|/// \brief Returns the name that should be used for this file or directory.
 name|StringRef
 name|getName
@@ -226,18 +257,6 @@ block|{
 return|return
 name|Name
 return|;
-block|}
-name|void
-name|setName
-parameter_list|(
-name|StringRef
-name|N
-parameter_list|)
-block|{
-name|Name
-operator|=
-name|N
-expr_stmt|;
 block|}
 comment|/// @name Status interface from llvm::sys::fs
 comment|/// @{
@@ -325,42 +344,6 @@ block|{
 return|return
 name|Size
 return|;
-block|}
-name|void
-name|setType
-argument_list|(
-name|llvm
-operator|::
-name|sys
-operator|::
-name|fs
-operator|::
-name|file_type
-name|v
-argument_list|)
-block|{
-name|Type
-operator|=
-name|v
-expr_stmt|;
-block|}
-name|void
-name|setPermissions
-argument_list|(
-name|llvm
-operator|::
-name|sys
-operator|::
-name|fs
-operator|::
-name|perms
-name|p
-argument_list|)
-block|{
-name|Perms
-operator|=
-name|p
-expr_stmt|;
 block|}
 comment|/// @}
 comment|/// @name Status queries
@@ -474,17 +457,6 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
-comment|/// \brief Sets the name to use for this file.
-name|virtual
-name|void
-name|setName
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 block|}
 empty_stmt|;
 name|namespace
@@ -1013,6 +985,68 @@ name|EC
 argument_list|)
 operator|=
 literal|0
+block|;
+comment|/// Set the working directory. This will affect all following operations on
+comment|/// this file system and may propagate down for nested file systems.
+name|virtual
+name|std
+operator|::
+name|error_code
+name|setCurrentWorkingDirectory
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Path
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// Get the working directory of this file system.
+name|virtual
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getCurrentWorkingDirectory
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// Check whether a file exists. Provided for convenience.
+name|bool
+name|exists
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Path
+argument_list|)
+block|;
+comment|/// Make \a Path an absolute path.
+comment|///
+comment|/// Makes \a Path absolute using the current directory if it is not already.
+comment|/// An empty \a Path will result in the current directory.
+comment|///
+comment|/// /absolute/path   => /absolute/path
+comment|/// relative/../path =><current-directory>/relative/../path
+comment|///
+comment|/// \param Path A path that is modified to be an absolute path.
+comment|/// \returns success if \a path has been made absolute, otherwise a
+comment|///          platform-specific error_code.
+name|std
+operator|::
+name|error_code
+name|makeAbsolute
+argument_list|(
+argument|SmallVectorImpl<char>&Path
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1188,6 +1222,34 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getCurrentWorkingDirectory
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|error_code
+name|setCurrentWorkingDirectory
+argument_list|(
+argument|const Twine&Path
+argument_list|)
+name|override
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 name|FileSystemList
@@ -1237,12 +1299,188 @@ return|;
 block|}
 end_function
 
-begin_comment
+begin_decl_stmt
 unit|};
-comment|/// \brief Get a globally unique ID for a virtual file or directory.
+name|namespace
+name|detail
+block|{
+name|class
+name|InMemoryDirectory
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace detail
 end_comment
 
-begin_expr_stmt
+begin_comment
+comment|/// An in-memory file system.
+end_comment
+
+begin_decl_stmt
+name|class
+name|InMemoryFileSystem
+range|:
+name|public
+name|FileSystem
+block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|detail
+operator|::
+name|InMemoryDirectory
+operator|>
+name|Root
+block|;
+name|std
+operator|::
+name|string
+name|WorkingDirectory
+block|;
+name|bool
+name|UseNormalizedPaths
+operator|=
+name|true
+block|;
+name|public
+operator|:
+name|explicit
+name|InMemoryFileSystem
+argument_list|(
+argument|bool UseNormalizedPaths = true
+argument_list|)
+block|;
+operator|~
+name|InMemoryFileSystem
+argument_list|()
+name|override
+block|;
+comment|/// Add a buffer to the VFS with a path. The VFS owns the buffer.
+comment|/// \return true if the file was successfully added, false if the file already
+comment|/// exists in the file system with different contents.
+name|bool
+name|addFile
+argument_list|(
+argument|const Twine&Path
+argument_list|,
+argument|time_t ModificationTime
+argument_list|,
+argument|std::unique_ptr<llvm::MemoryBuffer> Buffer
+argument_list|)
+block|;
+comment|/// Add a buffer to the VFS with a path. The VFS does not own the buffer.
+comment|/// \return true if the file was successfully added, false if the file already
+comment|/// exists in the file system with different contents.
+name|bool
+name|addFileNoOwn
+argument_list|(
+argument|const Twine&Path
+argument_list|,
+argument|time_t ModificationTime
+argument_list|,
+argument|llvm::MemoryBuffer *Buffer
+argument_list|)
+block|;
+name|std
+operator|::
+name|string
+name|toString
+argument_list|()
+specifier|const
+block|;
+comment|/// Return true if this file system normalizes . and .. in paths.
+name|bool
+name|useNormalizedPaths
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseNormalizedPaths
+return|;
+block|}
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|Status
+operator|>
+name|status
+argument_list|(
+argument|const Twine&Path
+argument_list|)
+name|override
+block|;
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|File
+operator|>>
+name|openFileForRead
+argument_list|(
+argument|const Twine&Path
+argument_list|)
+name|override
+block|;
+name|directory_iterator
+name|dir_begin
+argument_list|(
+argument|const Twine&Dir
+argument_list|,
+argument|std::error_code&EC
+argument_list|)
+name|override
+block|;
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getCurrentWorkingDirectory
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|WorkingDirectory
+return|;
+block|}
+name|std
+operator|::
+name|error_code
+name|setCurrentWorkingDirectory
+argument_list|(
+argument|const Twine&Path
+argument_list|)
+name|override
+block|{
+name|WorkingDirectory
+operator|=
+name|Path
+operator|.
+name|str
+argument_list|()
+block|;
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Get a globally unique ID for a virtual file or directory.
 name|llvm
 operator|::
 name|sys
@@ -1252,18 +1490,9 @@ operator|::
 name|UniqueID
 name|getNextVirtualUniqueID
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// \brief Gets a \p FileSystem for a virtual file system described in YAML
-end_comment
-
-begin_comment
 comment|/// format.
-end_comment
-
-begin_expr_stmt
 name|IntrusiveRefCntPtr
 operator|<
 name|FileSystem
@@ -1278,18 +1507,14 @@ argument|void *DiagContext = nullptr
 argument_list|,
 argument|IntrusiveRefCntPtr<FileSystem> ExternalFS = getRealFileSystem()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_struct
-struct|struct
+block|;  struct
 name|YAMLVFSEntry
 block|{
 name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
 operator|>
@@ -1316,7 +1541,7 @@ operator|(
 name|VPath
 operator|)
 argument_list|)
-operator|,
+block|,
 name|RPath
 argument_list|(
 argument|std::forward<T2>(RPath)
@@ -1326,17 +1551,13 @@ name|std
 operator|::
 name|string
 name|VPath
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|string
 name|RPath
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
+block|; }
+block|;
 name|class
 name|YAMLVFSWriter
 block|{
@@ -1347,40 +1568,36 @@ operator|<
 name|YAMLVFSEntry
 operator|>
 name|Mappings
-expr_stmt|;
+block|;
 name|Optional
 operator|<
 name|bool
 operator|>
 name|IsCaseSensitive
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|YAMLVFSWriter
 argument_list|()
 block|{}
 name|void
 name|addFileMapping
-parameter_list|(
-name|StringRef
-name|VirtualPath
-parameter_list|,
-name|StringRef
-name|RealPath
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef VirtualPath
+argument_list|,
+argument|StringRef RealPath
+argument_list|)
+block|;
 name|void
 name|setCaseSensitivity
-parameter_list|(
-name|bool
-name|CaseSensitive
-parameter_list|)
+argument_list|(
+argument|bool CaseSensitive
+argument_list|)
 block|{
 name|IsCaseSensitive
 operator|=
 name|CaseSensitive
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|write
 argument_list|(
@@ -1390,16 +1607,11 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|)
-decl_stmt|;
-block|}
+block|; }
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace vfs
 end_comment
 

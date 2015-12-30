@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -g -fblocks -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -debug-info-kind=limited -fblocks -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// CHECK: define {{.*}} @__main_block_invoke
 end_comment
 
 begin_comment
-comment|// CHECK: dbg ![[BLOCK_ENTRY:[0-9]+]]
+comment|// CHECK: , !dbg ![[BLOCK_ENTRY:[0-9]+]]
 end_comment
 
 begin_function

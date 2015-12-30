@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/FileManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -79,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Serialization/ContinuousRangeMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/ModuleFileExtension.h"
 end_include
 
 begin_include
@@ -139,9 +151,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|FileEntry
-decl_stmt|;
-name|class
 name|DeclContext
 decl_stmt|;
 name|class
@@ -177,44 +186,6 @@ name|MK_MainFile
 comment|///< File is a PCH file treated as the actual main file.
 block|}
 enum|;
-comment|/// \brief Information about the contents of a DeclContext.
-struct|struct
-name|DeclContextInfo
-block|{
-name|DeclContextInfo
-argument_list|()
-operator|:
-name|NameLookupTableData
-argument_list|()
-operator|,
-name|LexicalDecls
-argument_list|()
-operator|,
-name|NumLexicalDecls
-argument_list|()
-block|{}
-name|llvm
-operator|::
-name|OnDiskIterableChainedHashTable
-operator|<
-name|reader
-operator|::
-name|ASTDeclContextNameLookupTrait
-operator|>
-operator|*
-name|NameLookupTableData
-expr_stmt|;
-comment|// an ASTDeclContextNameLookupTable.
-specifier|const
-name|KindDeclIDPair
-modifier|*
-name|LexicalDecls
-decl_stmt|;
-name|unsigned
-name|NumLexicalDecls
-decl_stmt|;
-block|}
-struct|;
 comment|/// \brief The input file that has been loaded from this AST file, along with
 comment|/// bools indicating whether this was an overridden buffer or if it was
 comment|/// out-of-date or not-found.
@@ -490,6 +461,10 @@ comment|/// \brief Whether this precompiled header is a relocatable PCH file.
 name|bool
 name|RelocatablePCH
 decl_stmt|;
+comment|/// \brief Whether timestamps are included in this module file.
+name|bool
+name|HasTimestamps
+decl_stmt|;
 comment|/// \brief The file entry for the module file.
 specifier|const
 name|FileEntry
@@ -562,6 +537,20 @@ comment|/// \brief The first source location in this module.
 name|SourceLocation
 name|FirstLoc
 decl_stmt|;
+comment|/// The list of extension readers that are attached to this module
+comment|/// file.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleFileExtensionReader
+operator|>>
+name|ExtensionReaders
+expr_stmt|;
 comment|// === Input Files ===
 comment|/// \brief The cursor to the start of the input-files block.
 name|llvm
@@ -688,6 +677,16 @@ name|void
 modifier|*
 name|IdentifierLookupTable
 decl_stmt|;
+comment|/// \brief Offsets of identifiers that we're going to preload within
+comment|/// IdentifierTableData.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|PreloadIdentifierOffsets
+expr_stmt|;
 comment|// === Macros ===
 comment|/// \brief The cursor to the start of the preprocessor block, which stores
 comment|/// all of the macro definitions.
@@ -940,24 +939,6 @@ name|uint32_t
 modifier|*
 name|CXXCtorInitializersOffsets
 decl_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|DeclContext
-operator|*
-operator|,
-name|DeclContextInfo
-operator|>
-name|DeclContextInfosMap
-expr_stmt|;
-comment|/// \brief Information about the lexical and visible declarations
-comment|/// for each DeclContext.
-name|DeclContextInfosMap
-name|DeclContextInfos
-decl_stmt|;
 comment|/// \brief Array of file-level DeclIDs sorted by file.
 specifier|const
 name|serialization
@@ -969,29 +950,6 @@ expr_stmt|;
 name|unsigned
 name|NumFileSortedDecls
 decl_stmt|;
-comment|/// \brief Array of redeclaration chain location information within this
-comment|/// module file, sorted by the first declaration ID.
-specifier|const
-name|serialization
-operator|::
-name|LocalRedeclarationsInfo
-operator|*
-name|RedeclarationsMap
-expr_stmt|;
-comment|/// \brief The number of redeclaration info entries in RedeclarationsMap.
-name|unsigned
-name|LocalNumRedeclarationsInMap
-decl_stmt|;
-comment|/// \brief The redeclaration chains for declarations local to this
-comment|/// module file.
-name|SmallVector
-operator|<
-name|uint64_t
-operator|,
-literal|1
-operator|>
-name|RedeclarationChains
-expr_stmt|;
 comment|/// \brief Array of category list location information within this
 comment|/// module file, sorted by the definition ID.
 specifier|const
@@ -1084,6 +1042,22 @@ specifier|const
 block|{
 return|return
 name|DirectlyImported
+return|;
+block|}
+comment|/// \brief Is this a module file for a module (rather than a PCH or similar).
+name|bool
+name|isModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|MK_ImplicitModule
+operator|||
+name|Kind
+operator|==
+name|MK_ExplicitModule
 return|;
 block|}
 comment|/// \brief Dump debugging output for this module.

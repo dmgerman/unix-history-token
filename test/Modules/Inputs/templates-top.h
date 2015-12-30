@@ -44,6 +44,10 @@ begin_extern
 extern|extern List<double> *instantiateListDoubleDeclaration;
 end_extern
 
+begin_extern
+extern|extern List<long> *instantiateListLongDeclaration;
+end_extern
+
 begin_decl_stmt
 name|namespace
 name|A

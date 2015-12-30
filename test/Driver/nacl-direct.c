@@ -44,7 +44,7 @@ comment|// CHECK-I686: "-internal-isystem" "foo{{/|\\\\}}include"
 end_comment
 
 begin_comment
-comment|// CHECK-I686: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}x86_64-nacl{{/|\\\\}}usr{{/|\\\\}}include"
+comment|// CHECK-I686: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}i686-nacl{{/|\\\\}}usr{{/|\\\\}}include"
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ comment|// CHECK-I686: "-L{{.*}}{{/|\\\\}}..{{/|\\\\}}x86_64-nacl{{/|\\\\}}lib32
 end_comment
 
 begin_comment
-comment|// CHECK-I686: "-L{{.*}}{{/|\\\\}}..{{/|\\\\}}x86_64-nacl{{/|\\\\}}usr{{/|\\\\}}lib32"
+comment|// CHECK-I686: "-L{{.*}}{{/|\\\\}}..{{/|\\\\}}i686-nacl{{/|\\\\}}usr{{/|\\\\}}lib"
 end_comment
 
 begin_comment
@@ -464,7 +464,7 @@ comment|// CHECK-I686-CXX: "-internal-isystem" "foo{{/|\\\\}}include"
 end_comment
 
 begin_comment
-comment|// CHECK-I686-CXX: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}x86_64-nacl{{/|\\\\}}usr{{/|\\\\}}include"
+comment|// CHECK-I686-CXX: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}i686-nacl{{/|\\\\}}usr{{/|\\\\}}include"
 end_comment
 
 begin_comment

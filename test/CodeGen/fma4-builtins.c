@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +fma4 -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +fma4 -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
 begin_comment
@@ -33,6 +33,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_macc_ps
 comment|// CHECK: @llvm.x86.fma.vfmadd.ps
 return|return
 name|_mm_macc_ps
@@ -61,6 +62,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_macc_pd
 comment|// CHECK: @llvm.x86.fma.vfmadd.pd
 return|return
 name|_mm_macc_pd
@@ -89,6 +91,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_macc_ss
 comment|// CHECK: @llvm.x86.fma.vfmadd.ss
 return|return
 name|_mm_macc_ss
@@ -117,6 +120,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_macc_sd
 comment|// CHECK: @llvm.x86.fma.vfmadd.sd
 return|return
 name|_mm_macc_sd
@@ -145,6 +149,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_msub_ps
 comment|// CHECK: @llvm.x86.fma.vfmsub.ps
 return|return
 name|_mm_msub_ps
@@ -173,6 +178,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_msub_pd
 comment|// CHECK: @llvm.x86.fma.vfmsub.pd
 return|return
 name|_mm_msub_pd
@@ -201,6 +207,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_msub_ss
 comment|// CHECK: @llvm.x86.fma.vfmsub.ss
 return|return
 name|_mm_msub_ss
@@ -229,6 +236,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_msub_sd
 comment|// CHECK: @llvm.x86.fma.vfmsub.sd
 return|return
 name|_mm_msub_sd
@@ -257,6 +265,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmacc_ps
 comment|// CHECK: @llvm.x86.fma.vfnmadd.ps
 return|return
 name|_mm_nmacc_ps
@@ -285,6 +294,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmacc_pd
 comment|// CHECK: @llvm.x86.fma.vfnmadd.pd
 return|return
 name|_mm_nmacc_pd
@@ -313,6 +323,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmacc_ss
 comment|// CHECK: @llvm.x86.fma.vfnmadd.ss
 return|return
 name|_mm_nmacc_ss
@@ -341,6 +352,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmacc_sd
 comment|// CHECK: @llvm.x86.fma.vfnmadd.sd
 return|return
 name|_mm_nmacc_sd
@@ -369,6 +381,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmsub_ps
 comment|// CHECK: @llvm.x86.fma.vfnmsub.ps
 return|return
 name|_mm_nmsub_ps
@@ -397,6 +410,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmsub_pd
 comment|// CHECK: @llvm.x86.fma.vfnmsub.pd
 return|return
 name|_mm_nmsub_pd
@@ -425,6 +439,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmsub_ss
 comment|// CHECK: @llvm.x86.fma.vfnmsub.ss
 return|return
 name|_mm_nmsub_ss
@@ -453,6 +468,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_nmsub_sd
 comment|// CHECK: @llvm.x86.fma.vfnmsub.sd
 return|return
 name|_mm_nmsub_sd
@@ -481,6 +497,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_maddsub_ps
 comment|// CHECK: @llvm.x86.fma.vfmaddsub.ps
 return|return
 name|_mm_maddsub_ps
@@ -509,6 +526,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_maddsub_pd
 comment|// CHECK: @llvm.x86.fma.vfmaddsub.pd
 return|return
 name|_mm_maddsub_pd
@@ -537,6 +555,7 @@ name|__m128
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_msubadd_ps
 comment|// CHECK: @llvm.x86.fma.vfmsubadd.ps
 return|return
 name|_mm_msubadd_ps
@@ -565,6 +584,7 @@ name|__m128d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_msubadd_pd
 comment|// CHECK: @llvm.x86.fma.vfmsubadd.pd
 return|return
 name|_mm_msubadd_pd
@@ -593,6 +613,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_macc_ps
 comment|// CHECK: @llvm.x86.fma.vfmadd.ps.256
 return|return
 name|_mm256_macc_ps
@@ -621,6 +642,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_macc_pd
 comment|// CHECK: @llvm.x86.fma.vfmadd.pd.256
 return|return
 name|_mm256_macc_pd
@@ -649,6 +671,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_msub_ps
 comment|// CHECK: @llvm.x86.fma.vfmsub.ps.256
 return|return
 name|_mm256_msub_ps
@@ -677,6 +700,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_msub_pd
 comment|// CHECK: @llvm.x86.fma.vfmsub.pd.256
 return|return
 name|_mm256_msub_pd
@@ -705,6 +729,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_nmacc_ps
 comment|// CHECK: @llvm.x86.fma.vfnmadd.ps.256
 return|return
 name|_mm256_nmacc_ps
@@ -733,6 +758,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_nmacc_pd
 comment|// CHECK: @llvm.x86.fma.vfnmadd.pd.256
 return|return
 name|_mm256_nmacc_pd
@@ -761,6 +787,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_nmsub_ps
 comment|// CHECK: @llvm.x86.fma.vfnmsub.ps.256
 return|return
 name|_mm256_nmsub_ps
@@ -789,6 +816,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_nmsub_pd
 comment|// CHECK: @llvm.x86.fma.vfnmsub.pd.256
 return|return
 name|_mm256_nmsub_pd
@@ -817,6 +845,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_maddsub_ps
 comment|// CHECK: @llvm.x86.fma.vfmaddsub.ps.256
 return|return
 name|_mm256_maddsub_ps
@@ -845,6 +874,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_maddsub_pd
 comment|// CHECK: @llvm.x86.fma.vfmaddsub.pd.256
 return|return
 name|_mm256_maddsub_pd
@@ -873,6 +903,7 @@ name|__m256
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_msubadd_ps
 comment|// CHECK: @llvm.x86.fma.vfmsubadd.ps.256
 return|return
 name|_mm256_msubadd_ps
@@ -901,6 +932,7 @@ name|__m256d
 name|c
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_msubadd_pd
 comment|// CHECK: @llvm.x86.fma.vfmsubadd.pd.256
 return|return
 name|_mm256_msubadd_pd

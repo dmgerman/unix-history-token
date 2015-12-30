@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -w -fdump-record-layouts %s> %t.layouts
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -w -fdump-record-layouts-simple %s> %t.before
+comment|// RUN: %clang_cc1 -w -fdump-record-layouts-simple %s> %t.layouts
 end_comment
 
 begin_comment
@@ -12,7 +8,7 @@ comment|// RUN: %clang_cc1 -w -DPACKED= -DALIGNED16= -fdump-record-layouts-simpl
 end_comment
 
 begin_comment
-comment|// RUN: diff %t.before %t.after
+comment|// RUN: diff %t.layouts %t.after
 end_comment
 
 begin_comment

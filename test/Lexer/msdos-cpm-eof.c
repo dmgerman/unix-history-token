@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -fms-extensions %s
-end_comment
-
-begin_comment
-comment|// expected-no-diagnostics
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fms-extensions -Wmicrosoft %s
 end_comment
 
 begin_decl_stmt
@@ -12,6 +8,10 @@ name|int
 name|x
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning@+1 {{treating Ctrl-Z as end-of-file is a Microsoft extension}}
+end_comment
 
 begin_escape
 end_escape

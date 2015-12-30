@@ -16,6 +16,10 @@ comment|// CHECK: __ARM_64BIT_STATE 1
 end_comment
 
 begin_comment
+comment|// CHECK-NOT: __ARM_32BIT_STATE
+end_comment
+
+begin_comment
 comment|// CHECK: __ARM_ACLE 200
 end_comment
 
@@ -29,6 +33,30 @@ end_comment
 
 begin_comment
 comment|// CHECK: __ARM_ARCH_ISA_A64 1
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_ARCH_ISA_ARM
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_ARCH_ISA_THUMB
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_FEATURE_QBIT
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_FEATURE_SAT
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_FEATURE_SIMD32
 end_comment
 
 begin_comment
@@ -68,6 +96,10 @@ comment|// CHECK: __ARM_FEATURE_IDIV 1
 end_comment
 
 begin_comment
+comment|// CHECK: __ARM_FEATURE_LDREX 0xF
+end_comment
+
+begin_comment
 comment|// CHECK: __ARM_FEATURE_NUMERIC_MAXMIN 1
 end_comment
 
@@ -76,7 +108,11 @@ comment|// CHECK: __ARM_FEATURE_UNALIGNED 1
 end_comment
 
 begin_comment
-comment|// CHECK: __ARM_FP 0xe
+comment|// CHECK: __ARM_FP 0xE
+end_comment
+
+begin_comment
+comment|// CHECK: __ARM_FP16_ARGS 1
 end_comment
 
 begin_comment
@@ -88,19 +124,23 @@ comment|// CHECK-NOT: __ARM_FP_FAST 1
 end_comment
 
 begin_comment
-comment|// CHECK: __ARM_FP_FENV_ROUNDING 1
-end_comment
-
-begin_comment
 comment|// CHECK: __ARM_NEON 1
 end_comment
 
 begin_comment
-comment|// CHECK: __ARM_NEON_FP 0xe
+comment|// CHECK: __ARM_NEON_FP 0xE
 end_comment
 
 begin_comment
 comment|// CHECK: __ARM_PCS_AAPCS64 1
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_PCS 1
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_PCS_VFP 1
 end_comment
 
 begin_comment
@@ -109,6 +149,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOT: __ARM_SIZEOF_WCHAR_T 2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be-eabi -x c -E -dM %s -o - | FileCheck %s -check-prefix CHECK-BIGENDIAN
+end_comment
+
+begin_comment
+comment|// CHECK-BIGENDIAN: __ARM_BIG_ENDIAN 1
 end_comment
 
 begin_comment
@@ -141,6 +189,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-CRC32: __ARM_FEATURE_CRC32 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-linux-gnu -fno-math-errno -fno-signed-zeros\
+end_comment
+
+begin_comment
+comment|// RUN:        -fno-trapping-math -fassociative-math -freciprocal-math\
+end_comment
+
+begin_comment
+comment|// RUN:        -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-FASTMATH %s
 end_comment
 
 begin_comment
@@ -192,7 +252,15 @@ comment|// CHECK-NEON: __ARM_NEON 1
 end_comment
 
 begin_comment
-comment|// CHECK-NEON: __ARM_NEON_FP 0xe
+comment|// CHECK-NEON: __ARM_NEON_FP 0xE
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-eabi -march=armv8.1-a -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// CHECK-V81A: __ARM_FEATURE_QRDMX 1
 end_comment
 
 begin_comment
@@ -224,11 +292,23 @@ comment|// RUN: %clang -target aarch64 -mtune=cyclone -### -c %s 2>&1 | FileChec
 end_comment
 
 begin_comment
+comment|// ================== Check whether -mtune accepts mixed-case features.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=CYCLONE -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MTUNE-CYCLONE %s
+end_comment
+
+begin_comment
 comment|// CHECK-MTUNE-CYCLONE: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feature" "+neon" "-target-feature" "+zcm" "-target-feature" "+zcz"
 end_comment
 
 begin_comment
 comment|// RUN: %clang -target aarch64 -mcpu=cyclone -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-CYCLONE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=cortex-a35 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-A35 %s
 end_comment
 
 begin_comment
@@ -245,6 +325,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-MCPU-CYCLONE: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto" "-target-feature" "+zcm" "-target-feature" "+zcz"
+end_comment
+
+begin_comment
+comment|// CHECK-MCPU-A35: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto"
 end_comment
 
 begin_comment
@@ -373,6 +457,18 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target aarch64 -mtune=cyclone -mcpu=cortex-a53  -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-MTUNE %s
+end_comment
+
+begin_comment
+comment|// ================== Check whether -mtune accepts mixed-case features.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=cortex-a53 -mtune=CYCLONE -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-MTUNE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=CyclonE -mcpu=cortex-a53  -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-MTUNE %s
 end_comment
 
 begin_comment

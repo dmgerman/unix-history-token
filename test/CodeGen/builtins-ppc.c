@@ -35,5 +35,23 @@ comment|// CHECK: store volatile i32 4
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_builtin_ppc_get_timebase
+end_comment
+
+begin_function
+name|long
+name|long
+name|test_builtin_ppc_get_timebase
+parameter_list|()
+block|{
+comment|// CHECK: call i64 @llvm.readcyclecounter()
+return|return
+name|__builtin_ppc_get_timebase
+argument_list|()
+return|;
+block|}
+end_function
+
 end_unit
 

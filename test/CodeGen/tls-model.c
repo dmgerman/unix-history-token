@@ -19,6 +19,32 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple x86_64-pc-linux-gnu -ftls-model=local-exec -emit-llvm -o - | FileCheck %s -check-prefix=CHECK-LE
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-linux-gnu -femulated-tls -emit-llvm -o - 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:     FileCheck %s -check-prefix=CHECK-GD
+end_comment
+
+begin_decl_stmt
+name|int
+name|z1
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|z2
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
 name|__thread
@@ -60,7 +86,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// Note that unlike normal C uninitialized global variables,
+end_comment
+
+begin_comment
+comment|// uninitialized TLS variables do NOT have COMMON linkage.
+end_comment
+
+begin_comment
+comment|// CHECK-GD: @z1 = global i32 0
+end_comment
+
+begin_comment
 comment|// CHECK-GD: @f.y = internal thread_local global i32 0
+end_comment
+
+begin_comment
+comment|// CHECK-GD: @z2 = common global i32 0
 end_comment
 
 begin_comment
@@ -72,7 +114,15 @@ comment|// CHECK-GD: @z = thread_local(initialexec) global i32 0
 end_comment
 
 begin_comment
+comment|// CHECK-LD: @z1 = global i32 0
+end_comment
+
+begin_comment
 comment|// CHECK-LD: @f.y = internal thread_local(localdynamic) global i32 0
+end_comment
+
+begin_comment
+comment|// CHECK-LD: @z2 = common global i32 0
 end_comment
 
 begin_comment
@@ -84,7 +134,15 @@ comment|// CHECK-LD: @z = thread_local(initialexec) global i32 0
 end_comment
 
 begin_comment
+comment|// CHECK-IE: @z1 = global i32 0
+end_comment
+
+begin_comment
 comment|// CHECK-IE: @f.y = internal thread_local(initialexec) global i32 0
+end_comment
+
+begin_comment
+comment|// CHECK-IE: @z2 = common global i32 0
 end_comment
 
 begin_comment
@@ -96,7 +154,15 @@ comment|// CHECK-IE: @z = thread_local(initialexec) global i32 0
 end_comment
 
 begin_comment
+comment|// CHECK-LE: @z1 = global i32 0
+end_comment
+
+begin_comment
 comment|// CHECK-LE: @f.y = internal thread_local(localexec) global i32 0
+end_comment
+
+begin_comment
+comment|// CHECK-LE: @z2 = common global i32 0
 end_comment
 
 begin_comment

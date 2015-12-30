@@ -247,32 +247,6 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-error@+2 {{unexpected OpenMP clause 'linear' in directive '#pragma omp parallel for'}}
-comment|// expected-warning@+1 {{extra tokens at the end of '#pragma omp parallel for' are ignored}}
-pragma|#
-directive|pragma
-name|omp
-name|parallel
-name|for
-name|linear
-name|(
-name|x
-name|)
-name|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-operator|++
-name|i
-control|)
-empty_stmt|;
 comment|// expected-warning@+1 {{extra tokens at the end of '#pragma omp parallel for' are ignored}}
 pragma|#
 directive|pragma
@@ -785,7 +759,7 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-error@+1 {{argument to 'collapse' clause must be a positive integer value}}
+comment|// expected-error@+1 {{argument to 'collapse' clause must be a strictly positive integer value}}
 pragma|#
 directive|pragma
 name|omp
@@ -810,7 +784,7 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-error@+1 {{argument to 'collapse' clause must be a positive integer value}}
+comment|// expected-error@+1 {{argument to 'collapse' clause must be a strictly positive integer value}}
 pragma|#
 directive|pragma
 name|omp
@@ -834,7 +808,7 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-error@+1 {{argument to 'collapse' clause must be a positive integer value}}
+comment|// expected-error@+1 {{argument to 'collapse' clause must be a strictly positive integer value}}
 pragma|#
 directive|pragma
 name|omp
@@ -902,8 +876,7 @@ condition|;
 operator|++
 name|j
 control|)
-comment|// expected-error@+3 {{reduction variable must be shared}}
-comment|// expected-error@+2 {{private variable cannot be reduction}}
+comment|// expected-error@+2 2 {{reduction variable must be shared}}
 comment|// expected-error@+1 {{region cannot be closely nested inside 'parallel for' region; perhaps you forget to enclose 'omp for' directive into a parallel region?}}
 pragma|#
 directive|pragma

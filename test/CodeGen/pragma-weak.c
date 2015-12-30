@@ -16,51 +16,51 @@ comment|// CHECK: @correct_linkage = weak global
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @both = alias void ()* @__both
+comment|// CHECK-DAG: @both = alias void (), void ()* @__both
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @both2 = alias void ()* @__both2
+comment|// CHECK-DAG: @both2 = alias void (), void ()* @__both2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @weakvar_alias = weak alias i32* @__weakvar_alias
+comment|// CHECK-DAG: @weakvar_alias = weak alias i32, i32* @__weakvar_alias
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @foo = weak alias void ()* @__foo
+comment|// CHECK-DAG: @foo = weak alias void (), void ()* @__foo
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @foo2 = weak alias void ()* @__foo2
+comment|// CHECK-DAG: @foo2 = weak alias void (), void ()* @__foo2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @stutter = weak alias void ()* @__stutter
+comment|// CHECK-DAG: @stutter = weak alias void (), void ()* @__stutter
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @stutter2 = weak alias void ()* @__stutter2
+comment|// CHECK-DAG: @stutter2 = weak alias void (), void ()* @__stutter2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @declfirst = weak alias void ()* @__declfirst
+comment|// CHECK-DAG: @declfirst = weak alias void (), void ()* @__declfirst
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @declfirstattr = weak alias void ()* @__declfirstattr
+comment|// CHECK-DAG: @declfirstattr = weak alias void (), void ()* @__declfirstattr
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @mix2 = weak alias void ()* @__mix2
+comment|// CHECK-DAG: @mix2 = weak alias void (), void ()* @__mix2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @a1 = weak alias void ()* @__a1
+comment|// CHECK-DAG: @a1 = weak alias void (), void ()* @__a1
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @xxx = weak alias void ()* @__xxx
+comment|// CHECK-DAG: @xxx = weak alias void (), void ()* @__xxx
 end_comment
 
 begin_comment
@@ -223,7 +223,7 @@ name|td
 end_pragma
 
 begin_comment
-comment|// expected-warning {{weak identifier 'td' never declared}}
+comment|// expected-warning {{'weak' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -243,7 +243,7 @@ name|__td2
 end_pragma
 
 begin_comment
-comment|// expected-warning {{weak identifier '__td2' never declared}}
+comment|// expected-warning {{'weak' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -252,6 +252,26 @@ name|int
 name|__td2
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__td3
+typedef|;
+end_typedef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|td3
+name|=
+name|__td3
+end_pragma
+
+begin_comment
+comment|// expected-warning {{'weak' attribute only applies to variables and functions}}
+end_comment
 
 begin_comment
 comment|///// test weird cases

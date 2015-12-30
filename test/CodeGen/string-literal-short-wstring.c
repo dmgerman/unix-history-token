@@ -11,6 +11,18 @@ begin_comment
 comment|// Runs in c++ mode so that wchar_t is available.
 end_comment
 
+begin_comment
+comment|// XFAIL: hexagon
+end_comment
+
+begin_comment
+comment|// Hexagon aligns arrays of size 8+ bytes to a 64-bit boundary, which fails
+end_comment
+
+begin_comment
+comment|// the first check line with "align 1".
+end_comment
+
 begin_function
 name|int
 name|main

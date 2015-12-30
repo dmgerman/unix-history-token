@@ -16,7 +16,7 @@ comment|// RUN: c-index-test -code-completion-at=%s:9:1 -I %t %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:9:1 -I %t -fmodules %s | FileCheck %s
+comment|// RUN: c-index-test -code-completion-at=%s:9:1 -I %t -fmodules -fmodules-cache-path=%t %s | FileCheck %s
 end_comment
 
 begin_include

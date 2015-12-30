@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===---- avx512fintrin.h - AVX2 intrinsics -----------------------------------===  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to deal  * in the Software without restriction, including without limitation the rights  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  * copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  * THE SOFTWARE.  *  *===-----------------------------------------------------------------------===  */
+comment|/*===---- avx512erintrin.h - AVX512ER intrinsics ---------------------------===  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to deal  * in the Software without restriction, including without limitation the rights  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  * copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  * THE SOFTWARE.  *  *===-----------------------------------------------------------------------===  */
 end_comment
 
 begin_ifndef
@@ -375,7 +375,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_mask((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)_mm_setzero_ps(), \                                         (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)_mm_setzero_ps(), \                                         (__mmask8)-1, (R)); })
 end_define
 
 begin_define
@@ -393,7 +393,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_mask((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)(__m128)(S), \                                         (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)(__m128)(S), \                                         (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -409,7 +409,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_mask((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)_mm_setzero_ps(), \                                         (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)_mm_setzero_ps(), \                                         (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -468,7 +468,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_mask((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)_mm_setzero_pd(), \                                          (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)_mm_setzero_pd(), \                                          (__mmask8)-1, (R)); })
 end_define
 
 begin_define
@@ -486,7 +486,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_mask((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)(__m128d)(S), \                                          (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)(__m128d)(S), \                                          (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -502,7 +502,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_mask((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)_mm_setzero_pd(), \                                          (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)_mm_setzero_pd(), \                                          (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -727,7 +727,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_mask((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)_mm_setzero_ps(), \                                       (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)_mm_setzero_ps(), \                                       (__mmask8)-1, (R)); })
 end_define
 
 begin_define
@@ -745,7 +745,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_mask((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)(__m128)(S), \                                       (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)(__m128)(S), \                                       (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -761,7 +761,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_mask((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)_mm_setzero_ps(), \                                       (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)_mm_setzero_ps(), \                                       (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -820,7 +820,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_mask((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)_mm_setzero_pd(), \                                        (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)_mm_setzero_pd(), \                                        (__mmask8)-1, (R)); })
 end_define
 
 begin_define
@@ -838,7 +838,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_mask((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)(__m128d)(S), \                                        (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)(__m128d)(S), \                                        (__mmask8)(M), (R)); })
 end_define
 
 begin_define
@@ -854,7 +854,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_mask((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)_mm_setzero_pd(), \                                        (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)_mm_setzero_pd(), \                                        (__mmask8)(M), (R)); })
 end_define
 
 begin_define

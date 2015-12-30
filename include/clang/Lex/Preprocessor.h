@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Lex/PTHManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Lex/TokenLexer.h"
 end_include
 
@@ -246,6 +240,9 @@ name|PreprocessingRecord
 decl_stmt|;
 name|class
 name|ModuleLoader
+decl_stmt|;
+name|class
+name|PTHManager
 decl_stmt|;
 name|class
 name|PreprocessorOptions
@@ -435,6 +432,11 @@ specifier|const
 name|TargetInfo
 operator|*
 name|Target
+block|;
+specifier|const
+name|TargetInfo
+operator|*
+name|AuxTarget
 block|;
 name|FileManager
 operator|&
@@ -2652,6 +2654,14 @@ begin_comment
 comment|/// lifetime of the preprocessor.
 end_comment
 
+begin_comment
+comment|/// \param AuxTarget is owned by the caller and must remain valid for
+end_comment
+
+begin_comment
+comment|/// the lifetime of the preprocessor.
+end_comment
+
 begin_function_decl
 name|void
 name|Initialize
@@ -2660,6 +2670,13 @@ specifier|const
 name|TargetInfo
 modifier|&
 name|Target
+parameter_list|,
+specifier|const
+name|TargetInfo
+modifier|*
+name|AuxTarget
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2784,6 +2801,20 @@ block|{
 return|return
 operator|*
 name|Target
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|TargetInfo
+operator|*
+name|getAuxTargetInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AuxTarget
 return|;
 block|}
 end_expr_stmt

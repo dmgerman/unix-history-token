@@ -82,7 +82,7 @@ comment|// Debug info
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -I %t -ivfsoverlay %t.external.yaml -triple %itanium_abi_triple -g -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-DEBUG-EXTERNAL %s
+comment|// RUN: %clang_cc1 -I %t -ivfsoverlay %t.external.yaml -triple %itanium_abi_triple -debug-info-kind=limited -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-DEBUG-EXTERNAL %s
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ comment|// CHECK-DEBUG-EXTERNAL: ![[Num]] = !DIFile(filename: "{{[^"]*}}Inputs{{
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -I %t -ivfsoverlay %t.yaml -triple %itanium_abi_triple -g -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-DEBUG %s
+comment|// RUN: %clang_cc1 -I %t -ivfsoverlay %t.yaml -triple %itanium_abi_triple -debug-info-kind=limited -emit-llvm %s -o - | FileCheck -check-prefix=CHECK-DEBUG %s
 end_comment
 
 begin_comment

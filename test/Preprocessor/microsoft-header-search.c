@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -I%S/Inputs/microsoft-header-search %s -fms-compatibi
 end_comment
 
 begin_comment
-comment|// expected-warning@Inputs/microsoft-header-search/a/findme.h:3 {{findme.h successfully included using MS search rules}}
+comment|// expected-warning@Inputs/microsoft-header-search/a/findme.h:3 {{findme.h successfully included using Microsoft header search rules}}
 end_comment
 
 begin_comment
-comment|// expected-warning@Inputs/microsoft-header-search/a/b/include3.h:3 {{#include resolved using non-portable MSVC search rules as}}
+comment|// expected-warning@Inputs/microsoft-header-search/a/b/include3.h:3 {{#include resolved using non-portable Microsoft search rules as}}
 end_comment
 
 begin_comment

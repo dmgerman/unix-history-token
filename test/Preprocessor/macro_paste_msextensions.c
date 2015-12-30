@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: %clang_cc1 -verify -fms-extensions -Wmicrosoft %s
+end_comment
+
+begin_comment
 comment|// RUN: not %clang_cc1 -P -E -fms-extensions %s | FileCheck -strict-whitespace %s
 end_comment
 
@@ -36,6 +40,10 @@ name|comment
 value|/##/  dead tokens live here
 end_define
 
+begin_comment
+comment|// expected-warning@+1 {{pasting two '/' tokens}}
+end_comment
+
 begin_decl_stmt
 name|comment
 name|This
@@ -59,6 +67,10 @@ name|x
 parameter_list|)
 value|int x comment cute little dead tokens...
 end_define
+
+begin_comment
+comment|// expected-warning@+1 {{pasting two '/' tokens}}
+end_comment
 
 begin_macro
 name|nested
@@ -116,6 +128,10 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|// expected-warning {{type specifier missing}} expected-error {{invalid preprocessing token}} expected-error {{parameter list without types}}
+end_comment
+
+begin_comment
 comment|// CHECK: abc(baz(q))
 end_comment
 
@@ -157,6 +173,10 @@ argument_list|,
 argument|d4
 argument_list|)
 end_macro
+
+begin_comment
+comment|// expected-error 4 {{invalid preprocessing token}} expected-error {{expected function body}}
+end_comment
 
 begin_comment
 comment|// CHECK: "1a-b2-3cd4"

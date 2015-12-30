@@ -87,6 +87,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|ASTContext
+decl_stmt|;
 comment|/// \brief Provides common interface for the Decls that can be redeclared.
 name|template
 operator|<
@@ -120,9 +123,12 @@ name|CompleteRedeclChain
 operator|>
 name|KnownLatest
 expr_stmt|;
+comment|/// We store a pointer to the ASTContext in the UninitializedLatest
+comment|/// pointer, but to avoid circular type dependencies when we steal the low
+comment|/// bits of this pointer, we use a raw void* here.
 typedef|typedef
 specifier|const
-name|ASTContext
+name|void
 modifier|*
 name|UninitializedLatest
 typedef|;
@@ -182,7 +188,7 @@ argument_list|)
 operator|:
 name|Next
 argument_list|(
-argument|NotKnownLatest(&Ctx)
+argument|NotKnownLatest(reinterpret_cast<UninitializedLatest>(&Ctx))
 argument_list|)
 block|{}
 name|DeclLink
@@ -314,6 +320,13 @@ operator|=
 name|KnownLatest
 argument_list|(
 operator|*
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ASTContext
+operator|*
+operator|>
+operator|(
 name|NKL
 operator|.
 name|get
@@ -321,6 +334,7 @@ operator|<
 name|UninitializedLatest
 operator|>
 operator|(
+operator|)
 operator|)
 argument_list|,
 name|const_cast
@@ -426,6 +440,13 @@ operator|=
 name|KnownLatest
 argument_list|(
 operator|*
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ASTContext
+operator|*
+operator|>
+operator|(
 name|NKL
 operator|.
 name|get
@@ -433,6 +454,7 @@ operator|<
 name|UninitializedLatest
 operator|>
 operator|(
+operator|)
 operator|)
 argument_list|,
 name|D

@@ -40,10 +40,6 @@ comment|// RUN: %clang %s -c -S -o - -emit-llvm -fprofile-generate | FileCheck -
 end_comment
 
 begin_comment
-comment|// PROFILE-GEN: @__llvm_profile_runtime = external global i32
-end_comment
-
-begin_comment
 comment|// PROFILE-GEN-NOT: call void @__llvm_profile_override_default_filename
 end_comment
 

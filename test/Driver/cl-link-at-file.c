@@ -8,14 +8,6 @@ comment|// until the end of the response file (and not the entire command line)
 end_comment
 
 begin_comment
-comment|// Don't attempt slash switches on msys bash.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// Note: %s must be preceded by -- or bound to another option, otherwise it may
 end_comment
 

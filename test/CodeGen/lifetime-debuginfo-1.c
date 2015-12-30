@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O1 -triple x86_64-none-linux-gnu -emit-llvm -gline-tables-only %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -O1 -triple x86_64-none-linux-gnu -emit-llvm -debug-info-kind=line-tables-only %s -o - | FileCheck %s
 end_comment
 
 begin_comment

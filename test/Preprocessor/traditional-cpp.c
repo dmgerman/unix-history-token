@@ -140,11 +140,11 @@ parameter_list|)
 value|test(b##a)
 name|FOO_NO_PASTE
 argument_list|(
-argument|foo
+argument|xxx
 argument_list|,
-argument|bar
+argument|yyy
 argument_list|)
-comment|/* CHECK {{^}}test(bar##foo){{$}}  */
+comment|/* CHECK: {{^}}test(yyy##xxx){{$}}  */
 define|#
 directive|define
 name|BAR_NO_STRINGIFY

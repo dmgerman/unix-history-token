@@ -69,7 +69,7 @@ argument_list|(
 name|v0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: [[T168:%.*]] = call {<2 x i32>,<2 x i32>,<2 x i32> } @llvm.arm.neon.vld3lane.v2i32(i8* {{.*}},<2 x i32> undef,<2 x i32> undef,<2 x i32> undef, i32 {{[0-9]+}}, i32 {{[0-9]+}})
+comment|// CHECK: [[T168:%.*]] = call {<2 x i32>,<2 x i32>,<2 x i32> } @llvm.arm.neon.vld3lane.v2i32.p0i8(i8* {{.*}},<2 x i32> undef,<2 x i32> undef,<2 x i32> undef, i32 {{[0-9]+}}, i32 {{[0-9]+}})
 comment|// CHECK-NEXT: [[T169:%.*]] = extractvalue {<2 x i32>,<2 x i32>,<2 x i32> } [[T168]], 0
 comment|// CHECK-NEXT: [[T170:%.*]] = shufflevector<2 x i32> [[T169]],<2 x i32> [[T169]],<2 x i32> zeroinitializer
 comment|// CHECK-NEXT: [[T171:%.*]] = insertvalue {<2 x i32>,<2 x i32>,<2 x i32> } [[T168]],<2 x i32> [[T170]], 0
@@ -86,7 +86,7 @@ argument_list|(
 name|v2
 argument_list|)
 expr_stmt|;
-comment|// CHECK: [[T178:%.*]] = call {<2 x i32>,<2 x i32>,<2 x i32>,<2 x i32> } @llvm.arm.neon.vld4lane.v2i32(i8* {{.*}},<2 x i32> undef,<2 x i32> undef,<2 x i32> undef,<2 x i32> undef, i32 {{[0-9]+}}, i32 {{[0-9]+}})
+comment|// CHECK: [[T178:%.*]] = call {<2 x i32>,<2 x i32>,<2 x i32>,<2 x i32> } @llvm.arm.neon.vld4lane.v2i32.p0i8(i8* {{.*}},<2 x i32> undef,<2 x i32> undef,<2 x i32> undef,<2 x i32> undef, i32 {{[0-9]+}}, i32 {{[0-9]+}})
 comment|// CHECK-NEXT: [[T179:%.*]] = extractvalue {<2 x i32>,<2 x i32>,<2 x i32>,<2 x i32> } [[T178]], 0
 comment|// CHECK-NEXT: [[T180:%.*]] = shufflevector<2 x i32> [[T179]],<2 x i32> [[T179]],<2 x i32> zeroinitializer
 comment|// CHECK-NEXT: [[T181:%.*]] = insertvalue {<2 x i32>,<2 x i32>,<2 x i32>,<2 x i32> } [[T178]],<2 x i32> [[T180]], 0
@@ -106,7 +106,7 @@ argument_list|(
 name|v6
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{%.*}} = call {<1 x i64>,<1 x i64>,<1 x i64> } @llvm.arm.neon.vld3.v1i64(i8* {{.*}}, i32 {{[0-9]+}})
+comment|// CHECK: {{%.*}} = call {<1 x i64>,<1 x i64>,<1 x i64> } @llvm.arm.neon.vld3.v1i64.p0i8(i8* {{.*}}, i32 {{[0-9]+}})
 name|v5
 operator|=
 name|vld4_dup_s64
@@ -114,7 +114,7 @@ argument_list|(
 name|v7
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{%.*}} = call {<1 x i64>,<1 x i64>,<1 x i64>,<1 x i64> } @llvm.arm.neon.vld4.v1i64(i8* {{.*}}, i32 {{[0-9]+}})
+comment|// CHECK: {{%.*}} = call {<1 x i64>,<1 x i64>,<1 x i64>,<1 x i64> } @llvm.arm.neon.vld4.v1i64.p0i8(i8* {{.*}}, i32 {{[0-9]+}})
 return|return
 literal|0
 return|;

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ExprOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/StmtCXX.h"
 end_include
 
@@ -678,6 +684,16 @@ argument_list|,
 name|UnaryOperator
 argument_list|)
 expr_stmt|;
+case|case
+name|UO_Coawait
+case|:
+name|DISPATCH
+argument_list|(
+name|UnaryCoawait
+argument_list|,
+name|UnaryOperator
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|// Top switch stmt: dispatch to VisitFooStmt for each FooStmt.
@@ -946,6 +962,10 @@ argument_list|)
 name|UNARYOP_FALLBACK
 argument_list|(
 argument|Extension
+argument_list|)
+name|UNARYOP_FALLBACK
+argument_list|(
+argument|Coawait
 argument_list|)
 undef|#
 directive|undef

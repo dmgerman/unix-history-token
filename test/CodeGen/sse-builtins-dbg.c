@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -g -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -debug-info-kind=limited -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_comment

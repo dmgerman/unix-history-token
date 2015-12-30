@@ -34,7 +34,7 @@ comment|// RUN: not c-index-test -test-load-source all -x c -fmodules -fimplicit
 end_comment
 
 begin_comment
-comment|// VERIFY: fatal error: malformed or corrupted AST file: 'Unable to load module
+comment|// VERIFY: fatal error: module file '{{.*}}LibA.pcm' not found
 end_comment
 
 begin_comment

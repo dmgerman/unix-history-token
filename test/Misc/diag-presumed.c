@@ -39,15 +39,7 @@ comment|// PRESUMED: diag-presumed.c:101:11: error: use of undeclared identifier
 end_comment
 
 begin_comment
-comment|// PRESUMED: diag-presumed.c:100:14: note: expanded from
-end_comment
-
-begin_comment
 comment|// SPELLING: diag-presumed.c:6:11: error: use of undeclared identifier 'error'
-end_comment
-
-begin_comment
-comment|// SPELLING: diag-presumed.c:5:14: note: expanded from
 end_comment
 
 begin_empty_stmt
@@ -55,11 +47,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// PRESUMED: diag-presumed.c:108:1: error: extra ';' outside of a functio
+comment|// PRESUMED: diag-presumed.c:106:1: error: extra ';' outside of a functio
 end_comment
 
 begin_comment
-comment|// SPELLING: diag-presumed.c:13:1: error: extra ';' outside of a functio
+comment|// SPELLING: diag-presumed.c:11:1: error: extra ';' outside of a functio
 end_comment
 
 begin_empty
@@ -101,7 +93,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// PRESUMED: included from {{.*}}diag-presumed.c:112:
+comment|// PRESUMED: included from {{.*}}diag-presumed.c:110:
 end_comment
 
 begin_comment
@@ -121,7 +113,7 @@ comment|// SPELLING-NOT: included from
 end_comment
 
 begin_comment
-comment|// SPELLING: diag-presumed.c:26:1: error: unknown type name 'another'
+comment|// SPELLING: diag-presumed.c:24:1: error: unknown type name 'another'
 end_comment
 
 begin_empty

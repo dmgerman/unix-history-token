@@ -47,7 +47,7 @@ comment|// Structs should be passed byval and not split up
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define void @f1(%struct.s1* byval %i)
+comment|// CHECK-LABEL: define void @f1(%struct.s1* byval align 4 %i)
 end_comment
 
 begin_function
@@ -200,7 +200,7 @@ comment|// Unions should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define void @f7(%union.simple_union* byval %s)
+comment|// CHECK-LABEL: define void @f7(%union.simple_union* byval align 4 %s)
 end_comment
 
 begin_function
@@ -243,7 +243,7 @@ comment|// Bitfields should be passed as byval structs
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define void @f8(%struct.bitfield1* byval %bf1)
+comment|// CHECK-LABEL: define void @f8(%struct.bitfield1* byval align 4 %bf1)
 end_comment
 
 begin_function

@@ -27,6 +27,22 @@ comment|// CHECK: call {{.*}} @__clear_cache
 block|}
 end_function
 
+begin_function
+name|void
+modifier|*
+name|tp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|__builtin_thread_pointer
+argument_list|()
+return|;
+comment|// CHECK: call {{.*}} @llvm.aarch64.thread.pointer()
+block|}
+end_function
+
 begin_comment
 comment|// CHECK: call {{.*}} @llvm.aarch64.rbit.i32(i32 %a)
 end_comment

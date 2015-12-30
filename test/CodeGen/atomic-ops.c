@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - -ffreestanding -triple=i686-apple-darwin9 | FileCheck %s
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - -ffreestanding -ffake-address-space-map -triple=i686-apple-darwin9 | FileCheck %s
 end_comment
 
 begin_comment
@@ -16,11 +16,11 @@ comment|// test.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-pch -o %t -ffreestanding -triple=i686-apple-darwin9
+comment|// RUN: %clang_cc1 %s -emit-pch -o %t -ffreestanding -ffake-address-space-map -triple=i686-apple-darwin9
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -include-pch %t -ffreestanding -triple=i686-apple-darwin9 -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -include-pch %t -ffreestanding -ffake-address-space-map -triple=i686-apple-darwin9 -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_ifndef
@@ -579,6 +579,50 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|_AS1
+value|__attribute__((address_space(1)))
+end_define
+
+begin_function
+name|_Bool
+name|fi4d
+parameter_list|(
+atomic|_Atomic
+argument_list|(
+name|int
+argument_list|)
+modifier|*
+name|i
+parameter_list|,
+name|int
+name|_AS1
+modifier|*
+name|ptr2
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @fi4d(
+comment|// CHECK: [[EXPECTED:%[.0-9A-Z_a-z]+]] = load i32, i32 addrspace(1)* %{{[0-9]+}}
+comment|// CHECK: cmpxchg i32* %{{[0-9]+}}, i32 [[EXPECTED]], i32 %{{[0-9]+}} acquire acquire
+return|return
+name|__c11_atomic_compare_exchange_strong
+argument_list|(
+name|i
+argument_list|,
+name|ptr2
+argument_list|,
+literal|1
+argument_list|,
+name|memory_order_acquire
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_function
 name|float
 name|ff1
@@ -680,8 +724,8 @@ block|{
 comment|// CHECK-LABEL: @fd1
 comment|// CHECK: [[RETVAL:%.*]] = alloca %struct.S, align 4
 comment|// CHECK: [[RET:%.*]]    = alloca %struct.S, align 4
-comment|// CHECK: [[CALL:%.*]]   = call i64 @__atomic_load_8(
 comment|// CHECK: [[CAST:%.*]]   = bitcast %struct.S* [[RET]] to i64*
+comment|// CHECK: [[CALL:%.*]]   = call i64 @__atomic_load_8(
 comment|// CHECK: store i64 [[CALL]], i64* [[CAST]], align 4
 name|struct
 name|S
@@ -725,8 +769,9 @@ comment|// CHECK-NEXT: store %struct.S* %a, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: store %struct.S* %b, %struct.S** [[B_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S*, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S*, %struct.S** [[B_ADDR]], align 4
-comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i8*
+comment|// CHECK-NEXT: [[COERCED_A_TMP:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i64*
 comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i64*
+comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast i64* [[COERCED_A_TMP]] to i8*
 comment|// CHECK-NEXT: [[LOAD_B:%.*]] = load i64, i64* [[COERCED_B]], align 4
 comment|// CHECK-NEXT: call void @__atomic_store_8(i8* [[COERCED_A]], i64 [[LOAD_B]],
 comment|// CHECK-NEXT: ret void
@@ -772,11 +817,12 @@ comment|// CHECK-NEXT: store %struct.S* %c, %struct.S** [[C_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S*, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S*, %struct.S** [[B_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_C_PTR:%.*]] = load %struct.S*, %struct.S** [[C_ADDR]], align 4
-comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i8*
+comment|// CHECK-NEXT: [[COERCED_A_TMP:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i64*
 comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i64*
+comment|// CHECK-NEXT: [[COERCED_C:%.*]] = bitcast %struct.S* [[LOAD_C_PTR]] to i64*
+comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast i64* [[COERCED_A_TMP]] to i8*
 comment|// CHECK-NEXT: [[LOAD_B:%.*]] = load i64, i64* [[COERCED_B]], align 4
 comment|// CHECK-NEXT: [[CALL:%.*]] = call i64 @__atomic_exchange_8(i8* [[COERCED_A]], i64 [[LOAD_B]],
-comment|// CHECK-NEXT: [[COERCED_C:%.*]] = bitcast %struct.S* [[LOAD_C_PTR]] to i64*
 comment|// CHECK-NEXT: store i64 [[CALL]], i64* [[COERCED_C]], align 4
 name|__atomic_exchange
 argument_list|(
@@ -822,9 +868,11 @@ comment|// CHECK-NEXT: store %struct.S* %c, %struct.S** [[C_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S*, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S*, %struct.S** [[B_ADDR]], align 4
 comment|// CHECK-NEXT: [[LOAD_C_PTR:%.*]] = load %struct.S*, %struct.S** [[C_ADDR]], align 4
-comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i8*
-comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i8*
+comment|// CHECK-NEXT: [[COERCED_A_TMP:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i64*
+comment|// CHECK-NEXT: [[COERCED_B_TMP:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i64*
 comment|// CHECK-NEXT: [[COERCED_C:%.*]] = bitcast %struct.S* [[LOAD_C_PTR]] to i64*
+comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast i64* [[COERCED_A_TMP]] to i8*
+comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast i64* [[COERCED_B_TMP]] to i8*
 comment|// CHECK-NEXT: [[LOAD_C:%.*]] = load i64, i64* [[COERCED_C]], align 4
 comment|// CHECK-NEXT: [[CALL:%.*]] = call zeroext i1 @__atomic_compare_exchange_8(i8* [[COERCED_A]], i8* [[COERCED_B]], i64 [[LOAD_C]]
 comment|// CHECK-NEXT: ret i1 [[CALL]]
@@ -1152,6 +1200,12 @@ block|}
 name|seventeen
 struct|;
 end_struct
+
+begin_struct_decl
+struct_decl|struct
+name|Incomplete
+struct_decl|;
+end_struct_decl
 
 begin_function
 name|int

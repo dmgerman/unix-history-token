@@ -363,5 +363,29 @@ begin_comment
 comment|// MIPS-ALIAS-64R2: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-EB"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-unknown-freebsd -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -G0 -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-AS-G0 %s
+end_comment
+
+begin_comment
+comment|// MIPS32-EB-AS-G0: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EB" "-G0"
+end_comment
+
+begin_comment
+comment|// MIPS32-EB-AS-G0-NOT: "-KPIC"
+end_comment
+
 end_unit
 

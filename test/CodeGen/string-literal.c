@@ -274,6 +274,46 @@ name|R
 expr|\
 literal|"(abc\ ??= def)"
 decl_stmt|;
+comment|// CHECK-CXX11: private unnamed_addr constant [13 x i8] c"def\5C\0A??=\0Aabc\00", align 1
+specifier|const
+name|char
+modifier|*
+name|s
+init|=
+name|u8R
+expr|\
+literal|"(def\ ??= abc)"
+decl_stmt|;
+comment|// CHECK-CXX11: private unnamed_addr constant [13 x i16] [i16 97, i16 98, i16 99, i16 92, i16 10, i16 63, i16 63, i16 61, i16 10, i16 100, i16 101, i16 102, i16 0], align 2
+specifier|const
+name|char16_t
+modifier|*
+name|t
+init|=
+name|uR
+expr|\
+literal|"(abc\ ??= def)"
+decl_stmt|;
+comment|// CHECK-CXX11: private unnamed_addr constant [13 x i32] [i32 97, i32 98, i32 99, i32 92, i32 10, i32 63, i32 63, i32 61, i32 10, i32 100, i32 101, i32 102, i32 0], align 4
+specifier|const
+name|char32_t
+modifier|*
+name|u
+init|=
+name|UR
+expr|\
+literal|"(abc\ ??= def)"
+decl_stmt|;
+comment|// CHECK-CXX11: private unnamed_addr constant [13 x i32] [i32 100, i32 101, i32 102, i32 92, i32 10, i32 63, i32 63, i32 61, i32 10, i32 97, i32 98, i32 99, i32 0], align 4
+specifier|const
+name|wchar_t
+modifier|*
+name|v
+init|=
+name|LR
+expr|\
+literal|"(def\ ??= abc)"
+decl_stmt|;
 endif|#
 directive|endif
 endif|#

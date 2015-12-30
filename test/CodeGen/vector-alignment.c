@@ -1,6 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -w -triple x86_64-apple-darwin10 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -w -triple x86_64-apple-darwin10 \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -o - %s | FileCheck %s --check-prefix=ALL --check-prefix=SSE
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -w -triple   i386-apple-darwin10 \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -o - %s | FileCheck %s --check-prefix=ALL --check-prefix=SSE
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -w -triple x86_64-apple-darwin10 -target-feature +avx \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -o - %s | FileCheck %s --check-prefix=ALL --check-prefix=AVX
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -w -triple   i386-apple-darwin10 -target-feature +avx \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -o - %s | FileCheck %s --check-prefix=ALL --check-prefix=AVX
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -w -triple x86_64-apple-darwin10 -target-feature +avx512f \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -o - %s | FileCheck %s --check-prefix=ALL --check-prefix=AVX512
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -w -triple   i386-apple-darwin10 -target-feature +avx512f \
+end_comment
+
+begin_comment
+comment|// RUN:  -emit-llvm -o - %s | FileCheck %s --check-prefix=ALL --check-prefix=AVX512
 end_comment
 
 begin_comment
@@ -31,7 +75,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v1 {{.*}}, align 16
+comment|// SSE: @v1 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX: @v1 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX512: @v1 {{.*}}, align 16
 end_comment
 
 begin_decl_stmt
@@ -50,7 +102,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v2 {{.*}}, align 32
+comment|// SSE: @v2 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX: @v2 {{.*}}, align 32
+end_comment
+
+begin_comment
+comment|// AVX512: @v2 {{.*}}, align 32
 end_comment
 
 begin_comment
@@ -77,7 +137,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v3 {{.*}}, align 32
+comment|// SSE: @v3 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX: @v3 {{.*}}, align 32
+end_comment
+
+begin_comment
+comment|// AVX512: @v3 {{.*}}, align 64
 end_comment
 
 begin_decl_stmt
@@ -96,7 +164,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v4 {{.*}}, align 32
+comment|// SSE: @v4 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX: @v4 {{.*}}, align 32
+end_comment
+
+begin_comment
+comment|// AVX512: @v4 {{.*}}, align 64
 end_comment
 
 begin_comment
@@ -124,7 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v5 {{.*}}, align 16
+comment|// ALL: @v5 {{.*}}, align 16
 end_comment
 
 begin_decl_stmt
@@ -148,7 +224,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v6 {{.*}}, align 64
+comment|// ALL: @v6 {{.*}}, align 64
 end_comment
 
 begin_decl_stmt
@@ -172,7 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v7 {{.*}}, align 16
+comment|// ALL: @v7 {{.*}}, align 16
 end_comment
 
 begin_decl_stmt
@@ -196,7 +272,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v8 {{.*}}, align 64
+comment|// ALL: @v8 {{.*}}, align 64
 end_comment
 
 begin_comment
@@ -219,7 +295,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v9 {{.*}}, align 32
+comment|// SSE: @v9 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX: @v9 {{.*}}, align 32
+end_comment
+
+begin_comment
+comment|// AVX512: @v9 {{.*}}, align 32
 end_comment
 
 begin_decl_stmt
@@ -238,7 +322,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v10 {{.*}}, align 32
+comment|// SSE: @v10 {{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// AVX: @v10 {{.*}}, align 32
+end_comment
+
+begin_comment
+comment|// AVX512: @v10 {{.*}}, align 64
 end_comment
 
 begin_comment
@@ -266,7 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v11 {{.*}}, align 64
+comment|// ALL: @v11 {{.*}}, align 64
 end_comment
 
 begin_decl_stmt
@@ -290,7 +382,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @v12 {{.*}}, align 16
+comment|// ALL: @v12 {{.*}}, align 16
 end_comment
 
 end_unit

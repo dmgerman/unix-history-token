@@ -21,7 +21,7 @@ name|int
 name|d
 parameter_list|)
 block|{
-comment|// expected-warning {{calling convention '__cdecl' ignored for this target}}
+comment|// expected-no-diagnostics
 return|return
 name|a
 operator|+
@@ -52,7 +52,7 @@ name|float
 name|d
 parameter_list|)
 block|{
-comment|// expected-warning {{calling convention '__stdcall' ignored for this target}}
+comment|// expected-no-diagnostics
 return|return
 name|a
 operator|+

@@ -78,7 +78,7 @@ comment|// CHECK:      [[RESULT:%.*]] = call i32 @makeAgg()
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr [[AGG]], [[AGG]]* [[TEMP]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[AGG]], [[AGG]]* [[TEMP]], i32 0, i32 0
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ comment|// CHECK:      [[RESULT:%.*]] = call i32 @makeAgg()
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr [[AGG]], [[AGG]]* [[TEMP]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[AGG]], [[AGG]]* [[TEMP]], i32 0, i32 0
 end_comment
 
 begin_comment

@@ -77,9 +77,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:17:5: warning: expression result unused
-comment|// CHECK: {{.*}}:15:16: note: expanded from macro 'C'
-comment|// CHECK: {{.*}}:14:16: note: expanded from macro 'B'
-comment|// CHECK: {{.*}}:13:14: note: expanded from macro 'A'
 block|}
 end_function
 
@@ -209,14 +206,11 @@ argument_list|(
 literal|11
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:43:15: warning: expression result unused
+comment|// CHECK: {{.*}}:40:15: warning: expression result unused
 comment|// Also check that the 'caret' printing agrees with the location here where
 comment|// its easy to FileCheck.
 comment|// CHECK-NEXT:      macro_args3(11);
 comment|// CHECK-NEXT: {{^              \^~}}
-comment|// CHECK: {{.*}}:36:36: note: expanded from macro 'macro_args3'
-comment|// CHECK: {{.*}}:35:36: note: expanded from macro 'macro_args2'
-comment|// CHECK: {{.*}}:34:24: note: expanded from macro 'macro_args1'
 name|macro_many_args3
 argument_list|(
 literal|1
@@ -226,10 +220,10 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:55:5: warning: expression result unused
-comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
-comment|// CHECK: {{.*}}:39:55: note: expanded from macro 'macro_many_args2'
-comment|// CHECK: {{.*}}:38:35: note: expanded from macro 'macro_many_args1'
+comment|// CHECK: {{.*}}:49:5: warning: expression result unused
+comment|// CHECK: {{.*}}:37:55: note: expanded from macro 'macro_many_args3'
+comment|// CHECK: {{.*}}:36:55: note: expanded from macro 'macro_many_args2'
+comment|// CHECK: {{.*}}:35:35: note: expanded from macro 'macro_many_args1'
 name|macro_many_args3
 argument_list|(
 literal|1
@@ -239,11 +233,11 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:64:5: warning: expression result unused
+comment|// CHECK: {{.*}}:58:5: warning: expression result unused
 comment|// CHECK: {{.*}}:4:12: note: expanded from macro 'M2'
-comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
-comment|// CHECK: {{.*}}:39:55: note: expanded from macro 'macro_many_args2'
-comment|// CHECK: {{.*}}:38:35: note: expanded from macro 'macro_many_args1'
+comment|// CHECK: {{.*}}:37:55: note: expanded from macro 'macro_many_args3'
+comment|// CHECK: {{.*}}:36:55: note: expanded from macro 'macro_many_args2'
+comment|// CHECK: {{.*}}:35:35: note: expanded from macro 'macro_many_args1'
 name|macro_many_args3
 argument_list|(
 literal|1
@@ -256,16 +250,16 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:74:17: warning: expression result unused
+comment|// CHECK: {{.*}}:68:17: warning: expression result unused
 comment|// This caret location needs to be printed *inside* a different macro's
 comment|// arguments.
 comment|// CHECK-NEXT:        macro_args2(22),
 comment|// CHECK-NEXT: {{^                \^~}}
-comment|// CHECK: {{.*}}:35:36: note: expanded from macro 'macro_args2'
-comment|// CHECK: {{.*}}:34:24: note: expanded from macro 'macro_args1'
-comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
-comment|// CHECK: {{.*}}:39:55: note: expanded from macro 'macro_many_args2'
-comment|// CHECK: {{.*}}:38:35: note: expanded from macro 'macro_many_args1'
+comment|// CHECK: {{.*}}:32:36: note: expanded from macro 'macro_args2'
+comment|// CHECK: {{.*}}:31:24: note: expanded from macro 'macro_args1'
+comment|// CHECK: {{.*}}:37:55: note: expanded from macro 'macro_many_args3'
+comment|// CHECK: {{.*}}:36:55: note: expanded from macro 'macro_many_args2'
+comment|// CHECK: {{.*}}:35:35: note: expanded from macro 'macro_many_args1'
 block|}
 end_function
 
@@ -325,12 +319,12 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:93:21: warning: expression result unused
+comment|// CHECK: {{.*}}:87:21: warning: expression result unused
 comment|// CHECK-NEXT:      variadic_args3(1, 22, 3, 4);
 comment|// CHECK-NEXT: {{^                    \^~}}
-comment|// CHECK: {{.*}}:90:53: note: expanded from macro 'variadic_args3'
-comment|// CHECK: {{.*}}:89:50: note: expanded from macro 'variadic_args2'
-comment|// CHECK: {{.*}}:88:35: note: expanded from macro 'variadic_args1'
+comment|// CHECK: {{.*}}:84:53: note: expanded from macro 'variadic_args3'
+comment|// CHECK: {{.*}}:83:50: note: expanded from macro 'variadic_args2'
+comment|// CHECK: {{.*}}:82:35: note: expanded from macro 'variadic_args1'
 block|}
 end_function
 
@@ -418,10 +412,10 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// CHECK: {{.*}}:109:32: warning: expression result unused
-comment|// CHECK: {{.*}}:105:72: note: expanded from macro 'variadic_pasting_args3'
-comment|// CHECK: {{.*}}:103:68: note: expanded from macro 'variadic_pasting_args2'
-comment|// CHECK: {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
+comment|// CHECK: {{.*}}:103:32: warning: expression result unused
+comment|// CHECK: {{.*}}:99:72: note: expanded from macro 'variadic_pasting_args3'
+comment|// CHECK: {{.*}}:97:68: note: expanded from macro 'variadic_pasting_args2'
+comment|// CHECK: {{.*}}:96:41: note: expanded from macro 'variadic_pasting_args1'
 name|variadic_pasting_args3a
 argument_list|(
 literal|1
@@ -433,16 +427,16 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// CHECK:        {{.*}}:115:3: warning: expression result unused
+comment|// CHECK:        {{.*}}:109:3: warning: expression result unused
 comment|// CHECK-NEXT:     variadic_pasting_args3a(1, 2, 3, 4);
-comment|// CHECK-NEXT: {{  \^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}}
-comment|// CHECK:        {{.*}}:106:44: note: expanded from macro 'variadic_pasting_args3a'
+comment|// CHECK-NEXT: {{  \^~~~~~~~~~~~~~~~~~~~~~~}}
+comment|// CHECK:        {{.*}}:100:44: note: expanded from macro 'variadic_pasting_args3a'
 comment|// CHECK-NEXT:   #define variadic_pasting_args3a(x, y, ...) variadic_pasting_args2a(x, y, __VA_ARGS__)
-comment|// CHECK-NEXT: {{                                           \^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}}
-comment|// CHECK:        {{.*}}:104:70: note: expanded from macro 'variadic_pasting_args2a'
+comment|// CHECK-NEXT: {{                                           \^~~~~~~~~~~~~~~~~~~~~~~}}
+comment|// CHECK:        {{.*}}:98:70: note: expanded from macro 'variadic_pasting_args2a'
 comment|// CHECK-NEXT:   #define variadic_pasting_args2a(x, y, ...) variadic_pasting_args1(x, y ## __VA_ARGS__)
 comment|// CHECK-NEXT: {{                                                                     \^~~~~~~~~~~~~~~~}}
-comment|// CHECK:        {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
+comment|// CHECK:        {{.*}}:96:41: note: expanded from macro 'variadic_pasting_args1'
 comment|// CHECK-NEXT:   #define variadic_pasting_args1(x, y, z) y
 comment|// CHECK-NEXT: {{                                        \^}}
 block|}
@@ -466,7 +460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:         {{.*}}:130:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+comment|// CHECK:         {{.*}}:124:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
 end_comment
 
 begin_comment
@@ -478,7 +472,7 @@ comment|// CHECK-NEXT: {{^                                      \^}}
 end_comment
 
 begin_comment
-comment|// CHECK:         {{.*}}:130:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+comment|// CHECK:         {{.*}}:124:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
 end_comment
 
 begin_comment
@@ -490,7 +484,7 @@ comment|// CHECK-NEXT: {{^                                      \^}}
 end_comment
 
 begin_comment
-comment|// CHECK:         {{.*}}:130:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
+comment|// CHECK:         {{.*}}:124:39: note: expanded from macro 'BAD_CONDITIONAL_OPERATOR'
 end_comment
 
 begin_comment
@@ -531,7 +525,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:         {{.*}}:145:9: note: place parentheses around the '+' expression to silence this warning
+comment|// CHECK:         {{.*}}:139:9: note: place parentheses around the '+' expression to silence this warning
 end_comment
 
 begin_comment
@@ -543,7 +537,7 @@ comment|// CHECK-NEXT: {{^        \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:144:21: note: expanded from macro 'X'
+comment|// CHECK-NEXT:    {{.*}}:138:21: note: expanded from macro 'X'
 end_comment
 
 begin_comment
@@ -555,7 +549,7 @@ comment|// CHECK-NEXT: {{^          ~~~~~~~~~ \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:142:15: note: expanded from macro 'QMARK'
+comment|// CHECK-NEXT:    {{.*}}:136:15: note: expanded from macro 'QMARK'
 end_comment
 
 begin_comment
@@ -567,7 +561,7 @@ comment|// CHECK-NEXT: {{^              \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:145:9: note: place parentheses around the '?:' expression to evaluate it first
+comment|// CHECK-NEXT:    {{.*}}:139:9: note: place parentheses around the '?:' expression to evaluate it first
 end_comment
 
 begin_comment
@@ -579,7 +573,7 @@ comment|// CHECK-NEXT: {{^        \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:144:21: note: expanded from macro 'X'
+comment|// CHECK-NEXT:    {{.*}}:138:21: note: expanded from macro 'X'
 end_comment
 
 begin_comment
@@ -613,7 +607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:         {{.*}}:164:9: warning: operator '?:' has lower precedence than '+'; '+' will be evaluated first
+comment|// CHECK:         {{.*}}:158:9: warning: operator '?:' has lower precedence than '+'; '+' will be evaluated first
 end_comment
 
 begin_comment
@@ -625,7 +619,7 @@ comment|// CHECK-NEXT: {{^        \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:163:25: note: expanded from macro 'Y'
+comment|// CHECK-NEXT:    {{.*}}:157:25: note: expanded from macro 'Y'
 end_comment
 
 begin_comment
@@ -637,7 +631,7 @@ comment|// CHECK-NEXT: {{^          ~~~~~~~~~~~~~ \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:142:15: note: expanded from macro 'QMARK'
+comment|// CHECK-NEXT:    {{.*}}:136:15: note: expanded from macro 'QMARK'
 end_comment
 
 begin_comment
@@ -711,7 +705,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:         {{.*}}:180:21: warning: operator '?:' has lower precedence than '+'
+comment|// CHECK:         {{.*}}:174:21: warning: operator '?:' has lower precedence than '+'
 end_comment
 
 begin_comment
@@ -723,7 +717,7 @@ comment|// CHECK-NEXT: {{^                    \^~~~~~~~~~~~~~~~~~~~~~~~~~~}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:179:41: note: expanded from macro 'BARC'
+comment|// CHECK-NEXT:    {{.*}}:173:41: note: expanded from macro 'BARC'
 end_comment
 
 begin_comment
@@ -784,7 +778,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// CHECK:         {{.*}}:193:5: warning: left side of operator converted from negative value to unsigned: -1 to 18446744073709551615
+comment|// CHECK:         {{.*}}:187:5: warning: left side of operator converted from negative value to unsigned: -1 to 18446744073709551615
 end_comment
 
 begin_comment
@@ -796,7 +790,7 @@ comment|// CHECK-NEXT: {{^    \^~~~~~~~~~~}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:191:21: note: expanded from macro 'UTARG_MAX_U'
+comment|// CHECK-NEXT:    {{.*}}:185:21: note: expanded from macro 'UTARG_MAX_U'
 end_comment
 
 begin_comment
@@ -808,7 +802,7 @@ comment|// CHECK-NEXT: {{^                    \^~~~~~~~~~~~~~~~~~~~~}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:190:27: note: expanded from macro 'APPEND'
+comment|// CHECK-NEXT:    {{.*}}:184:27: note: expanded from macro 'APPEND'
 end_comment
 
 begin_comment
@@ -820,7 +814,7 @@ comment|// CHECK-NEXT: {{^                          \^~~~~~~~~~~~~~~~~~}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:189:31: note: expanded from macro 'APPEND2'
+comment|// CHECK-NEXT:    {{.*}}:183:31: note: expanded from macro 'APPEND2'
 end_comment
 
 begin_comment
@@ -903,25 +897,26 @@ name|pMsgBuf
 argument_list|,
 literal|"\nEnter minimum anagram length (2-%1d): "
 argument_list|,
-name|Cstrlen
+name|strlen_test
 argument_list|(
 name|pKeepBuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|// FIXME: Change test to use 'Cstrlen' instead of 'strlen_test' when macro printing is fixed.
 block|}
 end_function
 
 begin_comment
-comment|// CHECK:         {{.*}}:216:62: warning: format specifies type 'int' but the argument has type 'unsigned long'
+comment|// CHECK:         {{.*}}:210:62: warning: format specifies type 'int' but the argument has type 'unsigned long'
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Csprintf(pMsgBuf,"\nEnter minimum anagram length (2-%1d): ", Cstrlen(pKeepBuf));
+comment|// CHECK-NEXT:    Csprintf(pMsgBuf,"\nEnter minimum anagram length (2-%1d): ", strlen_test(pKeepBuf));
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^                                                    ~~~      \^}}
+comment|// CHECK-NEXT: {{^                                                    ~~~      \^~~~~~~~~~~~~~~~~~~~~}}
 end_comment
 
 begin_comment
@@ -929,11 +924,11 @@ comment|// CHECK-NEXT: {{^                                                    %1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:213:21: note: expanded from macro 'Cstrlen'
+comment|// CHECK-NEXT:    {{.*}}:208:21: note: expanded from macro 'Csprintf'
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    #define Cstrlen(a)  strlen_test(a)
+comment|// CHECK-NEXT:    #define Csprintf    sprintf2
 end_comment
 
 begin_comment
@@ -941,7 +936,7 @@ comment|// CHECK-NEXT: {{^                    \^}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    {{.*}}:212:56: note: expanded from macro 'sprintf2'
+comment|// CHECK-NEXT:    {{.*}}:206:56: note: expanded from macro 'sprintf2'
 end_comment
 
 begin_comment
@@ -949,7 +944,134 @@ comment|// CHECK-NEXT:      __builtin___sprintf_chk (str, 0, __darwin_obsz(str),
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{^                                                       \^}}
+comment|// CHECK-NEXT: {{^                                                       \^~~~~~~~~~~}}
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAP_AND_APPLY
+parameter_list|(
+name|arg
+parameter_list|,
+name|macro
+parameter_list|)
+value|macro arg
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPLY
+parameter_list|(
+name|macro
+parameter_list|,
+name|arg
+parameter_list|)
+value|macro arg
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_HELPER
+parameter_list|()
+value|__builtin_printf("%d\n", mylong);
+end_define
+
+begin_function
+name|void
+name|use_evil_macros
+parameter_list|(
+name|long
+name|mylong
+parameter_list|)
+block|{
+name|SWAP_AND_APPLY
+argument_list|(
+argument|()
+argument_list|,
+argument|DECLARE_HELPER
+argument_list|)
+name|APPLY
+argument_list|(
+argument|DECLARE_HELPER
+argument_list|,
+argument|()
+argument_list|)
+block|}
+end_function
+
+begin_comment
+comment|// CHECK:      {{.*}}:228:22: warning: format specifies type 'int' but the argument has type 'long'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   SWAP_AND_APPLY((), DECLARE_HELPER)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{.*}}:224:36: note: expanded from macro 'SWAP_AND_APPLY'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #define SWAP_AND_APPLY(arg, macro) macro arg
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:                                    ^~~~~~~~~
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{.*}}:226:51: note: expanded from macro 'DECLARE_HELPER'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #define DECLARE_HELPER() __builtin_printf("%d\n", mylong);
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:                                            ~~     ^~~~~~
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{.*}}:229:9: warning: format specifies type 'int' but the argument has type 'long'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   APPLY(DECLARE_HELPER, ())
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   ~~~~~~^~~~~~~~~~~~~~~~~~~
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{.*}}:225:27: note: expanded from macro 'APPLY'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #define APPLY(macro, arg) macro arg
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:                           ^~~~~~~~~
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{.*}}:226:51: note: expanded from macro 'DECLARE_HELPER'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: #define DECLARE_HELPER() __builtin_printf("%d\n", mylong);
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:                                            ~~     ^~~~~~
 end_comment
 
 end_unit

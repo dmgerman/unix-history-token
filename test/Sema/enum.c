@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -pedantic
+comment|// RUN: %clang_cc1 -triple %itanium_abi_triple %s -fsyntax-only -verify -pedantic
 end_comment
 
 begin_enum
@@ -610,6 +610,39 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// PR24610
+end_comment
+
+begin_enum
+enum|enum
+name|Color
+block|{
+name|Red
+block|,
+name|Green
+block|,
+name|Blue
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|// expected-note{{previous use is here}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|Color
+name|NewColor
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error {{use of 'Color' with tag type that does not match previous declaration}}
+end_comment
 
 end_unit
 

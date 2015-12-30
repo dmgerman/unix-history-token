@@ -16,7 +16,7 @@ comment|// CHECK: "-emit-llvm-uselists"
 end_comment
 
 begin_comment
-comment|// CHECK: "-disable-llvm-optzns"
+comment|// CHECK: "-disable-llvm-passes"
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// CWD: "-emit-llvm-uselists"
 end_comment
 
 begin_comment
-comment|// CWD: "-disable-llvm-optzns"
+comment|// CWD: "-disable-llvm-passes"
 end_comment
 
 begin_comment
@@ -240,7 +240,7 @@ comment|// CHECK-OBJ: "-o" "obj/dir{{/|\\\\}}save-temps.i"
 end_comment
 
 begin_comment
-comment|// CHECK-OBJ: "-disable-llvm-optzns"
+comment|// CHECK-OBJ: "-disable-llvm-passes"
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ comment|// CHECK-OBJ-NOO: "-o" "save-temps.i"
 end_comment
 
 begin_comment
-comment|// CHECK-OBJ-NOO: "-disable-llvm-optzns"
+comment|// CHECK-OBJ-NOO: "-disable-llvm-passes"
 end_comment
 
 begin_comment

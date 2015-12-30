@@ -1173,14 +1173,14 @@ name|sc
 operator|+
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|uc
 operator|+
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
@@ -1205,14 +1205,14 @@ name|sc
 operator|+
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|uc
 operator|+
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
@@ -1266,56 +1266,56 @@ name|sc
 operator|+
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
 operator|+
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc_scalar
 operator|+
 name|sc
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|uc_scalar
 operator|+
 name|sc
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|uc
 operator|+
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|uc
 operator|+
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|sc_scalar
 operator|+
 name|uc
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|uc_scalar
 operator|+
 name|uc
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ss
 operator|=
 name|ss
@@ -1385,14 +1385,14 @@ name|fd
 operator|+
 name|ul2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|fd
 operator|=
 name|sl
 operator|+
 name|fd2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|sc2
@@ -1401,7 +1401,7 @@ name|sc
 operator|+=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|bc2
@@ -1414,7 +1414,7 @@ name|uc
 operator|+=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|+=
 name|bc2
@@ -1428,52 +1428,52 @@ name|bc
 operator|+=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|bc
 operator|+=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|ss2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|si2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|sl2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|fd2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|+=
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|+=
 name|sc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|+=
 name|uc_scalar
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ss
 operator|+=
 name|ss2
@@ -1545,7 +1545,7 @@ name|uc
 operator|-
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
@@ -1575,7 +1575,7 @@ name|sc
 operator|-=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|-=
 name|bc2
@@ -1584,7 +1584,7 @@ name|bc
 operator|-=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ss
 operator|-=
 name|ss2
@@ -1657,21 +1657,21 @@ name|uc
 operator|*
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
 operator|*
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
 operator|*
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|*=
 name|sc2
@@ -1689,17 +1689,17 @@ name|sc
 operator|*=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|*=
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|bc
 operator|*=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ss
 operator|*=
 name|ss2
@@ -1771,21 +1771,21 @@ name|uc
 operator|/
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
 operator|/
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
 operator|/
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|/=
 name|sc2
@@ -1803,17 +1803,17 @@ name|sc
 operator|/=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|/=
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|bc
 operator|/=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ss
 operator|/=
 name|ss2
@@ -1885,21 +1885,21 @@ name|uc
 operator|%
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
 operator|%
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
 operator|%
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|%=
 name|sc2
@@ -1917,17 +1917,17 @@ name|sc
 operator|%=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|%=
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|bc
 operator|%=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ss
 operator|%=
 name|ss2
@@ -1987,14 +1987,14 @@ name|sc
 operator|&
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|uc
 operator|&
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
@@ -2019,14 +2019,14 @@ name|sc
 operator|&
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|uc
 operator|&
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
@@ -2116,7 +2116,7 @@ name|sc
 operator|&=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|&=
 name|bc2
@@ -2129,7 +2129,7 @@ name|uc
 operator|&=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|&=
 name|bc2
@@ -2142,27 +2142,27 @@ name|bc
 operator|&=
 name|sc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|bc
 operator|&=
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|&=
 name|ss2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|&=
 name|si2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|&=
 name|sl2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|&=
 name|fd2
@@ -2172,17 +2172,17 @@ name|us
 operator|&=
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ui
 operator|&=
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|ul
 operator|&=
 name|bc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|fd
 operator|&=
 name|bc2
@@ -2239,7 +2239,7 @@ name|sc
 operator||
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
@@ -2258,7 +2258,7 @@ name|sc
 operator||
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
@@ -2360,7 +2360,7 @@ name|sc
 operator|^
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|sc
 operator|=
 name|sc
@@ -2379,7 +2379,7 @@ name|sc
 operator|^
 name|uc2
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 name|uc
 operator|=
 name|bc
@@ -3417,7 +3417,7 @@ operator|==
 name|uc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -3436,7 +3436,7 @@ operator|==
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -3563,7 +3563,7 @@ operator|==
 name|ul
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -3573,7 +3573,7 @@ operator|==
 name|fd
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 comment|// -------------------------------------------------------------------------
 comment|// Test that == rules apply to != too.
 comment|// -------------------------------------------------------------------------
@@ -3613,7 +3613,7 @@ operator|!=
 name|uc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -3752,7 +3752,7 @@ operator|<=
 name|uc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -3891,7 +3891,7 @@ operator|>=
 name|uc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -4030,7 +4030,7 @@ operator|<
 name|uc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)
@@ -4169,7 +4169,7 @@ operator|>
 name|uc
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{can't convert}}
+comment|// expected-error {{cannot convert}}
 call|(
 name|void
 call|)

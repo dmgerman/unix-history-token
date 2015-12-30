@@ -57,13 +57,5 @@ begin_comment
 comment|// P: "-dwarf-debug-producer"
 end_comment
 
-begin_comment
-comment|// This depends on shell quoting.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell
-end_comment
-
 end_unit
 

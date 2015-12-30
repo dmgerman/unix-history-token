@@ -1101,31 +1101,6 @@ comment|// expected-error {{must have a constant size}}
 end_comment
 
 begin_comment
-comment|//<rdar://problem/11205586>
-end_comment
-
-begin_comment
-comment|// (Make sure we continue to reject this.)
-end_comment
-
-begin_expr_stmt
-name|EVAL_EXPR
-argument_list|(
-literal|44
-argument_list|,
-literal|"x"
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// expected-error {{variable length array}}
-end_comment
-
-begin_comment
 comment|//<rdar://problem/10962435>
 end_comment
 
@@ -1271,6 +1246,43 @@ operator|)
 decl_stmt|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|PR24622
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|PR24622
+block|{}
+name|pr24622
+struct|;
+end_struct
+
+begin_expr_stmt
+name|EVAL_EXPR
+argument_list|(
+literal|52
+argument_list|,
+operator|&
+name|pr24622
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|PR24622
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-error {{must have a constant size}}
+end_comment
 
 end_unit
 

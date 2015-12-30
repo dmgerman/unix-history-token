@@ -55,5 +55,65 @@ begin_comment
 comment|// CHECK-LINUX-INVALID-NOT: Thread model:
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -target wasm32-unknown-linux-gnu -c %s -v 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-DEFAULT %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm32-unknown-linux-gnu -c %s -v -mthread-model single 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-SINGLE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm32-unknown-linux-gnu -c %s -v -mthread-model posix 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-POSIX %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm32-unknown-linux-gnu -c %s -v -mthread-model silly 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-INVALID %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm64-unknown-linux-gnu -c %s -v 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-DEFAULT %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm64-unknown-linux-gnu -c %s -v -mthread-model single 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-SINGLE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm64-unknown-linux-gnu -c %s -v -mthread-model posix 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-POSIX %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target wasm64-unknown-linux-gnu -c %s -v -mthread-model silly 2>&1 | FileCheck -check-prefix=CHECK-WEBASSEMBLY-INVALID %s
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-DEFAULT: Thread model: posix
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-DEFAULT: "-mthread-model" "posix"
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-SINGLE: Thread model: single
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-SINGLE: "-mthread-model" "single"
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-POSIX: Thread model: posix
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-POSIX: "-mthread-model" "posix"
+end_comment
+
+begin_comment
+comment|// CHECK-WEBASSEMBLY-INVALID-NOT: Thread model:
+end_comment
+
 end_unit
 

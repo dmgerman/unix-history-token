@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 %s -Rpass=inline -Rpass-analysis=inline -Rpass-missed
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -Rpass=inline -Rpass-analysis=inline -Rpass-missed=inline -O0 -emit-llvm-only -gline-tables-only -verify
+comment|// RUN: %clang_cc1 %s -Rpass=inline -Rpass-analysis=inline -Rpass-missed=inline -O0 -emit-llvm-only -debug-info-kind=line-tables-only -verify
 end_comment
 
 begin_comment

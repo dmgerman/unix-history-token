@@ -153,6 +153,14 @@ parameter_list|(
 name|CXCompileCommand
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Get the filename associated with the CompileCommand.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_CompileCommand_getFilename
+parameter_list|(
+name|CXCompileCommand
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Get the number of arguments in the compiler invocation.  *  */
 name|CINDEX_LINKAGE
 name|unsigned

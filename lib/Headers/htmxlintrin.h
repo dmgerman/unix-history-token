@@ -95,7 +95,7 @@ index|[
 literal|16
 index|]
 typedef|;
-comment|/* This macro can be used to determine whether a transaction was successfully     started from the __TM_begin() and __TM_simple_begin() intrinsic functions    below.  */
+comment|/* This macro can be used to determine whether a transaction was successfully    started from the __TM_begin() and __TM_simple_begin() intrinsic functions    below.  */
 define|#
 directive|define
 name|_HTM_TBEGIN_STARTED

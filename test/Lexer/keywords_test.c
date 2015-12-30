@@ -35,6 +35,22 @@ begin_comment
 comment|// RUN:     | FileCheck --check-prefix=CHECK-MS-KEYWORDS %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -std=c99 -fdeclspec -E %s -o - \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck --check-prefix=CHECK-DECLSPEC-KEYWORD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -std=c99 -fms-extensions -fno-declspec -E %s -o - \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck --check-prefix=CHECK-MS-KEYWORDS-WITHOUT-DECLSPEC %s
+end_comment
+
 begin_function
 name|void
 name|f
@@ -67,6 +83,10 @@ begin_comment
 comment|// CHECK-MS-KEYWORDS: has_ms_wchar
 end_comment
 
+begin_comment
+comment|// CHECK-MS-KEYWORDS-WITHOUT-DECLSPEC: has_ms_wchar
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -91,6 +111,55 @@ end_else
 begin_function_decl
 name|void
 name|has_ms_wchar
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK-NONE: no_declspec
+end_comment
+
+begin_comment
+comment|// CHECK-MS-KEYWORDS: has_declspec
+end_comment
+
+begin_comment
+comment|// CHECK-MS-KEYWORDS-WITHOUT-DECLSPEC: no_declspec
+end_comment
+
+begin_comment
+comment|// CHECK-DECLSPEC-KEYWORD: has_declspec
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+name|__declspec
+argument_list|)
+end_if
+
+begin_function_decl
+name|void
+name|no_declspec
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|has_declspec
 parameter_list|()
 function_decl|;
 end_function_decl

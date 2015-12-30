@@ -65,6 +65,488 @@ name|LongLongErrorCode
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|overflowed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|unsigned
+name|test_add_overflow_uint_uint_uint
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|,
+name|unsigned
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_add_overflow_uint_uint_uint
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.uadd.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|unsigned
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_add_overflow_int_int_int
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_add_overflow_int_int_int
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|int
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|test_sub_overflow_uint_uint_uint
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|,
+name|unsigned
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_sub_overflow_uint_uint_uint
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.usub.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|unsigned
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_sub_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_sub_overflow_int_int_int
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_sub_overflow_int_int_int
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.ssub.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|int
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_sub_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|test_mul_overflow_uint_uint_uint
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|,
+name|unsigned
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_mul_overflow_uint_uint_uint
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.umul.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|unsigned
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_mul_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mul_overflow_int_int_int
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_mul_overflow_int_int_int
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.smul.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|int
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_mul_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_add_overflow_uint_int_int
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_add_overflow_uint_int_int
+comment|// CHECK: [[XE:%.+]] = zext i32 %{{.+}} to i33
+comment|// CHECK: [[YE:%.+]] = sext i32 %{{.+}} to i33
+comment|// CHECK: [[S:%.+]] = call { i33, i1 } @llvm.sadd.with.overflow.i33(i33 [[XE]], i33 [[YE]])
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i33, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C1:%.+]] = extractvalue { i33, i1 } [[S]], 1
+comment|// CHECK: [[QT:%.+]] = trunc i33 [[Q]] to i32
+comment|// CHECK: [[QTE:%.+]] = sext i32 [[QT]] to i33
+comment|// CHECK: [[C2:%.+]] = icmp ne i33 [[Q]], [[QTE]]
+comment|// CHECK: [[C3:%.+]] = or i1 [[C1]], [[C2]]
+comment|// CHECK: store i32 [[QT]], i32*
+comment|// CHECK: br i1 [[C3]]
+name|int
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|_Bool
+name|test_add_overflow_uint_uint_bool
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|,
+name|unsigned
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define {{.*}} i1 @test_add_overflow_uint_uint_bool
+comment|// CHECK-NOT: ext
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.uadd.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C1:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK: [[QT:%.+]] = trunc i32 [[Q]] to i1
+comment|// CHECK: [[QTE:%.+]] = zext i1 [[QT]] to i32
+comment|// CHECK: [[C2:%.+]] = icmp ne i32 [[Q]], [[QTE]]
+comment|// CHECK: [[C3:%.+]] = or i1 [[C1]], [[C2]]
+comment|// CHECK: [[QT2:%.+]] = zext i1 [[QT]] to i8
+comment|// CHECK: store i8 [[QT2]], i8*
+comment|// CHECK: br i1 [[C3]]
+name|_Bool
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|test_add_overflow_bool_bool_uint
+parameter_list|(
+name|_Bool
+name|x
+parameter_list|,
+name|_Bool
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_add_overflow_bool_bool_uint
+comment|// CHECK: [[XE:%.+]] = zext i1 %{{.+}} to i32
+comment|// CHECK: [[YE:%.+]] = zext i1 %{{.+}} to i32
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.uadd.with.overflow.i32(i32 [[XE]], i32 [[YE]])
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK: store i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+name|unsigned
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|_Bool
+name|test_add_overflow_bool_bool_bool
+parameter_list|(
+name|_Bool
+name|x
+parameter_list|,
+name|_Bool
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define {{.*}} i1 @test_add_overflow_bool_bool_bool
+comment|// CHECK: [[S:%.+]] = call { i1, i1 } @llvm.uadd.with.overflow.i1(i1 %{{.+}}, i1 %{{.+}})
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i1, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i1, i1 } [[S]], 1
+comment|// CHECK: [[QT2:%.+]] = zext i1 [[Q]] to i8
+comment|// CHECK: store i8 [[QT2]], i8*
+comment|// CHECK: br i1 [[C]]
+name|_Bool
+name|r
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|r
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|r
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_add_overflow_volatile
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define i32 @test_add_overflow_volatile
+comment|// CHECK: [[S:%.+]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 %{{.+}}, i32 %{{.+}})
+comment|// CHECK-DAG: [[Q:%.+]] = extractvalue { i32, i1 } [[S]], 0
+comment|// CHECK-DAG: [[C:%.+]] = extractvalue { i32, i1 } [[S]], 1
+comment|// CHECK: store volatile i32 [[Q]], i32*
+comment|// CHECK: br i1 [[C]]
+specifier|volatile
+name|int
+name|result
+decl_stmt|;
+if|if
+condition|(
+name|__builtin_add_overflow
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+operator|&
+name|result
+argument_list|)
+condition|)
+name|overflowed
+argument_list|()
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_function
+
 begin_function
 name|unsigned
 name|test_uadd_overflow

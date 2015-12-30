@@ -39,11 +39,15 @@ comment|// RUN: c-index-test -test-load-source-reparse 5 all -Wno-return-type %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-source all -w %s 2>&1|not grep warning:
+comment|// RUN: c-index-test -test-load-source all -w %s 2>&1 | FileCheck -check-prefix=NOWARNINGS %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-source-reparse 5 all -w %s 2>&1|not grep warning:
+comment|// RUN: c-index-test -test-load-source-reparse 5 all -w %s 2>&1 | FileCheck -check-prefix=NOWARNINGS %s
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -test-load-source all -w -O4 %s 2>&1 | FileCheck -check-prefix=NOWARNINGS %s
 end_comment
 
 begin_comment
@@ -60,6 +64,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-SECOND-WARNING: warning: incompatible pointer types returning 'float *' from a function with result type 'int *'
+end_comment
+
+begin_comment
+comment|// NOWARNINGS-NOT: warning:
 end_comment
 
 end_unit

@@ -146,12 +146,12 @@ name|vec3
 operator|+=
 name|vec2
 expr_stmt|;
-comment|// expected-error {{can't convert between vector values of different size}}
+comment|// expected-error {{cannot convert between vector values of different size}}
 name|vec4
 operator|+=
 name|vec3
 expr_stmt|;
-comment|// expected-error {{can't convert between vector values of different size}}
+comment|// expected-error {{cannot convert between vector values of different size}}
 name|vec4
 operator|=
 literal|5.0f
@@ -252,7 +252,7 @@ name|ivec4
 operator|+=
 name|vec4
 expr_stmt|;
-comment|// expected-error {{can't convert between vector values of different size ('int4' (vector of 4 'int' values) and 'float4' (vector of 4 'float' values))}}
+comment|// expected-error {{cannot convert between vector values of different size ('int4' (vector of 4 'int' values) and 'float4' (vector of 4 'float' values))}}
 name|ivec4
 operator|+=
 operator|(
@@ -272,7 +272,7 @@ name|ivec4
 operator|+=
 name|ptr
 expr_stmt|;
-comment|// expected-error {{can't convert between vector and non-scalar values ('int4' (vector of 4 'int' values) and 'int *')}}
+comment|// expected-error {{cannot convert between vector and non-scalar values ('int4' (vector of 4 'int' values) and 'int *')}}
 block|}
 end_function
 
@@ -549,7 +549,7 @@ name|vs
 operator|+
 literal|1.f
 expr_stmt|;
-comment|// expected-error {{can't convert between vector values of different size}}
+comment|// expected-error {{cannot convert between vector values of different size}}
 name|vi
 operator|=
 name|l
@@ -569,7 +569,7 @@ name|vi
 operator|+
 literal|2.0
 expr_stmt|;
-comment|// expected-error {{can't convert between vector values of different size}}
+comment|// expected-error {{cannot convert between vector values of different size}}
 name|vi
 operator|=
 name|vi

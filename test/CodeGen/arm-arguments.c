@@ -957,15 +957,15 @@ comment|// AAPCS: @f31([1 x i32] %s.coerce)
 end_comment
 
 begin_comment
-comment|// AAPCS: %s = alloca %struct.s31, align 4
+comment|// AAPCS: %s = alloca %struct.s31, align 1
 end_comment
 
 begin_comment
-comment|// AAPCS: alloca [1 x i32]
+comment|// AAPCS: [[TEMP:%.*]] = alloca [1 x i32], align 4
 end_comment
 
 begin_comment
-comment|// AAPCS: store [1 x i32] %s.coerce, [1 x i32]*
+comment|// AAPCS: store [1 x i32] %s.coerce, [1 x i32]* [[TEMP]], align 4
 end_comment
 
 begin_comment
@@ -973,15 +973,15 @@ comment|// APCS-GNU: @f31([1 x i32] %s.coerce)
 end_comment
 
 begin_comment
-comment|// APCS-GNU: %s = alloca %struct.s31, align 4
+comment|// APCS-GNU: %s = alloca %struct.s31, align 1
 end_comment
 
 begin_comment
-comment|// APCS-GNU: alloca [1 x i32]
+comment|// APCS-GNU: [[TEMP:%.*]] = alloca [1 x i32], align 4
 end_comment
 
 begin_comment
-comment|// APCS-GNU: store [1 x i32] %s.coerce, [1 x i32]*
+comment|// APCS-GNU: store [1 x i32] %s.coerce, [1 x i32]* [[TEMP]], align 4
 end_comment
 
 begin_comment

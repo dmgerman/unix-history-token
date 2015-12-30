@@ -10,6 +10,36 @@ name|mydefine
 value|2
 end_define
 
+begin_enum
+enum|enum
+name|Choices
+block|{
+name|CHOICE_0
+init|=
+literal|0
+block|,
+name|CHOICE_1
+init|=
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|Unchoices
+block|{
+name|UNCHOICE_0
+init|=
+literal|0
+block|,
+name|UNCHOICE_1
+init|=
+literal|1
+block|}
+enum|;
+end_enum
+
 begin_function
 name|void
 name|f
@@ -461,6 +491,158 @@ operator|&&
 name|x
 operator|>
 literal|3
+condition|)
+block|{ }
+if|if
+condition|(
+name|x
+operator|!=
+name|CHOICE_0
+operator|||
+name|x
+operator|!=
+name|CHOICE_1
+condition|)
+block|{ }
+comment|// expected-warning {{overlapping comparisons always evaluate to true}}
+if|if
+condition|(
+name|x
+operator|==
+name|CHOICE_0
+operator|&&
+name|x
+operator|==
+name|CHOICE_1
+condition|)
+block|{ }
+comment|// expected-warning {{overlapping comparisons always evaluate to false}}
+comment|// Don't warn if comparing x to different types
+if|if
+condition|(
+name|x
+operator|==
+name|CHOICE_0
+operator|&&
+name|x
+operator|==
+literal|1
+condition|)
+block|{ }
+if|if
+condition|(
+name|x
+operator|!=
+name|CHOICE_0
+operator|||
+name|x
+operator|!=
+literal|1
+condition|)
+block|{ }
+comment|// "Different types" includes different enums
+if|if
+condition|(
+name|x
+operator|==
+name|CHOICE_0
+operator|&&
+name|x
+operator|==
+name|UNCHOICE_1
+condition|)
+block|{ }
+if|if
+condition|(
+name|x
+operator|!=
+name|CHOICE_0
+operator|||
+name|x
+operator|!=
+name|UNCHOICE_1
+condition|)
+block|{ }
+block|}
+end_function
+
+begin_function
+name|void
+name|enums
+parameter_list|(
+name|enum
+name|Choices
+name|c
+parameter_list|)
+block|{
+if|if
+condition|(
+name|c
+operator|!=
+name|CHOICE_0
+operator|||
+name|c
+operator|!=
+name|CHOICE_1
+condition|)
+block|{ }
+comment|// expected-warning {{overlapping comparisons always evaluate to true}}
+if|if
+condition|(
+name|c
+operator|==
+name|CHOICE_0
+operator|&&
+name|c
+operator|==
+name|CHOICE_1
+condition|)
+block|{ }
+comment|// expected-warning {{overlapping comparisons always evaluate to false}}
+comment|// Don't warn if comparing x to different types
+if|if
+condition|(
+name|c
+operator|==
+name|CHOICE_0
+operator|&&
+name|c
+operator|==
+literal|1
+condition|)
+block|{ }
+if|if
+condition|(
+name|c
+operator|!=
+name|CHOICE_0
+operator|||
+name|c
+operator|!=
+literal|1
+condition|)
+block|{ }
+comment|// "Different types" includes different enums
+if|if
+condition|(
+name|c
+operator|==
+name|CHOICE_0
+operator|&&
+name|c
+operator|==
+name|UNCHOICE_1
+condition|)
+block|{ }
+if|if
+condition|(
+name|c
+operator|!=
+name|CHOICE_0
+operator|||
+name|c
+operator|!=
+name|UNCHOICE_1
 condition|)
 block|{ }
 block|}

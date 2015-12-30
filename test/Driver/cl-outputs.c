@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Don't attempt slash switches on msys bash.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// Note: %s must be preceded by --, otherwise it may be interpreted as a
 end_comment
 

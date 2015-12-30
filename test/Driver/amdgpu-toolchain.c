@@ -1,0 +1,15 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// RUN: %clang -### -target amdgcn--amdhsa -x assembler -mcpu=kaveri %s 2>&1 | FileCheck -check-prefix=AS_LINK %s
+end_comment
+
+begin_comment
+comment|// AS_LINK: clang{{.*}} "-cc1as"
+end_comment
+
+begin_comment
+comment|// AS_LINK: lld{{.*}} "-flavor" "old-gnu" "-target" "amdgcn--amdhsa"
+end_comment
+
+end_unit
+

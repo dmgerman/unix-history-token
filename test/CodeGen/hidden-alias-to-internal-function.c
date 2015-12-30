@@ -45,7 +45,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// CHECK: @bar = hidden alias void ()* @foo
+comment|// CHECK: @bar = hidden alias void (), void ()* @foo
 end_comment
 
 begin_comment

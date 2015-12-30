@@ -12,6 +12,10 @@ comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G %s
 end_comment
 
 begin_comment
+comment|// Assert that the toolchains which should default to a lower Dwarf version do so.
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S %s -g -target x86_64-apple-darwin 2>&1 \
 end_comment
 
@@ -36,11 +40,31 @@ comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DWARF2 %s
 end_comment
 
 begin_comment
+comment|// 'g0' is the default. Just sanity-test that it does nothing
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S %s -g0    2>&1 | FileCheck --check-prefix=CHECK-WITHOUT-G %s
 end_comment
 
 begin_comment
+comment|// And check that the last of -g or -g0 wins.
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S %s -g -g0 2>&1 | FileCheck --check-prefix=CHECK-WITHOUT-G %s
+end_comment
+
+begin_comment
+comment|// These should be semantically the same as not having given 'g0' at all,
+end_comment
+
+begin_comment
+comment|// as the last 'g' option wins.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -84,15 +108,19 @@ comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DWARF2 %s
 end_comment
 
 begin_comment
-comment|// CHECK-WITHOUT-G-NOT: "-g"
+comment|// CHECK-WITHOUT-G-NOT: -debug-info-kind
 end_comment
 
 begin_comment
-comment|// CHECK-WITH-G: "-g"
+comment|// CHECK-WITH-G: "-debug-info-kind=limited"
 end_comment
 
 begin_comment
-comment|// CHECK-WITH-G-DWARF2: "-gdwarf-2"
+comment|// CHECK-WITH-G: "-dwarf-version=4"
+end_comment
+
+begin_comment
+comment|// CHECK-WITH-G-DWARF2: "-dwarf-version=2"
 end_comment
 
 end_unit

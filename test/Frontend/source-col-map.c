@@ -4,6 +4,10 @@ comment|// RUN: not %clang_cc1 -fsyntax-only -fmessage-length 75 -o /dev/null -x
 end_comment
 
 begin_comment
+comment|// REQUIRES: utf8-capable-terminal
+end_comment
+
+begin_comment
 comment|// Test case for the text diagnostics source column conversion crash.
 end_comment
 

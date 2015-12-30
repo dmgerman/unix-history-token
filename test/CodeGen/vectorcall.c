@@ -239,7 +239,7 @@ comment|// CHECK: define x86_vectorcallcc void @"\01hfa2@@72"(double %a.0, doubl
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hfa2@@72"(double %a.0, double %a.1, double %a.2, double %a.3, %struct.HFA4* align 8 %b, double %c)
+comment|// X64: define x86_vectorcallcc void @"\01hfa2@@72"(double %a.0, double %a.1, double %a.2, double %a.3, %struct.HFA4* %b, double %c)
 end_comment
 
 begin_comment
@@ -282,7 +282,7 @@ comment|// CHECK: define x86_vectorcallcc void @"\01hfa3@@56"(double %a, double 
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hfa3@@56"(double %a, double %b, double %c, double %d, double %e, %struct.HFA2* align 8 %f)
+comment|// X64: define x86_vectorcallcc void @"\01hfa3@@56"(double %a, double %b, double %c, double %d, double %e, %struct.HFA2* %f)
 end_comment
 
 begin_comment
@@ -448,7 +448,7 @@ comment|// CHECK: define x86_vectorcallcc void @"\01hva2@@144"(<4 x float> %a.0,
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hva2@@144"(<4 x float> %a.0,<4 x float> %a.1,<4 x float> %a.2,<4 x float> %a.3, %struct.HVA4* align 16 %b,<4 x float> %c)
+comment|// X64: define x86_vectorcallcc void @"\01hva2@@144"(<4 x float> %a.0,<4 x float> %a.1,<4 x float> %a.2,<4 x float> %a.3, %struct.HVA4* %b,<4 x float> %c)
 end_comment
 
 begin_function
@@ -483,7 +483,7 @@ comment|// CHECK: define x86_vectorcallcc void @"\01hva3@@112"(<4 x float> %a,<4
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hva3@@112"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d,<4 x float> %e, %struct.HVA2* align 16 %f)
+comment|// X64: define x86_vectorcallcc void @"\01hva3@@112"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d,<4 x float> %e, %struct.HVA2* %f)
 end_comment
 
 begin_typedef

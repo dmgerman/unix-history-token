@@ -119,5 +119,45 @@ begin_comment
 comment|// CHECK: define i32 @bar()
 end_comment
 
+begin_comment
+comment|// Check that pragma redefine_extname applies to external declarations only.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|foo_static
+name|bar_static
+end_pragma
+
+begin_function
+specifier|static
+name|int
+name|foo_static
+parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|baz
+parameter_list|()
+block|{
+return|return
+name|foo_static
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-NOT: call i32 @bar_static()
+end_comment
+
 end_unit
 

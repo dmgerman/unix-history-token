@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Don't attempt slash switches on msys bash.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// Note: %s must be preceded by --, otherwise it may be interpreted as a
 end_comment
 
@@ -301,6 +293,38 @@ end_comment
 
 begin_comment
 comment|// MTOVERRIDE: "--dependent-lib=libcmt"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /Zl -- %s 2>&1 | FileCheck -check-prefix=CHECK-MTZl %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /MT /Zl -- %s 2>&1 | FileCheck -check-prefix=CHECK-MTZl %s
+end_comment
+
+begin_comment
+comment|// CHECK-MTZl-NOT: "-D_DEBUG"
+end_comment
+
+begin_comment
+comment|// CHECK-MTZl: "-D_MT"
+end_comment
+
+begin_comment
+comment|// CHECK-MTZl-NOT: "-D_DLL"
+end_comment
+
+begin_comment
+comment|// CHECK-MTZl-SAME: "-D_VC_NODEFAULTLIB"
+end_comment
+
+begin_comment
+comment|// CHECK-MTZl-NOT: "--dependent-lib=libcmt"
+end_comment
+
+begin_comment
+comment|// CHECK-MTZl-NOT: "--dependent-lib=oldnames"
 end_comment
 
 end_unit

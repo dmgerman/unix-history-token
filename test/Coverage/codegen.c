@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm-bc -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -g -emit-llvm-bc -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -debug-info-kind=limited -emit-llvm-bc -o %t %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm-bc -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -g -emit-llvm-bc -o %t %s
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -debug-info-kind=limited -emit-llvm-bc -o %t %s
 end_comment
 
 begin_include

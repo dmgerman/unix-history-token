@@ -182,6 +182,70 @@ name|vec_t7
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|v8qi
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|QI
+typedef|)))
+name|__attribute__
+typedef|((
+name|vector_size
+typedef|(8)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|v8qi
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|V8QI
+typedef|)));
+end_typedef
+
+begin_comment
+comment|// expected-warning@-1{{specifying vector types with the 'mode' attribute is deprecated; use the 'vector_size' attribute instead}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|v4sf
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|V4SF
+typedef|)));
+end_typedef
+
+begin_comment
+comment|// expected-warning@-1{{specifying vector types with the 'mode' attribute is deprecated; use the 'vector_size' attribute instead}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|v4sf
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|SF
+typedef|)))
+name|__attribute__
+typedef|((
+name|vector_size
+typedef|(16)));
+end_typedef
+
 begin_comment
 comment|// Incorrect cases.
 end_comment
@@ -331,6 +395,26 @@ end_typedef
 
 begin_comment
 comment|// expected-error@-1{{invalid vector element type '_Complex float'}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|mode
+argument_list|(
+name|V3QI
+argument_list|)
+operator|)
+argument_list|)
+name|v3qi
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error@-1{{unknown machine mode 'V3QI'}}
 end_comment
 
 end_unit

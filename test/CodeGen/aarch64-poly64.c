@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// FIXME: This is a front-end test that depends on LLVM optimizations (-O3).
+end_comment
+
+begin_comment
+comment|// It should be split into separate files for front/middle/back-end testing.
+end_comment
+
+begin_comment
 comment|// REQUIRES: aarch64-registered-target
 end_comment
 
@@ -325,7 +333,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: ins  {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: zip1 v0.2d, v0.2d, v1.2d
 block|}
 end_function
 

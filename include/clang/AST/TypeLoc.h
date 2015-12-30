@@ -644,6 +644,38 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Find a type with the location of an explicit type qualifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The result, if non-null, will be one of:
+end_comment
+
+begin_comment
+comment|///   QualifiedTypeLoc
+end_comment
+
+begin_comment
+comment|///   AtomicTypeLoc
+end_comment
+
+begin_comment
+comment|///   AttributedTypeLoc, for those type attributes that behave as qualifiers
+end_comment
+
+begin_expr_stmt
+name|TypeLoc
+name|findExplicitQualifierLoc
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Initializes this to state that every location in this
 end_comment
 
@@ -697,14 +729,13 @@ begin_comment
 comment|/// TypeLoc of the same type.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|initializeFullCopy
-argument_list|(
+parameter_list|(
 name|TypeLoc
 name|Other
-argument_list|)
-decl|const
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -717,27 +748,13 @@ name|getType
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|size_t
-name|Size
-init|=
-name|getFullDataSize
-argument_list|()
-decl_stmt|;
-name|memcpy
+name|copy
 argument_list|(
-name|getOpaqueData
-argument_list|()
-argument_list|,
 name|Other
-operator|.
-name|getOpaqueData
-argument_list|()
-argument_list|,
-name|Size
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// \brief Initializes this by copying its information from another
@@ -751,17 +768,16 @@ begin_comment
 comment|/// size.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|initializeFullCopy
-argument_list|(
+parameter_list|(
 name|TypeLoc
 name|Other
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Size
-argument_list|)
-decl|const
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -782,21 +798,13 @@ operator|==
 name|Size
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|copy
 argument_list|(
-name|getOpaqueData
-argument_list|()
-argument_list|,
 name|Other
-operator|.
-name|getOpaqueData
-argument_list|()
-argument_list|,
-name|Size
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// Copies the other type loc into this one.
@@ -979,6 +987,7 @@ name|getTypeLoc
 argument_list|()
 specifier|const
 block|{
+comment|// TODO: is this alignment already sufficient?
 return|return
 name|TypeLoc
 argument_list|(
@@ -2973,6 +2982,19 @@ name|hasAttrExprOperand
 argument_list|()
 operator|||
 name|hasAttrEnumOperand
+argument_list|()
+return|;
+block|}
+name|bool
+name|isQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|isQualifier
 argument_list|()
 return|;
 block|}

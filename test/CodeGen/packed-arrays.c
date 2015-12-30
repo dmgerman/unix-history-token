@@ -472,6 +472,10 @@ block|}
 end_function
 
 begin_comment
+comment|// Note that 'y' still causes struct s1 to be four-byte aligned.
+end_comment
+
+begin_comment
 comment|// Note that we are incompatible with GCC on this example.
 end_comment
 
@@ -484,7 +488,7 @@ comment|// CHECK-LABEL: define i32 @f1_a
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32, i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
@@ -528,7 +532,7 @@ comment|// CHECK-LABEL: define i32 @f1_d
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32, i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment

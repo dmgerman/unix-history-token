@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-UBSAN
+comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | opt -instnamer -S | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize-trap=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
+comment|// RUN: %clang_cc1 -fsanitize-trap=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | opt -instnamer -S | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
 end_comment
 
 begin_comment
@@ -13,10 +13,6 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsanitize=signed-integer-overflow -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-OVERFLOW
-end_comment
-
-begin_comment
-comment|// REQUIRES: asserts
 end_comment
 
 begin_comment
@@ -65,6 +61,50 @@ end_comment
 
 begin_comment
 comment|// CHECK-UBSAN: @[[LINE_900:.*]] = {{.*}}, i32 900, i32 11 {{.*}} @{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1000:.*]] = {{.*}}, i32 1000, i32 10 {{.*}} @{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[FP16:.*]] = private unnamed_addr constant { i16, i16, [9 x i8] } { i16 1, i16 16, [9 x i8] c"'__fp16'\00" }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1100:.*]] = {{.*}}, i32 1100, i32 8 {{.*}} @{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1200:.*]] = {{.*}}, i32 1200, i32 10 {{.*}} @{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1300:.*]] = {{.*}}, i32 1300, i32 10 {{.*}} @{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1400:.*]] = {{.*}}, i32 1400, i32 10 {{.*}} @{{.*}} }
+end_comment
+
+begin_comment
+comment|// Make sure we check the fp16 type_mismatch data so we can easily match the signed char float_cast_overflow
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1500:.*]] = {{.*}}, i32 1500, i32 10 {{.*}} @[[FP16]], {{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[SCHAR:.*]] = private unnamed_addr constant { i16, i16, [14 x i8] } { i16 0, i16 7, [14 x i8] c"'signed char'\00" }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1500:.*]] = {{.*}}, i32 1500, i32 10 {{.*}} @[[FP16]], {{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: @[[LINE_1600:.*]] = {{.*}}, i32 1600, i32 10 {{.*}} @{{.*}} }
 end_comment
 
 begin_comment
@@ -482,9 +522,12 @@ block|{
 comment|// This is 2**104. FLT_MAX is 2**128 - 2**104.
 comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = icmp ule i128 %{{.*}}, -20282409603651670423947251286016
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1000]] to i8*),
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1000
 return|return
 name|n
 return|;
@@ -511,9 +554,12 @@ comment|// CHECK-COMMON: %[[GE:.*]] = icmp sge i32 %{{.*}}, -65504
 comment|// CHECK-COMMON: %[[LE:.*]] = icmp sle i32 %{{.*}}, 65504
 comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1100]] to i8*),
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1100
 operator|*
 name|p
 operator|=
@@ -540,9 +586,12 @@ comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
 comment|// CHECK-UBSAN: %[[CAST:.*]] = bitcast float %[[F]] to i32
 comment|// CHECK-UBSAN: %[[ARG:.*]] = zext i32 %[[CAST]] to i64
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1200]] to i8*), i64 %[[ARG]]
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1200
 return|return
 name|f
 return|;
@@ -567,11 +616,14 @@ comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt x86_fp80 %[[F:.*]], 0xKC01E800000
 comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt x86_fp80 %[[F]], 0xK401E800000000000000
 comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
-comment|// CHECK-UBSAN: store x86_fp80 %[[F]], x86_fp80* %[[ALLOCA:.*]], !nosanitize
+comment|// CHECK-UBSAN: store x86_fp80 %[[F]], x86_fp80* %[[ALLOCA:.*]], align 16, !nosanitize
 comment|// CHECK-UBSAN: %[[ARG:.*]] = ptrtoint x86_fp80* %[[ALLOCA]] to i64
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1300]] to i8*), i64 %[[ARG]]
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1300
 return|return
 name|ld
 return|;
@@ -594,9 +646,12 @@ comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.{{0*}}e+00
 comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt float %[[F]], 0x41F0000000000000
 comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1400]] to i8*),
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1400
 return|return
 name|f
 return|;
@@ -621,9 +676,12 @@ comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.29{{0*}}e+02
 comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt float %[[F]], 1.28{{0*}}e+02
 comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1500]] to i8*),
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1500
 return|return
 operator|*
 name|p
@@ -649,9 +707,12 @@ comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt double %[[F]], 0x7FF0000000000000
 comment|// CHECK-COMMON: %[[OUTOFBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
 comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = xor i1 %[[OUTOFBOUNDS]], true
 comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
-comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(i8* bitcast ({{.*}} @[[LINE_1600]] to i8*),
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
+line|#
+directive|line
+number|1600
 return|return
 name|f
 return|;

@@ -161,5 +161,300 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|test_atomic_fetch_add
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_fetch_add
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_add_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+return|return
+name|__atomic_fetch_add
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_fetch_sub
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_fetch_sub
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+return|return
+name|__atomic_fetch_sub
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_fetch_and
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_fetch_and
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_and_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+return|return
+name|__atomic_fetch_and
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_fetch_or
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_fetch_or
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_or_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+return|return
+name|__atomic_fetch_or
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_fetch_xor
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_fetch_xor
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_xor_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+return|return
+name|__atomic_fetch_xor
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_fetch_nand
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_fetch_nand
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_nand_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+return|return
+name|__atomic_fetch_nand
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_add_fetch
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_add_fetch
+comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_add_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+comment|// CHECK: {{%[^ ]*}} = add i32 [[CALL]], 55
+return|return
+name|__atomic_add_fetch
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_sub_fetch
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_sub_fetch
+comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+comment|// CHECK: {{%[^ ]*}} = add i32 [[CALL]], -55
+return|return
+name|__atomic_sub_fetch
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_and_fetch
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_and_fetch
+comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_and_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+comment|// CHECK: {{%[^ ]*}} = and i32 [[CALL]], 55
+return|return
+name|__atomic_and_fetch
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_or_fetch
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_or_fetch
+comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_or_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+comment|// CHECK: {{%[^ ]*}} = or i32 [[CALL]], 55
+return|return
+name|__atomic_or_fetch
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_xor_fetch
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_xor_fetch
+comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_xor_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+comment|// CHECK: {{%[^ ]*}} = xor i32 [[CALL]], 55
+return|return
+name|__atomic_xor_fetch
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_atomic_nand_fetch
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: test_atomic_nand_fetch
+comment|// CHECK: [[CALL:%[^ ]*]] = tail call i32 @__atomic_fetch_nand_4(i8* {{%[0-9]+}}, i32 55, i32 5)
+comment|// CHECK: [[OR:%[^ ]*]] = or i32 [[CALL]], -56
+comment|// CHECK: {{%[^ ]*}} = xor i32 [[OR]], 55
+return|return
+name|__atomic_nand_fetch
+argument_list|(
+name|p
+argument_list|,
+literal|55
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

@@ -56,7 +56,7 @@ comment|// RUN: %clang -### -c -fprofile-arcs -no-integrated-as %s -o foo/bar.o 
 end_comment
 
 begin_comment
-comment|// CHECK-GCNO-DEFAULT-LOCATION: "-coverage-file" "{{.*}}/coverage_no_integrated_as.c"
+comment|// CHECK-GCNO-DEFAULT-LOCATION: "-coverage-file" "{{.*}}{{/|\\\\}}coverage_no_integrated_as.c"
 end_comment
 
 begin_comment
@@ -64,11 +64,11 @@ comment|// CHECK-GCNO-DEFAULT-LOCATION-NOT: "-coverage-file" "/tmp/{{.*}}/covera
 end_comment
 
 begin_comment
-comment|// CHECK-GCNO-LOCATION: "-coverage-file" "/foo/bar.o"
+comment|// CHECK-GCNO-LOCATION: "-coverage-file" "{{.*}}/foo/bar.o"
 end_comment
 
 begin_comment
-comment|// CHECK-GCNO-LOCATION-REL-PATH: "-coverage-file" "{{.*}}/foo/bar.o"
+comment|// CHECK-GCNO-LOCATION-REL-PATH: "-coverage-file" "{{.*}}{{/|\\\\}}foo/bar.o"
 end_comment
 
 end_unit

@@ -20,7 +20,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: ext_unterminated_string
+comment|// CHECK: ext_unterminated_char_or_string
 end_comment
 
 begin_comment

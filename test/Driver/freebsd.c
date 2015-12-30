@@ -508,7 +508,23 @@ comment|// CHECK-SPARC-CPU: cc1{{.*}}" "-target-cpu" "ultrasparc"
 end_comment
 
 begin_comment
-comment|// CHECK-SPARC-CPU: as{{.*}}" "-Av9a
+comment|// CHECK-SPARC-CPU: as{{.*}}" "-Av9
+end_comment
+
+begin_comment
+comment|// Check that -G flags are passed to the linker for mips
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-unknown-freebsd %s -### -G0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS-G %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-G: ld{{.*}}" "-G0"
 end_comment
 
 end_unit

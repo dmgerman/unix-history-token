@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-unknown-unknown -target-feature +3dnow -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-unknown-unknown -target-feature +3dnowa -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
 begin_comment

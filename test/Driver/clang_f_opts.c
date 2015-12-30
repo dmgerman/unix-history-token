@@ -304,6 +304,50 @@ comment|// RUN: %clang -### -S -fprofile-generate=dir -fprofile-instr-use=file %
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fno-profile-instr-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fno-profile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=dir -fno-profile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=dir -fno-profile-instr-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-use=file -fno-profile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-use=file -fno-profile-use %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-use=file -fno-profile-use %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-use=file -fno-profile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fcoverage-mapping %s 2>&1 | FileCheck -check-prefix=CHECK-COVERAGE-AND-GEN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fcoverage-mapping -fno-coverage-mapping %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-COVERAGE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fcoverage-mapping -fno-coverage-mapping %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-COVERAGE %s
+end_comment
+
+begin_comment
 comment|// CHECK-PROFILE-GENERATE: "-fprofile-instr-generate"
 end_comment
 
@@ -317,6 +361,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-MIX-GEN-USE: '{{[a-z=-]*}}' not allowed with '{{[a-z=-]*}}'
+end_comment
+
+begin_comment
+comment|// CHECK-DISABLE-GEN-NOT: "-fprofile-instr-generate"
+end_comment
+
+begin_comment
+comment|// CHECK-DISABLE-USE-NOT: "-fprofile-instr-use"
+end_comment
+
+begin_comment
+comment|// CHECK-COVERAGE-AND-GEN: '-fcoverage-mapping' only allowed with '-fprofile-instr-generate'
+end_comment
+
+begin_comment
+comment|// CHECK-DISABLE-COVERAGE-NOT: "-fcoverage-mapping"
 end_comment
 
 begin_comment
@@ -1340,7 +1400,7 @@ comment|// CHECK-WARNING-DAG: optimization flag '-funswitch-loops' is not suppor
 end_comment
 
 begin_comment
-comment|// CHECK-WARNING-DAG: optimization flag '-flto=1' is not supported
+comment|// CHECK-WARNING-DAG: unsupported argument '1' to option 'flto='
 end_comment
 
 begin_comment
@@ -1545,6 +1605,54 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-WARNING2-NOT: optimization flag '-finline-limit' is not supported
+end_comment
+
+begin_comment
+comment|// Test that an ignored optimization argument only prints 1 warning,
+end_comment
+
+begin_comment
+comment|// not both a warning about not claiming the arg, *and* about not supporting
+end_comment
+
+begin_comment
+comment|// the arg; and that adding -Wno-ignored-optimization silences the warning.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fprofile-correction %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-WARNING3 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-WARNING3: optimization flag '-fprofile-correction' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-NO-WARNING3-NOT: argument unused
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fprofile-correction -Wno-ignored-optimization-argument %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-WARNING4 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-WARNING4-NOT: not supported
+end_comment
+
+begin_comment
+comment|// CHECK-NO-WARNING4-NOT: argument unused
 end_comment
 
 begin_comment

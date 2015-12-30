@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -fnew-ms-eh -emit-llvm -o - | opt -instnamer -S | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -522,15 +522,11 @@ comment|// CHECK: [[g1_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
+comment|// CHECK-NEXT: cleanuppad
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: catch i8* null
-end_comment
-
-begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -542,7 +538,19 @@ comment|// CHECK-NEXT:       to label %[[g1_resume:.*]] unwind label %[[g2_lpad]
 end_comment
 
 begin_comment
+comment|// CHECK: cleanupret {{.*}} unwind label %[[g2_lpad]]
+end_comment
+
+begin_comment
 comment|// CHECK: [[g2_lpad]]
+end_comment
+
+begin_comment
+comment|// CHECK: catchpad {{.*}} [i8* null]
+end_comment
+
+begin_comment
+comment|// CHECK: catchret
 end_comment
 
 begin_comment
@@ -643,23 +651,15 @@ comment|// CHECK-NEXT:       to label %[[g1_cont:.*]] unwind label %[[g1_lpad:.*
 end_comment
 
 begin_comment
-comment|// CHECK: [[g1_cont]]
-end_comment
-
-begin_comment
-comment|// CHECK: store i32 16, i32* %myres
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: br label %[[trycont:[^ ]*]]
-end_comment
-
-begin_comment
 comment|// CHECK: [[g1_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK:  br label %[[except:[^ ]*]]
+comment|// CHECK: catchpad {{.*}} [i8* null]
+end_comment
+
+begin_comment
+comment|// CHECK: catchret {{.*}} to label %[[except:[^ ]*]]
 end_comment
 
 begin_comment
@@ -675,27 +675,15 @@ comment|// CHECK-NEXT:       to label %[[g2_cont:.*]] unwind label %[[g2_lpad:.*
 end_comment
 
 begin_comment
-comment|// CHECK: [[g2_cont]]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: br label %[[tryleave:[^ ]*]]
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: store i32 23
-end_comment
-
-begin_comment
 comment|// CHECK: [[g2_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: br label %[[outerexcept:[^ ]*]]
+comment|// CHECK: catchpad {{.*}} [i8* null]
 end_comment
 
 begin_comment
-comment|// CHECK: [[outerexcept]]
+comment|// CHECK: catchret
 end_comment
 
 begin_comment
@@ -708,6 +696,30 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: ret i32 1
+end_comment
+
+begin_comment
+comment|// CHECK: [[g2_cont]]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: br label %[[tryleave:[^ ]*]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: store i32 23
+end_comment
+
+begin_comment
+comment|// CHECK: [[g1_cont]]
+end_comment
+
+begin_comment
+comment|// CHECK: store i32 16, i32* %myres
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: br label %[[trycont:[^ ]*]]
 end_comment
 
 begin_comment
@@ -797,23 +809,15 @@ comment|// CHECK-NEXT:       to label %[[g1_cont:.*]] unwind label %[[g1_lpad:.*
 end_comment
 
 begin_comment
-comment|// CHECK: [[g1_cont]]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: br label %[[trycont:[^ ]*]]
-end_comment
-
-begin_comment
 comment|// CHECK: [[g1_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK:  br label %[[except:[^ ]*]]
+comment|// CHECK: catchpad
 end_comment
 
 begin_comment
-comment|// CHECK: [[except]]
+comment|// CHECK: catchret
 end_comment
 
 begin_comment
@@ -837,19 +841,11 @@ comment|// CHECK-NOT: 23
 end_comment
 
 begin_comment
-comment|// CHECK: [[g2_lpad]]
+comment|// CHECK: [[g1_cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: call void @"\01?fin$0@0@nested___finally___except@@"(i8 1, i8* %[[fp]])
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: br label %[[ehresume:[^ ]*]]
+comment|// CHECK-NEXT: br label %[[trycont:[^ ]*]]
 end_comment
 
 begin_comment
@@ -881,11 +877,23 @@ comment|// CHECK-NEXT: ret i32 1
 end_comment
 
 begin_comment
-comment|// CHECK: [[ehresume]]
+comment|// CHECK: [[g2_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: resume
+comment|// CHECK: cleanuppad
+end_comment
+
+begin_comment
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void @"\01?fin$0@0@nested___finally___except@@"(i8 1, i8* %[[fp]])
+end_comment
+
+begin_comment
+comment|// CHECK: cleanupret {{.*}} unwind to caller
 end_comment
 
 begin_comment
@@ -956,7 +964,7 @@ comment|// CHECK-LABEL: define i32 @nested___finally___finally()
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: invoke void @g()
+comment|// CHECK: invoke void @g()
 end_comment
 
 begin_comment
@@ -1008,15 +1016,11 @@ comment|// CHECK: [[g1_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
+comment|// CHECK-NEXT: %[[padtoken:[^ ]*]] = cleanuppad within none []
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: cleanup
-end_comment
-
-begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -1028,35 +1032,23 @@ comment|// CHECK-NEXT:       to label %[[finally_cont2:.*]] unwind label %[[g2_l
 end_comment
 
 begin_comment
-comment|// CHECK: [[g2_lpad]]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
-end_comment
-
-begin_comment
-comment|// CHECK: br label %[[ehcleanup:.*]]
-end_comment
-
-begin_comment
 comment|// CHECK: [[finally_cont2]]
 end_comment
 
 begin_comment
-comment|// CHECK: br label %[[ehcleanup]]
+comment|// CHECK: cleanupret from %[[padtoken]] unwind label %[[g2_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: [[ehcleanup]]
+comment|// CHECK: [[g2_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
+comment|// CHECK-NEXT: %[[padtoken:[^ ]*]] = cleanuppad within none []
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -1064,7 +1056,7 @@ comment|// CHECK-NEXT: call void @"\01?fin$0@0@nested___finally___finally@@"(i8 
 end_comment
 
 begin_comment
-comment|// CHECK: resume
+comment|// CHECK: cleanupret from %[[padtoken]] unwind to caller
 end_comment
 
 begin_comment

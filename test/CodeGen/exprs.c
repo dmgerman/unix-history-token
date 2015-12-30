@@ -719,9 +719,10 @@ name|X
 index|]
 return|;
 comment|// CHECK: [[Xaddr:%[^ ]+]] = alloca i64, align 8
-comment|// CHECK: load {{.*}}, {{.*}}* [[Xaddr]]
-comment|// CHECK-NEXT: getelementptr inbounds [100 x i32], [100 x i32]* %A, i32 0,
-comment|// CHECK-NEXT: load i32, i32*
+comment|// CHECK: [[A:%.*]] = alloca [100 x i32], align
+comment|// CHECK: [[X:%.*]] = load {{.*}}, {{.*}}* [[Xaddr]]
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [100 x i32], [100 x i32]* [[A]], i64 0, i64 [[X]]
+comment|// CHECK-NEXT: load i32, i32* [[T0]], align 4
 block|}
 end_function
 

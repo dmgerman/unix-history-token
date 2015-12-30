@@ -99,6 +99,9 @@ decl_stmt|;
 name|class
 name|Tool
 decl_stmt|;
+name|class
+name|InputInfo
+decl_stmt|;
 comment|// Re-export this as clang::driver::ArgStringList.
 name|using
 name|llvm
@@ -166,6 +169,14 @@ name|opt
 operator|::
 name|ArgStringList
 name|Arguments
+expr_stmt|;
+comment|/// The list of program arguments which are inputs.
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+name|InputFilenames
 expr_stmt|;
 comment|/// Response file name, if this command is set to use one, or nullptr
 comment|/// otherwise
@@ -250,7 +261,24 @@ operator|::
 name|ArgStringList
 operator|&
 name|Arguments
+argument_list|,
+name|ArrayRef
+operator|<
+name|InputInfo
+operator|>
+name|Inputs
 argument_list|)
+expr_stmt|;
+comment|// FIXME: This really shouldn't be copyable, but is currently copied in some
+comment|// error handling in Driver::generateCompilationDiagnostics.
+name|Command
+argument_list|(
+specifier|const
+name|Command
+operator|&
+argument_list|)
+operator|=
+expr|default
 expr_stmt|;
 name|virtual
 operator|~
@@ -429,6 +457,12 @@ specifier|const
 name|ArgStringList
 operator|&
 name|Arguments_
+argument_list|,
+name|ArrayRef
+operator|<
+name|InputInfo
+operator|>
+name|Inputs
 argument_list|,
 name|std
 operator|::

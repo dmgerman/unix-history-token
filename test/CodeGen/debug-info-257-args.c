@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -g -emit-llvm -triple x86_64-linux-gnu -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -x c++ -debug-info-kind=limited -emit-llvm -triple x86_64-linux-gnu -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -8,15 +8,15 @@ comment|// PR23332
 end_comment
 
 begin_comment
-comment|// CHECK: DILocalVariable(tag: DW_TAG_arg_variable, arg: 255
+comment|// CHECK: DILocalVariable(arg: 255
 end_comment
 
 begin_comment
-comment|// CHECK: DILocalVariable(tag: DW_TAG_arg_variable, arg: 256
+comment|// CHECK: DILocalVariable(arg: 256
 end_comment
 
 begin_comment
-comment|// CHECK: DILocalVariable(tag: DW_TAG_arg_variable, arg: 257
+comment|// CHECK: DILocalVariable(arg: 257
 end_comment
 
 begin_function

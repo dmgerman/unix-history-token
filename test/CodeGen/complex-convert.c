@@ -124,6 +124,7 @@ comment|// CHECK: i[[LLSIZE:[0-9]+]]
 comment|// Match against the allocas to pick up the alignments.
 comment|// CHECK: alloca i[[CHSIZE]], align [[CHALIGN:[0-9]+]]
 comment|// CHECK: alloca i[[LLSIZE]], align [[LLALIGN:[0-9]+]]
+comment|// CHECK: store i64 %ull,
 name|sc1
 operator|=
 name|csc

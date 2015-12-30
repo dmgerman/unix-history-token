@@ -1268,5 +1268,26 @@ begin_comment
 comment|// expected-error{{'staticFunc' must have external linkage when declared 'dllimport'}}
 end_comment
 
+begin_comment
+comment|// Static locals don't count as having external linkage.
+end_comment
+
+begin_function
+name|void
+name|staticLocalFunc
+parameter_list|()
+block|{
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+specifier|static
+name|int
+name|staticLocal
+decl_stmt|;
+comment|// expected-error{{'staticLocal' must have external linkage when declared 'dllimport'}}
+block|}
+end_function
+
 end_unit
 

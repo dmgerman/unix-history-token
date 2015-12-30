@@ -1084,6 +1084,126 @@ comment|// CHECK-LSAN-ASAN-LINUX-NOT: libclang_rt.lsan
 end_comment
 
 begin_comment
+comment|// CFI by itself does not link runtime libraries.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-LINUX-NOT: libclang_rt.
+end_comment
+
+begin_comment
+comment|// CFI with diagnostics links the UBSan runtime.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fno-sanitize-trap=cfi -fsanitize-recover=cfi \
+end_comment
+
+begin_comment
+comment|// RUN:     %s -### -o %t.o 2>&1\
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-DIAG-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-DIAG-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-DIAG-LINUX: "-whole-archive" "{{[^"]*}}libclang_rt.ubsan_standalone-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// Cross-DSO CFI links the CFI runtime.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fsanitize-cfi-cross-dso %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-CROSS-DSO-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO-LINUX: "-whole-archive" "{{[^"]*}}libclang_rt.cfi-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// Cross-DSO CFI with diagnostics links just the CFI runtime.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fsanitize-cfi-cross-dso %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-sanitize-trap=cfi -fsanitize-recover=cfi \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-CROSS-DSO-DIAG-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO-DIAG-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO-DIAG-LINUX: "-whole-archive" "{{[^"]*}}libclang_rt.cfi_diag-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
 comment|// RUN: %clangxx -fsanitize=address %s -### -o %t.o 2>&1 \
 end_comment
 
@@ -1113,6 +1233,202 @@ end_comment
 
 begin_comment
 comment|// CHECK-ASAN-DARWIN106-CXX-NOT: -lc++abi
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux -fsanitize=safe-stack \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-LINUX-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-LINUX: libclang_rt.safestack-x86_64.a"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-LINUX: "-ldl"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=safe-stack \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-ARM %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-ANDROID-ARM: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-ANDROID-ARM-NOT: libclang_rt.safestack
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o -shared 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=safe-stack \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-ARM %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-SHARED-ANDROID-ARM: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-SHARED-ANDROID-ARM-NOT: libclang_rt.safestack
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target aarch64-linux-android -fsanitize=safe-stack \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-AARCH64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-ANDROID-AARCH64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-SAFESTACK-ANDROID-AARCH64-NOT: libclang_rt.safestack
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-scei-ps4 \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UBSAN-PS4 %s
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-PS4: "{{.*}}ld{{(.gold)?(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-PS4: -lSceDbgUBSanitizer_stub_weak
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=address %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-scei-ps4 \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-PS4 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-PS4: "{{.*}}ld{{(.gold)?(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-PS4: -lSceDbgAddressSanitizer_stub_weak
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-scei-ps4 \
+end_comment
+
+begin_comment
+comment|// RUN:     -shared \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-AUBSAN-PS4 %s
+end_comment
+
+begin_comment
+comment|// CHECK-AUBSAN-PS4: "{{.*}}ld{{(.gold)?(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-AUBSAN-PS4: -lSceDbgAddressSanitizer_stub_weak
 end_comment
 
 end_unit

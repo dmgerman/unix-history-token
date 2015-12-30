@@ -208,7 +208,7 @@ comment|// RUN: echo "MS C Mode tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=c99 -fms-compatibility | FileCheck %s --check-prefix=CHECK4
+comment|// RUN: %clang_cc1 %s -triple i386-pc-win32 -O1 -disable-llvm-optzns -emit-llvm -o - -std=c99 | FileCheck %s --check-prefix=CHECK4
 end_comment
 
 begin_comment

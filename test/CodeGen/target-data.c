@@ -240,6 +240,30 @@ comment|// LE32-NACL: target datalayout = "e-p:32:32-i64:64"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple wasm32-unknown-unknown -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=WEBASSEMBLY32
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32: target datalayout = "e-p:32:32-i64:64-n32:64-S128"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple wasm64-unknown-unknown -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=WEBASSEMBLY64
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64: target datalayout = "e-p:64:64-i64:64-n32:64-S128"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple powerpc-unknown -o - -emit-llvm %s | \
 end_comment
 
@@ -456,7 +480,7 @@ comment|// RUN: FileCheck %s -check-prefix=HEXAGON
 end_comment
 
 begin_comment
-comment|// HEXAGON: target datalayout = "e-m:e-p:32:32-i1:32-i64:64-a:0-n32"
+comment|// HEXAGON: target datalayout = "e-m:e-p:32:32:32-i64:64:64-i32:32:32-i16:16:16-i1:8:8-f64:64:64-f32:32:32-v64:64:64-v32:32:32-a:0-n16:32"
 end_comment
 
 begin_comment

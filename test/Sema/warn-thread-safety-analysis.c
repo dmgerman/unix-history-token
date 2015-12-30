@@ -579,7 +579,21 @@ operator|&
 name|mu1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{acquiring mutex 'mu1' that is already held}}
+comment|// expected-warning{{acquiring mutex 'mu1' that is already held}} \
+name|expected
+operator|-
+name|warning
+block|{
+block|{
+name|mutex
+literal|'mu1'
+name|must
+name|be
+name|acquired
+name|before
+literal|'mu2'
+block|}
+block|}
 name|mutex_unlock
 argument_list|(
 operator|&

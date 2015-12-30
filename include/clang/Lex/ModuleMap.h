@@ -142,6 +142,37 @@ decl_stmt|;
 name|class
 name|ModuleMapParser
 decl_stmt|;
+comment|/// \brief A mechanism to observe the actions of the module map parser as it
+comment|/// reads module map files.
+name|class
+name|ModuleMapCallbacks
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|ModuleMapCallbacks
+argument_list|()
+block|{}
+comment|/// \brief Called when a module map file has been read.
+comment|///
+comment|/// \param FileStart A SourceLocation referring to the start of the file's
+comment|/// contents.
+comment|/// \param File The file itself.
+comment|/// \param IsSystem Whether this is a module map from a system include path.
+name|virtual
+name|void
+name|moduleMapFileRead
+argument_list|(
+argument|SourceLocation FileStart
+argument_list|,
+argument|const FileEntry&File
+argument_list|,
+argument|bool IsSystem
+argument_list|)
+block|{}
+block|}
+empty_stmt|;
 name|class
 name|ModuleMap
 block|{
@@ -167,6 +198,21 @@ name|HeaderSearch
 modifier|&
 name|HeaderInfo
 decl_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleMapCallbacks
+operator|>
+operator|,
+literal|1
+operator|>
+name|Callbacks
+expr_stmt|;
 comment|/// \brief The directory used for Clang-supplied, builtin include headers,
 comment|/// such as "stdint.h".
 specifier|const
@@ -287,6 +333,58 @@ argument_list|,
 argument|Role
 argument_list|)
 block|{ }
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|KnownHeader
+operator|&
+name|A
+operator|,
+specifier|const
+name|KnownHeader
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|Storage
+operator|==
+name|B
+operator|.
+name|Storage
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|KnownHeader
+operator|&
+name|A
+operator|,
+specifier|const
+name|KnownHeader
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|Storage
+operator|!=
+name|B
+operator|.
+name|Storage
+return|;
+block|}
 comment|/// \brief Retrieve the module the header is stored in.
 name|Module
 operator|*
@@ -635,6 +733,17 @@ operator|&
 name|IntermediateDirs
 argument_list|)
 decl_stmt|;
+comment|/// \brief Given that \p File is not in the Headers map, look it up within
+comment|/// umbrella directories and find or create a module for it.
+name|KnownHeader
+name|findOrCreateModuleForHeaderInUmbrellaDir
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
 comment|/// \brief A convenience method to determine if \p File is (possibly nested)
 comment|/// in an umbrella directory.
 name|bool
@@ -758,6 +867,32 @@ operator|=
 name|Dir
 expr_stmt|;
 block|}
+comment|/// \brief Add a module map callback.
+name|void
+name|addModuleMapCallbacks
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleMapCallbacks
+operator|>
+name|Callback
+argument_list|)
+block|{
+name|Callbacks
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Callback
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the module that owns the given header file, if any.
 comment|///
 comment|/// \param File The header file that is likely to be included.
@@ -774,6 +909,22 @@ modifier|*
 name|File
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve all the modules that contain the given header file. This
+comment|/// may not include umbrella modules, nor information from external sources,
+comment|/// if they have not yet been inferred / loaded.
+comment|///
+comment|/// Typically, \ref findModuleForHeader should be used instead, as it picks
+comment|/// the preferred module for the header.
+name|ArrayRef
+operator|<
+name|KnownHeader
+operator|>
+name|findAllModulesForHeader
+argument_list|(
+argument|const FileEntry *File
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \brief Reports errors if a module must not include a specific file.
 comment|///
 comment|/// \param RequestingModule The module including a file.
@@ -1188,6 +1339,11 @@ name|Header
 argument_list|,
 name|ModuleHeaderRole
 name|Role
+argument_list|,
+name|bool
+name|Imported
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// \brief Marks this header as being excluded from the given module.

@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:    define void @test0()
+comment|// CHECK-LABEL:define void @test0()
 end_comment
 
 begin_comment
@@ -169,7 +169,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test1()
+comment|// CHECK-LABEL:define void @test1()
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test2()
+comment|// CHECK-LABEL:define void @test2()
 end_comment
 
 begin_comment
@@ -254,7 +254,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test3(
+comment|// CHECK-LABEL:define void @test3(
 end_comment
 
 begin_comment
@@ -274,7 +274,7 @@ comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[PAIR_T]]* [[TEMP]] to i128*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = load i128, i128* [[T0]], align 16
+comment|// CHECK-NEXT: [[T1:%.*]] = load i128, i128* [[T0]], align 8
 end_comment
 
 begin_comment
@@ -303,7 +303,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:    define void @test4([[QUAD_T:%.*]]*
+comment|// CHECK-LABEL:define void @test4(
 end_comment
 
 begin_comment
@@ -323,11 +323,15 @@ comment|// CHECK-NEXT: call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[T0]], i8* [[T1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[QUAD_T]]* [[TEMP]] to i8*
+comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[QUAD_T]]* [[TEMP]] to i256*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void @__atomic_store(i64 32, i8* bitcast ([[QUAD_T]]* @a_pointer_quad to i8*), i8* [[T0]], i32 5)
+comment|// CHECK-NEXT: [[T1:%.*]] = bitcast i256* [[T0]] to i8*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call void @__atomic_store(i64 32, i8* bitcast ([[QUAD_T]]* @a_pointer_quad to i8*), i8* [[T1]], i32 5)
 end_comment
 
 begin_function

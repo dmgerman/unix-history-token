@@ -1242,6 +1242,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>8ea3f4e6a3100c73f078fac15acb0a9c</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -1250,7 +1258,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testCondOp</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>5</string>
 end_comment
 
 begin_comment
@@ -1818,6 +1826,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>2c219a33e961fc1be7d54b700867259e</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -1826,7 +1842,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testCondProblem</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>5</string>
 end_comment
 
 begin_comment
@@ -2394,6 +2410,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>8d43b511137326eab7d1242950e72984</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2402,7 +2426,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testLHSProblem</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -2970,6 +2994,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>b8e93b7355a6779a960f9a942fafac15</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2978,7 +3010,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testRHSProblem</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3818,6 +3850,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>a944281d096940ca43ec995649b48b5f</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3826,7 +3866,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testBinaryCondOp</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>4</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>4</string>
 end_comment
 
 begin_comment
@@ -4394,6 +4434,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>4db164bbf5cea42d75c5e838be1eef6f</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -4402,7 +4450,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testBinaryLHSProblem</stri
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>5</string>
 end_comment
 
 begin_comment
@@ -5106,6 +5154,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>778d56ad485369222613ac2c03b97700</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5114,7 +5170,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testDiagnosableBranch</str
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>4</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>4</string>
 end_comment
 
 begin_comment
@@ -5838,6 +5894,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>ebd0bb32bbdcaa2a806ff1984974c07a</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5846,7 +5910,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testNonDiagnosableBranchLo
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>4</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>4</string>
 end_comment
 
 begin_comment
@@ -6298,6 +6362,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>f56671e5f67c73abef619b56f7c29fa4</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -6306,7 +6378,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testNonDiagnosableBranchAr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>3</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>3</string>
 end_comment
 
 begin_comment

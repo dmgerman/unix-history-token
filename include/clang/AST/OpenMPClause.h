@@ -211,16 +211,44 @@ name|isInvalid
 argument_list|()
 return|;
 block|}
-name|StmtRange
+typedef|typedef
+name|StmtIterator
+name|child_iterator
+typedef|;
+typedef|typedef
+name|ConstStmtIterator
+name|const_child_iterator
+typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|child_iterator
+operator|>
+name|child_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_child_iterator
+operator|>
+name|const_child_range
+expr_stmt|;
+name|child_range
 name|children
 parameter_list|()
 function_decl|;
-name|ConstStmtRange
+name|const_child_range
 name|children
 argument_list|()
 specifier|const
 block|{
-return|return
+name|auto
+name|Children
+operator|=
 name|const_cast
 operator|<
 name|OMPClause
@@ -232,6 +260,20 @@ operator|)
 operator|->
 name|children
 argument_list|()
+block|;
+return|return
+name|const_child_range
+argument_list|(
+name|Children
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Children
+operator|.
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -691,7 +733,7 @@ comment|/// \code
 end_comment
 
 begin_comment
-comment|/// #pragma omp parallel if(a> 5)
+comment|/// #pragma omp parallel if(parallel:a> 5)
 end_comment
 
 begin_comment
@@ -699,11 +741,11 @@ comment|/// \endcode
 end_comment
 
 begin_comment
-comment|/// In this example directive '#pragma omp parallel' has simple 'if'
+comment|/// In this example directive '#pragma omp parallel' has simple 'if' clause with
 end_comment
 
 begin_comment
-comment|/// clause with condition 'a> 5'.
+comment|/// condition 'a> 5' and directive name modifier 'parallel'.
 end_comment
 
 begin_comment
@@ -730,6 +772,18 @@ name|Stmt
 operator|*
 name|Condition
 block|;
+comment|/// \brief Location of ':' (if any).
+name|SourceLocation
+name|ColonLoc
+block|;
+comment|/// \brief Directive name modifier for the clause.
+name|OpenMPDirectiveKind
+name|NameModifier
+block|;
+comment|/// \brief Name modifier location.
+name|SourceLocation
+name|NameModifierLoc
+block|;
 comment|/// \brief Set condition.
 comment|///
 name|void
@@ -742,22 +796,67 @@ name|Condition
 operator|=
 name|Cond
 block|; }
+comment|/// \brief Set directive name modifier for the clause.
+comment|///
+name|void
+name|setNameModifier
+argument_list|(
+argument|OpenMPDirectiveKind NM
+argument_list|)
+block|{
+name|NameModifier
+operator|=
+name|NM
+block|; }
+comment|/// \brief Set location of directive name modifier for the clause.
+comment|///
+name|void
+name|setNameModifierLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|NameModifierLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Set location of ':'.
+comment|///
+name|void
+name|setColonLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ColonLoc
+operator|=
+name|Loc
+block|; }
 name|public
 operator|:
 comment|/// \brief Build 'if' clause with condition \a Cond.
 comment|///
+comment|/// \param NameModifier [OpenMP 4.1] Directive name modifier of clause.
+comment|/// \param Cond Condition of the clause.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
-comment|/// \param Cond Condition of the clause.
+comment|/// \param NameModifierLoc Location of directive name modifier.
+comment|/// \param ColonLoc [OpenMP 4.1] Location of ':'.
 comment|/// \param EndLoc Ending location of the clause.
 comment|///
 name|OMPIfClause
 argument_list|(
+argument|OpenMPDirectiveKind NameModifier
+argument_list|,
 argument|Expr *Cond
 argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation NameModifierLoc
+argument_list|,
+argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
@@ -778,7 +877,22 @@ argument_list|)
 block|,
 name|Condition
 argument_list|(
-argument|Cond
+name|Cond
+argument_list|)
+block|,
+name|ColonLoc
+argument_list|(
+name|ColonLoc
+argument_list|)
+block|,
+name|NameModifier
+argument_list|(
+name|NameModifier
+argument_list|)
+block|,
+name|NameModifierLoc
+argument_list|(
+argument|NameModifierLoc
 argument_list|)
 block|{}
 comment|/// \brief Build an empty clause.
@@ -798,15 +912,23 @@ argument_list|()
 argument_list|)
 block|,
 name|LParenLoc
-argument_list|(
-name|SourceLocation
 argument_list|()
-argument_list|)
 block|,
 name|Condition
 argument_list|(
-argument|nullptr
+name|nullptr
 argument_list|)
+block|,
+name|ColonLoc
+argument_list|()
+block|,
+name|NameModifier
+argument_list|(
+name|OMPD_unknown
+argument_list|)
+block|,
+name|NameModifierLoc
+argument_list|()
 block|{}
 comment|/// \brief Sets the location of '('.
 name|void
@@ -829,6 +951,16 @@ return|return
 name|LParenLoc
 return|;
 block|}
+comment|/// \brief Return the location of ':'.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
 comment|/// \brief Returns condition.
 name|Expr
 operator|*
@@ -844,6 +976,26 @@ operator|>
 operator|(
 name|Condition
 operator|)
+return|;
+block|}
+comment|/// \brief Return directive name modifier associated with the clause.
+name|OpenMPDirectiveKind
+name|getNameModifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameModifier
+return|;
+block|}
+comment|/// \brief Return the location of directive name modifier.
+name|SourceLocation
+name|getNameModifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameModifierLoc
 return|;
 block|}
 specifier|static
@@ -862,12 +1014,12 @@ operator|==
 name|OMPC_if
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 operator|&
 name|Condition
@@ -1040,12 +1192,12 @@ operator|==
 name|OMPC_final
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 operator|&
 name|Condition
@@ -1219,12 +1371,12 @@ operator|==
 name|OMPC_num_threads
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 operator|&
 name|NumThreads
@@ -1401,18 +1553,199 @@ operator|==
 name|OMPC_safelen
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 operator|&
 name|Safelen
 argument_list|,
 operator|&
 name|Safelen
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'simdlen' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp simd simdlen(4)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp simd' has clause 'simdlen'
+comment|/// with single expression '4'.
+comment|/// If the 'simdlen' clause is used then it specifies the preferred number of
+comment|/// iterations to be executed concurrently. The parameter of the 'simdlen'
+comment|/// clause must be a constant positive integer expression.
+comment|///
+name|class
+name|OMPSimdlenClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Safe iteration space distance.
+name|Stmt
+operator|*
+name|Simdlen
+block|;
+comment|/// \brief Set simdlen.
+name|void
+name|setSimdlen
+argument_list|(
+argument|Expr *Len
+argument_list|)
+block|{
+name|Simdlen
+operator|=
+name|Len
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'simdlen' clause.
+comment|///
+comment|/// \param Len Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPSimdlenClause
+argument_list|(
+argument|Expr *Len
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_simdlen
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Simdlen
+argument_list|(
+argument|Len
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|explicit
+name|OMPSimdlenClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_simdlen
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|Simdlen
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return safe iteration space distance.
+name|Expr
+operator|*
+name|getSimdlen
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Simdlen
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_simdlen
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Simdlen
+argument_list|,
+operator|&
+name|Simdlen
 operator|+
 literal|1
 argument_list|)
@@ -1583,12 +1916,12 @@ operator|==
 name|OMPC_collapse
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 operator|&
 name|NumForLoops
@@ -1796,13 +2129,19 @@ operator|==
 name|OMPC_default
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2003,13 +2342,19 @@ operator|==
 name|OMPC_proc_bind
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2039,6 +2384,29 @@ block|;
 comment|/// \brief A kind of the 'schedule' clause.
 name|OpenMPScheduleClauseKind
 name|Kind
+block|;
+comment|/// \brief Modifiers for 'schedule' clause.
+block|enum
+block|{
+name|FIRST
+block|,
+name|SECOND
+block|,
+name|NUM_MODIFIERS
+block|}
+block|;
+name|OpenMPScheduleClauseModifier
+name|Modifiers
+index|[
+name|NUM_MODIFIERS
+index|]
+block|;
+comment|/// \brief Locations of modifiers.
+name|SourceLocation
+name|ModifiersLoc
+index|[
+name|NUM_MODIFIERS
+index|]
 block|;
 comment|/// \brief Start location of the schedule ind in source code.
 name|SourceLocation
@@ -2080,6 +2448,117 @@ name|Kind
 operator|=
 name|K
 block|; }
+comment|/// \brief Set the first schedule modifier.
+comment|///
+comment|/// \param M Schedule modifier.
+comment|///
+name|void
+name|setFirstScheduleModifier
+argument_list|(
+argument|OpenMPScheduleClauseModifier M
+argument_list|)
+block|{
+name|Modifiers
+index|[
+name|FIRST
+index|]
+operator|=
+name|M
+block|;   }
+comment|/// \brief Set the second schedule modifier.
+comment|///
+comment|/// \param M Schedule modifier.
+comment|///
+name|void
+name|setSecondScheduleModifier
+argument_list|(
+argument|OpenMPScheduleClauseModifier M
+argument_list|)
+block|{
+name|Modifiers
+index|[
+name|SECOND
+index|]
+operator|=
+name|M
+block|;   }
+comment|/// \brief Set location of the first schedule modifier.
+comment|///
+name|void
+name|setFirstScheduleModifierLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ModifiersLoc
+index|[
+name|FIRST
+index|]
+operator|=
+name|Loc
+block|;   }
+comment|/// \brief Set location of the second schedule modifier.
+comment|///
+name|void
+name|setSecondScheduleModifierLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ModifiersLoc
+index|[
+name|SECOND
+index|]
+operator|=
+name|Loc
+block|;   }
+comment|/// \brief Set schedule modifier location.
+comment|///
+comment|/// \param M Schedule modifier location.
+comment|///
+name|void
+name|setScheduleModifer
+argument_list|(
+argument|OpenMPScheduleClauseModifier M
+argument_list|)
+block|{
+if|if
+condition|(
+name|Modifiers
+index|[
+name|FIRST
+index|]
+operator|==
+name|OMPC_SCHEDULE_MODIFIER_unknown
+condition|)
+name|Modifiers
+index|[
+name|FIRST
+index|]
+operator|=
+name|M
+expr_stmt|;
+else|else
+block|{
+name|assert
+argument_list|(
+name|Modifiers
+index|[
+name|SECOND
+index|]
+operator|==
+name|OMPC_SCHEDULE_MODIFIER_unknown
+argument_list|)
+expr_stmt|;
+name|Modifiers
+index|[
+name|SECOND
+index|]
+operator|=
+name|M
+expr_stmt|;
+block|}
+block|}
 comment|/// \brief Sets the location of '('.
 comment|///
 comment|/// \param Loc Location of '('.
@@ -2169,6 +2648,10 @@ comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param Kind Schedule kind.
 comment|/// \param ChunkSize Chunk size.
 comment|/// \param HelperChunkSize Helper chunk size for combined directives.
+comment|/// \param M1 The first modifier applied to 'schedule' clause.
+comment|/// \param M1Loc Location of the first modifier
+comment|/// \param M2 The second modifier applied to 'schedule' clause.
+comment|/// \param M2Loc Location of the second modifier
 comment|///
 name|OMPScheduleClause
 argument_list|(
@@ -2187,6 +2670,14 @@ argument_list|,
 argument|Expr *ChunkSize
 argument_list|,
 argument|Expr *HelperChunkSize
+argument_list|,
+argument|OpenMPScheduleClauseModifier M1
+argument_list|,
+argument|SourceLocation M1Loc
+argument_list|,
+argument|OpenMPScheduleClauseModifier M2
+argument_list|,
+argument|SourceLocation M2Loc
 argument_list|)
 operator|:
 name|OMPClause
@@ -2231,6 +2722,34 @@ name|HELPER_CHUNK_SIZE
 index|]
 operator|=
 name|HelperChunkSize
+block|;
+name|Modifiers
+index|[
+name|FIRST
+index|]
+operator|=
+name|M1
+block|;
+name|Modifiers
+index|[
+name|SECOND
+index|]
+operator|=
+name|M2
+block|;
+name|ModifiersLoc
+index|[
+name|FIRST
+index|]
+operator|=
+name|M1Loc
+block|;
+name|ModifiersLoc
+index|[
+name|SECOND
+index|]
+operator|=
+name|M2Loc
 block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
@@ -2267,6 +2786,20 @@ name|HELPER_CHUNK_SIZE
 index|]
 operator|=
 name|nullptr
+block|;
+name|Modifiers
+index|[
+name|FIRST
+index|]
+operator|=
+name|OMPC_SCHEDULE_MODIFIER_unknown
+block|;
+name|Modifiers
+index|[
+name|SECOND
+index|]
+operator|=
+name|OMPC_SCHEDULE_MODIFIER_unknown
 block|;   }
 comment|/// \brief Get kind of the clause.
 comment|///
@@ -2277,6 +2810,34 @@ specifier|const
 block|{
 return|return
 name|Kind
+return|;
+block|}
+comment|/// \brief Get the first modifier of the clause.
+comment|///
+name|OpenMPScheduleClauseModifier
+name|getFirstScheduleModifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modifiers
+index|[
+name|FIRST
+index|]
+return|;
+block|}
+comment|/// \brief Get the second modifier of the clause.
+comment|///
+name|OpenMPScheduleClauseModifier
+name|getSecondScheduleModifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modifiers
+index|[
+name|SECOND
+index|]
 return|;
 block|}
 comment|/// \brief Get location of '('.
@@ -2297,6 +2858,34 @@ argument_list|()
 block|{
 return|return
 name|KindLoc
+return|;
+block|}
+comment|/// \brief Get the first modifier location.
+comment|///
+name|SourceLocation
+name|getFirstScheduleModifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModifiersLoc
+index|[
+name|FIRST
+index|]
+return|;
+block|}
+comment|/// \brief Get the second modifier location.
+comment|///
+name|SourceLocation
+name|getSecondScheduleModifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModifiersLoc
+index|[
+name|SECOND
+index|]
 return|;
 block|}
 comment|/// \brief Get location of ','.
@@ -2407,12 +2996,12 @@ operator|==
 name|OMPC_schedule
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 operator|&
 name|ChunkSizes
@@ -2435,9 +3024,10 @@ block|;
 comment|/// \brief This represents 'ordered' clause in the '#pragma omp ...' directive.
 comment|///
 comment|/// \code
-comment|/// #pragma omp for ordered
+comment|/// #pragma omp for ordered (2)
 comment|/// \endcode
-comment|/// In this example directive '#pragma omp for' has 'ordered' clause.
+comment|/// In this example directive '#pragma omp for' has 'ordered' clause with
+comment|/// parameter 2.
 comment|///
 name|class
 name|OMPOrderedClause
@@ -2445,43 +3035,135 @@ operator|:
 name|public
 name|OMPClause
 block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Number of for-loops.
+name|Stmt
+operator|*
+name|NumForLoops
+block|;
+comment|/// \brief Set the number of associated for-loops.
+name|void
+name|setNumForLoops
+argument_list|(
+argument|Expr *Num
+argument_list|)
+block|{
+name|NumForLoops
+operator|=
+name|Num
+block|; }
 name|public
 operator|:
 comment|/// \brief Build 'ordered' clause.
 comment|///
+comment|/// \param Num Expression, possibly associated with this clause.
 comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
 comment|///
 name|OMPOrderedClause
 argument_list|(
+argument|Expr *Num
+argument_list|,
 argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
 operator|:
 name|OMPClause
 argument_list|(
-argument|OMPC_ordered
+name|OMPC_ordered
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|NumForLoops
+argument_list|(
+argument|Num
 argument_list|)
 block|{}
 comment|/// \brief Build an empty clause.
 comment|///
+name|explicit
 name|OMPOrderedClause
 argument_list|()
 operator|:
 name|OMPClause
 argument_list|(
-argument|OMPC_ordered
+name|OMPC_ordered
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|NumForLoops
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return the number of associated for-loops.
+name|Expr
+operator|*
+name|getNumForLoops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|NumForLoops
+operator|)
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -2498,13 +3180,21 @@ operator|==
 name|OMPC_ordered
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
-argument_list|()
+name|child_range
+argument_list|(
+operator|&
+name|NumForLoops
+argument_list|,
+operator|&
+name|NumForLoops
+operator|+
+literal|1
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2575,13 +3265,19 @@ operator|==
 name|OMPC_nowait
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2652,13 +3348,19 @@ operator|==
 name|OMPC_untied
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2730,13 +3432,19 @@ operator|==
 name|OMPC_mergeable
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2807,13 +3515,19 @@ operator|==
 name|OMPC_read
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2884,13 +3598,19 @@ operator|==
 name|OMPC_write
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2962,13 +3682,19 @@ operator|==
 name|OMPC_update
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -3040,13 +3766,19 @@ operator|==
 name|OMPC_capture
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -3118,13 +3850,19 @@ operator|==
 name|OMPC_seq_cst
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -3401,12 +4139,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -3878,12 +4616,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -4564,12 +5302,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -4734,12 +5472,12 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -4947,6 +5685,67 @@ operator|=
 name|NSL
 block|; }
 comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent private copy of the reduction
+comment|/// variable.
+name|void
+name|setPrivates
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Privates
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper privates.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivates
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
 comment|/// clause. These expressions represent LHS expression in the final
 comment|/// reduction expression performed by the reduction clause.
 name|void
@@ -4976,7 +5775,10 @@ name|Expr
 operator|*
 operator|>
 operator|(
-name|varlist_end
+name|getPrivates
+argument_list|()
+operator|.
+name|end
 argument_list|()
 expr|,
 name|varlist_size
@@ -4999,7 +5801,10 @@ name|llvm
 operator|::
 name|makeArrayRef
 argument_list|(
-name|varlist_end
+name|getPrivates
+argument_list|()
+operator|.
+name|end
 argument_list|()
 argument_list|,
 name|varlist_size
@@ -5155,6 +5960,8 @@ comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL The variables in the clause.
 comment|/// \param QualifierLoc The nested-name qualifier with location information
 comment|/// \param NameInfo The full name info for reduction identifier.
+comment|/// \param Privates List of helper expressions for proper generation of
+comment|/// private copies.
 comment|/// \param LHSExprs List of helper expressions for proper generation of
 comment|/// assignment operation required for copyprivate clause. This list represents
 comment|/// LHSs of the reduction expressions.
@@ -5193,6 +6000,8 @@ argument_list|,
 argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
+argument_list|,
+argument|ArrayRef<Expr *> Privates
 argument_list|,
 argument|ArrayRef<Expr *> LHSExprs
 argument_list|,
@@ -5288,6 +6097,49 @@ operator|>
 name|helper_expr_const_range
 expr_stmt|;
 name|helper_expr_const_range
+name|privates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|privates
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_const_range
 name|lhs_exprs
 argument_list|()
 specifier|const
@@ -5416,12 +6268,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -5487,6 +6339,14 @@ name|friend
 name|class
 name|OMPClauseReader
 block|;
+comment|/// \brief Modifier of 'linear' clause.
+name|OpenMPLinearClauseKind
+name|Modifier
+block|;
+comment|/// \brief Location of linear modifier if any.
+name|SourceLocation
+name|ModifierLoc
+block|;
 comment|/// \brief Location of ':'.
 name|SourceLocation
 name|ColonLoc
@@ -5543,6 +6403,10 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
+argument|OpenMPLinearClauseKind Modifier
+argument_list|,
+argument|SourceLocation ModifierLoc
+argument_list|,
 argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
@@ -5565,6 +6429,16 @@ name|EndLoc
 expr|,
 name|NumVars
 operator|)
+block|,
+name|Modifier
+argument_list|(
+name|Modifier
+argument_list|)
+block|,
+name|ModifierLoc
+argument_list|(
+name|ModifierLoc
+argument_list|)
 block|,
 name|ColonLoc
 argument_list|(
@@ -5600,10 +6474,16 @@ expr|,
 name|NumVars
 operator|)
 block|,
-name|ColonLoc
+name|Modifier
 argument_list|(
-argument|SourceLocation()
+name|OMPC_LINEAR_val
 argument_list|)
+block|,
+name|ModifierLoc
+argument_list|()
+block|,
+name|ColonLoc
+argument_list|()
 block|{}
 comment|/// \brief Gets the list of initial values for linear variables.
 comment|///
@@ -5615,15 +6495,15 @@ comment|/// value after the loop body). After these lists, there are 2 helper
 comment|/// expressions - linear step and a helper to calculate it before the
 comment|/// loop body (used when the linear step is not constant):
 comment|///
-comment|/// { Vars[] /* in OMPVarListClause */; Inits[]; Updates[]; Finals[];
-comment|///   Step; CalcStep; }
+comment|/// { Vars[] /* in OMPVarListClause */; Privates[]; Inits[]; Updates[];
+comment|/// Finals[]; Step; CalcStep; }
 comment|///
 name|MutableArrayRef
 operator|<
 name|Expr
 operator|*
 operator|>
-name|getInits
+name|getPrivates
 argument_list|()
 block|{
 return|return
@@ -5647,7 +6527,7 @@ specifier|const
 name|Expr
 operator|*
 operator|>
-name|getInits
+name|getPrivates
 argument_list|()
 specifier|const
 block|{
@@ -5657,6 +6537,58 @@ operator|::
 name|makeArrayRef
 argument_list|(
 name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|end
 argument_list|()
 argument_list|,
 name|varlist_size
@@ -5770,6 +6702,19 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Sets the list of the copies of original linear variables.
+comment|/// \param PL List of expressions.
+name|void
+name|setPrivates
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|PL
+argument_list|)
+block|;
 comment|/// \brief Sets the list of the initial values for linear variables.
 comment|/// \param IL List of expressions.
 name|void
@@ -5791,9 +6736,12 @@ comment|///
 comment|/// \param C AST Context.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
+comment|/// \param Modifier Modifier of 'linear' clause.
+comment|/// \param ModifierLoc Modifier location.
 comment|/// \param ColonLoc Location of ':'.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL List of references to the variables.
+comment|/// \param PL List of private copies of original variables.
 comment|/// \param IL List of initial values for the variables.
 comment|/// \param Step Linear step.
 comment|/// \param CalcStep Calculation of the linear step.
@@ -5808,11 +6756,17 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
+argument|OpenMPLinearClauseKind Modifier
+argument_list|,
+argument|SourceLocation ModifierLoc
+argument_list|,
 argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|ArrayRef<Expr *> PL
 argument_list|,
 argument|ArrayRef<Expr *> IL
 argument_list|,
@@ -5836,6 +6790,48 @@ argument_list|,
 argument|unsigned NumVars
 argument_list|)
 block|;
+comment|/// \brief Set modifier.
+name|void
+name|setModifier
+argument_list|(
+argument|OpenMPLinearClauseKind Kind
+argument_list|)
+block|{
+name|Modifier
+operator|=
+name|Kind
+block|; }
+comment|/// \brief Return modifier.
+name|OpenMPLinearClauseKind
+name|getModifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modifier
+return|;
+block|}
+comment|/// \brief Set modifier location.
+name|void
+name|setModifierLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ModifierLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Return modifier location.
+name|SourceLocation
+name|getModifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModifierLoc
+return|;
+block|}
 comment|/// \brief Sets the location of ':'.
 name|void
 name|setColonLoc
@@ -5847,7 +6843,7 @@ name|ColonLoc
 operator|=
 name|Loc
 block|; }
-comment|/// \brief Returns the location of '('.
+comment|/// \brief Returns the location of ':'.
 name|SourceLocation
 name|getColonLoc
 argument_list|()
@@ -5967,7 +6963,7 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|inits_iterator
+name|privates_iterator
 expr_stmt|;
 typedef|typedef
 name|ArrayRef
@@ -5978,21 +6974,112 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|inits_const_iterator
+name|privates_const_iterator
 expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
 name|iterator_range
 operator|<
-name|inits_iterator
+name|privates_iterator
 operator|>
-name|inits_range
+name|privates_range
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|privates_const_iterator
+operator|>
+name|privates_const_range
+expr_stmt|;
+name|privates_range
+name|privates
+argument_list|()
+block|{
+return|return
+name|privates_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|privates_const_range
+name|privates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|privates_const_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_decl_stmt
 
 begin_typedef
 typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_const_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_iterator
+operator|>
+name|inits_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|llvm
 operator|::
 name|iterator_range
@@ -6253,12 +7340,12 @@ block|}
 end_expr_stmt
 
 begin_function
-name|StmtRange
+name|child_range
 name|children
 parameter_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -6545,12 +7632,12 @@ name|varlist_end
 argument_list|()
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -7142,12 +8229,12 @@ block|}
 end_function
 
 begin_function
-name|StmtRange
+name|child_range
 name|children
 parameter_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -7765,12 +8852,12 @@ block|}
 end_function
 
 begin_function
-name|StmtRange
+name|child_range
 name|children
 parameter_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -7987,12 +9074,12 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -8256,12 +9343,12 @@ return|return
 name|ColonLoc
 return|;
 block|}
-name|StmtRange
+name|child_range
 name|children
 argument_list|()
 block|{
 return|return
-name|StmtRange
+name|child_range
 argument_list|(
 name|reinterpret_cast
 operator|<
@@ -8304,6 +9391,1909 @@ name|OMPC_depend
 return|;
 block|}
 expr|}
+block|;
+comment|/// \brief This represents 'device' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target device(a)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target' has clause 'device'
+comment|/// with single expression 'a'.
+comment|///
+name|class
+name|OMPDeviceClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Device number.
+name|Stmt
+operator|*
+name|Device
+block|;
+comment|/// \brief Set the device number.
+comment|///
+comment|/// \param E Device number.
+comment|///
+name|void
+name|setDevice
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|Device
+operator|=
+name|E
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'device' clause.
+comment|///
+comment|/// \param E Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPDeviceClause
+argument_list|(
+argument|Expr *E
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_device
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Device
+argument_list|(
+argument|E
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPDeviceClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_device
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|Device
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return device number.
+name|Expr
+operator|*
+name|getDevice
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Device
+operator|)
+return|;
+block|}
+comment|/// \brief Return device number.
+name|Expr
+operator|*
+name|getDevice
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Device
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_device
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Device
+argument_list|,
+operator|&
+name|Device
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'threads' clause in the '#pragma omp ...' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp ordered threads
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp ordered' has simple 'threads' clause.
+comment|///
+name|class
+name|OMPThreadsClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'threads' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPThreadsClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_threads
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPThreadsClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_threads
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_threads
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|child_iterator
+argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'simd' clause in the '#pragma omp ...' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp ordered simd
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp ordered' has simple 'simd' clause.
+comment|///
+name|class
+name|OMPSIMDClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'simd' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPSIMDClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPSIMDClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_simd
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|child_iterator
+argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents clause 'map' in the '#pragma omp ...'
+comment|/// directives.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target map(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target' has clause 'map'
+comment|/// with the variables 'a' and 'b'.
+comment|///
+name|class
+name|OMPMapClause
+operator|:
+name|public
+name|OMPVarListClause
+operator|<
+name|OMPMapClause
+operator|>
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Map type modifier for the 'map' clause.
+name|OpenMPMapClauseKind
+name|MapTypeModifier
+block|;
+comment|/// \brief Map type for the 'map' clause.
+name|OpenMPMapClauseKind
+name|MapType
+block|;
+comment|/// \brief Location of the map type.
+name|SourceLocation
+name|MapLoc
+block|;
+comment|/// \brief Colon location.
+name|SourceLocation
+name|ColonLoc
+block|;
+comment|/// \brief Set type modifier for the clause.
+comment|///
+comment|/// \param T Type Modifier for the clause.
+comment|///
+name|void
+name|setMapTypeModifier
+argument_list|(
+argument|OpenMPMapClauseKind T
+argument_list|)
+block|{
+name|MapTypeModifier
+operator|=
+name|T
+block|; }
+comment|/// \brief Set type for the clause.
+comment|///
+comment|/// \param T Type for the clause.
+comment|///
+name|void
+name|setMapType
+argument_list|(
+argument|OpenMPMapClauseKind T
+argument_list|)
+block|{
+name|MapType
+operator|=
+name|T
+block|; }
+comment|/// \brief Set type location.
+comment|///
+comment|/// \param TLoc Type location.
+comment|///
+name|void
+name|setMapLoc
+argument_list|(
+argument|SourceLocation TLoc
+argument_list|)
+block|{
+name|MapLoc
+operator|=
+name|TLoc
+block|; }
+comment|/// \brief Set colon location.
+name|void
+name|setColonLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ColonLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Build clause with number of variables \a N.
+comment|///
+comment|/// \param MapTypeModifier Map type modifier.
+comment|/// \param MapType Map type.
+comment|/// \param MapLoc Location of the map type.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param N Number of the variables in the clause.
+comment|///
+name|explicit
+name|OMPMapClause
+argument_list|(
+argument|OpenMPMapClauseKind MapTypeModifier
+argument_list|,
+argument|OpenMPMapClauseKind MapType
+argument_list|,
+argument|SourceLocation MapLoc
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPMapClause
+operator|>
+operator|(
+name|OMPC_map
+expr|,
+name|StartLoc
+expr|,
+name|LParenLoc
+expr|,
+name|EndLoc
+expr|,
+name|N
+operator|)
+block|,
+name|MapTypeModifier
+argument_list|(
+name|MapTypeModifier
+argument_list|)
+block|,
+name|MapType
+argument_list|(
+name|MapType
+argument_list|)
+block|,
+name|MapLoc
+argument_list|(
+argument|MapLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param N Number of variables.
+comment|///
+name|explicit
+name|OMPMapClause
+argument_list|(
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPMapClause
+operator|>
+operator|(
+name|OMPC_map
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|N
+operator|)
+block|,
+name|MapTypeModifier
+argument_list|(
+name|OMPC_MAP_unknown
+argument_list|)
+block|,
+name|MapType
+argument_list|(
+name|OMPC_MAP_unknown
+argument_list|)
+block|,
+name|MapLoc
+argument_list|()
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates clause with a list of variables \a VL.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param VL List of references to the variables.
+comment|/// \param TypeModifier Map type modifier.
+comment|/// \param Type Map type.
+comment|/// \param TypeLoc Location of the map type.
+comment|///
+specifier|static
+name|OMPMapClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|OpenMPMapClauseKind TypeModifier
+argument_list|,
+argument|OpenMPMapClauseKind Type
+argument_list|,
+argument|SourceLocation TypeLoc
+argument_list|)
+block|;
+comment|/// \brief Creates an empty clause with the place for \a N variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param N The number of variables.
+comment|///
+specifier|static
+name|OMPMapClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned N
+argument_list|)
+block|;
+comment|/// \brief Fetches mapping kind for the clause.
+name|OpenMPMapClauseKind
+name|getMapType
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|MapType
+return|;
+block|}
+comment|/// \brief Fetches the map type modifier for the clause.
+name|OpenMPMapClauseKind
+name|getMapTypeModifier
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|MapTypeModifier
+return|;
+block|}
+comment|/// \brief Fetches location of clause mapping kind.
+name|SourceLocation
+name|getMapLoc
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|MapLoc
+return|;
+block|}
+comment|/// \brief Get colon location.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_map
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'num_teams' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp teams num_teams(n)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams' has clause 'num_teams'
+comment|/// with single expression 'n'.
+comment|///
+name|class
+name|OMPNumTeamsClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief NumTeams number.
+name|Stmt
+operator|*
+name|NumTeams
+block|;
+comment|/// \brief Set the NumTeams number.
+comment|///
+comment|/// \param E NumTeams number.
+comment|///
+name|void
+name|setNumTeams
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|NumTeams
+operator|=
+name|E
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'num_teams' clause.
+comment|///
+comment|/// \param E Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPNumTeamsClause
+argument_list|(
+argument|Expr *E
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_num_teams
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|NumTeams
+argument_list|(
+argument|E
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPNumTeamsClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_num_teams
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|NumTeams
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return NumTeams number.
+name|Expr
+operator|*
+name|getNumTeams
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|NumTeams
+operator|)
+return|;
+block|}
+comment|/// \brief Return NumTeams number.
+name|Expr
+operator|*
+name|getNumTeams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|NumTeams
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_num_teams
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|NumTeams
+argument_list|,
+operator|&
+name|NumTeams
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'thread_limit' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp teams thread_limit(n)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams' has clause 'thread_limit'
+comment|/// with single expression 'n'.
+comment|///
+name|class
+name|OMPThreadLimitClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief ThreadLimit number.
+name|Stmt
+operator|*
+name|ThreadLimit
+block|;
+comment|/// \brief Set the ThreadLimit number.
+comment|///
+comment|/// \param E ThreadLimit number.
+comment|///
+name|void
+name|setThreadLimit
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|ThreadLimit
+operator|=
+name|E
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'thread_limit' clause.
+comment|///
+comment|/// \param E Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPThreadLimitClause
+argument_list|(
+argument|Expr *E
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_thread_limit
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|ThreadLimit
+argument_list|(
+argument|E
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPThreadLimitClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_thread_limit
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|ThreadLimit
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return ThreadLimit number.
+name|Expr
+operator|*
+name|getThreadLimit
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|ThreadLimit
+operator|)
+return|;
+block|}
+comment|/// \brief Return ThreadLimit number.
+name|Expr
+operator|*
+name|getThreadLimit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|ThreadLimit
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_thread_limit
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|ThreadLimit
+argument_list|,
+operator|&
+name|ThreadLimit
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'priority' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp task priority(n)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp teams' has clause 'priority' with
+comment|/// single expression 'n'.
+comment|///
+name|class
+name|OMPPriorityClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Priority number.
+name|Stmt
+operator|*
+name|Priority
+block|;
+comment|/// \brief Set the Priority number.
+comment|///
+comment|/// \param E Priority number.
+comment|///
+name|void
+name|setPriority
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|Priority
+operator|=
+name|E
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'priority' clause.
+comment|///
+comment|/// \param E Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPPriorityClause
+argument_list|(
+argument|Expr *E
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_priority
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Priority
+argument_list|(
+argument|E
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPPriorityClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_priority
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|Priority
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return Priority number.
+name|Expr
+operator|*
+name|getPriority
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Priority
+operator|)
+return|;
+block|}
+comment|/// \brief Return Priority number.
+name|Expr
+operator|*
+name|getPriority
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Priority
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_priority
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Priority
+argument_list|,
+operator|&
+name|Priority
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'grainsize' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskloop grainsize(4)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp taskloop' has clause 'grainsize'
+comment|/// with single expression '4'.
+comment|///
+name|class
+name|OMPGrainsizeClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Safe iteration space distance.
+name|Stmt
+operator|*
+name|Grainsize
+block|;
+comment|/// \brief Set safelen.
+name|void
+name|setGrainsize
+argument_list|(
+argument|Expr *Size
+argument_list|)
+block|{
+name|Grainsize
+operator|=
+name|Size
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'grainsize' clause.
+comment|///
+comment|/// \param Size Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPGrainsizeClause
+argument_list|(
+argument|Expr *Size
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_grainsize
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Grainsize
+argument_list|(
+argument|Size
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|explicit
+name|OMPGrainsizeClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_grainsize
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|Grainsize
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return safe iteration space distance.
+name|Expr
+operator|*
+name|getGrainsize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Grainsize
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_grainsize
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Grainsize
+argument_list|,
+operator|&
+name|Grainsize
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'nogroup' clause in the '#pragma omp ...' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskloop nogroup
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp taskloop' has 'nogroup' clause.
+comment|///
+name|class
+name|OMPNogroupClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'nogroup' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPNogroupClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_nogroup
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPNogroupClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_nogroup
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_nogroup
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|child_iterator
+argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'num_tasks' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskloop num_tasks(4)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp taskloop' has clause 'num_tasks'
+comment|/// with single expression '4'.
+comment|///
+name|class
+name|OMPNumTasksClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Safe iteration space distance.
+name|Stmt
+operator|*
+name|NumTasks
+block|;
+comment|/// \brief Set safelen.
+name|void
+name|setNumTasks
+argument_list|(
+argument|Expr *Size
+argument_list|)
+block|{
+name|NumTasks
+operator|=
+name|Size
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'num_tasks' clause.
+comment|///
+comment|/// \param Size Expression associated with this clause.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPNumTasksClause
+argument_list|(
+argument|Expr *Size
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_num_tasks
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|NumTasks
+argument_list|(
+argument|Size
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|explicit
+name|OMPNumTasksClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_num_tasks
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|NumTasks
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Return safe iteration space distance.
+name|Expr
+operator|*
+name|getNumTasks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|NumTasks
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_num_tasks
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|NumTasks
+argument_list|,
+operator|&
+name|NumTasks
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'hint' clause in the '#pragma omp ...' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp critical (name) hint(6)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp critical' has name 'name' and clause
+comment|/// 'hint' with argument '6'.
+comment|///
+name|class
+name|OMPHintClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Hint expression of the 'hint' clause.
+name|Stmt
+operator|*
+name|Hint
+block|;
+comment|/// \brief Set hint expression.
+comment|///
+name|void
+name|setHint
+argument_list|(
+argument|Expr *H
+argument_list|)
+block|{
+name|Hint
+operator|=
+name|H
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'hint' clause with expression \a Hint.
+comment|///
+comment|/// \param Hint Hint expression.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPHintClause
+argument_list|(
+argument|Expr *Hint
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_hint
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Hint
+argument_list|(
+argument|Hint
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPHintClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_hint
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|Hint
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Sets the location of '('.
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Returns the location of '('.
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Returns number of threads.
+name|Expr
+operator|*
+name|getHint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Hint
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_hint
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Hint
+argument_list|,
+operator|&
+name|Hint
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;  }
 end_decl_stmt
 
@@ -8315,6 +11305,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_AST_OPENMPCLAUSE_H
+end_comment
 
 end_unit
 

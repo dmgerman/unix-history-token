@@ -1771,6 +1771,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.UndefinedBinaryOperatorR
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>ae5e3bd03d6d97614947942dae18e1da</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -1779,7 +1787,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>7</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>7</string>
 end_comment
 
 begin_comment
@@ -3043,6 +3051,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.UndefinedBinaryOperatorR
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>96cf3258da3df14d13cd5c2236c9cb27</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3051,7 +3067,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testPassingParentRegionArr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>4</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>4</string>
 end_comment
 
 begin_comment
@@ -4703,6 +4719,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>299055864402de225b0ab4f2ecd8e76c</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -4711,7 +4735,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testPassingParentRegionStr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>5</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>5</string>
 end_comment
 
 begin_comment

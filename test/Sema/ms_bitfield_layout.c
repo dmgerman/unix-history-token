@@ -56,19 +56,43 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct A
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:128
+comment|// CHECK-NEXT:      0 | struct A
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:32
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 32, 64, 64, 96, 99, 112]>
+comment|// CHECK-NEXT: 4:0-21 |   int a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    8:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  8:0-9 |   int c
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 12:0-2 |   char b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 12:3-6 |   char d
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:     14 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=16, align=4]
 end_comment
 
 begin_typedef
@@ -97,19 +121,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct B
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:48
+comment|// CHECK-NEXT:      0 | struct B
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:16
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 16, 32]>
+comment|// CHECK-NEXT:    1:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  2:0-3 |   short a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      4 |   char y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=6, align=2]
 end_comment
 
 begin_typedef
@@ -138,19 +174,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct C
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:64
+comment|// CHECK-NEXT:      0 | struct C
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:32
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 16, 32, 32]>
+comment|// CHECK-NEXT:  2:0-3 |   short a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    4:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      4 |   char y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=8, align=4]
 end_comment
 
 begin_typedef
@@ -178,19 +226,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct D
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:16
+comment|// CHECK-NEXT:      0 | struct D
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 8, 8]>
+comment|// CHECK-NEXT:    1:- |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    1:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      1 |   char y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=2, align=1]
 end_comment
 
 begin_typedef
@@ -226,19 +286,35 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: union E
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:64
+comment|// CHECK-NEXT:      0 | union E
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:16
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 0, 0, 0, 0]>
+comment|// CHECK-NEXT:  0:0-2 |   long long a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  0:0-2 |   int b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    0:- |   long long
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      0 |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=8, align=2]
 end_comment
 
 begin_typedef
@@ -303,19 +379,59 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct F
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:128
+comment|// CHECK-NEXT:      0 | struct F
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:16
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 11, 16, 32, 38, 48, 64, 80, 96, 112]>
+comment|// CHECK-NEXT:  1:0-2 |   char a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  1:3-5 |   char b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  2:0-2 |   char c
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  4:0-5 |   short d
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 4:6-11 |   short e
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  6:0-5 |   short f
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 8:0-10 |   short g
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:10:0-10 |   short h
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:12:0-10 |   short i
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:     14 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=16, align=2]
 end_comment
 
 begin_typedef
@@ -349,19 +465,35 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: union G
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:32
+comment|// CHECK-NEXT:      0 | union G
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:16
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 0, 0, 0, 0]>
+comment|// CHECK-NEXT:  0:0-2 |   int a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    0:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    0:- |   long long
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      0 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=4, align=2]
 end_comment
 
 begin_typedef
@@ -397,19 +529,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct H
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:32
+comment|// CHECK-NEXT:      0 | struct H
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:16
+comment|// CHECK-NEXT:  0:0-0 |   unsigned short a
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 16, 16, 16]>
+comment|// CHECK-NEXT:    2:- |   unsigned char
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    2:- |   unsigned long
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  2:0-0 |   unsigned short c
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=4, align=2]
 end_comment
 
 begin_typedef
@@ -437,19 +581,23 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct I
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:16
+comment|// CHECK-NEXT:      0 | struct I
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:16
+comment|// CHECK-NEXT:  0:0-7 |   short
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8]
+comment|// CHECK-NEXT:  1:0-7 |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=2, align=2]
 end_comment
 
 begin_pragma
@@ -504,19 +652,43 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct A1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:96
+comment|// CHECK-NEXT:      0 | struct A1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 40, 40, 72, 75, 80]>
+comment|// CHECK-NEXT: 1:0-21 |   int a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    5:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  5:0-9 |   int c
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  9:0-2 |   char b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  9:3-6 |   char d
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:     10 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=12, align=1]
 end_comment
 
 begin_typedef
@@ -545,19 +717,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct B1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:32
+comment|// CHECK-NEXT:      0 | struct B1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 8, 24]>
+comment|// CHECK-NEXT:    1:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  1:0-3 |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      3 |   char y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=4, align=1]
 end_comment
 
 begin_typedef
@@ -586,19 +770,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct C1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:32
+comment|// CHECK-NEXT:      0 | struct C1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 24, 24]>
+comment|// CHECK-NEXT:  1:0-3 |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    3:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      3 |   char y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=4, align=1]
 end_comment
 
 begin_typedef
@@ -626,19 +822,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct D1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:16
+comment|// CHECK-NEXT:      0 | struct D1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 8, 8]>
+comment|// CHECK-NEXT:    1:- |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    1:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      1 |   char y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=2, align=1]
 end_comment
 
 begin_typedef
@@ -674,19 +882,35 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: union E1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:64
+comment|// CHECK-NEXT:      0 | union E1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 0, 0, 0, 0]>
+comment|// CHECK-NEXT:  0:0-2 |   long long a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  0:0-2 |   int b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    0:- |   long long
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      0 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=8, align=1]
 end_comment
 
 begin_typedef
@@ -751,19 +975,59 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct F1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:120
+comment|// CHECK-NEXT:      0 | struct F1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8, 11, 16, 24, 30, 40, 56, 72, 88, 104]>
+comment|// CHECK-NEXT:  1:0-2 |   char a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  1:3-5 |   char b
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  2:0-2 |   char c
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  3:0-5 |   short d
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 3:6-11 |   short e
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  5:0-5 |   short f
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 7:0-10 |   short g
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: 9:0-10 |   short h
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:11:0-10 |   short i
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:     13 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=15, align=1]
 end_comment
 
 begin_typedef
@@ -797,19 +1061,35 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: union G1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:32
+comment|// CHECK-NEXT:      0 | union G1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:      0 |   char x
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 0, 0, 0, 0]>
+comment|// CHECK-NEXT:  0:0-2 |   int a
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    0:- |   int
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    0:- |   long long
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:      0 |   short y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=4, align=1]
 end_comment
 
 begin_typedef
@@ -845,19 +1125,31 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct H1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:64
+comment|// CHECK-NEXT:      0 | struct H1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:  0:0-0 |   unsigned long a
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 32, 32, 32]>
+comment|// CHECK-NEXT:    4:- |   unsigned char
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    4:- |   unsigned long
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  4:0-0 |   unsigned long c
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=8, align=1]
 end_comment
 
 begin_typedef
@@ -885,19 +1177,23 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: Type: struct I1
+comment|// CHECK:*** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK:   Size:16
+comment|// CHECK-NEXT:      0 | struct I1
 end_comment
 
 begin_comment
-comment|// CHECK:   Alignment:8
+comment|// CHECK-NEXT:  0:0-7 |   short
 end_comment
 
 begin_comment
-comment|// CHECK:   FieldOffsets: [0, 8]
+comment|// CHECK-NEXT:  1:0-7 |   short
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:        | [sizeof=2, align=1]
 end_comment
 
 begin_pragma

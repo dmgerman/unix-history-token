@@ -240,6 +240,26 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -march=p5600 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-P5600 %s
+end_comment
+
+begin_comment
+comment|// MIPS-P5600: as{{(.exe)?}}" "-march" "p5600" "-mabi" "32" "-mno-shared" "-call_nonpic" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target mips64-linux-gnu -march=octeon -### \
 end_comment
 

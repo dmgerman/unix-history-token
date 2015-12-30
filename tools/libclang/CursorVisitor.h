@@ -727,6 +727,14 @@ parameter_list|)
 function_decl|;
 comment|// Declaration visitors
 name|bool
+name|VisitTypeAliasTemplateDecl
+parameter_list|(
+name|TypeAliasTemplateDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|bool
 name|VisitTypeAliasDecl
 parameter_list|(
 name|TypeAliasDecl

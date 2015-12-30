@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +a
 end_comment
 
 begin_comment
+comment|// FIXME: This is testing optimized generation of shuffle instructions and should be fixed.
+end_comment
+
+begin_comment
 comment|// Don't include mm_malloc.h, it's system specific.
 end_comment
 

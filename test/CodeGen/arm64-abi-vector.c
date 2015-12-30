@@ -151,7 +151,7 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_3c
 comment|// CHECK: alloca<3 x i8>, align 4
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<3 x i8>*
 name|va_list
 name|ap
@@ -236,7 +236,7 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_4c
 comment|// CHECK: alloca<4 x i8>, align 4
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<4 x i8>*
 name|va_list
 name|ap
@@ -321,7 +321,7 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_5c
 comment|// CHECK: alloca<5 x i8>, align 8
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<5 x i8>*
 name|va_list
 name|ap
@@ -408,7 +408,7 @@ comment|// CHECK: varargs_vec_9c
 comment|// CHECK: alloca<9 x i8>, align 16
 comment|// CHECK: [[ALIGN:%.*]] = and i64 {{%.*}}, -16
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i64 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i64 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<9 x i8>*
 name|va_list
 name|ap
@@ -492,10 +492,9 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_19c
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<19 x i8>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to<19 x i8>**
+comment|// CHECK: [[VAR2:%.*]] = load<19 x i8>*,<19 x i8>** [[VAR]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -579,7 +578,7 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_3s
 comment|// CHECK: alloca<3 x i16>, align 8
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<3 x i16>*
 name|va_list
 name|ap
@@ -666,7 +665,7 @@ comment|// CHECK: varargs_vec_5s
 comment|// CHECK: alloca<5 x i16>, align 16
 comment|// CHECK: [[ALIGN:%.*]] = and i64 {{%.*}}, -16
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i64 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i64 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<5 x i16>*
 name|va_list
 name|ap
@@ -753,7 +752,7 @@ comment|// CHECK: varargs_vec_3i
 comment|// CHECK: alloca<3 x i32>, align 16
 comment|// CHECK: [[ALIGN:%.*]] = and i64 {{%.*}}, -16
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i64 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i64 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<3 x i32>*
 name|va_list
 name|ap
@@ -838,10 +837,9 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_5i
 comment|// CHECK: alloca<5 x i32>, align 16
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<5 x i32>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to<5 x i32>**
+comment|// CHECK: [[VAR2:%.*]] = load<5 x i32>*,<5 x i32>** [[VAR]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -925,10 +923,9 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_3d
 comment|// CHECK: alloca<3 x double>, align 16
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<3 x double>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to<3 x double>**
+comment|// CHECK: [[VAR2:%.*]] = load<3 x double>*,<3 x double>** [[VAR]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -1036,7 +1033,7 @@ argument_list|,
 name|__char3
 argument_list|)
 decl_stmt|;
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<3 x i8>*
 name|sum
 operator|=
@@ -1060,7 +1057,7 @@ argument_list|,
 name|__char5
 argument_list|)
 decl_stmt|;
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<5 x i8>*
 name|sum
 operator|=
@@ -1086,7 +1083,7 @@ argument_list|)
 decl_stmt|;
 comment|// CHECK: [[ALIGN:%.*]] = and i64 {{%.*}}, -16
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i64 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i64 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<9 x i8>*
 name|sum
 operator|=
@@ -1110,10 +1107,9 @@ argument_list|,
 name|__char19
 argument_list|)
 decl_stmt|;
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<19 x i8>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to<19 x i8>**
+comment|// CHECK: [[VAR2:%.*]] = load<19 x i8>*,<19 x i8>** [[VAR]]
 name|sum
 operator|=
 name|sum
@@ -1136,7 +1132,7 @@ argument_list|,
 name|__short3
 argument_list|)
 decl_stmt|;
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
 comment|// CHECK: bitcast i8* [[AP_CUR]] to<3 x i16>*
 name|sum
 operator|=
@@ -1162,7 +1158,7 @@ argument_list|)
 decl_stmt|;
 comment|// CHECK: [[ALIGN:%.*]] = and i64 {{%.*}}, -16
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i64 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i64 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<5 x i16>*
 name|sum
 operator|=
@@ -1188,7 +1184,7 @@ argument_list|)
 decl_stmt|;
 comment|// CHECK: [[ALIGN:%.*]] = and i64 {{%.*}}, -16
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i64 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i64 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<3 x i32>*
 name|sum
 operator|=
@@ -1212,10 +1208,9 @@ argument_list|,
 name|__int5
 argument_list|)
 decl_stmt|;
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<5 x i32>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to<5 x i32>**
+comment|// CHECK: [[VAR2:%.*]] = load<5 x i32>*,<5 x i32>** [[VAR]]
 name|sum
 operator|=
 name|sum
@@ -1238,10 +1233,9 @@ argument_list|,
 name|__double3
 argument_list|)
 decl_stmt|;
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_CUR:%.*]], i32 8
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<3 x double>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP_CUR]] to<3 x double>**
+comment|// CHECK: [[VAR2:%.*]] = load<3 x double>*,<3 x double>** [[VAR]]
 name|sum
 operator|=
 name|sum

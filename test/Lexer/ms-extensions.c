@@ -54,30 +54,6 @@ literal|0x42I64
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__SIZEOF_INT128__
-end_ifndef
-
-begin_comment
-comment|// expected-error@+2 {{__int128 is not supported on this target}}
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|__int64
-name|x4
-init|=
-literal|70000000i
-literal|128
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|__int64
 name|y

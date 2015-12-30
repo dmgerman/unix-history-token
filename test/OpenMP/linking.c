@@ -283,5 +283,77 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fopenmp=libomp -target x86_64-msvc-win32 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MSVC-LINK-64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-LINK-64: link.exe
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-LINK-64-SAME: -nodefaultlib:vcomp.lib
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-LINK-64-SAME: -nodefaultlib:vcompd.lib
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-LINK-64-SAME: -libpath:{{.+}}/../lib
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-LINK-64-SAME: -defaultlib:libomp.lib
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fopenmp=libiomp5 -target x86_64-msvc-win32 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MSVC-ILINK-64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-ILINK-64: link.exe
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-ILINK-64-SAME: -nodefaultlib:vcomp.lib
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-ILINK-64-SAME: -nodefaultlib:vcompd.lib
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-ILINK-64-SAME: -libpath:{{.+}}/../lib
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-ILINK-64-SAME: -defaultlib:libiomp5md.lib
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 end_unit
 

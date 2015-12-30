@@ -39,6 +39,23 @@ begin_comment
 comment|//#pragma weak pragma_weak04 // expected-warning {{weak identifier 'pragma_waek04' never declared}}
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MERGE_NO_REEXPORT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"merge_no_reexport.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

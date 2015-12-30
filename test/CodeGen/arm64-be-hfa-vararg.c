@@ -23,7 +23,14 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-comment|// CHECK: = add i64 %{{.*}}, 8
+comment|// CHECK: [[REGPP:%.*]] = getelementptr inbounds %struct.__va_list, %struct.__va_list* [[VA:%.*]], i32 0, i32 2
+comment|// CHECK: [[REGP:%.*]] = load i8*, i8** [[REGPP]], align 8
+comment|// CHECK: [[OFFSET0:%.*]] = getelementptr inbounds i8, i8* [[REGP]], i32 {{.*}}
+comment|// CHECK: [[OFFSET1:%.*]] = getelementptr inbounds i8, i8* [[OFFSET0]], i64 8
+comment|// CHECK: [[MEMPP:%.*]] = getelementptr inbounds %struct.__va_list, %struct.__va_list* [[VA:%.*]], i32 0, i32 0
+comment|// CHECK: [[MEMP:%.*]] = load i8*, i8** [[MEMPP]], align 8
+comment|// CHECK: [[NEXTP:%.*]] = getelementptr inbounds i8, i8* [[MEMP]], i64 8
+comment|// CHECK: store i8* [[NEXTP]], i8** [[MEMPP]], align 8
 name|va_list
 name|vl
 decl_stmt|;

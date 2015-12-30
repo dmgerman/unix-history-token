@@ -192,7 +192,7 @@ comment|// CHECK-EXTEND-LEGACY: -fsanitize-coverage-trace-cmp
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -fsanitize=address -fsanitize-coverage=1 -c -### -- %s 2>&1 | FileCheck %s -check-prefix=CLANG-CL-COVERAGE
+comment|// RUN: %clang_cl --target=i386-pc-win32 -fsanitize=address -fsanitize-coverage=1 -c -### -- %s 2>&1 | FileCheck %s -check-prefix=CLANG-CL-COVERAGE
 end_comment
 
 begin_comment

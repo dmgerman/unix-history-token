@@ -252,12 +252,11 @@ operator|++
 name|i
 control|)
 empty_stmt|;
+comment|// expected-warning@+2 {{extra tokens at the end of '#pragma omp for' are ignored}}
 pragma|#
 directive|pragma
 name|omp
 name|parallel
-comment|// expected-error@+2 {{unexpected OpenMP clause 'linear' in directive '#pragma omp for'}}
-comment|// expected-warning@+1 {{extra tokens at the end of '#pragma omp for' are ignored}}
 pragma|#
 directive|pragma
 name|omp
@@ -851,7 +850,7 @@ pragma|#
 directive|pragma
 name|omp
 name|parallel
-comment|// expected-error@+1 {{argument to 'collapse' clause must be a positive integer value}}
+comment|// expected-error@+1 {{argument to 'collapse' clause must be a strictly positive integer value}}
 pragma|#
 directive|pragma
 name|omp
@@ -879,7 +878,7 @@ pragma|#
 directive|pragma
 name|omp
 name|parallel
-comment|// expected-error@+1 {{argument to 'collapse' clause must be a positive integer value}}
+comment|// expected-error@+1 {{argument to 'collapse' clause must be a strictly positive integer value}}
 pragma|#
 directive|pragma
 name|omp
@@ -906,7 +905,7 @@ pragma|#
 directive|pragma
 name|omp
 name|parallel
-comment|// expected-error@+1 {{argument to 'collapse' clause must be a positive integer value}}
+comment|// expected-error@+1 {{argument to 'collapse' clause must be a strictly positive integer value}}
 pragma|#
 directive|pragma
 name|omp
@@ -971,7 +970,7 @@ condition|;
 operator|++
 name|j
 control|)
-comment|// expected-error@+2 {{private variable cannot be reduction}}
+comment|// expected-error@+2 {{reduction variable must be shared}}
 comment|// expected-error@+1 {{region cannot be closely nested inside 'for' region; perhaps you forget to enclose 'omp for' directive into a parallel region?}}
 pragma|#
 directive|pragma

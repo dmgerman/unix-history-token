@@ -27,18 +27,6 @@ begin_comment
 comment|// RUN: -emit-llvm %s -o - | FileCheck %s
 end_comment
 
-begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc-unknown-unknown \
-end_comment
-
-begin_comment
-comment|// RUN: -target-feature +crypto -target-feature +power8-vector \
-end_comment
-
-begin_comment
-comment|// RUN: -emit-llvm %s -o - | FileCheck %s
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -134,7 +122,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumb
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumb
 block|}
 end_function
 
@@ -171,7 +159,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumh
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumh
 block|}
 end_function
 
@@ -208,7 +196,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumw
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumw
 block|}
 end_function
 
@@ -248,7 +236,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumd
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumd
 block|}
 end_function
 
@@ -548,7 +536,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @llvm.ppc.altivec.crypto.vncipher
+comment|// CHECK-LABEL: @test_vncipher
 end_comment
 
 begin_function
@@ -736,7 +724,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumb
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumb
 block|}
 end_function
 
@@ -773,7 +761,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumh
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumh
 block|}
 end_function
 
@@ -810,7 +798,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumw
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumw
 block|}
 end_function
 
@@ -850,7 +838,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.altivec.crypto.vpmsumd
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumd
 block|}
 end_function
 
@@ -971,6 +959,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpermxor
 block|}
 end_function
 
@@ -1293,6 +1282,402 @@ literal|15
 argument_list|)
 return|;
 comment|// CHECK: @llvm.ppc.altivec.crypto.vshasigmad
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_sbox_be
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test_vec_sbox_be
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|a
+init|=
+name|B_INIT1
+return|return
+name|vec_sbox_be
+argument_list|(
+name|a
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vsbox
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_cipher_be
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test_vec_cipher_be
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|a
+init|=
+name|B_INIT1
+name|vector
+name|unsigned
+name|char
+name|b
+operator|=
+name|B_INIT2
+return|return
+name|vec_cipher_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vcipher
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_cipherlast_be
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test_vec_cipherlast_be
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|a
+init|=
+name|B_INIT1
+name|vector
+name|unsigned
+name|char
+name|b
+operator|=
+name|B_INIT2
+return|return
+name|vec_cipherlast_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vcipherlast
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_ncipher_be
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test_vec_ncipher_be
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|a
+init|=
+name|B_INIT1
+name|vector
+name|unsigned
+name|char
+name|b
+operator|=
+name|B_INIT2
+return|return
+name|vec_ncipher_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vncipher
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_ncipherlast_be
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test_vec_ncipherlast_be
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|a
+init|=
+name|B_INIT1
+name|vector
+name|unsigned
+name|char
+name|b
+operator|=
+name|B_INIT2
+return|return
+name|vec_ncipherlast_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vncipherlast
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_shasigma_bew
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|int
+name|test_vec_shasigma_bew
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|int
+name|a
+init|=
+name|W_INIT1
+return|return
+name|vec_shasigma_be
+argument_list|(
+name|a
+argument_list|,
+literal|1
+argument_list|,
+literal|15
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vshasigmaw
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_shasigma_bed
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|long
+name|long
+name|test_vec_shasigma_bed
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|long
+name|long
+name|a
+init|=
+name|D_INIT2
+return|return
+name|vec_shasigma_be
+argument_list|(
+name|a
+argument_list|,
+literal|1
+argument_list|,
+literal|15
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vshasigmad
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_pmsum_beb
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|short
+name|test_vec_pmsum_beb
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|a
+init|=
+name|B_INIT1
+name|vector
+name|unsigned
+name|char
+name|b
+operator|=
+name|B_INIT2
+return|return
+name|vec_pmsum_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumb
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_pmsum_beh
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|int
+name|test_vec_pmsum_beh
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|short
+name|a
+init|=
+name|H_INIT1
+name|vector
+name|unsigned
+name|short
+name|b
+operator|=
+name|H_INIT2
+return|return
+name|vec_pmsum_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumh
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_pmsum_bew
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|long
+name|long
+name|test_vec_pmsum_bew
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|int
+name|a
+init|=
+name|W_INIT1
+name|vector
+name|unsigned
+name|int
+name|b
+operator|=
+name|W_INIT2
+return|return
+name|vec_pmsum_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumw
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @test_vec_pmsum_bed
+end_comment
+
+begin_function
+name|vector
+name|unsigned
+name|__int128
+name|test_vec_pmsum_bed
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|long
+name|long
+name|a
+init|=
+name|D_INIT1
+name|vector
+name|unsigned
+name|long
+name|long
+name|b
+operator|=
+name|D_INIT2
+return|return
+name|vec_pmsum_be
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+comment|// CHECK: @llvm.ppc.altivec.crypto.vpmsumd
 block|}
 end_function
 

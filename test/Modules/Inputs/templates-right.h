@@ -195,6 +195,21 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|inline
+name|void
+name|defineListLongRight
+parameter_list|()
+block|{
+name|List
+operator|<
+name|long
+operator|>
+name|ll
+expr_stmt|;
+block|}
+end_function
+
 begin_expr_stmt
 name|template
 operator|<

@@ -391,5 +391,38 @@ begin_comment
 comment|// expected-error {{'address_space' attribute requires an integer constant}}
 end_comment
 
+begin_comment
+comment|// Clang extension doesn't forbid operations on pointers to different address spaces.
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|cmp
+parameter_list|(
+name|_AS1
+name|char
+modifier|*
+name|x
+parameter_list|,
+name|_AS2
+name|char
+modifier|*
+name|y
+parameter_list|)
+block|{
+return|return
+name|x
+operator|<
+name|y
+condition|?
+name|x
+else|:
+name|y
+return|;
+comment|// expected-warning {{pointer type mismatch ('__attribute__((address_space(1))) char *' and '__attribute__((address_space(2))) char *')}}
+block|}
+end_function
+
 end_unit
 

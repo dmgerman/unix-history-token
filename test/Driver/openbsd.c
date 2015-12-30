@@ -236,11 +236,11 @@ comment|// CHECK-POWERPC: as{{.*}}" "-mppc" "-many"
 end_comment
 
 begin_comment
-comment|// CHECK-SPARC: as{{.*}}" "-32"
+comment|// CHECK-SPARC: as{{.*}}" "-32" "-Av8"
 end_comment
 
 begin_comment
-comment|// CHECK-SPARC64: as{{.*}}" "-64" "-Av9a"
+comment|// CHECK-SPARC64: as{{.*}}" "-64" "-Av9"
 end_comment
 
 begin_comment

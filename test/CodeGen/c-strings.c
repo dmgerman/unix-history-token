@@ -55,6 +55,22 @@ begin_comment
 comment|// CHECK: @x = global [3 x i8] c"ola", align [[ALIGN]]
 end_comment
 
+begin_comment
+comment|// XFAIL: hexagon
+end_comment
+
+begin_comment
+comment|// Hexagon aligns arrays of size 8+ bytes to a 64-bit boundary, which
+end_comment
+
+begin_comment
+comment|// fails the check for "@f3.x = ... align [ALIGN]", since ALIGN is derived
+end_comment
+
+begin_comment
+comment|// from the alignment of a single i8, which is still 1.
+end_comment
+
 begin_if
 if|#
 directive|if

@@ -133,7 +133,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* expected-warning{{__declspec attribute 'safebuffers' is not supported}} expected-warning{{__declspec attribute 'noalias' is not supported}} */
+comment|/* expected-warning{{__declspec attribute 'safebuffers' is not supported}} */
 end_comment
 
 begin_typedef

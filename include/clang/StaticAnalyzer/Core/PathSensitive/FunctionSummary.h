@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -99,9 +105,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|Decl
-decl_stmt|;
 name|namespace
 name|ento
 block|{

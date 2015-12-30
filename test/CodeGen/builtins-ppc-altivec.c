@@ -2752,6 +2752,72 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp
 comment|/* vec_cmpge */
+name|res_vbc
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb
+name|res_vbc
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtub
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub
+name|res_vbs
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vs
+argument_list|,
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh
+name|res_vbs
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh
+name|res_vbi
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw
+name|res_vbi
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw
 name|res_vbi
 operator|=
 name|vec_cmpge
@@ -2942,6 +3008,72 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp
 comment|/* vec_cmple */
+name|res_vbc
+operator|=
+name|vec_cmple
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb
+name|res_vbc
+operator|=
+name|vec_cmple
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtub
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub
+name|res_vbs
+operator|=
+name|vec_cmple
+argument_list|(
+name|vs
+argument_list|,
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh
+name|res_vbs
+operator|=
+name|vec_cmple
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh
+name|res_vbi
+operator|=
+name|vec_cmple
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw
+name|res_vbi
+operator|=
+name|vec_cmple
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw
 name|res_vbi
 operator|=
 name|vec_cmple
@@ -15178,6 +15310,17 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<16 x i8>
 comment|// CHECK-LE: extractelement<16 x i8>
+name|res_uc
+operator|=
+name|vec_extract
+argument_list|(
+name|vbc
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<16 x i8>
+comment|// CHECK-LE: extractelement<16 x i8>
 name|res_s
 operator|=
 name|vec_extract
@@ -15200,6 +15343,17 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<8 x i16>
 comment|// CHECK-LE: extractelement<8 x i16>
+name|res_us
+operator|=
+name|vec_extract
+argument_list|(
+name|vbs
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<8 x i16>
+comment|// CHECK-LE: extractelement<8 x i16>
 name|res_i
 operator|=
 name|vec_extract
@@ -15216,6 +15370,17 @@ operator|=
 name|vec_extract
 argument_list|(
 name|vui
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK-LE: extractelement<4 x i32>
+name|res_ui
+operator|=
+name|vec_extract
+argument_list|(
+name|vbi
 argument_list|,
 name|param_i
 argument_list|)
@@ -15260,6 +15425,19 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<16 x i8>
 comment|// CHECK-LE: insertelement<16 x i8>
+name|res_vbc
+operator|=
+name|vec_insert
+argument_list|(
+name|param_uc
+argument_list|,
+name|vbc
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vs
 operator|=
 name|vec_insert
@@ -15286,6 +15464,19 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<8 x i16>
 comment|// CHECK-LE: insertelement<8 x i16>
+name|res_vbs
+operator|=
+name|vec_insert
+argument_list|(
+name|param_us
+argument_list|,
+name|vbs
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vi
 operator|=
 name|vec_insert
@@ -15306,6 +15497,19 @@ argument_list|(
 name|param_ui
 argument_list|,
 name|vui
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: insertelement<4 x i32>
+name|res_vbi
+operator|=
+name|vec_insert
+argument_list|(
+name|param_ui
+argument_list|,
+name|vbi
 argument_list|,
 name|param_i
 argument_list|)

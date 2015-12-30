@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O0 -triple=x86_64-apple-darwin -ffreestanding -target-feature +avx512cd -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx512cd -emit-llvm -o - -Werror | FileCheck %s
 end_comment
+
+begin_comment
+comment|// Don't include mm_malloc.h, it's system specific.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MM_MALLOC_H
+end_define
 
 begin_include
 include|#

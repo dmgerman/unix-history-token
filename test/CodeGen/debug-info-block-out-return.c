@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -g -fblocks -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -debug-info-kind=limited -fblocks -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -40,11 +40,11 @@ comment|// the same argument number by mistake).
 end_comment
 
 begin_comment
-comment|// CHECK: !DILocalVariable(tag: DW_TAG_arg_variable, name: ".block_descriptor", arg: 1,{{.*}}line: 2,
+comment|// CHECK: !DILocalVariable(name: ".block_descriptor", arg: 1,{{.*}}line: 2,
 end_comment
 
 begin_comment
-comment|// CHECK: !DILocalVariable(tag: DW_TAG_arg_variable, name: "param", arg: 2,{{.*}}line: 2,
+comment|// CHECK: !DILocalVariable(name: "param", arg: 2,{{.*}}line: 2,
 end_comment
 
 begin_comment

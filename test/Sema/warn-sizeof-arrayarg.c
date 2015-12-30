@@ -34,11 +34,7 @@ name|Arr
 name|arr
 parameter_list|)
 block|{
-comment|// \
-comment|// expected-note {{declared here}} \
-comment|// expected-note {{declared here}} \
-comment|// expected-note {{declared here}} \
-comment|// expected-note {{declared here}}
+comment|// expected-note 4 {{declared here}}
 comment|/* Should warn. */
 operator|(
 name|void

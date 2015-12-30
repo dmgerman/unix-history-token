@@ -867,5 +867,61 @@ begin_comment
 comment|// RDSEED: #define __RDSEED__ 1
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mxsave -x c -E -dM -o - %s | FileCheck --check-prefix=XSAVE %s
+end_comment
+
+begin_comment
+comment|// XSAVE: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mxsaveopt -x c -E -dM -o - %s | FileCheck --check-prefix=XSAVEOPT %s
+end_comment
+
+begin_comment
+comment|// XSAVEOPT: #define __XSAVEOPT__ 1
+end_comment
+
+begin_comment
+comment|// XSAVEOPT: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mxsavec -x c -E -dM -o - %s | FileCheck --check-prefix=XSAVEC %s
+end_comment
+
+begin_comment
+comment|// XSAVEC: #define __XSAVEC__ 1
+end_comment
+
+begin_comment
+comment|// XSAVEC: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mxsaves -x c -E -dM -o - %s | FileCheck --check-prefix=XSAVES %s
+end_comment
+
+begin_comment
+comment|// XSAVES: #define __XSAVES__ 1
+end_comment
+
+begin_comment
+comment|// XSAVES: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mxsaveopt -mno-xsave -x c -E -dM -o - %s | FileCheck --check-prefix=NOXSAVE %s
+end_comment
+
+begin_comment
+comment|// NOXSAVE-NOT: #define __XSAVEOPT__ 1
+end_comment
+
+begin_comment
+comment|// NOXSAVE-NOT: #define __XSAVE__ 1
+end_comment
+
 end_unit
 

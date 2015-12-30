@@ -344,6 +344,25 @@ operator|*
 name|exceptionRethrowFn
 argument_list|)
 decl_stmt|;
+name|void
+name|EmitInitOfCatchParam
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|exn
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+name|paramDecl
+argument_list|)
+decl_stmt|;
 comment|/// Emits an \@synchronize() statement, using the \p syncEnterFn and
 comment|/// \p syncExitFn arguments as the functions called to lock and unlock
 comment|/// the object.  This function can be called by subclasses that use
@@ -392,9 +411,8 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Get a selector for the specified name and type values. The
-comment|/// return value should have the LLVM type for pointer-to
-comment|/// ASTContext::getObjCSelType().
+comment|/// Get a selector for the specified name and type values.
+comment|/// The result should have the LLVM type for ASTContext::getObjCSelType().
 name|virtual
 name|llvm
 operator|::
@@ -405,12 +423,29 @@ argument_list|(
 argument|CodeGenFunction&CGF
 argument_list|,
 argument|Selector Sel
-argument_list|,
-argument|bool lval=false
 argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Get the address of a selector for the specified name and type values.
+comment|/// This is a rarely-used language extension, but sadly it exists.
+comment|///
+comment|/// The result should have the LLVM type for a pointer to
+comment|/// ASTContext::getObjCSelType().
+name|virtual
+name|Address
+name|GetAddrOfSelector
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|Selector
+name|Sel
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Get a typed selector.
 name|virtual
 name|llvm
@@ -449,19 +484,16 @@ literal|0
 expr_stmt|;
 comment|/// Generate a constant string object.
 name|virtual
-name|llvm
-operator|::
-name|Constant
-operator|*
+name|ConstantAddress
 name|GenerateConstantString
-argument_list|(
+parameter_list|(
 specifier|const
 name|StringLiteral
-operator|*
-argument_list|)
-operator|=
+modifier|*
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// Generate a category.  A category contains a list of methods (and
 comment|/// accompanying metadata) and a list of protocols.
 name|virtual
@@ -823,17 +855,9 @@ name|Value
 operator|*
 name|EmitObjCWeakRead
 argument_list|(
-name|CodeGen
-operator|::
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|AddrWeakObj
+argument|Address AddrWeakObj
 argument_list|)
 operator|=
 literal|0
@@ -854,10 +878,7 @@ name|Value
 operator|*
 name|src
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|dest
 argument_list|)
 init|=
@@ -879,10 +900,7 @@ name|Value
 operator|*
 name|src
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|dest
 argument_list|,
 name|bool
@@ -909,10 +927,7 @@ name|Value
 operator|*
 name|src
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|dest
 argument_list|,
 name|llvm
@@ -940,10 +955,7 @@ name|Value
 operator|*
 name|src
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|dest
 argument_list|)
 init|=
@@ -1015,16 +1027,10 @@ name|CodeGenFunction
 operator|&
 name|CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|DestPtr
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|SrcPtr
 argument_list|,
 name|llvm
@@ -1082,6 +1088,7 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Returns an i8* which points to the byref layout information.
 name|virtual
 name|llvm
 operator|::

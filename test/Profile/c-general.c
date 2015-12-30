@@ -16,6 +16,10 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-gen
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-general.c %s -o - -emit-llvm -fprofile-instr-use=%S/Inputs/c-general.profdata.v3 | FileCheck -check-prefix=PGOUSE %s
+end_comment
+
+begin_comment
 comment|// Also check compatibility with older profiles.
 end_comment
 
@@ -24,51 +28,51 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-gen
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[SLC:__llvm_profile_counters_simple_loops]] = private global [4 x i64] zeroinitializer
+comment|// PGOGEN: @[[SLC:__profc_simple_loops]] = private global [4 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[IFC:__llvm_profile_counters_conditionals]] = private global [11 x i64] zeroinitializer
+comment|// PGOGEN: @[[IFC:__profc_conditionals]] = private global [11 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[EEC:__llvm_profile_counters_early_exits]] = private global [9 x i64] zeroinitializer
+comment|// PGOGEN: @[[EEC:__profc_early_exits]] = private global [9 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[JMC:__llvm_profile_counters_jumps]] = private global [22 x i64] zeroinitializer
+comment|// PGOGEN: @[[JMC:__profc_jumps]] = private global [22 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[SWC:__llvm_profile_counters_switches]] = private global [19 x i64] zeroinitializer
+comment|// PGOGEN: @[[SWC:__profc_switches]] = private global [19 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[BSC:__llvm_profile_counters_big_switch]] = private global [17 x i64] zeroinitializer
+comment|// PGOGEN: @[[BSC:__profc_big_switch]] = private global [17 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[BOC:__llvm_profile_counters_boolean_operators]] = private global [8 x i64] zeroinitializer
+comment|// PGOGEN: @[[BOC:__profc_boolean_operators]] = private global [8 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[BLC:__llvm_profile_counters_boolop_loops]] = private global [9 x i64] zeroinitializer
+comment|// PGOGEN: @[[BLC:__profc_boolop_loops]] = private global [9 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[COC:__llvm_profile_counters_conditional_operator]] = private global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[COC:__profc_conditional_operator]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[DFC:__llvm_profile_counters_do_fallthrough]] = private global [4 x i64] zeroinitializer
+comment|// PGOGEN: @[[DFC:__profc_do_fallthrough]] = private global [4 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[MAC:__llvm_profile_counters_main]] = private global [1 x i64] zeroinitializer
+comment|// PGOGEN: @[[MAC:__profc_main]] = private global [1 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[STC:"__llvm_profile_counters_c-general.c:static_func"]] = private global [2 x i64] zeroinitializer
+comment|// PGOGEN: @[[STC:__profc_c_general.c_static_func]] = private global [2 x i64] zeroinitializer
 end_comment
 
 begin_comment

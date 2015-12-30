@@ -513,6 +513,14 @@ name|x
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{invalid application of 'sizeof' to bit-field}}
+name|__extension__
+argument_list|(
+argument|{ R = (__typeof__(P->x))
+literal|2
+argument|; }
+argument_list|)
+empty_stmt|;
+comment|// expected-error {{invalid application of 'typeof' to bit-field}}
 return|return
 name|R
 return|;

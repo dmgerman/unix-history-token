@@ -4,7 +4,7 @@ comment|// RUN: echo "#include<stddef.h>"> %t.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -S -g -include %t.h %s -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -S -debug-info-kind=limited -include %t.h %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment

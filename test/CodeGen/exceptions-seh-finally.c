@@ -113,11 +113,7 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK-NEXT: %[[pad:[^ ]*]] = cleanuppad
 end_comment
 
 begin_comment
@@ -129,7 +125,7 @@ comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} 1, 
 end_comment
 
 begin_comment
-comment|// CHECK: resume { i8*, i32 }
+comment|// CHECK-NEXT: cleanupret from %[[pad]] unwind to caller
 end_comment
 
 begin_comment
@@ -337,11 +333,7 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK-NEXT: %[[pad:[^ ]*]] = cleanuppad
 end_comment
 
 begin_comment
@@ -353,7 +345,7 @@ comment|// CHECK: call void @"\01?fin$0@0@use_abnormal_termination@@"({{i8( zero
 end_comment
 
 begin_comment
-comment|// CHECK: resume { i8*, i32 }
+comment|// CHECK-NEXT: cleanupret from %[[pad]] unwind to caller
 end_comment
 
 begin_comment
@@ -473,11 +465,7 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK-NEXT: %[[pad:[^ ]*]] = cleanuppad
 end_comment
 
 begin_comment
@@ -485,7 +473,7 @@ comment|// CHECK: call void @"\01?fin$0@0@noreturn_finally@@"({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK: resume { i8*, i32 }
+comment|// CHECK-NEXT: cleanupret from %[[pad]] unwind to caller
 end_comment
 
 begin_comment
@@ -607,15 +595,15 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK-NEXT: %[[pad:[^ ]*]] = cleanuppad
 end_comment
 
 begin_comment
 comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: cleanupret from %[[pad]] unwind to caller
 end_comment
 
 begin_comment
@@ -632,6 +620,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: unreachable
+end_comment
+
+begin_comment
+comment|// FIXME: Our behavior seems suspiciously different.
 end_comment
 
 begin_function
@@ -689,7 +681,7 @@ comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally_with_eh_e
 end_comment
 
 begin_comment
-comment|// CHECK:          to label %[[outercont:[^ ]*]] unwind label %[[lpad2:[^ ]*]]
+comment|// CHECK-NEXT:       to label %[[outercont:[^ ]*]] unwind label %[[lpad2:[^ ]*]]
 end_comment
 
 begin_comment
@@ -717,11 +709,7 @@ comment|// CHECK: [[lpad1]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK-NEXT: %[[innerpad:[^ ]*]] = cleanuppad
 end_comment
 
 begin_comment
@@ -729,7 +717,19 @@ comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally_with_eh_e
 end_comment
 
 begin_comment
-comment|// CHECK:          to label %[[outercont:[^ ]*]] unwind label %[[lpad2]]
+comment|// CHECK-NEXT:    label %[[innercleanupretbb:[^ ]*]] unwind label %[[lpad2:[^ ]*]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: [[innercleanupretbb]]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: cleanupret from %[[innerpad]] unwind label %[[lpad2]]
 end_comment
 
 begin_comment
@@ -741,11 +741,7 @@ comment|// CHECK: [[lpad2]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK-NEXT: %[[outerpad:[^ ]*]] = cleanuppad
 end_comment
 
 begin_comment
@@ -753,7 +749,7 @@ comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally_with_eh_edg
 end_comment
 
 begin_comment
-comment|// CHECK: resume
+comment|// CHECK-NEXT: cleanupret from %[[outerpad]] unwind to caller
 end_comment
 
 begin_comment

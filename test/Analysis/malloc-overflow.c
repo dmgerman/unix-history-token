@@ -542,7 +542,7 @@ name|int
 argument_list|)
 argument_list|)
 return|;
-comment|// no warning
+comment|// no-warning
 block|}
 end_function
 

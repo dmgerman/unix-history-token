@@ -625,12 +625,33 @@ name|unsigned
 operator|>
 name|MaxTimesInlineLarge
 expr_stmt|;
+comment|/// \sa getMinCFGSizeTreatFunctionsAsLarge
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|MinCFGSizeTreatFunctionsAsLarge
+expr_stmt|;
 comment|/// \sa getMaxNodesPerTopLevelFunction
 name|Optional
 operator|<
 name|unsigned
 operator|>
 name|MaxNodesPerTopLevelFunction
+expr_stmt|;
+comment|/// \sa shouldInlineLambdas
+name|Optional
+operator|<
+name|bool
+operator|>
+name|InlineLambdas
+expr_stmt|;
+comment|/// \sa shouldWidenLoops
+name|Optional
+operator|<
+name|bool
+operator|>
+name|WidenLoops
 expr_stmt|;
 comment|/// A helper function that retrieves option for a given full-qualified
 comment|/// checker name.
@@ -1029,6 +1050,15 @@ name|unsigned
 name|getMaxTimesInlineLarge
 parameter_list|()
 function_decl|;
+comment|/// Returns the number of basic blocks a function needs to have to be
+comment|/// considered large for the 'max-times-inline-large' config option.
+comment|///
+comment|/// This is controlled by the 'min-cfg-size-treat-functions-as-large' config
+comment|/// option.
+name|unsigned
+name|getMinCFGSizeTreatFunctionsAsLarge
+parameter_list|()
+function_decl|;
 comment|/// Returns the maximum number of nodes the analyzer can generate while
 comment|/// exploring a top level function (for each exploded graph).
 comment|/// 150000 is default; 0 means no limit.
@@ -1036,6 +1066,18 @@ comment|///
 comment|/// This is controlled by the 'max-nodes' config option.
 name|unsigned
 name|getMaxNodesPerTopLevelFunction
+parameter_list|()
+function_decl|;
+comment|/// Returns true if lambdas should be inlined. Otherwise a sink node will be
+comment|/// generated each time a LambdaExpr is visited.
+name|bool
+name|shouldInlineLambdas
+parameter_list|()
+function_decl|;
+comment|/// Returns true if the analysis should try to widen loops.
+comment|/// This is controlled by the 'widen-loops' config option.
+name|bool
+name|shouldWidenLoops
 parameter_list|()
 function_decl|;
 name|public

@@ -448,7 +448,7 @@ comment|// CHECK-SPARCV9: -64
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV9: -Av9a
+comment|// CHECK-SPARCV9: -Av9
 end_comment
 
 begin_comment
@@ -484,7 +484,7 @@ comment|// CHECK-SPARCV9PIC: -64
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV9PIC: -Av9a
+comment|// CHECK-SPARCV9PIC: -Av9
 end_comment
 
 begin_comment
@@ -520,7 +520,7 @@ comment|// CHECK-SPARCV8: -32
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV8: -Av8plusa
+comment|// CHECK-SPARCV8: -Av8
 end_comment
 
 begin_comment
@@ -552,7 +552,7 @@ comment|// CHECK-SPARCV8EL: -32
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV8EL: -Av8plusa
+comment|// CHECK-SPARCV8EL: -Av8
 end_comment
 
 begin_comment

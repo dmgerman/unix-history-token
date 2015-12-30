@@ -107,5 +107,93 @@ begin_comment
 comment|// CHECK-IAS: objcopy
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -gmlt -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-GMLT-OVER-SPLIT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-GMLT-OVER-SPLIT: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
+comment|// CHECK-GMLT-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+end_comment
+
+begin_comment
+comment|// CHECK-GMLT-OVER-SPLIT-NOT: "-split-dwarf-file"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gmlt -gsplit-dwarf -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-SPLIT-OVER-GMLT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-OVER-GMLT: "-split-dwarf=Enable" "-debug-info-kind=limited"
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-OVER-GMLT: "-split-dwarf-file"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -g0 -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-G0-OVER-SPLIT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-debug-info-kind
+end_comment
+
+begin_comment
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+end_comment
+
+begin_comment
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf-file"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -g0 -gsplit-dwarf -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-SPLIT-OVER-G0< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-OVER-G0: "-split-dwarf=Enable" "-debug-info-kind=limited"
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-OVER-G0: "-split-dwarf-file"
+end_comment
+
 end_unit
 

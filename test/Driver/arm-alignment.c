@@ -24,6 +24,38 @@ comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv6-apple-darwin -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv6-netbsd-eabi -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-unknown-linux -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-unknown-nacl-gnueabihf -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64-none-gnueabi -munaligned-access -### %s 2> %t
 end_comment
 
@@ -48,11 +80,11 @@ comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-AARCH64< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-UNALIGNED-ARM: "-backend-option" "-arm-no-strict-align"
+comment|// CHECK-UNALIGNED-ARM-NOT: "-target-feature" "+strict-align"
 end_comment
 
 begin_comment
-comment|// CHECK-UNALIGNED-AARCH64: "-backend-option" "-aarch64-no-strict-align"
+comment|// CHECK-UNALIGNED-AARCH64-NOT: "-target-feature" "+strict-align"
 end_comment
 
 begin_comment
@@ -81,6 +113,62 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm-none-gnueabi -munaligned-access -mstrict-align -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-none-gnueabi -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv5-apple-darwin -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv5t-netbsd-eabi -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv6-unknown-linux -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv6-unknown-nacl-gnueabihf -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv6m-apple-darwin -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv6m-netbsd-eabi -### %s 2> %t
 end_comment
 
 begin_comment
@@ -128,11 +216,11 @@ comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-AARCH64< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-ALIGNED-ARM: "-backend-option" "-arm-strict-align"
+comment|// CHECK-ALIGNED-ARM: "-target-feature" "+strict-align"
 end_comment
 
 begin_comment
-comment|// CHECK-ALIGNED-AARCH64: "-backend-option" "-aarch64-strict-align"
+comment|// CHECK-ALIGNED-AARCH64: "-target-feature" "+strict-align"
 end_comment
 
 begin_comment

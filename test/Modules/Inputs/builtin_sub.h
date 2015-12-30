@@ -17,5 +17,15 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|IS_CONST
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_constant_p(x)
+end_define
+
 end_unit
 

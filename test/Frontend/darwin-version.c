@@ -60,6 +60,14 @@ comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple i386-apple-macosx10.4.10 -dM -E -o %t %s
 end_comment
 
@@ -101,6 +109,70 @@ end_comment
 
 begin_comment
 comment|// RUN: grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t | grep '101000' | count 1
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-apple-tvos8.3 -dM -E -o %t %s
+end_comment
+
+begin_comment
+comment|// RUN: grep '__ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__' %t | grep '80300' | count 1
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-apple-tvos8.3 -dM -E -o %t %s
+end_comment
+
+begin_comment
+comment|// RUN: grep '__ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__' %t | grep '80300' | count 1
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple armv7k-apple-watchos2.1 -dM -E -o %t %s
+end_comment
+
+begin_comment
+comment|// RUN: grep '__ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__' %t | grep '20100' | count 1
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__' %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i386-apple-watchos2.1 -dM -E -o %t %s
+end_comment
+
+begin_comment
+comment|// RUN: grep '__ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__' %t | grep '20100' | count 1
+end_comment
+
+begin_comment
+comment|// RUN: not grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t
 end_comment
 
 begin_comment

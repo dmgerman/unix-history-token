@@ -105,6 +105,12 @@ directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/TrailingObjects.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -568,11 +574,14 @@ comment|/// \brief Construct a template argument that is a template argument pac
 comment|///
 comment|/// We assume that storage for the template arguments provided
 comment|/// outlives the TemplateArgument itself.
+name|explicit
 name|TemplateArgument
 argument_list|(
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|)
 block|{
 name|this
@@ -590,6 +599,9 @@ operator|.
 name|Args
 operator|=
 name|Args
+operator|.
+name|data
+argument_list|()
 expr_stmt|;
 name|this
 operator|->
@@ -597,7 +609,10 @@ name|Args
 operator|.
 name|NumArgs
 operator|=
-name|NumArgs
+name|Args
+operator|.
+name|size
+argument_list|()
 expr_stmt|;
 block|}
 specifier|static
@@ -608,13 +623,7 @@ block|{
 return|return
 name|TemplateArgument
 argument_list|(
-operator|(
-name|TemplateArgument
-operator|*
-operator|)
-name|nullptr
-argument_list|,
-literal|0
+name|None
 argument_list|)
 return|;
 block|}
@@ -623,20 +632,18 @@ comment|/// template arguments.
 specifier|static
 name|TemplateArgument
 name|CreatePackCopy
-parameter_list|(
+argument_list|(
 name|ASTContext
-modifier|&
+operator|&
 name|Context
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|TemplateArgument
-modifier|*
+operator|>
 name|Args
-parameter_list|,
-name|unsigned
-name|NumArgs
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Return the kind of stored template argument.
 name|ArgKind
 name|getKind
@@ -1951,6 +1958,8 @@ name|ASTContext
 modifier|&
 name|C
 parameter_list|)
+init|=
+name|delete
 function_decl|;
 name|public
 label|:
@@ -2042,6 +2051,20 @@ name|data
 argument_list|()
 return|;
 block|}
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Arguments
+return|;
+block|}
 specifier|const
 name|TemplateArgumentLoc
 modifier|&
@@ -2116,10 +2139,36 @@ begin_comment
 comment|/// TemplateArgumentListInfo.
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|ASTTemplateArgumentListInfo
+name|final
+range|:
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|ASTTemplateArgumentListInfo
+decl_stmt|,
+name|TemplateArgumentLoc
+decl|>
 block|{
+name|private
+label|:
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|ASTTemplateArgumentListInfo
+argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|List
+argument_list|)
+expr_stmt|;
+name|public
+label|:
 comment|/// \brief The source location of the left angle bracket ('<').
 name|SourceLocation
 name|LAngleLoc
@@ -2128,54 +2177,10 @@ comment|/// \brief The source location of the right angle bracket ('>').
 name|SourceLocation
 name|RAngleLoc
 decl_stmt|;
-union|union
-block|{
 comment|/// \brief The number of template arguments in TemplateArgs.
-comment|/// The actual template arguments (if any) are stored after the
-comment|/// ExplicitTemplateArgumentList structure.
 name|unsigned
 name|NumTemplateArgs
 decl_stmt|;
-comment|/// Force ASTTemplateArgumentListInfo to the right alignment
-comment|/// for the following array of TemplateArgumentLocs.
-name|llvm
-operator|::
-name|AlignedCharArray
-operator|<
-name|llvm
-operator|::
-name|AlignOf
-operator|<
-name|TemplateArgumentLoc
-operator|>
-operator|::
-name|Alignment
-operator|,
-literal|1
-operator|>
-name|Aligner
-expr_stmt|;
-block|}
-union|;
-comment|/// \brief Retrieve the template arguments
-name|TemplateArgumentLoc
-modifier|*
-name|getTemplateArgs
-parameter_list|()
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|TemplateArgumentLoc
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
 comment|/// \brief Retrieve the template arguments
 specifier|const
 name|TemplateArgumentLoc
@@ -2185,16 +2190,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|TemplateArgumentLoc
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -2233,22 +2233,98 @@ modifier|&
 name|List
 parameter_list|)
 function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Represents an explicit template argument list in C++, e.g.,
+end_comment
+
+begin_comment
+comment|/// the "<int>" in "sort<int>".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// It is intended to be used as a trailing object on AST nodes, and
+end_comment
+
+begin_comment
+comment|/// as such, doesn't contain the array of TemplateArgumentLoc itself,
+end_comment
+
+begin_comment
+comment|/// but expects the containing object to also provide storage for
+end_comment
+
+begin_comment
+comment|/// that.
+end_comment
+
+begin_struct
+struct|struct
+name|LLVM_ALIGNAS
+argument_list|(
+argument|LLVM_PTR_SIZE
+argument_list|)
+name|ASTTemplateKWAndArgsInfo
+block|{
+comment|/// \brief The source location of the left angle bracket ('<').
+name|SourceLocation
+name|LAngleLoc
+decl_stmt|;
+comment|/// \brief The source location of the right angle bracket ('>').
+name|SourceLocation
+name|RAngleLoc
+decl_stmt|;
+comment|/// \brief The source location of the template keyword; this is used
+comment|/// as part of the representation of qualified identifiers, such as
+comment|/// S<T>::template apply<T>.  Will be empty if this expression does
+comment|/// not have a template keyword.
+name|SourceLocation
+name|TemplateKWLoc
+decl_stmt|;
+comment|/// \brief The number of template arguments in TemplateArgs.
+name|unsigned
+name|NumTemplateArgs
+decl_stmt|;
 name|void
 name|initializeFrom
 parameter_list|(
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
 specifier|const
 name|TemplateArgumentListInfo
 modifier|&
 name|List
+parameter_list|,
+name|TemplateArgumentLoc
+modifier|*
+name|OutArgArray
 parameter_list|)
 function_decl|;
 name|void
 name|initializeFrom
 parameter_list|(
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
 specifier|const
 name|TemplateArgumentListInfo
 modifier|&
 name|List
+parameter_list|,
+name|TemplateArgumentLoc
+modifier|*
+name|OutArgArray
 parameter_list|,
 name|bool
 modifier|&
@@ -2264,177 +2340,31 @@ name|ContainsUnexpandedParameterPack
 parameter_list|)
 function_decl|;
 name|void
+name|initializeFrom
+parameter_list|(
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|)
+function_decl|;
+name|void
 name|copyInto
 argument_list|(
+specifier|const
+name|TemplateArgumentLoc
+operator|*
+name|ArgArray
+argument_list|,
 name|TemplateArgumentListInfo
 operator|&
 name|List
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|static
-name|std
-operator|::
-name|size_t
-name|sizeFor
-argument_list|(
-argument|unsigned NumTemplateArgs
-argument_list|)
-expr_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/// \brief Extends ASTTemplateArgumentListInfo with the source location
-end_comment
-
-begin_comment
-comment|/// information for the template keyword; this is used as part of the
-end_comment
-
-begin_comment
-comment|/// representation of qualified identifiers, such as S<T>::template apply<T>.
-end_comment
-
-begin_decl_stmt
-name|struct
-name|ASTTemplateKWAndArgsInfo
-range|:
-name|public
-name|ASTTemplateArgumentListInfo
-block|{
-typedef|typedef
-name|ASTTemplateArgumentListInfo
-name|Base
-typedef|;
-comment|// NOTE: the source location of the (optional) template keyword is
-comment|// stored after all template arguments.
-comment|/// \brief Get the source location of the template keyword.
-name|SourceLocation
-name|getTemplateKeywordLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|reinterpret_cast
-operator|<
-specifier|const
-name|SourceLocation
-operator|*
-operator|>
-operator|(
-name|getTemplateArgs
-argument_list|()
-operator|+
-name|NumTemplateArgs
-operator|)
-return|;
-block|}
-comment|/// \brief Sets the source location of the template keyword.
-name|void
-name|setTemplateKeywordLoc
-argument_list|(
-argument|SourceLocation TemplateKWLoc
-argument_list|)
-block|{
-operator|*
-name|reinterpret_cast
-operator|<
-name|SourceLocation
-operator|*
-operator|>
-operator|(
-name|getTemplateArgs
-argument_list|()
-operator|+
-name|NumTemplateArgs
-operator|)
-operator|=
-name|TemplateKWLoc
-block|;   }
-specifier|static
-specifier|const
-name|ASTTemplateKWAndArgsInfo
-operator|*
-name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|SourceLocation TemplateKWLoc
-argument_list|,
-argument|const TemplateArgumentListInfo&List
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|initializeFrom
-parameter_list|(
-name|SourceLocation
-name|TemplateKWLoc
-parameter_list|,
-specifier|const
-name|TemplateArgumentListInfo
-modifier|&
-name|List
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|initializeFrom
-parameter_list|(
-name|SourceLocation
-name|TemplateKWLoc
-parameter_list|,
-specifier|const
-name|TemplateArgumentListInfo
-modifier|&
-name|List
-parameter_list|,
-name|bool
-modifier|&
-name|Dependent
-parameter_list|,
-name|bool
-modifier|&
-name|InstantiationDependent
-parameter_list|,
-name|bool
-modifier|&
-name|ContainsUnexpandedParameterPack
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|initializeFrom
-parameter_list|(
-name|SourceLocation
-name|TemplateKWLoc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
-specifier|static
-name|std
-operator|::
-name|size_t
-name|sizeFor
-argument_list|(
-argument|unsigned NumTemplateArgs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
 specifier|const
 name|DiagnosticBuilder
 operator|&

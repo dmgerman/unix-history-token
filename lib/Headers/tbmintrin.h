@@ -6,23 +6,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__TBM__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"TBM instruction set is not enabled"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|__X86INTRIN_H
 end_ifndef
 
@@ -57,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("tbm")))
 end_define
 
 begin_define
@@ -69,7 +52,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(__builtin_ia32_bextri_u32((a), (b)))
+define|\
+value|((unsigned int)__builtin_ia32_bextri_u32((unsigned int)(a), \                                            (unsigned int)(b)))
 end_define
 
 begin_function
@@ -317,7 +301,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(__builtin_ia32_bextri_u64((a), (int)(b)))
+define|\
+value|((unsigned long long)__builtin_ia32_bextri_u64((unsigned long long)(a), \                                                  (unsigned long long)(b)))
 end_define
 
 begin_function

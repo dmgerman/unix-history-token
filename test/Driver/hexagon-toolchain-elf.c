@@ -12,15 +12,31 @@ comment|// ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK000 %s
+end_comment
+
+begin_comment
+comment|// CHECK000: "-cc1" {{.*}} "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/include"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
@@ -32,59 +48,11 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK001 %s
 end_comment
 
 begin_comment
-comment|// CHECK001: "-cc1" {{.*}} "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include"
+comment|// CHECK001: "-cc1" {{.*}} "-internal-isystem" "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/include/c++"
 end_comment
 
 begin_comment
-comment|// CHECK001:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include-fixed"
-end_comment
-
-begin_comment
-comment|// CHECK001:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include"
-end_comment
-
-begin_comment
-comment|// CHECK001-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
-end_comment
-
-begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK002 %s
-end_comment
-
-begin_comment
-comment|// CHECK002: "-cc1" {{.*}} "-internal-isystem" "[[INSTALL_DIR:.*]]/Inputs/hexagon_tree/qc/bin/../../gnu{{/|\\\\}}hexagon/include/c++/4.4.0"
-end_comment
-
-begin_comment
-comment|// CHECK002:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include"
-end_comment
-
-begin_comment
-comment|// CHECK002:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include-fixed"
-end_comment
-
-begin_comment
-comment|// CHECK002:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include"
-end_comment
-
-begin_comment
-comment|// CHECK002-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK001:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/include"
 end_comment
 
 begin_comment
@@ -100,15 +68,11 @@ comment|// ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
@@ -120,39 +84,23 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK003 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK010 %s
 end_comment
 
 begin_comment
-comment|// CHECK003: "-cc1"
+comment|// CHECK010: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK003-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include"
+comment|// CHECK010-NOT: "-internal-externc-isystem"
 end_comment
 
 begin_comment
-comment|// CHECK003-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include-fixed"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK003-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include"
-end_comment
-
-begin_comment
-comment|// CHECK003-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
@@ -164,87 +112,23 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK004 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK011 %s
 end_comment
 
 begin_comment
-comment|// CHECK004: "-cc1"
+comment|// CHECK011: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK004-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include"
+comment|// CHECK011-NOT: "-internal-externc-isystem"
 end_comment
 
 begin_comment
-comment|// CHECK004-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include-fixed"
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK004-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include"
-end_comment
-
-begin_comment
-comment|// CHECK004-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
-end_comment
-
-begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
-end_comment
-
-begin_comment
-comment|// RUN:   -nostdlibinc \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK005 %s
-end_comment
-
-begin_comment
-comment|// CHECK005: "-cc1"
-end_comment
-
-begin_comment
-comment|// CHECK005-NOT: "-internal-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include/c++/4.4.0"
-end_comment
-
-begin_comment
-comment|// CHECK005-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include"
-end_comment
-
-begin_comment
-comment|// CHECK005-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/lib/gcc/hexagon/4.4.0/include-fixed"
-end_comment
-
-begin_comment
-comment|// CHECK005-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include"
-end_comment
-
-begin_comment
-comment|// CHECK005-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
-end_comment
-
-begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
@@ -256,35 +140,23 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK006 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK012 %s
 end_comment
 
 begin_comment
-comment|// CHECK006: "-cc1"
+comment|// CHECK012: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK006-NOT: "-internal-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/hexagon/include/c++/4.4.0"
+comment|// CHECK012-DAG-NOT: "-internal-isystem"
 end_comment
 
 begin_comment
-comment|// CHECK006-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK012-DAG: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/include"
 end_comment
 
 begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// Test -march=<archname> -mcpu=<archname> -mv<number>
-end_comment
-
-begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf -fno-integrated-as    \
 end_comment
 
 begin_comment
@@ -296,7 +168,7 @@ comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
-comment|// RUN:   -march=hexagonv3 \
+comment|// RUN:   -nostdlibinc \
 end_comment
 
 begin_comment
@@ -304,31 +176,67 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK007 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK013 %s
 end_comment
 
 begin_comment
-comment|// CHECK007: "-cc1" {{.*}} "-target-cpu" "hexagonv3"
+comment|// CHECK013: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v3"
+comment|// CHECK013-DAG-NOT: "-internal-isystem"
 end_comment
 
 begin_comment
-comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv3"
+comment|// CHECK013-DAG-NOT: "-internal-externc-isystem"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// -----------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// Test -mcpu=<cpuname> -mv<number>
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// -----------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   -mcpu=hexagonv4 \
+end_comment
+
+begin_comment
+comment|// RUN:   %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK020 %s
+end_comment
+
+begin_comment
+comment|// CHECK020: "-cc1" {{.*}} "-target-cpu" "hexagonv4"
+end_comment
+
+begin_comment
+comment|// CHECK020: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v4/crt0
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
@@ -340,35 +248,27 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK008 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK021 %s
 end_comment
 
 begin_comment
-comment|// CHECK008: "-cc1" {{.*}} "-target-cpu" "hexagonv5"
+comment|// CHECK021: "-cc1" {{.*}} "-target-cpu" "hexagonv5"
 end_comment
 
 begin_comment
-comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v5"
+comment|// CHECK021: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v5/crt0
 end_comment
 
 begin_comment
-comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv5"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
-end_comment
-
-begin_comment
-comment|// RUN:   -mv2 \
+comment|// RUN:   -mcpu=hexagonv55 \
 end_comment
 
 begin_comment
@@ -376,31 +276,27 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK009 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK022 %s
 end_comment
 
 begin_comment
-comment|// CHECK009: "-cc1" {{.*}} "-target-cpu" "hexagonv2"
+comment|// CHECK022: "-cc1" {{.*}} "-target-cpu" "hexagonv55"
 end_comment
 
 begin_comment
-comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v2"
+comment|// CHECK022: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v55/crt0
 end_comment
 
 begin_comment
-comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv2"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -408,75 +304,15 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK010 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK023 %s
 end_comment
 
 begin_comment
-comment|// CHECK010: "-cc1" {{.*}} "-target-cpu" "hexagonv4"
+comment|// CHECK023: "-cc1" {{.*}} "-target-cpu" "hexagonv60"
 end_comment
 
 begin_comment
-comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v4"
-end_comment
-
-begin_comment
-comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv4"
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -march=hexagonv2 -target hexagon-unknown-elf \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V2 %s
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -mcpu=hexagonv2  -target hexagon-unknown-elf \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V2 %s
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -mv2             -target hexagon-unknown-elf \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V2 %s
-end_comment
-
-begin_comment
-comment|// CHECK-UNKNOWN-V2: error: unknown target CPU 'hexagonv2'
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -march=hexagonv3 -target hexagon-unknown-elf \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V3 %s
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -mcpu=hexagonv3  -target hexagon-unknown-elf \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V3 %s
-end_comment
-
-begin_comment
-comment|// RUN: not %clang -mv3             -target hexagon-unknown-elf \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 | FileCheck -check-prefix=CHECK-UNKNOWN-V3 %s
-end_comment
-
-begin_comment
-comment|// CHECK-UNKNOWN-V3: error: unknown target CPU 'hexagonv3'
+comment|// CHECK023: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0
 end_comment
 
 begin_comment
@@ -504,15 +340,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -520,71 +356,55 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK011 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK030 %s
 end_comment
 
 begin_comment
-comment|// CHECK011: "-cc1"
+comment|// CHECK030: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK030-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK030-NOT: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK011-NOT: "-static"
+comment|// CHECK030-NOT: "-shared"
 end_comment
 
 begin_comment
-comment|// CHECK011-NOT: "-shared"
+comment|// CHECK030: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK011: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK030: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK011: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK030: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK011: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK030: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK011: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK030: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK011: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK030: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK011: "-L{{.*}}/lib/gcc"
+comment|// CHECK030: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK011: "-L{{.*}}/hexagon/lib/v4"
-end_comment
-
-begin_comment
-comment|// CHECK011: "-L{{.*}}/hexagon/lib"
-end_comment
-
-begin_comment
-comment|// CHECK011: "{{[^"]+}}.o"
-end_comment
-
-begin_comment
-comment|// CHECK011: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK011: "{{.*}}/hexagon/lib/v4/fini.o"
+comment|// CHECK030: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
@@ -600,15 +420,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -616,75 +436,59 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK012 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK031 %s
 end_comment
 
 begin_comment
-comment|// CHECK012: "-cc1"
+comment|// CHECK031: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK031-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK031-NOT: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK012-NOT: "-static"
+comment|// CHECK031-NOT: "-shared"
 end_comment
 
 begin_comment
-comment|// CHECK012-NOT: "-shared"
+comment|// CHECK031: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK012: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK031: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK012: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK031: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK012: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK031: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK012: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK031: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK012: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK031: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK012: "-L{{.*}}/lib/gcc"
+comment|// CHECK031: "-lstdc++" "-lm"
 end_comment
 
 begin_comment
-comment|// CHECK012: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK031: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK012: "-L{{.*}}/hexagon/lib"
-end_comment
-
-begin_comment
-comment|// CHECK012: "{{[^"]+}}.o"
-end_comment
-
-begin_comment
-comment|// CHECK012: "-lstdc++" "-lm"
-end_comment
-
-begin_comment
-comment|// CHECK012: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK012: "{{.*}}/hexagon/lib/v4/fini.o"
+comment|// CHECK031: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
@@ -700,15 +504,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -720,67 +524,59 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK013 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK032 %s
 end_comment
 
 begin_comment
-comment|// CHECK013: "-cc1"
+comment|// CHECK032: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK032-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK032-NOT: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK013: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK032-NOT: "-shared"
 end_comment
 
 begin_comment
-comment|// CHECK013: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK032: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK013: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK032: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK013: "-Lone" "-Ltwo" "-Lthree"
+comment|// CHECK032: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK013: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK032: "-Lone" "-Ltwo" "-Lthree"
 end_comment
 
 begin_comment
-comment|// CHECK013: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK032: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK013: "-L{{.*}}/lib/gcc"
+comment|// CHECK032: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK013: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK032: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK013: "-L{{.*}}/hexagon/lib"
+comment|// CHECK032: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK013: "{{[^"]+}}.o"
-end_comment
-
-begin_comment
-comment|// CHECK013: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK013: "{{.*}}/hexagon/lib/v4/fini.o"
+comment|// CHECK032: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
@@ -796,15 +592,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -816,79 +612,63 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK014 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK033 %s
 end_comment
 
 begin_comment
-comment|// CHECK014: "-cc1"
+comment|// CHECK033: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK033-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK033: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK014: "-static"
+comment|// CHECK033: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK014: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK033: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK014: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK033: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK014: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK033: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK014: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK033: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK014: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK033: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK014: "-L{{.*}}/lib/gcc"
+comment|// CHECK033: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK014: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK033: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
-comment|// CHECK014: "-L{{.*}}/hexagon/lib"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK014: "{{[^"]+}}.o"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// CHECK014: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK014: "{{.*}}/hexagon/lib/v4/fini.o"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -900,111 +680,83 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK015 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK034 %s
 end_comment
 
 begin_comment
-comment|// CHECK015: "-cc1"
+comment|// CHECK034: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK034-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK034: "-shared" "-call_shared"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-shared" "-call_shared"
+comment|// CHECK034-NOT: crt0_standalone.o
 end_comment
 
 begin_comment
-comment|// CHECK015-NOT: crt0_standalone.o
+comment|// CHECK034-NOT: crt0.o
 end_comment
 
 begin_comment
-comment|// CHECK015-NOT: crt0.o
+comment|// CHECK034: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/G0/pic/initS.o"
 end_comment
 
 begin_comment
-comment|// CHECK015: "{{.*}}/hexagon/lib/v4/G0/initS.o"
+comment|// CHECK034: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/G0"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4/G0"
+comment|// CHECK034: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/lib/gcc/hexagon/4.4.0/G0"
+comment|// CHECK034: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK034: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK034: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/lib/gcc"
+comment|// CHECK034-NOT: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/hexagon/lib/v4/G0"
+comment|// CHECK034-NOT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/hexagon/lib/G0"
+comment|// CHECK034: "-lgcc"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK034: "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK015: "-L{{.*}}/hexagon/lib"
+comment|// CHECK034: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/G0/pic/finiS.o"
 end_comment
 
 begin_comment
-comment|// CHECK015: "{{[^"]+}}.o"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK015: "--start-group"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// CHECK015-NOT: "-lstandalone"
-end_comment
-
-begin_comment
-comment|// CHECK015-NOT: "-lc"
-end_comment
-
-begin_comment
-comment|// CHECK015: "-lgcc"
-end_comment
-
-begin_comment
-comment|// CHECK015: "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK015: "{{.*}}/hexagon/lib/v4/G0/finiS.o"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1020,99 +772,71 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK016 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK035 %s
 end_comment
 
 begin_comment
-comment|// CHECK016: "-cc1"
+comment|// CHECK035: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK035-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK035: "-shared" "-call_shared" "-static"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-shared" "-call_shared" "-static"
+comment|// CHECK035-NOT: crt0_standalone.o
 end_comment
 
 begin_comment
-comment|// CHECK016-NOT: crt0_standalone.o
+comment|// CHECK035-NOT: crt0.o
 end_comment
 
 begin_comment
-comment|// CHECK016-NOT: crt0.o
+comment|// CHECK035: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/G0/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK016: "{{.*}}/hexagon/lib/v4/G0/init.o"
+comment|// CHECK035: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/G0"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4/G0"
+comment|// CHECK035: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/lib/gcc/hexagon/4.4.0/G0"
+comment|// CHECK035: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK035: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK035: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/lib/gcc"
+comment|// CHECK035-NOT: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/hexagon/lib/v4/G0"
+comment|// CHECK035-NOT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/hexagon/lib/G0"
+comment|// CHECK035: "-lgcc"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK035: "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK016: "-L{{.*}}/hexagon/lib"
-end_comment
-
-begin_comment
-comment|// CHECK016: "{{[^"]+}}.o"
-end_comment
-
-begin_comment
-comment|// CHECK016: "--start-group"
-end_comment
-
-begin_comment
-comment|// CHECK016-NOT: "-lstandalone"
-end_comment
-
-begin_comment
-comment|// CHECK016-NOT: "-lc"
-end_comment
-
-begin_comment
-comment|// CHECK016: "-lgcc"
-end_comment
-
-begin_comment
-comment|// CHECK016: "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK016: "{{.*}}/hexagon/lib/v4/G0/fini.o"
+comment|// CHECK035: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/G0/fini.o"
 end_comment
 
 begin_comment
@@ -1128,15 +852,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1148,99 +872,83 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK017 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK036 %s
 end_comment
 
 begin_comment
-comment|// CHECK017: "-cc1"
+comment|// CHECK036: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK036-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK036-NOT: crt0_standalone.o
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: crt0_standalone.o
+comment|// CHECK036-NOT: crt0.o
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: crt0.o
+comment|// CHECK036-NOT: init.o
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: init.o
+comment|// CHECK036: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK017: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK036: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK017: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK036: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK017: "-L{{.*}}/lib/gcc"
+comment|// CHECK036-NOT: "-lstdc++"
 end_comment
 
 begin_comment
-comment|// CHECK017: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK036-NOT: "-lm"
 end_comment
 
 begin_comment
-comment|// CHECK017: "-L{{.*}}/hexagon/lib"
+comment|// CHECK036-NOT: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK017: "{{[^"]+}}.o"
+comment|// CHECK036-NOT: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "-lstdc++"
+comment|// CHECK036-NOT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "-lm"
+comment|// CHECK036-NOT: "-lgcc"
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "--start-group"
+comment|// CHECK036-NOT: "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "-lstandalone"
+comment|// CHECK036-NOT: fini.o
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "-lc"
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "-lgcc"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// CHECK017-NOT: "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK017-NOT: fini.o
-end_comment
-
-begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1252,99 +960,83 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK018 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK037 %s
 end_comment
 
 begin_comment
-comment|// CHECK018: "-cc1"
+comment|// CHECK037: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK037-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK037-NOT: crt0_standalone.o
 end_comment
 
 begin_comment
-comment|// CHECK018-NOT: crt0_standalone.o
+comment|// CHECK037-NOT: crt0.o
 end_comment
 
 begin_comment
-comment|// CHECK018-NOT: crt0.o
+comment|// CHECK037-NOT: init.o
 end_comment
 
 begin_comment
-comment|// CHECK018-NOT: init.o
+comment|// CHECK037: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK037: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK037: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-L{{.*}}/lib/gcc"
+comment|// CHECK037: "-lstdc++"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK037: "-lm"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-L{{.*}}/hexagon/lib"
+comment|// CHECK037: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK018: "{{[^"]+}}.o"
+comment|// CHECK037: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-lstdc++"
+comment|// CHECK037: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-lm"
+comment|// CHECK037: "-lgcc"
 end_comment
 
 begin_comment
-comment|// CHECK018: "--start-group"
+comment|// CHECK037: "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK018: "-lstandalone"
+comment|// CHECK037-NOT: fini.o
 end_comment
 
 begin_comment
-comment|// CHECK018: "-lc"
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK018: "-lgcc"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// CHECK018: "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK018-NOT: fini.o
-end_comment
-
-begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1356,87 +1048,71 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK019 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK038 %s
 end_comment
 
 begin_comment
-comment|// CHECK019: "-cc1"
+comment|// CHECK038: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK038-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK038: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK019: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK038: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK019: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK038: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK019: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK038: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK019: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK038: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK019: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK038: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK019: "-L{{.*}}/lib/gcc"
+comment|// CHECK038-NOT: "-lstdc++"
 end_comment
 
 begin_comment
-comment|// CHECK019: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK038-NOT: "-lm"
 end_comment
 
 begin_comment
-comment|// CHECK019: "-L{{.*}}/hexagon/lib"
+comment|// CHECK038-NOT: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK019: "{{[^"]+}}.o"
+comment|// CHECK038-NOT: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK019-NOT: "-lstdc++"
+comment|// CHECK038-NOT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK019-NOT: "-lm"
+comment|// CHECK038-NOT: "-lgcc"
 end_comment
 
 begin_comment
-comment|// CHECK019-NOT: "--start-group"
+comment|// CHECK038-NOT: "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK019-NOT: "-lstandalone"
-end_comment
-
-begin_comment
-comment|// CHECK019-NOT: "-lc"
-end_comment
-
-begin_comment
-comment|// CHECK019-NOT: "-lgcc"
-end_comment
-
-begin_comment
-comment|// CHECK019-NOT: "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK019: "{{.*}}/hexagon/lib/v4/fini.o"
+comment|// CHECK038: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
@@ -1452,15 +1128,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1472,99 +1148,83 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK020 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK039 %s
 end_comment
 
 begin_comment
-comment|// CHECK020: "-cc1"
+comment|// CHECK039: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK039-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK039-NOT: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK020-NOT: "-static"
+comment|// CHECK039-NOT: "-shared"
 end_comment
 
 begin_comment
-comment|// CHECK020-NOT: "-shared"
+comment|// CHECK039-NOT: crt0_standalone.o
 end_comment
 
 begin_comment
-comment|// CHECK020-NOT: crt0_standalone.o
+comment|// CHECK039: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK020: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK039: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK020: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK039: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK020: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK039: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK020: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK039: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK020: "-L{{.*}}/lib/gcc"
+comment|// CHECK039: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK020: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK039: "-lfirst" "-lsecond"
 end_comment
 
 begin_comment
-comment|// CHECK020: "-L{{.*}}/hexagon/lib"
+comment|// CHECK039-NOT: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK020: "{{[^"]+}}.o"
+comment|// CHECK039: "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK020: "--start-group"
+comment|// CHECK039: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
-comment|// CHECK020: "-lfirst" "-lsecond"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK020-NOT: "-lstandalone"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// CHECK020: "-lc" "-lgcc" "--end-group"
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
-comment|// CHECK020: "{{.*}}/hexagon/lib/v4/fini.o"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
-end_comment
-
-begin_comment
-comment|// RUN:   -moslib=first -moslib=second -moslib=standalone\
+comment|// RUN:   -moslib=first -moslib=second -moslib=standalone \
 end_comment
 
 begin_comment
@@ -1572,83 +1232,67 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK021 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK03A %s
 end_comment
 
 begin_comment
-comment|// CHECK021: "-cc1"
+comment|// CHECK03A: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK03A-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK03A-NOT: "-static"
 end_comment
 
 begin_comment
-comment|// CHECK021-NOT: "-static"
+comment|// CHECK03A-NOT: "-shared"
 end_comment
 
 begin_comment
-comment|// CHECK021-NOT: "-shared"
+comment|// CHECK03A: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK021: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK03A: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK021: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK03A: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK021: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK03A: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK021: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK03A: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK021: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK03A: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK021: "-L{{.*}}/lib/gcc"
+comment|// CHECK03A: "--start-group"
 end_comment
 
 begin_comment
-comment|// CHECK021: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK03A: "-lfirst" "-lsecond"
 end_comment
 
 begin_comment
-comment|// CHECK021: "-L{{.*}}/hexagon/lib"
+comment|// CHECK03A: "-lstandalone"
 end_comment
 
 begin_comment
-comment|// CHECK021: "{{[^"]+}}.o"
+comment|// CHECK03A: "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK021: "--start-group"
-end_comment
-
-begin_comment
-comment|// CHECK021: "-lfirst" "-lsecond"
-end_comment
-
-begin_comment
-comment|// CHECK021: "-lstandalone"
-end_comment
-
-begin_comment
-comment|// CHECK021: "-lc" "-lgcc" "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK021: "{{.*}}/hexagon/lib/v4/fini.o"
+comment|// CHECK03A: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
@@ -1664,15 +1308,15 @@ comment|// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -### -target hexagon-unknown-elf     \
+comment|// RUN: %clangxx -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1700,83 +1344,67 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK022 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK03B %s
 end_comment
 
 begin_comment
-comment|// CHECK022: "-cc1"
+comment|// CHECK03B: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
+comment|// CHECK03B-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK03B: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0_standalone.o"
 end_comment
 
 begin_comment
-comment|// CHECK022: "{{.*}}/hexagon/lib/v4/crt0_standalone.o"
+comment|// CHECK03B: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0.o"
 end_comment
 
 begin_comment
-comment|// CHECK022: "{{.*}}/hexagon/lib/v4/crt0.o"
+comment|// CHECK03B: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/init.o"
 end_comment
 
 begin_comment
-comment|// CHECK022: "{{.*}}/hexagon/lib/v4/init.o"
+comment|// CHECK03B: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-L{{.*}}/lib/gcc/hexagon/4.4.0/v4"
+comment|// CHECK03B: "-L{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-L{{.*}}/lib/gcc/hexagon/4.4.0"
+comment|// CHECK03B: "-s"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-L{{.*}}/lib/gcc"
+comment|// CHECK03B: "-Tbss" "0xdead" "-Tdata" "0xbeef" "-Ttext" "0xcafe"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-L{{.*}}/hexagon/lib/v4"
+comment|// CHECK03B: "-t"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-L{{.*}}/hexagon/lib"
+comment|// CHECK03B: "-u" "Foo" "-undefined" "Bar"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-Tbss" "0xdead" "-Tdata" "0xbeef" "-Ttext" "0xcafe"
+comment|// CHECK03B: "{{[^"]+}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-s"
+comment|// CHECK03B: "-lstdc++" "-lm"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-t"
+comment|// CHECK03B: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
 end_comment
 
 begin_comment
-comment|// CHECK022: "-u" "Foo" "-undefined" "Bar"
-end_comment
-
-begin_comment
-comment|// CHECK022: "{{[^"]+}}.o"
-end_comment
-
-begin_comment
-comment|// CHECK022: "-lstdc++" "-lm"
-end_comment
-
-begin_comment
-comment|// CHECK022: "--start-group" "-lstandalone" "-lc" "-lgcc" "--end-group"
-end_comment
-
-begin_comment
-comment|// CHECK022: "{{.*}}/hexagon/lib/v4/fini.o"
+comment|// CHECK03B: "{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/fini.o"
 end_comment
 
 begin_comment
@@ -1792,15 +1420,15 @@ comment|// ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1808,43 +1436,31 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK023 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK040 %s
 end_comment
 
 begin_comment
-comment|// CHECK023:      "-cc1"
+comment|// CHECK040:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK023:        "-mrelocation-model" "static"
+comment|// CHECK040-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK040-NOT:  "-G{{[0-9]+}}"
 end_comment
 
 begin_comment
-comment|// CHECK023-NOT:    "-G{{[0-9]+}}"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// CHECK023-NOT:    "-G{{[0-9]+}}"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1856,19 +1472,19 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK024 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK041 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1880,51 +1496,43 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK024 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK041 %s
 end_comment
 
 begin_comment
-comment|// CHECK024:      "-cc1"
+comment|// CHECK041:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK024-NOT:    "-mrelocation-model" "static"
+comment|// CHECK041-NOT:  "-mrelocation-model" "static"
 end_comment
 
 begin_comment
-comment|// CHECK024:        "-pic-level" "{{[12]}}"
+comment|// CHECK041:      "-pic-level" "{{[12]}}"
 end_comment
 
 begin_comment
-comment|// CHECK024:        "-mllvm" "-hexagon-small-data-threshold=0"
+comment|// CHECK041:      "-mllvm" "-hexagon-small-data-threshold=0"
 end_comment
 
 begin_comment
-comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK041-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK024:        "-G0"
+comment|// CHECK041:      "-G0"
 end_comment
 
 begin_comment
-comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// RUN: %clang -### -target hexagon-unknown-elf -fno-integrated-as \
 end_comment
 
 begin_comment
-comment|// CHECK024:        "-G0"
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1936,19 +1544,19 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK025 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK042 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf -fno-integrated-as \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1960,19 +1568,19 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK025 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK042 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf -fno-integrated-as \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -1984,35 +1592,35 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK025 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK042 %s
 end_comment
 
 begin_comment
-comment|// CHECK025:      "-cc1"
+comment|// CHECK042:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK025:        "-mrelocation-model" "static"
+comment|// CHECK042:      "-mrelocation-model" "static"
 end_comment
 
 begin_comment
-comment|// CHECK025:        "-mllvm" "-hexagon-small-data-threshold=8"
+comment|// CHECK042:      "-mllvm" "-hexagon-small-data-threshold=8"
 end_comment
 
 begin_comment
-comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK042-NEXT: llvm-mc
 end_comment
 
 begin_comment
-comment|// CHECK025:        "-G8"
+comment|// CHECK042:      "-gpsize=8"
 end_comment
 
 begin_comment
-comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK042-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK025:        "-G8"
+comment|// CHECK042:      "-G8"
 end_comment
 
 begin_comment
@@ -2028,15 +1636,15 @@ comment|// ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -2048,35 +1656,31 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK026 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK050 %s
 end_comment
 
 begin_comment
-comment|// CHECK026:      "-cc1"
+comment|// CHECK050:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK050-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK050:      "-pie"
 end_comment
 
 begin_comment
-comment|// CHECK026:        "-pie"
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -2088,75 +1692,19 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK027 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK051 %s
 end_comment
 
 begin_comment
-comment|// CHECK027:      "-cc1"
+comment|// CHECK051:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK051-NEXT: hexagon-link
 end_comment
 
 begin_comment
-comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
-end_comment
-
-begin_comment
-comment|// CHECK027-NOT:    "-pie"
-end_comment
-
-begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// Misc Defaults
-end_comment
-
-begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK028 %s
-end_comment
-
-begin_comment
-comment|// CHECK028:      "-cc1"
-end_comment
-
-begin_comment
-comment|// CHECK028:        "-mqdsp6-compat"
-end_comment
-
-begin_comment
-comment|// CHECK028:        "-Wreturn-type"
-end_comment
-
-begin_comment
-comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
-end_comment
-
-begin_comment
-comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK051-NOT:  "-pie"
 end_comment
 
 begin_comment
@@ -2172,15 +1720,15 @@ comment|// ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
+comment|// RUN: %clang -### -target hexagon-unknown-elf -fno-integrated-as    \
 end_comment
 
 begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
 end_comment
 
 begin_comment
-comment|// RUN:   --gcc-toolchain="" \
+comment|// RUN:   -mcpu=hexagonv60 \
 end_comment
 
 begin_comment
@@ -2200,23 +1748,63 @@ comment|// RUN:   %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK029 %s
+comment|// RUN:   | FileCheck -check-prefix=CHECK060 %s
 end_comment
 
 begin_comment
-comment|// CHECK029:      "-cc1"
+comment|// CHECK060:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
+comment|// CHECK060-NEXT: llvm-mc
 end_comment
 
 begin_comment
-comment|// CHECK029:      "--noexecstack" "--trap" "--keep-locals"
+comment|// CHECK060:      "--noexecstack" "--trap" "--keep-locals"
 end_comment
 
 begin_comment
-comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
+comment|// CHECK060-NEXT: hexagon-link
+end_comment
+
+begin_comment
+comment|// -----------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// Misc Defaults
+end_comment
+
+begin_comment
+comment|// -----------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target hexagon-unknown-elf \
+end_comment
+
+begin_comment
+comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/Tools/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   -mcpu=hexagonv60 \
+end_comment
+
+begin_comment
+comment|// RUN:   %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK070 %s
+end_comment
+
+begin_comment
+comment|// CHECK070:      "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK070:      "-Wreturn-type"
 end_comment
 
 end_unit

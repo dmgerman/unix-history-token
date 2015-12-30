@@ -67,7 +67,7 @@ argument_list|(
 name|src
 argument_list|)
 decl_stmt|;
-comment|// CHECK: call<2 x i64> @llvm.arm.neon.vld1.v2i64
+comment|// CHECK: call<2 x i64> @llvm.arm.neon.vld1.v2i64.p0i8
 name|vst1q_lane_u64
 argument_list|(
 name|dst
@@ -79,7 +79,7 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: bitcast<16 x i8> %{{.*}} to<2 x i64>
 comment|// CHECK: shufflevector<2 x i64>
-comment|// CHECK: call void @llvm.arm.neon.vst1.v1i64
+comment|// CHECK: call void @llvm.arm.neon.vst1.p0i8.v1i64
 block|}
 end_function
 
@@ -109,7 +109,7 @@ argument_list|(
 name|src1
 argument_list|)
 decl_stmt|;
-comment|// CHECK: call<2 x i64> @llvm.arm.neon.vld1.v2i64
+comment|// CHECK: call<2 x i64> @llvm.arm.neon.vld1.v2i64.p0i8
 name|q
 operator|=
 name|vld1q_lane_u64
@@ -122,7 +122,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shufflevector<2 x i64>
-comment|// CHECK: call<1 x i64> @llvm.arm.neon.vld1.v1i64
+comment|// CHECK: call<1 x i64> @llvm.arm.neon.vld1.v1i64.p0i8
 comment|// CHECK: shufflevector<1 x i64>
 operator|*
 name|dst

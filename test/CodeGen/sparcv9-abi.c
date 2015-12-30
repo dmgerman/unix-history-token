@@ -591,9 +591,9 @@ name|c
 condition|)
 block|{
 comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
-comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i32 8
+comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr inbounds i8, i8* %[[CUR]], i64 8
 comment|// CHECK-DAG: store i8* %[[NXT]], i8** %ap
-comment|// CHECK-DAG: %[[EXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i32 4
+comment|// CHECK-DAG: %[[EXT:[^ ]+]] = getelementptr inbounds i8, i8* %[[CUR]], i64 4
 comment|// CHECK-DAG: %[[ADR:[^ ]+]] = bitcast i8* %[[EXT]] to i32*
 comment|// CHECK-DAG: load i32, i32* %[[ADR]]
 comment|// CHECK: br
@@ -611,7 +611,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
-comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i32 8
+comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr inbounds i8, i8* %[[CUR]], i64 8
 comment|// CHECK-DAG: store i8* %[[NXT]], i8** %ap
 comment|// CHECK-DAG: %[[ADR:[^ ]+]] = bitcast i8* %[[CUR]] to i64*
 comment|// CHECK-DAG: load i64, i64* %[[ADR]]
@@ -630,7 +630,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
-comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i32 8
+comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr inbounds i8, i8* %[[CUR]], i64 8
 comment|// CHECK-DAG: store i8* %[[NXT]], i8** %ap
 comment|// CHECK-DAG: %[[ADR:[^ ]+]] = bitcast i8* %[[CUR]] to %struct.tiny*
 comment|// CHECK: br
@@ -651,7 +651,7 @@ name|a
 expr_stmt|;
 break|break;
 comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
-comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i32 16
+comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr inbounds i8, i8* %[[CUR]], i64 16
 comment|// CHECK-DAG: store i8* %[[NXT]], i8** %ap
 comment|// CHECK-DAG: %[[ADR:[^ ]+]] = bitcast i8* %[[CUR]] to %struct.small*
 comment|// CHECK: br
@@ -673,7 +673,7 @@ name|a
 expr_stmt|;
 break|break;
 comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
-comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i32 8
+comment|// CHECK-DAG: %[[NXT:[^ ]+]] = getelementptr inbounds i8, i8* %[[CUR]], i64 8
 comment|// CHECK-DAG: store i8* %[[NXT]], i8** %ap
 comment|// CHECK-DAG: %[[IND:[^ ]+]] = bitcast i8* %[[CUR]] to %struct.medium**
 comment|// CHECK-DAG: %[[ADR:[^ ]+]] = load %struct.medium*, %struct.medium** %[[IND]]

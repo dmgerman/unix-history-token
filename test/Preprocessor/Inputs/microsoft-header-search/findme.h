@@ -8,7 +8,7 @@ end_pragma
 begin_error
 error|#
 directive|error
-error|Wrong findme.h included, MSVC header search incorrect
+error|Wrong findme.h included, Microsoft header search incorrect
 end_error
 
 end_unit

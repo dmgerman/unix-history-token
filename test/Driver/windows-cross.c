@@ -95,5 +95,81 @@ begin_comment
 comment|// CHECK-LIBSTDCXX:  "-internal-isystem" "{{.*}}/usr/include/c++" "-internal-isystem" "{{.*}}/usr/include/c++/armv7--windows-itanium" "-internal-isystem" "{{.*}}/usr/include/c++/backwards"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=lld-link2 -shared -o shared.dll -x c++ %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:    | FileCheck %s --check-prefix CHECK-FUSE-LD
+end_comment
+
+begin_comment
+comment|// CHECK-FUSE-LD: "{{.*}}lld-link2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=lld-link2 -shared -o shared.dll -fsanitize=address -x c++ %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:    | FileCheck %s --check-prefix CHECK-SANITIZE-ADDRESS
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-ADDRESS: "-fsanitize=address"
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-ADDRESS: "{{.*}}clang_rt.asan_dll_thunk-arm.lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=lld-link2 -o test.exe -fsanitize=address -x c++ %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:    | FileCheck %s --check-prefix CHECK-SANITIZE-ADDRESS-EXE
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-ADDRESS-EXE: "-fsanitize=address"
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-ADDRESS-EXE: "{{.*}}clang_rt.asan_dynamic-arm.lib" "{{.*}}clang_rt.asan_dynamic_runtime_thunk-arm.lib" "--undefined" "__asan_seh_interceptor"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target i686-windows-itanium -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=lld-link2 -o test.exe -fsanitize=address -x c++ %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:    | FileCheck %s --check-prefix CHECK-SANITIZE-ADDRESS-EXE-X86
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-ADDRESS-EXE-X86: "-fsanitize=address"
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-ADDRESS-EXE-X86: "{{.*}}clang_rt.asan_dynamic-i686.lib" "{{.*}}clang_rt.asan_dynamic_runtime_thunk-i686.lib" "--undefined" "___asan_seh_interceptor"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=lld-link2 -shared -o shared.dll -fsanitize=tsan -x c++ %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:    | FileCheck %s --check-prefix CHECK-SANITIZE-TSAN
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-TSAN: error: unsupported argument 'tsan' to option 'fsanitize='
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-TSAN-NOT: "-fsanitize={{.*}}"
+end_comment
+
 end_unit
 

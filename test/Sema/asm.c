@@ -461,9 +461,6 @@ block|{
 name|int
 name|a
 decl_stmt|;
-name|char
-name|b
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -475,7 +472,7 @@ name|foo
 name|bar
 name|asm
 argument_list|(
-literal|"sp"
+literal|"esp"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -490,7 +487,7 @@ name|float
 name|baz
 name|asm
 argument_list|(
-literal|"sp"
+literal|"esp"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -498,6 +495,48 @@ end_decl_stmt
 begin_comment
 comment|// expected-error {{bad type for named register variable}}
 end_comment
+
+begin_decl_stmt
+specifier|register
+name|int
+name|r0
+name|asm
+argument_list|(
+literal|"edi"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{register 'edi' unsuitable for global register variables on this target}}
+end_comment
+
+begin_decl_stmt
+specifier|register
+name|long
+name|long
+name|r1
+name|asm
+argument_list|(
+literal|"esp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{size of register 'esp' does not match variable size}}
+end_comment
+
+begin_decl_stmt
+specifier|register
+name|int
+name|r2
+name|asm
+argument_list|(
+literal|"esp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|double
@@ -626,9 +665,27 @@ name|test16_foo
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(vector_size(
+literal|16
+argument|))
+argument_list|)
+name|int
+name|test16_bar
+typedef|;
+end_typedef
+
 begin_decl_stmt
-name|test16_foo
-name|x
+specifier|register
+name|int
+name|test16_baz
+name|asm
+argument_list|(
+literal|"esp"
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -637,12 +694,79 @@ name|void
 name|test16
 parameter_list|()
 block|{
-asm|__asm__("movl $5, %0"           : "=rm" (x.field2));
-comment|// expected-error {{reference to a bit-field in asm output with a memory constraint '=rm'}}
-asm|__asm__("movl $5, %0"           :           : "m" (x.field3));
-comment|// expected-error {{reference to a bit-field in asm input with a memory constraint 'm'}}
+name|test16_foo
+name|a
+decl_stmt|;
+name|test16_bar
+name|b
+decl_stmt|;
+asm|__asm__("movl $5, %0"           : "=rm" (a.field2));
+comment|// expected-error {{reference to a bit-field in asm input with a memory constraint '=rm'}}
+asm|__asm__("movl $5, %0"           :           : "m" (a.field3));
+comment|// expected-error {{reference to a bit-field in asm output with a memory constraint 'm'}}
+asm|__asm__("movl $5, %0"           : "=rm" (b[2]));
+comment|// expected-error {{reference to a vector element in asm input with a memory constraint '=rm'}}
+asm|__asm__("movl $5, %0"           :           : "m" (b[3]));
+comment|// expected-error {{reference to a vector element in asm output with a memory constraint 'm'}}
+asm|__asm__("movl $5, %0"           : "=rm" (test16_baz));
+comment|// expected-error {{reference to a global register variable in asm input with a memory constraint '=rm'}}
+asm|__asm__("movl $5, %0"           :           : "m" (test16_baz));
+comment|// expected-error {{reference to a global register variable in asm output with a memory constraint 'm'}}
 block|}
 end_function
 
+begin_function
+name|int
+name|test17
+parameter_list|(
+name|int
+name|t0
+parameter_list|)
+block|{
+name|int
+name|r0
+decl_stmt|,
+name|r1
+decl_stmt|;
+asm|__asm ("addl %2, %2\n\t"
+literal|"movl $123, %0"
+operator|:
+literal|"=a"
+operator|(
+name|r0
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|r1
+operator|)
+operator|:
+literal|"1"
+operator|(
+name|t0
+operator|)
+operator|,
+comment|// expected-note {{constraint '1' is already present here}}
+literal|"1"
+operator|(
+name|t0
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|// expected-error {{more than one input constraint matches the same output '1'}}
+end_comment
+
+begin_return
+return|return
+name|r0
+operator|+
+name|r1
+return|;
+end_return
+
+unit|}
 end_unit
 

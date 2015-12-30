@@ -34,11 +34,13 @@ name|int
 name|ui
 decl_stmt|;
 name|long
-name|l
+name|long
+name|ll
 decl_stmt|;
 name|unsigned
 name|long
-name|ul
+name|long
+name|ull
 decl_stmt|;
 name|float
 name|f
@@ -73,11 +75,11 @@ asm|("mov.b32 %0, %1;" : "=r"(ui) : "r"(ui));
 comment|// CHECK: i64 asm sideeffect "mov.b64 $0, $1;", "=l,l"
 asm|asm
 specifier|volatile
-asm|("mov.b64 %0, %1;" : "=l"(l) : "l"(l));
+asm|("mov.b64 %0, %1;" : "=l"(ll) : "l"(ll));
 comment|// CHECK: i64 asm sideeffect "mov.b64 $0, $1;", "=l,l"
 asm|asm
 specifier|volatile
-asm|("mov.b64 %0, %1;" : "=l"(ul) : "l"(ul));
+asm|("mov.b64 %0, %1;" : "=l"(ull) : "l"(ull));
 comment|// CHECK: float asm sideeffect "mov.b32 $0, $1;", "=f,f"
 asm|asm
 specifier|volatile

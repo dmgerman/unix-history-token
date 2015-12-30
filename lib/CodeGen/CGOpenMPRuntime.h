@@ -153,6 +153,9 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|Address
+decl_stmt|;
+name|class
 name|CodeGenFunction
 decl_stmt|;
 name|class
@@ -197,6 +200,10 @@ block|,
 comment|// Call to void __kmpc_critical(ident_t *loc, kmp_int32 global_tid,
 comment|// kmp_critical_name *crit);
 name|OMPRTL__kmpc_critical
+block|,
+comment|// Call to void __kmpc_critical_with_hint(ident_t *loc, kmp_int32
+comment|// global_tid, kmp_critical_name *crit, uintptr_t hint);
+name|OMPRTL__kmpc_critical_with_hint
 block|,
 comment|// Call to void __kmpc_end_critical(ident_t *loc, kmp_int32 global_tid,
 comment|// kmp_critical_name *crit);
@@ -321,6 +328,14 @@ block|,
 comment|// Call to kmp_int32 __kmpc_cancel(ident_t *loc, kmp_int32 global_tid,
 comment|// kmp_int32 cncl_kind);
 name|OMPRTL__kmpc_cancel
+block|,
+comment|//
+comment|// Offloading related calls
+comment|//
+comment|// Call to int32_t __tgt_target(int32_t device_id, void *host_ptr, int32_t
+comment|// arg_num, void** args_base, void **args, size_t *arg_sizes, int32_t
+comment|// *arg_types);
+name|OMPRTL__tgt_target
 block|,   }
 enum|;
 comment|/// \brief Values for bit flags used in the ident_t to describe the fields.
@@ -400,15 +415,15 @@ expr_stmt|;
 name|OpenMPDefaultLocMapTy
 name|OpenMPDefaultLocMap
 decl_stmt|;
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getOrCreateDefaultLocation
-argument_list|(
-argument|OpenMPLocationFlags Flags
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|OpenMPLocationFlags
+name|Flags
+parameter_list|)
+function_decl|;
+name|public
+label|:
 comment|/// \brief Describes ident structure that describes a source location.
 comment|/// All descriptions are taken from
 comment|/// http://llvm.org/svn/llvm-project/openmp/trunk/runtime/src/kmp.h
@@ -456,6 +471,8 @@ comment|/// and a pair of line numbers that delimit the construct.
 name|IdentField_PSource
 block|}
 enum|;
+name|private
+label|:
 name|llvm
 operator|::
 name|StructType
@@ -714,17 +731,17 @@ expr_stmt|;
 comment|/// \brief Emits address of the word in a memory where current thread id is
 comment|/// stored.
 name|virtual
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|emitThreadIDAddress
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Gets thread id value for the current thread.
 comment|///
 name|llvm
@@ -788,10 +805,7 @@ name|CodeGenFunction
 operator|&
 name|CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|VDAddr
 argument_list|,
 name|llvm
@@ -914,7 +928,7 @@ comment|/// variables captured in a record which address is stored in \a
 comment|/// CapturedStruct.
 comment|/// \param OutlinedFn Outlined function to be run in parallel threads. Type of
 comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
-comment|/// \param CapturedStruct A pointer to the record with the references to
+comment|/// \param CapturedVars A pointer to the record with the references to
 comment|/// variables used in \a OutlinedFn function.
 comment|/// \param IfCond Condition in the associated 'if' clause, if it was
 comment|/// specified, nullptr otherwise.
@@ -936,11 +950,14 @@ name|Value
 operator|*
 name|OutlinedFn
 argument_list|,
+name|ArrayRef
+operator|<
 name|llvm
 operator|::
 name|Value
 operator|*
-name|CapturedStruct
+operator|>
+name|CapturedVars
 argument_list|,
 specifier|const
 name|Expr
@@ -952,6 +969,7 @@ comment|/// \brief Emits a critical region.
 comment|/// \param CriticalName Name of the critical region.
 comment|/// \param CriticalOpGen Generator for the statement associated with the given
 comment|/// critical region.
+comment|/// \param Hint Value of the 'hint' clause (optional).
 name|virtual
 name|void
 name|emitCriticalRegion
@@ -970,6 +988,13 @@ name|CriticalOpGen
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Hint
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Emits a master region.
@@ -1095,13 +1120,18 @@ name|OrderedOpGen
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|bool
+name|IsThreads
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit an implicit/explicit barrier for OpenMP threads.
 comment|/// \param Kind Directive for which this implicit barrier call must be
 comment|/// generated. Must be OMPD_barrier for explicit barrier generation.
-comment|/// \param CheckForCancel true if check for possible cancellation must be
-comment|/// performed, false otherwise.
+comment|/// \param EmitChecks true if need to emit checks for cancellation barriers.
+comment|/// \param ForceSimpleCall true simple barrier call must be emitted, false if
+comment|/// runtime class decides which one to emit (simple or with cancellation
+comment|/// checks).
 comment|///
 name|virtual
 name|void
@@ -1118,9 +1148,14 @@ name|OpenMPDirectiveKind
 name|Kind
 parameter_list|,
 name|bool
-name|CheckForCancel
+name|EmitChecks
 init|=
 name|true
+parameter_list|,
+name|bool
+name|ForceSimpleCall
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Check if the specified \a ScheduleKind is static non-chunked.
@@ -1153,6 +1188,44 @@ name|ScheduleKind
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
+name|void
+name|emitForDispatchInit
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|OpenMPScheduleClauseKind
+name|SchedKind
+argument_list|,
+name|unsigned
+name|IVSize
+argument_list|,
+name|bool
+name|IVSigned
+argument_list|,
+name|bool
+name|Ordered
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|UB
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Chunk
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// \brief Call the appropriate runtime routine to initialize it before start
 comment|/// of loop.
 comment|///
@@ -1179,7 +1252,7 @@ comment|/// For the default (nullptr) value, the chunk 1 will be used.
 comment|///
 name|virtual
 name|void
-name|emitForInit
+name|emitForStaticInit
 argument_list|(
 name|CodeGenFunction
 operator|&
@@ -1200,28 +1273,16 @@ argument_list|,
 name|bool
 name|Ordered
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|IL
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|LB
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|UB
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|ST
 argument_list|,
 name|llvm
@@ -1306,13 +1367,13 @@ argument|unsigned IVSize
 argument_list|,
 argument|bool IVSigned
 argument_list|,
-argument|llvm::Value *IL
+argument|Address IL
 argument_list|,
-argument|llvm::Value *LB
+argument|Address LB
 argument_list|,
-argument|llvm::Value *UB
+argument|Address UB
 argument_list|,
-argument|llvm::Value *ST
+argument|Address ST
 argument_list|)
 expr_stmt|;
 comment|/// \brief Emits call to void __kmpc_push_num_threads(ident_t *loc, kmp_int32
@@ -1361,21 +1422,25 @@ comment|/// \param VDAddr Address of the global variable \a VD.
 comment|/// \param Loc Location of the reference to threadprivate var.
 comment|/// \return Address of the threadprivate variable for the current thread.
 name|virtual
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getAddrOfThreadPrivate
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|const VarDecl *VD
-argument_list|,
-argument|llvm::Value *VDAddr
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|Address
+name|VDAddr
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a code for initialization of threadprivate variable. It emits
 comment|/// a call to runtime library which adds initial value to the newly created
 comment|/// threadprivate variable (if it is not constant) and registers destructor
@@ -1393,7 +1458,7 @@ name|emitThreadPrivateVarDefinition
 argument_list|(
 argument|const VarDecl *VD
 argument_list|,
-argument|llvm::Value *VDAddr
+argument|Address VDAddr
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -1511,10 +1576,7 @@ argument_list|,
 name|QualType
 name|SharedsTy
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|Shareds
 argument_list|,
 specifier|const
@@ -1582,6 +1644,8 @@ comment|///
 comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
 comment|/// is a directive itself, for combined - its innermost directive).
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
+comment|/// \param HasCancel true if region has inner cancel directive, false
+comment|/// otherwise.
 name|virtual
 name|void
 name|emitInlinedDirective
@@ -1597,6 +1661,11 @@ specifier|const
 name|RegionCodeGenTy
 modifier|&
 name|CodeGen
+parameter_list|,
+name|bool
+name|HasCancel
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit a code for reduction clause. Next code should be emitted for
@@ -1630,6 +1699,7 @@ comment|/// default:;
 comment|/// }
 comment|/// \endcode
 comment|///
+comment|/// \param Privates List of private copies for original reduction arguments.
 comment|/// \param LHSExprs List of LHS in \a ReductionOps reduction operations.
 comment|/// \param RHSExprs List of RHS in \a ReductionOps reduction operations.
 comment|/// \param ReductionOps List of reduction operations in form 'LHS binop RHS'
@@ -1646,6 +1716,14 @@ name|CGF
 argument_list|,
 name|SourceLocation
 name|Loc
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|Privates
 argument_list|,
 name|ArrayRef
 operator|<
@@ -1711,6 +1789,8 @@ name|CancelRegion
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit code for 'cancel' construct.
+comment|/// \param IfCond Condition in the associated 'if' clause, if it was
+comment|/// specified, nullptr otherwise.
 comment|/// \param CancelRegion Region kind for which the cancel must be emitted.
 comment|///
 name|virtual
@@ -1724,10 +1804,85 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|IfCond
+parameter_list|,
 name|OpenMPDirectiveKind
 name|CancelRegion
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit outilined function for 'target' directive.
+comment|/// \param D Directive to emit.
+comment|/// \param CodeGen Code generation sequence for the \a D directive.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitTargetOutlinedFunction
+argument_list|(
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|RegionCodeGenTy
+operator|&
+name|CodeGen
+argument_list|)
+expr_stmt|;
+comment|/// \brief Emit the target offloading code associated with \a D. The emitted
+comment|/// code attempts offloading the execution to the device, an the event of
+comment|/// a failure it executes the host version outlined in \a OutlinedFn.
+comment|/// \param D Directive to emit.
+comment|/// \param OutlinedFn Host version of the code to be offloaded.
+comment|/// \param IfCond Expression evaluated in if clause associated with the target
+comment|/// directive, or null if no if clause is used.
+comment|/// \param Device Expression evaluated in device clause associated with the
+comment|/// target directive, or null if no device clause is used.
+comment|/// \param CapturedVars Values captured in the current region.
+name|virtual
+name|void
+name|emitTargetCall
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OutlinedFn
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|IfCond
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Device
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|CapturedVars
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

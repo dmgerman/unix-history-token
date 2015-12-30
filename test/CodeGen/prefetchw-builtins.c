@@ -21,7 +21,27 @@ end_include
 
 begin_function
 name|void
-name|prefetch_w
+name|test_m_prefetch
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+name|_m_prefetch
+argument_list|(
+name|p
+argument_list|)
+return|;
+comment|// CHECK-LABEL: define void @test_m_prefetch
+comment|// CHECK: call void @llvm.prefetch({{.*}}, i32 0, i32 3, i32 1)
+block|}
+end_function
+
+begin_function
+name|void
+name|test_m_prefetch_w
 parameter_list|(
 name|void
 modifier|*
@@ -34,7 +54,7 @@ argument_list|(
 name|p
 argument_list|)
 return|;
-comment|// CHECK: @prefetch_w
+comment|// CHECK-LABEL: define void @test_m_prefetch_w
 comment|// CHECK: call void @llvm.prefetch({{.*}}, i32 1, i32 3, i32 1)
 block|}
 end_function

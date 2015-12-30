@@ -768,7 +768,7 @@ comment|// SPARC: clang{{.*}}" "-cc1" "-triple" "sparc--netbsd"
 end_comment
 
 begin_comment
-comment|// SPARC: as{{.*}}" "-32" "-o"
+comment|// SPARC: as{{.*}}" "-32" "-Av8" "-o"
 end_comment
 
 begin_comment

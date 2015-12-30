@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// RUN: touch %t.o
 end_comment
 

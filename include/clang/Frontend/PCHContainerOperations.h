@@ -102,22 +102,13 @@ name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
-name|HeaderSearchOptions
-decl_stmt|;
-name|class
-name|LangOptions
-decl_stmt|;
-name|class
-name|PreprocessorOptions
-decl_stmt|;
-name|class
-name|TargetOptions
+name|CompilerInstance
 decl_stmt|;
 struct|struct
 name|PCHBuffer
 block|{
-name|bool
-name|IsComplete
+name|uint64_t
+name|Signature
 decl_stmt|;
 name|llvm
 operator|::
@@ -129,6 +120,9 @@ literal|0
 operator|>
 name|Data
 expr_stmt|;
+name|bool
+name|IsComplete
+decl_stmt|;
 block|}
 struct|;
 comment|/// This abstract interface provides operations for creating
@@ -166,15 +160,7 @@ name|ASTConsumer
 operator|>
 name|CreatePCHContainerGenerator
 argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|,
-argument|const HeaderSearchOptions&HSO
-argument_list|,
-argument|const PreprocessorOptions&PPO
-argument_list|,
-argument|const TargetOptions&TO
-argument_list|,
-argument|const LangOptions&LO
+argument|CompilerInstance&CI
 argument_list|,
 argument|const std::string&MainFileName
 argument_list|,
@@ -264,15 +250,7 @@ name|ASTConsumer
 operator|>
 name|CreatePCHContainerGenerator
 argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|,
-argument|const HeaderSearchOptions&HSO
-argument_list|,
-argument|const PreprocessorOptions&PPO
-argument_list|,
-argument|const TargetOptions&TO
-argument_list|,
-argument|const LangOptions&LO
+argument|CompilerInstance&CI
 argument_list|,
 argument|const std::string&MainFileName
 argument_list|,

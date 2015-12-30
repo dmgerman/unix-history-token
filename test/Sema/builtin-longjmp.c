@@ -20,10 +20,6 @@ comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -emit-llvm< %s| Fil
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm-unknown-unknown -emit-llvm-only -verify %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple aarch64-unknown-unknown -emit-llvm-only -verify %s
 end_comment
 

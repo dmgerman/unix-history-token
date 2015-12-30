@@ -199,6 +199,45 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|__declspec
+argument_list|(
+argument|noalias
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|noalias_callee
+parameter_list|(
+name|int
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// CHECK: call void @noalias_callee({{.*}}) [[NA:#[0-9]+]]
+end_comment
+
+begin_function
+name|void
+name|noalias_caller
+parameter_list|(
+name|int
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|noalias_callee
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// CHECK: attributes [[NAKED]] = { naked noinline nounwind{{.*}} }
 end_comment
@@ -213,6 +252,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: attributes [[NR]] = { noreturn }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[NA]] = { argmemonly nounwind{{.*}} }
 end_comment
 
 end_unit

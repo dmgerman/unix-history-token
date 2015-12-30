@@ -925,5 +925,33 @@ directive|undef
 name|M7
 end_undef
 
+begin_define
+define|#
+directive|define
+name|UNREFERENCED_PARAMETER
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_function
+name|void
+name|unused_parm
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+comment|// Don't warn if the warning is introduced by a macro that's spelled
+comment|// UNREFERENCED_PARAMETER, as that's a commonly used macro in Windows headers.
+name|UNREFERENCED_PARAMETER
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

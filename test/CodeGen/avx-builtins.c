@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +avx -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -517,7 +517,8 @@ name|__a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_extract_epi32
-comment|// CHECK: extractelement<8 x i32> %{{.*}}, i32 0
+comment|// CHECK: [[SHIFT1:%[^ ]+]] = and i32 %{{.*}}, 7
+comment|// CHECK: extractelement<8 x i32> %{{.*}}, i32 [[SHIFT1]]
 return|return
 name|_mm256_extract_epi32
 argument_list|(
@@ -538,7 +539,8 @@ name|__a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_extract_epi16
-comment|// CHECK: extractelement<16 x i16> %{{.*}}, i32 0
+comment|// CHECK: [[SHIFT2:%[^ ]+]] = and i32 %{{.*}}, 15
+comment|// CHECK: extractelement<16 x i16> %{{.*}}, i32 [[SHIFT2]]
 return|return
 name|_mm256_extract_epi16
 argument_list|(
@@ -559,7 +561,8 @@ name|__a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_extract_epi8
-comment|// CHECK: extractelement<32 x i8> %{{.*}}, i32 0
+comment|// CHECK: [[SHIFT3:%[^ ]+]] = and i32 %{{.*}}, 31
+comment|// CHECK: extractelement<32 x i8> %{{.*}}, i32 [[SHIFT3]]
 return|return
 name|_mm256_extract_epi8
 argument_list|(
@@ -711,6 +714,48 @@ literal|42
 argument_list|,
 literal|3
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_mm256_undefined_ps
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: @test_mm256_undefined_ps
+comment|// CHECK: ret<8 x float> undef
+return|return
+name|_mm256_undefined_ps
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256d
+name|test_mm256_undefined_pd
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: @test_mm256_undefined_pd
+comment|// CHECK: ret<4 x double> undef
+return|return
+name|_mm256_undefined_pd
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_undefined_si256
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: @test_mm256_undefined_si256
+comment|// CHECK: ret<4 x i64> undef
+return|return
+name|_mm256_undefined_si256
+argument_list|()
 return|;
 block|}
 end_function

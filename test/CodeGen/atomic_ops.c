@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// XFAIL: hexagon
+comment|// XFAIL: hexagon,sparc
+end_comment
+
+begin_comment
+comment|//        (due to not having native load atomic support)
 end_comment
 
 begin_comment

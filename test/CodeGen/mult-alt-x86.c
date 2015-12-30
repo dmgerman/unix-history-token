@@ -253,10 +253,10 @@ end_comment
 
 begin_function
 name|void
-name|single_Y0
+name|single_Y
 parameter_list|()
 block|{
-comment|// Y constraint currently broken.
+comment|// 'Y' constraint currently broken.
 comment|//asm("foo %1,%0" : "=Y0" (mout0) : "Y0" (min1));
 comment|//asm("foo %1,%0" : "=Yz" (mout0) : "Yz" (min1));
 comment|//asm("foo %1,%0" : "=Yt" (mout0) : "Yt" (min1));
@@ -316,8 +316,12 @@ name|void
 name|single_L
 parameter_list|()
 block|{
-comment|// CHECK: asm "foo $1,$0", "=*m,L[[CLOBBERS]](i32* @mout0, i32 1)
-asm|asm("foo %1,%0" : "=m" (mout0) : "L" (1));
+comment|// CHECK: asm "foo $1,$0", "=*m,L[[CLOBBERS]](i32* @mout0, i32 255)
+asm|asm("foo %1,%0" : "=m" (mout0) : "L" (0xff));
+comment|// CHECK: asm "foo $1,$0", "=*m,L[[CLOBBERS]](i32* @mout0, i32 65535)
+asm|asm("foo %1,%0" : "=m" (mout0) : "L" (0xffff));
+comment|// CHECK: asm "foo $1,$0", "=*m,L[[CLOBBERS]](i32* @mout0, i32 -1)
+asm|asm("foo %1,%0" : "=m" (mout0) : "L" (0xffffffff));
 block|}
 end_function
 

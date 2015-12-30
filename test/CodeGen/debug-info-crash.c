@@ -4,7 +4,7 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -fblocks -g -S %s -o -
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -fblocks -debug-info-kind=limited -S %s -o -
 end_comment
 
 begin_comment

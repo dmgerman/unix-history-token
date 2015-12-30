@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -g -triple x86_64-apple-darwin %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -emit-llvm -debug-info-kind=limited -triple x86_64-apple-darwin %s -o - | FileCheck %s
 end_comment
 
 begin_function
@@ -13,7 +13,7 @@ parameter_list|)
 block|{
 comment|// CHECK: dbg.declare
 comment|// CHECK: dbg.declare({{.*}}, metadata ![[VAR:.*]], metadata ![[EXPR:.*]])
-comment|// CHECK: ![[VAR]] = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vla",{{.*}} line: [[@LINE+2]]
+comment|// CHECK: ![[VAR]] = !DILocalVariable(name: "vla",{{.*}} line: [[@LINE+2]]
 comment|// CHECK: ![[EXPR]] = !DIExpression(DW_OP_deref)
 name|int
 name|vla

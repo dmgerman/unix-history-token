@@ -146,7 +146,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s0_load_y
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s0_load_y:%.*]] = load i32, i32* {{.*}}, align 1
+comment|// CHECK-FUNCTIONS: [[s0_load_y:%.*]] = load i32, i32* {{.*}}, align 4
 end_comment
 
 begin_comment
@@ -634,7 +634,7 @@ name|ptr
 parameter_list|)
 block|{
 comment|// CHECK-FUNCTIONS:      [[PTR:%.*]] = getelementptr inbounds {{%.*}}, {{%.*}}* {{%.*}}, i32 0, i32 1
-comment|// CHECK-FUNCTIONS-NEXT: load i32, i32* [[PTR]], align 1
+comment|// CHECK-FUNCTIONS-NEXT: load i32, i32* [[PTR]], align 2
 return|return
 name|ptr
 operator|->

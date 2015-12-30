@@ -1252,6 +1252,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>5c273b7f0421359833fde3f06e8a5c07</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -1260,7 +1268,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3084,6 +3092,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>1d1fa98a8e9fbfa90777dac9fc2795a8</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3092,7 +3108,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>use2</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment

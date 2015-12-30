@@ -35,7 +35,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// CHECK: enum {
+comment|// CHECK: enum
 end_comment
 
 begin_enum

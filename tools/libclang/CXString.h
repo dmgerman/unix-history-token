@@ -195,6 +195,23 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
+name|CXStringSet
+modifier|*
+name|createSet
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Strings
+argument_list|)
+decl_stmt|;
 comment|/// \brief A string pool used for fast allocation/deallocation of strings.
 name|class
 name|CXStringPool

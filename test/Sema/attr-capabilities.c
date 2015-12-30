@@ -40,6 +40,51 @@ struct|;
 end_struct
 
 begin_comment
+comment|// Put capability attributes on unions
+end_comment
+
+begin_union
+union|union
+name|__attribute__
+argument_list|(
+argument|(capability(
+literal|"mutex"
+argument|))
+argument_list|)
+name|MutexUnion
+block|{
+name|int
+name|a
+decl_stmt|;
+name|char
+modifier|*
+name|b
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|int
+name|a
+decl_stmt|;
+name|char
+modifier|*
+name|b
+decl_stmt|;
+block|}
+name|__attribute__
+typedef|((
+name|capability
+typedef|("mutex")))
+name|MutexUnion2
+typedef|;
+end_typedef
+
+begin_comment
 comment|// Test an invalid capability name
 end_comment
 
@@ -76,7 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{'capability' attribute only applies to structs and typedefs}}
+comment|// expected-error {{'capability' attribute only applies to structs, unions, and typedefs}}
 end_comment
 
 begin_decl_stmt
@@ -95,7 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{'shared_capability' attribute only applies to structs and typedefs}}
+comment|// expected-error {{'shared_capability' attribute only applies to structs, unions, and typedefs}}
 end_comment
 
 begin_decl_stmt

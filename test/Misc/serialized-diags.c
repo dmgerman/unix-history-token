@@ -223,10 +223,6 @@ comment|// CHECK: +-{{.*[/\\]}}serialized-diags.c:20:15: note: expanded from mac
 end_comment
 
 begin_comment
-comment|// CHECK: +-Range: {{.*[/\\]}}serialized-diags.c:22:3 {{.*[/\\]}}serialized-diags.c:22:6
-end_comment
-
-begin_comment
 comment|// CHECK: +-Range: {{.*[/\\]}}serialized-diags.c:20:15 {{.*[/\\]}}serialized-diags.c:20:16
 end_comment
 

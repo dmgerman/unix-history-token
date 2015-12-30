@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -674,12 +680,14 @@ operator|>>
 name|TypeLoc
 expr_stmt|;
 comment|/// \brief All the callbacks in one container to simplify iteration.
-name|std
+name|llvm
 operator|::
-name|vector
+name|SmallPtrSet
 operator|<
 name|MatchCallback
 operator|*
+operator|,
+literal|16
 operator|>
 name|AllCallbacks
 expr_stmt|;

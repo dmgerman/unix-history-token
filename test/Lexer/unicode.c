@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -x c -std=c11 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -x c++ -std=c++11 %s
 end_comment
 
 begin_comment
@@ -120,7 +124,47 @@ name|Â©
 operator|.
 endif|#
 directive|endif
+comment|// A ð¹ by any other name....
+expr|extern
+name|int
+name|ð¹
+decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|int
+name|ðµ
+parameter_list|(
+name|int
+name|ð»
+parameter_list|)
+block|{
+return|return
+name|ð»
+operator|+
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|main
+parameter_list|()
+block|{
+name|int
+name|ð·
+init|=
+name|ðµ
+argument_list|(
+name|ð¹
+argument_list|)
+decl_stmt|;
+return|return
+name|ð·
+return|;
+block|}
+end_function
 
 end_unit
 

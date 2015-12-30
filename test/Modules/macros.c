@@ -8,15 +8,43 @@ comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -veri
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s -DALT
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s -detailed-preprocessing-record
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -DLOCAL_VISIBILITY -fmodules-local-submodule-visibility -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s
+comment|// RUN: not %clang_cc1 -E -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -E -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s -DALT
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s -detailed-preprocessing-record
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -E -fmodules -fimplicit-module-maps -x objective-c++ -fmodules-cache-path=%t -I %S/Inputs %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -DLOCAL_VISIBILITY -fmodules-local-submodule-visibility -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s
 end_comment
 
 begin_comment
@@ -45,10 +73,6 @@ end_comment
 
 begin_comment
 comment|// expected-note@Inputs/macros_left.h:14{{other definition of 'LEFT_RIGHT_DIFFERENT'}}
-end_comment
-
-begin_comment
-comment|// expected-note@Inputs/macros_left.h:11{{other definition of 'LEFT_RIGHT_DIFFERENT2'}}
 end_comment
 
 begin_decl_stmt
@@ -270,6 +294,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|INTEGER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INTEGER
+value|int
+end_define
+
 begin_comment
 comment|// Import left module (which also imports top)
 end_comment
@@ -278,6 +315,14 @@ begin_decl_stmt
 unit|@
 name|import
 name|macros_left
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|INTEGER
+name|my_integer
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -670,6 +715,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALT
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|tmp
+init|=
+name|TOP_OTHER_REDEF1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 unit|@
 name|import
@@ -711,6 +775,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|__debug
+name|macro
+name|TOP_OTHER_REDEF1
+end_pragma
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -741,11 +814,11 @@ comment|// expected-warning{{ambiguous expansion of macro 'TOP_OTHER_REDEF1'}}
 end_comment
 
 begin_comment
-comment|// expected-note@macros_top.h:19 {{expanding this definition}}
+comment|// expected-note@macros_other.h:4 {{expanding this definition}}
 end_comment
 
 begin_comment
-comment|// expected-note@macros_other.h:4 {{other definition}}
+comment|// expected-note@macros_top.h:19 {{other definition}}
 end_comment
 
 begin_ifndef

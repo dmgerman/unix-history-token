@@ -466,197 +466,6 @@ block|}
 end_function
 
 begin_function
-name|__m128i
-name|test_mm_minpos_epu16
-parameter_list|(
-name|__m128i
-name|x
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_minpos_epu16
-comment|// CHECK: @llvm.x86.sse41.phminposuw
-return|return
-name|_mm_minpos_epu16
-argument_list|(
-name|x
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128i
-name|test_mm_mpsadbw_epu8
-parameter_list|(
-name|__m128i
-name|x
-parameter_list|,
-name|__m128i
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_mpsadbw_epu8
-comment|// CHECK: @llvm.x86.sse41.mpsadbw
-return|return
-name|_mm_mpsadbw_epu8
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_dp_ps
-parameter_list|(
-name|__m128
-name|x
-parameter_list|,
-name|__m128
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_dp_ps
-comment|// CHECK: @llvm.x86.sse41.dpps
-return|return
-name|_mm_dp_ps
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_dp_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|__m128d
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_dp_pd
-comment|// CHECK: @llvm.x86.sse41.dppd
-return|return
-name|_mm_dp_pd
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_round_ps
-parameter_list|(
-name|__m128
-name|x
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_round_ps
-comment|// CHECK: @llvm.x86.sse41.round.ps
-return|return
-name|_mm_round_ps
-argument_list|(
-name|x
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_round_ss
-parameter_list|(
-name|__m128
-name|x
-parameter_list|,
-name|__m128
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_round_ss
-comment|// CHECK: @llvm.x86.sse41.round.ss
-return|return
-name|_mm_round_ss
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_round_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_round_pd
-comment|// CHECK: @llvm.x86.sse41.round.pd
-return|return
-name|_mm_round_pd
-argument_list|(
-name|x
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_round_sd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|__m128d
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_mm_round_sd
-comment|// CHECK: @llvm.x86.sse41.round.sd
-return|return
-name|_mm_round_sd
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|,
-literal|2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|test_storel_epi64
 parameter_list|(
@@ -771,172 +580,6 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|int
-name|test_extract_ps
-parameter_list|(
-name|__m128i
-name|__a
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_extract_ps
-comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
-return|return
-name|_mm_extract_ps
-argument_list|(
-name|__a
-argument_list|,
-literal|4
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|test_extract_epi8
-parameter_list|(
-name|__m128i
-name|__a
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_extract_epi8
-comment|// CHECK: extractelement<16 x i8> %{{.*}}, i32 0
-return|return
-name|_mm_extract_epi8
-argument_list|(
-name|__a
-argument_list|,
-literal|16
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|test_extract_epi32
-parameter_list|(
-name|__m128i
-name|__a
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_extract_epi32
-comment|// CHECK: extractelement<4 x i32> %{{.*}}, i32 0
-return|return
-name|_mm_extract_epi32
-argument_list|(
-name|__a
-argument_list|,
-literal|4
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_insert_epi32
-parameter_list|(
-name|__m128i
-name|__a
-parameter_list|,
-name|int
-name|b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_insert_epi32
-comment|// CHECK: insertelement<4 x i32> %{{.*}}, i32 %{{.*}}, i32 0
-name|_mm_insert_epi32
-argument_list|(
-name|__a
-argument_list|,
-name|b
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_blend_pd
-parameter_list|(
-name|__m128d
-name|V1
-parameter_list|,
-name|__m128d
-name|V2
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_blend_pd
-comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<2 x i32><i32 2, i32 1>
-return|return
-name|_mm_blend_pd
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_blend_ps
-parameter_list|(
-name|__m128
-name|V1
-parameter_list|,
-name|__m128
-name|V2
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_blend_ps
-comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 6, i32 3>
-return|return
-name|_mm_blend_ps
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-literal|5
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128i
-name|test_blend_epi16
-parameter_list|(
-name|__m128i
-name|V1
-parameter_list|,
-name|__m128i
-name|V2
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_blend_epi16
-comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> %{{.*}},<8 x i32><i32 0, i32 9, i32 2, i32 11, i32 4, i32 13, i32 6, i32 7>
-return|return
-name|_mm_blend_epi16
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-literal|42
-argument_list|)
-return|;
 block|}
 end_function
 
@@ -2177,51 +1820,129 @@ block|}
 end_function
 
 begin_function
-name|__m128i
-name|test_mm_alignr_epi8
-parameter_list|(
-name|__m128i
-name|a
-parameter_list|,
-name|__m128i
-name|b
-parameter_list|)
+name|__m128
+name|test_mm_undefined_ps
+parameter_list|()
 block|{
-comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> %{{.*}},<16 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17>
+comment|// CHECK-LABEL: @test_mm_undefined_ps
+comment|// CHECK: ret<4 x float> undef
 return|return
-name|_mm_alignr_epi8
-argument_list|(
-name|a
-argument_list|,
-name|b
-argument_list|,
-literal|2
-argument_list|)
+name|_mm_undefined_ps
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm_undefined_pd
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: @test_mm_undefined_pd
+comment|// CHECK: ret<2 x double> undef
+return|return
+name|_mm_undefined_pd
+argument_list|()
 return|;
 block|}
 end_function
 
 begin_function
 name|__m128i
-name|test2_mm_alignr_epi8
+name|test_mm_undefined_si128
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: @test_mm_undefined_si128
+comment|// CHECK: ret<2 x i64> undef
+return|return
+name|_mm_undefined_si128
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_add_si64
 parameter_list|(
-name|__m128i
-name|a
+name|__m64
+name|__a
 parameter_list|,
-name|__m128i
-name|b
+name|__m64
+name|__b
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> zeroinitializer,<16 x i32><i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16>
+comment|// CHECK-LABEL: @test_mm_add_si64
+comment|// CHECK @llvm.x86.mmx.padd.q(x86_mmx %{{.*}}, x86_mmx %{{.*}})
 return|return
-name|_mm_alignr_epi8
+name|_mm_add_si64
 argument_list|(
-name|a
+name|__a
 argument_list|,
-name|b
-argument_list|,
-literal|17
+name|__b
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_sub_si64
+parameter_list|(
+name|__m64
+name|__a
+parameter_list|,
+name|__m64
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_sub_si64
+comment|// CHECK @llvm.x86.mmx.psub.q(x86_mmx %{{.*}}, x86_mmx %{{.*}})
+return|return
+name|_mm_sub_si64
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_mul_su32
+parameter_list|(
+name|__m64
+name|__a
+parameter_list|,
+name|__m64
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_mul_su32
+comment|// CHECK @llvm.x86.mmx.pmulu.dq(x86_mmx %{{.*}}, x86_mmx %{{.*}})
+return|return
+name|_mm_mul_su32
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_pause
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: @test_mm_pause
+comment|// CHECK @llvm.x86.sse2.pause()
+return|return
+name|_mm_pause
+argument_list|()
 return|;
 block|}
 end_function

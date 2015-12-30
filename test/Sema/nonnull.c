@@ -797,7 +797,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|// expected-warning {{comparison of nonnull parameter 'pointer' equal to a null pointer is false on first encounter}}
+comment|// expected-warning {{comparison of nonnull parameter 'pointer' equal to a null pointer is 'false' on first encounter}}
 return|return
 literal|0
 return|;
@@ -833,7 +833,7 @@ operator|==
 name|NULL
 condition|)
 block|{}
-comment|// expected-warning {{comparison of nonnull parameter 'pv' equal to a null pointer is false on first encounter}}
+comment|// expected-warning {{comparison of nonnull parameter 'pv' equal to a null pointer is 'false' on first encounter}}
 block|}
 end_function
 
@@ -900,7 +900,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|// expected-warning {{comparison of nonnull parameter 'pointer' equal to a null pointer is false on first encounter}}
+comment|// expected-warning {{comparison of nonnull parameter 'pointer' equal to a null pointer is 'false' on first encounter}}
 return|return
 literal|0
 return|;
@@ -938,7 +938,7 @@ operator|==
 name|NULL
 condition|)
 block|{}
-comment|// expected-warning {{comparison of nonnull parameter 'pv' equal to a null pointer is false on first encounter}}
+comment|// expected-warning {{comparison of nonnull parameter 'pv' equal to a null pointer is 'false' on first encounter}}
 block|}
 end_function
 
@@ -1089,6 +1089,77 @@ comment|// No warning
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(returns_nonnull)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+modifier|*
+name|returns_nonnull_whee
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|returns_nonnull_warning_tests
+parameter_list|()
+block|{
+if|if
+condition|(
+name|returns_nonnull_whee
+argument_list|()
+operator|==
+name|NULL
+condition|)
+block|{}
+comment|// expected-warning {{comparison of nonnull function call 'returns_nonnull_whee()' equal to a null pointer is 'false' on first encounter}}
+if|if
+condition|(
+name|returns_nonnull_whee
+argument_list|()
+operator|!=
+name|NULL
+condition|)
+block|{}
+comment|// expected-warning {{comparison of nonnull function call 'returns_nonnull_whee()' not equal to a null pointer is 'true' on first encounter}}
+if|if
+condition|(
+name|returns_nonnull_whee
+argument_list|()
+condition|)
+block|{}
+comment|// expected-warning {{nonnull function call 'returns_nonnull_whee()' will evaluate to 'true' on first encounter}}
+if|if
+condition|(
+operator|!
+name|returns_nonnull_whee
+argument_list|()
+condition|)
+block|{}
+comment|// expected-warning {{nonnull function call 'returns_nonnull_whee()' will evaluate to 'true' on first encounter}}
+name|int
+name|and_again
+init|=
+operator|!
+name|returns_nonnull_whee
+argument_list|()
+decl_stmt|;
+comment|// expected-warning {{nonnull function call 'returns_nonnull_whee()' will evaluate to 'true' on first encounter}}
+name|and_again
+operator|=
+operator|!
+name|returns_nonnull_whee
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{nonnull function call 'returns_nonnull_whee()' will evaluate to 'true' on first encounter}}
+block|}
+end_function
 
 end_unit
 

@@ -225,7 +225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'ownership_takes' attribute only applies to functions}}
+comment|// expected-warning {{'ownership_takes' attribute only applies to non-K&R-style functions}}
 end_comment
 
 begin_function_decl
@@ -475,6 +475,49 @@ end_expr_stmt
 
 begin_comment
 comment|// OK, same index
+end_comment
+
+begin_function_decl
+name|void
+name|f17
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(ownership_takes
+parameter_list|(
+name|__
+parameter_list|,
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|f18
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(ownership_takes
+parameter_list|(
+name|foo
+parameter_list|,
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-warning {{'ownership_takes' attribute only applies to non-K&R-style functions}}
 end_comment
 
 end_unit

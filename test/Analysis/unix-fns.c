@@ -2210,6 +2210,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>5ef25c5c47db3dbfb329901d426452e7</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2218,7 +2226,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_open</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>6</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>6</string>
 end_comment
 
 begin_comment
@@ -2806,6 +2814,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>osx.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>173fbcac3fc64dbaec32768d4cfda250</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2814,7 +2830,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_dispatch_once</string
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>2</string>
 end_comment
 
 begin_comment
@@ -3130,6 +3146,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>1e2f657a65cf8ee3c3ac2227de05ade4</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3138,7 +3162,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_pthread_once</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>2</string>
 end_comment
 
 begin_comment
@@ -3454,6 +3478,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>0e841458f0cb7cf161d35f9db5862dcf</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3462,7 +3494,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>pr2899</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -3778,6 +3810,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>a267ff573c7e8b959a3f886677893eb0</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3786,7 +3826,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_calloc</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -4102,6 +4142,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>14eb72957baab3c63bac610a10e6f48b</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -4110,7 +4158,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_calloc2</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -4426,6 +4474,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>7f6f67ebe3d481aed7750005bea7e371</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -4434,7 +4490,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_realloc</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -4750,6 +4806,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>4941698efbd81601653dff10ef9c645b</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -4758,7 +4822,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_reallocf</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5074,6 +5138,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>b7ca3488e81d9d9d4b8dc545258ce97c</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5082,7 +5154,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_alloca</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5398,6 +5470,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>1ec52551362b070237f47f6bb6c3847d</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5406,7 +5486,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_builtin_alloca</strin
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -5722,6 +5802,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>675741e04c8d0071d280324e23f41d35</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5730,7 +5818,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_valloc</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>1</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>1</string>
 end_comment
 
 begin_comment
@@ -6046,6 +6134,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>osx.API</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>8ded1f2025c1e4a4bcd5302dc97006d9</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -6054,7 +6150,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_dispatch_once_in_macr
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>2</string>
 end_comment
 
 begin_comment
@@ -7686,6 +7782,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>5d3f4c433004c7a6d4a06aa30cc3ea85</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>location</key>
 end_comment
 
@@ -9231,6 +9335,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>265c4fd608dafee211bfa93d21c28866</string>
 end_comment
 
 begin_comment

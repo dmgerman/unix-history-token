@@ -272,7 +272,7 @@ comment|// CHECK-LD-RT: "-L[[SYSROOT]]/usr/lib"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-RT: libclang_rt.builtins-x86_64.a" "-lgcc_s"
+comment|// CHECK-LD-RT: libclang_rt.builtins-x86_64.a"
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ comment|// CHECK-LD-RT: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-RT: libclang_rt.builtins-x86_64.a" "-lgcc_s"
+comment|// CHECK-LD-RT: libclang_rt.builtins-x86_64.a"
 end_comment
 
 begin_comment
@@ -332,7 +332,7 @@ comment|// CHECK-LD-RT-ANDROID: "-dynamic-linker"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-RT-ANDROID: libclang_rt.builtins-arm-android.a" "-lgcc_s"
+comment|// CHECK-LD-RT-ANDROID: libclang_rt.builtins-arm-android.a"
 end_comment
 
 begin_comment
@@ -340,7 +340,7 @@ comment|// CHECK-LD-RT-ANDROID: "-lc"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-RT-ANDROID: libclang_rt.builtins-arm-android.a" "-lgcc_s"
+comment|// CHECK-LD-RT-ANDROID: libclang_rt.builtins-arm-android.a"
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ comment|// CHECK-LD-GCC: "-L[[SYSROOT]]/usr/lib"
 end_comment
 
 begin_comment
-comment|// CHECK-LD-GCC "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
+comment|// CHECK-LD-GCC: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
 end_comment
 
 begin_comment

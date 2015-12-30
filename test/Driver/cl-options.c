@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Don't attempt slash switches on msys bash.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// Note: %s must be preceded by --, otherwise it may be interpreted as a
 end_comment
 
@@ -244,7 +236,7 @@ comment|// RUN: %clang_cl /Ofoo -### -- %s 2>&1 | FileCheck -check-prefix=O %s
 end_comment
 
 begin_comment
-comment|// O: -Ofoo
+comment|// O: /Ofoo
 end_comment
 
 begin_comment
@@ -280,7 +272,19 @@ comment|// Oi_: -fno-builtin
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Os -### -- %s 2>&1 | FileCheck -check-prefix=Os %s
+comment|// RUN: %clang_cl /Os --target=i686-pc-windows-msvc -### -- %s 2>&1 | FileCheck -check-prefix=Os %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Os --target=x86_64-pc-windows-msvc -### -- %s 2>&1 | FileCheck -check-prefix=Os %s
+end_comment
+
+begin_comment
+comment|// Os-NOT: -mdisable-fp-elim
+end_comment
+
+begin_comment
+comment|// Os: -momit-leaf-frame-pointer
 end_comment
 
 begin_comment
@@ -288,7 +292,19 @@ comment|// Os: -Os
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Ot -### -- %s 2>&1 | FileCheck -check-prefix=Ot %s
+comment|// RUN: %clang_cl /Ot --target=i686-pc-windows-msvc -### -- %s 2>&1 | FileCheck -check-prefix=Ot %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Ot --target=x86_64-pc-windows-msvc -### -- %s 2>&1 | FileCheck -check-prefix=Ot %s
+end_comment
+
+begin_comment
+comment|// Ot-NOT: -mdisable-fp-elim
+end_comment
+
+begin_comment
+comment|// Ot: -momit-leaf-frame-pointer
 end_comment
 
 begin_comment
@@ -296,11 +312,39 @@ comment|// Ot: -O2
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Ox -### -- %s 2>&1 | FileCheck -check-prefix=Ox %s
+comment|// RUN: %clang_cl /Ox --target=i686-pc-windows-msvc -### -- %s 2>&1 | FileCheck -check-prefix=Ox %s
 end_comment
 
 begin_comment
-comment|// Ox: -O3
+comment|// RUN: %clang_cl /Ox --target=x86_64-pc-windows-msvc -### -- %s 2>&1 | FileCheck -check-prefix=Ox %s
+end_comment
+
+begin_comment
+comment|// Ox-NOT: -mdisable-fp-elim
+end_comment
+
+begin_comment
+comment|// Ox: -momit-leaf-frame-pointer
+end_comment
+
+begin_comment
+comment|// Ox: -O2
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl --target=i686-pc-win32 /O2sy- -### -- %s 2>&1 | FileCheck -check-prefix=PR24003 %s
+end_comment
+
+begin_comment
+comment|// PR24003: -mdisable-fp-elim
+end_comment
+
+begin_comment
+comment|// PR24003: -momit-leaf-frame-pointer
+end_comment
+
+begin_comment
+comment|// PR24003: -Os
 end_comment
 
 begin_comment
@@ -308,7 +352,7 @@ comment|// RUN: %clang_cl /Zs /Oy -- %s 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Oy- -### -- %s 2>&1 | FileCheck -check-prefix=Oy_ %s
+comment|// RUN: %clang_cl --target=i686-pc-win32 /Oy- -### -- %s 2>&1 | FileCheck -check-prefix=Oy_ %s
 end_comment
 
 begin_comment
@@ -456,15 +500,19 @@ comment|// RUN: %clang_cl /W3 -### -- %s 2>&1 | FileCheck -check-prefix=W1 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /W4 -### -- %s 2>&1 | FileCheck -check-prefix=W1 %s
+comment|// RUN: %clang_cl /W4 -### -- %s 2>&1 | FileCheck -check-prefix=W4 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Wall -### -- %s 2>&1 | FileCheck -check-prefix=W1 %s
+comment|// RUN: %clang_cl /Wall -### -- %s 2>&1 | FileCheck -check-prefix=W4 %s
 end_comment
 
 begin_comment
 comment|// W1: -Wall
+end_comment
+
+begin_comment
+comment|// W4: -WCL4
 end_comment
 
 begin_comment
@@ -580,7 +628,7 @@ comment|// For some warning ids, we can map from MSVC warning to Clang warning.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -wd4005 -wd4996 -wd4910 -### -- %s 2>&1 | FileCheck -check-prefix=Wno %s
+comment|// RUN: %clang_cl -wd4005 -wd4100 -wd4910 -wd4996 -### -- %s 2>&1 | FileCheck -check-prefix=Wno %s
 end_comment
 
 begin_comment
@@ -592,11 +640,15 @@ comment|// Wno: "-Wno-macro-redefined"
 end_comment
 
 begin_comment
-comment|// Wno: "-Wno-deprecated-declarations"
+comment|// Wno: "-Wno-unused-parameter"
 end_comment
 
 begin_comment
 comment|// Wno: "-Wno-dllexport-explicit-instantiation-decl"
+end_comment
+
+begin_comment
+comment|// Wno: "-Wno-deprecated-declarations"
 end_comment
 
 begin_comment
@@ -609,6 +661,10 @@ end_comment
 
 begin_comment
 comment|// RUN:    /analyze- \
+end_comment
+
+begin_comment
+comment|// RUN:    /bigobj \
 end_comment
 
 begin_comment
@@ -904,6 +960,14 @@ comment|// RUN:     /GT \
 end_comment
 
 begin_comment
+comment|// RUN:     /guard:cf \
+end_comment
+
+begin_comment
+comment|// RUN:     /guard:cf- \
+end_comment
+
+begin_comment
 comment|// RUN:     /GX \
 end_comment
 
@@ -1136,6 +1200,102 @@ comment|// ThreadSafeStatics-NOT: "-fno-threadsafe-statics"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /Zi /c -### -- %s 2>&1 | FileCheck -check-prefix=Zi %s
+end_comment
+
+begin_comment
+comment|// Zi: "-gcodeview"
+end_comment
+
+begin_comment
+comment|// Zi: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Z7 /c -### -- %s 2>&1 | FileCheck -check-prefix=Z7 %s
+end_comment
+
+begin_comment
+comment|// Z7: "-gcodeview"
+end_comment
+
+begin_comment
+comment|// Z7: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=BreproDefault %s
+end_comment
+
+begin_comment
+comment|// BreproDefault: "-mincremental-linker-compatible"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Brepro- /Brepro /c '-###' -- %s 2>&1 | FileCheck -check-prefix=Brepro %s
+end_comment
+
+begin_comment
+comment|// Brepro: "-mincremental-linker-compatible"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Brepro /Brepro- /c '-###' -- %s 2>&1 | FileCheck -check-prefix=Brepro_ %s
+end_comment
+
+begin_comment
+comment|// Brepro_-NOT: "-mincremental-linker-compatible"
+end_comment
+
+begin_comment
+comment|// This test was super sneaky: "/Z7" means "line-tables", but "-gdwarf" occurs
+end_comment
+
+begin_comment
+comment|// later on the command line, so it should win. Interestingly the cc1 arguments
+end_comment
+
+begin_comment
+comment|// came out right, but had wrong semantics, because an invariant assumed by
+end_comment
+
+begin_comment
+comment|// CompilerInvocation was violated: it expects that at most one of {gdwarfN,
+end_comment
+
+begin_comment
+comment|// line-tables-only} appear. If you assume that, then you can safely use
+end_comment
+
+begin_comment
+comment|// Args.hasArg to test whether a boolean flag is present without caring
+end_comment
+
+begin_comment
+comment|// where it appeared. And for this test, it appeared to the left of -gdwarf
+end_comment
+
+begin_comment
+comment|// which made it "win". This test could not detect that bug.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Z7 -gdwarf /c -### -- %s 2>&1 | FileCheck -check-prefix=Z7_gdwarf %s
+end_comment
+
+begin_comment
+comment|// Z7_gdwarf: "-gcodeview"
+end_comment
+
+begin_comment
+comment|// Z7_gdwarf: "-debug-info-kind=limited"
+end_comment
+
+begin_comment
+comment|// Z7_gdwarf: "-dwarf-version=4"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl -fmsc-version=1800 -TP -### -- %s 2>&1 | FileCheck -check-prefix=CXX11 %s
 end_comment
 
@@ -1149,6 +1309,22 @@ end_comment
 
 begin_comment
 comment|// CXX14: -std=c++14
+end_comment
+
+begin_comment
+comment|// RUN: env CL="/Gy" %clang_cl -### -- %s 2>&1 | FileCheck -check-prefix=ENV-CL %s
+end_comment
+
+begin_comment
+comment|// ENV-CL: "-ffunction-sections"
+end_comment
+
+begin_comment
+comment|// RUN: env CL="/Gy" _CL_="/Gy- -- %s" %clang_cl -### 2>&1 | FileCheck -check-prefix=ENV-_CL_ %s
+end_comment
+
+begin_comment
+comment|// ENV-_CL_-NOT: "-ffunction-sections"
 end_comment
 
 begin_comment
@@ -1205,6 +1381,22 @@ end_comment
 
 begin_comment
 comment|// RUN:     -fsyntax-only \
+end_comment
+
+begin_comment
+comment|// RUN:     -fms-compatibility \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-ms-compatibility \
+end_comment
+
+begin_comment
+comment|// RUN:     -fms-extensions \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-ms-extensions \
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +f16c -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +f16c -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
 begin_comment
@@ -27,6 +27,7 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_cvtph_ps
 comment|// CHECK: @llvm.x86.vcvtph2ps.128
 return|return
 name|_mm_cvtph_ps
@@ -45,6 +46,7 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_cvtph_ps
 comment|// CHECK: @llvm.x86.vcvtph2ps.256
 return|return
 name|_mm256_cvtph_ps
@@ -63,6 +65,7 @@ name|__m128
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_cvtps_ph
 comment|// CHECK: @llvm.x86.vcvtps2ph.128
 return|return
 name|_mm_cvtps_ph
@@ -83,6 +86,7 @@ name|__m256
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm256_cvtps_ph
 comment|// CHECK: @llvm.x86.vcvtps2ph.256
 return|return
 name|_mm256_cvtps_ph

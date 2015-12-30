@@ -345,6 +345,7 @@ end_function
 begin_function
 name|__device__
 name|long
+name|long
 name|read_clocks
 parameter_list|()
 block|{
@@ -357,15 +358,13 @@ name|__builtin_ptx_read_clock
 argument_list|()
 decl_stmt|;
 name|long
+name|long
 name|b
 init|=
 name|__builtin_ptx_read_clock64
 argument_list|()
 decl_stmt|;
 return|return
-operator|(
-name|long
-operator|)
 name|a
 operator|+
 name|b
@@ -818,7 +817,7 @@ argument_list|,
 name|ll
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw max
+comment|// CHECK: atomicrmw max i32*
 name|__nvvm_atom_max_gen_i
 argument_list|(
 name|ip
@@ -826,7 +825,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw max
+comment|// CHECK: atomicrmw umax i32*
 name|__nvvm_atom_max_gen_ui
 argument_list|(
 operator|(
@@ -848,7 +847,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw max
+comment|// CHECK: atomicrmw umax
 name|__nvvm_atom_max_gen_ul
 argument_list|(
 operator|(
@@ -862,7 +861,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw max
+comment|// CHECK: atomicrmw max i64*
 name|__nvvm_atom_max_gen_ll
 argument_list|(
 operator|&
@@ -871,7 +870,7 @@ argument_list|,
 name|ll
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw max
+comment|// CHECK: atomicrmw umax i64*
 name|__nvvm_atom_max_gen_ull
 argument_list|(
 operator|(
@@ -886,7 +885,7 @@ argument_list|,
 name|ll
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw min
+comment|// CHECK: atomicrmw min i32*
 name|__nvvm_atom_min_gen_i
 argument_list|(
 name|ip
@@ -894,7 +893,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw min
+comment|// CHECK: atomicrmw umin i32*
 name|__nvvm_atom_min_gen_ui
 argument_list|(
 operator|(
@@ -916,7 +915,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw min
+comment|// CHECK: atomicrmw umin
 name|__nvvm_atom_min_gen_ul
 argument_list|(
 operator|(
@@ -930,7 +929,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw min
+comment|// CHECK: atomicrmw min i64*
 name|__nvvm_atom_min_gen_ll
 argument_list|(
 operator|&
@@ -939,7 +938,7 @@ argument_list|,
 name|ll
 argument_list|)
 expr_stmt|;
-comment|// CHECK: atomicrmw min
+comment|// CHECK: atomicrmw umin i64*
 name|__nvvm_atom_min_gen_ull
 argument_list|(
 operator|(
@@ -955,6 +954,7 @@ name|ll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: cmpxchg
+comment|// CHECK-NEXT: extractvalue { i32, i1 } {{%[0-9]+}}, 0
 name|__nvvm_atom_cas_gen_i
 argument_list|(
 name|ip
@@ -965,6 +965,7 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: cmpxchg
+comment|// CHECK-NEXT: extractvalue { {{i32|i64}}, i1 } {{%[0-9]+}}, 0
 name|__nvvm_atom_cas_gen_l
 argument_list|(
 operator|&
@@ -976,6 +977,7 @@ name|l
 argument_list|)
 expr_stmt|;
 comment|// CHECK: cmpxchg
+comment|// CHECK-NEXT: extractvalue { i64, i1 } {{%[0-9]+}}, 0
 name|__nvvm_atom_cas_gen_ll
 argument_list|(
 operator|&

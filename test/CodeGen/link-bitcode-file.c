@@ -4,11 +4,35 @@ comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE -emit-llvm-bc -o 
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -mlink-bitcode-file %t.bc -O3 -emit-llvm -o - %s | FileCheck -check-prefix=CHECK-NO-BC %s
+comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE2 -emit-llvm-bc -o %t-2.bc %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE -mlink-bitcode-file %t.bc -O3 -emit-llvm -o - %s 2>&1 | FileCheck -check-prefix=CHECK-BC %s
+comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -mlink-bitcode-file %t.bc \
+end_comment
+
+begin_comment
+comment|// RUN:     -O3 -emit-llvm -o - %s | FileCheck -check-prefix=CHECK-NO-BC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -O3 -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:     -mlink-bitcode-file %t.bc -mlink-bitcode-file %t-2.bc %s \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck -check-prefix=CHECK-NO-BC -check-prefix=CHECK-NO-BC2 %s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE -O3 -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:     -mlink-bitcode-file %t.bc %s 2>&1 | FileCheck -check-prefix=CHECK-BC %s
 end_comment
 
 begin_comment
@@ -38,6 +62,16 @@ directive|ifdef
 name|BITCODE
 end_ifdef
 
+begin_function_decl
+specifier|extern
+name|int
+name|f2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// CHECK-BC: fatal error: cannot link module {{.*}}'f': symbol multiply defined
 end_comment
@@ -49,8 +83,30 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|f2
+argument_list|()
+expr_stmt|;
 return|return
 literal|42
+return|;
+block|}
+end_function
+
+begin_elif
+elif|#
+directive|elif
+name|BITCODE2
+end_elif
+
+begin_function
+name|int
+name|f2
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|43
 return|;
 block|}
 end_function
@@ -84,6 +140,10 @@ end_function
 
 begin_comment
 comment|// CHECK-NO-BC-LABEL: define i32 @f
+end_comment
+
+begin_comment
+comment|// CHECK-NO-BC2-LABEL: define i32 @f2
 end_comment
 
 begin_endif

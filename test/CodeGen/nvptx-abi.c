@@ -81,7 +81,7 @@ name|x
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @foo
-comment|// CHECK: %struct.float4_s* byval %x
+comment|// CHECK: %struct.float4_s* byval align 4 %x
 block|}
 end_function
 
@@ -100,9 +100,9 @@ name|z
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @fooN
-comment|// CHECK: %struct.float4_s* byval %x
-comment|// CHECK: %struct.float4_s* byval %y
-comment|// CHECK: %struct.float4_s* byval %z
+comment|// CHECK: %struct.float4_s* byval align 4 %x
+comment|// CHECK: %struct.float4_s* byval align 4 %y
+comment|// CHECK: %struct.float4_s* byval align 4 %z
 block|}
 end_function
 
@@ -139,7 +139,7 @@ name|x
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @baz
-comment|// CHECK: %struct.nested_s* byval %x)
+comment|// CHECK: %struct.nested_s* byval align 8 %x)
 block|}
 end_function
 

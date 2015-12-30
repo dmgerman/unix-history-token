@@ -1359,7 +1359,7 @@ begin_struct
 struct|struct
 name|s6
 block|{
-name|_Bool
+name|unsigned
 name|f0
 range|:
 literal|2

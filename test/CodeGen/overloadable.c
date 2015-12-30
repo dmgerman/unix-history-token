@@ -7,6 +7,10 @@ begin_comment
 comment|// CHECK: _Z1fPA10_1X
 end_comment
 
+begin_comment
+comment|// CHECK: _Z1fPFvE
+end_comment
+
 begin_decl_stmt
 name|int
 name|__attribute__
@@ -168,6 +172,26 @@ argument_list|,
 operator|...
 argument_list|)
 block|{ }
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|overloadable
+operator|)
+argument_list|)
+name|f
+argument_list|(
+name|void
+argument_list|(
+operator|*
+name|x
+argument_list|)
+argument_list|()
+argument_list|)
+block|{}
 end_decl_stmt
 
 begin_function

@@ -124,23 +124,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// It doesn't make sense on msys bash.
+comment|// This test fails with MSYS or MSYS2 env.exe, since it does not preserve
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell-preserves-root
+comment|// root, expanding / into C:/MINGW/MSYS/1.0 or c:/msys64. To reproduce the
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This test will fail with MSYS env.exe, since it does not preserve root,
-end_comment
-
-begin_comment
-comment|// expanding / into C:/MINGW/MSYS/1.0. To see the problem, from cmd.exe run:
+comment|// problem, run:
 end_comment
 
 begin_comment
@@ -156,7 +148,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This test passes using env.exe from GnuWin32.
+comment|// This test do pass using GnuWin32 env.exe.
 end_comment
 
 begin_comment

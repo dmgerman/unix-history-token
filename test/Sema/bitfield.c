@@ -30,7 +30,7 @@ name|b
 range|:
 literal|33
 decl_stmt|;
-comment|// expected-error{{size of bit-field 'b' (33 bits) exceeds size of its type (32 bits)}}
+comment|// expected-error{{width of bit-field 'b' (33 bits) exceeds width of its type (32 bits)}}
 name|int
 name|c
 range|:
@@ -87,7 +87,7 @@ name|char
 label|:
 literal|10
 expr_stmt|;
-comment|// expected-error {{size of anonymous bit-field (10 bits) exceeds size of its type (8 bits)}}
+comment|// expected-error {{width of anonymous bit-field (10 bits) exceeds width of its type (8 bits)}}
 name|unsigned
 label|:
 operator|-
@@ -99,6 +99,17 @@ label|:
 literal|12
 expr_stmt|;
 comment|// expected-error {{anonymous bit-field has non-integral type 'float'}}
+name|_Bool
+label|:
+literal|2
+expr_stmt|;
+comment|// expected-error {{width of anonymous bit-field (2 bits) exceeds width of its type (1 bit)}}
+name|_Bool
+name|h
+range|:
+literal|5
+decl_stmt|;
+comment|// expected-error {{width of bit-field 'h' (5 bits) exceeds width of its type (1 bit)}}
 block|}
 struct|;
 end_struct
@@ -377,18 +388,24 @@ name|t5
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|__typeof__
-argument_list|(
-argument|t5.n
-argument_list|)
-name|Unsigned
-expr_stmt|;
-end_typedef
-
 begin_comment
 comment|// Bitfield is unsigned
+end_comment
+
+begin_decl_stmt
+name|struct
+name|Test5
+name|sometest5
+init|=
+block|{
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from -1 to 3}}
 end_comment
 
 begin_typedef

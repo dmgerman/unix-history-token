@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -O1 -emit-llvm -triple armv7-none-linux-gnueabihf -o - | FileCheck %s --check-prefix=ARM
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -O1 -emit-llvm -triple thumbv7k-apple-watchos2.0 -o - -target-abi aapcs16 | FileCheck %s --check-prefix=ARM7K
+end_comment
+
 begin_function
 name|float
 specifier|_Complex
@@ -1517,6 +1521,8 @@ parameter_list|)
 block|{
 comment|// ARM-LABEL: @foo(
 comment|// ARM: call arm_aapcscc { double, double } @__muldc3
+comment|// ARM7K-LABEL: @foo(
+comment|// ARM7K: call { double, double } @__muldc3
 return|return
 name|a
 operator|*

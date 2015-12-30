@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O0 -triple=x86_64-apple-darwin -target-feature +avx2 -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx2 -emit-llvm -o - -Werror | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx2 -fno-signed-char -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
 begin_comment
@@ -2641,6 +2645,7 @@ name|__m256i
 name|test_mm256_stream_load_si256
 parameter_list|(
 name|__m256i
+specifier|const
 modifier|*
 name|a
 parameter_list|)
@@ -2663,7 +2668,9 @@ name|__m128
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.vbroadcast.ss.ps
+comment|// CHECK-LABEL: test_mm_broadcastss_ps
+comment|// CHECK-NOT: @llvm.x86.avx2.vbroadcast.ss.ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32> zeroinitializer
 return|return
 name|_mm_broadcastss_ps
 argument_list|(
@@ -2681,6 +2688,7 @@ name|__m128d
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test_mm_broadcastsd_pd
 comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<2 x i32> zeroinitializer
 return|return
 name|_mm_broadcastsd_pd
@@ -2699,7 +2707,9 @@ name|__m128
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.vbroadcast.ss.ps.256
+comment|// CHECK-LABEL: test_mm256_broadcastss_ps
+comment|// CHECK-NOT: @llvm.x86.avx2.vbroadcast.ss.ps.256
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<8 x i32> zeroinitializer
 return|return
 name|_mm256_broadcastss_ps
 argument_list|(
@@ -2717,7 +2727,9 @@ name|__m128d
 name|a
 parameter_list|)
 block|{
-comment|// check: @llvm.x86.avx2.vbroadcast.sd.pd.256
+comment|// CHECK-LABEL: test_mm256_broadcastsd_pd
+comment|// CHECK-NOT: @llvm.x86.avx2.vbroadcast.sd.pd.256
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<4 x i32> zeroinitializer
 return|return
 name|_mm256_broadcastsd_pd
 argument_list|(
@@ -2807,7 +2819,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastb.256
+comment|// CHECK-LABEL: test_mm256_broadcastb_epi8
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastb.256
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> %{{.*}},<32 x i32> zeroinitializer
 return|return
 name|_mm256_broadcastb_epi8
 argument_list|(
@@ -2825,7 +2839,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastw.256
+comment|// CHECK-LABEL: test_mm256_broadcastw_epi16
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastw.256
+comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> %{{.*}},<16 x i32> zeroinitializer
 return|return
 name|_mm256_broadcastw_epi16
 argument_list|(
@@ -2843,7 +2859,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastd.256
+comment|// CHECK-LABEL: test_mm256_broadcastd_epi32
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastd.256
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<8 x i32> zeroinitializer
 return|return
 name|_mm256_broadcastd_epi32
 argument_list|(
@@ -2861,7 +2879,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastq.256
+comment|// CHECK-LABEL: test_mm256_broadcastq_epi64
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastq.256
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<4 x i32> zeroinitializer
 return|return
 name|_mm256_broadcastq_epi64
 argument_list|(
@@ -2879,7 +2899,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastb.128
+comment|// CHECK-LABEL: test_mm_broadcastb_epi8
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastb.128
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> %{{.*}},<16 x i32> zeroinitializer
 return|return
 name|_mm_broadcastb_epi8
 argument_list|(
@@ -2897,7 +2919,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastw.128
+comment|// CHECK-LABEL: test_mm_broadcastw_epi16
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastw.128
+comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> %{{.*}},<8 x i32> zeroinitializer
 return|return
 name|_mm_broadcastw_epi16
 argument_list|(
@@ -2915,7 +2939,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastd.128
+comment|// CHECK-LABEL: test_mm_broadcastd_epi32
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32> zeroinitializer
 return|return
 name|_mm_broadcastd_epi32
 argument_list|(
@@ -2933,7 +2959,9 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pbroadcastq.128
+comment|// CHECK-LABEL: test_mm_broadcastq_epi64
+comment|// CHECK-NOT: @llvm.x86.avx2.pbroadcastq.128
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<2 x i32> zeroinitializer
 return|return
 name|_mm_broadcastq_epi64
 argument_list|(
@@ -2993,7 +3021,7 @@ parameter_list|(
 name|__m256
 name|a
 parameter_list|,
-name|__m256
+name|__m256i
 name|b
 parameter_list|)
 block|{

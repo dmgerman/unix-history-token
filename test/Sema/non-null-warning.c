@@ -187,6 +187,16 @@ comment|// expected-warning {{null returned from function that requires a non-nu
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|SAFE_CALL
+parameter_list|(
+name|X
+parameter_list|)
+value|if (X) foo(X)
+end_define
+
 begin_function
 name|int
 name|main
@@ -198,6 +208,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{null passed to a callee that requires a non-null argument}}
+operator|(
+name|void
+operator|)
+sizeof|sizeof
+argument_list|(
+name|foo
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// expect no diagnostic in unevaluated context.
+name|SAFE_CALL
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expect no diagnostic for unreachable code.
 block|}
 end_function
 

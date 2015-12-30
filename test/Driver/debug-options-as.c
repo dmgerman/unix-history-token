@@ -24,11 +24,47 @@ comment|//
 end_comment
 
 begin_comment
+comment|// SAVE: "-cc1"{{.*}}"-E"{{.*}}"-debug-info-kind=
+end_comment
+
+begin_comment
+comment|// SAVE: "-cc1"{{.*}}"-emit-llvm-bc"{{.*}}"-debug-info-kind=
+end_comment
+
+begin_comment
+comment|// SAVE: "-cc1"{{.*}}"-S"{{.*}}"-debug-info-kind=
+end_comment
+
+begin_comment
 comment|// SAVE: "-cc1as"
 end_comment
 
 begin_comment
-comment|// SAVE-NOT: "-g"
+comment|// SAVE-NOT: -debug-info-kind=
+end_comment
+
+begin_comment
+comment|// Make sure that '-ggdb0' is not accidentally mistaken for '-g'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ggdb0 -c -integrated-as -x assembler %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=GGDB0 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GGDB0: "-cc1as"
+end_comment
+
+begin_comment
+comment|// GGDB0-NOT: -debug-info-kind=
 end_comment
 
 begin_comment
@@ -40,11 +76,7 @@ comment|// rdar://9275556
 end_comment
 
 begin_comment
-comment|// RUN: touch %t.s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -c -integrated-as -g %t.s 2>&1 \
+comment|// RUN: %clang -### -c -integrated-as -g -x assembler %s 2>&1 \
 end_comment
 
 begin_comment
@@ -60,7 +92,7 @@ comment|// CHECK: "-cc1as"
 end_comment
 
 begin_comment
-comment|// CHECK: "-g"
+comment|// CHECK: "-debug-info-kind=limited"
 end_comment
 
 begin_comment
@@ -72,11 +104,7 @@ comment|// rdar://12955296
 end_comment
 
 begin_comment
-comment|// RUN: touch %t.s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -c -integrated-as -g %t.s 2>&1 \
+comment|// RUN: %clang -### -c -integrated-as -g -x assembler %s 2>&1 \
 end_comment
 
 begin_comment

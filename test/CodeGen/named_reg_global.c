@@ -1,19 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-linux-gnu -S -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-linux-gnu -S -emit-llvm %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-X86-64
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -S -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -S -emit-llvm %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-ARM
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple armv7-linux-gnu -S -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple armv7-linux-gnu -S -emit-llvm %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-ARM
 end_comment
 
 begin_comment
 comment|// CHECK-NOT: @sp = common global
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|register
+name|unsigned
+name|long
+name|current_stack_pointer
+name|asm
+argument_list|(
+literal|"rsp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|register
@@ -26,6 +52,11 @@ literal|"sp"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -47,6 +78,33 @@ begin_comment
 comment|// Testing pointer types as well
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|p4_Thread
+modifier|*
+name|p4TH
+name|asm
+argument_list|(
+literal|"rsp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|register
 name|struct
@@ -59,6 +117,11 @@ literal|"sp"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// CHECK: define{{.*}} i[[bits:[0-9]+]] @get_stack_pointer_addr()
@@ -184,11 +247,19 @@ comment|// CHECK: call void @llvm.write_register.i[[bits]](metadata !0, i[[bits]
 end_comment
 
 begin_comment
-comment|// CHECK: !llvm.named.register.sp = !{!0}
+comment|// CHECK-X86-64: !llvm.named.register.rsp = !{!0}
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = !{!"sp"}
+comment|// CHECK-X86-64: !0 = !{!"rsp"}
+end_comment
+
+begin_comment
+comment|// CHECK-ARM: !llvm.named.register.sp = !{!0}
+end_comment
+
+begin_comment
+comment|// CHECK-ARM: !0 = !{!"sp"}
 end_comment
 
 end_unit

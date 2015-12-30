@@ -80,11 +80,11 @@ comment|// CHECK-MS64: #define _MSC_VER 1300
 end_comment
 
 begin_comment
-comment|// CHECK-MS64: #define _M_AMD64 1
+comment|// CHECK-MS64: #define _M_AMD64 100
 end_comment
 
 begin_comment
-comment|// CHECK-MS64: #define _M_X64 1
+comment|// CHECK-MS64: #define _M_X64 100
 end_comment
 
 begin_comment
@@ -541,6 +541,54 @@ end_comment
 
 begin_comment
 comment|// CHECK-SYNC_CAS_ARMv6-NOT: __GCC_HAVE_SYNC_COMPARE_AND_SWAP
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -triple mips -target-cpu mips2 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_MIPS \
+end_comment
+
+begin_comment
+comment|// RUN:         --check-prefix=CHECK-SYNC_CAS_MIPS32
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -triple mips64 -target-cpu mips3 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_MIPS \
+end_comment
+
+begin_comment
+comment|// RUN:         --check-prefix=CHECK-SYNC_CAS_MIPS64
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_MIPS:       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_MIPS:       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_MIPS:       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_MIPS32-NOT: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+end_comment
+
+begin_comment
+comment|// CHECK-SYNC_CAS_MIPS64:     __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
 end_comment
 
 end_unit

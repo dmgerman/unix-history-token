@@ -48,7 +48,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.divwe
+comment|// CHECK: @llvm.ppc.divwe
 block|}
 end_function
 
@@ -84,7 +84,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.divweu
+comment|// CHECK: @llvm.ppc.divweu
 block|}
 end_function
 
@@ -120,7 +120,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.divde
+comment|// CHECK: @llvm.ppc.divde
 block|}
 end_function
 
@@ -159,7 +159,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.divdeu
+comment|// CHECK: @llvm.ppc.divdeu
 block|}
 end_function
 
@@ -195,7 +195,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK @llvm.ppc.bpermd
+comment|// CHECK: @llvm.ppc.bpermd
 block|}
 end_function
 

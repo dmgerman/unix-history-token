@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O1 -triple x86_64-none-linux-gnu -emit-llvm -gline-tables-only %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=LIFETIME
+comment|// RUN: %clang_cc1 -O1 -triple x86_64-none-linux-gnu -emit-llvm -debug-info-kind=line-tables-only %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=LIFETIME
 end_comment
 
 begin_comment
@@ -8,11 +8,11 @@ comment|// We shouldn't have markers at -O0 or with msan.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -O0 -triple x86_64-none-linux-gnu -emit-llvm -gline-tables-only %s -o - | FileCheck %s --check-prefix=CHECK
+comment|// RUN: %clang_cc1 -O0 -triple x86_64-none-linux-gnu -emit-llvm -debug-info-kind=line-tables-only %s -o - | FileCheck %s --check-prefix=CHECK
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -O1 -triple x86_64-none-linux-gnu -emit-llvm -gline-tables-only %s -o - -fsanitize=memory | FileCheck %s --check-prefix=CHECK
+comment|// RUN: %clang_cc1 -O1 -triple x86_64-none-linux-gnu -emit-llvm -debug-info-kind=line-tables-only %s -o - -fsanitize=memory | FileCheck %s --check-prefix=CHECK
 end_comment
 
 begin_comment

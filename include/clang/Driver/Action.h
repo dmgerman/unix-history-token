@@ -690,15 +690,6 @@ name|CudaHostAction
 argument_list|()
 name|override
 block|;
-name|ActionList
-operator|&
-name|getDeviceActions
-argument_list|()
-block|{
-return|return
-name|DeviceActions
-return|;
-block|}
 specifier|const
 name|ActionList
 operator|&
@@ -1186,15 +1177,6 @@ argument_list|(
 argument|ActionClass Kind
 argument_list|,
 argument|std::unique_ptr<Action> Input
-argument_list|,
-argument|types::ID Type
-argument_list|)
-block|;
-name|VerifyJobAction
-argument_list|(
-argument|ActionClass Kind
-argument_list|,
-argument|ActionList&Inputs
 argument_list|,
 argument|types::ID Type
 argument_list|)

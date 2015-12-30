@@ -1,38 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
-operator|/
-name|PtrDiffType
-operator|/
-name|RUN
-operator|:
-operator|%
-name|clang_cc1
-operator|-
-name|E
-operator|-
-name|dM
-operator|-
-name|x
-name|assembler
-operator|-
-name|with
-operator|-
-name|cpp
-operator|<
-operator|/
-name|dev
-operator|/
-name|null
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-name|ASM
-operator|%
-name|s
-end_expr_stmt
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -x assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s
+end_comment
 
 begin_comment
 comment|//
@@ -615,6 +584,10 @@ comment|// MSEXT-CXX:#define _WCHAR_T_DEFINED 1
 end_comment
 
 begin_comment
+comment|// MSEXT-CXX:#define __BOOL_DEFINED 1
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -636,6 +609,10 @@ end_comment
 
 begin_comment
 comment|// MSEXT-CXX-NOWCHAR-NOT:#define _WCHAR_T_DEFINED 1
+end_comment
+
+begin_comment
+comment|// MSEXT-CXX-NOWCHAR:#define __BOOL_DEFINED 1
 end_comment
 
 begin_comment
@@ -4811,7 +4788,7 @@ comment|// ARM:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARM:#define __ARM_ARCH_6J__ 1
+comment|// ARM:#define __ARM_ARCH_4T__ 1
 end_comment
 
 begin_comment
@@ -5371,10 +5348,6 @@ comment|// ARM:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
-comment|// ARM:#define __THUMB_INTERWORK__ 1
-end_comment
-
-begin_comment
 comment|// ARM:#define __UINT16_C_SUFFIX__ {{$}}
 end_comment
 
@@ -5571,7 +5544,7 @@ comment|// ARM-BE-NOT:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARM-BE:#define __ARM_ARCH_6J__ 1
+comment|// ARM-BE:#define __ARM_ARCH_4T__ 1
 end_comment
 
 begin_comment
@@ -6131,10 +6104,6 @@ comment|// ARM-BE:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
-comment|// ARM-BE:#define __THUMB_INTERWORK__ 1
-end_comment
-
-begin_comment
 comment|// ARM-BE:#define __UINT16_C_SUFFIX__ {{$}}
 end_comment
 
@@ -6331,11 +6300,11 @@ comment|// ARMEABISOFTFP:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARMEABISOFTFP:#define __ARM_ARCH 6
+comment|// ARMEABISOFTFP:#define __ARM_ARCH 4
 end_comment
 
 begin_comment
-comment|// ARMEABISOFTFP:#define __ARM_ARCH_6J__ 1
+comment|// ARMEABISOFTFP:#define __ARM_ARCH_4T__ 1
 end_comment
 
 begin_comment
@@ -6911,10 +6880,6 @@ comment|// ARMEABISOFTFP:#define __SOFTFP__ 1
 end_comment
 
 begin_comment
-comment|// ARMEABISOFTFP:#define __THUMB_INTERWORK__ 1
-end_comment
-
-begin_comment
 comment|// ARMEABISOFTFP:#define __UINT16_C_SUFFIX__ {{$}}
 end_comment
 
@@ -7111,11 +7076,11 @@ comment|// ARMEABIHARDFP:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARMEABIHARDFP:#define __ARM_ARCH 6
+comment|// ARMEABIHARDFP:#define __ARM_ARCH 4
 end_comment
 
 begin_comment
-comment|// ARMEABIHARDFP:#define __ARM_ARCH_6J__ 1
+comment|// ARMEABIHARDFP:#define __ARM_ARCH_4T__ 1
 end_comment
 
 begin_comment
@@ -7691,10 +7656,6 @@ comment|// ARMEABIHARDFP-NOT:#define __SOFTFP__ 1
 end_comment
 
 begin_comment
-comment|// ARMEABIHARDFP:#define __THUMB_INTERWORK__ 1
-end_comment
-
-begin_comment
 comment|// ARMEABIHARDFP:#define __UINT16_C_SUFFIX__ {{$}}
 end_comment
 
@@ -7891,7 +7852,7 @@ comment|// ARM-NETBSD:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARM-NETBSD:#define __ARM_ARCH_6J__ 1
+comment|// ARM-NETBSD:#define __ARM_ARCH_4T__ 1
 end_comment
 
 begin_comment
@@ -8456,10 +8417,6 @@ end_comment
 
 begin_comment
 comment|// ARM-NETBSD:#define __SIZE_WIDTH__ 32
-end_comment
-
-begin_comment
-comment|// ARM-NETBSD:#define __THUMB_INTERWORK__ 1
 end_comment
 
 begin_comment
@@ -18871,11 +18828,11 @@ comment|// NVPTX32:#define __INT_FAST32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT_FAST64_FMTd__ "ld"
+comment|// NVPTX32:#define __INT_FAST64_FMTd__ "lld"
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT_FAST64_FMTi__ "li"
+comment|// NVPTX32:#define __INT_FAST64_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -18883,7 +18840,7 @@ comment|// NVPTX32:#define __INT_FAST64_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT_FAST64_TYPE__ long int
+comment|// NVPTX32:#define __INT_FAST64_TYPE__ long long int
 end_comment
 
 begin_comment
@@ -18935,11 +18892,11 @@ comment|// NVPTX32:#define __INT_LEAST32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT_LEAST64_FMTd__ "ld"
+comment|// NVPTX32:#define __INT_LEAST64_FMTd__ "lld"
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT_LEAST64_FMTi__ "li"
+comment|// NVPTX32:#define __INT_LEAST64_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -18947,7 +18904,7 @@ comment|// NVPTX32:#define __INT_LEAST64_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT_LEAST64_TYPE__ long int
+comment|// NVPTX32:#define __INT_LEAST64_TYPE__ long long int
 end_comment
 
 begin_comment
@@ -19031,7 +18988,7 @@ comment|// NVPTX32:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __LONG_MAX__ 9223372036854775807L
+comment|// NVPTX32:#define __LONG_MAX__ 2147483647L
 end_comment
 
 begin_comment
@@ -19099,7 +19056,7 @@ comment|// NVPTX32:#define __SIZEOF_LONG_LONG__ 8
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __SIZEOF_LONG__ 8
+comment|// NVPTX32:#define __SIZEOF_LONG__ 4
 end_comment
 
 begin_comment
@@ -19235,7 +19192,7 @@ comment|// NVPTX32:#define __UINT_FAST64_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __UINT_FAST64_TYPE__ long unsigned int
+comment|// NVPTX32:#define __UINT_FAST64_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -19267,7 +19224,7 @@ comment|// NVPTX32:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __UINT_LEAST64_TYPE__ long unsigned int
+comment|// NVPTX32:#define __UINT_LEAST64_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -26339,11 +26296,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x cl -E -dM -ffreestanding -triple=amdgcn< /dev/null | FileCheck -check-prefix AMDGCN %s
+comment|// RUN: %clang_cc1 -x cl -E -dM -ffreestanding -triple=amdgcn< /dev/null | FileCheck -check-prefix AMDGCN --check-prefix AMDGPU %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -E -dM -ffreestanding -triple=r600 -target-cpu caicos< /dev/null | FileCheck --check-prefix AMDGPU %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// AMDGPU:#define cl_khr_byte_addressable_store 1
 end_comment
 
 begin_comment
 comment|// AMDGCN:#define cl_khr_fp64 1
+end_comment
+
+begin_comment
+comment|// AMDGPU:#define cl_khr_global_int32_base_atomics 1
+end_comment
+
+begin_comment
+comment|// AMDGPU:#define cl_khr_global_int32_extended_atomics 1
+end_comment
+
+begin_comment
+comment|// AMDGPU:#define cl_khr_local_int32_base_atomics 1
+end_comment
+
+begin_comment
+comment|// AMDGPU:#define cl_khr_local_int32_extended_atomics 1
 end_comment
 
 begin_comment
@@ -27823,35 +27808,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc-none-netbsd< /dev/null | FileCheck -check-prefix SPARC-NETBSD %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc-none-netbsd< /dev/null | FileCheck -check-prefix SPARC-NETOPENBSD %s
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __INTPTR_FMTd__ "ld"
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc-none-openbsd< /dev/null | FileCheck -check-prefix SPARC-NETOPENBSD %s
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __INTPTR_FMTi__ "li"
+comment|// SPARC-NETOPENBSD:#define __INTPTR_FMTd__ "ld"
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __INTPTR_MAX__ 2147483647L
+comment|// SPARC-NETOPENBSD:#define __INTPTR_FMTi__ "li"
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __INTPTR_TYPE__ long int
+comment|// SPARC-NETOPENBSD:#define __INTPTR_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __PTRDIFF_TYPE__ long int
+comment|// SPARC-NETOPENBSD:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __SIZE_TYPE__ long unsigned int
+comment|// SPARC-NETOPENBSD:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// SPARC-NETBSD:#define __UINTPTR_TYPE__ long unsigned int
+comment|// SPARC-NETOPENBSD:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC-NETOPENBSD:#define __UINTPTR_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -33548,6 +33537,2534 @@ end_comment
 
 begin_comment
 comment|// XCORE:#define __XS1B__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=wasm32-unknown-unknown \
+end_comment
+
+begin_comment
+comment|// RUN:< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=WEBASSEMBLY32 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32:#define _ILP32 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ATOMIC_ACQUIRE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ATOMIC_ACQ_REL 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ATOMIC_CONSUME 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ATOMIC_RELAXED 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ATOMIC_RELEASE 3{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ATOMIC_SEQ_CST 5{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __BIGGEST_ALIGNMENT__ 16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CHAR16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CHAR32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CHAR_BIT__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __CHAR_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __CONSTANT_CFSTRINGS__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_DECIMAL_DIG__ 17{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_DIG__ 15{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_EPSILON__ 2.2204460492503131e-16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_HAS_DENORM__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_HAS_INFINITY__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_HAS_QUIET_NAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MANT_DIG__ 53{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MAX_10_EXP__ 308{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MAX_EXP__ 1024{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MAX__ 1.7976931348623157e+308{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MIN_10_EXP__ (-307){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MIN_EXP__ (-1021){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DBL_MIN__ 2.2250738585072014e-308{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __DECIMAL_DIG__ __LDBL_DECIMAL_DIG__{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __ELF__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FINITE_MATH_ONLY__ 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_DECIMAL_DIG__ 9{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_DENORM_MIN__ 1.40129846e-45F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_DIG__ 6{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_EPSILON__ 1.19209290e-7F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_EVAL_METHOD__ 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_HAS_DENORM__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_HAS_INFINITY__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_HAS_QUIET_NAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MANT_DIG__ 24{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MAX_10_EXP__ 38{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MAX_EXP__ 128{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MAX__ 3.40282347e+38F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MIN_10_EXP__ (-37){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MIN_EXP__ (-125){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_MIN__ 1.17549435e-38F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __FLT_RADIX__ 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_BOOL_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_CHAR_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_INT_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_LLONG_LOCK_FREE 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_LONG_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_POINTER_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_SHORT_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_TEST_AND_SET_TRUEVAL 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GNUC_MINOR__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GNUC_PATCHLEVEL__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GNUC_STDC_INLINE__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GNUC__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GXX_ABI_VERSION 1002{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __GXX_RTTI 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ILP32__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT16_FMTd__ "hd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT16_FMTi__ "hi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT16_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT16_TYPE__ short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT32_FMTd__ "d"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT32_FMTi__ "i"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT32_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT32_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT64_C_SUFFIX__ LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT64_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT64_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT64_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT64_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT8_FMTd__ "hhd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT8_FMTi__ "hhi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT8_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT8_TYPE__ signed char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_C_SUFFIX__ LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_FMTd__ "ld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_FMTi__ "li"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_MAX__ 2147483647L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_TYPE__ long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST16_FMTd__ "hd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST16_FMTi__ "hi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST16_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST16_TYPE__ short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST32_FMTd__ "d"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST32_FMTi__ "i"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST32_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST32_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST64_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST64_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST64_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST64_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST8_FMTd__ "hhd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST8_FMTi__ "hhi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST8_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_FAST8_TYPE__ signed char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST16_FMTd__ "hd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST16_FMTi__ "hi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST16_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST16_TYPE__ short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST32_FMTd__ "d"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST32_FMTi__ "i"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST32_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST32_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST64_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST64_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST64_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST64_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST8_FMTd__ "hhd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST8_FMTi__ "hhi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST8_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_LEAST8_TYPE__ signed char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __INT_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_DECIMAL_DIG__ 36{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_DIG__ 33{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_HAS_DENORM__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_HAS_INFINITY__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_HAS_QUIET_NAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MANT_DIG__ 113{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MAX_10_EXP__ 4932{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MAX_EXP__ 16384{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MIN_10_EXP__ (-4931){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MIN_EXP__ (-16381){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LITTLE_ENDIAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LONG_LONG_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __LONG_MAX__ 2147483647L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __NO_INLINE__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ORDER_BIG_ENDIAN__ 4321{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ORDER_LITTLE_ENDIAN__ 1234{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __ORDER_PDP_ENDIAN__ 3412{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __POINTER_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __PRAGMA_REDEFINE_EXTNAME 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_FMTd__ "ld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_FMTi__ "li"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_MAX__ 2147483647L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_TYPE__ long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SCHAR_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SHRT_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIG_ATOMIC_MAX__ 2147483647L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIG_ATOMIC_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_DOUBLE__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_FLOAT__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_INT128__ 16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_INT__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_LONG_DOUBLE__ 16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_LONG_LONG__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_LONG__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_POINTER__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_PTRDIFF_T__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_SHORT__ 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_SIZE_T__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_WCHAR_T__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_WINT_T__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTX__ "lX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTo__ "lo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTu__ "lu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTx__ "lx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_MAX__ 4294967295UL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_TYPE__ long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __STDC_HOSTED__ 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __STDC_MB_MIGHT_NEQ_WC__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __STDC_NO_ATOMICS__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __STDC_NO_COMPLEX__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __STDC_NO_VLA__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __STDC_NO_THREADS__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __STDC_UTF_16__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __STDC_UTF_32__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __STDC_VERSION__ 201112L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __STDC__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_FMTX__ "hX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_FMTo__ "ho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_FMTu__ "hu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_FMTx__ "hx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_MAX__ 65535{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_C_SUFFIX__ U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_FMTX__ "X"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_FMTo__ "o"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_FMTu__ "u"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_FMTx__ "x"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_MAX__ 4294967295U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_C_SUFFIX__ ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT64_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_FMTX__ "hhX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_FMTo__ "hho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_FMTu__ "hhu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_FMTx__ "hhx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_MAX__ 255{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT8_TYPE__ unsigned char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_C_SUFFIX__ ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTX__ "lX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTo__ "lo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTu__ "lu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTx__ "lx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_MAX__ 4294967295UL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_TYPE__ long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST16_FMTX__ "hX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST16_FMTo__ "ho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST16_FMTu__ "hu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST16_FMTx__ "hx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST16_MAX__ 65535{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST32_FMTX__ "X"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST32_FMTo__ "o"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST32_FMTu__ "u"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST32_FMTx__ "x"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST32_MAX__ 4294967295U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST64_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST64_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST64_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST64_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST64_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST64_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST8_FMTX__ "hhX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST8_FMTo__ "hho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST8_FMTu__ "hhu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST8_FMTx__ "hhx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST8_MAX__ 255{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_FAST8_TYPE__ unsigned char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST16_FMTX__ "hX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST16_FMTo__ "ho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST16_FMTu__ "hu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST16_FMTx__ "hx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST16_MAX__ 65535{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST32_FMTX__ "X"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST32_FMTo__ "o"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST32_FMTu__ "u"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST32_FMTx__ "x"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST32_MAX__ 4294967295U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST64_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST64_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST64_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST64_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST64_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST8_FMTX__ "hhX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST8_FMTo__ "hho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST8_FMTu__ "hhu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST8_FMTx__ "hhx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST8_MAX__ 255{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __UINT_LEAST8_TYPE__ unsigned char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __USER_LABEL_PREFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __VERSION__ "{{.*}}"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __WCHAR_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __WCHAR_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __WCHAR_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __WCHAR_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __WINT_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __WINT_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __WINT_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __clang__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __clang_major__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __clang_minor__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __clang_patchlevel__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __clang_version__ "{{.*}}"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __llvm__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __wasm_simd128__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __wasm_simd256__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __wasm_simd512__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __unix
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __unix__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __wasm 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __wasm32 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __wasm32__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __wasm64
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NOT:#define __wasm64__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY32-NEXT:#define __wasm__ 1{{$}}
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=wasm64-unknown-unknown \
+end_comment
+
+begin_comment
+comment|// RUN:< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=WEBASSEMBLY64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define _ILP32
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64:#define _LP64 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ATOMIC_ACQUIRE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ATOMIC_ACQ_REL 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ATOMIC_CONSUME 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ATOMIC_RELAXED 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ATOMIC_RELEASE 3{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ATOMIC_SEQ_CST 5{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __BIGGEST_ALIGNMENT__ 16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CHAR16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CHAR32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CHAR_BIT__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __CHAR_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __CONSTANT_CFSTRINGS__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_DECIMAL_DIG__ 17{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_DIG__ 15{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_EPSILON__ 2.2204460492503131e-16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_HAS_DENORM__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_HAS_INFINITY__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_HAS_QUIET_NAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MANT_DIG__ 53{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MAX_10_EXP__ 308{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MAX_EXP__ 1024{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MAX__ 1.7976931348623157e+308{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MIN_10_EXP__ (-307){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MIN_EXP__ (-1021){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DBL_MIN__ 2.2250738585072014e-308{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __DECIMAL_DIG__ __LDBL_DECIMAL_DIG__{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __ELF__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FINITE_MATH_ONLY__ 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_DECIMAL_DIG__ 9{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_DENORM_MIN__ 1.40129846e-45F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_DIG__ 6{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_EPSILON__ 1.19209290e-7F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_EVAL_METHOD__ 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_HAS_DENORM__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_HAS_INFINITY__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_HAS_QUIET_NAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MANT_DIG__ 24{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MAX_10_EXP__ 38{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MAX_EXP__ 128{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MAX__ 3.40282347e+38F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MIN_10_EXP__ (-37){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MIN_EXP__ (-125){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_MIN__ 1.17549435e-38F{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __FLT_RADIX__ 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_BOOL_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_CHAR_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_INT_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_LLONG_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_LONG_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_POINTER_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_SHORT_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_TEST_AND_SET_TRUEVAL 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GNUC_MINOR__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GNUC_PATCHLEVEL__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GNUC_STDC_INLINE__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GNUC__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GXX_ABI_VERSION 1002{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __GXX_RTTI 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __ILP32__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT16_FMTd__ "hd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT16_FMTi__ "hi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT16_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT16_TYPE__ short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT32_FMTd__ "d"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT32_FMTi__ "i"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT32_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT32_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT64_C_SUFFIX__ LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT64_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT64_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT64_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT64_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT8_FMTd__ "hhd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT8_FMTi__ "hhi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT8_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT8_TYPE__ signed char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTMAX_C_SUFFIX__ LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTMAX_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTMAX_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTMAX_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTMAX_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTMAX_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTPTR_FMTd__ "ld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTPTR_FMTi__ "li"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTPTR_MAX__ 9223372036854775807L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTPTR_TYPE__ long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INTPTR_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST16_FMTd__ "hd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST16_FMTi__ "hi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST16_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST16_TYPE__ short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST32_FMTd__ "d"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST32_FMTi__ "i"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST32_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST32_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST64_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST64_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST64_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST64_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST8_FMTd__ "hhd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST8_FMTi__ "hhi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST8_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_FAST8_TYPE__ signed char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST16_FMTd__ "hd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST16_FMTi__ "hi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST16_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST16_TYPE__ short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST32_FMTd__ "d"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST32_FMTi__ "i"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST32_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST32_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST64_FMTd__ "lld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST64_FMTi__ "lli"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST64_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST64_TYPE__ long long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST8_FMTd__ "hhd"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST8_FMTi__ "hhi"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST8_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_LEAST8_TYPE__ signed char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __INT_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_DECIMAL_DIG__ 36{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_DIG__ 33{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_HAS_DENORM__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_HAS_INFINITY__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_HAS_QUIET_NAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MANT_DIG__ 113{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MAX_10_EXP__ 4932{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MAX_EXP__ 16384{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MIN_10_EXP__ (-4931){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MIN_EXP__ (-16381){{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LITTLE_ENDIAN__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LONG_LONG_MAX__ 9223372036854775807LL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LONG_MAX__ 9223372036854775807L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __LP64__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __NO_INLINE__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ORDER_BIG_ENDIAN__ 4321{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ORDER_LITTLE_ENDIAN__ 1234{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __ORDER_PDP_ENDIAN__ 3412{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __POINTER_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __PRAGMA_REDEFINE_EXTNAME 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __PTRDIFF_FMTd__ "ld"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __PTRDIFF_FMTi__ "li"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __PTRDIFF_MAX__ 9223372036854775807L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __PTRDIFF_TYPE__ long int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __PTRDIFF_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SCHAR_MAX__ 127{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SHRT_MAX__ 32767{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIG_ATOMIC_MAX__ 9223372036854775807L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIG_ATOMIC_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_DOUBLE__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_FLOAT__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_INT128__ 16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_INT__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_LONG_DOUBLE__ 16{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_LONG_LONG__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_LONG__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_POINTER__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_PTRDIFF_T__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_SHORT__ 2{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_SIZE_T__ 8{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_WCHAR_T__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZEOF_WINT_T__ 4{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_FMTX__ "lX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_FMTo__ "lo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_FMTu__ "lu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_FMTx__ "lx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_MAX__ 18446744073709551615UL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_TYPE__ long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __SIZE_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __STDC_HOSTED__ 0{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __STDC_MB_MIGHT_NEQ_WC__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __STDC_NO_ATOMICS__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __STDC_NO_COMPLEX__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __STDC_NO_VLA__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __STDC_NO_THREADS__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __STDC_UTF_16__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __STDC_UTF_32__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __STDC_VERSION__ 201112L{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __STDC__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_FMTX__ "hX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_FMTo__ "ho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_FMTu__ "hu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_FMTx__ "hx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_MAX__ 65535{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_C_SUFFIX__ U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_FMTX__ "X"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_FMTo__ "o"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_FMTu__ "u"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_FMTx__ "x"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_MAX__ 4294967295U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_C_SUFFIX__ ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT64_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_FMTX__ "hhX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_FMTo__ "hho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_FMTu__ "hhu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_FMTx__ "hhx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_MAX__ 255{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT8_TYPE__ unsigned char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_C_SUFFIX__ ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTMAX_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_FMTX__ "lX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_FMTo__ "lo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_FMTu__ "lu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_FMTx__ "lx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_MAX__ 18446744073709551615UL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_TYPE__ long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINTPTR_WIDTH__ 64{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST16_FMTX__ "hX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST16_FMTo__ "ho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST16_FMTu__ "hu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST16_FMTx__ "hx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST16_MAX__ 65535{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST32_FMTX__ "X"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST32_FMTo__ "o"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST32_FMTu__ "u"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST32_FMTx__ "x"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST32_MAX__ 4294967295U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST64_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST64_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST64_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST64_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST64_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST64_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST8_FMTX__ "hhX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST8_FMTo__ "hho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST8_FMTu__ "hhu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST8_FMTx__ "hhx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST8_MAX__ 255{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_FAST8_TYPE__ unsigned char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST16_FMTX__ "hX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST16_FMTo__ "ho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST16_FMTu__ "hu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST16_FMTx__ "hx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST16_MAX__ 65535{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST16_TYPE__ unsigned short{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST32_FMTX__ "X"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST32_FMTo__ "o"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST32_FMTu__ "u"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST32_FMTx__ "x"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST32_MAX__ 4294967295U{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST32_TYPE__ unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST64_FMTX__ "llX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST64_FMTo__ "llo"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST64_FMTu__ "llu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST64_FMTx__ "llx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST64_TYPE__ long long unsigned int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST8_FMTX__ "hhX"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST8_FMTo__ "hho"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST8_FMTu__ "hhu"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST8_FMTx__ "hhx"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST8_MAX__ 255{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __UINT_LEAST8_TYPE__ unsigned char{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __USER_LABEL_PREFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __VERSION__ "{{.*}}"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __WCHAR_MAX__ 2147483647{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __WCHAR_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __WCHAR_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __WCHAR_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __WINT_TYPE__ int{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __WINT_UNSIGNED__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __WINT_WIDTH__ 32{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __clang__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __clang_major__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __clang_minor__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __clang_patchlevel__ {{.}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __clang_version__ "{{.*}}"{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __llvm__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __wasm_simd128__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __wasm_simd256__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __wasm_simd512__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __unix
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __unix__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __wasm 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __wasm32
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NOT:#define __wasm32__
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __wasm64 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __wasm64__ 1{{$}}
+end_comment
+
+begin_comment
+comment|// WEBASSEMBLY64-NEXT:#define __wasm__ 1{{$}}
 end_comment
 
 end_unit

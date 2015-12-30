@@ -1684,9 +1684,7 @@ name|PartialDiagnostic
 operator|&
 name|PD
 operator|,
-specifier|const
 name|SourceRange
-operator|&
 name|R
 operator|)
 block|{

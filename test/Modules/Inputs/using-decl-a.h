@@ -13,6 +13,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|merged
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|namespace
 name|UsingDecl
 block|{

@@ -4,10 +4,6 @@ comment|// RUN: %clang -### -working-directory /no/such/dir/ input 2>&1 | FileCh
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|//CHECK: no such file or directory: '/no/such/dir/input'
 end_comment
 

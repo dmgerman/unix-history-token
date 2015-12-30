@@ -192,6 +192,14 @@ name|ID
 name|Id
 parameter_list|)
 function_decl|;
+comment|/// Is this LLVM IR.
+name|bool
+name|isLLVMIR
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
 comment|/// isCuda - Is this a CUDA input.
 name|bool
 name|isCuda

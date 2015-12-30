@@ -27,5 +27,29 @@ begin_comment
 comment|// CHECK-OPTIONS2: -fobjc-runtime=ios-5.0.0
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -x objective-c -target x86_64-apple-darwin -mtvos-simulator-version-min=8.3.0 -fobjc-arc -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-OPTIONS3 %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS3: x86_64-apple-tvos8.3.0
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS3: -fobjc-runtime=ios-8.3.0
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -x objective-c -target x86_64-apple-darwin -mwatchos-simulator-version-min=2.0.0 -fobjc-arc -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-OPTIONS4 %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS4: x86_64-apple-watchos2.0.0
+end_comment
+
+begin_comment
+comment|// CHECK-OPTIONS4: -fobjc-runtime=watchos-2.0.0
+end_comment
+
 end_unit
 

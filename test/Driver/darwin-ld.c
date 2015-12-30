@@ -528,6 +528,238 @@ comment|// LINK_NO_IOS_ARM64_CRT1-NOT: crt
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm64-apple-tvos8.3 -mtvos-version-min=8.3 -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_TVOS_ARM64 %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_ARM64: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_ARM64: -tvos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_ARM64-NOT: crt
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_ARM64-NOT: lgcc_s.1
+end_comment
+
+begin_comment
+comment|// FIXME: This library does not get built unless the tvOS SDK is
+end_comment
+
+begin_comment
+comment|// installed, and the driver will not try to link it if it does not exist.
+end_comment
+
+begin_comment
+comment|// This should be reenabled when the tvOS SDK becomes a standard part
+end_comment
+
+begin_comment
+comment|// of Xcode.
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_TVOS_ARM64: libclang_rt.tvos.a
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64-apple-tvos8.3 -mtvos-version-min=8.3 -fprofile-instr-generate -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_TVOS_PROFILE %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_PROFILE: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// FIXME: These libraries do not get built unless the tvOS SDK is
+end_comment
+
+begin_comment
+comment|// installed, and the driver will not try to link them if they do not exist.
+end_comment
+
+begin_comment
+comment|// This should be reenabled when the tvOS SDK becomes a standard part
+end_comment
+
+begin_comment
+comment|// of Xcode.
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_TVOS_PROFILE: libclang_rt.profile_tvos.a
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_TVOS_PROFILE: libclang_rt.tvos.a
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64-apple-tvos8.3 -mtvos-version-min=8.3 -### %t.o -lcc_kext 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_TVOS_KEXT %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_KEXT: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// FIXME: These libraries do not get built unless the tvOS SDK is
+end_comment
+
+begin_comment
+comment|// installed, and the driver will not try to link them if they do not exist.
+end_comment
+
+begin_comment
+comment|// This should be reenabled when the tvOS SDK becomes a standard part
+end_comment
+
+begin_comment
+comment|// of Xcode.
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_TVOS_KEXT: libclang_rt.cc_kext_tvos.a
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_TVOS_KEXT: libclang_rt.tvos.a
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7k-apple-watchos2.0 -mwatchos-version-min=2.0 -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_WATCHOS_ARM %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_ARM: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_ARM: -watchos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_ARM-NOT: crt
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_ARM-NOT: lgcc_s.1
+end_comment
+
+begin_comment
+comment|// FIXME: This library does not get built unless the watchOS SDK is
+end_comment
+
+begin_comment
+comment|// installed, and the driver will not try to link it if it does not exist.
+end_comment
+
+begin_comment
+comment|// This should be reenabled when the watchOS SDK becomes a standard part
+end_comment
+
+begin_comment
+comment|// of Xcode.
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_WATCHOS_ARM: libclang_rt.watchos.a
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7k-apple-watchos2.0 -mwatchos-version-min=2.0 -fprofile-instr-generate -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_WATCHOS_PROFILE %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_PROFILE: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// FIXME: These libraries do not get built unless the watchOS SDK is
+end_comment
+
+begin_comment
+comment|// installed, and the driver will not try to link them if they do not exist.
+end_comment
+
+begin_comment
+comment|// This should be reenabled when the watchOS SDK becomes a standard part
+end_comment
+
+begin_comment
+comment|// of Xcode.
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_WATCHOS_PROFILE: libclang_rt.profile_watchos.a
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_WATCHOS_PROFILE: libclang_rt.watchos.a
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7k-apple-watchos2.0 -mwatchos-version-min=2.0 -### %t.o -lcc_kext 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_WATCHOS_KEXT %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_KEXT: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// FIXME: These libraries do not get built unless the watchOS SDK is
+end_comment
+
+begin_comment
+comment|// installed, and the driver will not try to link them if they do not exist.
+end_comment
+
+begin_comment
+comment|// This should be reenabled when the watchOS SDK becomes a standard part
+end_comment
+
+begin_comment
+comment|// of Xcode.
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_WATCHOS_KEXT: libclang_rt.cc_kext_watchos.a
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_WATCHOS_KEXT: libclang_rt.watchos.a
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-apple-darwin12 -pg -### %t.o 2> %t.log
 end_comment
 
@@ -705,6 +937,78 @@ end_comment
 
 begin_comment
 comment|// LINK_IOS_SIMULATOR_VERSION_MIN: -ios_simulator_version_min
+end_comment
+
+begin_comment
+comment|// Ditto for tvOS....
+end_comment
+
+begin_comment
+comment|// RUN: env TVOS_DEPLOYMENT_TARGET=7.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target armv7-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_TVOS_VERSION_MIN %s< %t.log
+end_comment
+
+begin_comment
+comment|// RUN: env TVOS_DEPLOYMENT_TARGET=7.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target x86_64-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_TVOS_SIMULATOR_VERSION_MIN %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_VERSION_MIN: -tvos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_TVOS_SIMULATOR_VERSION_MIN: -tvos_simulator_version_min
+end_comment
+
+begin_comment
+comment|// ...and for watchOS.
+end_comment
+
+begin_comment
+comment|// RUN: env WATCHOS_DEPLOYMENT_TARGET=2.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target armv7k-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_WATCHOS_VERSION_MIN %s< %t.log
+end_comment
+
+begin_comment
+comment|// RUN: env WATCHOS_DEPLOYMENT_TARGET=2.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target i386-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_WATCHOS_SIMULATOR_VERSION_MIN %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_VERSION_MIN: -watchos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_WATCHOS_SIMULATOR_VERSION_MIN: -watchos_simulator_version_min
 end_comment
 
 begin_comment

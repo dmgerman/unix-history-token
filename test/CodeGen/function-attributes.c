@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -Os -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -disable-llvm-optzns -Os -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -Os -std=c99 -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -disable-llvm-optzns -Os -std=c99 -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -326,7 +326,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f13() [[NUW]]
+comment|// CHECK: define void @f13() [[NUW_OS_RN:#[0-9]+]]
 end_comment
 
 begin_function_decl
@@ -358,112 +358,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{}
-end_function
-
-begin_comment
-comment|// Ensure that these get inlined: rdar://6853279
-end_comment
-
-begin_comment
-comment|// CHECK-LABEL: define void @f14
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: @ai_
-end_comment
-
-begin_comment
-comment|// CHECK: call void @f14_end
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|__attribute__
-argument_list|(
-operator|(
-name|always_inline
-operator|)
-argument_list|)
-name|int
-name|ai_1
-argument_list|()
-block|{
-return|return
-literal|4
-return|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|__attribute__
-argument_list|(
-operator|(
-name|always_inline
-operator|)
-argument_list|)
-decl|struct
-block|{
-name|int
-name|a
-decl_stmt|,
-name|b
-decl_stmt|,
-name|c
-decl_stmt|,
-name|d
-decl_stmt|,
-name|e
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_macro
-name|ai_2
-argument_list|()
-end_macro
-
-begin_block
-block|{
-while|while
-condition|(
-literal|1
-condition|)
-block|{}
-block|}
-end_block
-
-begin_function
-name|void
-name|f14
-parameter_list|(
-name|int
-name|a
-parameter_list|)
-block|{
-specifier|extern
-name|void
-name|f14_end
-argument_list|(
-name|void
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|a
-condition|)
-name|ai_2
-argument_list|()
-expr_stmt|;
-name|ai_1
-argument_list|()
-expr_stmt|;
-name|f14_end
-argument_list|()
-expr_stmt|;
-block|}
 end_function
 
 begin_comment
@@ -695,15 +589,19 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind optsize readnone{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { nounwind optsize{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[AI]] = { alwaysinline nounwind optsize readnone{{.*}} }
+comment|// CHECK: attributes [[AI]] = { alwaysinline nounwind optsize{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[ALIGN]] = { nounwind optsize readnone alignstack=16{{.*}} }
+comment|// CHECK: attributes [[NUW_OS_RN]] = { nounwind optsize readnone{{.*}} }
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[ALIGN]] = { nounwind optsize alignstack=16{{.*}} }
 end_comment
 
 begin_comment
@@ -711,7 +609,7 @@ comment|// CHECK: attributes [[RT]] = { nounwind optsize returns_twice{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NR]] = { noreturn nounwind optsize }
+comment|// CHECK: attributes [[NR]] = { noreturn optsize }
 end_comment
 
 begin_comment
@@ -719,7 +617,7 @@ comment|// CHECK: attributes [[NUW_RN]] = { nounwind optsize readnone }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[RT_CALL]] = { nounwind optsize returns_twice }
+comment|// CHECK: attributes [[RT_CALL]] = { optsize returns_twice }
 end_comment
 
 end_unit

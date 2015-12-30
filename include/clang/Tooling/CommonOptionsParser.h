@@ -140,6 +140,7 @@ comment|/// An example of usage:
 comment|/// \code
 comment|/// #include "clang/Frontend/FrontendActions.h"
 comment|/// #include "clang/Tooling/CommonOptionsParser.h"
+comment|/// #include "clang/Tooling/Tooling.h"
 comment|/// #include "llvm/Support/CommandLine.h"
 comment|///
 comment|/// using namespace clang::tooling;
@@ -154,8 +155,8 @@ comment|///
 comment|/// int main(int argc, const char **argv) {
 comment|///   CommonOptionsParser OptionsParser(argc, argv, MyToolCategory);
 comment|///   ClangTool Tool(OptionsParser.getCompilations(),
-comment|///                  OptionsParser.getSourcePathListi());
-comment|///   return Tool.run(newFrontendActionFactory<clang::SyntaxOnlyAction>());
+comment|///                  OptionsParser.getSourcePathList());
+comment|///   return Tool.run(newFrontendActionFactory<SyntaxOnlyAction>().get());
 comment|/// }
 comment|/// \endcode
 name|class
@@ -197,6 +198,42 @@ operator|*
 name|Overview
 operator|=
 name|nullptr
+argument_list|)
+operator|:
+name|CommonOptionsParser
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|,
+argument|Category
+argument_list|,
+argument|llvm::cl::OneOrMore
+argument_list|,
+argument|Overview
+argument_list|)
+block|{}
+comment|/// \brief Parses command-line, initializes a compilation database.
+comment|///
+comment|/// This constructor can change argc and argv contents, e.g. consume
+comment|/// command-line options used for creating FixedCompilationDatabase.
+comment|///
+comment|/// All options not belonging to \p Category become hidden.
+comment|///
+comment|/// I also allows calls to set the required number of positional parameters.
+comment|///
+comment|/// This constructor exits program in case of error.
+name|CommonOptionsParser
+argument_list|(
+argument|int&argc
+argument_list|,
+argument|const char **argv
+argument_list|,
+argument|llvm::cl::OptionCategory&Category
+argument_list|,
+argument|llvm::cl::NumOccurrencesFlag OccurrencesFlag
+argument_list|,
+argument|const char *Overview = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// Returns a reference to the loaded compilations database.

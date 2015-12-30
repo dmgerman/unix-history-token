@@ -42,7 +42,7 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: [[LOAD:%[^ ]+]] = load i32, i32* getelementptr inbounds ({ i32, i32, i32, [1 x i32] }, { i32, i32, i32, [1 x i32] }* @__cpu_model, i32 0, i32 3, i32 0)
 comment|// CHECK: [[AND:%[^ ]+]] = and i32 [[LOAD]], 256
-comment|// CHECK = icmp ne i32 [[AND]], 0
+comment|// CHECK: = icmp ne i32 [[AND]], 0
 return|return
 literal|0
 return|;

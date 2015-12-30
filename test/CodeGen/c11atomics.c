@@ -679,11 +679,11 @@ comment|// CHECK-NEXT: [[TMP0:%.*]] = alloca [[S]], align 8
 comment|// CHECK-NEXT: store [[S]]*
 comment|// CHECK-NEXT: [[P:%.*]] = load [[S]]*, [[S]]** [[FP]]
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[P]], i32 0, i32 0
-comment|// CHECK-NEXT: store i16 1, i16* [[T0]], align 2
+comment|// CHECK-NEXT: store i16 1, i16* [[T0]], align 8
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[P]], i32 0, i32 1
 comment|// CHECK-NEXT: store i16 2, i16* [[T0]], align 2
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[P]], i32 0, i32 2
-comment|// CHECK-NEXT: store i16 3, i16* [[T0]], align 2
+comment|// CHECK-NEXT: store i16 3, i16* [[T0]], align 4
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[P]], i32 0, i32 3
 comment|// CHECK-NEXT: store i16 4, i16* [[T0]], align 2
 name|__c11_atomic_init
@@ -705,11 +705,11 @@ block|}
 argument_list|)
 expr_stmt|;
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[X]], i32 0, i32 0
-comment|// CHECK-NEXT: store i16 1, i16* [[T0]], align 2
+comment|// CHECK-NEXT: store i16 1, i16* [[T0]], align 8
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[X]], i32 0, i32 1
 comment|// CHECK-NEXT: store i16 2, i16* [[T0]], align 2
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[X]], i32 0, i32 2
-comment|// CHECK-NEXT: store i16 3, i16* [[T0]], align 2
+comment|// CHECK-NEXT: store i16 3, i16* [[T0]], align 4
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[S]], [[S]]* [[X]], i32 0, i32 3
 comment|// CHECK-NEXT: store i16 4, i16* [[T0]], align 2
 atomic|_Atomic
@@ -821,11 +821,11 @@ comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[APS]]* [[P]] to i8*
 comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i64(i8* [[T0]], i8 0, i64 8, i32 8, i1 false)
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[APS]], [[APS]]* [[P]], i32 0, i32 0
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]], [[PS]]* [[T0]], i32 0, i32 0
-comment|// CHECK-NEXT: store i16 1, i16* [[T1]], align 2
+comment|// CHECK-NEXT: store i16 1, i16* [[T1]], align 8
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]], [[PS]]* [[T0]], i32 0, i32 1
 comment|// CHECK-NEXT: store i16 2, i16* [[T1]], align 2
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]], [[PS]]* [[T0]], i32 0, i32 2
-comment|// CHECK-NEXT: store i16 3, i16* [[T1]], align 2
+comment|// CHECK-NEXT: store i16 3, i16* [[T1]], align 4
 name|__c11_atomic_init
 argument_list|(
 name|fp
@@ -846,11 +846,11 @@ comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[APS]]* [[X]] to i8*
 comment|// CHECK-NEXT: call void @llvm.memset.p0i8.i32(i8* [[T0]], i8 0, i32 8, i32 8, i1 false)
 comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[APS]], [[APS]]* [[X]], i32 0, i32 0
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]], [[PS]]* [[T0]], i32 0, i32 0
-comment|// CHECK-NEXT: store i16 1, i16* [[T1]], align 2
+comment|// CHECK-NEXT: store i16 1, i16* [[T1]], align 8
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]], [[PS]]* [[T0]], i32 0, i32 1
 comment|// CHECK-NEXT: store i16 2, i16* [[T1]], align 2
 comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[PS]], [[PS]]* [[T0]], i32 0, i32 2
-comment|// CHECK-NEXT: store i16 3, i16* [[T1]], align 2
+comment|// CHECK-NEXT: store i16 3, i16* [[T1]], align 4
 atomic|_Atomic
 argument_list|(
 name|PS
@@ -926,94 +926,214 @@ comment|// CHECK-NEXT: ret void
 block|}
 end_function
 
-begin_comment
-comment|// CHECK: define arm_aapcscc void @testPromotedStructOps([[APS:.*]]*
-end_comment
-
-begin_comment
-comment|// FIXME: none of these look right, but we can leave the "test" here
-end_comment
-
-begin_comment
-comment|// to make sure they at least don't crash.
-end_comment
-
 begin_function
-name|void
-name|testPromotedStructOps
+name|PS
+name|test_promoted_load
 parameter_list|(
 atomic|_Atomic
 argument_list|(
 name|PS
 argument_list|)
 modifier|*
-name|p
+name|addr
 parameter_list|)
 block|{
-name|PS
-name|a
-init|=
+comment|// CHECK-LABEL: @test_promoted_load(%struct.PS* noalias sret %agg.result, { %struct.PS, [2 x i8] }* %addr)
+comment|// CHECK:   [[ADDR_ARG:%.*]] = alloca { %struct.PS, [2 x i8] }*, align 4
+comment|// CHECK:   [[ATOMIC_RES:%.*]] = alloca { %struct.PS, [2 x i8] }, align 8
+comment|// CHECK:   store { %struct.PS, [2 x i8] }* %addr, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   [[ADDR:%.*]] = load { %struct.PS, [2 x i8] }*, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   [[ADDR64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ADDR]] to i64*
+comment|// CHECK:   [[ATOMIC_RES64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_RES]] to i64*
+comment|// CHECK:   [[ADDR8:%.*]] = bitcast i64* [[ADDR64]] to i8*
+comment|// CHECK:   [[RES:%.*]] = call arm_aapcscc i64 @__atomic_load_8(i8* [[ADDR8]], i32 5)
+comment|// CHECK:   store i64 [[RES]], i64* [[ATOMIC_RES64]], align 8
+comment|// CHECK:   [[ATOMIC_RES_STRUCT:%.*]] = bitcast i64* [[ATOMIC_RES64]] to %struct.PS*
+comment|// CHECK:   [[AGG_RESULT8:%.*]] = bitcast %struct.PS* %agg.result to i8*
+comment|// CHECK:   [[ATOMIC_RES8:%.*]] = bitcast %struct.PS* [[ATOMIC_RES_STRUCT]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[AGG_RESULT8]], i8* [[ATOMIC_RES8]], i32 6, i32 2, i1 false)
+return|return
 name|__c11_atomic_load
 argument_list|(
-name|p
+name|addr
 argument_list|,
 literal|5
 argument_list|)
-decl_stmt|;
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_promoted_store
+parameter_list|(
+atomic|_Atomic
+argument_list|(
+name|PS
+argument_list|)
+modifier|*
+name|addr
+parameter_list|,
+name|PS
+modifier|*
+name|val
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_promoted_store({ %struct.PS, [2 x i8] }* %addr, %struct.PS* %val)
+comment|// CHECK:   [[ADDR_ARG:%.*]] = alloca { %struct.PS, [2 x i8] }*, align 4
+comment|// CHECK:   [[VAL_ARG:%.*]] = alloca %struct.PS*, align 4
+comment|// CHECK:   [[NONATOMIC_TMP:%.*]] = alloca %struct.PS, align 2
+comment|// CHECK:   [[ATOMIC_VAL:%.*]] = alloca { %struct.PS, [2 x i8] }, align 8
+comment|// CHECK:   store { %struct.PS, [2 x i8] }* %addr, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   store %struct.PS* %val, %struct.PS** [[VAL_ARG]], align 4
+comment|// CHECK:   [[ADDR:%.*]] = load { %struct.PS, [2 x i8] }*, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   [[VAL:%.*]] = load %struct.PS*, %struct.PS** [[VAL_ARG]], align 4
+comment|// CHECK:   [[NONATOMIC_TMP8:%.*]] = bitcast %struct.PS* [[NONATOMIC_TMP]] to i8*
+comment|// CHECK:   [[VAL8:%.*]] = bitcast %struct.PS* [[VAL]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[NONATOMIC_TMP8]], i8* [[VAL8]], i32 6, i32 2, i1 false)
+comment|// CHECK:   [[ADDR64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ADDR]] to i64*
+comment|// CHECK:   [[ATOMIC_VAL8:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_VAL]] to i8*
+comment|// CHECK:   [[NONATOMIC_TMP8:%.*]] = bitcast %struct.PS* [[NONATOMIC_TMP]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[ATOMIC_VAL8]], i8* [[NONATOMIC_TMP8]], i64 6, i32 2, i1 false)
+comment|// CHECK:   [[ATOMIC_VAL64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_VAL]] to i64*
+comment|// CHECK:   [[ADDR8:%.*]] = bitcast i64* [[ADDR64]] to i8*
+comment|// CHECK:   [[VAL64:%.*]] = load i64, i64* [[ATOMIC_VAL64]], align 2
+comment|// CHECK:   call arm_aapcscc void @__atomic_store_8(i8* [[ADDR8]], i64 [[VAL64]], i32 5)
 name|__c11_atomic_store
 argument_list|(
-name|p
+name|addr
 argument_list|,
-name|a
+operator|*
+name|val
 argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|PS
-name|b
-init|=
+name|test_promoted_exchange
+parameter_list|(
+atomic|_Atomic
+argument_list|(
+name|PS
+argument_list|)
+modifier|*
+name|addr
+parameter_list|,
+name|PS
+modifier|*
+name|val
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_promoted_exchange(%struct.PS* noalias sret %agg.result, { %struct.PS, [2 x i8] }* %addr, %struct.PS* %val)
+comment|// CHECK:   [[ADDR_ARG:%.*]] = alloca { %struct.PS, [2 x i8] }*, align 4
+comment|// CHECK:   [[VAL_ARG:%.*]] = alloca %struct.PS*, align 4
+comment|// CHECK:   [[NONATOMIC_TMP:%.*]] = alloca %struct.PS, align 2
+comment|// CHECK:   [[ATOMIC_VAL:%.*]] = alloca { %struct.PS, [2 x i8] }, align 8
+comment|// CHECK:   [[ATOMIC_RES:%.*]] = alloca { %struct.PS, [2 x i8] }, align 8
+comment|// CHECK:   store { %struct.PS, [2 x i8] }* %addr, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   store %struct.PS* %val, %struct.PS** [[VAL_ARG]], align 4
+comment|// CHECK:   [[ADDR:%.*]] = load { %struct.PS, [2 x i8] }*, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   [[VAL:%.*]] = load %struct.PS*, %struct.PS** [[VAL_ARG]], align 4
+comment|// CHECK:   [[NONATOMIC_TMP8:%.*]] = bitcast %struct.PS* [[NONATOMIC_TMP]] to i8*
+comment|// CHECK:   [[VAL8:%.*]] = bitcast %struct.PS* [[VAL]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[NONATOMIC_TMP8]], i8* [[VAL8]], i32 6, i32 2, i1 false)
+comment|// CHECK:   [[ADDR64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ADDR]] to i64*
+comment|// CHECK:   [[ATOMIC_VAL8:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_VAL]] to i8*
+comment|// CHECK:   [[NONATOMIC_TMP8:%.*]] = bitcast %struct.PS* [[NONATOMIC_TMP]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[ATOMIC_VAL8]], i8* [[NONATOMIC_TMP8]], i64 6, i32 2, i1 false)
+comment|// CHECK:   [[ATOMIC_VAL64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_VAL]] to i64*
+comment|// CHECK:   [[ATOMIC_RES64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_RES]] to i64*
+comment|// CHECK:   [[ADDR8:%.*]] = bitcast i64* [[ADDR64]] to i8*
+comment|// CHECK:   [[VAL64:%.*]] = load i64, i64* [[ATOMIC_VAL64]], align 2
+comment|// CHECK:   [[RES:%.*]] = call arm_aapcscc i64 @__atomic_exchange_8(i8* [[ADDR8]], i64 [[VAL64]], i32 5)
+comment|// CHECK:   store i64 [[RES]], i64* [[ATOMIC_RES64]], align 8
+comment|// CHECK:   [[ATOMIC_RES_STRUCT:%.*]] = bitcast i64* [[ATOMIC_RES64]] to %struct.PS*
+comment|// CHECK:   [[AGG_RESULT8:%.*]] = bitcast %struct.PS* %agg.result to i8*
+comment|// CHECK:   [[ATOMIC_RES8:%.*]] = bitcast %struct.PS* [[ATOMIC_RES_STRUCT]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[AGG_RESULT8]], i8* [[ATOMIC_RES8]], i32 6, i32 2, i1 false)
+return|return
 name|__c11_atomic_exchange
 argument_list|(
-name|p
+name|addr
 argument_list|,
-name|a
+operator|*
+name|val
 argument_list|,
 literal|5
 argument_list|)
-decl_stmt|;
+return|;
+block|}
+end_function
+
+begin_function
 name|_Bool
-name|v
-init|=
+name|test_promoted_cmpxchg
+parameter_list|(
+atomic|_Atomic
+argument_list|(
+name|PS
+argument_list|)
+modifier|*
+name|addr
+parameter_list|,
+name|PS
+modifier|*
+name|desired
+parameter_list|,
+name|PS
+modifier|*
+name|new
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: i1 @test_promoted_cmpxchg({ %struct.PS, [2 x i8] }* %addr, %struct.PS* %desired, %struct.PS* %new) #0 {
+comment|// CHECK:   [[ADDR_ARG:%.*]] = alloca { %struct.PS, [2 x i8] }*, align 4
+comment|// CHECK:   [[DESIRED_ARG:%.*]] = alloca %struct.PS*, align 4
+comment|// CHECK:   [[NEW_ARG:%.*]] = alloca %struct.PS*, align 4
+comment|// CHECK:   [[NONATOMIC_TMP:%.*]] = alloca %struct.PS, align 2
+comment|// CHECK:   [[ATOMIC_DESIRED:%.*]] = alloca { %struct.PS, [2 x i8] }, align 8
+comment|// CHECK:   [[ATOMIC_NEW:%.*]] = alloca { %struct.PS, [2 x i8] }, align 8
+comment|// CHECK:   store { %struct.PS, [2 x i8] }* %addr, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   store %struct.PS* %desired, %struct.PS** [[DESIRED_ARG]], align 4
+comment|// CHECK:   store %struct.PS* %new, %struct.PS** [[NEW_ARG]], align 4
+comment|// CHECK:   [[ADDR:%.*]] = load { %struct.PS, [2 x i8] }*, { %struct.PS, [2 x i8] }** [[ADDR_ARG]], align 4
+comment|// CHECK:   [[DESIRED:%.*]]= load %struct.PS*, %struct.PS** [[DESIRED_ARG]], align 4
+comment|// CHECK:   [[NEW:%.*]] = load %struct.PS*, %struct.PS** [[NEW_ARG]], align 4
+comment|// CHECK:   [[NONATOMIC_TMP8:%.*]] = bitcast %struct.PS* [[NONATOMIC_TMP]] to i8*
+comment|// CHECK:   [[NEW8:%.*]] = bitcast %struct.PS* [[NEW]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i32(i8* [[NONATOMIC_TMP8]], i8* [[NEW8]], i32 6, i32 2, i1 false)
+comment|// CHECK:   [[ADDR64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ADDR]] to i64*
+comment|// CHECK:   [[ATOMIC_DESIRED8:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_DESIRED]] to i8*
+comment|// CHECK:   [[DESIRED8:%.*]] = bitcast %struct.PS* [[DESIRED]]to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[ATOMIC_DESIRED8]], i8* [[DESIRED8]], i64 6, i32 2, i1 false)
+comment|// CHECK:   [[ATOMIC_DESIRED64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_DESIRED]] to i64*
+comment|// CHECK:   [[ATOMIC_NEW8:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_NEW]] to i8*
+comment|// CHECK:   [[NONATOMIC_TMP8:%.*]] = bitcast %struct.PS* [[NONATOMIC_TMP]] to i8*
+comment|// CHECK:   call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[ATOMIC_NEW8]], i8* [[NONATOMIC_TMP8]], i64 6, i32 2, i1 false)
+comment|// CHECK:   [[ATOMIC_NEW64:%.*]] = bitcast { %struct.PS, [2 x i8] }* [[ATOMIC_NEW]] to i64*
+comment|// CHECK:   [[ADDR8:%.*]] = bitcast i64* [[ADDR64]] to i8*
+comment|// CHECK:   [[ATOMIC_DESIRED8:%.*]] = bitcast i64* [[ATOMIC_DESIRED64]] to i8*
+comment|// CHECK:   [[NEW64:%.*]] = load i64, i64* [[ATOMIC_NEW64]], align 2
+comment|// CHECK:   [[RES:%.*]] = call arm_aapcscc zeroext i1 @__atomic_compare_exchange_8(i8* [[ADDR8]], i8* [[ATOMIC_DESIRED8]], i64 [[NEW64]], i32 5, i32 5)
+comment|// CHECK:   ret i1 [[RES]]
+return|return
 name|__c11_atomic_compare_exchange_strong
 argument_list|(
-name|p
+name|addr
 argument_list|,
-operator|&
-name|b
+name|desired
 argument_list|,
-name|a
-argument_list|,
-literal|5
-argument_list|,
-literal|5
-argument_list|)
-decl_stmt|;
-name|v
-operator|=
-name|__c11_atomic_compare_exchange_weak
-argument_list|(
-name|p
-argument_list|,
-operator|&
-name|b
-argument_list|,
-name|a
+operator|*
+name|new
 argument_list|,
 literal|5
 argument_list|,
 literal|5
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

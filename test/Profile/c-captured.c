@@ -12,15 +12,15 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-cap
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[DCC:__llvm_profile_counters_debug_captured]] = private global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[DCC:__profc_debug_captured]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[CSC:"__llvm_profile_counters_c-captured.c:__captured_stmt"]] = private global [2 x i64] zeroinitializer
+comment|// PGOGEN: @[[CSC:__profc_c_captured.c___captured_stmt]] = private global [2 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[C1C:"__llvm_profile_counters_c-captured.c:__captured_stmt.1"]] = private global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[C1C:__profc_c_captured.c___captured_stmt.1]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment

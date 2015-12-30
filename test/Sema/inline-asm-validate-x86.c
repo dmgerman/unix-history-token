@@ -120,6 +120,67 @@ end_function
 
 begin_function
 name|void
+name|L
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|int
+name|j
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|int
+name|Invalid1
+init|=
+literal|1
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|Invalid2
+init|=
+literal|42
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|Valid1
+init|=
+literal|0xff
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|Valid2
+init|=
+literal|0xffff
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|Valid3
+init|=
+literal|0xffffffff
+decl_stmt|;
+asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "L"(j));
+comment|// expected-error{{constraint 'L' expects an integer constant expression}}
+asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "L"(Invalid1));
+comment|// expected-error{{value '1' out of range for constraint 'L'}}
+asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "L"(Invalid2));
+comment|// expected-error{{value '42' out of range for constraint 'L'}}
+asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "L"(Valid1));
+comment|// expected-no-error
+asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "L"(Valid2));
+comment|// expected-no-error
+asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "L"(Valid3));
+comment|// expected-no-error
+block|}
+end_function
+
+begin_function
+name|void
 name|M
 parameter_list|(
 name|int

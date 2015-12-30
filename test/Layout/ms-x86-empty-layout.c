@@ -30,31 +30,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: *** Dumping AST Record Layout
+comment|// CHECK:       *** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK: Type: struct EmptyIntMemb
+comment|// CHECK-NEXT:  0 | struct EmptyIntMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Record:
+comment|// CHECK-NEXT:  0 | int [0] FlexArrayMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Layout:<ASTRecordLayout
-end_comment
-
-begin_comment
-comment|// CHECK:     Size:32
-end_comment
-
-begin_comment
-comment|// CHECK:     Alignment:32
-end_comment
-
-begin_comment
-comment|// CHECK:     FieldOffsets: [0]>
+comment|// CHECK-NEXT:    | [sizeof=4, align=4
 end_comment
 
 begin_struct
@@ -77,27 +65,15 @@ comment|// CHECK: *** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK: Type: struct EmptyLongLongMemb
+comment|// CHECK-NEXT:  0 | struct EmptyLongLongMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Record:
+comment|// CHECK-NEXT:  0 | long long [0] FlexArrayMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Layout:<ASTRecordLayout
-end_comment
-
-begin_comment
-comment|// CHECK:     Size:32
-end_comment
-
-begin_comment
-comment|// CHECK:     Alignment:64
-end_comment
-
-begin_comment
-comment|// CHECK:     FieldOffsets: [0]>
+comment|// CHECK-NEXT:    | [sizeof=4, align=8
 end_comment
 
 begin_struct
@@ -127,27 +103,15 @@ comment|// CHECK: *** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK: Type: struct EmptyAligned2LongLongMemb
+comment|// CHECK-NEXT:  0 | struct EmptyAligned2LongLongMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Record:
+comment|// CHECK-NEXT:  0 | long long [0] FlexArrayMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Layout:<ASTRecordLayout
-end_comment
-
-begin_comment
-comment|// CHECK:     Size:32
-end_comment
-
-begin_comment
-comment|// CHECK:     Alignment:64
-end_comment
-
-begin_comment
-comment|// CHECK:     FieldOffsets: [0]>
+comment|// CHECK-NEXT:    | [sizeof=4, align=8
 end_comment
 
 begin_struct
@@ -177,27 +141,15 @@ comment|// CHECK: *** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK: Type: struct EmptyAligned8LongLongMemb
+comment|// CHECK-NEXT:  0 | struct EmptyAligned8LongLongMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Record:
+comment|// CHECK-NEXT:  0 | long long [0] FlexArrayMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Layout:<ASTRecordLayout
-end_comment
-
-begin_comment
-comment|// CHECK:     Size:64
-end_comment
-
-begin_comment
-comment|// CHECK:     Alignment:64
-end_comment
-
-begin_comment
-comment|// CHECK:     FieldOffsets: [0]>
+comment|// CHECK-NEXT:    | [sizeof=8, align=8
 end_comment
 
 begin_pragma
@@ -243,27 +195,15 @@ comment|// CHECK: *** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK: Type: struct EmptyPackedAligned4LongLongMemb
+comment|// CHECK-NEXT:  0 | struct EmptyPackedAligned4LongLongMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Record:
+comment|// CHECK-NEXT:  0 | long long [0] FlexArrayMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Layout:<ASTRecordLayout
-end_comment
-
-begin_comment
-comment|// CHECK:     Size:32
-end_comment
-
-begin_comment
-comment|// CHECK:     Alignment:32
-end_comment
-
-begin_comment
-comment|// CHECK:     FieldOffsets: [0]>
+comment|// CHECK-NEXT:    | [sizeof=4, align=4
 end_comment
 
 begin_pragma
@@ -310,27 +250,15 @@ comment|// CHECK: *** Dumping AST Record Layout
 end_comment
 
 begin_comment
-comment|// CHECK: Type: struct EmptyPackedAligned8LongLongMemb
+comment|// CHECK-NEXT:  0 | struct EmptyPackedAligned8LongLongMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Record:
+comment|// CHECK-NEXT:  0 | long long [0] FlexArrayMemb
 end_comment
 
 begin_comment
-comment|// CHECK: Layout:<ASTRecordLayout
-end_comment
-
-begin_comment
-comment|// CHECK:     Size:64
-end_comment
-
-begin_comment
-comment|// CHECK:     Alignment:64
-end_comment
-
-begin_comment
-comment|// CHECK:     FieldOffsets: [0]>
+comment|// CHECK-NEXT:    | [sizeof=8, align=8
 end_comment
 
 begin_decl_stmt

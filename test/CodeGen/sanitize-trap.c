@@ -19,16 +19,21 @@ comment|// CHECK: %[[B2:.*]] = icmp ne i32 %[[N:.*]], -2147483648
 comment|// CHECK: %[[B3:.*]] = icmp ne i32 %[[D]], -1
 comment|// CHECK: %[[B4:.*]] = or i1 %[[B2]], %[[B3]]
 comment|// CHECK: br i1 %[[B1]], label %[[L1:[0-9a-z_.]*]], label %[[L2:[0-9a-z_.]*]]
-comment|// CHECK: [[L2]]
+comment|// {{^|:}} used to match both Debug form of the captured label
+comment|// cont:
+comment|// and Release form
+comment|// ;<label>:14
+comment|// But avoids false matches inside other numbers such as [114 x i8].
+comment|// CHECK: {{^|:}}[[L2]]
 comment|// CHECK-NEXT: call void @llvm.trap()
 comment|// CHECK-NEXT: unreachable
-comment|// CHECK: [[L1]]
+comment|// CHECK: {{^|:}}[[L1]]
 comment|// CHECK-NEXT: br i1 %[[B4]], label %[[L3:[0-9a-z_.]*]], label %[[L4:[0-9a-z_.]*]]
-comment|// CHECK: [[L4]]
+comment|// CHECK: {{^|:}}[[L4]]
 comment|// CHECK-NEXT: zext
 comment|// CHECK-NEXT: zext
 comment|// CHECK-NEXT: __ubsan_handle_divrem_overflow
-comment|// CHECK: [[L3]]
+comment|// CHECK: {{^|:}}[[L3]]
 comment|// CHECK-NEXT: sdiv i32 %[[N]], %[[D]]
 return|return
 name|x

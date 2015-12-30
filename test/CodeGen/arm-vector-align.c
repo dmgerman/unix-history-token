@@ -69,7 +69,7 @@ name|addr2
 parameter_list|)
 block|{
 comment|// CHECK: @t1
-comment|// CHECK: call<4 x float> @llvm.arm.neon.vld1.v4f32(i8* %{{.*}}, i32 16)
+comment|// CHECK: call<4 x float> @llvm.arm.neon.vld1.v4f32.p0i8(i8* %{{.*}}, i32 16)
 name|float32x4_t
 name|a
 init|=
@@ -78,7 +78,7 @@ argument_list|(
 name|addr1
 argument_list|)
 decl_stmt|;
-comment|// CHECK: call void @llvm.arm.neon.vst1.v4f32(i8* %{{.*}},<4 x float> %{{.*}}, i32 16)
+comment|// CHECK: call void @llvm.arm.neon.vst1.p0i8.v4f32(i8* %{{.*}},<4 x float> %{{.*}}, i32 16)
 name|vst1q_f32
 argument_list|(
 name|addr2

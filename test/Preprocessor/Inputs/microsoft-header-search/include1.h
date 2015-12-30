@@ -11,17 +11,5 @@ directive|include
 file|"a/include2.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|once
-end_pragma
-
-begin_include
-include|#
-directive|include
-file|"a/include2.h"
-end_include
-
 end_unit
 

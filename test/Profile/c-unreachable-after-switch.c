@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -O3 -triple x86_64-apple-macosx10.10 -main-file-name 
 end_comment
 
 begin_comment
-comment|// CHECK: @[[C:__llvm_profile_counters_foo]] = private global [3 x i64] zeroinitializer
+comment|// CHECK: @[[C:__profc_foo]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment

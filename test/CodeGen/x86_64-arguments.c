@@ -1645,7 +1645,11 @@ comment|// CHECK: ptrtoint
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: and {{.*}}, -32
+comment|// CHECK-NEXT: add i64 %{{[0-9]+}}, 31
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: and i64 %{{[0-9]+}}, -32
 end_comment
 
 begin_comment

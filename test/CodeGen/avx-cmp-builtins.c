@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +a
 end_comment
 
 begin_comment
+comment|// FIXME: The shufflevector instructions in test_cmpgt_sd are relying on O3 here.
+end_comment
+
+begin_comment
 comment|// Don't include mm_malloc.h, it's system specific.
 end_comment
 

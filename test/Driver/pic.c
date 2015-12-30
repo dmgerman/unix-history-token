@@ -52,6 +52,10 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK-STATIC: "-static"
+end_comment
+
+begin_comment
 comment|// CHECK-NO-STATIC-NOT: "-static"
 end_comment
 
@@ -548,11 +552,35 @@ comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
 end_comment
 
 begin_comment
+comment|// The -static argument *doesn't* override PIC: -static only affects
+end_comment
+
+begin_comment
+comment|// linking, and -fPIC only affects code generation.
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -target i386-unknown-unknown -static -fPIC -### 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -target i386-linux-gnu -static -fPIC -### \
+end_comment
+
+begin_comment
+comment|// RUN: --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-STATIC
 end_comment
 
 begin_comment
@@ -821,6 +849,14 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-STATIC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target armv7k-apple-watchos -fapple-kext -mwatchos-version-min=1.0.0 -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
 end_comment
 
 begin_comment

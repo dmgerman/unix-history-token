@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -x c -o %t.pch %S/Inputs/c-index-pch.h
+comment|// RUN: c-index-test -write-pch %t.pch -x c %S/Inputs/c-index-pch.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -include-pch %t.pch -x c -emit-pch -o %t.ast %s
+comment|// RUN: c-index-test -write-pch %t.ast -Xclang -include-pch -Xclang %t.pch -x c %s
 end_comment
 
 begin_comment

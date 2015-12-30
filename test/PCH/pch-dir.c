@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: rm -rf %t.h.gch
+end_comment
+
+begin_comment
 comment|// RUN: mkdir -p %t.h.gch
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -44,7 +52,19 @@ comment|// RUN: not %clang -x c++ -std=c++11 -include %t.h -fsyntax-only %s 2> %
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=CHECK-CPP11 %s< %t.cpp11log
+comment|// RUN: FileCheck -check-prefix=CHECK-NO-SUITABLE %s< %t.cpp11log
+end_comment
+
+begin_comment
+comment|// Don't crash if the precompiled header file is missing.
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -include-pch %t.h.gch -DFOO=baz -fsyntax-only %s -print-stats 2> %t.missinglog
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-NO-SUITABLE %s< %t.missinglog
 end_comment
 
 begin_comment
@@ -81,7 +101,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-CPP11: no suitable precompiled header file found in directory
+comment|// CHECK-NO-SUITABLE: no suitable precompiled header file found in directory
 end_comment
 
 end_unit

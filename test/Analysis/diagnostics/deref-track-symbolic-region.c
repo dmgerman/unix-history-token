@@ -1224,6 +1224,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>5cafa075eb4d5b0bf1f228608a3ec87e</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -1232,7 +1240,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test</string>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>11</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>11</string>
 end_comment
 
 begin_comment
@@ -2576,6 +2584,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>a213f858dacf7993492e6b32080aaa64</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2584,7 +2600,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>testTrackConstraintBRVisit
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>11</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>11</string>
 end_comment
 
 begin_comment

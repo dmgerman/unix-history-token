@@ -8,7 +8,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-FIXED-X18< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-FIXED-X18: "-backend-option" "-aarch64-reserve-x18"
+comment|// CHECK-FIXED-X18: "-target-feature" "+reserve-x18"
 end_comment
 
 end_unit

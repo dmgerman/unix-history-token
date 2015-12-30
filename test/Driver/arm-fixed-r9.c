@@ -8,7 +8,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-FIXED-R9< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-FIXED-R9: "-backend-option" "-arm-reserve-r9"
+comment|// CHECK-FIXED-R9: "-target-feature" "+reserve-r9"
 end_comment
 
 end_unit

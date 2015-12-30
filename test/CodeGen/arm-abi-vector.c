@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple armv7-apple-darwin -target-abi apcs-gnu -emit-llvm -o - %s | FileCheck -check-prefix=APCS-GNU %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm-linux-androideabi -emit-llvm -o - %s | FileCheck -check-prefix=ANDROID %s
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -119,18 +123,28 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_2i
-comment|// CHECK: alloca<2 x i32>, align 8
-comment|// CHECK: [[ALIGN:%.*]] = and i32 [[VAR:%.*]], -8
+comment|// CHECK: [[VAR:%.*]] = alloca<2 x i32>, align 8
+comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 8
-comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<2 x i32>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 8
+comment|// CHECK: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<2 x i32>*
+comment|// CHECK: [[VEC:%.*]] = load<2 x i32>,<2 x i32>* [[AP_CAST]], align 8
+comment|// CHECK: store<2 x i32> [[VEC]],<2 x i32>* [[VAR]], align 8
 comment|// APCS-GNU: varargs_vec_2i
-comment|// APCS-GNU: alloca<2 x i32>, align 8
-comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<2 x i32>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 8
-comment|// APCS-GNU: bitcast<2 x i32>* [[VAR_ALIGN]] to i8*
-comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<2 x i32>,<2 x i32>* [[VAR_ALIGN]]
+comment|// APCS-GNU: [[VAR:%.*]] = alloca<2 x i32>, align 8
+comment|// APCS-GNU: [[AP:%.*]] = load i8*,
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP]], i32 8
+comment|// APCS-GNU: [[AP_CAST:%.*]] = bitcast i8* [[AP]] to<2 x i32>*
+comment|// APCS-GNU: [[VEC:%.*]] = load<2 x i32>,<2 x i32>* [[AP_CAST]], align 4
+comment|// APCS-GNU: store<2 x i32> [[VEC]],<2 x i32>* [[VAR]], align 8
+comment|// ANDROID: varargs_vec_2i
+comment|// ANDROID: [[VAR:%.*]] = alloca<2 x i32>, align 8
+comment|// ANDROID: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
+comment|// ANDROID: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 8
+comment|// ANDROID: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<2 x i32>*
+comment|// ANDROID: [[VEC:%.*]] = load<2 x i32>,<2 x i32>* [[AP_CAST]], align 8
+comment|// ANDROID: store<2 x i32> [[VEC]],<2 x i32>* [[VAR]], align 8
 name|va_list
 name|ap
 decl_stmt|;
@@ -192,6 +206,8 @@ comment|// CHECK: test_2i
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
 comment|// APCS-GNU: test_2i
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
+comment|// ANDROID: test_2i
+comment|// ANDROID: call double (i32, ...) @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
 return|return
 name|varargs_vec_2i
 argument_list|(
@@ -216,12 +232,16 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_3c
 comment|// CHECK: alloca<3 x i8>, align 4
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP:%.*]], i32 4
 comment|// CHECK: bitcast i8* [[AP]] to<3 x i8>*
 comment|// APCS-GNU: varargs_vec_3c
 comment|// APCS-GNU: alloca<3 x i8>, align 4
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP:%.*]], i32 4
 comment|// APCS-GNU: bitcast i8* [[AP]] to<3 x i8>*
+comment|// ANDROID: varargs_vec_3c
+comment|// ANDROID: alloca<3 x i8>, align 4
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP:%.*]], i32 4
+comment|// ANDROID: bitcast i8* [[AP]] to<3 x i8>*
 name|va_list
 name|ap
 decl_stmt|;
@@ -283,6 +303,8 @@ comment|// CHECK: test_3c
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_3c(i32 3, i32 {{%.*}})
 comment|// APCS-GNU: test_3c
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_3c(i32 3, i32 {{%.*}})
+comment|// ANDROID: test_3c
+comment|// ANDROID: call double (i32, ...) @varargs_vec_3c(i32 3,<3 x i8> {{%.*}})
 return|return
 name|varargs_vec_3c
 argument_list|(
@@ -306,18 +328,28 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_5c
-comment|// CHECK: alloca<5 x i8>, align 8
+comment|// CHECK: [[VAR:%.*]] = alloca<5 x i8>, align 8
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 8
-comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<5 x i8>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 8
+comment|// CHECK: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<5 x i8>*
+comment|// CHECK: [[VEC:%.*]] = load<5 x i8>,<5 x i8>* [[AP_CAST]], align 8
+comment|// CHECK: store<5 x i8> [[VEC]],<5 x i8>* [[VAR]], align 8
 comment|// APCS-GNU: varargs_vec_5c
-comment|// APCS-GNU: alloca<5 x i8>, align 8
-comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<5 x i8>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 8
-comment|// APCS-GNU: bitcast<5 x i8>* [[VAR_ALIGN]] to i8*
-comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<5 x i8>,<5 x i8>* [[VAR_ALIGN]]
+comment|// APCS-GNU: [[VAR:%.*]] = alloca<5 x i8>, align 8
+comment|// APCS-GNU: [[AP:%.*]] = load i8*,
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP]], i32 8
+comment|// APCS-GNU: [[AP_CAST:%.*]] = bitcast i8* [[AP]] to<5 x i8>*
+comment|// APCS-GNU: [[VEC:%.*]] = load<5 x i8>,<5 x i8>* [[AP_CAST]], align 4
+comment|// APCS-GNU: store<5 x i8> [[VEC]],<5 x i8>* [[VAR]], align 8
+comment|// ANDROID: varargs_vec_5c
+comment|// ANDROID: [[VAR:%.*]] = alloca<5 x i8>, align 8
+comment|// ANDROID: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
+comment|// ANDROID: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 8
+comment|// ANDROID: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<5 x i8>*
+comment|// ANDROID: [[VEC:%.*]] = load<5 x i8>,<5 x i8>* [[AP_CAST]], align 8
+comment|// ANDROID: store<5 x i8> [[VEC]],<5 x i8>* [[VAR]], align 8
 name|va_list
 name|ap
 decl_stmt|;
@@ -379,6 +411,8 @@ comment|// CHECK: test_5c
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
 comment|// APCS-GNU: test_5c
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
+comment|// ANDROID: test_5c
+comment|// ANDROID: call double (i32, ...) @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
 return|return
 name|varargs_vec_5c
 argument_list|(
@@ -402,21 +436,28 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_9c
-comment|// CHECK: alloca<9 x i8>, align 16
-comment|// CHECK: [[VAR_ALIGN:%.*]] = alloca<9 x i8>
+comment|// CHECK: [[VAR:%.*]] = alloca<9 x i8>, align 16
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
-comment|// CHECK: bitcast<9 x i8>* [[VAR_ALIGN]] to i8*
-comment|// CHECK: call void @llvm.memcpy
-comment|// CHECK: load<9 x i8>,<9 x i8>* [[VAR_ALIGN]]
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<9 x i8>*
+comment|// CHECK: [[T0:%.*]] = load<9 x i8>,<9 x i8>* [[AP_CAST]], align 8
+comment|// CHECK: store<9 x i8> [[T0]],<9 x i8>* [[VAR]], align 16
 comment|// APCS-GNU: varargs_vec_9c
-comment|// APCS-GNU: alloca<9 x i8>, align 16
-comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<9 x i8>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 16
-comment|// APCS-GNU: bitcast<9 x i8>* [[VAR_ALIGN]] to i8*
-comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<9 x i8>,<9 x i8>* [[VAR_ALIGN]]
+comment|// APCS-GNU: [[VAR:%.*]] = alloca<9 x i8>, align 16
+comment|// APCS-GNU: [[AP:%.*]] = load i8*,
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP]], i32 16
+comment|// APCS-GNU: [[AP_CAST:%.*]] = bitcast i8* [[AP]] to<9 x i8>*
+comment|// APCS-GNU: [[VEC:%.*]] = load<9 x i8>,<9 x i8>* [[AP_CAST]], align 4
+comment|// APCS-GNU: store<9 x i8> [[VEC]],<9 x i8>* [[VAR]], align 16
+comment|// ANDROID: varargs_vec_9c
+comment|// ANDROID: [[VAR:%.*]] = alloca<9 x i8>, align 16
+comment|// ANDROID: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
+comment|// ANDROID: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 16
+comment|// ANDROID: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<9 x i8>*
+comment|// ANDROID: [[T0:%.*]] = load<9 x i8>,<9 x i8>* [[AP_CAST]], align 8
+comment|// ANDROID: store<9 x i8> [[T0]],<9 x i8>* [[VAR]], align 16
 name|va_list
 name|ap
 decl_stmt|;
@@ -478,6 +519,8 @@ comment|// CHECK: test_9c
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
 comment|// APCS-GNU: test_9c
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
+comment|// ANDROID: test_9c
+comment|// ANDROID: call double (i32, ...) @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
 return|return
 name|varargs_vec_9c
 argument_list|(
@@ -501,15 +544,17 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_19c
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
-comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// CHECK: bitcast i8* [[VAR2]] to<19 x i8>*
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP:%.*]], i32 4
+comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP]] to<19 x i8>**
+comment|// CHECK: [[VAR2:%.*]] = load<19 x i8>*,<19 x i8>** [[VAR]]
 comment|// APCS-GNU: varargs_vec_19c
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
-comment|// APCS-GNU: [[VAR:%.*]] = bitcast i8* [[AP]] to i8**
-comment|// APCS-GNU: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
-comment|// APCS-GNU: bitcast i8* [[VAR2]] to<19 x i8>*
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP:%.*]], i32 4
+comment|// APCS-GNU: [[VAR:%.*]] = bitcast i8* [[AP]] to<19 x i8>**
+comment|// APCS-GNU: [[VAR2:%.*]] = load<19 x i8>*,<19 x i8>** [[VAR]]
+comment|// ANDROID: varargs_vec_19c
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP:%.*]], i32 4
+comment|// ANDROID: [[VAR:%.*]] = bitcast i8* [[AP]] to<19 x i8>**
+comment|// ANDROID: [[VAR2:%.*]] = load<19 x i8>*,<19 x i8>** [[VAR]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -571,6 +616,8 @@ comment|// CHECK: test_19c
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
 comment|// APCS-GNU: test_19c
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
+comment|// ANDROID: test_19c
+comment|// ANDROID: call double (i32, ...) @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
 return|return
 name|varargs_vec_19c
 argument_list|(
@@ -597,15 +644,20 @@ comment|// CHECK: varargs_vec_3s
 comment|// CHECK: alloca<3 x i16>, align 8
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 8
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<3 x i16>*
 comment|// APCS-GNU: varargs_vec_3s
-comment|// APCS-GNU: alloca<3 x i16>, align 8
-comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<3 x i16>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 8
-comment|// APCS-GNU: bitcast<3 x i16>* [[VAR_ALIGN]] to i8*
-comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<3 x i16>,<3 x i16>* [[VAR_ALIGN]]
+comment|// APCS-GNU: [[VAR:%.*]] = alloca<3 x i16>, align 8
+comment|// APCS-GNU: [[AP:%.*]] = load i8*,
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP]], i32 8
+comment|// APCS-GNU: [[AP_CAST:%.*]] = bitcast i8* [[AP]] to<3 x i16>*
+comment|// APCS-GNU: [[VEC:%.*]] = load<3 x i16>,<3 x i16>* [[AP_CAST]], align 4
+comment|// ANDROID: varargs_vec_3s
+comment|// ANDROID: alloca<3 x i16>, align 8
+comment|// ANDROID: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
+comment|// ANDROID: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 8
+comment|// ANDROID: bitcast i8* [[AP_ALIGN]] to<3 x i16>*
 name|va_list
 name|ap
 decl_stmt|;
@@ -667,6 +719,8 @@ comment|// CHECK: test_3s
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_3s(i32 3,<2 x i32> {{%.*}})
 comment|// APCS-GNU: test_3s
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_3s(i32 3,<2 x i32> {{%.*}})
+comment|// ANDROID: test_3s
+comment|// ANDROID: call double (i32, ...) @varargs_vec_3s(i32 3,<3 x i16> {{%.*}})
 return|return
 name|varargs_vec_3s
 argument_list|(
@@ -690,21 +744,27 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_5s
-comment|// CHECK: alloca<5 x i16>, align 16
-comment|// CHECK: [[VAR_ALIGN:%.*]] = alloca<5 x i16>
+comment|// CHECK: [[VAR_ALIGN:%.*]] = alloca<5 x i16>, align 16
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
-comment|// CHECK: bitcast<5 x i16>* [[VAR_ALIGN]] to i8*
-comment|// CHECK: call void @llvm.memcpy
-comment|// CHECK: load<5 x i16>,<5 x i16>* [[VAR_ALIGN]]
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<5 x i16>*
+comment|// CHECK: [[VEC:%.*]] = load<5 x i16>,<5 x i16>* [[AP_CAST]], align 8
+comment|// CHECK: store<5 x i16> [[VEC]],<5 x i16>* [[VAR_ALIGN]], align 16
 comment|// APCS-GNU: varargs_vec_5s
-comment|// APCS-GNU: alloca<5 x i16>, align 16
-comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<5 x i16>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 16
-comment|// APCS-GNU: bitcast<5 x i16>* [[VAR_ALIGN]] to i8*
-comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<5 x i16>,<5 x i16>* [[VAR_ALIGN]]
+comment|// APCS-GNU: [[VAR:%.*]] = alloca<5 x i16>, align 16
+comment|// APCS-GNU: [[AP:%.*]] = load i8*,
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP]], i32 16
+comment|// APCS-GNU: [[AP_CAST:%.*]] = bitcast i8* [[AP]] to<5 x i16>*
+comment|// APCS-GNU: [[VEC:%.*]] = load<5 x i16>,<5 x i16>* [[AP_CAST]], align 4
+comment|// ANDROID: varargs_vec_5s
+comment|// ANDROID: [[VAR_ALIGN:%.*]] = alloca<5 x i16>, align 16
+comment|// ANDROID: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
+comment|// ANDROID: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 16
+comment|// ANDROID: [[AP_CAST:%.*]] = bitcast i8* [[AP_ALIGN]] to<5 x i16>*
+comment|// ANDROID: [[VEC:%.*]] = load<5 x i16>,<5 x i16>* [[AP_CAST]], align 8
+comment|// ANDROID: store<5 x i16> [[VEC]],<5 x i16>* [[VAR_ALIGN]], align 16
 name|va_list
 name|ap
 decl_stmt|;
@@ -766,6 +826,8 @@ comment|// CHECK: test_5s
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
 comment|// APCS-GNU: test_5s
 comment|// APCS-GNU: call double (i32, ...) @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
+comment|// ANDROID: test_5s
+comment|// ANDROID: call double (i32, ...) @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
 return|return
 name|varargs_vec_5s
 argument_list|(
@@ -810,13 +872,18 @@ block|{
 comment|// CHECK: varargs_struct
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to %struct.StructWithVec*
 comment|// APCS-GNU: varargs_struct
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca %struct.StructWithVec
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 16
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* {{%.*}}, i32 16
 comment|// APCS-GNU: bitcast %struct.StructWithVec* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
+comment|// ANDROID: varargs_struct
+comment|// ANDROID: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
+comment|// ANDROID: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_ALIGN]], i32 16
+comment|// ANDROID: bitcast i8* [[AP_ALIGN]] to %struct.StructWithVec*
 name|va_list
 name|ap
 decl_stmt|;
@@ -886,6 +953,8 @@ comment|// CHECK: test_struct
 comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_struct(i32 3, [2 x i64] {{%.*}})
 comment|// APCS-GNU: test_struct
 comment|// APCS-GNU: call double (i32, ...) @varargs_struct(i32 3, [2 x i64] {{%.*}})
+comment|// ANDROID: test_struct
+comment|// ANDROID: call double (i32, ...) @varargs_struct(i32 3, [2 x i64] {{%.*}})
 return|return
 name|varargs_struct
 argument_list|(

@@ -924,7 +924,7 @@ comment|// MIPS64EL-ANDROID: "-cc1"
 end_comment
 
 begin_comment
-comment|// MIPS64EL-ANDROID: "-target-cpu" "mips64r2"
+comment|// MIPS64EL-ANDROID: "-target-cpu" "mips64r6"
 end_comment
 
 begin_comment

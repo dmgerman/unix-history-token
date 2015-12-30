@@ -12,7 +12,7 @@ comment|// a SourceLocation.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -Rpass=inline -gline-tables-only -dwarf-column-info -emit-llvm-only -verify
+comment|// RUN: %clang_cc1 %s -Rpass=inline -debug-info-kind=line-tables-only -dwarf-column-info -emit-llvm-only -verify
 end_comment
 
 begin_function_decl

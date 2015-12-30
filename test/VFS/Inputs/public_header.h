@@ -3,6 +3,14 @@ begin_empty
 empty|#import<SomeFramework/public_header2.h>
 end_empty
 
+begin_empty
+empty|#import "public_header3.h"
+end_empty
+
+begin_comment
+comment|// includer-relative
+end_comment
+
 begin_function_decl
 name|void
 name|from_framework

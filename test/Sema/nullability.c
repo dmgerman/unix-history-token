@@ -374,6 +374,20 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|function_pointer_type_5
+function_decl|)
+parameter_list|(
+name|int_ptr
+name|_Nonnull
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_decl_stmt
 name|void
 name|acceptFunctionPtr
@@ -440,7 +454,15 @@ name|function_pointer_type_4
 operator|)
 literal|0
 expr_stmt|;
-comment|// expected-warning{{from 'function_pointer_type_4' (aka 'int_ptr  _Nonnull (*)(int, int)')}}
+comment|// expected-warning{{from 'function_pointer_type_4' (aka 'int * _Nonnull (*)(int, int)')}}
+name|fp
+operator|=
+operator|(
+name|function_pointer_type_5
+operator|)
+literal|0
+expr_stmt|;
+comment|// expected-warning{{from 'function_pointer_type_5' (aka 'void (*)(int * _Nonnull)')}}
 name|fp
 operator|=
 operator|(
@@ -728,6 +750,17 @@ name|b
 init|=
 name|ptr
 decl_stmt|;
+comment|// expected-warning{{implicit conversion from nullable pointer 'int * _Nullable' to non-nullable pointer type 'int * _Nonnull'}}
+name|b
+operator|=
+name|ptr
+expr_stmt|;
+comment|// expected-warning{{implicit conversion from nullable pointer 'int * _Nullable' to non-nullable pointer type 'int * _Nonnull'}}
+name|accepts_nonnull_1
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
 comment|// expected-warning{{implicit conversion from nullable pointer 'int * _Nullable' to non-nullable pointer type 'int * _Nonnull'}}
 block|}
 end_function

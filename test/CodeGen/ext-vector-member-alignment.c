@@ -117,15 +117,13 @@ index|]
 operator|=
 name|c
 expr_stmt|;
-comment|// FIXME: We should be able to come up with a more aggressive alignment
-comment|// estimate.
 comment|// CHECK: @func
-comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 1
-comment|// CHECK: store<4 x float> {{%.*}},<4 x float>* {{%.*}}, align 1
-comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 1
-comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 1
-comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 1
-comment|// CHECK: store<4 x float> {{%.*}},<4 x float>* {{%.*}}, align 1
+comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 4
+comment|// CHECK: store<4 x float> {{%.*}},<4 x float>* {{%.*}}, align 4
+comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 4
+comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 4
+comment|// CHECK: load<4 x float>,<4 x float>* {{%.*}}, align 4
+comment|// CHECK: store<4 x float> {{%.*}},<4 x float>* {{%.*}}, align 4
 comment|// CHECK: ret void
 block|}
 end_function

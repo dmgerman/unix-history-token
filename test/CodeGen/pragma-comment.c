@@ -153,5 +153,9 @@ begin_comment
 comment|// PS4: !{!"\01USER32.LIB"}
 end_comment
 
+begin_comment
+comment|// PS4: !{!"\01\22with space\22"}
+end_comment
+
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -verify %s -Wabsolute-value
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -verify %s -Wabsolute-value -Wno-int-conversion
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only %s -Wabsolute-value -fdiagnostics-parseable-fixits 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only %s -Wabsolute-value -Wno-int-conversion -fdiagnostics-parseable-fixits 2>&1 | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -2294,6 +2294,82 @@ expr_stmt|;
 comment|// expected-warning@-1 {{taking the absolute value of unsigned type 'unsigned long' has no effect}}
 comment|// expected-note@-2 {{remove the call to '__builtin_cabsl' since unsigned values cannot be negative}}
 comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-3]]:9-[[@LINE-3]]:24}:""
+block|}
+end_function
+
+begin_function
+name|long
+name|long
+name|test_array
+parameter_list|()
+block|{
+return|return
+name|llabs
+argument_list|(
+operator|(
+name|long
+name|long
+index|[]
+operator|)
+block|{
+literal|1
+block|}
+argument_list|)
+return|;
+comment|// expected-warning@-1 {{absolute value of array type}}
+block|}
+end_function
+
+begin_function
+name|long
+name|long
+name|test_function_pointer
+parameter_list|()
+block|{
+return|return
+name|llabs
+argument_list|(
+operator|&
+name|test_function_pointer
+argument_list|)
+return|;
+comment|// expected-warning@-1 {{absolute value of pointer type}}
+block|}
+end_function
+
+begin_function
+name|long
+name|long
+name|test_void_pointer
+parameter_list|(
+name|void
+modifier|*
+name|x
+parameter_list|)
+block|{
+return|return
+name|llabs
+argument_list|(
+name|x
+argument_list|)
+return|;
+comment|// expected-warning@-1 {{absolute value of pointer type}}
+block|}
+end_function
+
+begin_function
+name|long
+name|long
+name|test_function
+parameter_list|()
+block|{
+return|return
+name|llabs
+argument_list|(
+name|test_function
+argument_list|)
+return|;
+comment|// expected-warning@-1 {{absolute value of function type}}
 block|}
 end_function
 

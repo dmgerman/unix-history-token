@@ -16,19 +16,19 @@ comment|// Since foo is never emitted, there should not be a profile name for it
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @__llvm_profile_name_bar = {{.*}} [3 x i8] c"bar", section "{{.*}}__llvm_prf_names"
+comment|// CHECK-DAG: @__profn_bar = {{.*}} [3 x i8] c"bar", section "{{.*}}__llvm_prf_names"
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @__llvm_profile_name_baz = {{.*}} [3 x i8] c"baz", section "{{.*}}__llvm_prf_names"
+comment|// CHECK-DAG: @__profn_baz = {{.*}} [3 x i8] c"baz", section "{{.*}}__llvm_prf_names"
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @"__llvm_profile_name_unused_names.c:qux" = {{.*}} [18 x i8] c"unused_names.c:qux", section "{{.*}}__llvm_prf_names"
+comment|// CHECK-DAG: @__profn_unused_names.c_qux = {{.*}} [18 x i8] c"unused_names.c:qux", section "{{.*}}__llvm_prf_names"
 end_comment
 
 begin_comment
-comment|// SYSHEADER-NOT: @__llvm_profile_name_foo =
+comment|// SYSHEADER-NOT: @__profn_foo =
 end_comment
 
 begin_ifdef

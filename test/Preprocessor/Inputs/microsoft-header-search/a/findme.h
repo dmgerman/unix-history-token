@@ -8,7 +8,7 @@ end_pragma
 begin_warning
 warning|#
 directive|warning
-warning|findme.h successfully included using MS search rules
+warning|findme.h successfully included using Microsoft header search rules
 end_warning
 
 end_unit

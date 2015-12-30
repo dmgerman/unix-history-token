@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -g -emit-llvm< %s | FileCheck %s
+comment|// RUN: %clang_cc1 -debug-info-kind=limited -emit-llvm< %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -20,11 +20,11 @@ comment|// CHECK: ret void, !dbg [[F2_LINE:![0-9]*]]
 end_comment
 
 begin_comment
-comment|// CHECK: [[F1:![0-9]*]] = !DISubprogram(name: "f1",{{.*}} isDefinition: true
+comment|// CHECK: [[F1:![0-9]*]] = distinct !DISubprogram(name: "f1",{{.*}} isDefinition: true
 end_comment
 
 begin_comment
-comment|// CHECK: [[F2:![0-9]*]] = !DISubprogram(name: "f2",{{.*}} isDefinition: true
+comment|// CHECK: [[F2:![0-9]*]] = distinct !DISubprogram(name: "f2",{{.*}} isDefinition: true
 end_comment
 
 begin_comment

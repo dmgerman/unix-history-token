@@ -107,8 +107,8 @@ comment|/// \brief Manages the set of modules loaded by an AST reader.
 name|class
 name|ModuleManager
 block|{
-comment|/// \brief The chain of AST files. The first entry is the one named by the
-comment|/// user, the last one is the one that doesn't depend on anything further.
+comment|/// \brief The chain of AST files, in the order in which we started to load
+comment|/// them (this order isn't really useful for anything).
 name|SmallVector
 operator|<
 name|ModuleFile
@@ -117,6 +117,18 @@ operator|,
 literal|2
 operator|>
 name|Chain
+expr_stmt|;
+comment|/// \brief The chain of non-module PCH files. The first entry is the one named
+comment|/// by the user, the last one is the one that doesn't depend on anything
+comment|/// further.
+name|SmallVector
+operator|<
+name|ModuleFile
+operator|*
+operator|,
+literal|2
+operator|>
+name|PCHChain
 expr_stmt|;
 comment|// \brief The roots of the dependency DAG of AST files. This is used
 comment|// to implement short-circuiting logic when running DFS over the dependencies.
@@ -143,22 +155,6 @@ operator|*
 operator|>
 name|Modules
 expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|SetVector
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|>
-name|AdditionalKnownModuleFileSet
-expr_stmt|;
-comment|/// \brief Additional module files that are known but not loaded. Tracked
-comment|/// here so that we can re-export them if necessary.
-name|AdditionalKnownModuleFileSet
-name|AdditionalKnownModuleFiles
-decl_stmt|;
 comment|/// \brief FileManager that handles translating between filenames and
 comment|/// FileEntry *.
 name|FileManager
@@ -377,8 +373,7 @@ operator|~
 name|ModuleManager
 argument_list|()
 expr_stmt|;
-comment|/// \brief Forward iterator to traverse all loaded modules.  This is reverse
-comment|/// source-order.
+comment|/// \brief Forward iterator to traverse all loaded modules.
 name|ModuleIterator
 name|begin
 parameter_list|()
@@ -402,8 +397,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// \brief Const forward iterator to traverse all loaded modules.  This is
-comment|/// in reverse source-order.
+comment|/// \brief Const forward iterator to traverse all loaded modules.
 name|ModuleConstIterator
 name|begin
 argument_list|()
@@ -429,8 +423,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// \brief Reverse iterator to traverse all loaded modules.  This is in
-comment|/// source order.
+comment|/// \brief Reverse iterator to traverse all loaded modules.
 name|ModuleReverseIterator
 name|rbegin
 parameter_list|()
@@ -452,6 +445,34 @@ name|Chain
 operator|.
 name|rend
 argument_list|()
+return|;
+block|}
+comment|/// \brief A range covering the PCH and preamble module files loaded.
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|ModuleConstIterator
+operator|>
+name|pch_modules
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|PCHChain
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|PCHChain
+operator|.
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// \brief Returns the primary module associated with the manager, that is,
@@ -720,46 +741,6 @@ modifier|*
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// \brief Notification from the frontend that the given module file is
-comment|/// part of this compilation (even if not imported) and, if this compilation
-comment|/// is exported, should be made available to importers of it.
-name|bool
-name|addKnownModuleFile
-parameter_list|(
-name|StringRef
-name|FileName
-parameter_list|)
-function_decl|;
-comment|/// \brief Get a list of additional module files that are not currently
-comment|/// loaded but are considered to be part of the current compilation.
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|AdditionalKnownModuleFileSet
-operator|::
-name|const_iterator
-operator|>
-name|getAdditionalKnownModuleFiles
-argument_list|()
-block|{
-return|return
-name|llvm
-operator|::
-name|make_range
-argument_list|(
-name|AdditionalKnownModuleFiles
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|AdditionalKnownModuleFiles
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
 comment|/// \brief Visit each of the modules.
 comment|///
 comment|/// This routine visits each of the modules, starting with the
@@ -771,13 +752,9 @@ comment|/// This traversal is intended to support various "lookup"
 comment|/// operations that can find data in any of the loaded modules.
 comment|///
 comment|/// \param Visitor A visitor function that will be invoked with each
-comment|/// module and the given user data pointer. The return value must be
-comment|/// convertible to bool; when false, the visitation continues to
-comment|/// modules that the current module depends on. When true, the
-comment|/// visitation skips any modules that the current module depends on.
-comment|///
-comment|/// \param UserData User data associated with the visitor object, which
-comment|/// will be passed along to the visitor.
+comment|/// module. The return value must be convertible to bool; when false, the
+comment|/// visitation continues to modules that the current module depends on. When
+comment|/// true, the visitation skips any modules that the current module depends on.
 comment|///
 comment|/// \param ModuleFilesHit If non-NULL, contains the set of module files
 comment|/// that we know we need to visit because the global module index told us to.
@@ -786,24 +763,18 @@ comment|/// manager that is *not* in this set can be skipped.
 name|void
 name|visit
 argument_list|(
+name|llvm
+operator|::
+name|function_ref
+operator|<
 name|bool
-argument_list|(
-operator|*
-name|Visitor
-argument_list|)
 argument_list|(
 name|ModuleFile
 operator|&
 name|M
-argument_list|,
-name|void
-operator|*
-name|UserData
 argument_list|)
-argument_list|,
-name|void
-operator|*
-name|UserData
+operator|>
+name|Visitor
 argument_list|,
 name|llvm
 operator|::
@@ -818,77 +789,6 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// \brief Control DFS behavior during preorder visitation.
-enum|enum
-name|DFSPreorderControl
-block|{
-name|Continue
-block|,
-comment|/// Continue visiting all nodes.
-name|Abort
-block|,
-comment|/// Stop the visitation immediately.
-name|SkipImports
-block|,
-comment|/// Do not visit imports of the current node.
-block|}
-enum|;
-comment|/// \brief Visit each of the modules with a depth-first traversal.
-comment|///
-comment|/// This routine visits each of the modules known to the module
-comment|/// manager using a depth-first search, starting with the first
-comment|/// loaded module. The traversal invokes one callback before
-comment|/// traversing the imports (preorder traversal) and one after
-comment|/// traversing the imports (postorder traversal).
-comment|///
-comment|/// \param PreorderVisitor A visitor function that will be invoked with each
-comment|/// module before visiting its imports. The visitor can control how to
-comment|/// continue the visitation through its return value.
-comment|///
-comment|/// \param PostorderVisitor A visitor function taht will be invoked with each
-comment|/// module after visiting its imports. The visitor may return true at any time
-comment|/// to abort the depth-first visitation.
-comment|///
-comment|/// \param UserData User data ssociated with the visitor object,
-comment|/// which will be passed along to the user.
-name|void
-name|visitDepthFirst
-parameter_list|(
-name|DFSPreorderControl
-function_decl|(
-modifier|*
-name|PreorderVisitor
-function_decl|)
-parameter_list|(
-name|ModuleFile
-modifier|&
-name|M
-parameter_list|,
-name|void
-modifier|*
-name|UserData
-parameter_list|)
-parameter_list|,
-name|bool
-function_decl|(
-modifier|*
-name|PostorderVisitor
-function_decl|)
-parameter_list|(
-name|ModuleFile
-modifier|&
-name|M
-parameter_list|,
-name|void
-modifier|*
-name|UserData
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|UserData
-parameter_list|)
-function_decl|;
 comment|/// \brief Attempt to resolve the given module file name to a file entry.
 comment|///
 comment|/// \param FileName The name of the module file.

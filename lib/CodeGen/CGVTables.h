@@ -303,20 +303,6 @@ name|BaseSubobject
 name|Base
 parameter_list|)
 function_decl|;
-comment|/// getAddressPoint - Get the address point of the given subobject in the
-comment|/// class decl.
-name|uint64_t
-name|getAddressPoint
-parameter_list|(
-name|BaseSubobject
-name|Base
-parameter_list|,
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
 comment|/// GenerateConstructionVTable - Generate a construction vtable for the given
 comment|/// base subobject.
 name|llvm

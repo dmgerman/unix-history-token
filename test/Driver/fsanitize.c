@@ -424,35 +424,51 @@ comment|// OK
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-NO-PIE
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-PIE
 end_comment
 
 begin_comment
-comment|// CHECK-TSAN-NO-PIE: "-mrelocation-model" "static"
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-PIE
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-NO-PIE
+comment|// RUN: %clang -target x86_64-unknown-freebsd -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-PIE
 end_comment
 
 begin_comment
-comment|// CHECK-MSAN-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+comment|// RUN: %clang -target aarch64-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-PIE
 end_comment
 
 begin_comment
-comment|// CHECK-MSAN-NO-PIE: "-pie"
+comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-PIE
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ANDROID-ASAN-NO-PIE
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-PIE
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-ASAN-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+comment|// RUN: %clang -target i386-linux-gnu -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-PIE
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-ASAN-NO-PIE: "-pie"
+comment|// CHECK-NO-PIE-NOT: "-pie"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-PIE: "-mrelocation-model" "static"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-PIE-NOT: "-pie"
+end_comment
+
+begin_comment
+comment|// CHECK-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-PIE: "-pie"
 end_comment
 
 begin_comment
@@ -464,31 +480,39 @@ comment|// CHECK-ANDROID-NO-ASAN: "-mrelocation-model" "pic"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=all -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=all -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover -fsanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover=all -fsanitize-recover=thread -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover -fsanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover=all -fsanitize-recover=thread -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=all -fno-sanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=all -fno-sanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER-UBSAN
+end_comment
+
+begin_comment
+comment|// CHECK-RECOVER-UBSAN: "-fsanitize-recover={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift-base|shift-exponent|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
+end_comment
+
+begin_comment
+comment|// CHECK-NO-RECOVER-UBSAN-NOT: sanitize-recover
 end_comment
 
 begin_comment
@@ -496,19 +520,19 @@ comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-san
 end_comment
 
 begin_comment
-comment|// CHECK-RECOVER: "-fsanitize-recover={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift-base|shift-exponent|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
-end_comment
-
-begin_comment
-comment|// CHECK-NO-RECOVER-NOT: sanitize-recover
-end_comment
-
-begin_comment
 comment|// CHECK-PARTIAL-RECOVER: "-fsanitize-recover={{((object-size|shift-base),?){2}"}}
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=address,foobar,object-size,unreachable -### 2>&1 | FileCheck %s --check-prefix=CHECK-DIAG-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=address -fsanitize-recover=all -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER-ASAN
+end_comment
+
+begin_comment
+comment|// CHECK-RECOVER-ASAN: "-fsanitize-recover=address"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=foobar,object-size,unreachable -### 2>&1 | FileCheck %s --check-prefix=CHECK-DIAG-RECOVER
 end_comment
 
 begin_comment
@@ -516,7 +540,7 @@ comment|// CHECK-DIAG-RECOVER: unsupported argument 'foobar' to option 'fsanitiz
 end_comment
 
 begin_comment
-comment|// CHECK-DIAG-RECOVER: unsupported argument 'address,unreachable' to option 'fsanitize-recover='
+comment|// CHECK-DIAG-RECOVER: unsupported argument 'unreachable' to option 'fsanitize-recover='
 end_comment
 
 begin_comment
@@ -608,7 +632,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=memory -fsanitiz
 end_comment
 
 begin_comment
-comment|// CHECK-MSAN-TSAN-MSAN-DARWIN: unsupported option '-fsanitize=thread,memory' for target 'x86_64-apple-darwin10'
+comment|// CHECK-MSAN-TSAN-MSAN-DARWIN: unsupported option '-fsanitize=memory' for target 'x86_64-apple-darwin10'
 end_comment
 
 begin_comment
@@ -621,10 +645,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-TSAN-MSAN-MSAN-DARWIN: unsupported option '-fsanitize=memory' for target 'x86_64-apple-darwin10'
-end_comment
-
-begin_comment
-comment|// CHECK-TSAN-MSAN-MSAN-DARWIN: unsupported option '-fsanitize=thread' for target 'x86_64-apple-darwin10'
 end_comment
 
 begin_comment
@@ -684,6 +704,10 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -flto -c %s -### 
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-derived-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-DCAST
 end_comment
 
@@ -700,7 +724,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-vcall -c %s
 end_comment
 
 begin_comment
-comment|// CHECK-CFI: -emit-llvm-bc{{.*}}-fsanitize=cfi-derived-cast,cfi-unrelated-cast,cfi-nvcall,cfi-vcall
+comment|// CHECK-CFI: -emit-llvm-bc{{.*}}-fsanitize=cfi-derived-cast,cfi-icall,cfi-unrelated-cast,cfi-nvcall,cfi-vcall
 end_comment
 
 begin_comment
@@ -725,6 +749,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-CFI-NOLTO: '-fsanitize=cfi-derived-cast' only allowed with '-flto'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-unknown-linux -fsanitize=cfi-icall %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-ICALL-MIPS
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-ICALL-MIPS: unsupported option '-fsanitize=cfi-icall' for target 'mips-unknown-linux'
 end_comment
 
 begin_comment
@@ -753,6 +785,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-CFI-NOTRAP-WIN-NOT: -fsanitize-trap=cfi
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -fsanitize-cfi-cross-dso -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-CROSS-DSO
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NO-CROSS-DSO
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -fsanitize-cfi-cross-dso -fno-sanitize-cfi-cross-dso -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NO-CROSS-DSO
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -fno-sanitize-cfi-cross-dso -fsanitize-cfi-cross-dso -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-CROSS-DSO
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO: -emit-llvm-bc
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO: -fsanitize-cfi-cross-dso
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NO-CROSS-DSO: -emit-llvm-bc
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NO-CROSS-DSO-NOT: -fsanitize-cfi-cross-dso
 end_comment
 
 begin_comment
@@ -844,6 +908,14 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=safe-stack -fstack-pr
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-linux-android -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+end_comment
+
+begin_comment
 comment|// SP-NOT: stack-protector
 end_comment
 
@@ -869,6 +941,70 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANM: "-fsanitize=memory"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=function -fsanitize=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FSAN-UBSAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-FSAN-UBSAN-PS4: unsupported option '-fsanitize=function' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=function %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FSAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-FSAN-PS4: unsupported option '-fsanitize=function' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=dataflow %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-DFSAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-DFSAN-PS4: unsupported option '-fsanitize=dataflow' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=leak %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-LSAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-PS4: unsupported option '-fsanitize=leak' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=memory %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-PS4: unsupported option '-fsanitize=memory' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-PS4: unsupported option '-fsanitize=thread' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-PS4
+end_comment
+
+begin_comment
+comment|// Make sure there are no *.{o,bc} or -l passed before the ASan library.
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-PS4-NOT: {{(\.(o|bc)"? |-l).*-lSceDbgAddressSanitizer_stub_weak}}
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-PS4: -lSceDbgAddressSanitizer_stub_weak
 end_comment
 
 end_unit

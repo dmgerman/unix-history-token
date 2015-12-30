@@ -404,6 +404,30 @@ comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
 end_comment
 
 begin_comment
+comment|// RUN:        -march=p5600 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-ARCH-P5600 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-P5600: "-target-cpu" "p5600"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-P5600: "-target-abi" "o32"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
 comment|// RUN:        -march=mips64 2>&1 \
 end_comment
 

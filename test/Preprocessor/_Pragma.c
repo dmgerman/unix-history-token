@@ -71,6 +71,12 @@ end_endif
 begin_macro
 name|_Pragma
 argument_list|(
+argument|unroll
+literal|1
+comment|// expected-error{{_Pragma takes a parenthesized string literal}}
+argument|_Pragma(clang diagnostic push)
+comment|// expected-error{{_Pragma takes a parenthesized string literal}}
+argument|_Pragma(
 end_macro
 
 begin_comment

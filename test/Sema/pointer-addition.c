@@ -113,20 +113,20 @@ name|d
 operator|+=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' (aka 'void (struct S *, void *)') is a GNU extension}}
 name|d
 operator|++
 expr_stmt|;
-comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' (aka 'void (struct S *, void *)') is a GNU extension}}
 name|d
 operator|--
 expr_stmt|;
-comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' (aka 'void (struct S *, void *)') is a GNU extension}}
 name|d
 operator|-=
 literal|1
 expr_stmt|;
-comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' (aka 'void (struct S *, void *)') is a GNU extension}}
 call|(
 name|void
 call|)
@@ -136,7 +136,7 @@ operator|+
 name|d
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' (aka 'void (struct S *, void *)') is a GNU extension}}
 name|e
 operator|++
 expr_stmt|;

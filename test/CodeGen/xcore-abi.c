@@ -194,7 +194,7 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
 comment|// CHECK: [[P:%[a-z0-9]+]] = bitcast i8* [[I]] to i8**
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 4
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 4
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = load i8*, i8** [[P]]
 comment|// CHECK: store i8* [[V1]], i8** [[V:%[a-z0-9]+]], align 4
@@ -218,7 +218,7 @@ name|v2
 argument_list|)
 expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 4
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 4
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = load i8, i8* [[I]]
 comment|// CHECK: store i8 [[V1]], i8* [[V:%[a-z0-9]+]], align 1
@@ -241,7 +241,7 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
 comment|// CHECK: [[P:%[a-z0-9]+]] = bitcast i8* [[I]] to i32*
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 4
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 4
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = load i32, i32* [[P]]
 comment|// CHECK: store i32 [[V1]], i32* [[V:%[a-z0-9]+]], align 4
@@ -267,7 +267,7 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
 comment|// CHECK: [[P:%[a-z0-9]+]] = bitcast i8* [[I]] to i64*
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 8
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 8
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = load i64, i64* [[P]]
 comment|// CHECK: store i64 [[V1]], i64* [[V:%[a-z0-9]+]], align 4
@@ -295,7 +295,7 @@ expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
 comment|// CHECK: [[I2:%[a-z0-9]+]] = bitcast i8* [[I]] to %struct.x**
 comment|// CHECK: [[P:%[a-z0-9]+]] = load %struct.x*, %struct.x** [[I2]]
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 4
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 4
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = bitcast %struct.x* [[V:%[a-z0-9]+]] to i8*
 comment|// CHECK: [[P1:%[a-z0-9]+]] = bitcast %struct.x* [[P]] to i8*
@@ -325,7 +325,7 @@ expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
 comment|// CHECK: [[I2:%[a-z0-9]+]] = bitcast i8* [[I]] to [4 x i32]**
 comment|// CHECK: [[P:%[a-z0-9]+]] = load [4 x i32]*, [4 x i32]** [[I2]]
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 4
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 4
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = bitcast [4 x i32]* [[V0:%[a-z0-9]+]] to i8*
 comment|// CHECK: [[P1:%[a-z0-9]+]] = bitcast [4 x i32]* [[P]] to i8*
@@ -353,7 +353,7 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: [[I:%[a-z0-9]+]] = load i8*, i8** [[AP]]
 comment|// CHECK: [[P:%[a-z0-9]+]] = bitcast i8* [[I]] to double*
-comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr i8, i8* [[I]], i32 8
+comment|// CHECK: [[IN:%[a-z0-9]+]] = getelementptr inbounds i8, i8* [[I]], i32 8
 comment|// CHECK: store i8* [[IN]], i8** [[AP]]
 comment|// CHECK: [[V1:%[a-z0-9]+]] = load double, double* [[P]]
 comment|// CHECK: store double [[V1]], double* [[V:%[a-z0-9]+]], align 4

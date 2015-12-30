@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Don't attempt slash switches on msys bash.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// Note: %s must be preceded by --, otherwise it may be interpreted as a
 end_comment
 
@@ -16,11 +8,11 @@ comment|// command-line option, e.g. on Mac where %s is commonly under /Users.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /fallback /Dfoo=bar /Ubaz /Ifoo /O0 /Ox /GR /GR- /Gy /Gy- \
+comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /Dfoo=bar /Ubaz /Ifoo /O0 /Ox /GR /GR- /Gy /Gy- \
 end_comment
 
 begin_comment
-comment|// RUN:   /Gw /Gw- /LD /LDd /EHs /EHs- /MD /MDd /MTd /MT /FImyheader.h /Zi \
+comment|// RUN:   /Gw /Gw- /LD /LDd /EHs /EHs- /Zl /MD /MDd /MTd /MT /FImyheader.h /Zi \
 end_comment
 
 begin_comment
@@ -68,7 +60,27 @@ comment|// CHECK: "-I" "foo"
 end_comment
 
 begin_comment
-comment|// CHECK: "/Ox"
+comment|// CHECK: "/Oi"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Og"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Ot"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Ob2"
+end_comment
+
+begin_comment
+comment|// CHECK: "/Oy"
+end_comment
+
+begin_comment
+comment|// CHECK: "/GF"
 end_comment
 
 begin_comment
@@ -108,6 +120,10 @@ comment|// CHECK: "/EHs-"
 end_comment
 
 begin_comment
+comment|// CHECK: "/Zl"
+end_comment
+
+begin_comment
 comment|// CHECK: "/MT"
 end_comment
 
@@ -144,7 +160,7 @@ comment|// O0: "/Od"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /fallback /O1 -### -- %s 2>&1 | FileCheck -check-prefix=O1 %s
+comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /O1 -### -- %s 2>&1 | FileCheck -check-prefix=O1 %s
 end_comment
 
 begin_comment
@@ -152,11 +168,11 @@ comment|// O1: cl.exe
 end_comment
 
 begin_comment
-comment|// O1: "-O1"
+comment|// O1: "/Og" "/Os" "/Ob2" "/Oy" "/GF" "/Gy"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /fallback /O2 -### -- %s 2>&1 | FileCheck -check-prefix=O2 %s
+comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /O2 -### -- %s 2>&1 | FileCheck -check-prefix=O2 %s
 end_comment
 
 begin_comment
@@ -164,11 +180,11 @@ comment|// O2: cl.exe
 end_comment
 
 begin_comment
-comment|// O2: "-O2"
+comment|// O2: "/Oi" "/Og" "/Ot" "/Ob2" "/Oy" "/GF" "/Gy"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /fallback /Os -### -- %s 2>&1 | FileCheck -check-prefix=Os %s
+comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /Os -### -- %s 2>&1 | FileCheck -check-prefix=Os %s
 end_comment
 
 begin_comment
@@ -176,11 +192,11 @@ comment|// Os: cl.exe
 end_comment
 
 begin_comment
-comment|// Os: "-Os"
+comment|// Os: "/Os"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /fallback /Ox -### -- %s 2>&1 | FileCheck -check-prefix=Ox %s
+comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /Ox -### -- %s 2>&1 | FileCheck -check-prefix=Ox %s
 end_comment
 
 begin_comment
@@ -188,7 +204,7 @@ comment|// Ox: cl.exe
 end_comment
 
 begin_comment
-comment|// Ox: "/Ox"
+comment|// Ox: "/Oi" "/Og" "/Ot" "/Ob2" "/Oy" "/GF"
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-pch -o %t %S/debug-info-limited-struct.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -include-pch %t -emit-llvm %s -g -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -include-pch %t -emit-llvm %s -debug-info-kind=limited -o - | FileCheck %s
 end_comment
 
 begin_comment

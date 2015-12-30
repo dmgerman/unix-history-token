@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Don't attempt slash switches on msys bash.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell-preserves-root
-end_comment
-
-begin_comment
 comment|// Note: %s must be preceded by --, otherwise it may be interpreted as a
 end_comment
 
@@ -116,7 +108,11 @@ comment|// WARN-NOT: note
 end_comment
 
 begin_comment
-comment|// RUN: env LIB=%S/Inputs/cl-libs %clang_cl /c /TP cl-test.lib -### 2>&1 | FileCheck -check-prefix=TPlib %s
+comment|// MSYS2_ARG_CONV_EXCL tells MSYS2 to skip conversion of the specified argument.
+end_comment
+
+begin_comment
+comment|// RUN: env LIB=%S/Inputs/cl-libs MSYS2_ARG_CONV_EXCL="/TP;/c" %clang_cl /c /TP cl-test.lib -### 2>&1 | FileCheck -check-prefix=TPlib %s
 end_comment
 
 begin_comment
@@ -132,7 +128,7 @@ comment|// TPlib-NOT: cl-test.lib
 end_comment
 
 begin_comment
-comment|// RUN: env LIB=%S/Inputs/cl-libs %clang_cl /c /TC cl-test.lib -### 2>&1 | FileCheck -check-prefix=TClib %s
+comment|// RUN: env LIB=%S/Inputs/cl-libs MSYS2_ARG_CONV_EXCL="/TC;/c" %clang_cl /c /TC cl-test.lib -### 2>&1 | FileCheck -check-prefix=TClib %s
 end_comment
 
 begin_comment

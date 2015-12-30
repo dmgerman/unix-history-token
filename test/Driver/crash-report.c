@@ -8,11 +8,19 @@ comment|// RUN: mkdir %t
 end_comment
 
 begin_comment
-comment|// RUN: not env TMPDIR=%t TEMP=%t TMP=%t RC_DEBUG_OPTIONS=1 %clang -fsyntax-only %s \
+comment|// RUN: not env TMPDIR=%t TEMP=%t TMP=%t RC_DEBUG_OPTIONS=1              \
 end_comment
 
 begin_comment
-comment|// RUN:  -F/tmp/ -I /tmp/ -idirafter /tmp/ -iquote /tmp/ -isystem /tmp/ \
+comment|// RUN:  CC_PRINT_HEADERS=1 CC_LOG_DIAGNOSTICS=1                         \
+end_comment
+
+begin_comment
+comment|// RUN:  %clang -fsyntax-only %s                                         \
+end_comment
+
+begin_comment
+comment|// RUN:  -F/tmp/ -I /tmp/ -idirafter /tmp/ -iquote /tmp/ -isystem /tmp/  \
 end_comment
 
 begin_comment
@@ -25,6 +33,10 @@ end_comment
 
 begin_comment
 comment|// RUN:  -Xclang -internal-externc-isystem -Xclang /tmp/                 \
+end_comment
+
+begin_comment
+comment|// RUN:  -Xclang -main-file-name -Xclang foo.c                           \
 end_comment
 
 begin_comment
@@ -101,6 +113,14 @@ end_comment
 
 begin_comment
 comment|// CHECKSH: "-main-file-name" "crash-report.c"
+end_comment
+
+begin_comment
+comment|// CHECKSH-NOT: "-header-include-file"
+end_comment
+
+begin_comment
+comment|// CHECKSH-NOT: "-diagnostic-log-file"
 end_comment
 
 begin_comment

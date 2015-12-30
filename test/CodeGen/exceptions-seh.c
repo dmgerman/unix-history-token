@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - \
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -fnew-ms-eh -emit-llvm -o - \
 end_comment
 
 begin_comment
@@ -8,11 +8,27 @@ comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=X64
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -emit-llvm -o - \
+comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -fnew-ms-eh -emit-llvm -o - \
 end_comment
 
 begin_comment
 comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=X86
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i686-pc-windows-gnu -fms-extensions -fnew-ms-eh -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:         | FileCheck %s --check-prefix=X86-GNU
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-windows-gnu -fms-extensions -fnew-ms-eh -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:         | FileCheck %s --check-prefix=X64-GNU
 end_comment
 
 begin_function
@@ -117,47 +133,23 @@ block|}
 end_function
 
 begin_comment
-comment|// X64-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res) {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res)
 end_comment
 
 begin_comment
-comment|// X64: invoke void @try_body(i32 %{{.*}}, i32 %{{.*}}, i32* %{{.*}}) #[[NOINLINE:[0-9]+]]
+comment|// X64-SAME:      personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
-comment|// X64:       to label %{{.*}} unwind label %[[lpad:[^ ]*]]
+comment|// X86-SAME:      personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
 end_comment
 
 begin_comment
-comment|//
+comment|// CHECK: invoke void @try_body(i32 %{{.*}}, i32 %{{.*}}, i32* %{{.*}}) #[[NOINLINE:[0-9]+]]
 end_comment
 
 begin_comment
-comment|// X64: [[lpad]]
-end_comment
-
-begin_comment
-comment|// X64: landingpad { i8*, i32 }
-end_comment
-
-begin_comment
-comment|// X64-NEXT: catch i8* null
-end_comment
-
-begin_comment
-comment|// X64-NOT: br i1
-end_comment
-
-begin_comment
-comment|// X64: br label %[[except:[^ ]*]]
-end_comment
-
-begin_comment
-comment|// X64: [[except]]
-end_comment
-
-begin_comment
-comment|// X64: store i32 -42, i32* %[[success:[^ ]*]]
+comment|// CHECK:       to label %{{.*}} unwind label %[[catchpad:[^ ]*]]
 end_comment
 
 begin_comment
@@ -165,23 +157,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X64: %[[res:[^ ]*]] = load i32, i32* %[[success]]
+comment|// CHECK: [[catchpad]]
 end_comment
 
 begin_comment
-comment|// X64: ret i32 %[[res]]
+comment|// X64: %[[padtoken:[^ ]*]] = catchpad within %{{[^ ]*}} [i8* null]
 end_comment
 
 begin_comment
-comment|// X86-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res) {{.*}} personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
+comment|// X86: %[[padtoken:[^ ]*]] = catchpad within %{{[^ ]*}} [i8* bitcast (i32 ()* @"\01?filt$0@0@safe_div@@" to i8*)]
 end_comment
 
 begin_comment
-comment|// X86: invoke void @try_body(i32 %{{.*}}, i32 %{{.*}}, i32* %{{.*}}) #[[NOINLINE:[0-9]+]]
-end_comment
-
-begin_comment
-comment|// X86:       to label %{{.*}} unwind label %[[lpad:[^ ]*]]
+comment|// CHECK-NEXT: catchret from %[[padtoken]] to label %[[except:[^ ]*]]
 end_comment
 
 begin_comment
@@ -189,31 +177,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86: [[lpad]]
+comment|// CHECK: [[except]]
 end_comment
 
 begin_comment
-comment|// X86: landingpad { i8*, i32 }
-end_comment
-
-begin_comment
-comment|// X86-NEXT: catch i8* bitcast (i32 ()* @"\01?filt$0@0@safe_div@@" to i8*)
-end_comment
-
-begin_comment
-comment|// X86-NOT: br i1
-end_comment
-
-begin_comment
-comment|// X86: br label %[[except:[^ ]*]]
-end_comment
-
-begin_comment
-comment|// X86: [[except]]
-end_comment
-
-begin_comment
-comment|// X86: store i32 -42, i32* %[[success:[^ ]*]]
+comment|// CHECK: store i32 -42, i32* %[[success:[^ ]*]]
 end_comment
 
 begin_comment
@@ -221,11 +189,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86: %[[res:[^ ]*]] = load i32, i32* %[[success]]
+comment|// CHECK: %[[res:[^ ]*]] = load i32, i32* %[[success]]
 end_comment
 
 begin_comment
-comment|// X86: ret i32 %[[res]]
+comment|// CHECK: ret i32 %[[res]]
+end_comment
+
+begin_comment
+comment|// 32-bit SEH needs this filter to save the exception code.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -262,6 +238,26 @@ end_comment
 
 begin_comment
 comment|// X86: ret i32 1
+end_comment
+
+begin_comment
+comment|// Mingw uses msvcrt, so it can also use _except_handler3.
+end_comment
+
+begin_comment
+comment|// X86-GNU-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res)
+end_comment
+
+begin_comment
+comment|// X86-GNU-SAME:      personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
+end_comment
+
+begin_comment
+comment|// X64-GNU-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res)
+end_comment
+
+begin_comment
+comment|// X64-GNU-SAME:      personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_function_decl
@@ -341,11 +337,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: catch i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@filter_expr_capture@@" to i8*)
+comment|// CHECK: catchpad within %{{[^ ]*}} [i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@filter_expr_capture@@" to i8*)]
 end_comment
 
 begin_comment
@@ -369,7 +361,11 @@ comment|// X64-LABEL: define internal i32 @"\01?filt$0@0@filter_expr_capture@@"(
 end_comment
 
 begin_comment
-comment|// X64: call i8* @llvm.localrecover(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %frame_pointer, i32 0)
+comment|// X64: %[[fp:[^ ]*]] = call i8* @llvm.x86.seh.recoverfp(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %frame_pointer)
+end_comment
+
+begin_comment
+comment|// X64: call i8* @llvm.localrecover(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %[[fp]], i32 0)
 end_comment
 
 begin_comment
@@ -478,7 +474,7 @@ comment|// CHECK: invoke void @j() #[[NOINLINE]]
 end_comment
 
 begin_comment
-comment|// CHECK:       to label %[[cont:[^ ]*]] unwind label %[[lpad:[^ ]*]]
+comment|// CHECK:       to label %[[cont:[^ ]*]] unwind label %[[cswitch_inner:[^ ]*]]
 end_comment
 
 begin_comment
@@ -486,15 +482,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: [[cont]]
+comment|// CHECK: [[cswitch_inner]]
 end_comment
 
 begin_comment
-comment|// CHECK: store i32 0, i32* %[[r]]
-end_comment
-
-begin_comment
-comment|// CHECK: br label %[[inner_try_cont:[^ ]*]]
+comment|// CHECK: %[[cs_inner:[^ ]*]] = catchswitch within none [label %[[cpad_inner:[^ ]*]]] unwind label %[[cswitch_outer:[^ ]*]]
 end_comment
 
 begin_comment
@@ -502,27 +494,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: [[lpad]]
+comment|// CHECK: [[cswitch_outer]]
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad { i8*, i32 }
-end_comment
-
-begin_comment
-comment|// CHECK: catch i8* bitcast (i32 ({{.*}})* @"\01?filt$1@0@nested_try@@" to i8*)
-end_comment
-
-begin_comment
-comment|// CHECK: catch i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@nested_try@@" to i8*)
-end_comment
-
-begin_comment
-comment|// CHECK: store i8* %{{.*}}, i8** %[[ehptr_slot:[^ ]*]]
-end_comment
-
-begin_comment
-comment|// CHECK: store i32 %{{.*}}, i32* %[[sel_slot:[^ ]*]]
+comment|// CHECK: %[[cs_outer:[^ ]*]] = catchswitch within none [label %[[cpad_outer:[^ ]*]]] unwind to caller
 end_comment
 
 begin_comment
@@ -530,19 +506,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: load i32, i32* %[[sel_slot]]
+comment|// CHECK: [[cpad_outer]]
 end_comment
 
 begin_comment
-comment|// CHECK: call i32 @llvm.eh.typeid.for(i8* bitcast (i32 ({{.*}})* @"\01?filt$1@0@nested_try@@" to i8*))
+comment|// CHECK: catchpad within %{{[^ ]*}} [i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@nested_try@@" to i8*)]
 end_comment
 
 begin_comment
-comment|// CHECK: icmp eq i32
-end_comment
-
-begin_comment
-comment|// CHECK: br i1
+comment|// CHECK-NEXT: catchret {{.*}} to label %[[except_outer:[^ ]*]]
 end_comment
 
 begin_comment
@@ -550,23 +522,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: load i32, i32* %[[sel_slot]]
-end_comment
-
-begin_comment
-comment|// CHECK: call i32 @llvm.eh.typeid.for(i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@nested_try@@" to i8*))
-end_comment
-
-begin_comment
-comment|// CHECK: icmp eq i32
-end_comment
-
-begin_comment
-comment|// CHECK: br i1
-end_comment
-
-begin_comment
-comment|//
+comment|// CHECK: [[except_outer]]
 end_comment
 
 begin_comment
@@ -598,11 +554,31 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK: [[cpad_inner]]
+end_comment
+
+begin_comment
+comment|// CHECK: catchpad within %[[cs_inner]] [i8* bitcast (i32 ({{.*}})* @"\01?filt$1@0@nested_try@@" to i8*)]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: catchret {{.*}} to label %[[except_inner:[^ ]*]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: [[except_inner]]
+end_comment
+
+begin_comment
 comment|// CHECK: store i32 123, i32* %[[r]]
 end_comment
 
 begin_comment
-comment|// CHECK: br label %[[inner_try_cont]]
+comment|// CHECK: br label %[[inner_try_cont:[^ ]*]]
 end_comment
 
 begin_comment
@@ -615,6 +591,22 @@ end_comment
 
 begin_comment
 comment|// CHECK: br label %[[outer_try_cont]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: [[cont]]
+end_comment
+
+begin_comment
+comment|// CHECK: store i32 0, i32* %[[r]]
+end_comment
+
+begin_comment
+comment|// CHECK: br label %[[inner_try_cont]]
 end_comment
 
 begin_comment
@@ -724,7 +716,7 @@ comment|// CHECK: invoke void @j()
 end_comment
 
 begin_comment
-comment|// CHECK:       to label %[[cont:[^ ]*]] unwind label %[[lpad:[^ ]*]]
+comment|// CHECK:       to label %[[cont:[^ ]*]] unwind label %[[cleanuppad:[^ ]*]]
 end_comment
 
 begin_comment
@@ -756,15 +748,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: [[lpad]]
+comment|// CHECK: [[cleanuppad]]
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad { i8*, i32 }
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: cleanup
+comment|// CHECK: %[[padtoken:[^ ]*]] = cleanuppad within none []
 end_comment
 
 begin_comment
@@ -776,7 +764,7 @@ comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} 1, 
 end_comment
 
 begin_comment
-comment|// CHECK: resume
+comment|// CHECK: cleanupret from %[[padtoken]] unwind to caller
 end_comment
 
 begin_comment
@@ -847,7 +835,7 @@ comment|// CHECK: %[[tmp:[^ ]*]] = invoke i32 @returns_int()
 end_comment
 
 begin_comment
-comment|// CHECK:       to label %[[cont:[^ ]*]] unwind label %[[lpad:[^ ]*]]
+comment|// CHECK:       to label %[[cont:[^ ]*]] unwind label %[[catchpad:[^ ]*]]
 end_comment
 
 begin_comment
@@ -855,11 +843,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: [[cont]]
+comment|// CHECK: [[catchpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: store i32 %[[tmp]], i32* %[[rv:[^ ]*]]
+comment|// CHECK: catchpad
+end_comment
+
+begin_comment
+comment|// CHECK: catchret
+end_comment
+
+begin_comment
+comment|// CHECK: store i32 42, i32* %[[rv:[^ ]*]]
 end_comment
 
 begin_comment
@@ -871,11 +867,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: [[lpad]]
+comment|// CHECK: [[cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: store i32 42, i32* %[[rv]]
+comment|// CHECK: store i32 %[[tmp]], i32* %[[rv]]
 end_comment
 
 begin_comment
@@ -896,6 +892,196 @@ end_comment
 
 begin_comment
 comment|// CHECK: ret i32 %[[r]]
+end_comment
+
+begin_comment
+comment|// PR 24751: don't assert if a variable is used twice in a __finally block.
+end_comment
+
+begin_comment
+comment|// Also, make sure we don't do redundant work to capture/project it.
+end_comment
+
+begin_function
+name|void
+name|finally_capture_twice
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|__try
+block|{   }
+name|__finally
+block|{
+name|int
+name|y
+init|=
+name|x
+decl_stmt|;
+name|int
+name|z
+init|=
+name|x
+decl_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define void @finally_capture_twice(
+end_comment
+
+begin_comment
+comment|// CHECK:         [[X:%.*]] = alloca i32, align 4
+end_comment
+
+begin_comment
+comment|// CHECK:         call void (...) @llvm.localescape(i32* [[X]])
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    store i32 {{.*}}, i32* [[X]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    [[LOCAL:%.*]] = call i8* @llvm.localaddress()
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    call void [[FINALLY:@.*]](i8{{ zeroext | }}0, i8* [[LOCAL]])
+end_comment
+
+begin_comment
+comment|// CHECK:       define internal void [[FINALLY]](
+end_comment
+
+begin_comment
+comment|// CHECK:         [[LOCAL:%.*]] = call i8* @llvm.localrecover(
+end_comment
+
+begin_comment
+comment|// CHECK:         [[X:%.*]] = bitcast i8* [[LOCAL]] to i32*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    [[Y:%.*]] = alloca i32, align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    [[Z:%.*]] = alloca i32, align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    store i8*
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    store i8
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    [[T0:%.*]] = load i32, i32* [[X]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    store i32 [[T0]], i32* [[Y]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    [[T0:%.*]] = load i32, i32* [[X]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    store i32 [[T0]], i32* [[Z]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:    ret void
+end_comment
+
+begin_function
+name|int
+name|exception_code_in_except
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__try
+block|{
+name|try_body
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|__except
+argument_list|(
+literal|1
+argument_list|)
+block|{
+return|return
+name|_exception_code
+argument_list|()
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define i32 @exception_code_in_except()
+end_comment
+
+begin_comment
+comment|// CHECK: %[[ret_slot:[^ ]*]] = alloca i32
+end_comment
+
+begin_comment
+comment|// CHECK: %[[code_slot:[^ ]*]] = alloca i32
+end_comment
+
+begin_comment
+comment|// CHECK: invoke void @try_body(i32 0, i32 0, i32* null)
+end_comment
+
+begin_comment
+comment|// CHECK: %[[pad:[^ ]*]] = catchpad
+end_comment
+
+begin_comment
+comment|// CHECK: catchret from %[[pad]]
+end_comment
+
+begin_comment
+comment|// X64: %[[code:[^ ]*]] = call i32 @llvm.eh.exceptioncode(token %[[pad]])
+end_comment
+
+begin_comment
+comment|// X64: store i32 %[[code]], i32* %[[code_slot]]
+end_comment
+
+begin_comment
+comment|// CHECK: %[[ret1:[^ ]*]] = load i32, i32* %[[code_slot]]
+end_comment
+
+begin_comment
+comment|// CHECK: store i32 %[[ret1]], i32* %[[ret_slot]]
+end_comment
+
+begin_comment
+comment|// CHECK: %[[ret2:[^ ]*]] = load i32, i32* %[[ret_slot]]
+end_comment
+
+begin_comment
+comment|// CHECK: ret i32 %[[ret2]]
 end_comment
 
 begin_comment

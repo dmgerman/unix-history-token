@@ -800,21 +800,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|virtual
-name|void
-name|mangleCXXVTableBitSet
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|,
-name|raw_ostream
-modifier|&
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// @}
 block|}
 empty_stmt|;

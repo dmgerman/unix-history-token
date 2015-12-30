@@ -13,13 +13,5 @@ begin_comment
 comment|// CHECK: macro_arg_slocentry_merge.h:7:19: error: unknown type name 'win'
 end_comment
 
-begin_comment
-comment|// CHECK: macro_arg_slocentry_merge.h:5:16: note: expanded from macro 'WINDOW'
-end_comment
-
-begin_comment
-comment|// CHECK: macro_arg_slocentry_merge.h:6:18: note: expanded from macro 'P_'
-end_comment
-
 end_unit
 

@@ -108,6 +108,51 @@ end_expr_stmt
 
 begin_macro
 unit|@
+name|property
+argument_list|(
+argument|readonly
+argument_list|,
+argument|weak
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|SomeClass
+modifier|*
+name|property3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{missing a nullability type specifier}}
+end_comment
+
+begin_expr_stmt
+unit|@
+name|end
+expr|@
+name|interface
+name|SomeClass
+argument_list|()
+expr|@
+name|property
+argument_list|(
+argument|readonly
+argument_list|,
+argument|weak
+argument_list|)
+name|SomeClass
+operator|*
+name|property4
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-warning{{missing a nullability type specifier}}
+end_comment
+
+begin_macro
+unit|@
 name|end
 end_macro
 

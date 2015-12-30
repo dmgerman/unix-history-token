@@ -8,19 +8,19 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-lin
 end_comment
 
 begin_comment
-comment|// CHECK: @__llvm_profile_name_foo = private constant [3 x i8] c"foo"
+comment|// CHECK: @__profn_foo = private constant [3 x i8] c"foo"
 end_comment
 
 begin_comment
-comment|// CHECK: @__llvm_profile_name_foo_weak = weak hidden constant [8 x i8] c"foo_weak"
+comment|// CHECK: @__profn_foo_weak = weak hidden constant [8 x i8] c"foo_weak"
 end_comment
 
 begin_comment
-comment|// CHECK: @__llvm_profile_name_main = private constant [4 x i8] c"main"
+comment|// CHECK: @__profn_main = private constant [4 x i8] c"main"
 end_comment
 
 begin_comment
-comment|// CHECK: @"__llvm_profile_name_c-linkage.c:foo_internal" = private constant [24 x i8] c"c-linkage.c:foo_internal"
+comment|// CHECK: @__profn_c_linkage.c_foo_internal = private constant [24 x i8] c"c-linkage.c:foo_internal"
 end_comment
 
 begin_function

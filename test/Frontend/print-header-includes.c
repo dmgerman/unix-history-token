@@ -47,6 +47,34 @@ begin_comment
 comment|// MS-NOT: Note
 end_comment
 
+begin_comment
+comment|// RUN: echo "fun:foo"> %t.blacklist
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsanitize=address -fdepfile-entry=%t.blacklist -E --show-includes -o %t.out %s> %t.stdout
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=MS-BLACKLIST< %t.stdout %s
+end_comment
+
+begin_comment
+comment|// MS-BLACKLIST: Note: including file: {{.*\.blacklist}}
+end_comment
+
+begin_comment
+comment|// MS-BLACKLIST: Note: including file: {{.*test.h}}
+end_comment
+
+begin_comment
+comment|// MS-BLACKLIST: Note: including file:  {{.*test2.h}}
+end_comment
+
+begin_comment
+comment|// MS-BLACKLIST-NOT: Note
+end_comment
+
 begin_include
 include|#
 directive|include

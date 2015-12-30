@@ -724,31 +724,31 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK:      Type: struct test0
+comment|// CHECK:             0 | struct test0
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: Record:
+comment|// CHECK-NEXT:    0:0-7 |   unsigned long a
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: Layout:
+comment|// CHECK-NEXT:    1:0-7 |   unsigned long b
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   Size:64
+comment|// CHECK-NEXT:    2:0-7 |   unsigned long c
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   DataSize:64
+comment|// CHECK-NEXT:    4:0-9 |   unsigned long d
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   Alignment:16
+comment|// CHECK-NEXT:    5:2-2 |   unsigned long e
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   FieldOffsets: [0, 8, 16, 32, 42]>
+comment|// CHECK-NEXT:          | [sizeof=8, align=2]
 end_comment
 
 begin_decl_stmt

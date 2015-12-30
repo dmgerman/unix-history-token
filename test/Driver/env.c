@@ -8,7 +8,7 @@ comment|// a strange environment. Unfortunately, it requires a normal shell and 
 end_comment
 
 begin_comment
-comment|// 'env' command.
+comment|// 'env' command that understands arguments, unlike the LIT built-in env.
 end_comment
 
 begin_comment

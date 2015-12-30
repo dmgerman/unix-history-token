@@ -77,7 +77,7 @@ block|}
 comment|// CHECK-1: %struct.anon = type { i32* }
 comment|// CHECK-1: {{.+}} global float 3.0
 comment|//
-comment|// CHECK-1: test1
+comment|// CHECK-1: @test1(
 comment|// CHECK-1: alloca %struct.anon
 comment|// CHECK-1: getelementptr inbounds %struct.anon, %struct.anon*
 comment|// CHECK-1: store i32* %i
@@ -147,7 +147,7 @@ name|foo
 argument_list|()
 expr_stmt|;
 block|}
-comment|// CHECK-2: test2
+comment|// CHECK-2: @test2(
 comment|// CHECK-2-NOT: %i
 comment|// CHECK-2: call void @[[HelperName:__captured_stmt[\.0-9]+]]
 block|}
@@ -218,7 +218,7 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-comment|// CHECK-3: test3
+comment|// CHECK-3: @test3(
 comment|// CHECK-3: alloca [5 x i32]
 comment|// CHECK-3: call void @__captured_stmt
 block|}

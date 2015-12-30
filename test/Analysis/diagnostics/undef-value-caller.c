@@ -588,6 +588,14 @@ comment|// CHECK-NEXT:<key>check_name</key><string>core.uninitialized.UndefRetur
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<!-- This hash is experimental and going to change! -->
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash_content_of_line_in_context</key><string>1ef750c5562c09a467ea54ea4b4de771</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -596,7 +604,7 @@ comment|// CHECK-NEXT:<key>issue_context</key><string>test_calling_unimportant_c
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>issue_hash</key><string>3</string>
+comment|// CHECK-NEXT:<key>issue_hash_function_offset</key><string>3</string>
 end_comment
 
 begin_comment

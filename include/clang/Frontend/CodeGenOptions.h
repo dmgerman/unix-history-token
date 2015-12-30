@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -233,6 +239,17 @@ name|FullDebugInfo
 comment|/// Generate complete debug info.
 block|}
 block|;    enum
+name|DebuggerKind
+block|{
+name|DebuggerKindDefault
+block|,
+name|DebuggerKindGDB
+block|,
+name|DebuggerKindLLDB
+block|,
+name|DebuggerKindSCE
+block|}
+block|;    enum
 name|TLSModel
 block|{
 name|GeneralDynamicTLSModel
@@ -307,6 +324,20 @@ operator|::
 name|string
 name|DwarfDebugFlags
 block|;
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+block|,
+name|std
+operator|::
+name|string
+operator|>
+name|DebugPrefixMap
+block|;
 comment|/// The ABI to use for passing floating point arguments.
 name|std
 operator|::
@@ -322,8 +353,19 @@ block|;
 comment|/// The name of the bitcode file to link before optzns.
 name|std
 operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|std
+operator|::
 name|string
-name|LinkBitcodeFile
+operator|>>
+name|LinkBitcodeFiles
 block|;
 comment|/// The user provided name for the "main file", if non-empty. This is useful
 comment|/// in situations where the input file name does not match the original input
@@ -399,6 +441,19 @@ name|std
 operator|::
 name|string
 name|InstrProfileInput
+block|;
+comment|/// Name of the function summary index file to use for ThinLTO function
+comment|/// importing.
+name|std
+operator|::
+name|string
+name|ThinLTOIndexFile
+block|;
+comment|/// The EABI version to use
+name|std
+operator|::
+name|string
+name|EABIVersion
 block|;
 comment|/// A list of file names passed with -fcuda-include-gpubinary options to
 comment|/// forward to CUDA runtime back-end for incorporating them into host-side

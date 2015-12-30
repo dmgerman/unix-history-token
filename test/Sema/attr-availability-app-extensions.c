@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple armv7-apple-ios9.0 -fsyntax-only -fapplication-extension %s -verify
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-apple-tvos3.0 -fsyntax-only -fapplication-extension -DTVOS=1 -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-apple-tvos3.0 -fsyntax-only -fapplication-extension -verify %s
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -23,12 +31,35 @@ argument|(availability(macosx_app_extension,unavailable))
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TVOS
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
 argument|(availability(ios_app_extension,unavailable))
 argument_list|)
 end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(availability(tvos_app_extension,unavailable))
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -55,12 +86,35 @@ argument|(availability(macosx,unavailable))
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TVOS
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
 argument|(availability(ios,unavailable))
 argument_list|)
 end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(availability(tvos,unavailable))
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

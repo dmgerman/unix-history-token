@@ -204,6 +204,66 @@ name|void
 call|)
 argument_list|(
 name|i
+operator|^
+name|i
+operator||
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'^' within '|'}} \
+comment|// expected-note {{place parentheses around the '^' expression to silence this warning}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:10-[[@LINE-2]]:10}:"("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-3]]:15-[[@LINE-3]]:15}:")"
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator||
+name|i
+operator|^
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'^' within '|'}} \
+comment|// expected-note {{place parentheses around the '^' expression to silence this warning}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:14-[[@LINE-2]]:14}:"("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-3]]:19-[[@LINE-3]]:19}:")"
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|&
+name|i
+operator|^
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&' within '^'}} \
+comment|// expected-note {{place parentheses around the '&' expression to silence this warning}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:10-[[@LINE-2]]:10}:"("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-3]]:15-[[@LINE-3]]:15}:")"
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|^
+name|i
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&' within '^'}} \
+comment|// expected-note {{place parentheses around the '&' expression to silence this warning}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:14-[[@LINE-2]]:14}:"("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-3]]:19-[[@LINE-3]]:19}:")"
+call|(
+name|void
+call|)
+argument_list|(
+name|i
 operator|||
 name|i
 operator|&&

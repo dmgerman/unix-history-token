@@ -4,6 +4,18 @@ comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-unknown-unknown -target-feature
 end_comment
 
 begin_comment
+comment|// FIXME: The code generation checks for add/sub and/or are depending on the optimizer.
+end_comment
+
+begin_comment
+comment|// The REQUIRES keyword will be removed when the FIXME is complete.
+end_comment
+
+begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
 comment|// Don't include mm_malloc.h, it's system specific.
 end_comment
 

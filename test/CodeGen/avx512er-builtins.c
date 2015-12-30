@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O0 -triple=x86_64-apple-darwin -ffreestanding -target-feature +avx512f -target-feature +avx512er -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx512f -target-feature +avx512er -emit-llvm -o - -Werror | FileCheck %s
 end_comment
+
+begin_comment
+comment|// Don't include mm_malloc.h, it's system specific.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MM_MALLOC_H
+end_define
 
 begin_include
 include|#
@@ -44,8 +54,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_mask_rsqrt28_round_pd
-comment|// check: @llvm.x86.avx512.rsqrt28.pd
+comment|// CHECK-LABEL: @test_mm512_mask_rsqrt28_round_pd
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.pd
 return|return
 name|_mm512_mask_rsqrt28_round_pd
 argument_list|(
@@ -72,8 +82,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_maskz_rsqrt28_round_pd
-comment|// check: @llvm.x86.avx512.rsqrt28.pd
+comment|// CHECK-LABEL: @test_mm512_maskz_rsqrt28_round_pd
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.pd
 return|return
 name|_mm512_maskz_rsqrt28_round_pd
 argument_list|(
@@ -120,8 +130,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_mask_rsqrt28_pd
-comment|// check: @llvm.x86.avx512.rsqrt28.pd
+comment|// CHECK-LABEL: @test_mm512_mask_rsqrt28_pd
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.pd
 return|return
 name|_mm512_mask_rsqrt28_pd
 argument_list|(
@@ -146,8 +156,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_maskz_rsqrt28_pd
-comment|// check: @llvm.x86.avx512.rsqrt28.pd
+comment|// CHECK-LABEL: @test_mm512_maskz_rsqrt28_pd
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.pd
 return|return
 name|_mm512_maskz_rsqrt28_pd
 argument_list|(
@@ -320,8 +330,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_rsqrt28_round_ss
-comment|// check: @llvm.x86.avx512.rsqrt28.ss
+comment|// CHECK-LABEL: @test_mm_rsqrt28_round_ss
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.ss
 return|return
 name|_mm_rsqrt28_round_ss
 argument_list|(
@@ -352,8 +362,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_mask_rsqrt28_round_ss
-comment|// check: @llvm.x86.avx512.rsqrt28.ss
+comment|// CHECK-LABEL: @test_mm_mask_rsqrt28_round_ss
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.ss
 return|return
 name|_mm_mask_rsqrt28_round_ss
 argument_list|(
@@ -385,8 +395,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_maskz_rsqrt28_round_ss
-comment|// check: @llvm.x86.avx512.rsqrt28.ss
+comment|// CHECK-LABEL: @test_mm_maskz_rsqrt28_round_ss
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.ss
 return|return
 name|_mm_maskz_rsqrt28_round_ss
 argument_list|(
@@ -413,8 +423,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_rsqrt28_ss
-comment|// check: @llvm.x86.avx512.rsqrt28.ss
+comment|// CHECK-LABEL: @test_mm_rsqrt28_ss
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.ss
 return|return
 name|_mm_rsqrt28_ss
 argument_list|(
@@ -443,8 +453,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_mask_rsqrt28_ss
-comment|// check: @llvm.x86.avx512.rsqrt28.ss
+comment|// CHECK-LABEL: @test_mm_mask_rsqrt28_ss
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.ss
 return|return
 name|_mm_mask_rsqrt28_ss
 argument_list|(
@@ -474,8 +484,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_maskz_rsqrt28_ss
-comment|// check: @llvm.x86.avx512.rsqrt28.ss
+comment|// CHECK-LABEL: @test_mm_maskz_rsqrt28_ss
+comment|// CHECK: @llvm.x86.avx512.rsqrt28.ss
 return|return
 name|_mm_maskz_rsqrt28_ss
 argument_list|(
@@ -617,8 +627,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_mask_rcp28_round_pd
-comment|// check: @llvm.x86.avx512.rcp28.pd
+comment|// CHECK-LABEL: @test_mm512_mask_rcp28_round_pd
+comment|// CHECK: @llvm.x86.avx512.rcp28.pd
 return|return
 name|_mm512_mask_rcp28_round_pd
 argument_list|(
@@ -645,8 +655,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_maskz_rcp28_round_pd
-comment|// check: @llvm.x86.avx512.rcp28.pd
+comment|// CHECK-LABEL: @test_mm512_maskz_rcp28_round_pd
+comment|// CHECK: @llvm.x86.avx512.rcp28.pd
 return|return
 name|_mm512_maskz_rcp28_round_pd
 argument_list|(
@@ -693,8 +703,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_mask_rcp28_pd
-comment|// check: @llvm.x86.avx512.rcp28.pd
+comment|// CHECK-LABEL: @test_mm512_mask_rcp28_pd
+comment|// CHECK: @llvm.x86.avx512.rcp28.pd
 return|return
 name|_mm512_mask_rcp28_pd
 argument_list|(
@@ -719,8 +729,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_maskz_rcp28_pd
-comment|// check: @llvm.x86.avx512.rcp28.pd
+comment|// CHECK-LABEL: @test_mm512_maskz_rcp28_pd
+comment|// CHECK: @llvm.x86.avx512.rcp28.pd
 return|return
 name|_mm512_maskz_rcp28_pd
 argument_list|(
@@ -893,8 +903,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_rcp28_round_ss
-comment|// check: @llvm.x86.avx512.rcp28.ss
+comment|// CHECK-LABEL: @test_mm_rcp28_round_ss
+comment|// CHECK: @llvm.x86.avx512.rcp28.ss
 return|return
 name|_mm_rcp28_round_ss
 argument_list|(
@@ -925,8 +935,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_mask_rcp28_round_ss
-comment|// check: @llvm.x86.avx512.rcp28.ss
+comment|// CHECK-LABEL: @test_mm_mask_rcp28_round_ss
+comment|// CHECK: @llvm.x86.avx512.rcp28.ss
 return|return
 name|_mm_mask_rcp28_round_ss
 argument_list|(
@@ -958,8 +968,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_maskz_rcp28_round_ss
-comment|// check: @llvm.x86.avx512.rcp28.ss
+comment|// CHECK-LABEL: @test_mm_maskz_rcp28_round_ss
+comment|// CHECK: @llvm.x86.avx512.rcp28.ss
 return|return
 name|_mm_maskz_rcp28_round_ss
 argument_list|(
@@ -986,8 +996,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_rcp28_ss
-comment|// check: @llvm.x86.avx512.rcp28.ss
+comment|// CHECK-LABEL: @test_mm_rcp28_ss
+comment|// CHECK: @llvm.x86.avx512.rcp28.ss
 return|return
 name|_mm_rcp28_ss
 argument_list|(
@@ -1016,8 +1026,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_mask_rcp28_ss
-comment|// check: @llvm.x86.avx512.rcp28.ss
+comment|// CHECK-LABEL: @test_mm_mask_rcp28_ss
+comment|// CHECK: @llvm.x86.avx512.rcp28.ss
 return|return
 name|_mm_mask_rcp28_ss
 argument_list|(
@@ -1047,8 +1057,8 @@ name|__m128
 name|b
 parameter_list|)
 block|{
-comment|// check-label: @test_mm_maskz_rcp28_ss
-comment|// check: @llvm.x86.avx512.rcp28.ss
+comment|// CHECK-LABEL: @test_mm_maskz_rcp28_ss
+comment|// CHECK: @llvm.x86.avx512.rcp28.ss
 return|return
 name|_mm_maskz_rcp28_ss
 argument_list|(
@@ -1277,8 +1287,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_mask_exp2a23_round_pd
-comment|// check: @llvm.x86.avx512.exp2.pd
+comment|// CHECK-LABEL: @test_mm512_mask_exp2a23_round_pd
+comment|// CHECK: @llvm.x86.avx512.exp2.pd
 return|return
 name|_mm512_mask_exp2a23_round_pd
 argument_list|(
@@ -1305,8 +1315,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_maskz_exp2a23_round_pd
-comment|// check: @llvm.x86.avx512.exp2.pd
+comment|// CHECK-LABEL: @test_mm512_maskz_exp2a23_round_pd
+comment|// CHECK: @llvm.x86.avx512.exp2.pd
 return|return
 name|_mm512_maskz_exp2a23_round_pd
 argument_list|(
@@ -1353,8 +1363,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_mask_exp2a23_pd
-comment|// check: @llvm.x86.avx512.exp2.pd
+comment|// CHECK-LABEL: @test_mm512_mask_exp2a23_pd
+comment|// CHECK: @llvm.x86.avx512.exp2.pd
 return|return
 name|_mm512_mask_exp2a23_pd
 argument_list|(
@@ -1379,8 +1389,8 @@ name|__m512d
 name|a
 parameter_list|)
 block|{
-comment|// check-label: @test_mm512_maskz_exp2a23_pd
-comment|// check: @llvm.x86.avx512.exp2.pd
+comment|// CHECK-LABEL: @test_mm512_maskz_exp2a23_pd
+comment|// CHECK: @llvm.x86.avx512.exp2.pd
 return|return
 name|_mm512_maskz_exp2a23_pd
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -fms-extensions
+comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -fms-extensions -Wunknown-pragmas
 end_comment
 
 begin_comment
@@ -288,6 +288,7 @@ parameter_list|()
 block|{
 name|__pragma
 argument_list|()
+comment|// expected-warning{{unknown pragma ignored}}
 comment|// CHECK: #pragma
 comment|// If we ever actually *support* __pragma(warning(disable: x)),
 comment|// this warning should go away.
@@ -991,6 +992,25 @@ end_pragma
 
 begin_comment
 comment|// expected-warning {{requires a level between 0 and 4}}
+end_comment
+
+begin_comment
+comment|// Test that runtime_checks is parsed but ignored.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|runtime_checks
+name|(
+literal|"sc"
+name|,
+name|restore
+name|)
+end_pragma
+
+begin_comment
+comment|// no-warning
 end_comment
 
 end_unit

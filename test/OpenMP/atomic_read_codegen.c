@@ -388,13 +388,25 @@ name|float2x
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// Register "0" is currently an invalid register for global register variables.
+end_comment
+
+begin_comment
+comment|// Use "esp" instead of "0".
+end_comment
+
+begin_comment
+comment|// register int rix __asm__("0");
+end_comment
+
 begin_decl_stmt
 specifier|register
 name|int
 name|rix
 name|__asm__
 argument_list|(
-literal|"0"
+literal|"esp"
 argument_list|)
 decl_stmt|;
 end_decl_stmt

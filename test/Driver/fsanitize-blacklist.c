@@ -40,15 +40,35 @@ comment|// RUN: echo "badline"> %t.bad
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BLACKLIST
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-blacklist=%t.good -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BLACKLIST
 end_comment
 
 begin_comment
-comment|// CHECK-BLACKLIST: -fsanitize-blacklist={{.*}}.good
+comment|// CHECK-BLACKLIST: -fsanitize-blacklist={{.*}}.good" "-fsanitize-blacklist={{.*}}.second
 end_comment
 
 begin_comment
-comment|// CHECK-BLACKLIST: -fsanitize-blacklist={{.*}}.second
+comment|// Now, check for -fdepfile-entry flags.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-blacklist=%t.good -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BLACKLIST2
+end_comment
+
+begin_comment
+comment|// CHECK-BLACKLIST2: -fdepfile-entry={{.*}}.good" "-fdepfile-entry={{.*}}.second
+end_comment
+
+begin_comment
+comment|// Check that the default blacklist is not added as an extra dependency.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -resource-dir=%S/Inputs/resource_dir %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-DEFAULT-BLACKLIST --implicit-check-not=fdepfile-entry
+end_comment
+
+begin_comment
+comment|// CHECK-DEFAULT-BLACKLIST: -fsanitize-blacklist={{.*}}asan_blacklist.txt
 end_comment
 
 begin_comment
@@ -56,7 +76,7 @@ comment|// Ignore -fsanitize-blacklist flag if there is no -fsanitize flag.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SANITIZE --check-prefix=DELIMITERS
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SANITIZE --check-prefix=DELIMITERS
 end_comment
 
 begin_comment
@@ -64,11 +84,27 @@ comment|// CHECK-NO-SANITIZE-NOT: -fsanitize-blacklist
 end_comment
 
 begin_comment
+comment|// Ignore -fsanitize-blacklist flag if there is no -fsanitize flag.
+end_comment
+
+begin_comment
+comment|// Now, check for the absense of -fdepfile-entry flags.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SANITIZE2 --check-prefix=DELIMITERS
+end_comment
+
+begin_comment
+comment|// CHECK-NO-SANITIZE2-NOT: -fdepfile-entry
+end_comment
+
+begin_comment
 comment|// Flag -fno-sanitize-blacklist wins if it is specified later.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-BLACKLIST --check-prefix=DELIMITERS
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-BLACKLIST --check-prefix=DELIMITERS
 end_comment
 
 begin_comment
@@ -80,7 +116,7 @@ comment|// Driver barks on unexisting blacklist files.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fno-sanitize-blacklist -fsanitize-blacklist=unexisting.txt %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SUCH-FILE
+comment|// RUN: %clang -target x86_64-linux-gnu -fno-sanitize-blacklist -fsanitize-blacklist=unexisting.txt %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SUCH-FILE
 end_comment
 
 begin_comment
@@ -92,7 +128,7 @@ comment|// Driver properly reports malformed blacklist files.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.second -fsanitize-blacklist=%t.bad -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BAD-BLACKLIST
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-blacklist=%t.second -fsanitize-blacklist=%t.bad -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BAD-BLACKLIST
 end_comment
 
 begin_comment
@@ -104,7 +140,7 @@ comment|// -fno-sanitize-blacklist disables all blacklists specified earlier.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ONLY-FIRST-DISABLED
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ONLY-FIRST-DISABLED
 end_comment
 
 begin_comment

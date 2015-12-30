@@ -160,6 +160,17 @@ literal|0
 argument_list|)
 block|{}
 name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
 name|isInvalid
 argument_list|()
 specifier|const
@@ -1151,9 +1162,7 @@ name|getEnd
 argument_list|()
 return|;
 block|}
-specifier|const
 name|SourceRange
-operator|&
 name|getAsRange
 argument_list|()
 specifier|const

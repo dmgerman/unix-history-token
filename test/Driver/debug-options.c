@@ -11,139 +11,169 @@ begin_comment
 comment|// RUN: %clang -### -c -g %s -target x86_64-linux-gnu 2>&1 \
 end_comment
 
-begin_expr_stmt
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G
-operator|%
-name|s
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G -check-prefix=G_GDB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -g2 %s -target x86_64-linux-gnu 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -g3 %s -target x86_64-linux-gnu 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -ggdb %s -target x86_64-linux-gnu 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G -check-prefix=G_GDB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -ggdb1 %s -target x86_64-linux-gnu 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY -check-prefix=G_GDB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -ggdb3 %s -target x86_64-linux-gnu 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -glldb %s -target x86_64-linux-gnu 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G -check-prefix=G_LLDB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -gsce %s -target x86_64-linux-gnu 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G -check-prefix=G_SCE %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -g %s -target x86_64-apple-darwin 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G_DARWIN
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_DARWIN -check-prefix=G_LLDB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -g2 %s -target x86_64-apple-darwin 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G_DARWIN
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_DARWIN %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -g3 %s -target x86_64-apple-darwin 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G_DARWIN
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_DARWIN %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -ggdb %s -target x86_64-apple-darwin 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G_DARWIN
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_DARWIN -check-prefix=G_GDB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -ggdb1 %s -target x86_64-apple-darwin 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G_DARWIN
-operator|%
-name|s
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY_DWARF2 %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -ggdb3 %s -target x86_64-apple-darwin 2>&1 \
-operator||
-name|FileCheck
-operator|-
-name|check
-operator|-
-name|prefix
-operator|=
-name|G_DARWIN
-operator|%
-name|s
-end_expr_stmt
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_DARWIN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target x86_64-pc-freebsd10.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_LLDB %s
+end_comment
+
+begin_comment
+comment|// On the PS4, -g defaults to -gno-column-info, and we always generate the
+end_comment
+
+begin_comment
+comment|// arange section.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c %s -target x86_64-scei-ps4 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=NOG_PS4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c %s -g -target x86_64-scei-ps4 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_PS4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c %s -g -target x86_64-scei-ps4 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_SCE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c %s -g -target x86_64-scei-ps4 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=NOCI %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c %s -g -gcolumn-info -target x86_64-scei-ps4 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=CI %s
+end_comment
 
 begin_comment
 comment|// RUN: %clang -### -c -gdwarf-2 %s 2>&1 | FileCheck -check-prefix=G_D2 %s
@@ -163,6 +193,38 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -### -c -ggdb0 %s 2>&1 | FileCheck -check-prefix=G_NO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -glldb -g0 %s 2>&1 | FileCheck -check-prefix=G_NO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -glldb -g1 %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY -check-prefix=G_LLDB %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PS4 defaults to sce; -ggdb0 changes tuning but turns off debug info,
+end_comment
+
+begin_comment
+comment|// then -g turns it back on without affecting tuning.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -ggdb0 -g -target x86_64-scei-ps4 %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G -check-prefix=G_GDB %s
 end_comment
 
 begin_comment
@@ -338,7 +400,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -g %s 2>&1 | FileCheck -check-prefix=CI %s
+comment|// RUN: %clang -### -g -target x86_64-unknown-unknown %s 2>&1 \
+end_comment
+
+begin_comment
+comment|//             | FileCheck -check-prefix=CI %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -gmodules %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:        | FileCheck -check-prefix=GEXTREFS %s
 end_comment
 
 begin_comment
@@ -350,7 +428,7 @@ comment|// G: "-cc1"
 end_comment
 
 begin_comment
-comment|// G: "-g"
+comment|// G: "-debug-info-kind=limited"
 end_comment
 
 begin_comment
@@ -362,7 +440,43 @@ comment|// G_DARWIN: "-cc1"
 end_comment
 
 begin_comment
-comment|// G_DARWIN: "-gdwarf-2"
+comment|// G_DARWIN: "-dwarf-version=2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// NOG_PS4: "-cc1"
+end_comment
+
+begin_comment
+comment|// NOG_PS4-NOT "-dwarf-version=
+end_comment
+
+begin_comment
+comment|// NOG_PS4: "-generate-arange-section"
+end_comment
+
+begin_comment
+comment|// NOG_PS4-NOT: "-dwarf-version=
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// G_PS4: "-cc1"
+end_comment
+
+begin_comment
+comment|// G_PS4: "-dwarf-version=
+end_comment
+
+begin_comment
+comment|// G_PS4: "-generate-arange-section"
 end_comment
 
 begin_comment
@@ -374,7 +488,7 @@ comment|// G_D2: "-cc1"
 end_comment
 
 begin_comment
-comment|// G_D2: "-gdwarf-2"
+comment|// G_D2: "-dwarf-version=2"
 end_comment
 
 begin_comment
@@ -386,7 +500,7 @@ comment|// G_NO: "-cc1"
 end_comment
 
 begin_comment
-comment|// G_NO-NOT: "-g"
+comment|// G_NO-NOT: -debug-info-kind=
 end_comment
 
 begin_comment
@@ -398,15 +512,7 @@ comment|// GLTO_ONLY: "-cc1"
 end_comment
 
 begin_comment
-comment|// GLTO_ONLY-NOT: "-g"
-end_comment
-
-begin_comment
-comment|// GLTO_ONLY: "-gline-tables-only"
-end_comment
-
-begin_comment
-comment|// GLTO_ONLY-NOT: "-g"
+comment|// GLTO_ONLY: "-debug-info-kind=line-tables-only"
 end_comment
 
 begin_comment
@@ -418,19 +524,11 @@ comment|// GLTO_ONLY_DWARF2: "-cc1"
 end_comment
 
 begin_comment
-comment|// GLTO_ONLY_DWARF2-NOT: "-g"
+comment|// GLTO_ONLY_DWARF2: "-debug-info-kind=line-tables-only"
 end_comment
 
 begin_comment
-comment|// GLTO_ONLY_DWARF2: "-gline-tables-only"
-end_comment
-
-begin_comment
-comment|// GLTO_ONLY_DWARF2: "-gdwarf-2"
-end_comment
-
-begin_comment
-comment|// GLTO_ONLY_DWARF2-NOT: "-g"
+comment|// GLTO_ONLY_DWARF2: "-dwarf-version=2"
 end_comment
 
 begin_comment
@@ -442,19 +540,35 @@ comment|// G_ONLY: "-cc1"
 end_comment
 
 begin_comment
-comment|// G_ONLY-NOT: "-gline-tables-only"
-end_comment
-
-begin_comment
-comment|// G_ONLY: "-g"
-end_comment
-
-begin_comment
-comment|// G_ONLY-NOT: "-gline-tables-only"
+comment|// G_ONLY: "-debug-info-kind=limited"
 end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// G_GDB:  "-debugger-tuning=gdb"
+end_comment
+
+begin_comment
+comment|// G_LLDB: "-debugger-tuning=lldb"
+end_comment
+
+begin_comment
+comment|// G_SCE:  "-debugger-tuning=sce"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// These tests assert that "-gline-tables-only" "-g" uses the latter,
+end_comment
+
+begin_comment
+comment|// but otherwise not caring about the DebugInfoKind.
 end_comment
 
 begin_comment
@@ -462,15 +576,11 @@ comment|// G_ONLY_DWARF2: "-cc1"
 end_comment
 
 begin_comment
-comment|// G_ONLY_DWARF2-NOT: "-gline-tables-only"
+comment|// G_ONLY_DWARF2: "-debug-info-kind={{standalone|limited}}"
 end_comment
 
 begin_comment
-comment|// G_ONLY_DWARF2: "-gdwarf-2"
-end_comment
-
-begin_comment
-comment|// G_ONLY_DWARF2-NOT: "-gline-tables-only"
+comment|// G_ONLY_DWARF2: "-dwarf-version=2"
 end_comment
 
 begin_comment
@@ -478,11 +588,15 @@ comment|//
 end_comment
 
 begin_comment
+comment|// This tests asserts that "-gline-tables-only" "-g0" disables debug info.
+end_comment
+
+begin_comment
 comment|// GLTO_NO: "-cc1"
 end_comment
 
 begin_comment
-comment|// GLTO_NO-NOT: "-gline-tables-only"
+comment|// GLTO_NO-NOT: -debug-info-kind=
 end_comment
 
 begin_comment
@@ -539,6 +653,14 @@ end_comment
 
 begin_comment
 comment|// NOCI-NOT: "-dwarf-column-info"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GEXTREFS: "-dwarf-ext-refs" "-fmodule-format=obj" "-debug-info-kind={{standalone|limited}}"
 end_comment
 
 end_unit

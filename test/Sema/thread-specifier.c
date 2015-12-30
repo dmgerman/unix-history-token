@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-extern -verify -pedantic -x c++ %s -DGNU
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-extern -verify -pedantic -x c++ %s -DGNU -std=c++98
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-extern -verify -pedantic -x c++ %s -DC11 -D__thread=_Thread_local
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -fsyntax-only -Wno-private-extern -verify -pedantic -x c++ %s -DC11 -D__thread=_Thread_local -std=c++98
 end_comment
 
 begin_comment

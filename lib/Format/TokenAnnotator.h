@@ -423,6 +423,36 @@ operator|...
 argument_list|)
 return|;
 block|}
+comment|/// \c true if this line looks like a function definition instead of a
+comment|/// function declaration. Asserts MightBeFunctionDecl.
+name|bool
+name|mightBeFunctionDefinition
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MightBeFunctionDecl
+argument_list|)
+block|;
+comment|// FIXME: Line.Last points to other characters than tok::semi
+comment|// and tok::lbrace.
+return|return
+operator|!
+name|Last
+operator|->
+name|isOneOf
+argument_list|(
+name|tok
+operator|::
+name|semi
+argument_list|,
+name|tok
+operator|::
+name|comment
+argument_list|)
+return|;
+block|}
 name|FormatToken
 modifier|*
 name|First
@@ -737,6 +767,16 @@ modifier|&
 name|Right
 parameter_list|)
 function_decl|;
+name|bool
+name|mustBreakForReturnType
+argument_list|(
+specifier|const
+name|AnnotatedLine
+operator|&
+name|Line
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|printDebugInfo
 parameter_list|(

@@ -4,7 +4,7 @@ comment|// RUN: not %clang_cc1 -fsyntax-only %s -verify
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fshort-enums -fsyntax-only %s -verify
+comment|// RUN: %clang_cc1 -triple %itanium_abi_triple -fshort-enums -fsyntax-only %s -verify
 end_comment
 
 begin_comment
