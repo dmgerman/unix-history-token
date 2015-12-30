@@ -13315,7 +13315,11 @@ name|MBOX_EXEC_COMMAND_IOCB_A64
 argument_list|,
 name|MBLOGALL
 argument_list|,
-literal|500000
+name|MBCMD_DEFAULT_TIMEOUT
+operator|+
+name|ICB_LOGIN_TOV
+operator|*
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -18967,7 +18971,7 @@ name|pt
 operator|->
 name|ctp_time
 operator|=
-literal|30
+literal|10
 expr_stmt|;
 name|pt
 operator|->
@@ -19290,7 +19294,13 @@ name|MBOX_EXEC_COMMAND_IOCB_A64
 argument_list|,
 name|MBLOGALL
 argument_list|,
-literal|500000
+name|MBCMD_DEFAULT_TIMEOUT
+operator|+
+name|pt
+operator|->
+name|ctp_time
+operator|*
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -21823,7 +21833,7 @@ name|pt
 operator|->
 name|ctp_time
 operator|=
-literal|1
+literal|4
 expr_stmt|;
 name|pt
 operator|->
@@ -22180,6 +22190,12 @@ name|MBOX_EXEC_COMMAND_IOCB_A64
 argument_list|,
 name|MBLOGALL
 argument_list|,
+name|MBCMD_DEFAULT_TIMEOUT
+operator|+
+name|pt
+operator|->
+name|ctp_time
+operator|*
 literal|1000000
 argument_list|)
 expr_stmt|;
@@ -22663,7 +22679,7 @@ name|pt
 operator|->
 name|ctp_time
 operator|=
-literal|1
+literal|4
 expr_stmt|;
 name|pt
 operator|->
@@ -23043,6 +23059,12 @@ name|MBOX_EXEC_COMMAND_IOCB_A64
 argument_list|,
 name|MBLOGALL
 argument_list|,
+name|MBCMD_DEFAULT_TIMEOUT
+operator|+
+name|pt
+operator|->
+name|ctp_time
+operator|*
 literal|1000000
 argument_list|)
 expr_stmt|;
@@ -25215,32 +25237,17 @@ expr_stmt|;
 operator|*
 name|tptr
 operator|=
+operator|(
 name|XS_TIME
 argument_list|(
 name|xs
 argument_list|)
+operator|+
+literal|999
+operator|)
 operator|/
 literal|1000
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|tptr
-operator|==
-literal|0
-operator|&&
-name|XS_TIME
-argument_list|(
-name|xs
-argument_list|)
-condition|)
-block|{
-operator|*
-name|tptr
-operator|=
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|IS_24XX
@@ -25780,7 +25787,7 @@ name|tmf
 operator|->
 name|tmf_timeout
 operator|=
-literal|2
+literal|4
 expr_stmt|;
 name|tmf
 operator|->
@@ -25845,7 +25852,13 @@ name|MBOX_EXEC_COMMAND_IOCB_A64
 argument_list|,
 name|MBLOGALL
 argument_list|,
-literal|5000000
+name|MBCMD_DEFAULT_TIMEOUT
+operator|+
+name|tmf
+operator|->
+name|tmf_timeout
+operator|*
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -38332,12 +38345,12 @@ block|,
 comment|/* 0x21: */
 name|ISP_FC_OPMAP
 argument_list|(
-literal|0x01
+literal|0x03
 argument_list|,
-literal|0x07
+literal|0x4b
 argument_list|)
 block|,
-comment|/* 0x22: MBOX_GET_RETRY_COUNT	*/
+comment|/* 0x22: MBOX_GET_TIMEOUT_PARAMS */
 name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
@@ -38460,12 +38473,12 @@ block|,
 comment|/* 0x31: */
 name|ISP_FC_OPMAP
 argument_list|(
-literal|0x07
+literal|0x4b
 argument_list|,
-literal|0x07
+literal|0x4b
 argument_list|)
 block|,
-comment|/* 0x32: MBOX_SET_RETRY_COUNT	*/
+comment|/* 0x32: MBOX_SET_TIMEOUT_PARAMS */
 name|ISP_FC_OPMAP
 argument_list|(
 literal|0x00
