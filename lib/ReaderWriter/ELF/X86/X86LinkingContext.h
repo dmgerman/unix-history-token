@@ -91,12 +91,33 @@ operator|::
 name|Triple
 argument_list|)
 block|;
+name|int
+name|getMachineType
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|llvm
+operator|::
+name|ELF
+operator|::
+name|EM_386
+return|;
+block|}
 name|X86LinkingContext
 argument_list|(
 name|llvm
 operator|::
 name|Triple
 argument_list|)
+block|;
+name|void
+name|registerRelocationNames
+argument_list|(
+argument|Registry&r
+argument_list|)
+name|override
 block|;
 comment|/// \brief X86 has only two relative relocation
 comment|/// a) for supporting IFUNC relocs - R_386_IRELATIVE

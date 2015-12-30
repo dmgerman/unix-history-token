@@ -268,15 +268,6 @@ operator|::
 name|parse
 argument_list|(
 name|vec
-operator|.
-name|size
-argument_list|()
-argument_list|,
-operator|&
-name|vec
-index|[
-literal|0
-index|]
 argument_list|,
 name|_ctx
 argument_list|,

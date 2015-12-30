@@ -119,28 +119,11 @@ argument_list|(
 name|file
 argument_list|)
 block|,
-name|_target
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|_name
 argument_list|(
-name|name
+argument|name
 argument_list|)
-block|,
-name|_merge
-argument_list|(
-name|DefinedAtom
-operator|::
-name|mergeNo
-argument_list|)
-block|,
-name|_deadStrip
-argument_list|(
-argument|DefinedAtom::deadStripNormal
-argument_list|)
-block|{   }
+block|{}
 name|StringRef
 name|name
 argument_list|()
@@ -418,15 +401,6 @@ block|}
 block|}
 end_decl_stmt
 
-begin_decl_stmt
-name|mutable
-specifier|const
-name|DefinedAtom
-modifier|*
-name|_target
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|std
 operator|::
@@ -434,6 +408,17 @@ name|string
 name|_name
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|mutable
+specifier|const
+name|DefinedAtom
+modifier|*
+name|_target
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|llvm
@@ -443,12 +428,20 @@ operator|<
 name|Merge
 operator|>
 name|_merge
+operator|=
+name|DefinedAtom
+operator|::
+name|mergeNo
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
 name|DeadStripKind
 name|_deadStrip
+init|=
+name|DefinedAtom
+operator|::
+name|deadStripNormal
 decl_stmt|;
 end_decl_stmt
 

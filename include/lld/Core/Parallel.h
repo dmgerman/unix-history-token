@@ -67,30 +67,11 @@ directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|// concrt.h depends on eh.h for __uncaught_exception declaration
-end_comment
-
-begin_comment
-comment|// even if we disable exceptions.
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<eh.h>
+file|"llvm/Support/thread.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -119,20 +100,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<thread>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stack>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifdef
+argument_list|)
+operator|&&
+name|LLVM_ENABLE_THREADS
+end_if
 
 begin_include
 include|#
@@ -423,10 +403,14 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief An abstract class that takes closures and runs them asynchronously.
+comment|// Classes in this namespace are implementation details of this header.
 end_comment
 
 begin_decl_stmt
+name|namespace
+name|internal
+block|{
+comment|/// \brief An abstract class that takes closures and runs them asynchronously.
 name|class
 name|Executor
 block|{
@@ -436,7 +420,9 @@ name|virtual
 operator|~
 name|Executor
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|add
@@ -450,25 +436,182 @@ argument_list|()
 operator|>
 name|func
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LLVM_ENABLE_THREADS
+argument_list|)
+operator|||
+name|LLVM_ENABLE_THREADS
+operator|==
+literal|0
+name|class
+name|SyncExecutor
+range|:
+name|public
+name|Executor
+block|{
+name|public
+operator|:
+name|virtual
+name|void
+name|add
+argument_list|(
+argument|std::function<void()> func
+argument_list|)
+block|{
+name|func
+argument_list|()
+block|;   }
+block|}
+decl_stmt|;
+specifier|inline
+name|Executor
+modifier|*
+name|getDefaultExecutor
+parameter_list|()
+block|{
+specifier|static
+name|SyncExecutor
+name|exec
+decl_stmt|;
+return|return
+operator|&
+name|exec
+return|;
+block|}
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+comment|/// \brief An Executor that runs tasks via ConcRT.
+name|class
+name|ConcRTExecutor
+range|:
+name|public
+name|Executor
+block|{   struct
+name|Taskish
+block|{
+name|Taskish
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|()
+operator|>
+name|task
+argument_list|)
+operator|:
+name|_task
+argument_list|(
+argument|task
+argument_list|)
+block|{}
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|()
+operator|>
+name|_task
+block|;
+specifier|static
+name|void
+name|run
+argument_list|(
+argument|void *p
+argument_list|)
+block|{
+name|Taskish
+operator|*
+name|self
+operator|=
+name|static_cast
+operator|<
+name|Taskish
+operator|*
+operator|>
+operator|(
+name|p
+operator|)
+block|;
+name|self
+operator|->
+name|_task
+argument_list|()
+block|;
+name|concurrency
+operator|::
+name|Free
+argument_list|(
+name|self
+argument_list|)
+block|;     }
+block|}
+block|;
+name|public
+operator|:
+name|virtual
+name|void
+name|add
+argument_list|(
+argument|std::function<void()> func
+argument_list|)
+block|{
+name|Concurrency
+operator|::
+name|CurrentScheduler
+operator|::
+name|ScheduleTask
+argument_list|(
+name|Taskish
+operator|::
+name|run
+argument_list|,
+name|new
+argument_list|(
+argument|concurrency::Alloc(sizeof(Taskish))
+argument_list|)
+name|Taskish
+argument_list|(
+name|func
+argument_list|)
+argument_list|)
+block|;   }
+block|}
+decl_stmt|;
+specifier|inline
+name|Executor
+modifier|*
+name|getDefaultExecutor
+parameter_list|()
+block|{
+specifier|static
+name|ConcRTExecutor
+name|exec
+decl_stmt|;
+return|return
+operator|&
+name|exec
+return|;
+block|}
+else|#
+directive|else
 comment|/// \brief An implementation of an Executor that runs closures on a thread pool
-end_comment
-
-begin_comment
 comment|///   in filo order.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ThreadPoolExecutor
 range|:
@@ -551,6 +694,7 @@ block|;   }
 operator|~
 name|ThreadPoolExecutor
 argument_list|()
+name|override
 block|{
 name|std
 operator|::
@@ -732,144 +876,6 @@ name|Latch
 name|_done
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|/// \brief An Executor that runs tasks via ConcRT.
-end_comment
-
-begin_decl_stmt
-name|class
-name|ConcRTExecutor
-range|:
-name|public
-name|Executor
-block|{   struct
-name|Taskish
-block|{
-name|Taskish
-argument_list|(
-name|std
-operator|::
-name|function
-operator|<
-name|void
-argument_list|()
-operator|>
-name|task
-argument_list|)
-operator|:
-name|_task
-argument_list|(
-argument|task
-argument_list|)
-block|{}
-name|std
-operator|::
-name|function
-operator|<
-name|void
-argument_list|()
-operator|>
-name|_task
-block|;
-specifier|static
-name|void
-name|run
-argument_list|(
-argument|void *p
-argument_list|)
-block|{
-name|Taskish
-operator|*
-name|self
-operator|=
-name|static_cast
-operator|<
-name|Taskish
-operator|*
-operator|>
-operator|(
-name|p
-operator|)
-block|;
-name|self
-operator|->
-name|_task
-argument_list|()
-block|;
-name|concurrency
-operator|::
-name|Free
-argument_list|(
-name|self
-argument_list|)
-block|;     }
-block|}
-block|;
-name|public
-operator|:
-name|virtual
-name|void
-name|add
-argument_list|(
-argument|std::function<void()> func
-argument_list|)
-block|{
-name|Concurrency
-operator|::
-name|CurrentScheduler
-operator|::
-name|ScheduleTask
-argument_list|(
-name|Taskish
-operator|::
-name|run
-argument_list|,
-name|new
-argument_list|(
-argument|concurrency::Alloc(sizeof(Taskish))
-argument_list|)
-name|Taskish
-argument_list|(
-name|func
-argument_list|)
-argument_list|)
-block|;   }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|inline
-name|Executor
-modifier|*
-name|getDefaultExecutor
-parameter_list|()
-block|{
-specifier|static
-name|ConcRTExecutor
-name|exec
-decl_stmt|;
-return|return
-operator|&
-name|exec
-return|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
 specifier|inline
 name|Executor
 modifier|*
@@ -885,12 +891,14 @@ operator|&
 name|exec
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace internal
+end_comment
 
 begin_comment
 comment|/// \brief Allows launching a number of tasks and waiting for them to finish
@@ -927,6 +935,8 @@ operator|.
 name|inc
 argument_list|()
 expr_stmt|;
+name|internal
+operator|::
 name|getDefaultExecutor
 argument_list|()
 operator|->
@@ -966,17 +976,57 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|// Use ppl parallel_sort on Windows.
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LLVM_ENABLE_THREADS
+argument_list|)
+operator|||
+name|LLVM_ENABLE_THREADS
+operator|==
+literal|0
+end_if
 
 begin_expr_stmt
+name|template
+operator|<
+name|class
+name|RandomAccessIterator
+operator|,
+name|class
+name|Comp
+operator|>
+name|void
+name|parallel_sort
+argument_list|(
+argument|RandomAccessIterator start
+argument_list|,
+argument|RandomAccessIterator end
+argument_list|,
+argument|const Comp&comp = std::less<         typename std::iterator_traits<RandomAccessIterator>::value_type>()
+argument_list|)
+block|{
+name|std
+operator|::
+name|sort
+argument_list|(
+name|start
+argument_list|,
+name|end
+argument_list|,
+name|comp
+argument_list|)
+block|; }
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+comment|// Use ppl parallel_sort on Windows.
 name|template
 operator|<
 name|class
@@ -1441,9 +1491,52 @@ operator|(
 operator|)
 argument_list|)
 block|; }
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LLVM_ENABLE_THREADS
+argument_list|)
+operator|||
+name|LLVM_ENABLE_THREADS
+operator|==
+literal|0
+name|template
+operator|<
+name|class
+name|Iterator
+operator|,
+name|class
+name|Func
+operator|>
+name|void
+name|parallel_for_each
+argument_list|(
+argument|Iterator begin
+argument_list|,
+argument|Iterator end
+argument_list|,
+argument|Func func
+argument_list|)
+block|{
+name|std
+operator|::
+name|for_each
+argument_list|(
+name|begin
+argument_list|,
+name|end
+argument_list|,
+name|func
+argument_list|)
+block|; }
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 comment|// Use ppl parallel_for_each on Windows.
 name|template
 operator|<
@@ -1575,6 +1668,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLD_CORE_PARALLEL_H
+end_comment
 
 end_unit
 

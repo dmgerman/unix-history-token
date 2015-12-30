@@ -117,6 +117,9 @@ decl_stmt|;
 name|class
 name|MachOFile
 decl_stmt|;
+name|class
+name|SectCreateFile
+decl_stmt|;
 block|}
 name|class
 name|MachOLinkingContext
@@ -132,6 +135,7 @@ block|;
 operator|~
 name|MachOLinkingContext
 argument_list|()
+name|override
 block|;    enum
 name|Arch
 block|{
@@ -186,6 +190,18 @@ comment|// Default
 name|noDebugMap
 comment|// -S option
 block|}
+block|;    enum
+name|class
+name|UndefinedMode
+block|{
+name|error
+block|,
+name|warning
+block|,
+name|suppress
+block|,
+name|dynamicLookup
+block|}
 block|;
 comment|/// Initializes the context to sane default values given the specified output
 comment|/// file type, arch, os, and minimum os version.  This should be called before
@@ -226,7 +242,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
+name|void
 name|createImplicitFiles
 argument_list|(
 argument|std::vector<std::unique_ptr<File>>&
@@ -579,6 +595,25 @@ operator|=
 name|pie
 block|; }
 name|uint64_t
+name|stackSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_stackSize
+return|;
+block|}
+name|void
+name|setStackSize
+argument_list|(
+argument|uint64_t stackSize
+argument_list|)
+block|{
+name|_stackSize
+operator|=
+name|stackSize
+block|; }
+name|uint64_t
 name|baseAddress
 argument_list|()
 specifier|const
@@ -741,6 +776,44 @@ return|return
 name|_deadStrippableDylib
 return|;
 block|}
+comment|/// \brief Whether or not to use flat namespace.
+comment|///
+comment|/// MachO usually uses a two-level namespace, where each external symbol
+comment|/// referenced by the target is associated with the dylib that will provide
+comment|/// the symbol's definition at runtime. Using flat namespace overrides this
+comment|/// behavior: the linker searches all dylibs on the command line and all
+comment|/// dylibs those original dylibs depend on, but does not record which dylib
+comment|/// an external symbol came from. At runtime dyld again searches all images
+comment|/// and uses the first definition it finds. In addition, any undefines in
+comment|/// loaded flat_namespace dylibs must be resolvable at build time.
+name|bool
+name|useFlatNamespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_flatNamespace
+return|;
+block|}
+comment|/// \brief How to handle undefined symbols.
+comment|///
+comment|/// Options are:
+comment|///  * error: Report an error and terminate linking.
+comment|///  * warning: Report a warning, but continue linking.
+comment|///  * suppress: Ignore and continue linking.
+comment|///  * dynamic_lookup: For use with -twolevel namespace: Records source dylibs
+comment|///    for symbols that are defined in a linked dylib at static link time.
+comment|///    Undefined symbols are handled by searching all loaded images at
+comment|///    runtime.
+name|UndefinedMode
+name|undefinedMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_undefinedMode
+return|;
+block|}
 comment|/// \brief The path to the executable that will load the bundle at runtime.
 comment|///
 comment|/// When building a Mach-O bundle, this executable will be examined if there
@@ -795,6 +868,26 @@ block|{
 name|_deadStrippableDylib
 operator|=
 name|deadStrippable
+block|;   }
+name|void
+name|setUseFlatNamespace
+argument_list|(
+argument|bool flatNamespace
+argument_list|)
+block|{
+name|_flatNamespace
+operator|=
+name|flatNamespace
+block|;   }
+name|void
+name|setUndefinedMode
+argument_list|(
+argument|UndefinedMode undefinedMode
+argument_list|)
+block|{
+name|_undefinedMode
+operator|=
+name|undefinedMode
 block|;   }
 name|void
 name|setBundleLoader
@@ -864,7 +957,18 @@ argument|StringRef seg
 argument_list|,
 argument|StringRef sect
 argument_list|,
-argument|uint8_t align2
+argument|uint16_t align
+argument_list|)
+block|;
+comment|/// \brief Add a section based on a command-line sectcreate option.
+name|void
+name|addSectCreateSection
+argument_list|(
+argument|StringRef seg
+argument_list|,
+argument|StringRef sect
+argument_list|,
+argument|std::unique_ptr<MemoryBuffer> content
 argument_list|)
 block|;
 comment|/// Returns true if specified section had alignment constraints.
@@ -875,7 +979,7 @@ argument|StringRef seg
 argument_list|,
 argument|StringRef sect
 argument_list|,
-argument|uint8_t&align2
+argument|uint16_t&align
 argument_list|)
 specifier|const
 block|;
@@ -897,6 +1001,12 @@ block|;
 comment|// GOT creation Pass should be run.
 name|bool
 name|needsGOTPass
+argument_list|()
+specifier|const
+block|;
+comment|/// Pass to add TLV sections.
+name|bool
+name|needsTLVPass
 argument_list|()
 specifier|const
 block|;
@@ -990,18 +1100,11 @@ comment|/// this method will return the offset and size of that slice.
 name|bool
 name|sliceFromFatFile
 argument_list|(
-specifier|const
-name|MemoryBuffer
-operator|&
-name|mb
+argument|MemoryBufferRef mb
 argument_list|,
-name|uint32_t
-operator|&
-name|offset
+argument|uint32_t&offset
 argument_list|,
-name|uint32_t
-operator|&
-name|size
+argument|uint32_t&size
 argument_list|)
 block|;
 comment|/// Returns if a command line option specified dylib is an upward link.
@@ -1106,6 +1209,19 @@ argument|bool&leftBeforeRight
 argument_list|)
 specifier|const
 block|;
+comment|/// Return the 'flat namespace' file. This is the file that supplies
+comment|/// atoms for otherwise undefined symbols when the -flat_namespace or
+comment|/// -undefined dynamic_lookup options are used.
+name|File
+operator|*
+name|flatNamespaceFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_flatNamespaceFile
+return|;
+block|}
 name|private
 operator|:
 name|Writer
@@ -1166,8 +1282,8 @@ block|;
 name|StringRef
 name|sectionName
 block|;
-name|uint8_t
-name|align2
+name|uint16_t
+name|align
 block|;   }
 block|;    struct
 name|OrderFileNode
@@ -1259,6 +1375,9 @@ block|;
 name|uint64_t
 name|_baseAddress
 block|;
+name|uint64_t
+name|_stackSize
+block|;
 name|uint32_t
 name|_compatibilityVersion
 block|;
@@ -1270,6 +1389,12 @@ name|_installName
 block|;
 name|StringRefVector
 name|_rpaths
+block|;
+name|bool
+name|_flatNamespace
+block|;
+name|UndefinedMode
+name|_undefinedMode
 block|;
 name|bool
 name|_deadStrippableDylib
@@ -1366,6 +1491,12 @@ name|File
 operator|>>
 name|_indirectDylibs
 block|;
+name|mutable
+name|std
+operator|::
+name|mutex
+name|_dylibsMutex
+block|;
 name|ExportMode
 name|_exportMode
 block|;
@@ -1403,6 +1534,18 @@ name|_orderFiles
 block|;
 name|unsigned
 name|_orderFileEntries
+block|;
+name|File
+operator|*
+name|_flatNamespaceFile
+block|;
+name|mach_o
+operator|::
+name|SectCreateFile
+operator|*
+name|_sectCreateFile
+operator|=
+name|nullptr
 block|; }
 decl_stmt|;
 block|}
@@ -1416,6 +1559,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLD_READER_WRITER_MACHO_LINKING_CONTEXT_H
+end_comment
 
 end_unit
 

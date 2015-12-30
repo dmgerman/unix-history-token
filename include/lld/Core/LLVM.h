@@ -103,6 +103,9 @@ decl_stmt|;
 name|class
 name|MemoryBuffer
 decl_stmt|;
+name|class
+name|MemoryBufferRef
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -206,6 +209,11 @@ name|using
 name|llvm
 operator|::
 name|MemoryBuffer
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|MemoryBufferRef
 expr_stmt|;
 name|using
 name|llvm

@@ -111,6 +111,12 @@ directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atomic>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lld
@@ -119,7 +125,7 @@ name|class
 name|SimpleFile
 range|:
 name|public
-name|MutableFile
+name|File
 block|{
 name|public
 operator|:
@@ -128,23 +134,80 @@ argument_list|(
 argument|StringRef path
 argument_list|)
 operator|:
-name|MutableFile
+name|File
 argument_list|(
 argument|path
+argument_list|,
+argument|kindObject
 argument_list|)
 block|{}
 name|void
 name|addAtom
 argument_list|(
+argument|const DefinedAtom&a
+argument_list|)
+block|{
+name|_defined
+operator|.
+name|push_back
+argument_list|(
+operator|&
+name|a
+argument_list|)
+block|; }
+name|void
+name|addAtom
+argument_list|(
+argument|const UndefinedAtom&a
+argument_list|)
+block|{
+name|_undefined
+operator|.
+name|push_back
+argument_list|(
+operator|&
+name|a
+argument_list|)
+block|; }
+name|void
+name|addAtom
+argument_list|(
+argument|const SharedLibraryAtom&a
+argument_list|)
+block|{
+name|_shared
+operator|.
+name|push_back
+argument_list|(
+operator|&
+name|a
+argument_list|)
+block|; }
+name|void
+name|addAtom
+argument_list|(
+argument|const AbsoluteAtom&a
+argument_list|)
+block|{
+name|_absolute
+operator|.
+name|push_back
+argument_list|(
+operator|&
+name|a
+argument_list|)
+block|; }
+name|void
+name|addAtom
+argument_list|(
 argument|const Atom&atom
 argument_list|)
-name|override
 block|{
 if|if
 condition|(
 name|auto
 operator|*
-name|defAtom
+name|p
 operator|=
 name|dyn_cast
 operator|<
@@ -156,13 +219,11 @@ name|atom
 operator|)
 condition|)
 block|{
-name|_definedAtoms
-operator|.
-name|_atoms
+name|_defined
 operator|.
 name|push_back
 argument_list|(
-name|defAtom
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -171,7 +232,7 @@ if|if
 condition|(
 name|auto
 operator|*
-name|undefAtom
+name|p
 operator|=
 name|dyn_cast
 operator|<
@@ -183,13 +244,11 @@ name|atom
 operator|)
 condition|)
 block|{
-name|_undefinedAtoms
-operator|.
-name|_atoms
+name|_undefined
 operator|.
 name|push_back
 argument_list|(
-name|undefAtom
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -198,7 +257,7 @@ if|if
 condition|(
 name|auto
 operator|*
-name|shlibAtom
+name|p
 operator|=
 name|dyn_cast
 operator|<
@@ -210,13 +269,11 @@ name|atom
 operator|)
 condition|)
 block|{
-name|_sharedLibraryAtoms
-operator|.
-name|_atoms
+name|_shared
 operator|.
 name|push_back
 argument_list|(
-name|shlibAtom
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -225,7 +282,7 @@ if|if
 condition|(
 name|auto
 operator|*
-name|absAtom
+name|p
 operator|=
 name|dyn_cast
 operator|<
@@ -237,13 +294,11 @@ name|atom
 operator|)
 condition|)
 block|{
-name|_absoluteAtoms
-operator|.
-name|_atoms
+name|_absolute
 operator|.
 name|push_back
 argument_list|(
-name|absAtom
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -261,15 +316,12 @@ name|removeDefinedAtomsIf
 argument_list|(
 argument|std::function<bool(const DefinedAtom *)> pred
 argument_list|)
-name|override
 block|{
 name|auto
 operator|&
 name|atoms
 operator|=
-name|_definedAtoms
-operator|.
-name|_atoms
+name|_defined
 block|;
 name|auto
 name|newEnd
@@ -304,7 +356,7 @@ argument_list|()
 argument_list|)
 block|;   }
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|DefinedAtom
 operator|>
@@ -315,11 +367,11 @@ specifier|const
 name|override
 block|{
 return|return
-name|_definedAtoms
+name|_defined
 return|;
 block|}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|UndefinedAtom
 operator|>
@@ -330,11 +382,11 @@ specifier|const
 name|override
 block|{
 return|return
-name|_undefinedAtoms
+name|_undefined
 return|;
 block|}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|SharedLibraryAtom
 operator|>
@@ -345,11 +397,11 @@ specifier|const
 name|override
 block|{
 return|return
-name|_sharedLibraryAtoms
+name|_shared
 return|;
 block|}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|AbsoluteAtom
 operator|>
@@ -360,53 +412,82 @@ specifier|const
 name|override
 block|{
 return|return
-name|_absoluteAtoms
+name|_absolute
 return|;
 block|}
+typedef|typedef
+name|range
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|DefinedAtom
+operator|*
+operator|>
+operator|::
+name|iterator
+operator|>
+name|DefinedAtomRange
+expr_stmt|;
 name|DefinedAtomRange
 name|definedAtoms
 argument_list|()
-name|override
 block|{
 return|return
 name|make_range
 argument_list|(
-name|_definedAtoms
-operator|.
-name|_atoms
+name|_defined
 argument_list|)
 return|;
 block|}
 name|private
 operator|:
-name|atom_collection_vector
+name|AtomVector
 operator|<
 name|DefinedAtom
 operator|>
-name|_definedAtoms
-block|;
-name|atom_collection_vector
+name|_defined
+decl_stmt|;
+name|AtomVector
 operator|<
 name|UndefinedAtom
 operator|>
-name|_undefinedAtoms
-block|;
-name|atom_collection_vector
+name|_undefined
+expr_stmt|;
+name|AtomVector
 operator|<
 name|SharedLibraryAtom
 operator|>
-name|_sharedLibraryAtoms
-block|;
-name|atom_collection_vector
+name|_shared
+expr_stmt|;
+name|AtomVector
 operator|<
 name|AbsoluteAtom
 operator|>
-name|_absoluteAtoms
-block|; }
-decl_stmt|;
+name|_absolute
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Archive library file that may be used as a virtual container
+end_comment
+
+begin_comment
 comment|/// for symbols that should be added dynamically in response to
+end_comment
+
+begin_comment
 comment|/// call to find() method.
+end_comment
+
+begin_decl_stmt
 name|class
 name|SimpleArchiveLibraryFile
 range|:
@@ -426,7 +507,7 @@ argument|filename
 argument_list|)
 block|{}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|DefinedAtom
 operator|>
@@ -441,7 +522,7 @@ name|_definedAtoms
 return|;
 block|}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|UndefinedAtom
 operator|>
@@ -456,7 +537,7 @@ name|_undefinedAtoms
 return|;
 block|}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|SharedLibraryAtom
 operator|>
@@ -471,7 +552,7 @@ name|_sharedLibraryAtoms
 return|;
 block|}
 specifier|const
-name|atom_collection
+name|AtomVector
 operator|<
 name|AbsoluteAtom
 operator|>
@@ -519,31 +600,34 @@ return|;
 block|}
 name|private
 operator|:
-name|atom_collection_vector
+name|AtomVector
 operator|<
 name|DefinedAtom
 operator|>
 name|_definedAtoms
 block|;
-name|atom_collection_vector
+name|AtomVector
 operator|<
 name|UndefinedAtom
 operator|>
 name|_undefinedAtoms
 block|;
-name|atom_collection_vector
+name|AtomVector
 operator|<
 name|SharedLibraryAtom
 operator|>
 name|_sharedLibraryAtoms
 block|;
-name|atom_collection_vector
+name|AtomVector
 operator|<
 name|AbsoluteAtom
 operator|>
 name|_absoluteAtoms
 block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|SimpleReference
 range|:
@@ -767,10 +851,10 @@ operator|*
 name|_prev
 block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// ilist will lazily create a sentinal (so end() can return a node past the
 end_comment
 
@@ -782,9 +866,12 @@ begin_comment
 comment|// via the BumpPtrAllocator.
 end_comment
 
-begin_decl_stmt
-name|namespace
+begin_macro
+unit|namespace
 name|llvm
+end_macro
+
+begin_block
 block|{
 name|template
 operator|<
@@ -913,14 +1000,25 @@ name|head
 argument_list|)
 return|;
 block|}
+end_block
+
+begin_decl_stmt
 name|void
 name|noteHead
 argument_list|(
-argument|lld::SimpleReference *newHead
+name|lld
+operator|::
+name|SimpleReference
+operator|*
+name|newHead
 argument_list|,
-argument|lld::SimpleReference *sentinel
+name|lld
+operator|::
+name|SimpleReference
+operator|*
+name|sentinel
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|ilist_traits
 operator|<
@@ -935,23 +1033,31 @@ name|newHead
 argument_list|,
 name|sentinel
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_expr_stmt
 name|mutable
 name|llvm
 operator|::
 name|BumpPtrAllocator
 operator|*
 name|_allocator
-block|; }
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_decl_stmt
-name|namespace
+begin_macro
+unit|}; }  namespace
 name|lld
+end_macro
+
+begin_block
 block|{
 name|class
 name|SimpleDefinedAtom
@@ -972,20 +1078,14 @@ argument_list|)
 operator|:
 name|_file
 argument_list|(
-argument|f
+name|f
+argument_list|)
+block|,
+name|_ordinal
+argument_list|(
+argument|f.getNextAtomOrdinalAndIncrement()
 argument_list|)
 block|{
-specifier|static
-name|uint32_t
-name|lastOrdinal
-operator|=
-literal|0
-block|;
-name|_ordinal
-operator|=
-name|lastOrdinal
-operator|++
-block|;
 name|_references
 operator|.
 name|setAllocator
@@ -1073,12 +1173,7 @@ specifier|const
 name|override
 block|{
 return|return
-name|Alignment
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
+literal|1
 return|;
 block|}
 name|SectionChoice
@@ -1416,7 +1511,7 @@ name|RefList
 name|_references
 decl_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_empty_stmt
 empty_stmt|;

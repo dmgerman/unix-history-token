@@ -65,10 +65,12 @@ name|Pass
 block|{
 name|public
 operator|:
-name|void
+name|std
+operator|::
+name|error_code
 name|perform
 argument_list|(
-argument|std::unique_ptr<MutableFile>&mergedFile
+argument|SimpleFile&mergedFile
 argument_list|)
 name|override
 block|; }

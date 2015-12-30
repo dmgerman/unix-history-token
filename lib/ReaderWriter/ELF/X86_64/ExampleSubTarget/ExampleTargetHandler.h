@@ -89,7 +89,7 @@ name|private
 operator|:
 name|ExampleLinkingContext
 operator|&
-name|_exampleContext
+name|_ctx
 block|; }
 decl_stmt|;
 block|}

@@ -220,7 +220,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|MutableFile
+name|SimpleFile
 operator|>
 name|resultFile
 argument_list|()

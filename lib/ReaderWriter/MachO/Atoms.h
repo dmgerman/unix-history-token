@@ -139,6 +139,8 @@ argument|const StringRef name
 argument_list|,
 argument|Scope scope
 argument_list|,
+argument|ContentType type
+argument_list|,
 argument|uint64_t size
 argument_list|,
 argument|bool noDeadStrip
@@ -176,9 +178,7 @@ argument_list|)
 block|,
 name|_contentType
 argument_list|(
-name|DefinedAtom
-operator|::
-name|typeZeroFill
+name|type
 argument_list|)
 block|,
 name|_scope
@@ -652,7 +652,9 @@ block|}
 name|private
 operator|:
 specifier|const
-name|StringRef
+name|std
+operator|::
+name|string
 name|_name
 block|;
 specifier|const
@@ -710,12 +712,13 @@ argument_list|(
 argument|dylibInstallName
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|MachOSharedLibraryAtom
 argument_list|()
-block|{}
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|StringRef
 name|loadName
 argument_list|()
@@ -726,7 +729,6 @@ return|return
 name|_dylibInstallName
 return|;
 block|}
-name|virtual
 name|bool
 name|canBeNullAtRuntime
 argument_list|()
@@ -739,7 +741,6 @@ return|return
 name|false
 return|;
 block|}
-name|virtual
 specifier|const
 name|File
 operator|&
@@ -752,7 +753,6 @@ return|return
 name|_file
 return|;
 block|}
-name|virtual
 name|StringRef
 name|name
 argument_list|()
@@ -763,7 +763,6 @@ return|return
 name|_name
 return|;
 block|}
-name|virtual
 name|Type
 name|type
 argument_list|()
@@ -777,7 +776,6 @@ operator|::
 name|Unknown
 return|;
 block|}
-name|virtual
 name|uint64_t
 name|size
 argument_list|()
@@ -807,18 +805,22 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// mach_o
+comment|// namespace mach_o
 end_comment
 
 begin_comment
 unit|}
-comment|// lld
+comment|// namespace lld
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLD_READER_WRITER_MACHO_ATOMS_H
+end_comment
 
 end_unit
 

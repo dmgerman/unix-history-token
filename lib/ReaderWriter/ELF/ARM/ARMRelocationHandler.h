@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARMTargetHandler.h"
+file|"lld/ReaderWriter/ELFLinkingContext.h"
 end_include
 
 begin_decl_stmt
@@ -56,33 +56,9 @@ block|{
 name|namespace
 name|elf
 block|{
-typedef|typedef
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELFType
-operator|<
-name|llvm
-operator|::
-name|support
-operator|::
-name|little
-operator|,
-literal|2
-operator|,
-name|false
-operator|>
-name|ARMELFType
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|ARMTargetLayout
-expr_stmt|;
+decl_stmt|;
 name|class
 name|ARMTargetRelocationHandler
 name|final
@@ -95,9 +71,6 @@ operator|:
 name|ARMTargetRelocationHandler
 argument_list|(
 name|ARMTargetLayout
-operator|<
-name|ARMELFType
-operator|>
 operator|&
 name|layout
 argument_list|)
@@ -116,7 +89,7 @@ argument|ELFWriter&
 argument_list|,
 argument|llvm::FileOutputBuffer&
 argument_list|,
-argument|const lld::AtomLayout&
+argument|const AtomLayout&
 argument_list|,
 argument|const Reference&
 argument_list|)
@@ -126,9 +99,6 @@ block|;
 name|private
 operator|:
 name|ARMTargetLayout
-operator|<
-name|ARMELFType
-operator|>
 operator|&
 name|_armLayout
 block|; }

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"AArch64TargetHandler.h"
+file|"lld/ReaderWriter/ELFLinkingContext.h"
 end_include
 
 begin_decl_stmt
@@ -56,33 +56,9 @@ block|{
 name|namespace
 name|elf
 block|{
-typedef|typedef
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELFType
-operator|<
-name|llvm
-operator|::
-name|support
-operator|::
-name|little
-operator|,
-literal|2
-operator|,
-name|true
-operator|>
-name|AArch64ELFType
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|AArch64TargetLayout
-expr_stmt|;
+decl_stmt|;
 name|class
 name|AArch64TargetRelocationHandler
 name|final
@@ -92,6 +68,18 @@ name|TargetRelocationHandler
 block|{
 name|public
 operator|:
+name|AArch64TargetRelocationHandler
+argument_list|(
+name|AArch64TargetLayout
+operator|&
+name|layout
+argument_list|)
+operator|:
+name|_layout
+argument_list|(
+argument|layout
+argument_list|)
+block|{}
 name|std
 operator|::
 name|error_code
@@ -101,20 +89,18 @@ argument|ELFWriter&
 argument_list|,
 argument|llvm::FileOutputBuffer&
 argument_list|,
-argument|const lld::AtomLayout&
+argument|const AtomLayout&
 argument_list|,
 argument|const Reference&
 argument_list|)
 specifier|const
 name|override
 block|;
-specifier|static
-specifier|const
-name|Registry
-operator|::
-name|KindStrings
-name|kindStrings
-index|[]
+name|private
+operator|:
+name|AArch64TargetLayout
+operator|&
+name|_layout
 block|; }
 decl_stmt|;
 block|}

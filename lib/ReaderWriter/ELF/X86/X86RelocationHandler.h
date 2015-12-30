@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86TargetHandler.h"
+file|"lld/ReaderWriter/ELFLinkingContext.h"
 end_include
 
 begin_decl_stmt
@@ -56,25 +56,6 @@ block|{
 name|namespace
 name|elf
 block|{
-typedef|typedef
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELFType
-operator|<
-name|llvm
-operator|::
-name|support
-operator|::
-name|little
-operator|,
-literal|2
-operator|,
-name|false
-operator|>
-name|X86ELFType
-expr_stmt|;
 name|class
 name|X86TargetRelocationHandler
 name|final
@@ -93,7 +74,7 @@ argument|ELFWriter&
 argument_list|,
 argument|llvm::FileOutputBuffer&
 argument_list|,
-argument|const lld::AtomLayout&
+argument|const AtomLayout&
 argument_list|,
 argument|const Reference&
 argument_list|)

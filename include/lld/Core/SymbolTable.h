@@ -448,7 +448,7 @@ parameter_list|)
 function_decl|;
 name|LinkingContext
 modifier|&
-name|_context
+name|_ctx
 decl_stmt|;
 name|AtomToAtom
 name|_replacedAtoms

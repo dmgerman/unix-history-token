@@ -62,26 +62,16 @@ block|{
 name|namespace
 name|elf
 block|{
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|HexagonELFFile
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
+decl_stmt|;
 name|class
 name|HexagonELFDefinedAtom
-operator|:
+range|:
 name|public
 name|ELFDefinedAtom
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 block|{
 typedef|typedef
@@ -91,7 +81,7 @@ name|object
 operator|::
 name|Elf_Sym_Impl
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 name|Elf_Sym
 expr_stmt|;
@@ -102,69 +92,41 @@ name|object
 operator|::
 name|Elf_Shdr_Impl
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 name|Elf_Shdr
 expr_stmt|;
 name|public
 label|:
+name|template
+operator|<
+name|typename
+operator|...
+name|T
+operator|>
 name|HexagonELFDefinedAtom
 argument_list|(
-argument|const HexagonELFFile<ELFT>&file
-argument_list|,
-argument|StringRef symbolName
-argument_list|,
-argument|StringRef sectionName
-argument_list|,
-argument|const Elf_Sym *symbol
-argument_list|,
-argument|const Elf_Shdr *section
-argument_list|,
-argument|ArrayRef<uint8_t> contentData
-argument_list|,
-argument|unsigned int referenceStart
-argument_list|,
-argument|unsigned int referenceEnd
-argument_list|,
-argument|std::vector<ELFReference<ELFT> *>&referenceList
+name|T
+operator|&&
+operator|...
+name|args
 argument_list|)
-block|:
+operator|:
 name|ELFDefinedAtom
-operator|<
-name|ELFT
-operator|>
-operator|(
-name|file
-operator|,
-name|symbolName
-operator|,
-name|sectionName
-operator|,
-name|symbol
-operator|,
-name|section
-operator|,
-name|contentData
-operator|,
-name|referenceStart
-operator|,
-name|referenceEnd
-operator|,
-name|referenceList
-operator|)
+argument_list|(
+argument|std::forward<T>(args)...
+argument_list|)
 block|{}
-name|virtual
 name|DefinedAtom
 operator|::
 name|ContentType
 name|contentType
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
-name|this
-operator|->
 name|_contentType
 operator|!=
 name|DefinedAtom
@@ -172,15 +134,10 @@ operator|::
 name|typeUnknown
 condition|)
 return|return
-name|this
-operator|->
 name|_contentType
 return|;
-elseif|else
 if|if
 condition|(
-name|this
-operator|->
 name|_section
 operator|->
 name|sh_flags
@@ -194,8 +151,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|this
-operator|->
 name|_section
 operator|->
 name|sh_type
@@ -208,8 +163,6 @@ name|SHT_NOBITS
 condition|)
 return|return
 operator|(
-name|this
-operator|->
 name|_contentType
 operator|=
 name|DefinedAtom
@@ -217,11 +170,8 @@ operator|::
 name|typeZeroFillFast
 operator|)
 return|;
-else|else
 return|return
 operator|(
-name|this
-operator|->
 name|_contentType
 operator|=
 name|DefinedAtom
@@ -232,26 +182,21 @@ return|;
 block|}
 return|return
 name|ELFDefinedAtom
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|contentType
 argument_list|()
 return|;
 block|}
-name|virtual
 name|DefinedAtom
 operator|::
 name|ContentPermissions
 name|permissions
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
-name|this
-operator|->
 name|_section
 operator|->
 name|sh_flags
@@ -269,34 +214,22 @@ name|permRW_
 return|;
 return|return
 name|ELFDefinedAtom
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|permissions
 argument_list|()
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
+begin_decl_stmt
+unit|};
 name|class
 name|HexagonELFCommonAtom
-operator|:
+range|:
 name|public
 name|ELFCommonAtom
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 block|{
 typedef|typedef
@@ -306,11 +239,11 @@ name|object
 operator|::
 name|Elf_Sym_Impl
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 name|Elf_Sym
 expr_stmt|;
-end_expr_stmt
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -320,7 +253,7 @@ name|object
 operator|::
 name|Elf_Shdr_Impl
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 name|Elf_Shdr
 expr_stmt|;
@@ -334,7 +267,7 @@ end_label
 begin_macro
 name|HexagonELFCommonAtom
 argument_list|(
-argument|const HexagonELFFile<ELFT>&file
+argument|const ELFFile<ELF32LE>&file
 argument_list|,
 argument|StringRef symbolName
 argument_list|,
@@ -342,20 +275,23 @@ argument|const Elf_Sym *symbol
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_macro
 unit|:
 name|ELFCommonAtom
-operator|<
-name|ELFT
-operator|>
-operator|(
-name|file
-operator|,
-name|symbolName
-operator|,
-name|symbol
-operator|)
+argument_list|(
+argument|file
+argument_list|,
+argument|symbolName
+argument_list|,
+argument|symbol
+argument_list|)
+end_macro
+
+begin_block
 block|{}
+end_block
+
+begin_expr_stmt
 name|virtual
 name|bool
 name|isSmallCommonSymbol
@@ -364,8 +300,6 @@ specifier|const
 block|{
 switch|switch
 condition|(
-name|this
-operator|->
 name|_symbol
 operator|->
 name|st_shndx
@@ -421,12 +355,15 @@ name|false
 return|;
 end_return
 
-begin_expr_stmt
-unit|}    virtual
-name|uint64_t
+begin_macro
+unit|}    uint64_t
 name|size
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -434,8 +371,6 @@ name|isSmallCommonSymbol
 argument_list|()
 condition|)
 return|return
-name|this
-operator|->
 name|_symbol
 operator|->
 name|st_size
@@ -445,9 +380,6 @@ end_expr_stmt
 begin_return
 return|return
 name|ELFCommonAtom
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|size
 argument_list|()
@@ -455,18 +387,16 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    virtual
-name|DefinedAtom
+unit|}    DefinedAtom
 operator|::
 name|Merge
 name|merge
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
-name|this
-operator|->
 name|_symbol
 operator|->
 name|getBinding
@@ -501,9 +431,6 @@ end_if
 begin_return
 return|return
 name|ELFCommonAtom
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|merge
 argument_list|()
@@ -511,13 +438,13 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    virtual
-name|DefinedAtom
+unit|}    DefinedAtom
 operator|::
 name|ContentType
 name|contentType
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -534,9 +461,6 @@ end_expr_stmt
 begin_return
 return|return
 name|ELFCommonAtom
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|contentType
 argument_list|()
@@ -544,13 +468,13 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    virtual
-name|DefinedAtom
+unit|}    DefinedAtom
 operator|::
 name|Alignment
 name|alignment
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -562,40 +486,27 @@ name|DefinedAtom
 operator|::
 name|Alignment
 argument_list|(
-name|llvm
-operator|::
-name|Log2_64
-argument_list|(
-name|this
-operator|->
 name|_symbol
 operator|->
 name|st_value
-argument_list|)
 argument_list|)
 return|;
 end_expr_stmt
 
 begin_return
 return|return
-name|ELFCommonAtom
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|alignment
-argument_list|()
+literal|1
 return|;
 end_return
 
 begin_expr_stmt
-unit|}    virtual
-name|DefinedAtom
+unit|}    DefinedAtom
 operator|::
 name|ContentPermissions
 name|permissions
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -612,9 +523,6 @@ end_expr_stmt
 begin_return
 return|return
 name|ELFCommonAtom
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|permissions
 argument_list|()
@@ -626,19 +534,14 @@ unit|} }
 empty_stmt|;
 end_empty_stmt
 
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
+begin_decl_stmt
 name|class
 name|HexagonELFFile
-operator|:
+range|:
 name|public
 name|ELFFile
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 block|{
 typedef|typedef
@@ -648,11 +551,11 @@ name|object
 operator|::
 name|Elf_Sym_Impl
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 name|Elf_Sym
 expr_stmt|;
-end_expr_stmt
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -662,7 +565,7 @@ name|object
 operator|::
 name|Elf_Shdr_Impl
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 name|Elf_Shdr
 expr_stmt|;
@@ -684,82 +587,24 @@ name|MemoryBuffer
 operator|>
 name|mb
 argument_list|,
-name|HexagonLinkingContext
+name|ELFLinkingContext
 operator|&
 name|ctx
 argument_list|)
 operator|:
 name|ELFFile
-operator|<
-name|ELFT
-operator|>
-operator|(
-name|std
-operator|::
-name|move
 argument_list|(
-name|mb
-argument_list|)
-operator|,
-name|ctx
-operator|)
-block|{}
-specifier|static
-name|ErrorOr
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|HexagonELFFile
-operator|>>
-name|create
-argument_list|(
-argument|std::unique_ptr<MemoryBuffer> mb
+argument|std::move(mb)
 argument_list|,
-argument|HexagonLinkingContext&ctx
+argument|ctx
 argument_list|)
-block|{
-return|return
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|HexagonELFFile
-operator|<
-name|ELFT
-operator|>>
-operator|(
-name|new
-name|HexagonELFFile
-operator|<
-name|ELFT
-operator|>
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|mb
-argument_list|)
-operator|,
-name|ctx
-operator|)
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
+block|{}
 name|bool
 name|isCommonSymbol
 argument_list|(
-specifier|const
-name|Elf_Sym
-operator|*
-name|symbol
+argument|const Elf_Sym *symbol
 argument_list|)
-decl|const
+specifier|const
 name|override
 block|{
 switch|switch
@@ -811,34 +656,31 @@ return|;
 default|default:
 break|break;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|ELFFile
-operator|<
-name|ELFT
-operator|>
 operator|::
 name|isCommonSymbol
 argument_list|(
 name|symbol
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// Process the Defined symbol and create an atom for it.
 end_comment
 
 begin_expr_stmt
-name|ErrorOr
+unit|ELFDefinedAtom
 operator|<
-name|ELFDefinedAtom
-operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 operator|*
-operator|>
-name|handleDefinedSymbol
+name|createDefinedAtom
 argument_list|(
 argument|StringRef symName
 argument_list|,
@@ -854,39 +696,36 @@ argument|unsigned int referenceStart
 argument_list|,
 argument|unsigned int referenceEnd
 argument_list|,
-argument|std::vector<ELFReference<ELFT> *>&referenceList
+argument|std::vector<ELFReference<ELF32LE> *>&referenceList
 argument_list|)
 name|override
 block|{
 return|return
 name|new
 argument_list|(
-argument|this->_readerStorage
+argument|_readerStorage
 argument_list|)
 name|HexagonELFDefinedAtom
-operator|<
-name|ELFT
-operator|>
-operator|(
+argument_list|(
 operator|*
 name|this
-operator|,
+argument_list|,
 name|symName
-operator|,
+argument_list|,
 name|sectionName
-operator|,
+argument_list|,
 name|sym
-operator|,
+argument_list|,
 name|sectionHdr
-operator|,
+argument_list|,
 name|contentData
-operator|,
+argument_list|,
 name|referenceStart
-operator|,
+argument_list|,
 name|referenceEnd
-operator|,
+argument_list|,
 name|referenceList
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -896,15 +735,12 @@ comment|/// Process the Common symbol and create an atom for it.
 end_comment
 
 begin_expr_stmt
-name|ErrorOr
-operator|<
 name|ELFCommonAtom
 operator|<
-name|ELFT
+name|ELF32LE
 operator|>
 operator|*
-operator|>
-name|handleCommonSymbol
+name|createCommonAtom
 argument_list|(
 argument|StringRef symName
 argument_list|,
@@ -915,65 +751,23 @@ block|{
 return|return
 name|new
 argument_list|(
-argument|this->_readerStorage
+argument|_readerStorage
 argument_list|)
 name|HexagonELFCommonAtom
-operator|<
-name|ELFT
-operator|>
-operator|(
+argument_list|(
 operator|*
 name|this
-operator|,
+argument_list|,
 name|symName
-operator|,
+argument_list|,
 name|sym
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-unit|};
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|class
-name|HexagonDynamicFile
-operator|:
-name|public
-name|DynamicFile
-operator|<
-name|ELFT
-operator|>
-block|{
-name|public
-operator|:
-name|HexagonDynamicFile
-argument_list|(
-argument|const HexagonLinkingContext&context
-argument_list|,
-argument|StringRef name
-argument_list|)
-operator|:
-name|DynamicFile
-operator|<
-name|ELFT
-operator|>
-operator|(
-name|context
-operator|,
-name|name
-operator|)
-block|{}
-block|}
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// elf
 end_comment
 

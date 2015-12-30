@@ -135,49 +135,224 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|lld
+name|llvm
 block|{
 name|class
-name|DefinedAtom
+name|FileOutputBuffer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lld
+block|{
+struct_decl|struct
+name|AtomLayout
+struct_decl|;
+name|class
+name|File
 decl_stmt|;
 name|class
 name|Reference
 decl_stmt|;
-name|class
-name|File
-decl_stmt|;
 name|namespace
 name|elf
 block|{
-name|template
-operator|<
-name|typename
-name|ELFT
-operator|>
-name|class
-name|TargetHandler
+name|using
+name|llvm
+operator|::
+name|object
+operator|::
+name|ELF32LE
 expr_stmt|;
-block|}
+name|using
+name|llvm
+operator|::
+name|object
+operator|::
+name|ELF32BE
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|object
+operator|::
+name|ELF64LE
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|object
+operator|::
+name|ELF64BE
+expr_stmt|;
 name|class
-name|TargetHandlerBase
+name|ELFWriter
+decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createAArch64LinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createAMDGPULinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createARMLinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createExampleLinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createHexagonLinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createMipsLinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createX86LinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+name|createX86_64LinkingContext
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+argument_list|)
+expr_stmt|;
+name|class
+name|TargetRelocationHandler
 block|{
 name|public
 label|:
 name|virtual
 operator|~
-name|TargetHandlerBase
+name|TargetRelocationHandler
 argument_list|()
 block|{}
 name|virtual
-name|void
-name|registerRelocationNames
+name|std
+operator|::
+name|error_code
+name|applyRelocation
 argument_list|(
-name|Registry
-operator|&
+argument|ELFWriter&
+argument_list|,
+argument|llvm::FileOutputBuffer&
+argument_list|,
+argument|const lld::AtomLayout&
+argument_list|,
+argument|const Reference&
 argument_list|)
+specifier|const
 operator|=
 literal|0
 expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+comment|// namespace elf
+comment|/// \brief TargetHandler contains all the information responsible to handle a
+comment|/// a particular target on ELF. A target might wish to override implementation
+comment|/// of creating atoms and how the atoms are written to the output file.
+name|class
+name|TargetHandler
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|TargetHandler
+argument_list|()
+block|{}
+comment|/// Determines how relocations need to be applied.
+name|virtual
+specifier|const
+name|elf
+operator|::
+name|TargetRelocationHandler
+operator|&
+name|getRelocationHandler
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Returns a reader for object files.
 name|virtual
 name|std
 operator|::
@@ -190,6 +365,7 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Returns a reader for .so files.
 name|virtual
 name|std
 operator|::
@@ -202,6 +378,7 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Returns a writer to write an ELF file.
 name|virtual
 name|std
 operator|::
@@ -232,17 +409,36 @@ name|OutputMagic
 operator|:
 name|uint8_t
 block|{
-name|DEFAULT
-block|,
 comment|// The default mode, no specific magic set
-name|NMAGIC
+name|DEFAULT
 block|,
 comment|// Disallow shared libraries and don't align sections
 comment|// PageAlign Data, Mark Text Segment/Data segment RW
-name|OMAGIC
+name|NMAGIC
+block|,
 comment|// Disallow shared libraries and don't align sections,
 comment|// Mark Text Segment/Data segment RW
-block|}
+name|OMAGIC
+block|,   }
+block|;
+comment|/// \brief ELF DT_FLAGS.
+block|enum
+name|DTFlag
+operator|:
+name|uint32_t
+block|{
+name|DT_NOW
+operator|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|DT_ORIGIN
+operator|=
+literal|1
+operator|<<
+literal|2
+block|,   }
 block|;
 name|llvm
 operator|::
@@ -255,38 +451,25 @@ return|return
 name|_triple
 return|;
 block|}
-comment|// Page size.
-name|virtual
 name|uint64_t
 name|getPageSize
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|_maxPageSize
-condition|)
 return|return
-operator|*
 name|_maxPageSize
-return|;
-return|return
-literal|0x1000
 return|;
 block|}
-name|virtual
 name|void
 name|setMaxPageSize
-parameter_list|(
-name|uint64_t
-name|pagesize
-parameter_list|)
+argument_list|(
+argument|uint64_t v
+argument_list|)
 block|{
 name|_maxPageSize
 operator|=
-name|pagesize
-expr_stmt|;
-block|}
+name|v
+block|; }
 name|OutputMagic
 name|getOutputMagic
 argument_list|()
@@ -309,7 +492,7 @@ name|uint16_t
 name|getOutputMachine
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|mergeCommonStrings
 argument_list|()
@@ -319,6 +502,14 @@ return|return
 name|_mergeCommonStrings
 return|;
 block|}
+name|virtual
+name|int
+name|getMachineType
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
 name|virtual
 name|uint64_t
 name|getBaseAddress
@@ -332,35 +523,25 @@ block|}
 name|virtual
 name|void
 name|setBaseAddress
-parameter_list|(
-name|uint64_t
-name|address
-parameter_list|)
+argument_list|(
+argument|uint64_t address
+argument_list|)
 block|{
 name|_baseAddress
 operator|=
 name|address
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|notifySymbolTableCoalesce
 argument_list|(
-specifier|const
-name|Atom
-operator|*
-name|existingAtom
+argument|const Atom *existingAtom
 argument_list|,
-specifier|const
-name|Atom
-operator|*
-name|newAtom
+argument|const Atom *newAtom
 argument_list|,
-name|bool
-operator|&
-name|useNew
+argument|bool&useNew
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// This controls if undefined atoms need to be created for undefines that are
 comment|/// present in a SharedLibrary. If this option is set, undefined atoms are
 comment|/// created for every undefined symbol that are present in the dynamic table
@@ -374,8 +555,8 @@ return|return
 name|_useShlibUndefines
 return|;
 block|}
-comment|/// @}
-comment|/// \brief Does this relocation belong in the dynamic relocation table?
+comment|/// \brief Returns true if a given relocation should be added to the
+comment|/// dynamic relocation table.
 comment|///
 comment|/// This table is evaluated at loadtime by the dynamic loader and is
 comment|/// referenced by the DT_RELA{,ENT,SZ} entries in the dynamic table.
@@ -385,17 +566,15 @@ name|virtual
 name|bool
 name|isDynamicRelocation
 argument_list|(
-specifier|const
-name|Reference
-operator|&
+argument|const Reference&
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
 return|;
 block|}
-comment|/// \brief Is this a copy relocation?
+comment|/// \brief Returns true if a given reference is a copy relocation.
 comment|///
 comment|/// If this is a copy relocation, its target must be an ObjectAtom. We must
 comment|/// include in DT_NEEDED the name of the library where this object came from.
@@ -403,11 +582,9 @@ name|virtual
 name|bool
 name|isCopyRelocation
 argument_list|(
-specifier|const
-name|Reference
-operator|&
+argument|const Reference&
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -416,16 +593,15 @@ block|}
 name|bool
 name|validateImpl
 argument_list|(
-name|raw_ostream
-operator|&
-name|diagnostics
+argument|raw_ostream&diagnostics
 argument_list|)
 name|override
-decl_stmt|;
-comment|/// \brief Does the linker allow dynamic libraries to be linked with?
+block|;
+comment|/// \brief Returns true if the linker allows dynamic libraries to be
+comment|/// linked with.
+comment|///
 comment|/// This is true when the output mode of the executable is set to be
 comment|/// having NMAGIC/OMAGIC
-name|virtual
 name|bool
 name|allowLinkWithDynamicLibraries
 argument_list|()
@@ -454,13 +630,7 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Use Elf_Rela format to output relocation tables.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|isRelaOutputFormat
@@ -471,37 +641,13 @@ return|return
 name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Does this relocation belong in the dynamic plt relocation table?
-end_comment
-
-begin_comment
+comment|/// \brief Returns true if a given relocation should be added to PLT.
 comment|///
-end_comment
-
-begin_comment
 comment|/// This table holds all of the relocations used for delayed symbol binding.
-end_comment
-
-begin_comment
 comment|/// It will be evaluated at load time if LD_BIND_NOW is set. It is referenced
-end_comment
-
-begin_comment
 comment|/// by the DT_{JMPREL,PLTRELSZ} entries in the dynamic table.
-end_comment
-
-begin_comment
 comment|/// Relocations that return true will be added to the dynamic plt relocation
-end_comment
-
-begin_comment
 comment|/// table.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|isPLTRelocation
@@ -516,13 +662,7 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The path to the dynamic interpreter
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|StringRef
 name|getDefaultInterpreter
@@ -533,14 +673,7 @@ return|return
 literal|"/lib64/ld-linux-x86-64.so.2"
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The dynamic linker path set by the --dynamic-linker option
-end_comment
-
-begin_expr_stmt
-name|virtual
 name|StringRef
 name|getInterpreter
 argument_list|()
@@ -548,27 +681,29 @@ specifier|const
 block|{
 if|if
 condition|(
-name|_dynamicLinkerArg
+name|_dynamicLinkerPath
+operator|.
+name|hasValue
+argument_list|()
 condition|)
 return|return
 name|_dynamicLinkerPath
+operator|.
+name|getValue
+argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getDefaultInterpreter
 argument_list|()
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
-comment|/// \brief Does the output have dynamic sections.
+comment|/// \brief Returns true if the output have dynamic sections.
 end_comment
 
 begin_expr_stmt
-unit|virtual
 name|bool
 name|isDynamic
 argument_list|()
@@ -577,11 +712,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Are we creating a shared library?
+comment|/// \brief Returns true if we are creating a shared library.
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|bool
 name|isDynamicLibrary
 argument_list|()
@@ -600,7 +734,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Is the relocation a relative relocation
+comment|/// \brief Returns true if a given relocation is a relative relocation.
 end_comment
 
 begin_decl_stmt
@@ -618,19 +752,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|ELFT
-operator|>
-name|lld
-operator|::
-name|elf
-operator|::
 name|TargetHandler
-operator|<
-name|ELFT
-operator|>
 operator|&
 name|getTargetHandler
 argument_list|()
@@ -644,44 +766,24 @@ literal|"Got null TargetHandler!"
 argument_list|)
 block|;
 return|return
-name|static_cast
-operator|<
-name|lld
-operator|::
-name|elf
-operator|::
-name|TargetHandler
-operator|<
-name|ELFT
-operator|>
-operator|&
-operator|>
-operator|(
 operator|*
 name|_targetHandler
-operator|.
-name|get
-argument_list|()
-operator|)
 return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-name|TargetHandlerBase
-operator|*
-name|targetHandler
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_targetHandler
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-end_expr_stmt
+begin_function_decl
+name|virtual
+name|void
+name|registerRelocationNames
+parameter_list|(
+name|Registry
+modifier|&
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -852,16 +954,12 @@ name|void
 name|setInterpreter
 parameter_list|(
 name|StringRef
-name|dynamicLinker
+name|s
 parameter_list|)
 block|{
-name|_dynamicLinkerArg
-operator|=
-name|true
-expr_stmt|;
 name|_dynamicLinkerPath
 operator|=
-name|dynamicLinker
+name|s
 expr_stmt|;
 block|}
 end_function
@@ -883,7 +981,6 @@ comment|/// or -N in the command line
 end_comment
 
 begin_function
-name|virtual
 name|void
 name|setOutputMagic
 parameter_list|(
@@ -903,7 +1000,6 @@ comment|/// \brief Disallow dynamic libraries during linking
 end_comment
 
 begin_function
-name|virtual
 name|void
 name|setNoAllowDynamicLibraries
 parameter_list|()
@@ -1083,6 +1179,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|StringRef
+name|sharedObjectName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_soname
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|void
 name|setSharedObjectName
@@ -1100,18 +1208,6 @@ end_function
 
 begin_expr_stmt
 name|StringRef
-name|sharedObjectName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_soname
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|StringRef
 name|getSysroot
 argument_list|()
 specifier|const
@@ -1121,10 +1217,6 @@ name|_sysrootPath
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// \brief Set path to the system root
-end_comment
 
 begin_function
 name|void
@@ -1302,8 +1394,7 @@ comment|// add search path to list.
 end_comment
 
 begin_function
-name|virtual
-name|bool
+name|void
 name|addSearchPath
 parameter_list|(
 name|StringRef
@@ -1317,9 +1408,6 @@ argument_list|(
 name|ref
 argument_list|)
 expr_stmt|;
-return|return
-name|true
-return|;
 block|}
 end_function
 
@@ -1337,10 +1425,6 @@ name|_inputSearchPaths
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|// By default, the linker would merge sections that are read only with
@@ -1476,6 +1560,131 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Enable new dtags.
+end_comment
+
+begin_comment
+comment|/// If this flag is set lld emits DT_RUNPATH instead of
+end_comment
+
+begin_comment
+comment|/// DT_RPATH. They are functionally equivalent except for
+end_comment
+
+begin_comment
+comment|/// the following two differences:
+end_comment
+
+begin_comment
+comment|/// - DT_RUNPATH is searched after LD_LIBRARY_PATH, while
+end_comment
+
+begin_comment
+comment|/// DT_RPATH is searched before.
+end_comment
+
+begin_comment
+comment|/// - DT_RUNPATH is used only to search for direct dependencies
+end_comment
+
+begin_comment
+comment|/// of the object it's contained in, while DT_RPATH is used
+end_comment
+
+begin_comment
+comment|/// for indirect dependencies as well.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|getEnableNewDtags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_enableNewDtags
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setEnableNewDtags
+parameter_list|(
+name|bool
+name|e
+parameter_list|)
+block|{
+name|_enableNewDtags
+operator|=
+name|e
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Discard local symbols.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|discardLocals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_discardLocals
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setDiscardLocals
+parameter_list|(
+name|bool
+name|d
+parameter_list|)
+block|{
+name|_discardLocals
+operator|=
+name|d
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Discard temprorary local symbols.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|discardTempLocals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_discardTempLocals
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setDiscardTempLocals
+parameter_list|(
+name|bool
+name|d
+parameter_list|)
+block|{
+name|_discardTempLocals
+operator|=
+name|d
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Strip symbols.
 end_comment
 
@@ -1559,6 +1768,43 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// \brief Set DT_FLAGS flag.
+end_comment
+
+begin_function
+name|void
+name|setDTFlag
+parameter_list|(
+name|DTFlag
+name|f
+parameter_list|)
+block|{
+name|_dtFlags
+operator||=
+name|f
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|getDTFlag
+parameter_list|(
+name|DTFlag
+name|f
+parameter_list|)
+block|{
+return|return
+operator|(
+name|_dtFlags
+operator|&
+name|f
+operator|)
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 specifier|const
 name|llvm
@@ -1622,42 +1868,130 @@ return|;
 block|}
 end_expr_stmt
 
-begin_label
-name|private
-label|:
-end_label
+begin_comment
+comment|/// Notify the ELFLinkingContext when the new ELF section is read.
+end_comment
+
+begin_function_decl
+name|void
+name|notifyInputSectionName
+parameter_list|(
+name|StringRef
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Encountered C-ident input section names.
+end_comment
 
 begin_expr_stmt
-name|ELFLinkingContext
+specifier|const
+name|llvm
+operator|::
+name|StringSet
+operator|<
+operator|>
+operator|&
+name|cidentSectionNames
 argument_list|()
-operator|=
-name|delete
-expr_stmt|;
+specifier|const
+block|{
+return|return
+name|_cidentSections
+return|;
+block|}
 end_expr_stmt
+
+begin_comment
+comment|// Set R_ARM_TARGET1 relocation behaviour
+end_comment
+
+begin_expr_stmt
+name|bool
+name|armTarget1Rel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_armTarget1Rel
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setArmTarget1Rel
+parameter_list|(
+name|bool
+name|value
+parameter_list|)
+block|{
+name|_armTarget1Rel
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Set R_MIPS_EH relocation behaviour.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|mipsPcRelEhRel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_mipsPcRelEhRel
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setMipsPcRelEhRel
+parameter_list|(
+name|bool
+name|value
+parameter_list|)
+block|{
+name|_mipsPcRelEhRel
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
 
 begin_label
 name|protected
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|ELFLinkingContext
 argument_list|(
-name|llvm
-operator|::
-name|Triple
+argument|llvm::Triple triple
 argument_list|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|TargetHandlerBase
-operator|>
+argument|std::unique_ptr<TargetHandler> handler
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_expr_stmt
+unit|:
+name|_triple
+argument_list|(
+name|triple
+argument_list|)
+operator|,
+name|_targetHandler
+argument_list|(
+argument|std::move(handler)
+argument_list|)
+block|{}
 name|Writer
 operator|&
 name|writer
@@ -1688,12 +2022,14 @@ end_expr_stmt
 begin_decl_stmt
 name|uint16_t
 name|_outputELFType
+init|=
+name|llvm
+operator|::
+name|ELF
+operator|::
+name|ET_EXEC
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// e.g ET_EXEC
-end_comment
 
 begin_expr_stmt
 name|llvm
@@ -1708,7 +2044,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|TargetHandlerBase
+name|TargetHandler
 operator|>
 name|_targetHandler
 expr_stmt|;
@@ -1717,101 +2053,170 @@ end_expr_stmt
 begin_decl_stmt
 name|uint64_t
 name|_baseAddress
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_isStaticExecutable
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_noInhibitExec
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_exportDynamic
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_mergeCommonStrings
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_useShlibUndefines
+init|=
+name|true
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_dynamicLinkerArg
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_noAllowDynamicLibraries
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_mergeRODataToTextSegment
+init|=
+name|true
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_demangle
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|_discardTempLocals
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|_discardLocals
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_stripSymbols
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_alignSegments
+init|=
+name|true
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|_nostdlib
+name|_enableNewDtags
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bool
 name|_collectStats
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Optional
-operator|<
+begin_decl_stmt
+name|bool
+name|_armTarget1Rel
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|_mipsPcRelEhRel
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|uint64_t
-operator|>
 name|_maxPageSize
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|0x1000
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|_dtFlags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|OutputMagic
 name|_outputMagic
+init|=
+name|OutputMagic
+operator|::
+name|DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -1832,27 +2237,38 @@ name|_writer
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|llvm
+operator|::
+name|Optional
+operator|<
 name|StringRef
+operator|>
 name|_dynamicLinkerPath
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|StringRef
 name|_initFunction
+init|=
+literal|"_init"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|StringRef
 name|_finiFunction
+init|=
+literal|"_fini"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|StringRef
 name|_sysrootPath
+init|=
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -1920,6 +2336,24 @@ name|_resolver
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|std
+operator|::
+name|mutex
+name|_cidentMutex
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringSet
+operator|<
+operator|>
+name|_cidentSections
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|// The linker script semantic object, which owns all script ASTs, is stored
 end_comment
@@ -1937,7 +2371,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|}; }
+unit|};  }
 comment|// end namespace lld
 end_comment
 

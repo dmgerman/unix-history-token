@@ -152,7 +152,7 @@ block|,
 comment|///< Section
 name|AtomSection
 block|,
-comment|///< A section containing atoms.
+comment|///< A section containing atoms
 name|Expression
 comment|///< A linker script expression
 block|}
@@ -182,7 +182,7 @@ argument|StringRef name
 argument_list|,
 argument|Kind kind
 argument_list|,
-argument|const ELFLinkingContext&context
+argument|const ELFLinkingContext&ctx
 argument_list|)
 operator|:
 name|_name
@@ -195,44 +195,9 @@ argument_list|(
 name|kind
 argument_list|)
 block|,
-name|_fsize
+name|_ctx
 argument_list|(
-literal|0
-argument_list|)
-block|,
-name|_msize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|_alignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|_order
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|_ordinal
-argument_list|(
-literal|1
-argument_list|)
-block|,
-name|_start
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|_fileoffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|_context
-argument_list|(
-argument|context
+argument|ctx
 argument_list|)
 block|{}
 name|virtual
@@ -321,7 +286,7 @@ block|{
 name|_ordinal
 operator|=
 name|newVal
-block|;}
+block|; }
 comment|// The order in which the chunk would appear in the output file
 name|uint64_t
 name|order
@@ -404,7 +369,7 @@ name|_msize
 operator|=
 name|msize
 block|; }
-comment|// Whats the contentType of the chunk?
+comment|// Returns the ContentType of the chunk
 name|virtual
 name|int
 name|getContentType
@@ -443,17 +408,13 @@ name|virtual
 name|void
 name|doPreFlight
 argument_list|()
-operator|=
-literal|0
-block|;
+block|{}
 comment|// Finalize the chunk before writing
 name|virtual
 name|void
 name|finalize
 argument_list|()
-operator|=
-literal|0
-block|;
+block|{}
 name|protected
 operator|:
 name|StringRef
@@ -462,31 +423,45 @@ block|;
 name|Kind
 name|_kind
 block|;
-name|uint64_t
-name|_fsize
-block|;
-name|uint64_t
-name|_msize
-block|;
-name|uint64_t
-name|_alignment
-block|;
-name|uint32_t
-name|_order
-block|;
-name|uint64_t
-name|_ordinal
-block|;
-name|uint64_t
-name|_start
-block|;
-name|uint64_t
-name|_fileoffset
-block|;
 specifier|const
 name|ELFLinkingContext
 operator|&
-name|_context
+name|_ctx
+block|;
+name|uint64_t
+name|_fsize
+operator|=
+literal|0
+block|;
+name|uint64_t
+name|_msize
+operator|=
+literal|0
+block|;
+name|uint64_t
+name|_alignment
+operator|=
+literal|1
+block|;
+name|uint32_t
+name|_order
+operator|=
+literal|0
+block|;
+name|uint64_t
+name|_ordinal
+operator|=
+literal|1
+block|;
+name|uint64_t
+name|_start
+operator|=
+literal|0
+block|;
+name|uint64_t
+name|_fileoffset
+operator|=
+literal|0
 block|; }
 expr_stmt|;
 block|}

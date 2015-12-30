@@ -78,7 +78,7 @@ name|namespace
 name|lld
 block|{
 name|class
-name|MutableFile
+name|SimpleFile
 decl_stmt|;
 comment|/// Once the core linking is done (which resolves references, coalesces atoms
 comment|/// and produces a complete Atom graph), the linker runs a series of passes
@@ -102,15 +102,12 @@ argument_list|()
 block|{ }
 comment|/// Do the actual work of the Pass.
 name|virtual
-name|void
-name|perform
-argument_list|(
 name|std
 operator|::
-name|unique_ptr
-operator|<
-name|MutableFile
-operator|>
+name|error_code
+name|perform
+argument_list|(
+name|SimpleFile
 operator|&
 name|mergedFile
 argument_list|)

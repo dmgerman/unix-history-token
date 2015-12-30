@@ -46,19 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"HexagonSectionChunks.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"HexagonTargetHandler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/ReaderWriter/RelocationHelperFunctions.h"
+file|"lld/ReaderWriter/ELFLinkingContext.h"
 end_include
 
 begin_decl_stmt
@@ -72,6 +60,9 @@ name|class
 name|HexagonTargetHandler
 decl_stmt|;
 name|class
+name|HexagonTargetLayout
+decl_stmt|;
+name|class
 name|HexagonTargetRelocationHandler
 name|final
 range|:
@@ -83,14 +74,11 @@ operator|:
 name|HexagonTargetRelocationHandler
 argument_list|(
 name|HexagonTargetLayout
-operator|<
-name|HexagonELFType
-operator|>
 operator|&
 name|layout
 argument_list|)
 operator|:
-name|_hexagonTargetLayout
+name|_targetLayout
 argument_list|(
 argument|layout
 argument_list|)
@@ -104,7 +92,7 @@ argument|ELFWriter&
 argument_list|,
 argument|llvm::FileOutputBuffer&
 argument_list|,
-argument|const lld::AtomLayout&
+argument|const AtomLayout&
 argument_list|,
 argument|const Reference&
 argument_list|)
@@ -114,11 +102,8 @@ block|;
 name|private
 operator|:
 name|HexagonTargetLayout
-operator|<
-name|HexagonELFType
-operator|>
 operator|&
-name|_hexagonTargetLayout
+name|_targetLayout
 block|; }
 decl_stmt|;
 block|}

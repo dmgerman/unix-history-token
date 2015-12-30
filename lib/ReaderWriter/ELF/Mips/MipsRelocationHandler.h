@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"TargetHandler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lld/Core/Reference.h"
 end_include
 
@@ -63,28 +57,16 @@ name|namespace
 name|elf
 block|{
 name|class
-name|MipsRelocationHandler
-range|:
-name|public
-name|TargetRelocationHandler
-block|{
-name|public
-operator|:
-name|virtual
-name|Reference
-operator|::
-name|Addend
-name|readAddend
-argument_list|(
-argument|Reference::KindValue kind
-argument_list|,
-argument|const uint8_t *content
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|; }
+name|MipsLinkingContext
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|ELFT
+operator|>
+name|class
+name|MipsTargetLayout
+expr_stmt|;
 name|template
 operator|<
 name|class
@@ -101,6 +83,28 @@ argument_list|(
 name|MipsLinkingContext
 operator|&
 name|ctx
+argument_list|,
+name|MipsTargetLayout
+operator|<
+name|ELFT
+operator|>
+operator|&
+name|layout
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|Reference
+operator|::
+name|Addend
+name|readMipsRelocAddend
+argument_list|(
+argument|Reference::KindValue kind
+argument_list|,
+argument|const uint8_t *content
 argument_list|)
 expr_stmt|;
 block|}

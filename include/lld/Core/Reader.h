@@ -128,15 +128,12 @@ name|class
 name|PECOFFLinkingContext
 decl_stmt|;
 name|class
-name|TargetHandlerBase
-decl_stmt|;
-name|class
 name|MachOLinkingContext
 decl_stmt|;
 comment|/// \brief An abstract class for reading object files, library files, and
 comment|/// executable files.
 comment|///
-comment|/// Each file format (e.g. ELF, mach-o, PECOFF, native, etc) have a concrete
+comment|/// Each file format (e.g. ELF, mach-o, PECOFF, etc) have a concrete
 comment|/// subclass of Reader.
 name|class
 name|Reader
@@ -151,17 +148,14 @@ block|{}
 comment|/// Sniffs the file to determine if this Reader can parse it.
 comment|/// The method is called with:
 comment|/// 1) the file_magic enumeration returned by identify_magic()
-comment|/// 2) the file extension (e.g. ".obj")
-comment|/// 3) the whole file content buffer if the above is not enough.
+comment|/// 2) the whole file content buffer if the above is not enough.
 name|virtual
 name|bool
 name|canParse
 argument_list|(
 argument|file_magic magic
 argument_list|,
-argument|StringRef fileExtension
-argument_list|,
-argument|const MemoryBuffer&mb
+argument|MemoryBufferRef mb
 argument_list|)
 specifier|const
 operator|=
@@ -171,16 +165,19 @@ comment|/// \brief Parse a supplied buffer (already filled with the contents of 
 comment|/// file) and create a File object.
 comment|/// The resulting File object takes ownership of the MemoryBuffer.
 name|virtual
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|File
+operator|>>
 name|loadFile
 argument_list|(
 argument|std::unique_ptr<MemoryBuffer> mb
 argument_list|,
 argument|const class Registry&
-argument_list|,
-argument|std::vector<std::unique_ptr<File>>&result
 argument_list|)
 specifier|const
 operator|=
@@ -253,14 +250,17 @@ argument_list|()
 expr_stmt|;
 comment|/// Walk the list of registered Readers and find one that can parse the
 comment|/// supplied file and parse it.
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|File
+operator|>>
 name|loadFile
 argument_list|(
 argument|std::unique_ptr<MemoryBuffer> mb
-argument_list|,
-argument|std::vector<std::unique_ptr<File>>&result
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -354,10 +354,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|addSupportYamlFiles
-parameter_list|()
-function_decl|;
-name|void
-name|addSupportNativeObjects
 parameter_list|()
 function_decl|;
 name|void

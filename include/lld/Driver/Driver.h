@@ -159,12 +159,16 @@ argument_list|)
 decl_stmt|;
 name|FileVector
 name|parseMemberFiles
-parameter_list|(
-name|FileVector
-modifier|&
-name|files
-parameter_list|)
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|File
+operator|>
+name|File
+argument_list|)
+decl_stmt|;
 name|FileVector
 name|loadFile
 parameter_list|(
@@ -204,6 +208,17 @@ name|errs
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|/// Parses the LLVM options from the context.
+specifier|static
+name|void
+name|parseLLVMOptions
+parameter_list|(
+specifier|const
+name|LinkingContext
+modifier|&
+name|context
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|Driver
@@ -228,11 +243,24 @@ specifier|static
 name|bool
 name|link
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 name|private
@@ -258,11 +286,24 @@ specifier|static
 name|bool
 name|linkELF
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 comment|/// Uses gnu/binutils style ld command line options to fill in options struct.
@@ -271,13 +312,33 @@ specifier|static
 name|bool
 name|parse
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFLinkingContext
+operator|>
+operator|&
+name|context
 argument_list|,
-argument|std::unique_ptr<ELFLinkingContext>&context
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 comment|/// Parses a given memory buffer as a linker script and evaluate that.
@@ -389,11 +450,24 @@ specifier|static
 name|bool
 name|linkMachO
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 comment|/// Uses darwin style ld command line options to update LinkingContext object.
@@ -402,13 +476,28 @@ specifier|static
 name|bool
 name|parse
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
+name|MachOLinkingContext
+operator|&
+name|info
 argument_list|,
-argument|MachOLinkingContext&info
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 name|private
@@ -420,81 +509,42 @@ name|delete
 block|; }
 decl_stmt|;
 comment|/// Driver for Windows 'link.exe' command line options
-name|class
-name|WinLinkDriver
-range|:
-name|public
-name|Driver
+name|namespace
+name|coff
 block|{
-name|public
-operator|:
-comment|/// Parses command line arguments same as Windows link.exe and performs link.
-comment|/// Returns true iff there was an error.
-specifier|static
-name|bool
-name|linkPECOFF
+name|void
+name|link
 argument_list|(
-argument|int argc
-argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|)
-block|;
-comment|/// Uses Windows style link command line options to fill in options struct.
-comment|/// Returns true iff there was an error.
-specifier|static
-name|bool
-name|parse
-argument_list|(
-argument|int argc
-argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|PECOFFLinkingContext&info
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
-argument_list|,
-argument|bool isDirective = false
-argument_list|)
-block|;
-comment|// Same as parse(), but restricted to the context of directives.
-specifier|static
-name|bool
-name|parseDirectives
-argument_list|(
-argument|int argc
-argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|PECOFFLinkingContext&info
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
-argument_list|)
-block|{
-return|return
-name|parse
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|info
-argument_list|,
-name|diag
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-name|WinLinkDriver
-argument_list|()
-operator|=
-name|delete
-block|; }
 decl_stmt|;
+block|}
+name|namespace
+name|elf2
+block|{
+name|void
+name|link
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
+argument_list|)
+decl_stmt|;
+block|}
 comment|/// Driver for lld unit tests
 name|class
 name|CoreDriver
@@ -510,11 +560,24 @@ specifier|static
 name|bool
 name|link
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 comment|/// Uses lld-core command line options to fill in options struct.
@@ -523,13 +586,28 @@ specifier|static
 name|bool
 name|parse
 argument_list|(
-argument|int argc
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|args
 argument_list|,
-argument|const char *argv[]
+name|CoreLinkingContext
+operator|&
+name|info
 argument_list|,
-argument|CoreLinkingContext&info
-argument_list|,
-argument|raw_ostream&diag = llvm::errs()
+name|raw_ostream
+operator|&
+name|diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 block|;
 name|private

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86_64TargetHandler.h"
+file|"lld/ReaderWriter/ELFLinkingContext.h"
 end_include
 
 begin_decl_stmt
@@ -56,25 +56,6 @@ block|{
 name|namespace
 name|elf
 block|{
-typedef|typedef
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELFType
-operator|<
-name|llvm
-operator|::
-name|support
-operator|::
-name|little
-operator|,
-literal|2
-operator|,
-name|true
-operator|>
-name|X86_64ELFType
-expr_stmt|;
 name|class
 name|X86_64TargetLayout
 decl_stmt|;
@@ -99,7 +80,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|_x86_64Layout
+name|_layout
 argument_list|(
 argument|layout
 argument_list|)
@@ -113,7 +94,7 @@ argument|ELFWriter&
 argument_list|,
 argument|llvm::FileOutputBuffer&
 argument_list|,
-argument|const lld::AtomLayout&
+argument|const AtomLayout&
 argument_list|,
 argument|const Reference&
 argument_list|)
@@ -129,7 +110,7 @@ name|_tlsSize
 block|;
 name|X86_64TargetLayout
 operator|&
-name|_x86_64Layout
+name|_layout
 block|; }
 decl_stmt|;
 block|}

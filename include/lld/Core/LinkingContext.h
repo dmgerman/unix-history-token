@@ -152,8 +152,6 @@ comment|// The default output type for this target
 name|YAML
 block|,
 comment|// The output type is set to YAML
-name|Native
-comment|// The output file format is Native (Atoms)
 block|}
 decl_stmt|;
 name|virtual
@@ -200,7 +198,6 @@ return|return
 name|_globalsAreDeadStripRoots
 return|;
 block|}
-empty_stmt|;
 comment|/// Only used if deadStrip() returns true.  This method returns the names
 comment|/// of DefinedAtoms that should be marked live (along with all Atoms they
 comment|/// reference). Only Atoms with scope scopeLinkageUnit or scopeGlobal can
@@ -833,34 +830,19 @@ argument_list|(
 literal|"yaml"
 argument_list|)
 condition|)
+block|{
 name|_outputFileType
 operator|=
 name|OutputFileType
 operator|::
 name|YAML
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|outputFileType
-operator|.
-name|equals_lower
-argument_list|(
-literal|"native"
-argument_list|)
-condition|)
-name|_outputFileType
-operator|=
-name|OutputFileType
-operator|::
-name|YAML
-expr_stmt|;
-else|else
-return|return
-name|false
-return|;
 return|return
 name|true
+return|;
+block|}
+return|return
+name|false
 return|;
 block|}
 comment|/// Returns the output file type that that the linker needs to create.
@@ -898,7 +880,7 @@ comment|/// This method is called by core linking to give the Writer a chance
 comment|/// to add file format specific "files" to set of files to be linked. This is
 comment|/// how file format specific atoms can be added to the link.
 name|virtual
-name|bool
+name|void
 name|createImplicitFiles
 argument_list|(
 name|std
@@ -910,8 +892,7 @@ operator|::
 name|unique_ptr
 operator|<
 name|File
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
 decl_stmt|;

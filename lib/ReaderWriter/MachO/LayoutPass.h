@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lld/Core/Simple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -93,7 +99,7 @@ name|class
 name|DefinedAtom
 decl_stmt|;
 name|class
-name|MutableFile
+name|SimpleFile
 decl_stmt|;
 name|namespace
 name|mach_o
@@ -184,44 +190,41 @@ argument|SortOverride sorter
 argument_list|)
 decl_stmt|;
 comment|/// Sorts atoms in mergedFile by content type then by command line order.
-name|void
-name|perform
-argument_list|(
 name|std
 operator|::
-name|unique_ptr
-operator|<
-name|MutableFile
-operator|>
-operator|&
-name|mergedFile
+name|error_code
+name|perform
+argument_list|(
+argument|SimpleFile&mergedFile
 argument_list|)
 name|override
-decl_stmt|;
-name|virtual
+expr_stmt|;
 operator|~
 name|LayoutPass
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+expr_stmt|;
 name|private
-operator|:
+label|:
 comment|// Build the followOn atoms chain as specified by the kindLayoutAfter
 comment|// reference type
 name|void
 name|buildFollowOnTable
 argument_list|(
-name|MutableFile
+name|SimpleFile
 operator|::
 name|DefinedAtomRange
 operator|&
 name|range
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|// Build a map of Atoms to ordinals for sorting the atoms
 name|void
 name|buildOrdinalOverrideMap
 argument_list|(
-name|MutableFile
+name|SimpleFile
 operator|::
 name|DefinedAtomRange
 operator|&
@@ -324,14 +327,14 @@ name|SortKey
 operator|>
 name|decorate
 argument_list|(
-argument|MutableFile::DefinedAtomRange&atomRange
+argument|SimpleFile::DefinedAtomRange&atomRange
 argument_list|)
 specifier|const
 expr_stmt|;
 name|void
 name|undecorate
 argument_list|(
-name|MutableFile
+name|SimpleFile
 operator|::
 name|DefinedAtomRange
 operator|&
@@ -352,7 +355,7 @@ comment|// Check if the follow-on graph is a correct structure. For debugging on
 name|void
 name|checkFollowonChain
 argument_list|(
-name|MutableFile
+name|SimpleFile
 operator|::
 name|DefinedAtomRange
 operator|&

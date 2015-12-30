@@ -322,6 +322,9 @@ comment|// Identifies a section group [ELF, COFF]
 name|typeGnuLinkOnce
 block|,
 comment|// Identifies a gnu.linkonce section [ELF]
+name|typeSectCreate
+block|,
+comment|// Created via the -sectcreate option [Darwin]
 block|}
 block|;
 comment|// Permission bits for atoms and segments. The order of these values are
@@ -420,6 +423,7 @@ block|{
 name|codeNA
 block|,
 comment|// no specific code model
+comment|// MIPS code models
 name|codeMipsPIC
 block|,
 comment|// PIC function in a PIC / non-PIC mixed file
@@ -432,24 +436,34 @@ comment|// microMIPS instruction encoding + PIC
 name|codeMips16
 block|,
 comment|// MIPS-16 instruction encoding
+comment|// ARM code models
 name|codeARMThumb
 block|,
 comment|// ARM Thumb instruction set
+name|codeARM_a
+block|,
+comment|// $a-like mapping symbol (for ARM code)
+name|codeARM_d
+block|,
+comment|// $d-like mapping symbol (for data)
+name|codeARM_t
+block|,
+comment|// $t-like mapping symbol (for Thumb code)
 block|}
 block|;    struct
 name|Alignment
 block|{
 name|Alignment
 argument_list|(
-argument|int p2
+argument|int v
 argument_list|,
 argument|int m =
 literal|0
 argument_list|)
 operator|:
-name|powerOf2
+name|value
 argument_list|(
-name|p2
+name|v
 argument_list|)
 block|,
 name|modulus
@@ -458,7 +472,7 @@ argument|m
 argument_list|)
 block|{}
 name|uint16_t
-name|powerOf2
+name|value
 block|;
 name|uint16_t
 name|modulus
@@ -476,11 +490,11 @@ specifier|const
 block|{
 return|return
 operator|(
-name|powerOf2
+name|value
 operator|==
 name|rhs
 operator|.
-name|powerOf2
+name|value
 operator|)
 operator|&&
 operator|(

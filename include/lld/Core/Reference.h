@@ -155,6 +155,8 @@ name|all
 operator|,
 name|AArch64
 operator|,
+name|AMDGPU
+operator|,
 name|ARM
 operator|,
 name|Hexagon

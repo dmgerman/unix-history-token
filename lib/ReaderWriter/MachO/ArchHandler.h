@@ -179,6 +179,31 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Used by TLVPass to locate TLV References.
+name|virtual
+name|bool
+name|isTLVAccess
+argument_list|(
+specifier|const
+name|Reference
+operator|&
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Used by the TLVPass to update TLV References.
+name|virtual
+name|void
+name|updateReferenceToTLV
+parameter_list|(
+specifier|const
+name|Reference
+modifier|*
+parameter_list|)
+block|{}
 comment|/// Used by ShimPass to insert shims in branches that switch mode.
 name|virtual
 name|bool

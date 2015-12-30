@@ -71,17 +71,19 @@ name|Pass
 block|{
 name|public
 operator|:
-name|void
+name|std
+operator|::
+name|error_code
 name|perform
 argument_list|(
-argument|std::unique_ptr<MutableFile>&file
+argument|SimpleFile&file
 argument_list|)
 name|override
 block|{
 name|parallel_sort
 argument_list|(
 name|file
-operator|->
+operator|.
 name|definedAtoms
 argument_list|()
 operator|.
@@ -89,7 +91,7 @@ name|begin
 argument_list|()
 argument_list|,
 name|file
-operator|->
+operator|.
 name|definedAtoms
 argument_list|()
 operator|.
@@ -100,10 +102,16 @@ name|DefinedAtom
 operator|::
 name|compareByPosition
 argument_list|)
-block|;   }
+block|;
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|()
+return|;
 block|}
-decl_stmt|;
-block|}
+expr|}
+block|; }
 block|}
 end_decl_stmt
 

@@ -72,11 +72,6 @@ name|Writer
 block|{
 name|public
 operator|:
-name|ELFWriter
-argument_list|()
-block|{ }
-name|public
-operator|:
 comment|/// \brief builds the chunks that needs to be written to the output
 comment|///        ELF file
 name|virtual
@@ -92,7 +87,6 @@ operator|=
 literal|0
 block|;
 comment|/// \brief Writes the chunks into the output file specified by path
-name|virtual
 name|std
 operator|::
 name|error_code
@@ -102,6 +96,7 @@ argument|const File&file
 argument_list|,
 argument|StringRef path
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
@@ -132,6 +127,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLD_READER_WRITER_ELF_WRITER_H
+end_comment
 
 end_unit
 

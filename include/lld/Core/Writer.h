@@ -66,10 +66,13 @@ name|namespace
 name|lld
 block|{
 name|class
+name|ELFLinkingContext
+decl_stmt|;
+name|class
 name|File
 decl_stmt|;
 name|class
-name|ELFLinkingContext
+name|LinkingContext
 decl_stmt|;
 name|class
 name|MachOLinkingContext
@@ -77,15 +80,9 @@ decl_stmt|;
 name|class
 name|PECOFFLinkingContext
 decl_stmt|;
-name|class
-name|LinkingContext
-decl_stmt|;
-name|class
-name|TargetHandlerBase
-decl_stmt|;
 comment|/// \brief The Writer is an abstract class for writing object files, shared
 comment|/// library files, and executable files.  Each file format (e.g. ELF, mach-o,
-comment|/// PECOFF, native, etc) have a concrete subclass of Writer.
+comment|/// PECOFF, etc) have a concrete subclass of Writer.
 name|class
 name|Writer
 block|{
@@ -114,7 +111,7 @@ comment|/// \brief This method is called by Core Linking to give the Writer a ch
 comment|/// to add file format specific "files" to set of files to be linked. This is
 comment|/// how file format specific atoms can be added to the link.
 name|virtual
-name|bool
+name|void
 name|createImplicitFiles
 argument_list|(
 name|std
@@ -126,11 +123,10 @@ operator|::
 name|unique_ptr
 operator|<
 name|File
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
-decl_stmt|;
+block|{}
 name|protected
 label|:
 comment|// only concrete subclasses can be instantiated
@@ -147,9 +143,9 @@ name|Writer
 operator|>
 name|createWriterELF
 argument_list|(
-name|TargetHandlerBase
-operator|*
-name|handler
+specifier|const
+name|ELFLinkingContext
+operator|&
 argument_list|)
 expr_stmt|;
 name|std
@@ -177,15 +173,6 @@ specifier|const
 name|PECOFFLinkingContext
 operator|&
 argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Writer
-operator|>
-name|createWriterNative
-argument_list|()
 expr_stmt|;
 name|std
 operator|::
