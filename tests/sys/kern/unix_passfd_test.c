@@ -363,7 +363,7 @@ name|int
 name|sockfd
 parameter_list|,
 name|int
-name|sendfd
+name|send_fd
 parameter_list|,
 name|void
 modifier|*
@@ -508,7 +508,7 @@ name|cmsghdr
 argument_list|)
 argument_list|,
 operator|&
-name|sendfd
+name|send_fd
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -576,7 +576,7 @@ name|int
 name|sockfd
 parameter_list|,
 name|int
-name|sendfd
+name|send_fd
 parameter_list|)
 block|{
 name|char
@@ -590,7 +590,7 @@ name|sendfd_payload
 argument_list|(
 name|sockfd
 argument_list|,
-name|sendfd
+name|send_fd
 argument_list|,
 operator|&
 name|ch
@@ -615,7 +615,7 @@ name|sockfd
 parameter_list|,
 name|int
 modifier|*
-name|recvfd
+name|recv_fd
 parameter_list|,
 name|void
 modifier|*
@@ -770,7 +770,7 @@ literal|"recvmsg: did not receive control message"
 argument_list|)
 expr_stmt|;
 operator|*
-name|recvfd
+name|recv_fd
 operator|=
 operator|-
 literal|1
@@ -822,7 +822,7 @@ condition|)
 block|{
 name|memcpy
 argument_list|(
-name|recvfd
+name|recv_fd
 argument_list|,
 name|CMSG_DATA
 argument_list|(
@@ -838,7 +838,7 @@ expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 operator|*
-name|recvfd
+name|recv_fd
 operator|!=
 operator|-
 literal|1
@@ -849,7 +849,7 @@ block|}
 name|ATF_REQUIRE_MSG
 argument_list|(
 operator|*
-name|recvfd
+name|recv_fd
 operator|!=
 operator|-
 literal|1
@@ -870,7 +870,7 @@ name|sockfd
 parameter_list|,
 name|int
 modifier|*
-name|recvfd
+name|recv_fd
 parameter_list|)
 block|{
 name|char
@@ -884,7 +884,7 @@ name|recvfd_payload
 argument_list|(
 name|sockfd
 argument_list|,
-name|recvfd
+name|recv_fd
 argument_list|,
 operator|&
 name|ch
