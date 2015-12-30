@@ -167,6 +167,16 @@ name|newnfsnode_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|char
+name|nfs_vnode_tag
+index|[]
+init|=
+literal|"newnfs"
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -439,7 +449,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"newnfs"
+name|nfs_vnode_tag
 argument_list|,
 name|mntp
 argument_list|,
