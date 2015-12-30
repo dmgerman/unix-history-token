@@ -311,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
-value|256
+value|1024
 end_define
 
 begin_endif
@@ -1652,6 +1652,12 @@ name|isp_scratch
 decl_stmt|;
 name|XS_DMA_ADDR_T
 name|isp_scdma
+decl_stmt|;
+name|uint8_t
+name|isp_scanscratch
+index|[
+name|ISP_FC_SCRLEN
+index|]
 decl_stmt|;
 block|}
 name|fcparam
