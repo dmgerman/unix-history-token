@@ -358,14 +358,14 @@ argument_list|)
 block|, 	}
 block|,
 index|[
-name|MLX5E_10GBASE_ER
+name|MLX5E_10GBASE_LR
 index|]
 operator|=
 block|{
 operator|.
 name|subtype
 operator|=
-name|IFM_10G_ER
+name|IFM_10G_LR
 block|,
 operator|.
 name|baudrate
