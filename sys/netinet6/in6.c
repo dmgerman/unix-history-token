@@ -6476,7 +6476,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|if_addr_rlock
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6540,7 +6540,7 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|if_addr_runlock
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
