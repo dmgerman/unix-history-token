@@ -265,6 +265,8 @@ name|nflag
 operator|=
 name|qflag
 operator|=
+name|Nflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
