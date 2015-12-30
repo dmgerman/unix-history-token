@@ -89,10 +89,10 @@ argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|StreamGDBRemote
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Output a block of data to the stream performing GDB-remote escaping.

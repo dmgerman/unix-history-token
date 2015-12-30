@@ -136,32 +136,35 @@ name|virtual
 operator|~
 name|ThreadPlanTracer
 argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|TracingStarted
-argument_list|()
-block|{          }
+parameter_list|()
+block|{     }
 name|virtual
 name|void
 name|TracingEnded
-argument_list|()
-block|{          }
+parameter_list|()
+block|{     }
 name|bool
 name|EnableTracing
-argument_list|(
-argument|bool value
-argument_list|)
+parameter_list|(
+name|bool
+name|value
+parameter_list|)
 block|{
 name|bool
 name|old_value
-operator|=
+init|=
 name|m_enabled
-block|;
+decl_stmt|;
 name|m_enabled
 operator|=
 name|value
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|old_value
@@ -263,13 +266,7 @@ name|StreamSP
 name|m_stream_sp
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|ThreadPlanAssemblyTracer
 range|:
@@ -298,25 +295,25 @@ operator|&
 name|thread
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadPlanAssemblyTracer
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|TracingStarted
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|TracingEnded
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Log
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -351,10 +348,10 @@ name|DataBufferSP
 name|m_buffer_sp
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

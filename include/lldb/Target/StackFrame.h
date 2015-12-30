@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -186,6 +192,14 @@ literal|1u
 operator|<<
 literal|4
 operator|)
+block|,
+name|eExpressionPathOptionsInspectAnonymousUnions
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|5
+operator|)
 block|}
 enum|;
 comment|//------------------------------------------------------------------
@@ -301,10 +315,10 @@ argument_list|,
 argument|const SymbolContext *sc_ptr
 argument_list|)
 empty_stmt|;
-name|virtual
 operator|~
 name|StackFrame
 argument_list|()
+name|override
 expr_stmt|;
 name|lldb
 operator|::
@@ -426,7 +440,7 @@ comment|/// pointer to the innermost lexical Block that the frame is currently
 comment|/// executing.
 comment|///
 comment|/// @return
-comment|///   A pointer to the current Block.  NULL is returned if this can
+comment|///   A pointer to the current Block.  nullptr is returned if this can
 comment|///   not be provided.
 comment|//------------------------------------------------------------------
 name|Block
@@ -600,7 +614,7 @@ name|char
 modifier|*
 name|frame_marker
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -666,7 +680,7 @@ name|char
 modifier|*
 name|frame_marker
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -762,44 +776,58 @@ argument|lldb::DynamicValueType use_dynamic
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Query this frame to determine what the default language should be
+comment|/// when parsing expressions given the execution context.
+comment|///
+comment|/// @return
+comment|///   The language of the frame if known, else lldb::eLanguageTypeUnknown.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|TargetSP
 name|CalculateTarget
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|CalculateProcess
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadSP
 name|CalculateThread
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|StackFrameSP
 name|CalculateStackFrame
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|CalculateExecutionContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|protected
 label|:
 name|friend

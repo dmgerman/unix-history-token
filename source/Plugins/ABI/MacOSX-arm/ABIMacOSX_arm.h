@@ -85,14 +85,16 @@ operator|:
 operator|~
 name|ABIMacOSX_arm
 argument_list|()
-block|{ }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|GetRedZoneSize
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|PrepareTrivialCall
 argument_list|(
@@ -107,8 +109,8 @@ argument_list|,
 argument|llvm::ArrayRef<lldb::addr_t> args
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|GetArgumentValues
 argument_list|(
@@ -117,82 +119,46 @@ argument_list|,
 argument|lldb_private::ValueList&values
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|SetReturnValueObject
 argument_list|(
-name|lldb
-operator|::
-name|StackFrameSP
-operator|&
-name|frame_sp
+argument|lldb::StackFrameSP&frame_sp
 argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
-operator|&
-name|new_value
+argument|lldb::ValueObjectSP&new_value
 argument_list|)
+name|override
 block|;
-name|protected
-operator|:
-name|virtual
-name|lldb
-operator|::
-name|ValueObjectSP
-name|GetReturnValueObjectImpl
-argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|lldb_private::ClangASTType&ast_type
-argument_list|)
-specifier|const
-block|;
-name|public
-operator|:
-name|virtual
 name|bool
 name|CreateFunctionEntryUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|CreateDefaultUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|RegisterIsVolatile
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|CallFrameAddressIsValid
 argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
+name|override
 block|{
 comment|// Make sure the stack call frame addresses are are 4 byte aligned
 if|if
@@ -230,16 +196,19 @@ name|true
 return|;
 end_return
 
-begin_decl_stmt
-unit|}          virtual
-name|bool
+begin_macro
+unit|}          bool
 name|CodeAddressIsValid
 argument_list|(
-name|lldb
-operator|::
-name|addr_t
-name|pc
+argument|lldb::addr_t pc
 argument_list|)
+end_macro
+
+begin_macro
+name|override
+end_macro
+
+begin_block
 block|{
 comment|// Just make sure the address is a valid 32 bit address. Bit zero
 comment|// might be set due to Thumb function calls, so don't enforce 2 byte
@@ -250,10 +219,9 @@ operator|<=
 name|UINT32_MAX
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_expr_stmt
-name|virtual
 name|lldb
 operator|::
 name|addr_t
@@ -261,6 +229,7 @@ name|FixCodeAddress
 argument_list|(
 argument|lldb::addr_t pc
 argument_list|)
+name|override
 block|{
 comment|// ARM uses bit zero to signify a code address is thumb, so we must
 comment|// strip bit zero in any code addresses.
@@ -279,7 +248,6 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -287,12 +255,25 @@ name|RegisterInfo
 operator|*
 name|GetRegisterInfoArray
 argument_list|(
-name|uint32_t
-operator|&
-name|count
+argument|uint32_t&count
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|IsArmv7kProcess
+argument_list|(
+name|lldb_private
+operator|::
+name|Thread
+operator|*
+name|thread
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -362,27 +343,42 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|uint32_t
 name|GetPluginVersion
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|protected
 label|:
 end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObjectImpl
+argument_list|(
+argument|lldb_private::Thread&thread
+argument_list|,
+argument|lldb_private::CompilerType&ast_type
+argument_list|)
+specifier|const
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

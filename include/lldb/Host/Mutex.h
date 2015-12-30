@@ -43,26 +43,13 @@ directive|define
 name|liblldb_Mutex_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -80,6 +67,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -174,7 +175,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|//--------------------------------------------------------------
-comment|/// Desstructor
+comment|/// Destructor
 comment|///
 comment|/// Unlocks any valid pthread_mutex_t that this object may
 comment|/// contain.
@@ -188,7 +189,7 @@ comment|/// Change the contained mutex.
 comment|///
 comment|/// Unlock the current mutex in this object (if it contains a
 comment|/// valid mutex) and lock the new \a mutex object if it is
-comment|/// non-NULL.
+comment|/// non-nullptr.
 comment|//--------------------------------------------------------------
 name|void
 name|Lock
@@ -228,7 +229,7 @@ comment|/// called again. If the mutex is already locked, this object
 comment|/// will not take ownership of the mutex.
 comment|///
 comment|/// @return
-comment|///     Returns \b true if the lock was aquired and the this
+comment|///     Returns \b true if the lock was acquired and the this
 comment|///     object will unlock the mutex when it goes out of scope,
 comment|///     returns \b false otherwise.
 comment|//--------------------------------------------------------------
@@ -244,7 +245,7 @@ name|char
 modifier|*
 name|failure_message
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -259,7 +260,7 @@ name|char
 modifier|*
 name|failure_message
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 if|if
@@ -400,7 +401,7 @@ name|char
 modifier|*
 name|failure_message
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -503,7 +504,9 @@ name|virtual
 operator|~
 name|TrackingMutex
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|virtual
 name|int
 name|Unlock
@@ -513,7 +516,7 @@ name|virtual
 name|int
 name|TryLock
 argument_list|(
-argument|const char *failure_message = NULL
+argument|const char *failure_message = nullptr
 argument_list|)
 block|{
 name|int
@@ -532,7 +535,7 @@ literal|0
 operator|&&
 name|failure_message
 operator|!=
-name|NULL
+name|nullptr
 condition|)
 block|{
 name|m_failure_message
@@ -601,7 +604,9 @@ name|virtual
 operator|~
 name|LoggingMutex
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|virtual
 name|int
 name|Lock
@@ -621,7 +626,7 @@ name|char
 operator|*
 name|failure_message
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|protected
@@ -632,6 +637,7 @@ block|; }
 decl_stmt|;
 endif|#
 directive|endif
+comment|// LLDB_CONFIGURATION_DEBUG
 block|}
 end_decl_stmt
 
@@ -645,13 +651,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined(__cplusplus)
+comment|// liblldb_Mutex_h_
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

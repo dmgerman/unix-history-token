@@ -115,8 +115,8 @@ comment|// Every register is described in detail including its name, alternate
 comment|// name (optional), encoding, size in bytes and the default display
 comment|// format.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 struct|struct
+name|RegisterInfo
 block|{
 specifier|const
 name|char
@@ -174,17 +174,16 @@ modifier|*
 name|invalidate_regs
 decl_stmt|;
 comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
-comment|// null, all registers in this list will be invalidateed when the value of this
+comment|// null, all registers in this list will be invalidated when the value of this
 comment|// register changes.  For example, the invalidate list for eax would be rax
 comment|// ax, ah, and al.
 block|}
-name|RegisterInfo
-typedef|;
+struct|;
 comment|//----------------------------------------------------------------------
 comment|// Registers are grouped into register sets
 comment|//----------------------------------------------------------------------
-typedef|typedef
 struct|struct
+name|RegisterSet
 block|{
 specifier|const
 name|char
@@ -213,10 +212,9 @@ comment|// register array.  For example, if eax is defined at index 4 for a
 comment|// particular RegisterContext, eax would be included in this RegisterSet
 comment|// by adding the value 4.  Not by adding the value lldb_eax_i386.
 block|}
-name|RegisterSet
-typedef|;
-typedef|typedef
+struct|;
 struct|struct
+name|OptionEnumValueElement
 block|{
 name|int64_t
 name|value
@@ -232,8 +230,7 @@ modifier|*
 name|usage
 decl_stmt|;
 block|}
-name|OptionEnumValueElement
-typedef|;
+struct|;
 struct|struct
 name|OptionValidator
 block|{
@@ -331,6 +328,19 @@ comment|// Full text explaining what this options does and what (if any) argumen
 comment|// pass it.
 block|}
 struct|;
+typedef|typedef
+struct|struct
+name|type128
+block|{
+name|uint64_t
+name|x
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|type128
+typedef|;
 block|}
 end_decl_stmt
 

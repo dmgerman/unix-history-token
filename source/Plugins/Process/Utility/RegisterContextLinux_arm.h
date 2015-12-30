@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"RegisterInfoInterface.h"
 end_include
 

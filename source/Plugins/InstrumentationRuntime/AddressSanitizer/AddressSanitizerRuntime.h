@@ -43,6 +43,22 @@ directive|define
 name|liblldb_AddressSanitizerRuntime_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -87,6 +103,11 @@ name|InstrumentationRuntime
 block|{
 name|public
 operator|:
+operator|~
+name|AddressSanitizerRuntime
+argument_list|()
+name|override
+block|;
 specifier|static
 name|lldb
 operator|::
@@ -125,17 +146,12 @@ name|InstrumentationRuntimeType
 name|GetTypeStatic
 argument_list|()
 block|;
-name|virtual
-operator|~
-name|AddressSanitizerRuntime
-argument_list|()
-block|;
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|{
 return|return
 name|GetPluginNameStatic
@@ -154,30 +170,26 @@ name|GetTypeStatic
 argument_list|()
 return|;
 block|}
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|virtual
 name|void
 name|ModulesDidLoad
 argument_list|(
-name|lldb_private
-operator|::
-name|ModuleList
-operator|&
-name|module_list
+argument|lldb_private::ModuleList&module_list
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|IsActive
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -191,6 +203,19 @@ operator|&
 name|process_sp
 argument_list|)
 block|;
+name|lldb
+operator|::
+name|ProcessSP
+name|GetProcessSP
+argument_list|()
+block|{
+return|return
+name|m_process_wp
+operator|.
+name|lock
+argument_list|()
+return|;
+block|}
 name|void
 name|Activate
 argument_list|()
@@ -236,14 +261,14 @@ name|m_runtime_module
 block|;
 name|lldb
 operator|::
-name|ProcessSP
-name|m_process
+name|ProcessWP
+name|m_process_wp
 block|;
 name|lldb
 operator|::
 name|user_id_t
 name|m_breakpoint_id
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -258,7 +283,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_InstrumentationRuntime_h_
+comment|// liblldb_AddressSanitizerRuntime_h_
 end_comment
 
 end_unit

@@ -54,12 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<list>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -67,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<queue>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/TimeValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Interpreter/Args.h"
 end_include
 
 begin_include
@@ -275,9 +281,6 @@ name|uint32_t
 name|m_saved_timeout
 block|;     }
 block|;
-comment|//------------------------------------------------------------------
-comment|// Constructors and Destructors
-comment|//------------------------------------------------------------------
 name|GDBRemoteCommunication
 argument_list|(
 specifier|const
@@ -291,10 +294,10 @@ operator|*
 name|listener_name
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|GDBRemoteCommunication
 argument_list|()
+name|override
 block|;
 name|PacketResult
 name|GetAck
@@ -330,7 +333,7 @@ name|char
 operator|*
 name|failure_message
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|PacketType
@@ -421,14 +424,31 @@ comment|//------------------------------------------------------------------
 name|Error
 name|StartDebugserverProcess
 argument_list|(
-argument|const char *hostname
+specifier|const
+name|char
+operator|*
+name|url
 argument_list|,
-argument|uint16_t in_port
+name|Platform
+operator|*
+name|platform
 argument_list|,
-comment|// If set to zero, then out_port will contain the bound port on exit
-argument|ProcessLaunchInfo&launch_info
+comment|// If non nullptr, then check with the platform for the GDB server binary if it can't be located
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
 argument_list|,
-argument|uint16_t&out_port
+name|uint16_t
+operator|*
+name|port
+argument_list|,
+specifier|const
+name|Args
+operator|&
+name|inferior_args
+operator|=
+name|Args
+argument_list|()
 argument_list|)
 block|;
 name|void
@@ -701,6 +721,56 @@ name|bool
 name|m_dumped_to_log
 block|;     }
 block|;
+name|uint32_t
+name|m_packet_timeout
+block|;
+name|uint32_t
+name|m_echo_number
+block|;
+name|LazyBool
+name|m_supports_qEcho
+block|;
+ifdef|#
+directive|ifdef
+name|ENABLE_MUTEX_ERROR_CHECKING
+name|TrackingMutex
+name|m_sequence_mutex
+block|;
+else|#
+directive|else
+name|Mutex
+name|m_sequence_mutex
+block|;
+comment|// Restrict access to sending/receiving packets to a single thread at a time
+endif|#
+directive|endif
+name|Predicate
+operator|<
+name|bool
+operator|>
+name|m_public_is_running
+block|;
+name|Predicate
+operator|<
+name|bool
+operator|>
+name|m_private_is_running
+block|;
+name|History
+name|m_history
+block|;
+name|bool
+name|m_send_acks
+block|;
+name|bool
+name|m_is_platform
+block|;
+comment|// Set to true if this class represents a platform,
+comment|// false if this class represents a debug session for
+comment|// a single process
+name|CompressionType
+name|m_compression_type
+block|;
 name|PacketResult
 name|SendPacket
 argument_list|(
@@ -778,59 +848,6 @@ name|bool
 name|DecompressPacket
 argument_list|()
 block|;
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from GDBRemoteCommunication can see and modify these
-comment|//------------------------------------------------------------------
-name|uint32_t
-name|m_packet_timeout
-block|;
-name|uint32_t
-name|m_echo_number
-block|;
-name|LazyBool
-name|m_supports_qEcho
-block|;
-ifdef|#
-directive|ifdef
-name|ENABLE_MUTEX_ERROR_CHECKING
-name|TrackingMutex
-name|m_sequence_mutex
-block|;
-else|#
-directive|else
-name|Mutex
-name|m_sequence_mutex
-block|;
-comment|// Restrict access to sending/receiving packets to a single thread at a time
-endif|#
-directive|endif
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_public_is_running
-block|;
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_private_is_running
-block|;
-name|History
-name|m_history
-block|;
-name|bool
-name|m_send_acks
-block|;
-name|bool
-name|m_is_platform
-block|;
-comment|// Set to true if this class represents a platform,
-comment|// false if this class represents a debug session for
-comment|// a single process
-name|CompressionType
-name|m_compression_type
-block|;
 name|Error
 name|StartListenThread
 argument_list|(
@@ -863,7 +880,6 @@ comment|//    This setup allows us to intercept and handle async packets, such
 comment|//    as the notify packet.
 comment|// This method is defined as part of communication.h
 comment|// when the read thread gets any bytes it will pass them on to this function
-name|virtual
 name|void
 name|AppendBytesToCache
 argument_list|(
@@ -875,6 +891,7 @@ argument|bool broadcast
 argument_list|,
 argument|lldb::ConnectionStatus status
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -905,9 +922,6 @@ operator|::
 name|string
 name|m_listen_url
 block|;
-comment|//------------------------------------------------------------------
-comment|// For GDBRemoteCommunication only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|GDBRemoteCommunication

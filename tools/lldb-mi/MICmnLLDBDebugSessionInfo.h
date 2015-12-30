@@ -174,18 +174,6 @@ comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 04/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -225,9 +213,7 @@ struct|struct
 name|SBrkPtInfo
 block|{
 name|SBrkPtInfo
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 operator|:
 name|m_id
 argument_list|(
@@ -475,18 +461,14 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|// Variant type data which can be assigned and retrieved across all command instances
 name|template
 operator|<
@@ -525,11 +507,9 @@ operator|&
 name|vwData
 argument_list|)
 expr_stmt|;
-name|bool
-name|SharedDataDestroy
-parameter_list|(
 name|void
-parameter_list|)
+name|SharedDataDestroy
+parameter_list|()
 function_decl|;
 comment|//  Common command required functionality
 name|bool
@@ -658,7 +638,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-name|bool
+name|void
 name|MIResponseFormBrkPtFrameInfo
 parameter_list|(
 specifier|const
@@ -850,9 +830,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnLLDBDebugSessionInfo
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnLLDBDebugSessionInfo
@@ -983,9 +961,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnLLDBDebugSessionInfo
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

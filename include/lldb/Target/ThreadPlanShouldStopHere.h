@@ -195,7 +195,7 @@ name|void
 operator|*
 name|baton
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|virtual
@@ -380,9 +380,6 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from ThreadPlanShouldStopHere can see and modify these
-comment|//------------------------------------------------------------------
 name|ThreadPlanShouldStopHereCallbacks
 name|m_callbacks
 decl_stmt|;
@@ -401,9 +398,6 @@ name|m_flags
 expr_stmt|;
 name|private
 label|:
-comment|//------------------------------------------------------------------
-comment|// For ThreadPlanShouldStopHere only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanShouldStopHere

@@ -87,25 +87,21 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectQuit
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoExecute
 argument_list|(
-name|Args
-operator|&
-name|args
+argument|Args& args
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;
 name|bool
 name|ShouldAskForConfirmation
@@ -114,7 +110,7 @@ name|bool
 operator|&
 name|is_a_detach
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

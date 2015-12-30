@@ -128,7 +128,9 @@ name|virtual
 operator|~
 name|SymbolContextScope
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Reconstruct the object's symbol context into \a sc.
 comment|///
@@ -142,14 +144,14 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|void
 name|CalculateSymbolContext
-argument_list|(
+parameter_list|(
 name|SymbolContext
-operator|*
+modifier|*
 name|sc
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|lldb
 operator|::
@@ -171,7 +173,7 @@ name|CalculateSymbolContextCompileUnit
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -181,7 +183,7 @@ name|CalculateSymbolContextFunction
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -191,7 +193,7 @@ name|CalculateSymbolContextBlock
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -201,7 +203,7 @@ name|CalculateSymbolContextSymbol
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------

@@ -91,14 +91,16 @@ operator|:
 operator|~
 name|ABIMacOSX_i386
 argument_list|()
-block|{ }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|GetRedZoneSize
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|PrepareTrivialCall
 argument_list|(
@@ -113,24 +115,8 @@ argument_list|,
 argument|llvm::ArrayRef<lldb::addr_t> args
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|bool
-name|PrepareNormalCall
-argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|lldb::addr_t sp
-argument_list|,
-argument|lldb::addr_t func_addr
-argument_list|,
-argument|lldb::addr_t return_addr
-argument_list|,
-argument|lldb_private::ValueList&args
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|bool
 name|GetArgumentValues
 argument_list|(
@@ -139,75 +125,39 @@ argument_list|,
 argument|lldb_private::ValueList&values
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|SetReturnValueObject
 argument_list|(
-name|lldb
-operator|::
-name|StackFrameSP
-operator|&
-name|frame_sp
+argument|lldb::StackFrameSP&frame_sp
 argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
-operator|&
-name|new_value
+argument|lldb::ValueObjectSP&new_value
 argument_list|)
+name|override
 block|;
-name|protected
-operator|:
-name|virtual
-name|lldb
-operator|::
-name|ValueObjectSP
-name|GetReturnValueObjectImpl
-argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|lldb_private::ClangASTType&ast_type
-argument_list|)
-specifier|const
-block|;
-name|public
-operator|:
-name|virtual
 name|bool
 name|CreateFunctionEntryUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|CreateDefaultUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|RegisterIsVolatile
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|)
+name|override
 block|;
 comment|// The Darwin i386 ABI requires that stack frames be 16 byte aligned.
 comment|// When there is a trap handler on the stack, e.g. _sigtramp in userland
@@ -222,12 +172,12 @@ comment|// involved in async traps.
 comment|//
 comment|// If we were to enforce 16-byte alignment, we also need to relax to 4-byte
 comment|// alignment for non-darwin i386 targets.
-name|virtual
 name|bool
 name|CallFrameAddressIsValid
 argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
+name|override
 block|{
 comment|// Make sure the stack call frame addresses are are 4 byte aligned
 if|if
@@ -265,16 +215,19 @@ name|true
 return|;
 end_return
 
-begin_decl_stmt
-unit|}      virtual
-name|bool
+begin_macro
+unit|}      bool
 name|CodeAddressIsValid
 argument_list|(
-name|lldb
-operator|::
-name|addr_t
-name|pc
+argument|lldb::addr_t pc
 argument_list|)
+end_macro
+
+begin_macro
+name|override
+end_macro
+
+begin_block
 block|{
 comment|// Just make sure the address is a valid 32 bit address.
 return|return
@@ -283,10 +236,9 @@ operator|<=
 name|UINT32_MAX
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_expr_stmt
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -294,10 +246,9 @@ name|RegisterInfo
 operator|*
 name|GetRegisterInfoArray
 argument_list|(
-name|uint32_t
-operator|&
-name|count
+argument|uint32_t&count
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -369,27 +320,42 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|uint32_t
 name|GetPluginVersion
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|protected
 label|:
 end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObjectImpl
+argument_list|(
+argument|lldb_private::Thread&thread
+argument_list|,
+argument|lldb_private::CompilerType&ast_type
+argument_list|)
+specifier|const
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|bool
@@ -418,12 +384,10 @@ name|lldb_private
 operator|::
 name|ABI
 argument_list|()
-block|{ }
-end_expr_stmt
-
-begin_comment
+block|{
 comment|// Call CreateInstance instead.
-end_comment
+block|}
+end_expr_stmt
 
 begin_endif
 unit|};
@@ -432,7 +396,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_ABI_h_
+comment|// liblldb_ABIMacOSX_i386_h_
 end_comment
 
 end_unit

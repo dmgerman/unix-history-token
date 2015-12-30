@@ -43,11 +43,27 @@ directive|define
 name|lldb_RegisterContextLLDB_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -124,25 +140,23 @@ argument_list|,
 argument|lldb_private::UnwindLLDB& unwind_lldb
 argument_list|)
 decl_stmt|;
-comment|///
-comment|// pure virtual functions from the base class that we must implement
-comment|///
-name|virtual
 operator|~
 name|RegisterContextLLDB
 argument_list|()
-block|{ }
-name|virtual
+name|override
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|InvalidateAllRegisters
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|size_t
 name|GetRegisterCount
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 specifier|const
 name|lldb_private
 operator|::
@@ -152,13 +166,13 @@ name|GetRegisterInfoAtIndex
 argument_list|(
 argument|size_t reg
 argument_list|)
+name|override
 expr_stmt|;
-name|virtual
 name|size_t
 name|GetRegisterSetCount
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 specifier|const
 name|lldb_private
 operator|::
@@ -168,8 +182,8 @@ name|GetRegisterSet
 argument_list|(
 argument|size_t reg_set
 argument_list|)
+name|override
 expr_stmt|;
-name|virtual
 name|bool
 name|ReadRegister
 argument_list|(
@@ -186,8 +200,8 @@ name|RegisterValue
 operator|&
 name|value
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|WriteRegister
 argument_list|(
@@ -205,8 +219,8 @@ name|RegisterValue
 operator|&
 name|value
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|ReadAllRegisterValues
 argument_list|(
@@ -216,8 +230,8 @@ name|DataBufferSP
 operator|&
 name|data_sp
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|WriteAllRegisterValues
 argument_list|(
@@ -228,8 +242,8 @@ name|DataBufferSP
 operator|&
 name|data_sp
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|uint32_t
 name|ConvertRegisterKindToRegisterNumber
 argument_list|(
@@ -241,6 +255,7 @@ argument_list|,
 name|uint32_t
 name|num
 argument_list|)
+name|override
 decl_stmt|;
 name|bool
 name|IsValid

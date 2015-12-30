@@ -818,6 +818,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|UNUSED_IF_ASSERT_DISABLED
+parameter_list|(
+name|x
+parameter_list|)
+value|((void)(x))
+end_define
+
 begin_if
 if|#
 directive|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CMICmdArgValBase.h --------------------------------------*- C++ -*-===//
+comment|//===-- MICmdArgValBase.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -38,7 +38,19 @@ name|once
 end_pragma
 
 begin_comment
-comment|// In-house headers:
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -122,18 +134,6 @@ comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 14/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -149,13 +149,9 @@ block|{
 comment|// Methods:
 name|public
 operator|:
-comment|/* ctor */
 name|CMICmdArgValBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
-comment|/* ctor */
 name|CMICmdArgValBase
 argument_list|(
 argument|const CMIUtilString&vrArgName
@@ -166,49 +162,36 @@ argument|const bool vbHandleByCmd
 argument_list|)
 block|;
 comment|// Overrideable:
-name|public
-operator|:
-comment|/* dtor */
 operator|~
 name|CMICmdArgValBase
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
+operator|=
+expr|default
 block|;
 comment|// Overridden:
-name|public
-operator|:
 comment|// From CMICmdArgSet::IArg
 name|bool
 name|GetFound
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
 name|bool
 name|GetIsHandledByCmd
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
 name|bool
 name|GetIsMandatory
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
 name|bool
 name|GetIsMissingOptions
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -216,17 +199,13 @@ specifier|const
 name|CMIUtilString
 operator|&
 name|GetName
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
 name|bool
 name|GetValid
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -276,18 +255,6 @@ comment|// Details: MI common code class. Templated command argument base class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 14/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -306,13 +273,11 @@ block|{
 comment|// Methods:
 name|public
 operator|:
-comment|/* ctor */
 name|CMICmdArgValBaseTemplate
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
+operator|=
+expr|default
 block|;
-comment|/* ctor */
 name|CMICmdArgValBaseTemplate
 argument_list|(
 argument|const CMIUtilString&vrArgName
@@ -327,21 +292,16 @@ specifier|const
 name|T
 operator|&
 name|GetValue
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// Overrideable:
-name|public
-operator|:
-comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdArgValBaseTemplate
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
+name|override
+operator|=
+expr|default
 block|;
 comment|// Attributes:
 name|protected
@@ -365,7 +325,15 @@ comment|// Type:    Method.
 end_comment
 
 begin_comment
-comment|// Args:    None.
+comment|// Args:    vrArgName       - (R) Argument's name to search by.
+end_comment
+
+begin_comment
+comment|//          vbMandatory     - (R) True = Yes must be present, false = optional argument.
+end_comment
+
+begin_comment
+comment|//          vbHandleByCmd   - (R) True = Command processes *this option, false = not handled.
 end_comment
 
 begin_comment
@@ -381,30 +349,6 @@ comment|//--
 end_comment
 
 begin_expr_stmt
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|CMICmdArgValBaseTemplate
-operator|<
-name|T
-operator|>
-operator|::
-name|CMICmdArgValBaseTemplate
-argument_list|(
-argument|void
-argument_list|)
-block|{ }
-comment|//++ ------------------------------------------------------------------------------------
-comment|// Details: CMICmdArgValBaseTemplate constructor.
-comment|// Type:    Method.
-comment|// Args:    vrArgName       - (R) Argument's name to search by.
-comment|//          vbMandatory     - (R) True = Yes must be present, false = optional argument.
-comment|//          vbHandleByCmd   - (R) True = Command processes *this option, false = not handled.
-comment|// Return:  None.
-comment|// Throws:  None.
-comment|//--
 name|template
 operator|<
 name|class
@@ -434,29 +378,6 @@ argument|vbHandleByCmd
 argument_list|)
 block|{ }
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details: CMICmdArgValBaseTemplate destructor.
-comment|// Type:    Overrideable.
-comment|// Args:    None.
-comment|// Return:  None.
-comment|// Throws:  None.
-comment|//--
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|CMICmdArgValBaseTemplate
-operator|<
-name|T
-operator|>
-operator|::
-operator|~
-name|CMICmdArgValBaseTemplate
-argument_list|(
-argument|void
-argument_list|)
-block|{ }
-comment|//++ ------------------------------------------------------------------------------------
 comment|// Details: Retrieve the value the argument parsed from the command's argument / options
 comment|//          text string.
 comment|// Type:    Method.
@@ -478,9 +399,7 @@ name|T
 operator|>
 operator|::
 name|GetValue
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return

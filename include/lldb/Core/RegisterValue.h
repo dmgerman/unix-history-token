@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterValue.h ------------------------------------------*- C++ -*-===//
+comment|//===-- RegisterValue.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -61,6 +61,12 @@ begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -83,9 +89,11 @@ directive|include
 file|"lldb/Host/Endian.h"
 end_include
 
-begin_comment
-comment|//#define ENABLE_128_BIT_SUPPORT 1
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Scalar.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -116,16 +124,8 @@ name|eTypeUInt32
 block|,
 name|eTypeUInt64
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
 name|eTypeUInt128
 block|,
-endif|#
-directive|endif
 name|eTypeFloat
 block|,
 name|eTypeDouble
@@ -140,7 +140,13 @@ argument_list|()
 operator|:
 name|m_type
 argument_list|(
-argument|eTypeInvalid
+name|eTypeInvalid
+argument_list|)
+operator|,
+name|m_scalar
+argument_list|(
+argument|(unsigned long)
+literal|0
 argument_list|)
 block|{         }
 name|explicit
@@ -154,9 +160,7 @@ argument_list|(
 argument|eTypeUInt8
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|uint8
+name|m_scalar
 operator|=
 name|inst
 block|;         }
@@ -171,9 +175,7 @@ argument_list|(
 argument|eTypeUInt16
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|uint16
+name|m_scalar
 operator|=
 name|inst
 block|;         }
@@ -188,9 +190,7 @@ argument_list|(
 argument|eTypeUInt32
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|uint32
+name|m_scalar
 operator|=
 name|inst
 block|;         }
@@ -205,22 +205,14 @@ argument_list|(
 argument|eTypeUInt64
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|uint64
+name|m_scalar
 operator|=
 name|inst
 block|;         }
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
 name|explicit
 name|RegisterValue
 argument_list|(
-argument|__uint128_t inst
+argument|llvm::APInt inst
 argument_list|)
 operator|:
 name|m_type
@@ -228,14 +220,15 @@ argument_list|(
 argument|eTypeUInt128
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|uint128
+name|m_scalar
 operator|=
+name|llvm
+operator|::
+name|APInt
+argument_list|(
 name|inst
+argument_list|)
 block|;         }
-endif|#
-directive|endif
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -247,9 +240,7 @@ argument_list|(
 argument|eTypeFloat
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|ieee_float
+name|m_scalar
 operator|=
 name|value
 block|;         }
@@ -264,9 +255,7 @@ argument_list|(
 argument|eTypeDouble
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|ieee_double
+name|m_scalar
 operator|=
 name|value
 block|;         }
@@ -281,9 +270,7 @@ argument_list|(
 argument|eTypeLongDouble
 argument_list|)
 block|{
-name|m_data
-operator|.
-name|ieee_long_double
+name|m_scalar
 operator|=
 name|value
 block|;         }
@@ -441,7 +428,7 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -462,9 +449,12 @@ operator|=
 name|true
 expr_stmt|;
 return|return
-name|m_data
+name|m_scalar
 operator|.
-name|uint8
+name|UChar
+argument_list|(
+name|fail_value
+argument_list|)
 return|;
 block|}
 if|if
@@ -492,7 +482,7 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -508,7 +498,7 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -524,40 +514,21 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
-name|__uint128_t
+name|llvm
+operator|::
+name|APInt
 name|GetAsUInt128
 argument_list|(
-name|__uint128_t
-name|fail_value
-operator|=
-operator|~
-operator|(
-operator|(
-name|__uint128_t
-operator|)
-literal|0
-operator|)
+argument|const llvm::APInt& fail_value
 argument_list|,
-name|bool
-operator|*
-name|success_ptr
-operator|=
-name|NULL
+argument|bool *success_ptr = nullptr
 argument_list|)
-decl|const
-decl_stmt|;
-endif|#
-directive|endif
+specifier|const
+expr_stmt|;
 name|float
 name|GetAsFloat
 argument_list|(
@@ -570,7 +541,7 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -586,7 +557,7 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -604,7 +575,7 @@ name|bool
 operator|*
 name|success_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -665,9 +636,7 @@ name|m_type
 operator|=
 name|eTypeUInt8
 block|;
-name|m_data
-operator|.
-name|uint8
+name|m_scalar
 operator|=
 name|uint
 block|;         }
@@ -683,9 +652,7 @@ name|m_type
 operator|=
 name|eTypeUInt16
 block|;
-name|m_data
-operator|.
-name|uint16
+name|m_scalar
 operator|=
 name|uint
 block|;         }
@@ -701,9 +668,7 @@ name|m_type
 operator|=
 name|eTypeUInt32
 block|;
-name|m_data
-operator|.
-name|uint32
+name|m_scalar
 operator|=
 name|uint
 block|;         }
@@ -719,23 +684,17 @@ name|m_type
 operator|=
 name|eTypeUInt64
 block|;
-name|m_data
-operator|.
-name|uint64
+name|m_scalar
 operator|=
 name|uint
 block|;         }
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
 name|void
 name|operator
 operator|=
 operator|(
-name|__uint128_t
+name|llvm
+operator|::
+name|APInt
 name|uint
 operator|)
 block|{
@@ -743,14 +702,15 @@ name|m_type
 operator|=
 name|eTypeUInt128
 block|;
-name|m_data
-operator|.
-name|uint128
+name|m_scalar
 operator|=
+name|llvm
+operator|::
+name|APInt
+argument_list|(
 name|uint
+argument_list|)
 block|;         }
-endif|#
-directive|endif
 name|void
 name|operator
 operator|=
@@ -763,9 +723,7 @@ name|m_type
 operator|=
 name|eTypeFloat
 block|;
-name|m_data
-operator|.
-name|ieee_float
+name|m_scalar
 operator|=
 name|f
 block|;         }
@@ -781,9 +739,7 @@ name|m_type
 operator|=
 name|eTypeDouble
 block|;
-name|m_data
-operator|.
-name|ieee_double
+name|m_scalar
 operator|=
 name|f
 block|;         }
@@ -800,9 +756,7 @@ name|m_type
 operator|=
 name|eTypeLongDouble
 block|;
-name|m_data
-operator|.
-name|ieee_long_double
+name|m_scalar
 operator|=
 name|f
 block|;         }
@@ -816,9 +770,7 @@ name|m_type
 operator|=
 name|eTypeUInt8
 block|;
-name|m_data
-operator|.
-name|uint8
+name|m_scalar
 operator|=
 name|uint
 block|;         }
@@ -832,9 +784,7 @@ name|m_type
 operator|=
 name|eTypeUInt16
 block|;
-name|m_data
-operator|.
-name|uint16
+name|m_scalar
 operator|=
 name|uint
 block|;         }
@@ -850,9 +800,7 @@ name|m_type
 operator|=
 name|t
 block|;
-name|m_data
-operator|.
-name|uint32
+name|m_scalar
 operator|=
 name|uint
 block|;         }
@@ -868,36 +816,24 @@ name|m_type
 operator|=
 name|t
 block|;
-name|m_data
-operator|.
-name|uint64
+name|m_scalar
 operator|=
 name|uint
 block|;         }
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
 name|void
 name|SetUInt128
 argument_list|(
-argument|__uint128_t uint
+argument|llvm::APInt uint
 argument_list|)
 block|{
 name|m_type
 operator|=
 name|eTypeUInt128
 block|;
-name|m_data
-operator|.
-name|uint128
+name|m_scalar
 operator|=
 name|uint
 block|;         }
-endif|#
-directive|endif
 name|bool
 name|SetUInt
 argument_list|(
@@ -917,9 +853,7 @@ name|m_type
 operator|=
 name|eTypeFloat
 expr_stmt|;
-name|m_data
-operator|.
-name|ieee_float
+name|m_scalar
 operator|=
 name|f
 expr_stmt|;
@@ -935,9 +869,7 @@ name|m_type
 operator|=
 name|eTypeDouble
 expr_stmt|;
-name|m_data
-operator|.
-name|ieee_double
+name|m_scalar
 operator|=
 name|f
 expr_stmt|;
@@ -954,9 +886,7 @@ name|m_type
 operator|=
 name|eTypeLongDouble
 expr_stmt|;
-name|m_data
-operator|.
-name|ieee_long_double
+name|m_scalar
 operator|=
 name|f
 expr_stmt|;
@@ -1077,15 +1007,11 @@ operator|==
 name|eTypeBytes
 condition|)
 return|return
-name|m_data
-operator|.
 name|buffer
 operator|.
 name|byte_order
 return|;
 return|return
-name|lldb
-operator|::
 name|endian
 operator|::
 name|InlHostByteOrder
@@ -1117,40 +1043,8 @@ operator|::
 name|Type
 name|m_type
 expr_stmt|;
-union|union
-block|{
-name|uint8_t
-name|uint8
-decl_stmt|;
-name|uint16_t
-name|uint16
-decl_stmt|;
-name|uint32_t
-name|uint32
-decl_stmt|;
-name|uint64_t
-name|uint64
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
-name|__uint128_t
-name|uint128
-decl_stmt|;
-endif|#
-directive|endif
-name|float
-name|ieee_float
-decl_stmt|;
-name|double
-name|ieee_double
-decl_stmt|;
-name|long
-name|double
-name|ieee_long_double
+name|Scalar
+name|m_scalar
 decl_stmt|;
 struct|struct
 block|{
@@ -1172,9 +1066,6 @@ expr_stmt|;
 block|}
 name|buffer
 struct|;
-block|}
-name|m_data
-union|;
 block|}
 end_decl_stmt
 

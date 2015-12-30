@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MICmdArgValConsume.h ---------------------------------------*- C++ -*-===//
+comment|//===-- MICmdArgValConsume.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -114,18 +114,6 @@ comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 20/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -144,9 +132,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CMICmdArgValConsume
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CMICmdArgValConsume
@@ -159,9 +145,7 @@ block|;
 comment|//
 name|bool
 name|IsOk
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// Overridden:
@@ -171,9 +155,7 @@ comment|// From CMICmdArgValBase
 comment|/* dtor */
 operator|~
 name|CMICmdArgValConsume
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmdArgSet::IArg

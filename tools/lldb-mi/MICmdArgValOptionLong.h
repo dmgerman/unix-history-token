@@ -104,18 +104,6 @@ comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 16/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -131,9 +119,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CMICmdArgValOptionLong
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CMICmdArgValOptionLong
@@ -171,9 +157,7 @@ specifier|const
 name|VecArgObjPtr_t
 operator|&
 name|GetExpectedOptions
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|template
@@ -198,9 +182,7 @@ comment|// From CMICmdArgValBase
 comment|/* dtor */
 operator|~
 name|CMICmdArgValOptionLong
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmdArgSet::IArg
@@ -246,9 +228,7 @@ name|private
 operator|:
 name|void
 name|Destroy
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Attributes:
 name|private

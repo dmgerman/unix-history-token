@@ -70,11 +70,57 @@ argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
 empty_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Attach to a process by name.
+comment|///
+comment|/// This function implies that a future call to SBTarget::Attach(...)
+comment|/// will be synchronous.
+comment|///
+comment|/// @param[in] path
+comment|///     A full or partial name for the process to attach to.
+comment|///
+comment|/// @param[in] wait_for
+comment|///     If \b false, attach to an existing process whose name matches.
+comment|///     If \b true, then wait for the next process whose name matches.
+comment|//------------------------------------------------------------------
 name|SBAttachInfo
 argument_list|(
 argument|const char *path
 argument_list|,
 argument|bool wait_for
+argument_list|)
+empty_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Attach to a process by name.
+comment|///
+comment|/// Future calls to SBTarget::Attach(...) will be synchronous or
+comment|/// asynchronous depending on the \a async argument.
+comment|///
+comment|/// @param[in] path
+comment|///     A full or partial name for the process to attach to.
+comment|///
+comment|/// @param[in] wait_for
+comment|///     If \b false, attach to an existing process whose name matches.
+comment|///     If \b true, then wait for the next process whose name matches.
+comment|///
+comment|/// @param[in] async
+comment|///     If \b false, then the SBTarget::Attach(...) call will be a
+comment|///     synchronous call with no way to cancel the attach in
+comment|///     progress.
+comment|///     If \b true, then the SBTarget::Attach(...) function will
+comment|///     return immediately and clients are expected to wait for a
+comment|///     process eStateStopped event if a suitable process is
+comment|///     eventually found. If the client wants to cancel the event,
+comment|///     SBProcess::Stop() can be called and an eStateExited process
+comment|///     event will be delivered.
+comment|//------------------------------------------------------------------
+name|SBAttachInfo
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|bool wait_for
+argument_list|,
+argument|bool async
 argument_list|)
 empty_stmt|;
 name|SBAttachInfo
@@ -137,11 +183,54 @@ name|bool
 name|GetWaitForLaunch
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Set attach by process name settings.
+comment|///
+comment|/// Designed to be used after a call to SBAttachInfo::SetExecutable().
+comment|/// This function implies that a call to SBTarget::Attach(...) will
+comment|/// be synchronous.
+comment|///
+comment|/// @param[in] wait_for
+comment|///     If \b false, attach to an existing process whose name matches.
+comment|///     If \b true, then wait for the next process whose name matches.
+comment|//------------------------------------------------------------------
 name|void
 name|SetWaitForLaunch
 parameter_list|(
 name|bool
 name|b
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Set attach by process name settings.
+comment|///
+comment|/// Designed to be used after a call to SBAttachInfo::SetExecutable().
+comment|/// Future calls to SBTarget::Attach(...) will be synchronous or
+comment|/// asynchronous depending on the \a async argument.
+comment|///
+comment|/// @param[in] wait_for
+comment|///     If \b false, attach to an existing process whose name matches.
+comment|///     If \b true, then wait for the next process whose name matches.
+comment|///
+comment|/// @param[in] async
+comment|///     If \b false, then the SBTarget::Attach(...) call will be a
+comment|///     synchronous call with no way to cancel the attach in
+comment|///     progress.
+comment|///     If \b true, then the SBTarget::Attach(...) function will
+comment|///     return immediately and clients are expected to wait for a
+comment|///     process eStateStopped event if a suitable process is
+comment|///     eventually found. If the client wants to cancel the event,
+comment|///     SBProcess::Stop() can be called and an eStateExited process
+comment|///     event will be delivered.
+comment|//------------------------------------------------------------------
+name|void
+name|SetWaitForLaunch
+parameter_list|(
+name|bool
+name|b
+parameter_list|,
+name|bool
+name|async
 parameter_list|)
 function_decl|;
 name|bool

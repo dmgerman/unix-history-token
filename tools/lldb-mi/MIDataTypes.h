@@ -154,57 +154,6 @@ parameter_list|)
 value|(void) x;
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_WIN32
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MI_NO_INITIALIZE_VTABLE
-value|__declspec(novtable)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MI_FORCE_INLINE
-value|__forceinline
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MI_NO_INITIALIZE_VTABLE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MI_FORCE_INLINE
-value|inline
-end_define
-
-begin_comment
-comment|// __attribute__( ( always_inline ) )
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// _WIN32
-end_comment
-
 begin_comment
 comment|// Portability issues
 end_comment
@@ -352,22 +301,6 @@ end_typedef
 
 begin_comment
 comment|// 64bit unsigned integer.
-end_comment
-
-begin_comment
-comment|// using namespace std; // Better to put this or std:: at translation units scope.
-end_comment
-
-begin_comment
-comment|//--------------------------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// Common routines:
-end_comment
-
-begin_comment
-comment|//--------------------------------------------------------------------------------------
 end_comment
 
 end_unit

@@ -120,18 +120,6 @@ comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 16/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -222,9 +210,7 @@ end_comment
 
 begin_expr_stmt
 name|CMICmdArgValListBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -288,9 +274,7 @@ end_comment
 begin_expr_stmt
 operator|~
 name|CMICmdArgValListBase
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 end_expr_stmt
@@ -366,9 +350,7 @@ end_label
 begin_function_decl
 name|void
 name|Destroy
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 

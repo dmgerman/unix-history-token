@@ -54,7 +54,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unordered_set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -211,21 +229,6 @@ name|EventData
 block|{
 name|public
 operator|:
-specifier|static
-specifier|const
-name|ConstString
-operator|&
-name|GetFlavorString
-argument_list|()
-block|;
-name|virtual
-specifier|const
-name|ConstString
-operator|&
-name|GetFlavor
-argument_list|()
-specifier|const
-block|;
 name|BreakpointEventData
 argument_list|(
 argument|lldb::BreakpointEventType sub_type
@@ -233,10 +236,25 @@ argument_list|,
 argument|const lldb::BreakpointSP&new_breakpoint_sp
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|BreakpointEventData
 argument_list|()
+name|override
+block|;
+specifier|static
+specifier|const
+name|ConstString
+operator|&
+name|GetFlavorString
+argument_list|()
+block|;
+specifier|const
+name|ConstString
+operator|&
+name|GetFlavor
+argument_list|()
+specifier|const
+name|override
 block|;
 name|lldb
 operator|::
@@ -261,13 +279,13 @@ return|return
 name|m_locations
 return|;
 block|}
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|lldb
@@ -362,16 +380,18 @@ name|virtual
 operator|~
 name|BreakpointPrecondition
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|bool
 name|EvaluatePrecondition
-argument_list|(
+parameter_list|(
 name|StoppointCallbackContext
-operator|&
+modifier|&
 name|context
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|virtual
 name|Error
 name|ConfigurePrecondition
@@ -383,7 +403,7 @@ parameter_list|)
 function_decl|;
 name|virtual
 name|void
-name|DescribePrecondition
+name|GetDescription
 argument_list|(
 name|Stream
 operator|&
@@ -416,6 +436,7 @@ comment|//------------------------------------------------------------------
 operator|~
 name|Breakpoint
 argument_list|()
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Methods
@@ -435,12 +456,13 @@ comment|/// Standard "Dump" method.  At present it does nothing.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// The next set of methods provide ways to tell the breakpoint to update
 comment|// it's location list - usually done when modules appear or disappear.
@@ -588,7 +610,7 @@ name|bool
 operator|*
 name|new_location
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -598,7 +620,7 @@ comment|/// @param[in] addr
 comment|///    The Address specifying the location.
 comment|/// @return
 comment|///    Returns a shared pointer to the location at \a addr.  The pointer
-comment|///    in the shared pointer will be NULL if there is no location at that address.
+comment|///    in the shared pointer will be nullptr if there is no location at that address.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -638,7 +660,7 @@ comment|/// @param[in] bp_loc_id
 comment|///    The ID specifying the location.
 comment|/// @return
 comment|///    Returns a shared pointer to the location with ID \a bp_loc_id.  The pointer
-comment|///    in the shared pointer will be NULL if there is no location with that ID.
+comment|///    in the shared pointer will be nullptr if there is no location with that ID.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -656,7 +678,7 @@ comment|///    The location index.
 comment|///
 comment|/// @return
 comment|///     Returns a shared pointer to the location with index \a
-comment|///     index. The shared pointer might contain NULL if \a index is
+comment|///     index. The shared pointer might contain nullptr if \a index is
 comment|///     greater than then number of actual locations.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -699,11 +721,12 @@ comment|/// If \a enable is \b true, enable the breakpoint, if \b false disable 
 comment|//------------------------------------------------------------------
 name|void
 name|SetEnabled
-parameter_list|(
+argument_list|(
 name|bool
 name|enable
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Check the Enable/Disable state.
 comment|/// @return
@@ -711,8 +734,9 @@ comment|///     \b true if the breakpoint is enabled, \b false if disabled.
 comment|//------------------------------------------------------------------
 name|bool
 name|IsEnabled
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Set the breakpoint to ignore the next \a count breakpoint hits.
 comment|/// @param[in] count
@@ -895,7 +919,7 @@ comment|/// Set the breakpoint's condition.
 comment|///
 comment|/// @param[in] condition
 comment|///    The condition expression to evaluate when the breakpoint is hit.
-comment|///    Pass in NULL to clear the condition.
+comment|///    Pass in nullptr to clear the condition.
 comment|//------------------------------------------------------------------
 name|void
 name|SetCondition
@@ -910,7 +934,7 @@ comment|//------------------------------------------------------------------
 comment|/// Return a pointer to the text of the condition expression.
 comment|///
 comment|/// @return
-comment|///    A pointer to the condition expression text, or NULL if no
+comment|///    A pointer to the condition expression text, or nullptr if no
 comment|//     condition has been set.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -1006,7 +1030,7 @@ comment|//------------------------------------------------------------------
 comment|/// Return the "kind" description for a breakpoint.
 comment|///
 comment|/// @return
-comment|///     The breakpoint kind, or NULL if none is set.
+comment|///     The breakpoint kind, or nullptr if none is set.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char

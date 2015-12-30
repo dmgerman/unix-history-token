@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/CharUnits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/RangeMap.h"
 end_include
 
@@ -87,31 +81,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
-name|DWARFCompileUnit
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
 name|DWARFDebugAranges
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|class
-name|DWARFDebugInfoEntry
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
 name|DWARFDeclContext
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
-name|DebugMapModule
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +211,13 @@ argument_list|)
 name|override
 block|;
 name|bool
+name|ParseCompileUnitDebugMacros
+argument_list|(
+argument|const lldb_private::SymbolContext& sc
+argument_list|)
+name|override
+block|;
+name|bool
 name|ParseCompileUnitSupportFiles
 argument_list|(
 argument|const lldb_private::SymbolContext& sc
@@ -283,32 +266,35 @@ argument|lldb::user_id_t type_uid
 argument_list|)
 name|override
 block|;
-name|clang
+name|lldb_private
 operator|::
-name|DeclContext
-operator|*
-name|GetClangDeclContextContainingTypeUID
+name|CompilerDeclContext
+name|GetDeclContextForUID
 argument_list|(
-argument|lldb::user_id_t type_uid
+argument|lldb::user_id_t uid
 argument_list|)
 name|override
 block|;
-name|clang
+name|lldb_private
 operator|::
-name|DeclContext
-operator|*
-name|GetClangDeclContextForTypeUID
+name|CompilerDeclContext
+name|GetDeclContextContainingUID
 argument_list|(
-argument|const lldb_private::SymbolContext&sc
-argument_list|,
-argument|lldb::user_id_t type_uid
+argument|lldb::user_id_t uid
+argument_list|)
+name|override
+block|;
+name|void
+name|ParseDeclsForContext
+argument_list|(
+argument|lldb_private::CompilerDeclContext decl_ctx
 argument_list|)
 name|override
 block|;
 name|bool
-name|ResolveClangOpaqueTypeDefinition
+name|CompleteType
 argument_list|(
-argument|lldb_private::ClangASTType& clang_type
+argument|lldb_private::CompilerType& compiler_type
 argument_list|)
 name|override
 block|;
@@ -343,7 +329,7 @@ name|FindGlobalVariables
 argument_list|(
 argument|const lldb_private::ConstString&name
 argument_list|,
-argument|const lldb_private::ClangNamespaceDecl *namespace_decl
+argument|const lldb_private::CompilerDeclContext *parent_decl_ctx
 argument_list|,
 argument|bool append
 argument_list|,
@@ -371,7 +357,7 @@ name|FindFunctions
 argument_list|(
 argument|const lldb_private::ConstString&name
 argument_list|,
-argument|const lldb_private::ClangNamespaceDecl *namespace_decl
+argument|const lldb_private::CompilerDeclContext *parent_decl_ctx
 argument_list|,
 argument|uint32_t name_type_mask
 argument_list|,
@@ -403,26 +389,26 @@ argument|const lldb_private::SymbolContext& sc
 argument_list|,
 argument|const lldb_private::ConstString&name
 argument_list|,
-argument|const lldb_private::ClangNamespaceDecl *namespace_decl
+argument|const lldb_private::CompilerDeclContext *parent_decl_ctx
 argument_list|,
 argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|lldb_private::TypeList& types
+argument|lldb_private::TypeMap& types
 argument_list|)
 name|override
 block|;
 name|lldb_private
 operator|::
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 name|FindNamespace
 argument_list|(
 argument|const lldb_private::SymbolContext& sc
 argument_list|,
 argument|const lldb_private::ConstString&name
 argument_list|,
-argument|const lldb_private::ClangNamespaceDecl *parent_namespace_decl
+argument|const lldb_private::CompilerDeclContext *parent_decl_ctx
 argument_list|)
 name|override
 block|;
@@ -436,110 +422,6 @@ argument_list|,
 argument|lldb_private::TypeList&type_list
 argument_list|)
 name|override
-block|;
-comment|//------------------------------------------------------------------
-comment|// ClangASTContext callbacks for external source lookups.
-comment|//------------------------------------------------------------------
-specifier|static
-name|void
-name|CompleteTagDecl
-argument_list|(
-name|void
-operator|*
-name|baton
-argument_list|,
-name|clang
-operator|::
-name|TagDecl
-operator|*
-argument_list|)
-block|;
-specifier|static
-name|void
-name|CompleteObjCInterfaceDecl
-argument_list|(
-name|void
-operator|*
-name|baton
-argument_list|,
-name|clang
-operator|::
-name|ObjCInterfaceDecl
-operator|*
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|LayoutRecordType
-argument_list|(
-name|void
-operator|*
-name|baton
-argument_list|,
-specifier|const
-name|clang
-operator|::
-name|RecordDecl
-operator|*
-name|record_decl
-argument_list|,
-name|uint64_t
-operator|&
-name|size
-argument_list|,
-name|uint64_t
-operator|&
-name|alignment
-argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|clang
-operator|::
-name|FieldDecl
-operator|*
-argument_list|,
-name|uint64_t
-operator|>
-operator|&
-name|field_offsets
-argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|clang
-operator|::
-name|CXXRecordDecl
-operator|*
-argument_list|,
-name|clang
-operator|::
-name|CharUnits
-operator|>
-operator|&
-name|base_offsets
-argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|clang
-operator|::
-name|CXXRecordDecl
-operator|*
-argument_list|,
-name|clang
-operator|::
-name|CharUnits
-operator|>
-operator|&
-name|vbase_offsets
-argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
@@ -582,6 +464,10 @@ block|;
 name|friend
 name|class
 name|DebugMapModule
+block|;
+name|friend
+name|class
+name|DWARFASTParserClang
 block|;     struct
 name|OSOInfo
 block|{
@@ -1119,9 +1005,9 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 operator|*
-name|namespace_decl
+name|parent_decl_ctx
 argument_list|,
 specifier|const
 name|std
@@ -1219,7 +1105,7 @@ operator|::
 name|TypeSP
 name|FindCompleteObjCDefinitionTypeForDIE
 argument_list|(
-argument|const DWARFDebugInfoEntry *die
+argument|const DWARFDIE&die
 argument_list|,
 argument|const lldb_private::ConstString&type_name
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterInfos_i386.h -----------------------------------*- C++ -*-===//
+comment|//===-- RegisterInfos_i386.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -28,7 +28,25 @@ comment|//
 end_comment
 
 begin_comment
-comment|//===---------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
 end_comment
 
 begin_include
@@ -37,11 +55,9 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -207,7 +223,7 @@ value|{ #name, NULL, FPR_SIZE(reg), FPR_OFFSET(reg), eEncodingUint,   \       eF
 end_define
 
 begin_comment
-comment|// RegisterKind: GCC, DWARF, Generic, GDB, LLDB
+comment|// RegisterKind: EHFrame, DWARF, Generic, Process Plugin, LLDB
 end_comment
 
 begin_define
@@ -220,7 +236,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, FP_SIZE, LLVM_EXTENSION FPR_OFFSET(stmm[i]),    \       eEncodingVector, eFormatVectorOfUInt8,                       \       { gcc_st##i##_i386, dwarf_st##i##_i386, LLDB_INVALID_REGNUM, gdb_st##i##_i386, lldb_st##i##_i386 }, \       NULL, NULL }
+value|{ #reg#i, NULL, FP_SIZE, LLVM_EXTENSION FPR_OFFSET(stmm[i]),    \       eEncodingVector, eFormatVectorOfUInt8,                       \       { ehframe_st##i##_i386, dwarf_st##i##_i386, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_st##i##_i386 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -233,7 +249,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, sizeof(uint64_t), LLVM_EXTENSION FPR_OFFSET(stmm[i]),   \       eEncodingUint, eFormatHex,                                            \       { gcc_mm##i##_i386, dwarf_mm##i##_i386, LLDB_INVALID_REGNUM, gdb_mm##i##_i386, lldb_mm##i##_i386 }, \       NULL, NULL }
+value|{ #reg#i, NULL, sizeof(uint64_t), LLVM_EXTENSION FPR_OFFSET(stmm[i]),   \       eEncodingUint, eFormatHex,                                            \       { ehframe_mm##i##_i386, dwarf_mm##i##_i386, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_mm##i##_i386 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -246,7 +262,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, XMM_SIZE, LLVM_EXTENSION FPR_OFFSET(reg[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { gcc_##reg##i##_i386, dwarf_##reg##i##_i386, LLDB_INVALID_REGNUM, gdb_##reg##i##_i386, lldb_##reg##i##_i386}, \       NULL, NULL }
+value|{ #reg#i, NULL, XMM_SIZE, LLVM_EXTENSION FPR_OFFSET(reg[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { ehframe_##reg##i##_i386, dwarf_##reg##i##_i386, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##reg##i##_i386}, \       NULL, NULL }
 end_define
 
 begin_comment
@@ -263,7 +279,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(i),        \       eEncodingVector, eFormatVectorOfUInt8,                       \       { LLDB_INVALID_REGNUM, dwarf_xmm##i##_i386, LLDB_INVALID_REGNUM, gdb_##reg##i##h_i386, lldb_##reg##i##_i386 }, \       NULL, NULL }
+value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(i),        \       eEncodingVector, eFormatVectorOfUInt8,                       \       { LLDB_INVALID_REGNUM, dwarf_xmm##i##_i386, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##reg##i##_i386 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -330,90 +346,90 @@ name|DEFINE_GPR
 argument_list|(
 name|eax
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
-name|gcc_eax_i386
+name|ehframe_eax_i386
 argument_list|,
 name|dwarf_eax_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_eax_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|ebx
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
-name|gcc_ebx_i386
+name|ehframe_ebx_i386
 argument_list|,
 name|dwarf_ebx_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_ebx_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|ecx
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
-name|gcc_ecx_i386
+name|ehframe_ecx_i386
 argument_list|,
 name|dwarf_ecx_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_ecx_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|edx
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
-name|gcc_edx_i386
+name|ehframe_edx_i386
 argument_list|,
 name|dwarf_edx_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_edx_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|edi
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
-name|gcc_edi_i386
+name|ehframe_edi_i386
 argument_list|,
 name|dwarf_edi_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_edi_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|esi
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
-name|gcc_esi_i386
+name|ehframe_esi_i386
 argument_list|,
 name|dwarf_esi_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_esi_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -422,13 +438,13 @@ name|ebp
 argument_list|,
 literal|"fp"
 argument_list|,
-name|gcc_ebp_i386
+name|ehframe_ebp_i386
 argument_list|,
 name|dwarf_ebp_i386
 argument_list|,
 name|LLDB_REGNUM_GENERIC_FP
 argument_list|,
-name|gdb_ebp_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -437,13 +453,13 @@ name|esp
 argument_list|,
 literal|"sp"
 argument_list|,
-name|gcc_esp_i386
+name|ehframe_esp_i386
 argument_list|,
 name|dwarf_esp_i386
 argument_list|,
 name|LLDB_REGNUM_GENERIC_SP
 argument_list|,
-name|gdb_esp_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -452,13 +468,13 @@ name|eip
 argument_list|,
 literal|"pc"
 argument_list|,
-name|gcc_eip_i386
+name|ehframe_eip_i386
 argument_list|,
 name|dwarf_eip_i386
 argument_list|,
 name|LLDB_REGNUM_GENERIC_PC
 argument_list|,
-name|gdb_eip_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -467,20 +483,20 @@ name|eflags
 argument_list|,
 literal|"flags"
 argument_list|,
-name|gcc_eflags_i386
+name|ehframe_eflags_i386
 argument_list|,
 name|dwarf_eflags_i386
 argument_list|,
 name|LLDB_REGNUM_GENERIC_FLAGS
 argument_list|,
-name|gdb_eflags_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|cs
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
@@ -488,14 +504,14 @@ name|dwarf_cs_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_cs_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|fs
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
@@ -503,14 +519,14 @@ name|dwarf_fs_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fs_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|gs
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
@@ -518,14 +534,14 @@ name|dwarf_gs_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_gs_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|ss
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
@@ -533,14 +549,14 @@ name|dwarf_ss_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_ss_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|ds
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
@@ -548,14 +564,14 @@ name|dwarf_ds_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_ds_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
 argument_list|(
 name|es
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
@@ -563,7 +579,7 @@ name|dwarf_es_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_es_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR_PSEUDO_16
@@ -691,7 +707,7 @@ name|dwarf_fctrl_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fctrl_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -706,7 +722,7 @@ name|dwarf_fstat_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fstat_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -721,7 +737,7 @@ name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_ftag_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -736,7 +752,7 @@ name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fop_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -755,7 +771,7 @@ name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fiseg_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -774,7 +790,7 @@ name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fioff_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -793,7 +809,7 @@ name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_foseg_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -812,7 +828,7 @@ name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_fooff_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -827,7 +843,7 @@ name|dwarf_mxcsr_i386
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|,
-name|gdb_mxcsr_i386
+name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR

@@ -43,6 +43,14 @@ directive|define
 name|utility_SharingPtr_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -94,6 +102,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_comment
 comment|//#define ENABLE_SP_LOGGING 1 // DON'T CHECK THIS LINE IN UNLESS COMMENTED OUT
@@ -160,6 +176,39 @@ name|shared_count
 operator|&
 operator|)
 decl_stmt|;
+name|public
+label|:
+name|explicit
+name|shared_count
+argument_list|(
+argument|long refs =
+literal|0
+argument_list|)
+block|:
+name|shared_owners_
+argument_list|(
+argument|refs
+argument_list|)
+block|{}
+name|void
+name|add_shared
+parameter_list|()
+function_decl|;
+name|void
+name|release_shared
+parameter_list|()
+function_decl|;
+name|long
+name|use_count
+argument_list|()
+specifier|const
+block|{
+return|return
+name|shared_owners_
+operator|+
+literal|1
+return|;
+block|}
 name|protected
 label|:
 ifdef|#
@@ -194,39 +243,6 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-name|public
-label|:
-name|explicit
-name|shared_count
-argument_list|(
-argument|long refs =
-literal|0
-argument_list|)
-block|:
-name|shared_owners_
-argument_list|(
-argument|refs
-argument_list|)
-block|{}
-name|void
-name|add_shared
-parameter_list|()
-function_decl|;
-name|void
-name|release_shared
-parameter_list|()
-function_decl|;
-name|long
-name|use_count
-argument_list|()
-specifier|const
-block|{
-return|return
-name|shared_owners_
-operator|+
-literal|1
-return|;
-block|}
 block|}
 empty_stmt|;
 name|template
@@ -257,10 +273,10 @@ argument_list|)
 block|{}
 name|private
 operator|:
-name|virtual
 name|void
 name|on_zero_shared
 argument_list|()
+name|override
 block|;
 comment|// Outlaw copy constructor and assignment operator to keep effective C++
 comment|// warnings down to a minimum
@@ -498,10 +514,10 @@ argument_list|)
 block|{}
 name|private
 operator|:
-name|virtual
 name|void
 name|on_zero_shared
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -532,7 +548,7 @@ name|on_zero_shared
 argument_list|()
 block|{ }
 block|}
-comment|// namespace
+comment|// namespace imp
 name|template
 operator|<
 name|class
@@ -793,7 +809,7 @@ block|{
 return|return
 name|cntrl_
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|operator
@@ -995,12 +1011,12 @@ argument_list|()
 operator|:
 name|ptr_
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|cntrl_
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|template
@@ -1023,12 +1039,12 @@ argument_list|)
 operator|:
 name|ptr_
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|cntrl_
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|template
@@ -1060,7 +1076,7 @@ argument_list|)
 operator|,
 name|cntrl_
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|std
@@ -2636,29 +2652,6 @@ begin_comment
 comment|//          true  means decrement is about to happen
 end_comment
 
-begin_label
-name|private
-label|:
-end_label
-
-begin_decl_stmt
-name|Callback
-name|cb_
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-modifier|*
-name|baton_
-decl_stmt|;
-end_decl_stmt
-
-begin_label
-name|public
-label|:
-end_label
-
 begin_expr_stmt
 name|LoggingSharingPtr
 argument_list|()
@@ -2670,7 +2663,7 @@ argument_list|)
 operator|,
 name|baton_
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|LoggingSharingPtr
@@ -2732,7 +2725,7 @@ argument_list|)
 operator|,
 name|baton_
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|template
@@ -3045,6 +3038,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|Callback
+name|cb_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|baton_
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 unit|};
 name|template
@@ -3260,16 +3271,18 @@ argument|-
 literal|1
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|ReferenceCountedBaseVirtual
 argument_list|()
-block|{     }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|void
 name|on_zero_shared
 argument_list|()
-block|;      }
+name|override
+block|; }
 expr_stmt|;
 end_expr_stmt
 
@@ -3478,7 +3491,7 @@ comment|// that are for development, we NULL out the pointers to catch potential
 comment|// issues.
 name|ptr_
 operator|=
-name|NULL
+name|nullptr
 block|;
 endif|#
 directive|endif
@@ -3609,7 +3622,7 @@ name|T
 modifier|*
 name|ptr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|IntrusiveSharingPtr
@@ -3739,7 +3752,7 @@ name|track_sp
 argument_list|(
 name|this
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|ptr_
 operator|->

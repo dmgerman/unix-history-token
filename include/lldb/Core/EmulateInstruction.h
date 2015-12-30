@@ -85,246 +85,69 @@ directive|include
 file|"lldb/Core/RegisterValue.h"
 end_include
 
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// @class EmulateInstruction EmulateInstruction.h "lldb/Core/EmulateInstruction.h"
-end_comment
-
-begin_comment
-comment|/// @brief A class that allows emulation of CPU opcodes.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This class is a plug-in interface that is accessed through the
-end_comment
-
-begin_comment
-comment|/// standard static FindPlugin function call in the EmulateInstruction
-end_comment
-
-begin_comment
-comment|/// class. The FindPlugin takes a target triple and returns a new object
-end_comment
-
-begin_comment
-comment|/// if there is a plug-in that supports the architecture and OS. Four
-end_comment
-
-begin_comment
-comment|/// callbacks and a baton are provided. The four callbacks are read
-end_comment
-
-begin_comment
-comment|/// register, write register, read memory and write memory.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This class is currently designed for these main use cases:
-end_comment
-
-begin_comment
-comment|/// - Auto generation of Call Frame Information (CFI) from assembly code
-end_comment
-
-begin_comment
-comment|/// - Predicting single step breakpoint locations
-end_comment
-
-begin_comment
-comment|/// - Emulating instructions for breakpoint traps
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Objects can be asked to read an instruction which will cause a call
-end_comment
-
-begin_comment
-comment|/// to the read register callback to get the PC, followed by a read
-end_comment
-
-begin_comment
-comment|/// memory call to read the opcode. If ReadInstruction () returns true,
-end_comment
-
-begin_comment
-comment|/// then a call to EmulateInstruction::EvaluateInstruction () can be
-end_comment
-
-begin_comment
-comment|/// made. At this point the EmulateInstruction subclass will use all of
-end_comment
-
-begin_comment
-comment|/// the callbacks to emulate an instruction.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Clients that provide the callbacks can either do the read/write
-end_comment
-
-begin_comment
-comment|/// registers/memory to actually emulate the instruction on a real or
-end_comment
-
-begin_comment
-comment|/// virtual CPU, or watch for the EmulateInstruction::Context which
-end_comment
-
-begin_comment
-comment|/// is context for the read/write register/memory which explains why
-end_comment
-
-begin_comment
-comment|/// the callback is being called. Examples of a context are:
-end_comment
-
-begin_comment
-comment|/// "pushing register 3 onto the stack at offset -12", or "adjusting
-end_comment
-
-begin_comment
-comment|/// stack pointer by -16". This extra context allows the generation of
-end_comment
-
-begin_comment
-comment|/// CFI information from assembly code without having to actually do
-end_comment
-
-begin_comment
-comment|/// the read/write register/memory.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Clients must be prepared that not all instructions for an
-end_comment
-
-begin_comment
-comment|/// Instruction Set Architecture (ISA) will be emulated.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Subclasses at the very least should implement the instructions that
-end_comment
-
-begin_comment
-comment|/// save and restore registers onto the stack and adjustment to the stack
-end_comment
-
-begin_comment
-comment|/// pointer. By just implementing a few instructions for an ISA that are
-end_comment
-
-begin_comment
-comment|/// the typical prologue opcodes, you can then generate CFI using a
-end_comment
-
-begin_comment
-comment|/// class that will soon be available.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Implementing all of the instructions that affect the PC can then
-end_comment
-
-begin_comment
-comment|/// allow single step prediction support.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Implementing all of the instructions allows for emulation of opcodes
-end_comment
-
-begin_comment
-comment|/// for breakpoint traps and will pave the way for "thread centric"
-end_comment
-
-begin_comment
-comment|/// debugging. The current debugging model is "process centric" where
-end_comment
-
-begin_comment
-comment|/// all threads must be stopped when any thread is stopped; when
-end_comment
-
-begin_comment
-comment|/// hitting software breakpoints we must disable the breakpoint by
-end_comment
-
-begin_comment
-comment|/// restoring the original breakpoint opcode, single stepping and
-end_comment
-
-begin_comment
-comment|/// restoring the breakpoint trap. If all threads were allowed to run
-end_comment
-
-begin_comment
-comment|/// then other threads could miss the breakpoint.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This class centralizes the code that usually is done in separate
-end_comment
-
-begin_comment
-comment|/// code paths in a debugger (single step prediction, finding save
-end_comment
-
-begin_comment
-comment|/// restore locations of registers for unwinding stack frame variables)
-end_comment
-
-begin_comment
-comment|/// and emulating the instruction is just a bonus.
-end_comment
-
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+comment|//----------------------------------------------------------------------
+comment|/// @class EmulateInstruction EmulateInstruction.h "lldb/Core/EmulateInstruction.h"
+comment|/// @brief A class that allows emulation of CPU opcodes.
+comment|///
+comment|/// This class is a plug-in interface that is accessed through the
+comment|/// standard static FindPlugin function call in the EmulateInstruction
+comment|/// class. The FindPlugin takes a target triple and returns a new object
+comment|/// if there is a plug-in that supports the architecture and OS. Four
+comment|/// callbacks and a baton are provided. The four callbacks are read
+comment|/// register, write register, read memory and write memory.
+comment|///
+comment|/// This class is currently designed for these main use cases:
+comment|/// - Auto generation of Call Frame Information (CFI) from assembly code
+comment|/// - Predicting single step breakpoint locations
+comment|/// - Emulating instructions for breakpoint traps
+comment|///
+comment|/// Objects can be asked to read an instruction which will cause a call
+comment|/// to the read register callback to get the PC, followed by a read
+comment|/// memory call to read the opcode. If ReadInstruction () returns true,
+comment|/// then a call to EmulateInstruction::EvaluateInstruction () can be
+comment|/// made. At this point the EmulateInstruction subclass will use all of
+comment|/// the callbacks to emulate an instruction.
+comment|///
+comment|/// Clients that provide the callbacks can either do the read/write
+comment|/// registers/memory to actually emulate the instruction on a real or
+comment|/// virtual CPU, or watch for the EmulateInstruction::Context which
+comment|/// is context for the read/write register/memory which explains why
+comment|/// the callback is being called. Examples of a context are:
+comment|/// "pushing register 3 onto the stack at offset -12", or "adjusting
+comment|/// stack pointer by -16". This extra context allows the generation of
+comment|/// CFI information from assembly code without having to actually do
+comment|/// the read/write register/memory.
+comment|///
+comment|/// Clients must be prepared that not all instructions for an
+comment|/// Instruction Set Architecture (ISA) will be emulated.
+comment|///
+comment|/// Subclasses at the very least should implement the instructions that
+comment|/// save and restore registers onto the stack and adjustment to the stack
+comment|/// pointer. By just implementing a few instructions for an ISA that are
+comment|/// the typical prologue opcodes, you can then generate CFI using a
+comment|/// class that will soon be available.
+comment|///
+comment|/// Implementing all of the instructions that affect the PC can then
+comment|/// allow single step prediction support.
+comment|///
+comment|/// Implementing all of the instructions allows for emulation of opcodes
+comment|/// for breakpoint traps and will pave the way for "thread centric"
+comment|/// debugging. The current debugging model is "process centric" where
+comment|/// all threads must be stopped when any thread is stopped; when
+comment|/// hitting software breakpoints we must disable the breakpoint by
+comment|/// restoring the original breakpoint opcode, single stepping and
+comment|/// restoring the breakpoint trap. If all threads were allowed to run
+comment|/// then other threads could miss the breakpoint.
+comment|///
+comment|/// This class centralizes the code that usually is done in separate
+comment|/// code paths in a debugger (single step prediction, finding save
+comment|/// restore locations of registers for unwinding stack frame variables)
+comment|/// and emulating the instruction is just a bonus.
+comment|//----------------------------------------------------------------------
 name|class
 name|EmulateInstruction
 range|:
@@ -577,7 +400,7 @@ name|ISAAndImmediateSigned
 block|;
 name|uint32_t
 name|isa
-block|;                                  }
+block|;         }
 name|info
 block|;
 name|Context
@@ -1052,23 +875,26 @@ operator|&
 name|arch
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|EmulateInstruction
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Mandatory overrides
 comment|//----------------------------------------------------------------------
 name|virtual
 name|bool
 name|SupportsEmulatingInstructionsOfType
-argument_list|(
-argument|InstructionType inst_type
-argument_list|)
-operator|=
+parameter_list|(
+name|InstructionType
+name|inst_type
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|bool
 name|SetTargetTriple
@@ -1098,6 +924,15 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|bool
+name|IsInstructionConditional
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 name|virtual
 name|bool
 name|TestEmulation

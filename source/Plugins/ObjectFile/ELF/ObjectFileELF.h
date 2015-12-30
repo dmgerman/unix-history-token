@@ -43,17 +43,33 @@ directive|define
 name|liblldb_ObjectFileELF_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdint.h>
 end_include
 
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -162,6 +178,33 @@ operator|*
 name|offset
 argument_list|)
 expr_stmt|;
+name|size_t
+name|GetByteSize
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|12
+operator|+
+name|llvm
+operator|::
+name|RoundUpToAlignment
+argument_list|(
+name|n_namesz
+argument_list|,
+literal|4
+argument_list|)
+operator|+
+name|llvm
+operator|::
+name|RoundUpToAlignment
+argument_list|(
+name|n_descsz
+argument_list|,
+literal|4
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 end_struct
@@ -201,6 +244,11 @@ name|ObjectFile
 block|{
 name|public
 operator|:
+operator|~
+name|ObjectFileELF
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -310,11 +358,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// ObjectFile Protocol.
 comment|//------------------------------------------------------------------
-name|virtual
-operator|~
-name|ObjectFileELF
-argument_list|()
-block|;
 name|bool
 name|ParseHeader
 argument_list|()
@@ -1606,7 +1649,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_ObjectFileELF_h_
+comment|// liblldb_ObjectFileELF_h_
 end_comment
 
 end_unit

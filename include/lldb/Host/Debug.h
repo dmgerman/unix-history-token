@@ -43,11 +43,27 @@ directive|define
 name|liblldb_Debug_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -169,7 +185,9 @@ block|}
 operator|~
 name|ResumeActionList
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|bool
 name|IsEmpty
 argument_list|()
@@ -359,7 +377,7 @@ name|false
 argument_list|)
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|size_t
@@ -441,7 +459,7 @@ argument_list|,
 name|true
 argument_list|)
 operator|==
-name|NULL
+name|nullptr
 condition|)
 block|{
 comment|// There isn't a default action so we do need to set it.
@@ -656,7 +674,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_Debug_h_
+comment|// liblldb_Debug_h_
 end_comment
 
 end_unit

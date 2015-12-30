@@ -34,23 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_DBRegex_h_
+name|liblldb_RegularExpression_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_DBRegex_h_
+name|liblldb_RegularExpression_h_
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
 
 begin_ifdef
 ifdef|#
@@ -267,6 +258,10 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace llvm
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -376,21 +371,20 @@ modifier|*
 name|GetData
 parameter_list|()
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|m_matches
 operator|.
 name|empty
 argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-return|return
+condition|?
+name|nullptr
+else|:
 name|m_matches
 operator|.
 name|data
 argument_list|()
+operator|)
 return|;
 block|}
 name|bool
@@ -556,7 +550,7 @@ comment|///
 comment|/// @param[in] match
 comment|///     A pointer to a RegularExpression::Match structure that was
 comment|///     properly initialized with the desired number of maximum
-comment|///     matches, or NULL if no parenthesized matching is needed.
+comment|///     matches, or nullptr if no parenthesized matching is needed.
 comment|///
 comment|/// @return
 comment|///     \b true if \a string matches the compiled regular
@@ -574,7 +568,7 @@ name|Match
 operator|*
 name|match
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -702,16 +696,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined(__cplusplus)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// liblldb_DBRegex_h_
+comment|// liblldb_RegularExpression_h_
 end_comment
 
 end_unit

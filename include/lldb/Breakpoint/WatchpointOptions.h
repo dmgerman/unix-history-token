@@ -51,6 +51,18 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -284,10 +296,10 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Return the current thread spec for this option.  This will return NULL if the no thread
+comment|/// Return the current thread spec for this option. This will return nullptr if the no thread
 comment|/// specifications have been set for this Option yet.
 comment|/// @return
-comment|///     The thread specification pointer for this option, or NULL if none has
+comment|///     The thread specification pointer for this option, or nullptr if none has
 comment|///     been set yet.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -398,10 +410,12 @@ block|{         }
 operator|~
 name|CommandData
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|StringList
 name|user_source
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -432,10 +446,10 @@ argument_list|(
 argument|data
 argument_list|)
 block|{         }
-name|virtual
 operator|~
 name|CommandBaton
 argument_list|()
+name|override
 block|{
 name|delete
 argument_list|(
@@ -448,9 +462,8 @@ argument_list|)
 block|;
 name|m_data
 operator|=
-name|NULL
+name|nullptr
 block|;         }
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
@@ -459,7 +472,8 @@ argument_list|,
 argument|lldb::DescriptionLevel level
 argument_list|)
 specifier|const
-block|;      }
+name|override
+block|;     }
 decl_stmt|;
 name|protected
 label|:

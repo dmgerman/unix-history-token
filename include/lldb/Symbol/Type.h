@@ -70,7 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerDecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -95,6 +101,68 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+comment|//----------------------------------------------------------------------
+comment|// CompilerContext allows an array of these items to be passed to
+comment|// perform detailed lookups in SymbolVendor and SymbolFile functions.
+comment|//----------------------------------------------------------------------
+struct|struct
+name|CompilerContext
+block|{
+name|CompilerContext
+argument_list|(
+argument|CompilerContextKind t
+argument_list|,
+argument|const ConstString&n
+argument_list|)
+block|:
+name|type
+argument_list|(
+name|t
+argument_list|)
+operator|,
+name|name
+argument_list|(
+argument|n
+argument_list|)
+block|{     }
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|CompilerContext
+operator|&
+name|rhs
+operator|)
+specifier|const
+block|{
+return|return
+name|type
+operator|==
+name|rhs
+operator|.
+name|type
+operator|&&
+name|name
+operator|==
+name|rhs
+operator|.
+name|name
+return|;
+block|}
+name|void
+name|Dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|CompilerContextKind
+name|type
+decl_stmt|;
+name|ConstString
+name|name
+decl_stmt|;
+block|}
+struct|;
 name|class
 name|SymbolFileType
 range|:
@@ -128,6 +196,20 @@ argument_list|(
 argument|symbol_file
 argument_list|)
 block|{         }
+name|SymbolFileType
+argument_list|(
+name|SymbolFile
+operator|&
+name|symbol_file
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|TypeSP
+operator|&
+name|type_sp
+argument_list|)
+expr_stmt|;
 operator|~
 name|SymbolFileType
 argument_list|()
@@ -265,9 +347,9 @@ argument|EncodingDataType encoding_uid_type
 argument_list|,
 argument|const Declaration& decl
 argument_list|,
-argument|const ClangASTType&clang_qual_type
+argument|const CompilerType&compiler_qual_type
 argument_list|,
-argument|ResolveState clang_type_resolve_state
+argument|ResolveState compiler_type_resolve_state
 argument_list|)
 empty_stmt|;
 comment|// This makes an invalid type.  Used for functions that return a Type when they
@@ -617,26 +699,21 @@ specifier|const
 expr_stmt|;
 comment|// Get the clang type, and resolve definitions for any
 comment|// class/struct/union/enum types completely.
-name|ClangASTType
-name|GetClangFullType
+name|CompilerType
+name|GetFullCompilerType
 parameter_list|()
 function_decl|;
 comment|// Get the clang type, and resolve definitions enough so that the type could
 comment|// have layout performed. This allows ptrs and refs to class/struct/union/enum
 comment|// types remain forward declarations.
-name|ClangASTType
-name|GetClangLayoutType
+name|CompilerType
+name|GetLayoutCompilerType
 parameter_list|()
 function_decl|;
 comment|// Get the clang type and leave class/struct/union/enum types as forward
 comment|// declarations if they haven't already been fully defined.
-name|ClangASTType
-name|GetClangForwardType
-parameter_list|()
-function_decl|;
-name|ClangASTContext
-modifier|&
-name|GetClangASTContext
+name|CompilerType
+name|GetForwardCompilerType
 parameter_list|()
 function_decl|;
 specifier|static
@@ -702,22 +779,6 @@ name|uint32_t
 name|GetEncodingMask
 parameter_list|()
 function_decl|;
-name|ClangASTType
-name|CreateClangTypedefType
-parameter_list|(
-name|Type
-modifier|*
-name|typedef_type
-parameter_list|,
-name|Type
-modifier|*
-name|base_type
-parameter_list|)
-function_decl|;
-name|bool
-name|IsRealObjCClass
-parameter_list|()
-function_decl|;
 name|bool
 name|IsCompleteObjCClass
 parameter_list|()
@@ -774,8 +835,8 @@ decl_stmt|;
 name|Declaration
 name|m_decl
 decl_stmt|;
-name|ClangASTType
-name|m_clang_type
+name|CompilerType
+name|m_compiler_type
 decl_stmt|;
 struct|struct
 name|Flags
@@ -785,14 +846,14 @@ directive|ifdef
 name|__GNUC__
 comment|// using unsigned type here to work around a very noisy gcc warning
 name|unsigned
-name|clang_type_resolve_state
+name|compiler_type_resolve_state
 range|:
 literal|2
 decl_stmt|;
 else|#
 directive|else
 name|ResolveState
-name|clang_type_resolve_state
+name|compiler_type_resolve_state
 range|:
 literal|2
 decl_stmt|;
@@ -815,7 +876,7 @@ name|bool
 name|ResolveClangType
 parameter_list|(
 name|ResolveState
-name|clang_type_resolve_state
+name|compiler_type_resolve_state
 parameter_list|)
 function_decl|;
 block|}
@@ -838,7 +899,7 @@ label|:
 name|TypePair
 argument_list|()
 operator|:
-name|clang_type
+name|compiler_type
 argument_list|()
 operator|,
 name|type_sp
@@ -846,10 +907,10 @@ argument_list|()
 block|{     }
 name|TypePair
 argument_list|(
-argument|ClangASTType type
+argument|CompilerType type
 argument_list|)
 operator|:
-name|clang_type
+name|compiler_type
 argument_list|(
 name|type
 argument_list|)
@@ -862,7 +923,7 @@ argument_list|(
 argument|lldb::TypeSP type
 argument_list|)
 operator|:
-name|clang_type
+name|compiler_type
 argument_list|()
 operator|,
 name|type_sp
@@ -870,11 +931,11 @@ argument_list|(
 argument|type
 argument_list|)
 block|{
-name|clang_type
+name|compiler_type
 operator|=
 name|type_sp
 operator|->
-name|GetClangForwardType
+name|GetForwardCompilerType
 argument_list|()
 block|;     }
 name|bool
@@ -883,7 +944,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|clang_type
+name|compiler_type
 operator|.
 name|IsValid
 argument_list|()
@@ -921,11 +982,11 @@ operator|)
 specifier|const
 block|{
 return|return
-name|clang_type
+name|compiler_type
 operator|==
 name|rhs
 operator|.
-name|clang_type
+name|compiler_type
 operator|&&
 name|type_sp
 operator|.
@@ -952,11 +1013,11 @@ operator|)
 specifier|const
 block|{
 return|return
-name|clang_type
+name|compiler_type
 operator|!=
 name|rhs
 operator|.
-name|clang_type
+name|compiler_type
 operator|||
 name|type_sp
 operator|.
@@ -975,7 +1036,7 @@ name|void
 name|Clear
 parameter_list|()
 block|{
-name|clang_type
+name|compiler_type
 operator|.
 name|Clear
 argument_list|()
@@ -1003,10 +1064,10 @@ argument_list|()
 return|;
 if|if
 condition|(
-name|clang_type
+name|compiler_type
 condition|)
 return|return
-name|clang_type
+name|compiler_type
 operator|.
 name|GetTypeName
 argument_list|()
@@ -1031,7 +1092,7 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangForwardType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetDisplayTypeName
@@ -1042,10 +1103,10 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|clang_type
+name|compiler_type
 condition|)
 return|return
-name|clang_type
+name|compiler_type
 operator|.
 name|GetDisplayTypeName
 argument_list|()
@@ -1063,7 +1124,7 @@ begin_macro
 unit|}          void
 name|SetType
 argument_list|(
-argument|ClangASTType type
+argument|CompilerType type
 argument_list|)
 end_macro
 
@@ -1074,7 +1135,7 @@ operator|.
 name|reset
 argument_list|()
 expr_stmt|;
-name|clang_type
+name|compiler_type
 operator|=
 name|type
 expr_stmt|;
@@ -1095,11 +1156,11 @@ name|type_sp
 operator|=
 name|type
 expr_stmt|;
-name|clang_type
+name|compiler_type
 operator|=
 name|type_sp
 operator|->
-name|GetClangForwardType
+name|GetForwardCompilerType
 argument_list|()
 expr_stmt|;
 block|}
@@ -1120,19 +1181,19 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|ClangASTType
-name|GetClangASTType
+name|CompilerType
+name|GetCompilerType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|clang_type
+name|compiler_type
 return|;
 block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|ClangASTType
+name|CompilerType
 name|GetPointerType
 argument_list|()
 specifier|const
@@ -1144,7 +1205,7 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangLayoutType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetPointerType
@@ -1154,7 +1215,7 @@ end_expr_stmt
 
 begin_return
 return|return
-name|clang_type
+name|compiler_type
 operator|.
 name|GetPointerType
 argument_list|()
@@ -1162,7 +1223,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          ClangASTType
+unit|}          CompilerType
 name|GetPointeeType
 argument_list|()
 end_macro
@@ -1177,7 +1238,7 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangFullType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetPointeeType
@@ -1187,7 +1248,7 @@ end_expr_stmt
 
 begin_return
 return|return
-name|clang_type
+name|compiler_type
 operator|.
 name|GetPointeeType
 argument_list|()
@@ -1195,7 +1256,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          ClangASTType
+unit|}          CompilerType
 name|GetReferenceType
 argument_list|()
 end_macro
@@ -1210,30 +1271,26 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangLayoutType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetLValueReferenceType
 argument_list|()
 return|;
+else|else
+return|return
+name|compiler_type
+operator|.
+name|GetLValueReferenceType
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|clang_type
-operator|.
-name|GetLValueReferenceType
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}      ClangASTType
+begin_expr_stmt
+name|CompilerType
 name|GetTypedefedType
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -1243,30 +1300,26 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangFullType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetTypedefedType
 argument_list|()
 return|;
+else|else
+return|return
+name|compiler_type
+operator|.
+name|GetTypedefedType
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|clang_type
-operator|.
-name|GetTypedefedType
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}      ClangASTType
+begin_expr_stmt
+name|CompilerType
 name|GetDereferencedType
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -1276,30 +1329,26 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangFullType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetNonReferenceType
 argument_list|()
 return|;
+else|else
+return|return
+name|compiler_type
+operator|.
+name|GetNonReferenceType
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|clang_type
-operator|.
-name|GetNonReferenceType
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}          ClangASTType
+begin_expr_stmt
+name|CompilerType
 name|GetUnqualifiedType
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -1309,30 +1358,26 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangLayoutType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetFullyUnqualifiedType
 argument_list|()
 return|;
+else|else
+return|return
+name|compiler_type
+operator|.
+name|GetFullyUnqualifiedType
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|clang_type
-operator|.
-name|GetFullyUnqualifiedType
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}          ClangASTType
+begin_expr_stmt
+name|CompilerType
 name|GetCanonicalType
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -1342,7 +1387,7 @@ condition|)
 return|return
 name|type_sp
 operator|->
-name|GetClangFullType
+name|GetForwardCompilerType
 argument_list|()
 operator|.
 name|GetCanonicalType
@@ -1352,7 +1397,7 @@ end_expr_stmt
 
 begin_return
 return|return
-name|clang_type
+name|compiler_type
 operator|.
 name|GetCanonicalType
 argument_list|()
@@ -1360,18 +1405,16 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}          clang
-operator|::
-name|ASTContext
+unit|}          TypeSystem
 operator|*
-name|GetClangASTContext
+name|GetTypeSystem
 argument_list|()
 specifier|const
 block|{
 return|return
-name|clang_type
+name|compiler_type
 operator|.
-name|GetASTContext
+name|GetTypeSystem
 argument_list|()
 return|;
 block|}
@@ -1408,8 +1451,8 @@ end_return
 
 begin_decl_stmt
 unit|} protected:
-name|ClangASTType
-name|clang_type
+name|CompilerType
+name|compiler_type
 decl_stmt|;
 end_decl_stmt
 
@@ -1421,8 +1464,16 @@ name|type_sp
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_comment
 unit|};
+comment|// the two classes here are used by the public API as a backend to
+end_comment
+
+begin_comment
+comment|// the SBType and SBTypeList classes
+end_comment
+
+begin_decl_stmt
 name|class
 name|TypeImpl
 block|{
@@ -1456,9 +1507,9 @@ expr_stmt|;
 name|TypeImpl
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_type
+name|compiler_type
 argument_list|)
 expr_stmt|;
 name|TypeImpl
@@ -1471,7 +1522,7 @@ operator|&
 name|type_sp
 argument_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
 name|dynamic
 argument_list|)
@@ -1479,12 +1530,12 @@ expr_stmt|;
 name|TypeImpl
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_type
+name|compiler_type
 argument_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
 name|dynamic
 argument_list|)
@@ -1497,7 +1548,7 @@ operator|&
 name|pair
 argument_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
 name|dynamic
 argument_list|)
@@ -1517,9 +1568,9 @@ name|void
 name|SetType
 parameter_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
-name|clang_type
+name|compiler_type
 parameter_list|)
 function_decl|;
 name|void
@@ -1533,7 +1584,7 @@ operator|&
 name|type_sp
 argument_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
 name|dynamic
 argument_list|)
@@ -1542,12 +1593,12 @@ name|void
 name|SetType
 parameter_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
-name|clang_type
+name|compiler_type
 parameter_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
 name|dynamic
 parameter_list|)
@@ -1561,7 +1612,7 @@ modifier|&
 name|pair
 parameter_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
 name|dynamic
 parameter_list|)
@@ -1659,22 +1710,21 @@ name|GetCanonicalType
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ClangASTType
-name|GetClangASTType
+name|CompilerType
+name|GetCompilerType
 parameter_list|(
 name|bool
 name|prefer_dynamic
 parameter_list|)
 function_decl|;
-name|clang
-operator|::
-name|ASTContext
-operator|*
-name|GetClangASTContext
-argument_list|(
-argument|bool prefer_dynamic
-argument_list|)
-expr_stmt|;
+name|TypeSystem
+modifier|*
+name|GetTypeSystem
+parameter_list|(
+name|bool
+name|prefer_dynamic
+parameter_list|)
+function_decl|;
 name|bool
 name|GetDescription
 argument_list|(
@@ -1711,7 +1761,7 @@ expr_stmt|;
 name|TypePair
 name|m_static_type
 decl_stmt|;
-name|ClangASTType
+name|CompilerType
 name|m_dynamic_type
 decl_stmt|;
 block|}
@@ -2123,9 +2173,9 @@ expr_stmt|;
 name|TypeAndOrName
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_type
+name|compiler_type
 argument_list|)
 expr_stmt|;
 name|TypeAndOrName
@@ -2203,15 +2253,15 @@ name|GetTypeSP
 argument_list|()
 return|;
 block|}
-name|ClangASTType
-name|GetClangASTType
+name|CompilerType
+name|GetCompilerType
 argument_list|()
 specifier|const
 block|{
 return|return
 name|m_type_pair
 operator|.
-name|GetClangASTType
+name|GetCompilerType
 argument_list|()
 return|;
 block|}
@@ -2243,10 +2293,10 @@ name|type_sp
 argument_list|)
 decl_stmt|;
 name|void
-name|SetClangASTType
+name|SetCompilerType
 parameter_list|(
-name|ClangASTType
-name|clang_type
+name|CompilerType
+name|compiler_type
 parameter_list|)
 function_decl|;
 name|bool
@@ -2265,7 +2315,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
-name|HasClangASTType
+name|HasCompilerType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2278,7 +2328,7 @@ return|return
 name|HasTypeSP
 argument_list|()
 operator|||
-name|HasClangASTType
+name|HasCompilerType
 argument_list|()
 return|;
 block|}
@@ -2324,10 +2374,8 @@ operator|:
 name|m_type
 argument_list|()
 operator|,
-name|m_objc_method_decl
-argument_list|(
-name|nullptr
-argument_list|)
+name|m_decl
+argument_list|()
 operator|,
 name|m_name
 argument_list|()
@@ -2340,9 +2388,14 @@ block|{     }
 name|TypeMemberFunctionImpl
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
 name|type
+argument_list|,
+specifier|const
+name|CompilerDecl
+operator|&
+name|decl
 argument_list|,
 specifier|const
 name|std
@@ -2364,9 +2417,9 @@ argument_list|(
 name|type
 argument_list|)
 operator|,
-name|m_objc_method_decl
+name|m_decl
 argument_list|(
-name|nullptr
+name|decl
 argument_list|)
 operator|,
 name|m_name
@@ -2379,107 +2432,26 @@ argument_list|(
 argument|kind
 argument_list|)
 block|{     }
-name|TypeMemberFunctionImpl
-argument_list|(
-name|clang
-operator|::
-name|ObjCMethodDecl
-operator|*
-name|method
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|name
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|MemberFunctionKind
-operator|&
-name|kind
-argument_list|)
-operator|:
-name|m_type
-argument_list|()
-operator|,
-name|m_objc_method_decl
-argument_list|(
-name|method
-argument_list|)
-operator|,
-name|m_name
-argument_list|(
-name|name
-argument_list|)
-operator|,
-name|m_kind
-argument_list|(
-argument|kind
-argument_list|)
-block|{     }
-name|TypeMemberFunctionImpl
-argument_list|(
-specifier|const
-name|TypeMemberFunctionImpl
-operator|&
-name|rhs
-argument_list|)
-operator|:
-name|m_type
-argument_list|(
-name|rhs
-operator|.
-name|m_type
-argument_list|)
-operator|,
-name|m_objc_method_decl
-argument_list|(
-name|rhs
-operator|.
-name|m_objc_method_decl
-argument_list|)
-operator|,
-name|m_name
-argument_list|(
-name|rhs
-operator|.
-name|m_name
-argument_list|)
-operator|,
-name|m_kind
-argument_list|(
-argument|rhs.m_kind
-argument_list|)
-block|{     }
-name|TypeMemberFunctionImpl
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|TypeMemberFunctionImpl
-operator|&
-name|rhs
-operator|)
-expr_stmt|;
 name|bool
 name|IsValid
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|ConstString
 name|GetName
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ClangASTType
+name|ConstString
+name|GetMangledName
+argument_list|()
+specifier|const
+expr_stmt|;
+name|CompilerType
 name|GetType
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ClangASTType
+name|CompilerType
 name|GetReturnType
 argument_list|()
 specifier|const
@@ -2489,7 +2461,7 @@ name|GetNumArguments
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ClangASTType
+name|CompilerType
 name|GetArgumentAtIndex
 argument_list|(
 name|size_t
@@ -2522,15 +2494,12 @@ argument_list|()
 expr_stmt|;
 name|private
 label|:
-name|ClangASTType
+name|CompilerType
 name|m_type
 decl_stmt|;
-name|clang
-operator|::
-name|ObjCMethodDecl
-operator|*
-name|m_objc_method_decl
-expr_stmt|;
+name|CompilerDecl
+name|m_decl
+decl_stmt|;
 name|ConstString
 name|m_name
 decl_stmt|;
@@ -2574,18 +2543,23 @@ block|{     }
 name|TypeEnumMemberImpl
 argument_list|(
 specifier|const
-name|clang
+name|lldb
 operator|::
-name|EnumConstantDecl
-operator|*
-name|enum_member_decl
+name|TypeImplSP
+operator|&
+name|integer_type_sp
 argument_list|,
 specifier|const
-name|lldb_private
-operator|::
-name|ClangASTType
+name|ConstString
 operator|&
-name|integer_type
+name|name
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|value
 argument_list|)
 expr_stmt|;
 name|TypeEnumMemberImpl

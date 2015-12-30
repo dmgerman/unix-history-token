@@ -49,6 +49,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Mutex.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|option
@@ -102,8 +108,14 @@ enum|;
 specifier|static
 name|void
 name|Prepare
-parameter_list|()
-function_decl|;
+argument_list|(
+name|Mutex
+operator|::
+name|Locker
+operator|&
+name|locker
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|EnableError

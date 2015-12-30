@@ -87,26 +87,21 @@ argument_list|,
 argument|lldb::ScriptLanguage script_lang
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectScript
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoExecute
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|command
+argument|const char *command
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

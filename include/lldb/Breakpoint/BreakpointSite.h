@@ -143,10 +143,10 @@ comment|// debug interface where memory reads transparently will not
 comment|// display any breakpoint opcodes.
 block|}
 enum|;
-name|virtual
 operator|~
 name|BreakpointSite
 argument_list|()
+name|override
 expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// This section manages the breakpoint traps
@@ -277,15 +277,15 @@ comment|///
 comment|/// @return
 comment|///    \b true if we should stop, \b false otherwise.
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|ShouldStop
-parameter_list|(
+argument_list|(
 name|StoppointCallbackContext
-modifier|*
+operator|*
 name|context
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Standard Dump method
 comment|///
@@ -300,6 +300,7 @@ operator|*
 name|s
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// The "Owners" are the breakpoint locations that share this
@@ -350,6 +351,25 @@ argument_list|(
 argument|size_t idx
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// This method copies the breakpoint site's owners into a new collection.
+comment|/// It does this while the owners mutex is locked.
+comment|///
+comment|/// @param[out] out_collection
+comment|///    The BreakpointLocationCollection into which to put the owners
+comment|///    of this breakpoint site.
+comment|///
+comment|/// @return
+comment|///    The number of elements copied into out_collection.
+comment|//------------------------------------------------------------------
+name|size_t
+name|CopyOwnersList
+parameter_list|(
+name|BreakpointLocationCollection
+modifier|&
+name|out_collection
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Check whether the owners of this breakpoint site have any
 comment|/// thread specifiers, and if yes, is \a thread contained in any

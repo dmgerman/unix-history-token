@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -132,22 +138,22 @@ operator|&
 name|GetStaticBroadcasterClass
 argument_list|()
 block|;
-name|virtual
 name|ConstString
 operator|&
 name|GetBroadcasterClass
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetStaticBroadcasterClass
 argument_list|()
 return|;
 block|}
-name|virtual
 operator|~
 name|TargetList
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Create a new Target.
@@ -163,12 +169,12 @@ comment|///     The debugger to associate this target with
 comment|///
 comment|/// @param[in] file_spec
 comment|///     The main executable file for a debug target. This value
-comment|///     can be NULL and the file can be set later using:
+comment|///     can be nullptr and the file can be set later using:
 comment|///     Target::SetExecutableModule (ModuleSP&)
 comment|///
 comment|/// @param[in] triple_cstr
 comment|///     A target triple string to be used for the target. This can
-comment|///     be NULL if the triple is not known or when attaching to a
+comment|///     be nullptr if the triple is not known or when attaching to a
 comment|///     process.
 comment|///
 comment|/// @param[in] get_dependent_modules
@@ -177,7 +183,7 @@ comment|///     load those into the module list.
 comment|///
 comment|/// @param[in] platform_options
 comment|///     A pointer to the platform options to use when creating this
-comment|///     target. If this value is NULL, then the currently selected
+comment|///     target. If this value is nullptr, then the currently selected
 comment|///     platform will be used.
 comment|///
 comment|/// @param[out] target_sp
@@ -275,7 +281,7 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Find the target that contains has an executable whose path
 comment|/// matches \a exe_file_spec, and whose architecture matches
-comment|/// \a arch_ptr if arch_ptr is not NULL.
+comment|/// \a arch_ptr if arch_ptr is not nullptr.
 comment|///
 comment|/// @param[in] exe_file_spec
 comment|///     A file spec containing a basename, or a full path (directory
@@ -286,12 +292,12 @@ comment|///     compared. If \a exe_file_spec contains a filename and a
 comment|///     directory, then both must match.
 comment|///
 comment|/// @param[in] exe_arch_ptr
-comment|///     If not NULL then the architecture also needs to match, else
+comment|///     If not nullptr then the architecture also needs to match, else
 comment|///     the architectures will be compared.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to a target object. The returned shared
-comment|///     pointer will contain NULL if no target objects have a
+comment|///     pointer will contain nullptr if no target objects have a
 comment|///     executable whose full or partial path matches
 comment|///     with a matching process ID.
 comment|//------------------------------------------------------------------
@@ -302,7 +308,7 @@ name|FindTargetWithExecutableAndArchitecture
 argument_list|(
 argument|const FileSpec&exe_file_spec
 argument_list|,
-argument|const ArchSpec *exe_arch_ptr = NULL
+argument|const ArchSpec *exe_arch_ptr = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -315,7 +321,7 @@ comment|///     The process ID to search our target list for.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to a target object. The returned shared
-comment|///     pointer will contain NULL if no target objects own a process
+comment|///     pointer will contain nullptr if no target objects own a process
 comment|///     with a matching process ID.
 comment|//------------------------------------------------------------------
 name|lldb

@@ -196,11 +196,13 @@ comment|///
 comment|/// The destructor is virtual since this class is designed to be
 comment|/// inherited from by the plug-in instance.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|ObjectContainer
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Dump a description of this object to a Stream.
 comment|///
@@ -216,12 +218,14 @@ name|virtual
 name|void
 name|Dump
 argument_list|(
-argument|Stream *s
+name|Stream
+operator|*
+name|s
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Gets the architecture given an index.
 comment|///
@@ -363,7 +367,7 @@ comment|/// and prepare to return information for the new architecture.
 comment|///
 comment|/// @return
 comment|///     Returns a pointer to the object file of the requested \a
-comment|///     arch and optional \a name. Returns NULL of no such object
+comment|///     arch and optional \a name. Returns nullptr of no such object
 comment|///     file exists in the container.
 comment|//------------------------------------------------------------------
 name|virtual
@@ -402,7 +406,7 @@ name|object_idx
 parameter_list|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -415,7 +419,7 @@ name|object_idx
 parameter_list|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -430,7 +434,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|protected

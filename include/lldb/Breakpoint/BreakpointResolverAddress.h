@@ -65,6 +65,12 @@ directive|include
 file|"lldb/Breakpoint/BreakpointResolver.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ModuleSpec.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -94,10 +100,27 @@ operator|&
 name|addr
 argument_list|)
 block|;
-name|virtual
+name|BreakpointResolverAddress
+argument_list|(
+name|Breakpoint
+operator|*
+name|bkpt
+argument_list|,
+specifier|const
+name|Address
+operator|&
+name|addr
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|module_spec
+argument_list|)
+block|;
 operator|~
 name|BreakpointResolverAddress
 argument_list|()
+name|override
 block|;
 name|void
 name|ResolveBreakpoint
@@ -198,6 +221,19 @@ operator|:
 name|Address
 name|m_addr
 block|;
+comment|// The address - may be Section Offset or may be just an offset
+name|lldb
+operator|::
+name|addr_t
+name|m_resolved_addr
+block|;
+comment|// The current value of the resolved load address for this breakpoint,
+name|FileSpec
+name|m_module_filespec
+block|;
+comment|// If this filespec is Valid, and m_addr is an offset, then it will be converted
+comment|// to a Section+Offset address in this module, whenever that module gets around to
+comment|// being loaded.
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<set>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -396,9 +390,9 @@ name|BroadcasterInfo
 argument_list|(
 argument|uint32_t mask
 argument_list|,
-argument|HandleBroadcastCallback cb = NULL
+argument|HandleBroadcastCallback cb = nullptr
 argument_list|,
-argument|void *ud = NULL
+argument|void *ud = nullptr
 argument_list|)
 block|:
 name|event_mask
@@ -468,13 +462,13 @@ name|Broadcaster
 operator|*
 name|broadcaster
 argument_list|,
-comment|// NULL for any broadcaster
+comment|// nullptr for any broadcaster
 specifier|const
 name|ConstString
 operator|*
 name|sources
 argument_list|,
-comment|// NULL for any event
+comment|// nullptr for any event
 name|uint32_t
 name|num_sources
 argument_list|,
@@ -498,13 +492,13 @@ name|Broadcaster
 operator|*
 name|broadcaster
 argument_list|,
-comment|// NULL for any broadcaster
+comment|// nullptr for any broadcaster
 specifier|const
 name|ConstString
 operator|*
 name|sources
 argument_list|,
-comment|// NULL for any event
+comment|// nullptr for any event
 name|uint32_t
 name|num_sources
 argument_list|,
@@ -530,13 +524,13 @@ name|Broadcaster
 operator|*
 name|broadcaster
 argument_list|,
-comment|// NULL for any broadcaster
+comment|// nullptr for any broadcaster
 specifier|const
 name|ConstString
 operator|*
 name|sources
 argument_list|,
-comment|// NULL for any event
+comment|// nullptr for any event
 name|uint32_t
 name|num_sources
 argument_list|,

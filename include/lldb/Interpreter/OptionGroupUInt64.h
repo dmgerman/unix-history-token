@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionGroupUInt64.h ------------------------------------*- C++ -*-===//
+comment|//===-- OptionGroupUInt64.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -105,33 +105,32 @@ argument_list|,
 argument|uint64_t default_value
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|OptionGroupUInt64
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|virtual
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|{
 return|return
 operator|&
 name|m_option_definition
 return|;
 block|}
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -141,15 +140,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 name|OptionValueUInt64
 operator|&
@@ -178,7 +176,7 @@ name|m_value
 block|;
 name|OptionDefinition
 name|m_option_definition
-block|;              }
+block|;     }
 decl_stmt|;
 block|}
 end_decl_stmt

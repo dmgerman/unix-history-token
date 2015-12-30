@@ -355,6 +355,11 @@ init|=
 literal|0
 function_decl|;
 name|virtual
+name|bool
+name|HasDelaySlot
+parameter_list|()
+function_decl|;
+name|virtual
 name|size_t
 name|Decode
 argument_list|(
@@ -701,28 +706,32 @@ operator|:
 name|PseudoInstruction
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|PseudoInstruction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|DoesBranch
 argument_list|()
+name|override
 block|;
-name|virtual
+name|bool
+name|HasDelaySlot
+argument_list|()
+name|override
+block|;
 name|void
 name|CalculateMnemonicOperandsAndComment
 argument_list|(
 argument|const ExecutionContext* exe_ctx
 argument_list|)
+name|override
 block|{
 comment|// TODO: fill this in and put opcode name into Instruction::m_opcode_name,
 comment|// mnemonic into Instruction::m_mnemonics, and any comment into
 comment|// Instruction::m_comment
 block|}
-name|virtual
 name|size_t
 name|Decode
 argument_list|(
@@ -732,6 +741,7 @@ argument|const DataExtractor&data
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|)
+name|override
 block|;
 name|void
 name|SetOpcode
@@ -741,15 +751,12 @@ argument_list|,
 argument|void *opcode_data
 argument_list|)
 block|;
-name|virtual
 name|void
 name|SetDescription
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|description
+argument|const char *description
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -1162,10 +1169,10 @@ operator|*
 name|flavor
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|Disassembler
 argument_list|()
+name|override
 expr_stmt|;
 typedef|typedef
 specifier|const

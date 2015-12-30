@@ -881,10 +881,10 @@ operator|:
 name|LogChannel
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|LogChannel
 argument_list|()
+name|override
 block|;
 specifier|static
 name|lldb
@@ -898,7 +898,7 @@ operator|*
 name|plugin_name
 argument_list|)
 block|;
-comment|// categories is a an array of chars that ends with a NULL element.
+comment|// categories is an array of chars that ends with a NULL element.
 name|virtual
 name|void
 name|Disable
@@ -975,7 +975,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_Log_H_
+comment|// liblldb_Log_h_
 end_comment
 
 end_unit

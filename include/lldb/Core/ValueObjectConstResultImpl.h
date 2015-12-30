@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ValueObjectConstResultImpl.h -----------------------------*- C++ -*-===//
+comment|//===-- ValueObjectConstResultImpl.h ----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -90,7 +90,9 @@ name|virtual
 operator|~
 name|ValueObjectConstResultImpl
 argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -122,7 +124,7 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const ClangASTType& type
+argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
 argument_list|)
@@ -147,6 +149,17 @@ return|return
 name|m_live_address
 return|;
 block|}
+name|lldb
+operator|::
+name|ValueObjectSP
+name|Cast
+argument_list|(
+specifier|const
+name|CompilerType
+operator|&
+name|compiler_type
+argument_list|)
+expr_stmt|;
 name|void
 name|SetLiveAddress
 argument_list|(
@@ -180,7 +193,7 @@ name|GetAddressOf
 argument_list|(
 argument|bool scalar_is_load_address = true
 argument_list|,
-argument|AddressType *address_type = NULL
+argument|AddressType *address_type = nullptr
 argument_list|)
 expr_stmt|;
 name|virtual

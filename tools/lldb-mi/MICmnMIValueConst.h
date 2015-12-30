@@ -120,22 +120,6 @@ comment|//          The text formed in *this Result class is stripped of any '\n
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 24/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -173,9 +157,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnMIValueConst
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
@@ -183,9 +165,7 @@ name|private
 operator|:
 name|bool
 name|BuildConst
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Attributes:
 name|private

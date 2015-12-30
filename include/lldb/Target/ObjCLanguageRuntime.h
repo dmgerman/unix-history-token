@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ObjCLanguageRuntime.h ---------------------------------------------------*- C++ -*-===//
+comment|//===-- ObjCLanguageRuntime.h -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,12 +66,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unordered_set>
 end_include
 
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
 
 begin_comment
 comment|// Project includes
@@ -98,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -130,7 +142,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|ClangUtilityFunction
+name|UtilityFunction
 decl_stmt|;
 name|class
 name|ObjCLanguageRuntime
@@ -140,231 +152,23 @@ name|LanguageRuntime
 block|{
 name|public
 operator|:
-name|class
-name|MethodName
-block|{
-name|public
-operator|:
 expr|enum
-name|Type
+name|class
+name|ObjCRuntimeVersions
 block|{
-name|eTypeUnspecified
+name|eObjC_VersionUnknown
+operator|=
+literal|0
 block|,
-name|eTypeClassMethod
+name|eAppleObjC_V1
+operator|=
+literal|1
 block|,
-name|eTypeInstanceMethod
+name|eAppleObjC_V2
+operator|=
+literal|2
 block|}
 block|;
-name|MethodName
-argument_list|()
-operator|:
-name|m_full
-argument_list|()
-block|,
-name|m_class
-argument_list|()
-block|,
-name|m_category
-argument_list|()
-block|,
-name|m_selector
-argument_list|()
-block|,
-name|m_type
-argument_list|(
-name|eTypeUnspecified
-argument_list|)
-block|,
-name|m_category_is_valid
-argument_list|(
-argument|false
-argument_list|)
-block|{         }
-name|MethodName
-argument_list|(
-argument|const char *name
-argument_list|,
-argument|bool strict
-argument_list|)
-operator|:
-name|m_full
-argument_list|()
-block|,
-name|m_class
-argument_list|()
-block|,
-name|m_category
-argument_list|()
-block|,
-name|m_selector
-argument_list|()
-block|,
-name|m_type
-argument_list|(
-name|eTypeUnspecified
-argument_list|)
-block|,
-name|m_category_is_valid
-argument_list|(
-argument|false
-argument_list|)
-block|{
-name|SetName
-argument_list|(
-name|name
-argument_list|,
-name|strict
-argument_list|)
-block|;         }
-name|void
-name|Clear
-argument_list|()
-block|;
-name|bool
-name|IsValid
-argument_list|(
-argument|bool strict
-argument_list|)
-specifier|const
-block|{
-comment|// If "strict" is true, the name must have everything specified including
-comment|// the leading "+" or "-" on the method name
-if|if
-condition|(
-name|strict
-operator|&&
-name|m_type
-operator|==
-name|eTypeUnspecified
-condition|)
-return|return
-name|false
-return|;
-comment|// Other than that, m_full will only be filled in if the objective C
-comment|// name is valid.
-return|return
-operator|(
-name|bool
-operator|)
-name|m_full
-return|;
-block|}
-name|bool
-name|HasCategory
-argument_list|()
-block|{
-return|return
-operator|(
-name|bool
-operator|)
-name|GetCategory
-argument_list|()
-return|;
-block|}
-name|Type
-name|GetType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_type
-return|;
-block|}
-specifier|const
-name|ConstString
-operator|&
-name|GetFullName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_full
-return|;
-block|}
-name|ConstString
-name|GetFullNameWithoutCategory
-argument_list|(
-argument|bool empty_if_no_category
-argument_list|)
-block|;
-name|bool
-name|SetName
-argument_list|(
-argument|const char *name
-argument_list|,
-argument|bool strict
-argument_list|)
-block|;
-specifier|const
-name|ConstString
-operator|&
-name|GetClassName
-argument_list|()
-block|;
-specifier|const
-name|ConstString
-operator|&
-name|GetClassNameWithCategory
-argument_list|()
-block|;
-specifier|const
-name|ConstString
-operator|&
-name|GetCategory
-argument_list|()
-block|;
-specifier|const
-name|ConstString
-operator|&
-name|GetSelector
-argument_list|()
-block|;
-comment|// Get all possible names for a method. Examples:
-comment|// If name is "+[NSString(my_additions) myStringWithCString:]"
-comment|//  names[0] => "+[NSString(my_additions) myStringWithCString:]"
-comment|//  names[1] => "+[NSString myStringWithCString:]"
-comment|// If name is specified without the leading '+' or '-' like "[NSString(my_additions) myStringWithCString:]"
-comment|//  names[0] => "+[NSString(my_additions) myStringWithCString:]"
-comment|//  names[1] => "-[NSString(my_additions) myStringWithCString:]"
-comment|//  names[2] => "+[NSString myStringWithCString:]"
-comment|//  names[3] => "-[NSString myStringWithCString:]"
-name|size_t
-name|GetFullNames
-argument_list|(
-argument|std::vector<ConstString>&names
-argument_list|,
-argument|bool append
-argument_list|)
-block|;
-name|protected
-operator|:
-name|ConstString
-name|m_full
-block|;
-comment|// Full name:   "+[NSString(my_additions) myStringWithCString:]"
-name|ConstString
-name|m_class
-block|;
-comment|// Class name:  "NSString"
-name|ConstString
-name|m_class_category
-block|;
-comment|// Class with category: "NSString(my_additions)"
-name|ConstString
-name|m_category
-block|;
-comment|// Category:    "my_additions"
-name|ConstString
-name|m_selector
-block|;
-comment|// Selector:    "myStringWithCString:"
-name|Type
-name|m_type
-block|;
-name|bool
-name|m_category_is_valid
-block|;      }
-decl_stmt|;
 typedef|typedef
 name|lldb
 operator|::
@@ -411,14 +215,16 @@ name|virtual
 operator|~
 name|ClassDescriptor
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|ConstString
 name|GetClassName
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|ClassDescriptorSP
 name|GetSuperclass
@@ -572,19 +378,19 @@ name|uint64_t
 modifier|*
 name|info_bits
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 name|uint64_t
 modifier|*
 name|value_bits
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 name|uint64_t
 modifier|*
 name|payload
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 init|=
 literal|0
@@ -744,7 +550,7 @@ block|{
 name|ConstString
 name|m_name
 decl_stmt|;
-name|ClangASTType
+name|CompilerType
 name|m_type
 decl_stmt|;
 name|uint64_t
@@ -828,7 +634,12 @@ block|{
 name|public
 label|:
 name|virtual
-name|ClangASTType
+operator|~
+name|EncodingToType
+argument_list|()
+expr_stmt|;
+name|virtual
+name|CompilerType
 name|RealizeType
 parameter_list|(
 name|ClangASTContext
@@ -845,7 +656,7 @@ name|for_expression
 parameter_list|)
 function_decl|;
 name|virtual
-name|ClangASTType
+name|CompilerType
 name|RealizeType
 parameter_list|(
 specifier|const
@@ -858,7 +669,7 @@ name|for_expression
 parameter_list|)
 function_decl|;
 name|virtual
-name|ClangASTType
+name|CompilerType
 name|RealizeType
 argument_list|(
 name|clang
@@ -878,11 +689,6 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-name|virtual
-operator|~
-name|EncodingToType
-argument_list|()
-expr_stmt|;
 name|protected
 label|:
 name|std
@@ -908,11 +714,13 @@ operator|:
 name|ObjCExceptionPrecondition
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|ObjCExceptionPrecondition
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+block|;
 name|bool
 name|EvaluatePrecondition
 argument_list|(
@@ -921,7 +729,7 @@ argument_list|)
 name|override
 block|;
 name|void
-name|DescribePrecondition
+name|GetDescription
 argument_list|(
 argument|Stream&stream
 argument_list|,
@@ -966,6 +774,13 @@ block|{
 name|public
 label|:
 name|virtual
+operator|~
+name|TaggedPointerVendor
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|virtual
 name|bool
 name|IsPossibleTaggedPointer
 argument_list|(
@@ -988,13 +803,8 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|virtual
-operator|~
-name|TaggedPointerVendor
-argument_list|()
-block|{ }
 name|protected
-operator|:
+label|:
 name|TaggedPointerVendor
 argument_list|()
 operator|=
@@ -1009,6 +819,11 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
+operator|~
+name|ObjCLanguageRuntime
+argument_list|()
+name|override
+expr_stmt|;
 name|virtual
 name|TaggedPointerVendor
 modifier|*
@@ -1075,11 +890,6 @@ name|ObjCISA
 name|isa
 parameter_list|)
 function_decl|;
-name|virtual
-operator|~
-name|ObjCLanguageRuntime
-argument_list|()
-expr_stmt|;
 name|lldb
 operator|::
 name|LanguageType
@@ -1224,7 +1034,7 @@ name|name
 argument_list|)
 expr_stmt|;
 name|virtual
-name|ClangUtilityFunction
+name|UtilityFunction
 modifier|*
 name|CreateObjectChecker
 parameter_list|(
@@ -1238,9 +1048,12 @@ function_decl|;
 name|virtual
 name|ObjCRuntimeVersions
 name|GetRuntimeVersion
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
+name|ObjCRuntimeVersions
+operator|::
 name|eObjC_VersionUnknown
 return|;
 block|}
@@ -1326,7 +1139,7 @@ name|GetDeclVendor
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|// Finds the byte offset of the child_type ivar in parent_type.  If it can't find the
@@ -1335,7 +1148,7 @@ name|virtual
 name|size_t
 name|GetByteOffsetForIvar
 parameter_list|(
-name|ClangASTType
+name|CompilerType
 modifier|&
 name|parent_qual_type
 parameter_list|,
@@ -1359,193 +1172,6 @@ argument_list|)
 block|{
 return|return
 name|LLDB_INVALID_ADDRESS
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Chop up an objective C function prototype.
-comment|///
-comment|/// Chop up an objective C function fullname and optionally fill in
-comment|/// any non-NULL ConstString objects. If a ConstString * is NULL,
-comment|/// then this name doesn't get filled in
-comment|///
-comment|/// @param[in] name
-comment|///     A fully specified objective C function name. The string might
-comment|///     contain a category and it includes the leading "+" or "-" and
-comment|///     the square brackets, no types for the arguments, just the plain
-comment|///     selector. A few examples:
-comment|///         "-[NSStringDrawingContext init]"
-comment|///         "-[NSStringDrawingContext addString:inRect:]"
-comment|///         "-[NSString(NSStringDrawing) sizeWithAttributes:]"
-comment|///         "+[NSString(NSStringDrawing) usesFontLeading]"
-comment|///
-comment|/// @param[out] class_name
-comment|///     If non-NULL, this string will be filled in with the class
-comment|///     name including the category. The examples above would return:
-comment|///         "NSStringDrawingContext"
-comment|///         "NSStringDrawingContext"
-comment|///         "NSString(NSStringDrawing)"
-comment|///         "NSString(NSStringDrawing)"
-comment|///
-comment|/// @param[out] selector_name
-comment|///     If non-NULL, this string will be filled in with the selector
-comment|///     name. The examples above would return:
-comment|///         "init"
-comment|///         "addString:inRect:"
-comment|///         "sizeWithAttributes:"
-comment|///         "usesFontLeading"
-comment|///
-comment|/// @param[out] name_sans_category
-comment|///     If non-NULL, this string will be filled in with the class
-comment|///     name _without_ the category. If there is no category, and empty
-comment|///     string will be returned (as the result would be normally returned
-comment|///     in the "class_name" argument). The examples above would return:
-comment|///<empty>
-comment|///<empty>
-comment|///         "-[NSString sizeWithAttributes:]"
-comment|///         "+[NSString usesFontLeading]"
-comment|///
-comment|/// @param[out] class_name_sans_category
-comment|///     If non-NULL, this string will be filled in with the prototype
-comment|///     name _without_ the category. If there is no category, and empty
-comment|///     string will be returned (as this is already the value that was
-comment|///     passed in). The examples above would return:
-comment|///<empty>
-comment|///<empty>
-comment|///         "NSString"
-comment|///         "NSString"
-comment|///
-comment|/// @return
-comment|///     Returns the number of strings that were successfully filled
-comment|///     in.
-comment|//------------------------------------------------------------------
-comment|//    static uint32_t
-comment|//    ParseMethodName (const char *name,
-comment|//                     ConstString *class_name,               // Class name (with category if there is one)
-comment|//                     ConstString *selector_name,            // selector only
-comment|//                     ConstString *name_sans_category,       // full function name with no category (empty if no category)
-comment|//                     ConstString *class_name_sans_category);// Class name without category (empty if no category)
-specifier|static
-name|bool
-name|IsPossibleObjCMethodName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|name
-condition|)
-return|return
-name|false
-return|;
-name|bool
-name|starts_right
-init|=
-operator|(
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'+'
-operator|||
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-operator|)
-operator|&&
-name|name
-index|[
-literal|1
-index|]
-operator|==
-literal|'['
-decl_stmt|;
-name|bool
-name|ends_right
-init|=
-operator|(
-name|name
-index|[
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|']'
-operator|)
-decl_stmt|;
-return|return
-operator|(
-name|starts_right
-operator|&&
-name|ends_right
-operator|)
-return|;
-block|}
-specifier|static
-name|bool
-name|IsPossibleObjCSelector
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|name
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|':'
-argument_list|)
-operator|==
-name|NULL
-condition|)
-return|return
-name|true
-return|;
-elseif|else
-if|if
-condition|(
-name|name
-index|[
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|':'
-condition|)
-return|return
-name|true
-return|;
-else|else
-return|return
-name|false
 return|;
 block|}
 name|bool
@@ -1602,9 +1228,9 @@ name|bool
 name|GetTypeBitSize
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_type
+name|compiler_type
 argument_list|,
 name|uint64_t
 operator|&

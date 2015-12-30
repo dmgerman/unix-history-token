@@ -59,6 +59,12 @@ directive|include
 file|<cinttypes>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdarg>
+end_include
+
 begin_comment
 comment|// In-house headers:
 end_comment
@@ -79,18 +85,6 @@ end_comment
 
 begin_comment
 comment|//          Derived from std::string
-end_comment
-
-begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 02/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -199,6 +193,11 @@ parameter_list|(
 specifier|const
 name|char
 name|vChar
+parameter_list|,
+name|bool
+name|bEscapeQuotes
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -211,6 +210,11 @@ parameter_list|(
 specifier|const
 name|char16_t
 name|vChar16
+parameter_list|,
+name|bool
+name|bEscapeQuotes
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -223,6 +227,11 @@ parameter_list|(
 specifier|const
 name|char32_t
 name|vChar32
+parameter_list|,
+name|bool
+name|bEscapeQuotes
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -242,9 +251,7 @@ end_comment
 
 begin_expr_stmt
 name|CMIUtilString
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -271,11 +278,11 @@ begin_expr_stmt
 name|CMIUtilString
 argument_list|(
 specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-name|vpData
+name|std
+operator|::
+name|string
+operator|&
+name|vrStr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -314,35 +321,29 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|IsNumber
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|IsHexadecimalNumber
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|IsQuoted
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|CMIUtilString
@@ -401,35 +402,29 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|CMIUtilString
 name|StripCREndOfLine
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|CMIUtilString
 name|StripCRAll
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|CMIUtilString
 name|Trim
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|CMIUtilString
@@ -517,25 +512,21 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|CMIUtilString
 name|AddSlashes
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|CMIUtilString
 name|StripSlashes
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|//
@@ -588,9 +579,7 @@ begin_expr_stmt
 name|virtual
 operator|~
 name|CMIUtilString
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -615,6 +604,20 @@ name|vrFormat
 parameter_list|,
 name|va_list
 name|vArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|CMIUtilString
+name|ConvertCharValueToPrintableASCII
+parameter_list|(
+name|char
+name|vChar
+parameter_list|,
+name|bool
+name|bEscapeQuotes
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -156,6 +162,8 @@ block|,
 name|ProtocolUdp
 block|,
 name|ProtocolUnixDomain
+block|,
+name|ProtocolUnixAbstract
 decl|}
 name|SocketProtocol
 empty_stmt|;
@@ -164,18 +172,70 @@ specifier|const
 name|NativeSocket
 name|kInvalidSocketValue
 block|;
-name|Socket
-argument_list|(
-argument|NativeSocket socket
-argument_list|,
-argument|SocketProtocol protocol
-argument_list|,
-argument|bool should_close
-argument_list|)
-empty_stmt|;
 operator|~
 name|Socket
 argument_list|()
+name|override
+expr_stmt|;
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Socket
+operator|>
+name|Create
+argument_list|(
+argument|const SocketProtocol protocol
+argument_list|,
+argument|bool child_processes_inherit
+argument_list|,
+argument|Error&error
+argument_list|)
+expr_stmt|;
+name|virtual
+name|Error
+name|Connect
+block|(
+name|llvm
+block|::
+name|StringRef
+name|name
+block|) = 0;
+name|virtual
+name|Error
+name|Listen
+block|(
+name|llvm
+block|::
+name|StringRef
+name|name
+block|,
+name|int
+name|backlog
+block|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|Error
+name|Accept
+block|(
+name|llvm
+block|::
+name|StringRef
+name|name
+block|,
+name|bool
+name|child_processes_inherit
+block|,
+name|Socket
+modifier|*
+modifier|&
+name|socket
+block|)
+operator|=
+literal|0
 expr_stmt|;
 comment|// Initialize a Tcp Socket object in listening mode.  listen and accept are implemented
 comment|// separately because the caller may wish to manipulate or query the socket after it is
@@ -287,11 +347,27 @@ operator|&
 name|socket
 argument_list|)
 block|;
-comment|// Blocks on a listening socket until a connection is received.  This method assumes that
-comment|// |this->m_socket| is a listening socket, created via either TcpListen() or via the native
-comment|// constructor that takes a NativeSocket, which itself was created via a call to |listen()|
+specifier|static
 name|Error
-name|BlockingAccept
+name|UnixAbstractConnect
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|host_and_port
+argument_list|,
+name|bool
+name|child_processes_inherit
+argument_list|,
+name|Socket
+operator|*
+operator|&
+name|socket
+argument_list|)
+block|;
+specifier|static
+name|Error
+name|UnixAbstractAccept
 argument_list|(
 name|llvm
 operator|::
@@ -334,47 +410,6 @@ name|int
 name|option_value
 parameter_list|)
 function_decl|;
-comment|// returns port number or 0 if error
-specifier|static
-name|uint16_t
-name|GetLocalPortNumber
-parameter_list|(
-specifier|const
-name|NativeSocket
-modifier|&
-name|socket
-parameter_list|)
-function_decl|;
-comment|// returns port number or 0 if error
-name|uint16_t
-name|GetLocalPortNumber
-argument_list|()
-decl|const
-empty_stmt|;
-comment|// returns ip address string or empty string if error
-name|std
-decl|::
-name|string
-name|GetLocalIPAddress
-argument_list|()
-decl|const
-empty_stmt|;
-comment|// must be connected
-comment|// returns port number or 0 if error
-name|uint16_t
-name|GetRemotePortNumber
-argument_list|()
-decl|const
-empty_stmt|;
-comment|// must be connected
-comment|// returns ip address string or empty string if error
-name|std
-decl|::
-name|string
-name|GetRemoteIPAddress
-argument_list|()
-decl|const
-empty_stmt|;
 name|NativeSocket
 name|GetNativeSocket
 argument_list|()
@@ -393,7 +428,6 @@ return|return
 name|m_protocol
 return|;
 block|}
-name|virtual
 name|Error
 name|Read
 argument_list|(
@@ -405,36 +439,37 @@ name|size_t
 operator|&
 name|num_bytes
 argument_list|)
+name|override
 empty_stmt|;
-name|virtual
 name|Error
 name|Write
-parameter_list|(
+argument_list|(
 specifier|const
 name|void
-modifier|*
+operator|*
 name|buf
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|&
+operator|&
 name|num_bytes
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+block|;
 name|virtual
 name|Error
 name|PreDisconnect
 parameter_list|()
 function_decl|;
-name|virtual
 name|Error
 name|Close
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+empty_stmt|;
 name|bool
 name|IsValid
 argument_list|()
 decl|const
+name|override
 block|{
 return|return
 name|m_socket
@@ -442,10 +477,10 @@ operator|!=
 name|kInvalidSocketValue
 return|;
 block|}
-name|virtual
 name|WaitableHandle
 name|GetWaitableHandle
 argument_list|()
+name|override
 empty_stmt|;
 specifier|static
 name|bool
@@ -479,25 +514,109 @@ argument_list|)
 block|;
 name|protected
 label|:
+name|Socket
+argument_list|(
+argument|NativeSocket socket
+argument_list|,
+argument|SocketProtocol protocol
+argument_list|,
+argument|bool should_close
+argument_list|)
+empty_stmt|;
+name|virtual
+name|size_t
+name|Send
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+specifier|const
+name|size_t
+name|num_bytes
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|SetLastError
+parameter_list|(
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+specifier|static
+name|NativeSocket
+name|CreateSocket
+parameter_list|(
+specifier|const
+name|int
+name|domain
+parameter_list|,
+specifier|const
+name|int
+name|type
+parameter_list|,
+specifier|const
+name|int
+name|protocol
+parameter_list|,
+name|bool
+name|child_processes_inherit
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+specifier|static
+name|NativeSocket
+name|AcceptSocket
+parameter_list|(
+name|NativeSocket
+name|sockfd
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|addr
+parameter_list|,
+name|socklen_t
+modifier|*
+name|addrlen
+parameter_list|,
+name|bool
+name|child_processes_inherit
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
 name|SocketProtocol
 name|m_protocol
 block|;
 name|NativeSocket
 name|m_socket
 block|;
-name|SocketAddress
-name|m_udp_send_sockaddr
-block|;
-comment|// Send address used for UDP connections.
 block|}
 enum|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_Host_Socket_h_
+end_comment
 
 end_unit
 

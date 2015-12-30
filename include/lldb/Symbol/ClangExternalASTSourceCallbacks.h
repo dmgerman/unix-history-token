@@ -47,22 +47,6 @@ begin_comment
 comment|// C Includes
 end_comment
 
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -70,8 +54,18 @@ file|<stdint.h>
 end_include
 
 begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
 comment|// Other libraries and framework includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
 
 begin_include
 include|#
@@ -98,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -318,7 +312,7 @@ block|{
 comment|// This method only needs to be implemented if the AST source ever
 comment|// passes back decl sets as VisibleDeclaration objects.
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|clang
@@ -335,7 +329,7 @@ comment|// This operation is meant to be used via a LazyOffsetPtr.  It only
 comment|// needs to be implemented if the AST source uses methods like
 comment|// FunctionDecl::setLazyBody when building decls.
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|clang
@@ -376,7 +370,7 @@ argument_list|)
 name|override
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -390,30 +384,46 @@ name|DeclContext
 operator|*
 name|decl_ctx
 argument_list|)
-block|{
-return|return;
-block|}
-name|clang
-operator|::
-name|ExternalLoadResult
+block|{     }
+name|void
 name|FindExternalLexicalDecls
 argument_list|(
-argument|const clang::DeclContext *decl_ctx
-argument_list|,
-argument|bool (*isKindWeWant)(clang::Decl::Kind)
-argument_list|,
-argument|llvm::SmallVectorImpl<clang::Decl *>&decls
-argument_list|)
-name|override
-block|{
-comment|// This is used to support iterating through an entire lexical context,
-comment|// which isn't something the debugger should ever need to do.
-return|return
+specifier|const
 name|clang
 operator|::
-name|ELR_Failure
-return|;
-block|}
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|clang
+operator|::
+name|Decl
+operator|::
+name|Kind
+argument_list|)
+operator|>
+name|IsKindWeWant
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|clang
+operator|::
+name|Decl
+operator|*
+operator|>
+operator|&
+name|Result
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
@@ -580,19 +590,19 @@ condition|)
 block|{
 name|m_callback_tag_decl
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|m_callback_objc_decl
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|m_callback_find_by_name
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|m_callback_layout_record_type
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 block|}
 block|}

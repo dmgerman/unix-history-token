@@ -495,7 +495,7 @@ typedef|;
 typedef|typedef
 name|void
 modifier|*
-name|clang_type_t
+name|opaque_compiler_type_t
 typedef|;
 typedef|typedef
 name|uint64_t

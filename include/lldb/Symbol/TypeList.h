@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
+file|<vector>
 end_include
 
 begin_include
@@ -130,17 +130,6 @@ operator|&
 name|type
 argument_list|)
 decl_stmt|;
-name|bool
-name|InsertUnique
-argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|TypeSP
-operator|&
-name|type
-argument_list|)
-decl_stmt|;
 name|uint32_t
 name|GetSize
 argument_list|()
@@ -157,12 +146,8 @@ expr_stmt|;
 typedef|typedef
 name|std
 operator|::
-name|multimap
+name|vector
 operator|<
-name|lldb
-operator|::
-name|user_id_t
-operator|,
 name|lldb
 operator|::
 name|TypeSP
@@ -178,7 +163,7 @@ name|lldb
 operator|::
 name|TypeSP
 operator|,
-name|map_adapter
+name|vector_adapter
 operator|>
 name|TypeIterable
 expr_stmt|;
@@ -235,15 +220,6 @@ operator|>
 specifier|const
 operator|&
 name|callback
-argument_list|)
-decl_stmt|;
-name|bool
-name|RemoveTypeWithUID
-argument_list|(
-name|lldb
-operator|::
-name|user_id_t
-name|uid
 argument_list|)
 decl_stmt|;
 name|void

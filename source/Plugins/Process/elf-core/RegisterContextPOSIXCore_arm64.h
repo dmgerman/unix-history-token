@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextCorePOSIX_arm64.h -----------------------*- C++ -*-===//
+comment|//===-- RegisterContextCorePOSIX_arm64.h ------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -28,20 +28,36 @@ comment|//
 end_comment
 
 begin_comment
-comment|//===---------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_RegisterContextCorePOSIX_arm64_H_
+name|liblldb_RegisterContextCorePOSIX_arm64_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_RegisterContextCorePOSIX_arm64_H_
+name|liblldb_RegisterContextCorePOSIX_arm64_h_
 end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -96,88 +112,68 @@ block|;
 operator|~
 name|RegisterContextCorePOSIX_arm64
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|ReadRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|value
+argument|lldb_private::RegisterValue&value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|value
+argument|const lldb_private::RegisterValue&value
 argument_list|)
+name|override
 block|;
 name|bool
 name|ReadAllRegisterValues
 argument_list|(
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
 name|bool
 name|WriteAllRegisterValues
 argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
 name|bool
 name|HardwareSingleStep
 argument_list|(
 argument|bool enable
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
 name|bool
 name|ReadGPR
 argument_list|()
+name|override
 block|;
 name|bool
 name|ReadFPR
 argument_list|()
+name|override
 block|;
 name|bool
 name|WriteGPR
 argument_list|()
+name|override
 block|;
 name|bool
 name|WriteFPR
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -200,7 +196,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_RegisterContextCorePOSIX_arm64_H_
+comment|// liblldb_RegisterContextCorePOSIX_arm64_h_
 end_comment
 
 end_unit

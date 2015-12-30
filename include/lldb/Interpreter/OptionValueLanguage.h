@@ -121,10 +121,10 @@ argument_list|(
 argument|default_value
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|OptionValueLanguage
 argument_list|()
+name|override
 block|{     }
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides

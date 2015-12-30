@@ -49,12 +49,6 @@ directive|include
 file|"lldb/API/SBDefines.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LLDB_DISABLE_PYTHON
-end_ifndef
-
 begin_decl_stmt
 name|namespace
 name|lldb
@@ -226,6 +220,22 @@ label|:
 name|SBTypeSummary
 argument_list|()
 expr_stmt|;
+comment|// Native function summary formatter callback
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|FormatCallback
+function_decl|)
+parameter_list|(
+name|SBValue
+parameter_list|,
+name|SBTypeSummaryOptions
+parameter_list|,
+name|SBStream
+modifier|&
+parameter_list|)
+function_decl|;
 specifier|static
 name|SBTypeSummary
 name|CreateWithSummaryString
@@ -274,6 +284,26 @@ literal|0
 parameter_list|)
 function_decl|;
 comment|// see lldb::eTypeOption values
+specifier|static
+name|SBTypeSummary
+name|CreateWithCallback
+parameter_list|(
+name|FormatCallback
+name|cb
+parameter_list|,
+name|uint32_t
+name|options
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|description
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 name|SBTypeSummary
 argument_list|(
 specifier|const
@@ -379,6 +409,15 @@ name|rhs
 operator|)
 expr_stmt|;
 name|bool
+name|DoesPrintValue
+argument_list|(
+name|lldb
+operator|::
+name|SBValue
+name|value
+argument_list|)
+decl_stmt|;
+name|bool
 name|IsEqualTo
 argument_list|(
 name|lldb
@@ -476,15 +515,6 @@ end_empty_stmt
 begin_comment
 unit|}
 comment|// namespace lldb
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// LLDB_DISABLE_PYTHON
 end_comment
 
 begin_endif

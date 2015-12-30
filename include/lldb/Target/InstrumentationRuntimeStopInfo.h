@@ -89,18 +89,18 @@ name|StopInfo
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|InstrumentationRuntimeStopInfo
 argument_list|()
+name|override
 block|{     }
-name|virtual
 name|lldb
 operator|::
 name|StopReason
 name|GetStopReason
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|lldb
@@ -108,13 +108,24 @@ operator|::
 name|eStopReasonInstrumentation
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetDescription
 argument_list|()
+name|override
 block|;
+name|bool
+name|DoShouldNotify
+argument_list|(
+argument|Event *event_ptr
+argument_list|)
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 specifier|static
 name|lldb
 operator|::
@@ -138,7 +149,7 @@ argument|std::string description
 argument_list|,
 argument|StructuredData::ObjectSP additional_data
 argument_list|)
-block|;      }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

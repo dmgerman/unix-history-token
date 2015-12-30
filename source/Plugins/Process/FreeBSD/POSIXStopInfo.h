@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"POSIXThread.h"
+file|"FreeBSDThread.h"
 end_include
 
 begin_include
@@ -155,7 +155,7 @@ name|public
 operator|:
 name|POSIXLimboStopInfo
 argument_list|(
-name|POSIXThread
+name|FreeBSDThread
 operator|&
 name|thread
 argument_list|)
@@ -234,7 +234,7 @@ name|public
 operator|:
 name|POSIXCrashStopInfo
 argument_list|(
-argument|POSIXThread&thread
+argument|FreeBSDThread&thread
 argument_list|,
 argument|uint32_t status
 argument_list|,
@@ -284,7 +284,7 @@ name|public
 operator|:
 name|POSIXNewThreadStopInfo
 argument_list|(
-name|POSIXThread
+name|FreeBSDThread
 operator|&
 name|thread
 argument_list|)

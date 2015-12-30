@@ -43,16 +43,62 @@ directive|define
 name|liblldb_DisassemblerLLVMC_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
 
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"llvm-c/Disassembler.h"
+end_include
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Address.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Disassembler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/PluginManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Mutex.h"
 end_include
 
 begin_comment
@@ -90,29 +136,9 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Address.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Disassembler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/PluginManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_decl_stmt
 name|class
@@ -165,14 +191,26 @@ argument_list|,
 argument|llvm::MCInst&mc_inst
 argument_list|)
 block|;
-name|uint64_t
+name|void
 name|PrintMCInst
 argument_list|(
-argument|llvm::MCInst&mc_inst
+name|llvm
+operator|::
+name|MCInst
+operator|&
+name|mc_inst
 argument_list|,
-argument|char *output_buffer
+name|std
+operator|::
+name|string
+operator|&
+name|inst_string
 argument_list|,
-argument|size_t out_buffer_len
+name|std
+operator|::
+name|string
+operator|&
+name|comments_string
 argument_list|)
 block|;
 name|void
@@ -185,6 +223,16 @@ argument_list|)
 block|;
 name|bool
 name|CanBranch
+argument_list|(
+name|llvm
+operator|::
+name|MCInst
+operator|&
+name|mc_inst
+argument_list|)
+block|;
+name|bool
+name|HasDelaySlot
 argument_list|(
 name|llvm
 operator|::
@@ -279,6 +327,27 @@ block|;     }
 block|;
 name|public
 operator|:
+name|DisassemblerLLVMC
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|flavor
+comment|/* = NULL */
+argument_list|)
+block|;
+operator|~
+name|DisassemblerLLVMC
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -319,28 +388,6 @@ operator|*
 name|flavor
 argument_list|)
 block|;
-name|DisassemblerLLVMC
-argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|arch
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|flavor
-comment|/* = NULL */
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|DisassemblerLLVMC
-argument_list|()
-block|;
-name|virtual
 name|size_t
 name|DecodeInstructions
 argument_list|(
@@ -356,21 +403,22 @@ argument|bool append
 argument_list|,
 argument|bool data_from_file
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -378,22 +426,14 @@ name|friend
 name|class
 name|InstructionLLVMC
 block|;
-name|virtual
 name|bool
 name|FlavorValidForArchSpec
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|arch
+argument|const lldb_private::ArchSpec&arch
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|flavor
+argument|const char *flavor
 argument_list|)
+name|override
 block|;
 name|bool
 name|IsValid

@@ -119,10 +119,10 @@ operator|*
 name|process
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|JITLoader
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Called after attaching a process.

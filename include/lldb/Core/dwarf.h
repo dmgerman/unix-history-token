@@ -59,6 +59,12 @@ directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/RangeMap.h"
+end_include
+
 begin_comment
 comment|// and stuff them in our default namespace
 end_comment
@@ -95,7 +101,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint8_t
+name|uint16_t
 name|dw_form_t
 typedef|;
 end_typedef
@@ -277,6 +283,22 @@ end_comment
 begin_comment
 comment|//#define DW_OP_APPLE_error         0xFF // Stops expression evaluation and returns an error (no args)
 end_comment
+
+begin_typedef
+typedef|typedef
+name|lldb_private
+operator|::
+name|RangeArray
+operator|<
+name|dw_addr_t
+operator|,
+name|dw_addr_t
+operator|,
+literal|2
+operator|>
+name|DWARFRangeList
+expr_stmt|;
+end_typedef
 
 begin_endif
 endif|#

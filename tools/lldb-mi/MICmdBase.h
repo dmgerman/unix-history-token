@@ -38,7 +38,19 @@ name|once
 end_pragma
 
 begin_comment
-comment|// In-house headers:
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -180,18 +192,6 @@ comment|//          be presented with arguments or options it does not understan
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 18/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -215,136 +215,108 @@ block|{
 comment|// Methods:
 name|public
 label|:
-comment|/* ctor */
 name|CMICmdBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Overridden:
-name|public
-label|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 specifier|const
 name|SMICmdData
-modifier|&
+operator|&
 name|GetCmdData
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetErrorDescription
-argument_list|(
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|bool
 name|SetCmdData
-parameter_list|(
+argument_list|(
 specifier|const
 name|SMICmdData
-modifier|&
+operator|&
 name|vCmdData
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|CmdFinishedTellInvoker
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetMIResultRecord
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetMIResultRecordExtra
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 name|bool
 name|HasMIResultRecordExtra
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 name|bool
 name|ParseArgs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|// From CMICmdFactory::ICmd
-name|virtual
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetMiCmd
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 name|CMICmdFactory
 operator|::
 name|CmdCreatorFnPtr
 name|GetCmdCreatorFn
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 name|virtual
 name|MIuint
 name|GetGUID
-parameter_list|(
+parameter_list|()
+function_decl|;
 name|void
-parameter_list|)
+name|AddCommonArgs
+parameter_list|()
 function_decl|;
 comment|// Overrideable:
-name|public
-label|:
-comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
+name|override
 expr_stmt|;
 name|virtual
 name|bool
 name|GetExitAppOnCommandFailure
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Methods:
 name|protected
 label|:
@@ -374,13 +346,9 @@ argument_list|)
 expr_stmt|;
 name|bool
 name|ParseValidateCmdOptions
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Attributes:
-name|protected
-label|:
 name|CMICmdFactory
 operator|::
 name|CmdCreatorFnPtr
@@ -427,6 +395,33 @@ name|CMICmdArgSet
 name|m_setCmdArgs
 decl_stmt|;
 comment|// The list of arguments *this command needs to parse from the options string to carry out work.
+specifier|const
+name|CMIUtilString
+name|m_constStrArgThreadGroup
+decl_stmt|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgThread
+decl_stmt|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrame
+decl_stmt|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgConsume
+decl_stmt|;
+comment|// These 3 members can be used by the derived classes to make any of
+comment|// "thread", "frame" or "thread-group" mandatory.
+name|bool
+name|m_ThreadGrpArgMandatory
+decl_stmt|;
+name|bool
+name|m_ThreadArgMandatory
+decl_stmt|;
+name|bool
+name|m_FrameArgMandatory
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -475,7 +470,7 @@ comment|// Return:  T * - CMICmdArgValBase derived object.
 end_comment
 
 begin_comment
-comment|//              - NULL = function has failed, unable to retrieve the option/arg object.
+comment|//              - nullptr = function has failed, unable to retrieve the option/arg object.
 end_comment
 
 begin_comment
@@ -606,7 +601,7 @@ comment|// Return:  T * - CMICmdArgValBase derived object.
 end_comment
 
 begin_comment
-comment|//              - NULL = function has failed, unable to retrieve the option/arg object.
+comment|//              - nullptr = function has failed, unable to retrieve the option/arg object.
 end_comment
 
 begin_comment

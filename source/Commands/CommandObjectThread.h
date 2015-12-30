@@ -84,11 +84,11 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectMultiwordThread
 argument_list|()
-block|;  }
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

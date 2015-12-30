@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/TaggedASTType.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 

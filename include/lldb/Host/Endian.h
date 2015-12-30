@@ -51,7 +51,7 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|lldb
+name|lldb_private
 block|{
 name|namespace
 name|endian
@@ -81,12 +81,16 @@ literal|0x01020304
 block|}
 union|;
 specifier|inline
+name|lldb
+operator|::
 name|ByteOrder
 name|InlHostByteOrder
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|(
+name|lldb
+operator|::
 name|ByteOrder
 operator|)
 name|endianTest

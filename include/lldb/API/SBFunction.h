@@ -160,6 +160,15 @@ name|SBAddress
 name|GetEndAddress
 argument_list|()
 expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|GetArgumentName
+parameter_list|(
+name|uint32_t
+name|arg_idx
+parameter_list|)
+function_decl|;
 name|uint32_t
 name|GetPrologueByteSize
 parameter_list|()
@@ -182,6 +191,10 @@ name|LanguageType
 name|GetLanguage
 argument_list|()
 expr_stmt|;
+name|bool
+name|GetIsOptimized
+parameter_list|()
+function_decl|;
 name|bool
 name|operator
 operator|==

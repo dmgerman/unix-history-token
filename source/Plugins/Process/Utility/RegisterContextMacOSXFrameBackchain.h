@@ -88,9 +88,6 @@ name|RegisterContext
 block|{
 name|public
 operator|:
-comment|//------------------------------------------------------------------
-comment|// Constructors and Destructors
-comment|//------------------------------------------------------------------
 name|RegisterContextMacOSXFrameBackchain
 argument_list|(
 argument|lldb_private::Thread&thread
@@ -100,25 +97,21 @@ argument_list|,
 argument|const UnwindMacOSXFrameBackchain::Cursor&cursor
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|RegisterContextMacOSXFrameBackchain
 argument_list|()
+name|override
 block|;
-comment|//------------------------------------------------------------------
-comment|// Subclasses must override these functions
-comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|InvalidateAllRegisters
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetRegisterCount
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -128,13 +121,13 @@ name|GetRegisterInfoAtIndex
 argument_list|(
 argument|size_t reg
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetRegisterSetCount
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -144,68 +137,40 @@ name|GetRegisterSet
 argument_list|(
 argument|size_t reg_set
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ReadRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|value
+argument|lldb_private::RegisterValue&value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|value
+argument|const lldb_private::RegisterValue&value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ReadAllRegisterValues
 argument_list|(
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteAllRegisterValues
 argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|ConvertRegisterKindToRegisterNumber
 argument_list|(
@@ -213,6 +178,7 @@ argument|lldb::RegisterKind kind
 argument_list|,
 argument|uint32_t num
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -224,9 +190,6 @@ block|;
 name|bool
 name|m_cursor_is_valid
 block|;
-comment|//------------------------------------------------------------------
-comment|// For RegisterContextMacOSXFrameBackchain only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|RegisterContextMacOSXFrameBackchain

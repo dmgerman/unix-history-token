@@ -107,10 +107,10 @@ operator|&
 name|rhs
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadList
 argument_list|()
+name|override
 block|;
 specifier|const
 name|ThreadList
@@ -307,11 +307,11 @@ argument_list|(
 argument|uint32_t stop_id
 argument_list|)
 block|;
-name|virtual
 name|Mutex
 operator|&
 name|GetMutex
 argument_list|()
+name|override
 block|;
 name|void
 name|Update

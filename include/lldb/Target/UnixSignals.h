@@ -284,6 +284,14 @@ name|index
 argument_list|)
 decl|const
 decl_stmt|;
+name|ConstString
+name|GetShortName
+argument_list|(
+name|ConstString
+name|name
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// We assume that the elements of this object are constant once it is constructed,
 comment|// since a process should never need to add or remove symbols as it runs.  So don't
 comment|// call these functions anywhere but the constructor of your subclass of UnixSignals or in
@@ -299,11 +307,6 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|short_name
-parameter_list|,
 name|bool
 name|default_suppress
 parameter_list|,
@@ -317,6 +320,13 @@ specifier|const
 name|char
 modifier|*
 name|description
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alias
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -338,7 +348,7 @@ name|ConstString
 name|m_name
 decl_stmt|;
 name|ConstString
-name|m_short_name
+name|m_alias
 decl_stmt|;
 name|std
 operator|::
@@ -362,8 +372,6 @@ name|Signal
 argument_list|(
 argument|const char *name
 argument_list|,
-argument|const char *short_name
-argument_list|,
 argument|bool default_suppress
 argument_list|,
 argument|bool default_stop
@@ -371,6 +379,8 @@ argument_list|,
 argument|bool default_notify
 argument_list|,
 argument|const char *description
+argument_list|,
+argument|const char *alias
 argument_list|)
 empty_stmt|;
 operator|~

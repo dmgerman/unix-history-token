@@ -85,12 +85,6 @@ name|SymbolFileDWARF
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|class
-name|DWARFDebugInfoEntry
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
@@ -119,7 +113,9 @@ name|FileNameEntry
 argument_list|()
 operator|:
 name|name
-argument_list|()
+argument_list|(
+name|nullptr
+argument_list|)
 operator|,
 name|dir_idx
 argument_list|(
@@ -136,9 +132,9 @@ argument_list|(
 literal|0
 argument_list|)
 block|{         }
-name|std
-operator|::
-name|string
+specifier|const
+name|char
+operator|*
 name|name
 expr_stmt|;
 name|dw_sleb128_t
@@ -267,9 +263,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+specifier|const
+name|char
+operator|*
 operator|>
 name|include_directories
 expr_stmt|;
@@ -359,17 +355,16 @@ argument_list|(
 name|uint32_t
 name|file_idx
 argument_list|,
-name|std
+specifier|const
+name|char
+operator|*
+name|comp_dir
+argument_list|,
+name|lldb_private
 operator|::
-name|string
+name|FileSpec
 operator|&
 name|file
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|dir
 argument_list|)
 decl|const
 decl_stmt|;

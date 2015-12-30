@@ -531,6 +531,39 @@ name|GetRemoteUnixSignals
 argument_list|()
 name|override
 block|;
+name|lldb
+operator|::
+name|ProcessSP
+name|ConnectProcess
+argument_list|(
+argument|const char* connect_url
+argument_list|,
+argument|const char* plugin_name
+argument_list|,
+argument|lldb_private::Debugger&debugger
+argument_list|,
+argument|lldb_private::Target *target
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+name|override
+block|;
+name|virtual
+name|size_t
+name|GetPendingGdbServerList
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|connection_urls
+argument_list|)
+block|;
 name|protected
 operator|:
 name|process_gdb_remote
@@ -559,18 +592,25 @@ operator|::
 name|UnixSignalsSP
 name|m_remote_signals_sp
 block|;
-comment|// Launch the lldb-gdbserver on the remote host and return the port it is listening on or 0 on
-comment|// failure. Subclasses should override this method if they want to do extra actions before or
-comment|// after launching the lldb-gdbserver.
+comment|// Launch the debug server on the remote host - caller connects to launched
+comment|// debug server using connect_url.
+comment|// Subclasses should override this method if they want to do extra actions before or
+comment|// after launching the debug server.
 name|virtual
-name|uint16_t
-name|LaunchGDBserverAndGetPort
+name|bool
+name|LaunchGDBServer
 argument_list|(
 name|lldb
 operator|::
 name|pid_t
 operator|&
 name|pid
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|connect_url
 argument_list|)
 block|;
 name|virtual
@@ -580,8 +620,37 @@ argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
 block|;
+name|virtual
+name|std
+operator|::
+name|string
+name|MakeUrl
+argument_list|(
+argument|const char* scheme
+argument_list|,
+argument|const char* hostname
+argument_list|,
+argument|uint16_t port
+argument_list|,
+argument|const char* path
+argument_list|)
+block|;
 name|private
 operator|:
+name|std
+operator|::
+name|string
+name|MakeGdbServerUrl
+argument_list|(
+argument|const std::string&platform_scheme
+argument_list|,
+argument|const std::string&platform_hostname
+argument_list|,
+argument|uint16_t port
+argument_list|,
+argument|const char* socket_name
+argument_list|)
+block|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformRemoteGDBServer

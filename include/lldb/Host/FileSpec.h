@@ -43,20 +43,33 @@ directive|define
 name|liblldb_FileSpec_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<functional>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -153,14 +166,14 @@ comment|//------------------------------------------------------------------
 comment|/// Constructor with path.
 comment|///
 comment|/// Takes a path to a file which can be just a filename, or a full
-comment|/// path. If \a path is not NULL or empty, this function will call
+comment|/// path. If \a path is not nullptr or empty, this function will call
 comment|/// FileSpec::SetFile (const char *path, bool resolve).
 comment|///
 comment|/// @param[in] path
 comment|///     The full or partial path to a file.
 comment|///
 comment|/// @param[in] resolve_path
-comment|///     If \b true, then we resolve the path with realpath,
+comment|///     If \b true, then we resolve the path, removing stray ../.. and so forth,
 comment|///     if \b false we trust the path is in canonical form already.
 comment|///
 comment|/// @see FileSpec::SetFile (const char *path, bool resolve)
@@ -254,10 +267,10 @@ comment|//------------------------------------------------------------------
 comment|/// Copy constructor
 comment|///
 comment|/// Makes a copy of the uniqued directory and filename strings from
-comment|/// \a rhs if it is not NULL.
+comment|/// \a rhs if it is not nullptr.
 comment|///
 comment|/// @param[in] rhs
-comment|///     A const FileSpec object pointer to copy if non-NULL.
+comment|///     A const FileSpec object pointer to copy if non-nullptr.
 comment|//------------------------------------------------------------------
 name|FileSpec
 argument_list|(
@@ -384,7 +397,7 @@ comment|/// @endcode
 comment|///
 comment|/// @return
 comment|///     A pointer to this object if either the directory or filename
-comment|///     is valid, NULL otherwise.
+comment|///     is valid, nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|explicit
 name|operator
@@ -764,7 +777,7 @@ comment|/// Extract the extension of the file.
 comment|///
 comment|/// Returns a ConstString that represents the extension of the filename
 comment|/// for this FileSpec object. If this object does not represent a file,
-comment|/// or the filename has no extension, ConstString(NULL) is returned.
+comment|/// or the filename has no extension, ConstString(nullptr) is returned.
 comment|/// The dot ('.') character is not returned as part of the extension
 comment|///
 comment|/// @return
@@ -873,16 +886,7 @@ name|bool
 name|IsSymbolicLink
 argument_list|()
 specifier|const
-block|{
-return|return
-name|GetFileType
-argument_list|()
-operator|==
-name|FileSpec
-operator|::
-name|eFileTypeSymbolicLink
-return|;
-block|}
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get the memory cost of this object.
 comment|///
@@ -925,7 +929,7 @@ comment|///     as many bytes as possible.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to the memory mapped data. This shared
-comment|///     pointer can contain a NULL DataBuffer pointer, so the contained
+comment|///     pointer can contain a nullptr DataBuffer pointer, so the contained
 comment|///     pointer must be checked prior to using it.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -972,7 +976,7 @@ comment|///     as many bytes as possible.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to the memory mapped data. This shared
-comment|///     pointer can contain a NULL DataBuffer pointer, so the contained
+comment|///     pointer can contain a nullptr DataBuffer pointer, so the contained
 comment|///     pointer must be checked prior to using it.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -1010,7 +1014,7 @@ comment|///     as many bytes as possible.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to the memory mapped data. This shared
-comment|///     pointer can contain a NULL DataBuffer pointer, so the contained
+comment|///     pointer can contain a nullptr DataBuffer pointer, so the contained
 comment|///     pointer must be checked prior to using it.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -1023,7 +1027,7 @@ literal|0
 argument_list|,
 argument|size_t length = SIZE_MAX
 argument_list|,
-argument|Error *error_ptr = NULL
+argument|Error *error_ptr = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1055,7 +1059,7 @@ comment|/// is NULL terminated so it can be used as a C string.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to the data. This shared pointer can
-comment|///     contain a NULL DataBuffer pointer, so the contained pointer
+comment|///     contain a nullptr DataBuffer pointer, so the contained pointer
 comment|///     must be checked prior to using it.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -1067,7 +1071,7 @@ name|Error
 operator|*
 name|error_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -1521,15 +1525,6 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace lldb_private
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
 end_comment
 
 begin_endif

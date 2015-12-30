@@ -43,11 +43,27 @@ directive|define
 name|liblldb_LineTable_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -99,14 +115,16 @@ name|virtual
 operator|~
 name|LineSequence
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|Clear
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN
@@ -313,7 +331,7 @@ comment|///     returned, otherwise \a entry is left unmodified.
 comment|///
 comment|/// @param[out] index_ptr
 comment|///     A pointer to a 32 bit integer that will get the actual line
-comment|///     entry index if it is not NULL.
+comment|///     entry index if it is not nullptr.
 comment|///
 comment|/// @return
 comment|///     Returns \b true if \a so_addr is contained in a line entry
@@ -335,7 +353,7 @@ name|uint32_t
 modifier|*
 name|index_ptr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -1041,19 +1059,20 @@ name|public
 operator|:
 name|LineSequenceImpl
 argument_list|()
-operator|:
-name|LineSequence
-argument_list|()
-block|{}
-name|virtual
+operator|=
+expr|default
+block|;
 operator|~
 name|LineSequenceImpl
 argument_list|()
-block|{}
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|void
 name|Clear
 argument_list|()
+name|override
 block|;
 name|entry_collection
 name|m_entries
