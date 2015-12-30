@@ -249,6 +249,13 @@ name|TargetInfo
 operator|>
 name|Target
 block|;
+comment|/// Auxiliary Target info.
+name|IntrusiveRefCntPtr
+operator|<
+name|TargetInfo
+operator|>
+name|AuxTarget
+block|;
 comment|/// The virtual file system.
 name|IntrusiveRefCntPtr
 operator|<
@@ -395,26 +402,6 @@ name|Module
 operator|*
 operator|>
 name|KnownModules
-block|;
-comment|/// \brief Module names that have an override for the target file.
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|ModuleFileOverrides
-block|;
-comment|/// \brief Module files that we've explicitly loaded via \ref loadModuleFile,
-comment|/// and their dependencies.
-name|llvm
-operator|::
-name|StringSet
-operator|<
-operator|>
-name|ExplicitlyLoadedModuleFiles
 block|;
 comment|/// \brief The location of the module-import keyword for the last module
 comment|/// import.
@@ -1068,9 +1055,34 @@ operator|*
 name|Target
 return|;
 block|}
-comment|/// Replace the current diagnostics engine.
+comment|/// Replace the current Target.
 name|void
 name|setTarget
+argument_list|(
+name|TargetInfo
+operator|*
+name|Value
+argument_list|)
+block|;
+comment|/// }
+comment|/// @name AuxTarget Info
+comment|/// {
+name|TargetInfo
+operator|*
+name|getAuxTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AuxTarget
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// Replace the current AuxTarget.
+name|void
+name|setAuxTarget
 argument_list|(
 name|TargetInfo
 operator|*
@@ -1910,6 +1922,8 @@ argument_list|,
 argument|ASTContext&Context
 argument_list|,
 argument|const PCHContainerReader&PCHContainerRdr
+argument_list|,
+argument|ArrayRef<IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
 argument_list|,
 argument|void *DeserializationListener
 argument_list|,

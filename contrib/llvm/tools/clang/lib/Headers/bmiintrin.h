@@ -29,27 +29,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__BMI__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"BMI instruction set not enabled"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __BMI__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|__BMIINTRIN_H
 end_ifndef
 
@@ -133,6 +112,17 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__, __target__("bmi")))
+end_define
+
+begin_comment
+comment|/* Allow using the tzcnt intrinsics even for non-BMI targets. Since the TZCNT    instruction behaves as BSF on non-BMI targets, there is code that expects    to use it as a potentially faster version of BSF. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__RELAXED_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
@@ -141,7 +131,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|__DEFAULT_FN_ATTRS
+name|__RELAXED_FN_ATTRS
 name|__tzcnt_u16
 parameter_list|(
 name|unsigned
@@ -349,7 +339,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|__DEFAULT_FN_ATTRS
+name|__RELAXED_FN_ATTRS
 name|__tzcnt_u32
 parameter_list|(
 name|unsigned
@@ -634,7 +624,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|__DEFAULT_FN_ATTRS
+name|__RELAXED_FN_ATTRS
 name|__tzcnt_u64
 parameter_list|(
 name|unsigned
@@ -669,6 +659,12 @@ begin_undef
 undef|#
 directive|undef
 name|__DEFAULT_FN_ATTRS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__RELAXED_FN_ATTRS
 end_undef
 
 begin_endif

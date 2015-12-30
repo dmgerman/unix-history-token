@@ -96,11 +96,25 @@ name|Module
 operator|>
 name|TheModule
 block|;
+comment|// Vector of {Linker::Flags, Module*} pairs to specify bitcode
+comment|// modules to link in using corresponding linker flags.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
 name|llvm
 operator|::
 name|Module
 operator|*
-name|LinkModule
+operator|>
+block|,
+literal|4
+operator|>
+name|LinkModules
 block|;
 name|llvm
 operator|::
@@ -164,15 +178,27 @@ comment|/// setLinkModule - Set the link module to be used by this action.  If a
 comment|/// module is not provided, and CodeGenOptions::LinkBitcodeFile is non-empty,
 comment|/// the action will load it from the specified file.
 name|void
-name|setLinkModule
+name|addLinkModule
 argument_list|(
 argument|llvm::Module *Mod
+argument_list|,
+argument|unsigned LinkFlags
 argument_list|)
 block|{
-name|LinkModule
-operator|=
+name|LinkModules
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|LinkFlags
+argument_list|,
 name|Mod
-block|; }
+argument_list|)
+argument_list|)
+block|;   }
 comment|/// Take the generated LLVM module, for use after the action has been run.
 comment|/// The result may be null on failure.
 name|std

@@ -6,23 +6,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__POPCNT__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"POPCNT instruction set not enabled"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|_POPCNTINTRIN_H
 end_ifndef
 
@@ -40,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("popcnt")))
 end_define
 
 begin_function
@@ -51,6 +34,26 @@ name|__DEFAULT_FN_ATTRS
 name|_mm_popcnt_u32
 parameter_list|(
 name|unsigned
+name|int
+name|__A
+parameter_list|)
+block|{
+return|return
+name|__builtin_popcount
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|int
+name|__DEFAULT_FN_ATTRS
+name|_popcnt32
+parameter_list|(
 name|int
 name|__A
 parameter_list|)
@@ -79,6 +82,28 @@ name|__DEFAULT_FN_ATTRS
 name|_mm_popcnt_u64
 parameter_list|(
 name|unsigned
+name|long
+name|long
+name|__A
+parameter_list|)
+block|{
+return|return
+name|__builtin_popcountll
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|long
+name|long
+name|__DEFAULT_FN_ATTRS
+name|_popcnt64
+parameter_list|(
 name|long
 name|long
 name|__A

@@ -343,7 +343,7 @@ name|void
 name|parseAccessSpecifier
 parameter_list|()
 function_decl|;
-name|void
+name|bool
 name|parseEnum
 parameter_list|()
 function_decl|;

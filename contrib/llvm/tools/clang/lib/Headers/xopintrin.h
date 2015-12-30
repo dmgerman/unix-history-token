@@ -32,23 +32,6 @@ directive|define
 name|__XOPINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__XOP__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"XOP instruction set is not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -63,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("xop")))
 end_define
 
 begin_function
@@ -1213,7 +1196,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   (__m128i)__builtin_ia32_vprotbi((__v16qi)__A, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vprotbi((__v16qi)(__m128i)(A), (N)); })
 end_define
 
 begin_define
@@ -1225,7 +1208,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   (__m128i)__builtin_ia32_vprotwi((__v8hi)__A, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vprotwi((__v8hi)(__m128i)(A), (N)); })
 end_define
 
 begin_define
@@ -1237,7 +1220,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   (__m128i)__builtin_ia32_vprotdi((__v4si)__A, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vprotdi((__v4si)(__m128i)(A), (N)); })
 end_define
 
 begin_define
@@ -1249,7 +1232,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   (__m128i)__builtin_ia32_vprotqi((__v2di)__A, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vprotqi((__v2di)(__m128i)(A), (N)); })
 end_define
 
 begin_function
@@ -1535,7 +1518,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomub((__v16qi)__A, (__v16qi)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomub((__v16qi)(__m128i)(A), \                                   (__v16qi)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1549,7 +1532,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomuw((__v8hi)__A, (__v8hi)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomuw((__v8hi)(__m128i)(A), \                                   (__v8hi)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1563,7 +1546,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomud((__v4si)__A, (__v4si)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomud((__v4si)(__m128i)(A), \                                   (__v4si)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1577,7 +1560,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomuq((__v2di)__A, (__v2di)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomuq((__v2di)(__m128i)(A), \                                   (__v2di)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1591,7 +1574,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomb((__v16qi)__A, (__v16qi)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomb((__v16qi)(__m128i)(A), \                                  (__v16qi)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1605,7 +1588,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomw((__v8hi)__A, (__v8hi)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomw((__v8hi)(__m128i)(A), \                                  (__v8hi)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1619,7 +1602,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomd((__v4si)__A, (__v4si)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomd((__v4si)(__m128i)(A), \                                  (__v4si)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -1633,7 +1616,7 @@ name|B
 parameter_list|,
 name|N
 parameter_list|)
-value|__extension__ ({ \   __m128i __A = (A); \   __m128i __B = (B); \   (__m128i)__builtin_ia32_vpcomq((__v2di)__A, (__v2di)__B, (N)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vpcomq((__v2di)(__m128i)(A), \                                  (__v2di)(__m128i)(B), (N)); })
 end_define
 
 begin_define
@@ -3433,7 +3416,7 @@ name|C
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__ ({ \   __m128d __X = (X); \   __m128d __Y = (Y); \   __m128i __C = (C); \   (__m128d)__builtin_ia32_vpermil2pd((__v2df)__X, (__v2df)__Y, \                                      (__v2di)__C, (I)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_vpermil2pd((__v2df)(__m128d)(X), \                                      (__v2df)(__m128d)(Y), \                                      (__v2di)(__m128i)(C), (I)); })
 end_define
 
 begin_define
@@ -3449,7 +3432,7 @@ name|C
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__ ({ \   __m256d __X = (X); \   __m256d __Y = (Y); \   __m256i __C = (C); \   (__m256d)__builtin_ia32_vpermil2pd256((__v4df)__X, (__v4df)__Y, \                                         (__v4di)__C, (I)); })
+value|__extension__ ({ \   (__m256d)__builtin_ia32_vpermil2pd256((__v4df)(__m256d)(X), \                                         (__v4df)(__m256d)(Y), \                                         (__v4di)(__m256i)(C), (I)); })
 end_define
 
 begin_define
@@ -3465,7 +3448,7 @@ name|C
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__ ({ \   __m128 __X = (X); \   __m128 __Y = (Y); \   __m128i __C = (C); \   (__m128)__builtin_ia32_vpermil2ps((__v4sf)__X, (__v4sf)__Y, \                                     (__v4si)__C, (I)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_vpermil2ps((__v4sf)(__m128)(X), (__v4sf)(__m128)(Y), \                                     (__v4si)(__m128i)(C), (I)); })
 end_define
 
 begin_define
@@ -3481,7 +3464,7 @@ name|C
 parameter_list|,
 name|I
 parameter_list|)
-value|__extension__ ({ \   __m256 __X = (X); \   __m256 __Y = (Y); \   __m256i __C = (C); \   (__m256)__builtin_ia32_vpermil2ps256((__v8sf)__X, (__v8sf)__Y, \                                        (__v8si)__C, (I)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_vpermil2ps256((__v8sf)(__m256)(X), \                                        (__v8sf)(__m256)(Y), \                                        (__v8si)(__m256i)(C), (I)); })
 end_define
 
 begin_function
@@ -3645,15 +3628,6 @@ undef|#
 directive|undef
 name|__DEFAULT_FN_ATTRS
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __XOP__ */
-end_comment
 
 begin_endif
 endif|#

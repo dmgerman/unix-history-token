@@ -239,7 +239,7 @@ name|RevertedTokenID
 range|:
 literal|1
 decl_stmt|;
-comment|// True if RevertTokenIDToIdentifier was
+comment|// True if revertTokenIDToIdentifier was
 comment|// called.
 name|bool
 name|OutOfDate
@@ -617,7 +617,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief True if RevertTokenIDToIdentifier() was called.
+comment|/// \brief True if revertTokenIDToIdentifier() was called.
 end_comment
 
 begin_expr_stmt
@@ -658,7 +658,7 @@ end_comment
 
 begin_function
 name|void
-name|RevertTokenIDToIdentifier
+name|revertTokenIDToIdentifier
 parameter_list|()
 block|{
 name|assert
@@ -684,6 +684,38 @@ name|true
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|void
+name|revertIdentifierToTokenID
+argument_list|(
+name|tok
+operator|::
+name|TokenKind
+name|TK
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|TokenID
+operator|==
+name|tok
+operator|::
+name|identifier
+operator|&&
+literal|"Should be at tok::identifier"
+argument_list|)
+expr_stmt|;
+name|TokenID
+operator|=
+name|TK
+expr_stmt|;
+name|RevertedTokenID
+operator|=
+name|false
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the preprocessor keyword ID for this identifier.
@@ -768,6 +800,51 @@ name|ID
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief True if setNotBuiltin() was called.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasRevertedBuiltin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCOrBuiltinID
+operator|==
+name|tok
+operator|::
+name|NUM_OBJC_KEYWORDS
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Revert the identifier to a non-builtin identifier. We do this if
+end_comment
+
+begin_comment
+comment|/// the name of a known builtin library function is used to declare that
+end_comment
+
+begin_comment
+comment|/// function, but an unexpected type is specified.
+end_comment
+
+begin_function
+name|void
+name|revertBuiltin
+parameter_list|()
+block|{
+name|setBuiltinID
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Return a value indicating whether this is a builtin function.

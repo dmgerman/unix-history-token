@@ -217,11 +217,6 @@ argument_list|()
 operator|:
 name|StackBase
 argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|StackBaseMem
-argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
@@ -234,10 +229,7 @@ name|LValue
 name|Source
 block|;
 comment|/// The temporary alloca.
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|Temporary
 block|;
 comment|/// A value to "use" after the writeback, or null.
@@ -350,10 +342,7 @@ argument_list|(
 name|LValue
 name|srcLV
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|temporary
 argument_list|,
 name|llvm
@@ -365,25 +354,15 @@ argument_list|)
 block|{
 name|Writeback
 name|writeback
-decl_stmt|;
-name|writeback
-operator|.
-name|Source
-operator|=
+init|=
+block|{
 name|srcLV
-expr_stmt|;
-name|writeback
-operator|.
-name|Temporary
-operator|=
+block|,
 name|temporary
-expr_stmt|;
-name|writeback
-operator|.
-name|ToUse
-operator|=
+block|,
 name|toUse
-expr_stmt|;
+block|}
+decl_stmt|;
 name|Writebacks
 operator|.
 name|push_back
@@ -557,13 +536,6 @@ name|CallInst
 operator|*
 name|StackBase
 expr_stmt|;
-comment|/// The alloca holding the stackbase.  We need it to maintain SSA form.
-name|llvm
-operator|::
-name|AllocaInst
-operator|*
-name|StackBaseMem
-expr_stmt|;
 comment|/// The iterator pointing to the stack restore cleanup.  We manually run and
 comment|/// deactivate this cleanup after the call in the unexceptional case because
 comment|/// it doesn't run in the normal order.
@@ -610,6 +582,9 @@ name|int
 operator|>
 name|Value
 expr_stmt|;
+name|CharUnits
+name|Alignment
+decl_stmt|;
 comment|// Return value slot flags
 enum|enum
 name|Flags
@@ -630,7 +605,7 @@ argument_list|()
 block|{}
 name|ReturnValueSlot
 argument_list|(
-argument|llvm::Value *Value
+argument|Address Addr
 argument_list|,
 argument|bool IsVolatile
 argument_list|,
@@ -639,13 +614,38 @@ argument_list|)
 block|:
 name|Value
 argument_list|(
-argument|Value
+name|Addr
+operator|.
+name|isValid
+argument_list|()
+condition|?
+name|Addr
+operator|.
+name|getPointer
+argument_list|()
+else|:
+name|nullptr
 argument_list|,
-argument|(IsVolatile ? IS_VOLATILE :
+operator|(
+name|IsVolatile
+condition|?
+name|IS_VOLATILE
+else|:
 literal|0
-argument|) | (IsUnused ? IS_UNUSED :
+operator|)
+operator||
+operator|(
+name|IsUnused
+condition|?
+name|IS_UNUSED
+else|:
 literal|0
-argument|)
+operator|)
+argument_list|)
+operator|,
+name|Alignment
+argument_list|(
+argument|Addr.isValid() ? Addr.getAlignment() : CharUnits::Zero()
 argument_list|)
 block|{}
 name|bool
@@ -656,6 +656,9 @@ block|{
 return|return
 operator|!
 name|getValue
+argument_list|()
+operator|.
+name|isValid
 argument_list|()
 return|;
 block|}
@@ -673,19 +676,21 @@ operator|&
 name|IS_VOLATILE
 return|;
 block|}
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getValue
 argument_list|()
 specifier|const
 block|{
 return|return
+name|Address
+argument_list|(
 name|Value
 operator|.
 name|getPointer
 argument_list|()
+argument_list|,
+name|Alignment
+argument_list|)
 return|;
 block|}
 name|bool

@@ -32,23 +32,6 @@ directive|define
 name|__FMAINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FMA__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"FMA instruction set is not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Define the default attributes for the functions in this file. */
 end_comment
@@ -57,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("fma")))
 end_define
 
 begin_function
@@ -1121,15 +1104,6 @@ undef|#
 directive|undef
 name|__DEFAULT_FN_ATTRS
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FMA__ */
-end_comment
 
 begin_endif
 endif|#

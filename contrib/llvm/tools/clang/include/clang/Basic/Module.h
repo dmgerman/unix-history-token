@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/FileManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -159,15 +165,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|DirectoryEntry
-decl_stmt|;
-name|class
-name|FileEntry
-decl_stmt|;
-name|class
-name|FileManager
-decl_stmt|;
 name|class
 name|LangOptions
 decl_stmt|;
@@ -467,6 +464,12 @@ expr_stmt|;
 comment|/// \brief Whether this module is missing a feature from \c Requirements.
 name|unsigned
 name|IsMissingRequirement
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we tried and failed to load a module file for this module.
+name|unsigned
+name|HasIncompatibleModuleFile
 range|:
 literal|1
 decl_stmt|;
@@ -935,6 +938,21 @@ name|getFullModuleName
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Whether the full name of this module is equal to joining
+comment|/// \p nameParts with "."s.
+comment|///
+comment|/// This is more efficient than getFullModuleName().
+name|bool
+name|fullModuleNameIs
+argument_list|(
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|nameParts
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve the top-level module for this (sub)module, which may
 comment|/// be this module.
 name|Module
@@ -1481,6 +1499,57 @@ name|SubModules
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|submodule_iterator
+operator|>
+name|submodules
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|submodule_begin
+argument_list|()
+argument_list|,
+name|submodule_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|submodule_const_iterator
+operator|>
+name|submodules
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|submodule_begin
+argument_list|()
+argument_list|,
+name|submodule_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt

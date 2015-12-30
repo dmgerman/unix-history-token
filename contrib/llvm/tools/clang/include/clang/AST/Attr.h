@@ -236,8 +236,7 @@ parameter_list|(
 name|size_t
 name|bytes
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -253,8 +252,7 @@ name|void
 modifier|*
 name|data
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -282,8 +280,7 @@ name|Alignment
 init|=
 literal|8
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 return|return
 operator|::
@@ -313,8 +310,7 @@ parameter_list|,
 name|size_t
 name|Alignment
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 return|return
 operator|::

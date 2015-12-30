@@ -3131,7 +3131,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+comment|/// \param PCHContainerRdr - The PCHContainerOperations to use for loading and
 end_comment
 
 begin_comment
@@ -3172,6 +3172,8 @@ argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,
 argument|const FileSystemOptions&FileSystemOpts
 argument_list|,
+argument|bool UseDebugInfo = false
+argument_list|,
 argument|bool OnlyLocalDecls = false
 argument_list|,
 argument|ArrayRef<RemappedFile> RemappedFiles = None
@@ -3203,11 +3205,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param PrecompilePreamble Whether to precompile the preamble of this
+comment|/// \param PrecompilePreambleAfterNParses After how many parses the preamble
 end_comment
 
 begin_comment
-comment|/// translation unit, to improve the performance of reparsing.
+comment|/// of this translation unit should be precompiled, to improve the performance
+end_comment
+
+begin_comment
+comment|/// of reparsing. Set to zero to disable preambles.
 end_comment
 
 begin_comment
@@ -3234,8 +3240,8 @@ name|PCHContainerOperations
 operator|>
 name|PCHContainerOps
 argument_list|,
-name|bool
-name|PrecompilePreamble
+name|unsigned
+name|PrecompilePreambleAfterNParses
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3414,10 +3420,10 @@ name|CaptureDiagnostics
 operator|=
 name|false
 argument_list|,
-name|bool
-name|PrecompilePreamble
+name|unsigned
+name|PrecompilePreambleAfterNParses
 operator|=
-name|false
+literal|0
 argument_list|,
 name|bool
 name|CacheCodeCompletionResults
@@ -3520,11 +3526,14 @@ argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,
 argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,
+argument|FileManager *FileMgr
+argument_list|,
 argument|bool OnlyLocalDecls = false
 argument_list|,
 argument|bool CaptureDiagnostics = false
 argument_list|,
-argument|bool PrecompilePreamble = false
+argument|unsigned PrecompilePreambleAfterNParses =
+literal|0
 argument_list|,
 argument|TranslationUnitKind TUKind = TU_Complete
 argument_list|,
@@ -3591,6 +3600,14 @@ end_comment
 
 begin_comment
 comment|/// \param ResourceFilesPath - The path to the compiler resource files.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ModuleFormat - If provided, uses the specific module format.
 end_comment
 
 begin_comment
@@ -3679,10 +3696,10 @@ name|RemappedFilesKeepOriginalName
 operator|=
 name|true
 argument_list|,
-name|bool
-name|PrecompilePreamble
+name|unsigned
+name|PrecompilePreambleAfterNParses
 operator|=
-name|false
+literal|0
 argument_list|,
 name|TranslationUnitKind
 name|TUKind
@@ -3718,6 +3735,18 @@ name|bool
 name|ForSerialization
 operator|=
 name|false
+argument_list|,
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|StringRef
+operator|>
+name|ModuleFormat
+operator|=
+name|llvm
+operator|::
+name|None
 argument_list|,
 name|std
 operator|::
@@ -4063,10 +4092,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 unit|};  }

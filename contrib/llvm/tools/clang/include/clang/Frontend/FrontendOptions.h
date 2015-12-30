@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Serialization/ModuleFileExtension.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/CodeCompleteOptions.h"
 end_include
 
@@ -258,7 +264,12 @@ argument_list|)
 operator|,
 name|Kind
 argument_list|(
-argument|IK_None
+name|IK_None
+argument_list|)
+operator|,
+name|IsSystem
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 name|FrontendInputFile
@@ -523,6 +534,20 @@ literal|1
 decl_stmt|;
 comment|///< Whether we include lookup table
 comment|///< dumps in AST dumps.
+name|unsigned
+name|BuildingImplicitModule
+range|:
+literal|1
+decl_stmt|;
+comment|///< Whether we are performing an
+comment|///< implicit module build.
+name|unsigned
+name|ModulesEmbedAllFiles
+range|:
+literal|1
+decl_stmt|;
+comment|///< Whether we should embed all used
+comment|///< files into the PCM file.
 name|CodeCompleteOptions
 name|CodeCompleteOpts
 decl_stmt|;
@@ -761,6 +786,17 @@ name|string
 operator|>
 name|Plugins
 expr_stmt|;
+comment|/// The list of module file extensions.
+name|std
+operator|::
+name|vector
+operator|<
+name|IntrusiveRefCntPtr
+operator|<
+name|ModuleFileExtension
+operator|>>
+name|ModuleFileExtensions
+expr_stmt|;
 comment|/// \brief The list of module map files to load before processing the input.
 name|std
 operator|::
@@ -783,6 +819,17 @@ operator|::
 name|string
 operator|>
 name|ModuleFiles
+expr_stmt|;
+comment|/// \brief The list of files to embed into the compiled module file.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModulesEmbedFiles
 expr_stmt|;
 comment|/// \brief The list of AST files to merge.
 name|std
@@ -813,6 +860,12 @@ name|std
 operator|::
 name|string
 name|OverrideRecordLayoutsFile
+expr_stmt|;
+comment|/// \brief Auxiliary triple for CUDA compilation.
+name|std
+operator|::
+name|string
+name|AuxTriple
 expr_stmt|;
 name|public
 label|:
@@ -895,6 +948,16 @@ name|false
 argument_list|)
 operator|,
 name|ASTDumpLookups
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|BuildingImplicitModule
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ModulesEmbedAllFiles
 argument_list|(
 name|false
 argument_list|)

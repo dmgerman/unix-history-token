@@ -333,14 +333,6 @@ name|Count
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Check if we need to emit coverage mapping for a given declaration
-name|void
-name|checkGlobalDecl
-parameter_list|(
-name|GlobalDecl
-name|GD
-parameter_list|)
-function_decl|;
 comment|/// Assign counters to regions and configure them for PGO of a given
 comment|/// function. Does nothing if instrumentation is not enabled and either
 comment|/// generates global variables or associates PGO data with each of the
@@ -348,10 +340,8 @@ comment|/// counters depending on whether we are generating or using instrumenta
 name|void
 name|assignRegionCounters
 argument_list|(
-specifier|const
-name|Decl
-operator|*
-name|D
+name|GlobalDecl
+name|GD
 argument_list|,
 name|llvm
 operator|::
@@ -408,17 +398,6 @@ name|Linkage
 argument_list|)
 decl_stmt|;
 name|void
-name|createFuncNameVar
-argument_list|(
-name|llvm
-operator|::
-name|GlobalValue
-operator|::
-name|LinkageTypes
-name|Linkage
-argument_list|)
-decl_stmt|;
-name|void
 name|mapRegionCounters
 parameter_list|(
 specifier|const
@@ -465,10 +444,6 @@ name|bool
 name|IsInMainFile
 argument_list|)
 decl_stmt|;
-name|void
-name|emitCounterVariables
-parameter_list|()
-function_decl|;
 name|void
 name|emitCounterRegionMapping
 parameter_list|(

@@ -590,6 +590,9 @@ parameter_list|(
 name|Sema
 modifier|&
 name|S
+parameter_list|,
+name|bool
+name|ForTakingAddress
 parameter_list|)
 function_decl|;
 block|}
@@ -611,6 +614,12 @@ name|Candidates
 expr_stmt|;
 name|SourceLocation
 name|Loc
+decl_stmt|;
+comment|// Stores whether we're taking the address of these candidates. This helps us
+comment|// produce better error messages when dealing with the pass_object_size
+comment|// attribute on parameters.
+name|bool
+name|ForTakingAddress
 decl_stmt|;
 name|TemplateSpecCandidateSet
 argument_list|(
@@ -641,11 +650,18 @@ label|:
 name|TemplateSpecCandidateSet
 argument_list|(
 argument|SourceLocation Loc
+argument_list|,
+argument|bool ForTakingAddress = false
 argument_list|)
 block|:
 name|Loc
 argument_list|(
-argument|Loc
+name|Loc
+argument_list|)
+operator|,
+name|ForTakingAddress
+argument_list|(
+argument|ForTakingAddress
 argument_list|)
 block|{}
 operator|~

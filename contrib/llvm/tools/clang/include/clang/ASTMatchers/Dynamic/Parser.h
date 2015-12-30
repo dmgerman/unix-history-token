@@ -241,9 +241,7 @@ argument_list|(
 name|MatcherCtor
 name|Ctor
 argument_list|,
-specifier|const
 name|SourceRange
-operator|&
 name|NameRange
 argument_list|,
 name|StringRef
@@ -377,7 +375,7 @@ name|actOnMatcherExpression
 argument_list|(
 argument|MatcherCtor Ctor
 argument_list|,
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|StringRef BindID
 argument_list|,

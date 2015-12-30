@@ -138,6 +138,11 @@ comment|///    http://infocenter.arm.com
 comment|///                  /help/topic/com.arm.doc.ihi0059a/IHI0059A_cppabi64.pdf
 name|iOS64
 block|,
+comment|/// WatchOS is a modernisation of the iOS ABI, which roughly means it's
+comment|/// the iOS64 ABI ported to 32-bits. The primary difference from iOS64 is
+comment|/// that RTTI objects must still be unique at the moment.
+name|WatchOS
+block|,
 comment|/// The generic AArch64 ABI is also a modified version of the Itanium ABI,
 comment|/// but it has fewer divergences than the 32-bit ARM ABI.
 comment|///
@@ -151,6 +156,21 @@ comment|///
 comment|/// At the moment, only change from the generic ABI in this case is:
 comment|///   - representation of member function pointers adjusted as in ARM.
 name|GenericMIPS
+block|,
+comment|/// The WebAssembly ABI is a modified version of the Itanium ABI.
+comment|///
+comment|/// The changes from the Itanium ABI are:
+comment|///   - representation of member function pointers is adjusted, as in ARM;
+comment|///   - member functions are not specially aligned;
+comment|///   - constructors and destructors return 'this', as in ARM;
+comment|///   - guard variables are 32-bit on wasm32, as in ARM;
+comment|///   - unused bits of guard variables are reserved, as in ARM;
+comment|///   - inline functions are never key functions, as in ARM;
+comment|///   - C++11 POD rules are used for tail padding, as in iOS64.
+comment|///
+comment|/// TODO: At present the WebAssembly ABI is not considered stable, so none
+comment|/// of these details is necessarily final yet.
+name|WebAssembly
 block|,
 comment|/// The Microsoft ABI is the ABI used by Microsoft Visual Studio (and
 comment|/// compatible compilers).
@@ -237,7 +257,13 @@ case|case
 name|iOS64
 case|:
 case|case
+name|WatchOS
+case|:
+case|case
 name|GenericMIPS
+case|:
+case|case
+name|WebAssembly
 case|:
 return|return
 name|true
@@ -283,11 +309,81 @@ case|case
 name|iOS64
 case|:
 case|case
+name|WatchOS
+case|:
+case|case
 name|GenericMIPS
+case|:
+case|case
+name|WebAssembly
 case|:
 return|return
 name|false
 return|;
+case|case
+name|Microsoft
+case|:
+return|return
+name|true
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad ABI kind"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Are member functions differently aligned?
+comment|///
+comment|/// Many Itanium-style C++ ABIs require member functions to be aligned, so
+comment|/// that a pointer to such a function is guaranteed to have a zero in the
+comment|/// least significant bit, so that pointers to member functions can use that
+comment|/// bit to distinguish between virtual and non-virtual functions. However,
+comment|/// some Itanium-style C++ ABIs differentiate between virtual and non-virtual
+comment|/// functions via other means, and consequently don't require that member
+comment|/// functions be aligned.
+name|bool
+name|areMemberFunctionsAligned
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|WebAssembly
+case|:
+comment|// WebAssembly doesn't require any special alignment for member functions.
+return|return
+name|false
+return|;
+case|case
+name|GenericARM
+case|:
+case|case
+name|GenericAArch64
+case|:
+case|case
+name|GenericMIPS
+case|:
+comment|// TODO: ARM-style pointers to member functions put the discriminator in
+comment|//       the this adjustment, so they don't require functions to have any
+comment|//       special alignment and could therefore also return false.
+case|case
+name|GenericItanium
+case|:
+case|case
+name|iOS
+case|:
+case|case
+name|iOS64
+case|:
+case|case
+name|WatchOS
+case|:
 case|case
 name|Microsoft
 case|:
@@ -413,6 +509,12 @@ case|:
 case|case
 name|iOS64
 case|:
+case|case
+name|WebAssembly
+case|:
+case|case
+name|WatchOS
+case|:
 return|return
 name|false
 return|;
@@ -489,7 +591,7 @@ condition|)
 block|{
 comment|// To preserve binary compatibility, the generic Itanium ABI has
 comment|// permanently locked the definition of POD to the rules of C++ TR1,
-comment|// and that trickles down to all the derived ABIs.
+comment|// and that trickles down to derived ABIs.
 case|case
 name|GenericItanium
 case|:
@@ -508,10 +610,16 @@ case|:
 return|return
 name|UseTailPaddingUnlessPOD03
 return|;
-comment|// iOS on ARM64 uses the C++11 POD rules.  It does not honor the
-comment|// Itanium exception about classes with over-large bitfields.
+comment|// iOS on ARM64 and WebAssembly use the C++11 POD rules.  They do not honor
+comment|// the Itanium exception about classes with over-large bitfields.
 case|case
 name|iOS64
+case|:
+case|case
+name|WebAssembly
+case|:
+case|case
+name|WatchOS
 case|:
 return|return
 name|UseTailPaddingUnlessPOD11
@@ -531,13 +639,6 @@ literal|"bad ABI kind"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Try to parse an ABI name, returning false on error.
-name|bool
-name|tryParse
-argument_list|(
-argument|llvm::StringRef name
-argument_list|)
-expr_stmt|;
 name|friend
 name|bool
 name|operator

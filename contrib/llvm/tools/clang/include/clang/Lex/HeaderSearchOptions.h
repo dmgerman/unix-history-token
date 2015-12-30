@@ -86,10 +86,11 @@ block|{
 name|namespace
 name|frontend
 block|{
-comment|/// IncludeDirGroup - Identifiers the group a include entry belongs to, which
-comment|/// represents its relative positive in the search list.  A \#include of a ""
-comment|/// path starts at the -iquote group, then searches the Angled group, then
-comment|/// searches the system group, etc.
+comment|/// IncludeDirGroup - Identifies the group an include Entry belongs to,
+comment|/// representing its relative positive in the search list.
+comment|/// \#include directives whose paths are enclosed by string quotes ("")
+comment|/// start searching at the Quoted group (specified by '-iquote'),
+comment|/// then search the Angled group, then the System group, etc.
 enum|enum
 name|IncludeDirGroup
 block|{
@@ -342,11 +343,13 @@ comment|/// \brief The set of macro names that should be ignored for the purpose
 comment|/// of computing the module hash.
 name|llvm
 operator|::
-name|SetVector
+name|SmallSetVector
 operator|<
 name|std
 operator|::
 name|string
+block|,
+literal|16
 operator|>
 name|ModulesIgnoreMacros
 block|;
@@ -405,8 +408,12 @@ name|ModulesValidateSystemHeaders
 operator|:
 literal|1
 block|;
-name|public
+comment|/// Whether the module includes debug information (-gmodules).
+name|unsigned
+name|UseDebugInfo
 operator|:
+literal|1
+block|;
 name|HeaderSearchOptions
 argument_list|(
 argument|StringRef _Sysroot =
@@ -496,6 +503,11 @@ name|false
 argument_list|)
 block|,
 name|ModulesValidateSystemHeaders
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|UseDebugInfo
 argument_list|(
 argument|false
 argument_list|)

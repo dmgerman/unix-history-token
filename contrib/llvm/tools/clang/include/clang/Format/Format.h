@@ -172,15 +172,38 @@ comment|/// \brief The extra indent or outdent of access modifiers, e.g. \c publ
 name|int
 name|AccessModifierOffset
 decl_stmt|;
+comment|/// \brief Different styles for aligning after open brackets.
+enum|enum
+name|BracketAlignmentStyle
+block|{
+comment|/// \brief Align parameters on the open bracket, e.g.:
+comment|/// \code
+comment|///   someLongFunction(argument1,
+comment|///                    argument2);
+comment|/// \endcode
+name|BAS_Align
+block|,
+comment|/// \brief Don't align, instead use \c ContinuationIndentWidth, e.g.:
+comment|/// \code
+comment|///   someLongFunction(argument1,
+comment|///       argument2);
+comment|/// \endcode
+name|BAS_DontAlign
+block|,
+comment|/// \brief Always break after an open bracket, if the parameters don't fit
+comment|/// on a single line, e.g.:
+comment|/// \code
+comment|///   someLongFunction(
+comment|///       argument1, argument2);
+comment|/// \endcode
+name|BAS_AlwaysBreak
+block|,   }
+enum|;
 comment|/// \brief If \c true, horizontally aligns arguments after an open bracket.
 comment|///
 comment|/// This applies to round brackets (parentheses), angle brackets and square
-comment|/// brackets. This will result in formattings like
-comment|/// \code
-comment|/// someLongFunction(argument1,
-comment|///                  argument2);
-comment|/// \endcode
-name|bool
+comment|/// brackets.
+name|BracketAlignmentStyle
 name|AlignAfterOpenBracket
 decl_stmt|;
 comment|/// \brief If \c true, aligns consecutive assignments.
@@ -188,12 +211,24 @@ comment|///
 comment|/// This will align the assignment operators of consecutive lines. This
 comment|/// will result in formattings like
 comment|/// \code
-comment|/// int aaaa = 12;
-comment|/// int b    = 23;
-comment|/// int ccc  = 23;
+comment|///   int aaaa = 12;
+comment|///   int b    = 23;
+comment|///   int ccc  = 23;
 comment|/// \endcode
 name|bool
 name|AlignConsecutiveAssignments
+decl_stmt|;
+comment|/// \brief If \c true, aligns consecutive declarations.
+comment|///
+comment|/// This will align the declaration names of consecutive lines. This
+comment|/// will result in formattings like
+comment|/// \code
+comment|///   int         aaaa = 12;
+comment|///   float       b = 23;
+comment|///   std::string ccc = 23;
+comment|/// \endcode
+name|bool
+name|AlignConsecutiveDeclarations
 decl_stmt|;
 comment|/// \brief If \c true, aligns escaped newlines as far left as possible.
 comment|/// Otherwise puts them into the right-most column.
@@ -202,6 +237,13 @@ name|AlignEscapedNewlinesLeft
 decl_stmt|;
 comment|/// \brief If \c true, horizontally align operands of binary and ternary
 comment|/// expressions.
+comment|///
+comment|/// Specifically, this aligns operands of a single expression that needs to be
+comment|/// split over multiple lines, e.g.:
+comment|/// \code
+comment|///   int aaa = bbbbbbbbbbbbbbb +
+comment|///             ccccccccccccccc;
+comment|/// \endcode
 name|bool
 name|AlignOperands
 decl_stmt|;
@@ -268,13 +310,40 @@ block|,
 comment|/// Always break after the return type.
 name|DRTBS_All
 block|,
-comment|/// Always break after the return types of top level functions.
+comment|/// Always break after the return types of top-level functions.
 name|DRTBS_TopLevel
 block|,   }
 enum|;
-comment|/// \brief The function definition return type breaking style to use.
+comment|/// \brief Different ways to break after the function definition or
+comment|/// declaration return type.
+enum|enum
+name|ReturnTypeBreakingStyle
+block|{
+comment|/// Break after return type automatically.
+comment|/// \c PenaltyReturnTypeOnItsOwnLine is taken into account.
+name|RTBS_None
+block|,
+comment|/// Always break after the return type.
+name|RTBS_All
+block|,
+comment|/// Always break after the return types of top-level functions.
+name|RTBS_TopLevel
+block|,
+comment|/// Always break after the return type of function definitions.
+name|RTBS_AllDefinitions
+block|,
+comment|/// Always break after the return type of top-level definitions.
+name|RTBS_TopLevelDefinitions
+block|,   }
+enum|;
+comment|/// \brief The function definition return type breaking style to use.  This
+comment|/// option is deprecated and is retained for backwards compatibility.
 name|DefinitionReturnTypeBreakingStyle
 name|AlwaysBreakAfterDefinitionReturnType
+decl_stmt|;
+comment|/// \brief The function declaration return type breaking style to use.
+name|ReturnTypeBreakingStyle
+name|AlwaysBreakAfterReturnType
 decl_stmt|;
 comment|/// \brief If \c true, always break before multiline string literals.
 comment|///
@@ -333,7 +402,7 @@ comment|/// Like ``Attach``, but break before braces on enum, function, and reco
 comment|/// definitions.
 name|BS_Mozilla
 block|,
-comment|/// Like \c Attach, but break before function definitions, and 'else'.
+comment|/// Like \c Attach, but break before function definitions, 'catch', and 'else'.
 name|BS_Stroustrup
 block|,
 comment|/// Always break before braces.
@@ -343,11 +412,74 @@ comment|/// Always break before braces and add an extra level of indentation to
 comment|/// braces of control statements, not to those of class, function
 comment|/// or other definitions.
 name|BS_GNU
+block|,
+comment|/// Like ``Attach``, but break before functions.
+name|BS_WebKit
+block|,
+comment|/// Configure each individual brace in \c BraceWrapping.
+name|BS_Custom
 block|}
 enum|;
 comment|/// \brief The brace breaking style to use.
 name|BraceBreakingStyle
 name|BreakBeforeBraces
+decl_stmt|;
+comment|/// \brief Precise control over the wrapping of braces.
+struct|struct
+name|BraceWrappingFlags
+block|{
+comment|/// \brief Wrap class definitions.
+name|bool
+name|AfterClass
+decl_stmt|;
+comment|/// \brief Wrap control statements (if/for/while/switch/..).
+name|bool
+name|AfterControlStatement
+decl_stmt|;
+comment|/// \brief Wrap enum definitions.
+name|bool
+name|AfterEnum
+decl_stmt|;
+comment|/// \brief Wrap function definitions.
+name|bool
+name|AfterFunction
+decl_stmt|;
+comment|/// \brief Wrap namespace definitions.
+name|bool
+name|AfterNamespace
+decl_stmt|;
+comment|/// \brief Wrap ObjC definitions (@autoreleasepool, interfaces, ..).
+name|bool
+name|AfterObjCDeclaration
+decl_stmt|;
+comment|/// \brief Wrap struct definitions.
+name|bool
+name|AfterStruct
+decl_stmt|;
+comment|/// \brief Wrap union definitions.
+name|bool
+name|AfterUnion
+decl_stmt|;
+comment|/// \brief Wrap before \c catch.
+name|bool
+name|BeforeCatch
+decl_stmt|;
+comment|/// \brief Wrap before \c else.
+name|bool
+name|BeforeElse
+decl_stmt|;
+comment|/// \brief Indent the wrapped braces themselves.
+name|bool
+name|IndentBraces
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Control of individual brace wrapping cases.
+comment|///
+comment|/// If \c BreakBeforeBraces is set to \c custom, use this to specify how each
+comment|/// individual brace case should be handled. Otherwise, this is ignored.
+name|BraceWrappingFlags
+name|BraceWrapping
 decl_stmt|;
 comment|/// \brief If \c true, ternary operators will be placed after line breaks.
 name|bool
@@ -357,6 +489,10 @@ comment|/// \brief Always break constructor initializers before commas and align
 comment|/// the commas with the colon.
 name|bool
 name|BreakConstructorInitializersBeforeComma
+decl_stmt|;
+comment|/// \brief Break after each annotation on a field in Java files.
+name|bool
+name|BreakAfterJavaFieldAnnotations
 decl_stmt|;
 comment|/// \brief The column limit.
 comment|///
@@ -430,8 +566,13 @@ comment|/// instead of as function calls.
 comment|///
 comment|/// These are expected to be macros of the form:
 comment|/// \code
-comment|/// FOREACH(<variable-declaration>, ...)
+comment|///   FOREACH(<variable-declaration>, ...)
 comment|///<loop-body>
+comment|/// \endcode
+comment|///
+comment|/// In the .clang-format configuration file, this can be configured like:
+comment|/// \code
+comment|///   ForEachMacros: ['RANGES_FOR', 'FOREACH']
 comment|/// \endcode
 comment|///
 comment|/// For example: BOOST_FOREACH.
@@ -444,6 +585,81 @@ operator|::
 name|string
 operator|>
 name|ForEachMacros
+expr_stmt|;
+comment|/// \brief See documentation of \c IncludeCategories.
+struct|struct
+name|IncludeCategory
+block|{
+comment|/// \brief The regular expression that this category matches.
+name|std
+operator|::
+name|string
+name|Regex
+expr_stmt|;
+comment|/// \brief The priority to assign to this category.
+name|int
+name|Priority
+decl_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|IncludeCategory
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|Regex
+operator|==
+name|Other
+operator|.
+name|Regex
+operator|&&
+name|Priority
+operator|==
+name|Other
+operator|.
+name|Priority
+return|;
+block|}
+block|}
+struct|;
+comment|/// \brief Regular expressions denoting the different #include categories used
+comment|/// for ordering #includes.
+comment|///
+comment|/// These regular expressions are matched against the filename of an include
+comment|/// (including the<> or "") in order. The value belonging to the first
+comment|/// matching regular expression is assigned and #includes are sorted first
+comment|/// according to increasing category number and then alphabetically within
+comment|/// each category.
+comment|///
+comment|/// If none of the regular expressions match, INT_MAX is assigned as
+comment|/// category. The main header for a source file automatically gets category 0.
+comment|/// so that it is generally kept at the beginning of the #includes
+comment|/// (http://llvm.org/docs/CodingStandards.html#include-style). However, you
+comment|/// can also assign negative priorities if you have certain headers that
+comment|/// always need to be first.
+comment|///
+comment|/// To configure this in the .clang-format file, use:
+comment|/// \code
+comment|///   IncludeCategories:
+comment|///     - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
+comment|///       Priority:        2
+comment|///     - Regex:           '^(<|"(gtest|isl|json)/)'
+comment|///       Priority:        3
+comment|///     - Regex:           '.*'
+comment|///       Priority:        1
+comment|/// \endcode
+name|std
+operator|::
+name|vector
+operator|<
+name|IncludeCategory
+operator|>
+name|IncludeCategories
 expr_stmt|;
 comment|/// \brief Indent case labels one level from the switch statement.
 comment|///
@@ -486,6 +702,9 @@ block|,
 comment|/// Should be used for Protocol Buffers
 comment|/// (https://developers.google.com/protocol-buffers/).
 name|LK_Proto
+block|,
+comment|/// Should be used for TableGen code.
+name|LK_TableGen
 block|}
 enum|;
 comment|/// \brief Language, this format style is targeted at.
@@ -579,9 +798,17 @@ comment|/// Align pointer in the middle.
 name|PAS_Middle
 block|}
 enum|;
-comment|/// Pointer and reference alignment style.
+comment|/// \brief Pointer and reference alignment style.
 name|PointerAlignmentStyle
 name|PointerAlignment
+decl_stmt|;
+comment|/// \brief If true, clang-format will attempt to re-flow comments.
+name|bool
+name|ReflowComments
+decl_stmt|;
+comment|/// \brief If true, clang-format will sort #includes.
+name|bool
+name|SortIncludes
 decl_stmt|;
 comment|/// \brief If \c true, a space may be inserted after C style casts.
 name|bool
@@ -720,6 +947,12 @@ name|R
 operator|.
 name|AlignConsecutiveAssignments
 operator|&&
+name|AlignConsecutiveDeclarations
+operator|==
+name|R
+operator|.
+name|AlignConsecutiveDeclarations
+operator|&&
 name|AlignEscapedNewlinesLeft
 operator|==
 name|R
@@ -774,11 +1007,11 @@ name|R
 operator|.
 name|AllowShortLoopsOnASingleLine
 operator|&&
-name|AlwaysBreakAfterDefinitionReturnType
+name|AlwaysBreakAfterReturnType
 operator|==
 name|R
 operator|.
-name|AlwaysBreakAfterDefinitionReturnType
+name|AlwaysBreakAfterReturnType
 operator|&&
 name|AlwaysBreakBeforeMultilineStrings
 operator|==
@@ -827,6 +1060,12 @@ operator|==
 name|R
 operator|.
 name|BreakConstructorInitializersBeforeComma
+operator|&&
+name|BreakAfterJavaFieldAnnotations
+operator|==
+name|R
+operator|.
+name|BreakAfterJavaFieldAnnotations
 operator|&&
 name|ColumnLimit
 operator|==
@@ -887,6 +1126,12 @@ operator|==
 name|R
 operator|.
 name|ForEachMacros
+operator|&&
+name|IncludeCategories
+operator|==
+name|R
+operator|.
+name|IncludeCategories
 operator|&&
 name|IndentCaseLabels
 operator|==
@@ -1185,6 +1430,24 @@ specifier|const
 name|FormatStyle
 operator|&
 name|Style
+argument_list|)
+expr_stmt|;
+comment|/// \brief Returns the replacements necessary to sort all #include blocks that
+comment|/// are affected by 'Ranges'.
+name|tooling
+operator|::
+name|Replacements
+name|sortIncludes
+argument_list|(
+argument|const FormatStyle&Style
+argument_list|,
+argument|StringRef Code
+argument_list|,
+argument|ArrayRef<tooling::Range> Ranges
+argument_list|,
+argument|StringRef FileName
+argument_list|,
+argument|unsigned *Cursor = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Reformats the given \p Ranges in the file \p ID.

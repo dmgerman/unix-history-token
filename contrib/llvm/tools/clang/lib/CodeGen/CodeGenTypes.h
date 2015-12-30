@@ -433,13 +433,6 @@ operator|&
 name|TheModule
 expr_stmt|;
 specifier|const
-name|llvm
-operator|::
-name|DataLayout
-operator|&
-name|TheDataLayout
-expr_stmt|;
-specifier|const
 name|TargetInfo
 modifier|&
 name|Target
@@ -556,8 +549,6 @@ literal|8
 operator|>
 name|DeferredRecords
 expr_stmt|;
-name|private
-label|:
 comment|/// This map keeps cache of llvm::Types and maps clang::Type to
 comment|/// corresponding llvm::Type.
 name|llvm
@@ -598,7 +589,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TheDataLayout
+name|TheModule
+operator|.
+name|getDataLayout
+argument_list|()
 return|;
 block|}
 name|ASTContext
@@ -665,6 +659,22 @@ operator|*
 name|ConvertType
 argument_list|(
 argument|QualType T
+argument_list|)
+expr_stmt|;
+comment|/// \brief Converts the GlobalDecl into an llvm::Type. This should be used
+comment|/// when we know the target of the function we want to convert.  This is
+comment|/// because some functions (explicitly, those with pass_object_size
+comment|/// parameters) may not have the same signature as their type portrays, and
+comment|/// can only be called directly.
+name|llvm
+operator|::
+name|Type
+operator|*
+name|ConvertFunctionType
+argument_list|(
+argument|QualType FT
+argument_list|,
+argument|const FunctionDecl *FD = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// ConvertTypeForMem - Convert type T into a llvm::Type.  This differs from
@@ -1008,6 +1018,11 @@ operator|<
 name|FunctionProtoType
 operator|>
 name|Ty
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -1036,6 +1051,11 @@ specifier|const
 name|FunctionProtoType
 modifier|*
 name|FTP
+parameter_list|,
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|MD
 parameter_list|)
 function_decl|;
 comment|/// "Arrange" the LLVM information for a call or type with the given

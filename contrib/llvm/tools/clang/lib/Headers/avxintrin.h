@@ -93,6 +93,21 @@ name|__vector_size__
 typedef|(32)));
 end_typedef
 
+begin_comment
+comment|/* We need an explicitly signed variant for char. Note that this shouldn't  * appear in the interface though. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|signed
+name|char
+name|__v32qs
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|float
@@ -132,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("avx")))
 end_define
 
 begin_comment
@@ -632,7 +647,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \     __m256d __V = (V); \     (__m256d)__builtin_ia32_roundpd256((__v4df)__V, (M)); })
+value|__extension__ ({ \     (__m256d)__builtin_ia32_roundpd256((__v4df)(__m256d)(V), (M)); })
 end_define
 
 begin_define
@@ -644,7 +659,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256 __V = (V); \   (__m256)__builtin_ia32_roundps256((__v8sf)__V, (M)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_roundps256((__v8sf)(__m256)(V), (M)); })
 end_define
 
 begin_define
@@ -1246,7 +1261,7 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   __m128d __A = (A); \   (__m128d)__builtin_shufflevector((__v2df)__A, (__v2df) _mm_setzero_pd(), \                                    (C)& 0x1, ((C)& 0x2)>> 1); })
+value|__extension__ ({ \   (__m128d)__builtin_shufflevector((__v2df)(__m128d)(A), \                                    (__v2df)_mm_setzero_pd(), \                                    (C)& 0x1, ((C)& 0x2)>> 1); })
 end_define
 
 begin_define
@@ -1258,7 +1273,7 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   __m256d __A = (A); \   (__m256d)__builtin_shufflevector((__v4df)__A, (__v4df) _mm256_setzero_pd(), \                                    (C)& 0x1, ((C)& 0x2)>> 1, \                                    2 + (((C)& 0x4)>> 2), \                                    2 + (((C)& 0x8)>> 3)); })
+value|__extension__ ({ \   (__m256d)__builtin_shufflevector((__v4df)(__m256d)(A), \                                    (__v4df)_mm256_setzero_pd(), \                                    (C)& 0x1, ((C)& 0x2)>> 1, \                                    2 + (((C)& 0x4)>> 2), \                                    2 + (((C)& 0x8)>> 3)); })
 end_define
 
 begin_define
@@ -1270,7 +1285,7 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   __m128 __A = (A); \   (__m128)__builtin_shufflevector((__v4sf)__A, (__v4sf) _mm_setzero_ps(), \                                    (C)& 0x3, ((C)& 0xc)>> 2, \                                    ((C)& 0x30)>> 4, ((C)& 0xc0)>> 6); })
+value|__extension__ ({ \   (__m128)__builtin_shufflevector((__v4sf)(__m128)(A), \                                   (__v4sf)_mm_setzero_ps(), \                                    (C)& 0x3, ((C)& 0xc)>> 2, \                                    ((C)& 0x30)>> 4, ((C)& 0xc0)>> 6); })
 end_define
 
 begin_define
@@ -1282,7 +1297,7 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   __m256 __A = (A); \   (__m256)__builtin_shufflevector((__v8sf)__A, (__v8sf) _mm256_setzero_ps(), \                                   (C)& 0x3, ((C)& 0xc)>> 2, \                                   ((C)& 0x30)>> 4, ((C)& 0xc0)>> 6, \                                   4 + (((C)& 0x03)>> 0), \                                   4 + (((C)& 0x0c)>> 2), \                                   4 + (((C)& 0x30)>> 4), \                                   4 + (((C)& 0xc0)>> 6)); })
+value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v8sf)(__m256)(A), \                                   (__v8sf)_mm256_setzero_ps(), \                                   (C)& 0x3, ((C)& 0xc)>> 2, \                                   ((C)& 0x30)>> 4, ((C)& 0xc0)>> 6, \                                   4 + (((C)& 0x03)>> 0), \                                   4 + (((C)& 0x0c)>> 2), \                                   4 + (((C)& 0x30)>> 4), \                                   4 + (((C)& 0xc0)>> 6)); })
 end_define
 
 begin_define
@@ -1296,7 +1311,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256d __V1 = (V1); \   __m256d __V2 = (V2); \   (__m256d)__builtin_ia32_vperm2f128_pd256((__v4df)__V1, (__v4df)__V2, (M)); })
+value|__extension__ ({ \   (__m256d)__builtin_ia32_vperm2f128_pd256((__v4df)(__m256d)(V1), \                                            (__v4df)(__m256d)(V2), (M)); })
 end_define
 
 begin_define
@@ -1310,7 +1325,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256 __V1 = (V1); \   __m256 __V2 = (V2); \   (__m256)__builtin_ia32_vperm2f128_ps256((__v8sf)__V1, (__v8sf)__V2, (M)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_vperm2f128_ps256((__v8sf)(__m256)(V1), \                                           (__v8sf)(__m256)(V2), (M)); })
 end_define
 
 begin_define
@@ -1324,7 +1339,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256i __V1 = (V1); \   __m256i __V2 = (V2); \   (__m256i)__builtin_ia32_vperm2f128_si256((__v8si)__V1, (__v8si)__V2, (M)); })
+value|__extension__ ({ \   (__m256i)__builtin_ia32_vperm2f128_si256((__v8si)(__m256i)(V1), \                                            (__v8si)(__m256i)(V2), (M)); })
 end_define
 
 begin_comment
@@ -1342,7 +1357,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256d __V1 = (V1); \   __m256d __V2 = (V2); \   (__m256d)__builtin_shufflevector((__v4df)__V1, (__v4df)__V2, \                                    (((M)& 0x01) ? 4 : 0), \                                    (((M)& 0x02) ? 5 : 1), \                                    (((M)& 0x04) ? 6 : 2), \                                    (((M)& 0x08) ? 7 : 3)); })
+value|__extension__ ({ \   (__m256d)__builtin_shufflevector((__v4df)(__m256d)(V1), \                                    (__v4df)(__m256d)(V2), \                                    (((M)& 0x01) ? 4 : 0), \                                    (((M)& 0x02) ? 5 : 1), \                                    (((M)& 0x04) ? 6 : 2), \                                    (((M)& 0x08) ? 7 : 3)); })
 end_define
 
 begin_define
@@ -1356,7 +1371,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256 __V1 = (V1); \   __m256 __V2 = (V2); \   (__m256)__builtin_shufflevector((__v8sf)__V1, (__v8sf)__V2, \                                   (((M)& 0x01) ?  8 : 0), \                                   (((M)& 0x02) ?  9 : 1), \                                   (((M)& 0x04) ? 10 : 2), \                                   (((M)& 0x08) ? 11 : 3), \                                   (((M)& 0x10) ? 12 : 4), \                                   (((M)& 0x20) ? 13 : 5), \                                   (((M)& 0x40) ? 14 : 6), \                                   (((M)& 0x80) ? 15 : 7)); })
+value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v8sf)(__m256)(V1), \                                   (__v8sf)(__m256)(V2), \                                   (((M)& 0x01) ?  8 : 0), \                                   (((M)& 0x02) ?  9 : 1), \                                   (((M)& 0x04) ? 10 : 2), \                                   (((M)& 0x08) ? 11 : 3), \                                   (((M)& 0x10) ? 12 : 4), \                                   (((M)& 0x20) ? 13 : 5), \                                   (((M)& 0x40) ? 14 : 6), \                                   (((M)& 0x80) ? 15 : 7)); })
 end_define
 
 begin_function
@@ -1458,7 +1473,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m256 __V1 = (V1); \   __m256 __V2 = (V2); \   (__m256)__builtin_ia32_dpps256((__v8sf)__V1, (__v8sf)__V2, (M)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_dpps256((__v8sf)(__m256)(V1), \                                  (__v8sf)(__m256)(V2), (M)); })
 end_define
 
 begin_comment
@@ -1476,7 +1491,7 @@ name|b
 parameter_list|,
 name|mask
 parameter_list|)
-value|__extension__ ({ \         __m256 __a = (a); \         __m256 __b = (b); \         (__m256)__builtin_shufflevector((__v8sf)__a, (__v8sf)__b, \         (mask)& 0x3,                ((mask)& 0xc)>> 2, \         (((mask)& 0x30)>> 4) + 8,  (((mask)& 0xc0)>> 6) + 8, \         ((mask)& 0x3) + 4,          (((mask)& 0xc)>> 2) + 4, \         (((mask)& 0x30)>> 4) + 12, (((mask)& 0xc0)>> 6) + 12); })
+value|__extension__ ({ \         (__m256)__builtin_shufflevector((__v8sf)(__m256)(a), \                                         (__v8sf)(__m256)(b), \                                         (mask)& 0x3, \                                         ((mask)& 0xc)>> 2, \                                         (((mask)& 0x30)>> 4) + 8, \                                         (((mask)& 0xc0)>> 6) + 8, \                                         ((mask)& 0x3) + 4, \                                         (((mask)& 0xc)>> 2) + 4, \                                         (((mask)& 0x30)>> 4) + 12, \                                         (((mask)& 0xc0)>> 6) + 12); })
 end_define
 
 begin_define
@@ -1490,7 +1505,7 @@ name|b
 parameter_list|,
 name|mask
 parameter_list|)
-value|__extension__ ({ \         __m256d __a = (a); \         __m256d __b = (b); \         (__m256d)__builtin_shufflevector((__v4df)__a, (__v4df)__b, \         (mask)& 0x1, \         (((mask)& 0x2)>> 1) + 4, \         (((mask)& 0x4)>> 2) + 2, \         (((mask)& 0x8)>> 3) + 6); })
+value|__extension__ ({ \         (__m256d)__builtin_shufflevector((__v4df)(__m256d)(a), \                                          (__v4df)(__m256d)(b), \                                          (mask)& 0x1, \                                          (((mask)& 0x2)>> 1) + 4, \                                          (((mask)& 0x4)>> 2) + 2, \                                          (((mask)& 0x8)>> 3) + 6); })
 end_define
 
 begin_comment
@@ -1860,7 +1875,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({ \   __m128d __a = (a); \   __m128d __b = (b); \   (__m128d)__builtin_ia32_cmppd((__v2df)__a, (__v2df)__b, (c)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_cmppd((__v2df)(__m128d)(a), \                                 (__v2df)(__m128d)(b), (c)); })
 end_define
 
 begin_define
@@ -1874,7 +1889,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({ \   __m128 __a = (a); \   __m128 __b = (b); \   (__m128)__builtin_ia32_cmpps((__v4sf)__a, (__v4sf)__b, (c)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_cmpps((__v4sf)(__m128)(a), \                                (__v4sf)(__m128)(b), (c)); })
 end_define
 
 begin_define
@@ -1888,7 +1903,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({ \   __m256d __a = (a); \   __m256d __b = (b); \   (__m256d)__builtin_ia32_cmppd256((__v4df)__a, (__v4df)__b, (c)); })
+value|__extension__ ({ \   (__m256d)__builtin_ia32_cmppd256((__v4df)(__m256d)(a), \                                    (__v4df)(__m256d)(b), (c)); })
 end_define
 
 begin_define
@@ -1902,7 +1917,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({ \   __m256 __a = (a); \   __m256 __b = (b); \   (__m256)__builtin_ia32_cmpps256((__v8sf)__a, (__v8sf)__b, (c)); })
+value|__extension__ ({ \   (__m256)__builtin_ia32_cmpps256((__v8sf)(__m256)(a), \                                   (__v8sf)(__m256)(b), (c)); })
 end_define
 
 begin_define
@@ -1916,7 +1931,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({ \   __m128d __a = (a); \   __m128d __b = (b); \   (__m128d)__builtin_ia32_cmpsd((__v2df)__a, (__v2df)__b, (c)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_cmpsd((__v2df)(__m128d)(a), \                                 (__v2df)(__m128d)(b), (c)); })
 end_define
 
 begin_define
@@ -1930,7 +1945,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({ \   __m128 __a = (a); \   __m128 __b = (b); \   (__m128)__builtin_ia32_cmpss((__v4sf)__a, (__v4sf)__b, (c)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_cmpss((__v4sf)(__m128)(a), \                                (__v4sf)(__m128)(b), (c)); })
 end_define
 
 begin_function
@@ -3920,7 +3935,7 @@ specifier|const
 modifier|*
 name|__p
 parameter_list|,
-name|__m128d
+name|__m128i
 name|__m
 parameter_list|)
 block|{
@@ -3938,7 +3953,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v2df
+name|__v2di
 operator|)
 name|__m
 argument_list|)
@@ -3958,7 +3973,7 @@ specifier|const
 modifier|*
 name|__p
 parameter_list|,
-name|__m256d
+name|__m256i
 name|__m
 parameter_list|)
 block|{
@@ -3976,7 +3991,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v4df
+name|__v4di
 operator|)
 name|__m
 argument_list|)
@@ -3996,7 +4011,7 @@ specifier|const
 modifier|*
 name|__p
 parameter_list|,
-name|__m128
+name|__m128i
 name|__m
 parameter_list|)
 block|{
@@ -4014,7 +4029,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v4sf
+name|__v4si
 operator|)
 name|__m
 argument_list|)
@@ -4034,7 +4049,7 @@ specifier|const
 modifier|*
 name|__p
 parameter_list|,
-name|__m256
+name|__m256i
 name|__m
 parameter_list|)
 block|{
@@ -4052,7 +4067,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v8sf
+name|__v8si
 operator|)
 name|__m
 argument_list|)
@@ -4075,7 +4090,7 @@ name|float
 modifier|*
 name|__p
 parameter_list|,
-name|__m256
+name|__m256i
 name|__m
 parameter_list|,
 name|__m256
@@ -4091,7 +4106,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v8sf
+name|__v8si
 operator|)
 name|__m
 argument_list|,
@@ -4115,7 +4130,7 @@ name|double
 modifier|*
 name|__p
 parameter_list|,
-name|__m128d
+name|__m128i
 name|__m
 parameter_list|,
 name|__m128d
@@ -4131,7 +4146,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v2df
+name|__v2di
 operator|)
 name|__m
 argument_list|,
@@ -4155,7 +4170,7 @@ name|double
 modifier|*
 name|__p
 parameter_list|,
-name|__m256d
+name|__m256i
 name|__m
 parameter_list|,
 name|__m256d
@@ -4171,7 +4186,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v4df
+name|__v4di
 operator|)
 name|__m
 argument_list|,
@@ -4195,7 +4210,7 @@ name|float
 modifier|*
 name|__p
 parameter_list|,
-name|__m128
+name|__m128i
 name|__m
 parameter_list|,
 name|__m128
@@ -4211,7 +4226,7 @@ operator|)
 name|__p
 argument_list|,
 operator|(
-name|__v4sf
+name|__v4si
 operator|)
 name|__m
 argument_list|,
@@ -4319,6 +4334,60 @@ end_function
 begin_comment
 comment|/* Create vectors */
 end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|__m256d
+name|__DEFAULT_FN_ATTRS
+name|_mm256_undefined_pd
+parameter_list|()
+block|{
+return|return
+operator|(
+name|__m256d
+operator|)
+name|__builtin_ia32_undef256
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|__m256
+name|__DEFAULT_FN_ATTRS
+name|_mm256_undefined_ps
+parameter_list|()
+block|{
+return|return
+operator|(
+name|__m256
+operator|)
+name|__builtin_ia32_undef256
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|__m256i
+name|__DEFAULT_FN_ATTRS
+name|_mm256_undefined_si256
+parameter_list|()
+block|{
+return|return
+operator|(
+name|__m256i
+operator|)
+name|__builtin_ia32_undef256
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -5967,7 +6036,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Vector insert.    We use macros rather than inlines because we only want to accept    invocations where the immediate M is a constant expression. */
+comment|/*    Vector insert.    We use macros rather than inlines because we only want to accept    invocations where the immediate M is a constant expression. */
 end_comment
 
 begin_define
@@ -5981,7 +6050,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m256)__builtin_shufflevector( \     (__v8sf)(V1), \     (__v8sf)_mm256_castps128_ps256((__m128)(V2)), \     (((M)& 1) ?  0 :  8), \     (((M)& 1) ?  1 :  9), \     (((M)& 1) ?  2 : 10), \     (((M)& 1) ?  3 : 11), \     (((M)& 1) ?  8 :  4), \     (((M)& 1) ?  9 :  5), \     (((M)& 1) ? 10 :  6), \     (((M)& 1) ? 11 :  7) );})
+value|__extension__ ({ \   (__m256)__builtin_shufflevector( \     (__v8sf)(__m256)(V1), \     (__v8sf)_mm256_castps128_ps256((__m128)(V2)), \     (((M)& 1) ?  0 :  8), \     (((M)& 1) ?  1 :  9), \     (((M)& 1) ?  2 : 10), \     (((M)& 1) ?  3 : 11), \     (((M)& 1) ?  8 :  4), \     (((M)& 1) ?  9 :  5), \     (((M)& 1) ? 10 :  6), \     (((M)& 1) ? 11 :  7) );})
 end_define
 
 begin_define
@@ -5995,7 +6064,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m256d)__builtin_shufflevector( \     (__v4df)(V1), \     (__v4df)_mm256_castpd128_pd256((__m128d)(V2)), \     (((M)& 1) ? 0 : 4), \     (((M)& 1) ? 1 : 5), \     (((M)& 1) ? 4 : 2), \     (((M)& 1) ? 5 : 3) );})
+value|__extension__ ({ \   (__m256d)__builtin_shufflevector( \     (__v4df)(__m256d)(V1), \     (__v4df)_mm256_castpd128_pd256((__m128d)(V2)), \     (((M)& 1) ? 0 : 4), \     (((M)& 1) ? 1 : 5), \     (((M)& 1) ? 4 : 2), \     (((M)& 1) ? 5 : 3) );})
 end_define
 
 begin_define
@@ -6009,11 +6078,11 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m256i)__builtin_shufflevector( \     (__v4di)(V1), \     (__v4di)_mm256_castsi128_si256((__m128i)(V2)), \     (((M)& 1) ? 0 : 4), \     (((M)& 1) ? 1 : 5), \     (((M)& 1) ? 4 : 2), \     (((M)& 1) ? 5 : 3) );})
+value|__extension__ ({ \   (__m256i)__builtin_shufflevector( \     (__v4di)(__m256i)(V1), \     (__v4di)_mm256_castsi128_si256((__m128i)(V2)), \     (((M)& 1) ? 0 : 4), \     (((M)& 1) ? 1 : 5), \     (((M)& 1) ? 4 : 2), \     (((M)& 1) ? 5 : 3) );})
 end_define
 
 begin_comment
-comment|/*     Vector extract.    We use macros rather than inlines because we only want to accept    invocations where the immediate M is a constant expression. */
+comment|/*    Vector extract.    We use macros rather than inlines because we only want to accept    invocations where the immediate M is a constant expression. */
 end_comment
 
 begin_define
@@ -6025,7 +6094,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_shufflevector( \     (__v8sf)(V), \     (__v8sf)(_mm256_setzero_ps()), \     (((M)& 1) ? 4 : 0), \     (((M)& 1) ? 5 : 1), \     (((M)& 1) ? 6 : 2), \     (((M)& 1) ? 7 : 3) );})
+value|__extension__ ({ \   (__m128)__builtin_shufflevector( \     (__v8sf)(__m256)(V), \     (__v8sf)(_mm256_setzero_ps()), \     (((M)& 1) ? 4 : 0), \     (((M)& 1) ? 5 : 1), \     (((M)& 1) ? 6 : 2), \     (((M)& 1) ? 7 : 3) );})
 end_define
 
 begin_define
@@ -6037,7 +6106,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_shufflevector( \     (__v4df)(V), \     (__v4df)(_mm256_setzero_pd()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
+value|__extension__ ({ \   (__m128d)__builtin_shufflevector( \     (__v4df)(__m256d)(V), \     (__v4df)(_mm256_setzero_pd()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
 end_define
 
 begin_define
@@ -6049,7 +6118,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m128i)__builtin_shufflevector( \     (__v4di)(V), \     (__v4di)(_mm256_setzero_si256()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
+value|__extension__ ({ \   (__m128i)__builtin_shufflevector( \     (__v4di)(__m256i)(V), \     (__v4di)(_mm256_setzero_si256()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
 end_define
 
 begin_comment

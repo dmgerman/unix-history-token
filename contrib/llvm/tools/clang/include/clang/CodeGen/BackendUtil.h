@@ -49,6 +49,18 @@ directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/FunctionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -134,6 +146,18 @@ argument_list|,
 name|raw_pwrite_stream
 operator|*
 name|OS
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|FunctionInfoIndex
+operator|>
+name|Index
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

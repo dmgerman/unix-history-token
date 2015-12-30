@@ -376,6 +376,14 @@ name|EHScopeStack
 block|{
 name|public
 label|:
+comment|/* Should switch to alignof(uint64_t) instead of 8, when EHCleanupScope can */
+enum|enum
+block|{
+name|ScopeStackAlignment
+init|=
+literal|8
+block|}
+enum|;
 comment|/// A saved depth on the scope stack.  This is necessary because
 comment|/// pushing scopes onto the stack invalidates iterators.
 name|class
@@ -535,8 +543,35 @@ name|void
 name|anchor
 parameter_list|()
 function_decl|;
+name|protected
+label|:
+operator|~
+name|Cleanup
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|public
 label|:
+name|Cleanup
+argument_list|(
+specifier|const
+name|Cleanup
+operator|&
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+name|Cleanup
+argument_list|(
+argument|Cleanup&&
+argument_list|)
+block|{}
+name|Cleanup
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Generation flags.
 name|class
 name|Flags
@@ -645,14 +680,6 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|// Provide a virtual destructor to suppress a very common warning
-comment|// that unfortunately cannot be suppressed without this.  Cleanups
-comment|// should not rely on this destructor ever being called.
-name|virtual
-operator|~
-name|Cleanup
-argument_list|()
-block|{}
 comment|/// Emit the cleanup.  For normal cleanups, this is run in the
 comment|/// same EH context as when the cleanup was pushed, i.e. the
 comment|/// immediately-enclosing context of the cleanup scope.  For
@@ -662,14 +689,17 @@ comment|// \param flags cleanup kind.
 name|virtual
 name|void
 name|Emit
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|Flags flags
-argument_list|)
-operator|=
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|Flags
+name|flags
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// ConditionalCleanup stores the saved form of its parameters,
@@ -685,6 +715,7 @@ name|As
 operator|>
 name|class
 name|ConditionalCleanup
+name|final
 operator|:
 name|public
 name|Cleanup
@@ -875,6 +906,13 @@ name|Size
 parameter_list|)
 function_decl|;
 name|void
+name|deallocate
+parameter_list|(
+name|size_t
+name|Size
+parameter_list|)
+function_decl|;
+name|void
 modifier|*
 name|pushCleanup
 parameter_list|(
@@ -942,6 +980,22 @@ argument_list|,
 argument|As... A
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+operator|<=
+name|ScopeStackAlignment
+argument_list|,
+literal|"Cleanup's alignment is too large."
+argument_list|)
+block|;
 name|void
 operator|*
 name|Buffer
@@ -993,6 +1047,22 @@ argument_list|,
 argument|std::tuple<As...> A
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+operator|<=
+name|ScopeStackAlignment
+argument_list|,
+literal|"Cleanup's alignment is too large."
+argument_list|)
+block|;
 name|void
 operator|*
 name|Buffer
@@ -1062,6 +1132,22 @@ argument_list|,
 argument|As... A
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+operator|<=
+name|ScopeStackAlignment
+argument_list|,
+literal|"Cleanup's alignment is too large."
+argument_list|)
+block|;
 name|void
 operator|*
 name|Buffer
@@ -1254,11 +1340,6 @@ return|return
 name|InnermostEHScope
 return|;
 block|}
-name|stable_iterator
-name|getInnermostActiveEHScope
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// An unstable reference to a scope-stack depth.  Invalidated by
 comment|/// pushes but not pops.
 name|class
@@ -1325,14 +1406,6 @@ name|save
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Removes the cleanup pointed to by the given stable_iterator.
-name|void
-name|removeCleanup
-parameter_list|(
-name|stable_iterator
-name|save
-parameter_list|)
-function_decl|;
 comment|/// Add a branch fixup to the current cleanup scope.
 name|BranchFixup
 modifier|&

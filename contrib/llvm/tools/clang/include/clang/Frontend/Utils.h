@@ -577,6 +577,9 @@ function_decl|;
 comment|/// AttachHeaderIncludeGen - Create a header include list generator, and attach
 comment|/// it to the given preprocessor.
 comment|///
+comment|/// \param ExtraHeaders - If not empty, will write the header filenames, just
+comment|/// like they were included during a regular preprocessing. Useful for
+comment|/// implicit include dependencies, like sanitizer blacklists.
 comment|/// \param ShowAllHeaders - If true, show all header information instead of just
 comment|/// headers following the predefines buffer. This is useful for making sure
 comment|/// includes mentioned on the command line are also reported, but differs from
@@ -587,32 +590,44 @@ comment|/// \param ShowDepth - Whether to indent to show the nesting of the incl
 comment|/// \param MSStyle - Whether to print in cl.exe /showIncludes style.
 name|void
 name|AttachHeaderIncludeGen
-parameter_list|(
+argument_list|(
 name|Preprocessor
-modifier|&
+operator|&
 name|PP
-parameter_list|,
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|ExtraHeaders
+argument_list|,
 name|bool
 name|ShowAllHeaders
-init|=
+operator|=
 name|false
-parameter_list|,
+argument_list|,
 name|StringRef
 name|OutputPath
-init|=
+operator|=
 literal|""
-parameter_list|,
+argument_list|,
 name|bool
 name|ShowDepth
-init|=
+operator|=
 name|true
-parameter_list|,
+argument_list|,
 name|bool
 name|MSStyle
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Cache tokens for use with PCH. Note that this requires a seekable stream.
 name|void
 name|CacheTokens

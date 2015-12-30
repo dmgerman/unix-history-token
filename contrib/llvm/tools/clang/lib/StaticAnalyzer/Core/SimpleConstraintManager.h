@@ -145,6 +145,21 @@ argument|bool Assumption
 argument_list|)
 block|;
 name|ProgramStateRef
+name|assumeWithinInclusiveRange
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|NonLoc Value
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|,
+argument|bool InRange
+argument_list|)
+name|override
+block|;
+name|ProgramStateRef
 name|assumeSymRel
 argument_list|(
 argument|ProgramStateRef state
@@ -154,6 +169,20 @@ argument_list|,
 argument|BinaryOperator::Opcode op
 argument_list|,
 argument|const llvm::APSInt& Int
+argument_list|)
+block|;
+name|ProgramStateRef
+name|assumeSymWithinInclusiveRange
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|SymbolRef Sym
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|,
+argument|bool InRange
 argument_list|)
 block|;
 name|protected
@@ -249,6 +278,40 @@ argument_list|,
 argument|const llvm::APSInt& V
 argument_list|,
 argument|const llvm::APSInt& Adjustment
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|ProgramStateRef
+name|assumeSymbolWithinInclusiveRange
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|SymbolRef Sym
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|,
+argument|const llvm::APSInt&Adjustment
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|ProgramStateRef
+name|assumeSymbolOutOfInclusiveRange
+argument_list|(
+argument|ProgramStateRef state
+argument_list|,
+argument|SymbolRef Sym
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|,
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0

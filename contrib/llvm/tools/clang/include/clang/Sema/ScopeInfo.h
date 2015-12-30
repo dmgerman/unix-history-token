@@ -276,50 +276,74 @@ comment|/// \brief What kind of scope we are describing.
 comment|///
 name|ScopeKind
 name|Kind
+range|:
+literal|3
 decl_stmt|;
 comment|/// \brief Whether this function contains a VLA, \@try, try, C++
 comment|/// initializer, or anything else that can't be jumped past.
 name|bool
 name|HasBranchProtectedScope
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Whether this function contains any switches or direct gotos.
 name|bool
 name|HasBranchIntoScope
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Whether this function contains any indirect gotos.
 name|bool
 name|HasIndirectGoto
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Whether a statement was dropped because it was invalid.
 name|bool
 name|HasDroppedStmt
+range|:
+literal|1
 decl_stmt|;
 comment|/// A flag that is set when parsing a method that must call super's
 comment|/// implementation, such as \c -dealloc, \c -finalize, or any method marked
 comment|/// with \c __attribute__((objc_requires_super)).
 name|bool
 name|ObjCShouldCallSuper
+range|:
+literal|1
 decl_stmt|;
 comment|/// True when this is a method marked as a designated initializer.
 name|bool
 name|ObjCIsDesignatedInit
+range|:
+literal|1
 decl_stmt|;
 comment|/// This starts true for a method marked as designated initializer and will
 comment|/// be set to false if there is an invocation to a designated initializer of
 comment|/// the super class.
 name|bool
 name|ObjCWarnForNoDesignatedInitChain
+range|:
+literal|1
 decl_stmt|;
 comment|/// True when this is an initializer method not marked as a designated
 comment|/// initializer within a class that has at least one initializer marked as a
 comment|/// designated initializer.
 name|bool
 name|ObjCIsSecondaryInit
+range|:
+literal|1
 decl_stmt|;
 comment|/// This starts true for a secondary initializer method and will be set to
 comment|/// false if there is an invocation of an initializer on 'self'.
 name|bool
 name|ObjCWarnForNoInitDelegation
+range|:
+literal|1
+decl_stmt|;
+comment|/// First 'return' statement in the current function.
+name|SourceLocation
+name|FirstReturnLoc
 decl_stmt|;
 comment|/// First C++ 'try' statement in the current function.
 name|SourceLocation
@@ -355,6 +379,23 @@ operator|,
 literal|4
 operator|>
 name|Returns
+expr_stmt|;
+comment|/// \brief The promise object for this coroutine, if any.
+name|VarDecl
+modifier|*
+name|CoroutinePromise
+decl_stmt|;
+comment|/// \brief The list of coroutine control flow constructs (co_await, co_yield,
+comment|/// co_return) that occur within the function or block. Empty if and only if
+comment|/// this function or block is not (yet known to be) a coroutine.
+name|SmallVector
+operator|<
+name|Stmt
+operator|*
+operator|,
+literal|4
+operator|>
+name|CoroutineStmts
 expr_stmt|;
 comment|/// \brief The stack of currently active compound stamement scopes in the
 comment|/// function.
@@ -825,6 +866,17 @@ comment|/// Part of the implementation of -Wrepeated-use-of-weak.
 name|WeakObjectUseMap
 name|WeakObjectUses
 decl_stmt|;
+name|protected
+label|:
+name|FunctionScopeInfo
+argument_list|(
+specifier|const
+name|FunctionScopeInfo
+operator|&
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
 name|public
 label|:
 comment|/// Record that a weak object was accessed.
@@ -1049,6 +1101,17 @@ range|:
 name|public
 name|FunctionScopeInfo
 block|{
+name|protected
+operator|:
+name|CapturingScopeInfo
+argument_list|(
+specifier|const
+name|CapturingScopeInfo
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
 name|public
 operator|:
 expr|enum
@@ -1774,6 +1837,7 @@ block|;
 comment|/// \brief Retains information about a block that is currently being parsed.
 name|class
 name|BlockScopeInfo
+name|final
 operator|:
 name|public
 name|CapturingScopeInfo
@@ -1856,6 +1920,7 @@ block|;
 comment|/// \brief Retains information about a captured region.
 name|class
 name|CapturedRegionScopeInfo
+name|final
 operator|:
 name|public
 name|CapturingScopeInfo
@@ -1991,6 +2056,7 @@ expr|}
 block|;
 name|class
 name|LambdaScopeInfo
+name|final
 operator|:
 name|public
 name|CapturingScopeInfo
@@ -2168,11 +2234,6 @@ name|Kind
 operator|=
 name|SK_Lambda
 block|;   }
-operator|~
-name|LambdaScopeInfo
-argument_list|()
-name|override
-block|;
 comment|/// \brief Note when all explicit captures have been added.
 name|void
 name|finishedExplicitCaptures

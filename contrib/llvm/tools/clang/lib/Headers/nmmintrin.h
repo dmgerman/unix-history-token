@@ -15,23 +15,6 @@ directive|define
 name|_NMMINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__SSE4_2__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"SSE4.2 instruction set not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* To match expectations of gcc we put the sse4.2 definitions into smmintrin.h,    just include it now then.  */
 end_comment
@@ -41,15 +24,6 @@ include|#
 directive|include
 file|<smmintrin.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __SSE4_2__ */
-end_comment
 
 begin_endif
 endif|#

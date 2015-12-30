@@ -626,6 +626,60 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Assumes that the value of \p Val is bounded with [\p From; \p To]
+comment|/// (if \p assumption is "true") or it is fully out of this range
+comment|/// (if \p assumption is "false").
+comment|///
+comment|/// This returns a new state with the added constraint on \p cond.
+comment|/// If no new state is feasible, NULL is returned.
+name|ProgramStateRef
+name|assumeWithinInclusiveRange
+argument_list|(
+name|DefinedOrUnknownSVal
+name|Val
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|From
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|To
+argument_list|,
+name|bool
+name|assumption
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Assumes given range both "true" and "false" for \p Val, and returns both
+comment|/// corresponding states (respectively).
+comment|///
+comment|/// This is more efficient than calling assume() twice. Note that one (but not
+comment|/// both) of the returned states may be NULL.
+name|std
+operator|::
+name|pair
+operator|<
+name|ProgramStateRef
+operator|,
+name|ProgramStateRef
+operator|>
+name|assumeWithinInclusiveRange
+argument_list|(
+argument|DefinedOrUnknownSVal Val
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \brief Check if the given SVal is constrained to zero or is a zero
 comment|///        constant.
 name|ConditionTruthVal
@@ -1247,64 +1301,6 @@ name|TaintTagGeneric
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Get dynamic type information for a region.
-name|DynamicTypeInfo
-name|getDynamicTypeInfo
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|Reg
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Set dynamic type information of the region; return the new state.
-name|ProgramStateRef
-name|setDynamicTypeInfo
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|Reg
-argument_list|,
-name|DynamicTypeInfo
-name|NewTy
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Set dynamic type information of the region; return the new state.
-name|ProgramStateRef
-name|setDynamicTypeInfo
-argument_list|(
-specifier|const
-name|MemRegion
-operator|*
-name|Reg
-argument_list|,
-name|QualType
-name|NewTy
-argument_list|,
-name|bool
-name|CanBeSubClassed
-operator|=
-name|true
-argument_list|)
-decl|const
-block|{
-return|return
-name|setDynamicTypeInfo
-argument_list|(
-name|Reg
-argument_list|,
-name|DynamicTypeInfo
-argument_list|(
-name|NewTy
-argument_list|,
-name|CanBeSubClassed
-argument_list|)
-argument_list|)
-return|;
-block|}
 comment|//==---------------------------------------------------------------------==//
 comment|// Accessing the Generic Data Map (GDM).
 comment|//==---------------------------------------------------------------------==//
@@ -2680,6 +2676,160 @@ name|DefinedSVal
 operator|>
 operator|(
 operator|)
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  inline
+name|ProgramStateRef
+name|ProgramState
+operator|::
+name|assumeWithinInclusiveRange
+argument_list|(
+argument|DefinedOrUnknownSVal Val
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|,
+argument|bool Assumption
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|Val
+operator|.
+name|isUnknown
+argument_list|()
+condition|)
+return|return
+name|this
+return|;
+name|assert
+argument_list|(
+name|Val
+operator|.
+name|getAs
+operator|<
+name|NonLoc
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Only NonLocs are supported!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getStateManager
+argument_list|()
+operator|.
+name|ConstraintMgr
+operator|->
+name|assumeWithinInclusiveRange
+argument_list|(
+name|this
+argument_list|,
+name|Val
+operator|.
+name|castAs
+operator|<
+name|NonLoc
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|From
+argument_list|,
+name|To
+argument_list|,
+name|Assumption
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  inline
+name|std
+operator|::
+name|pair
+operator|<
+name|ProgramStateRef
+operator|,
+name|ProgramStateRef
+operator|>
+name|ProgramState
+operator|::
+name|assumeWithinInclusiveRange
+argument_list|(
+argument|DefinedOrUnknownSVal Val
+argument_list|,
+argument|const llvm::APSInt&From
+argument_list|,
+argument|const llvm::APSInt&To
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|Val
+operator|.
+name|isUnknown
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|this
+argument_list|,
+name|this
+argument_list|)
+return|;
+name|assert
+argument_list|(
+name|Val
+operator|.
+name|getAs
+operator|<
+name|NonLoc
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Only NonLocs are supported!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getStateManager
+argument_list|()
+operator|.
+name|ConstraintMgr
+operator|->
+name|assumeWithinInclusiveRangeDual
+argument_list|(
+name|this
+argument_list|,
+name|Val
+operator|.
+name|castAs
+operator|<
+name|NonLoc
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|From
+argument_list|,
+name|To
 argument_list|)
 return|;
 end_return

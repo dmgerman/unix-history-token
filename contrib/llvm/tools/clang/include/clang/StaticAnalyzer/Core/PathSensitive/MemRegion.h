@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclCXX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/ExprObjC.h"
 end_include
 
@@ -168,7 +174,7 @@ name|MemRegion
 modifier|*
 name|R
 decl_stmt|;
-comment|/// The bit offset within the base region. It shouldn't be negative.
+comment|/// The bit offset within the base region. Can be negative.
 name|int64_t
 name|Offset
 decl_stmt|;
@@ -5179,6 +5185,17 @@ comment|/// Suppress pointer-escaping of a region.
 name|TK_SuppressEscape
 operator|=
 literal|0x2
+block|,
+comment|// Do not invalidate super region.
+name|TK_DoNotInvalidateSuperRegion
+operator|=
+literal|0x4
+block|,
+comment|/// When applied to a MemSpaceRegion, indicates the entire memory space
+comment|/// should be invalidated.
+name|TK_EntireMemSpace
+operator|=
+literal|0x8
 comment|// Do not forget to extend StorageTypeForKinds if number of traits exceed
 comment|// the number of bits StorageTypeForKinds can store.
 block|}

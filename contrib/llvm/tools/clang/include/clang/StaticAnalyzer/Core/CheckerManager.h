@@ -310,20 +310,9 @@ name|public
 label|:
 name|CheckName
 argument_list|()
-block|{}
-name|CheckName
-argument_list|(
-specifier|const
-name|CheckName
-operator|&
-name|Other
-argument_list|)
-operator|:
-name|Name
-argument_list|(
-argument|Other.Name
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|StringRef
 name|getName
 argument_list|()
@@ -333,6 +322,17 @@ return|return
 name|Name
 return|;
 block|}
+block|}
+empty_stmt|;
+name|enum
+name|class
+name|ObjCMessageVisitKind
+block|{
+name|Pre
+operator|,
+name|Post
+operator|,
+name|MessageNil
 block|}
 empty_stmt|;
 name|class
@@ -908,8 +908,9 @@ parameter_list|)
 block|{
 name|runCheckersForObjCMessage
 argument_list|(
-comment|/*isPreVisit=*/
-name|true
+name|ObjCMessageVisitKind
+operator|::
+name|Pre
 argument_list|,
 name|Dst
 argument_list|,
@@ -957,8 +958,9 @@ parameter_list|)
 block|{
 name|runCheckersForObjCMessage
 argument_list|(
-comment|/*isPreVisit=*/
-name|false
+name|ObjCMessageVisitKind
+operator|::
+name|Post
 argument_list|,
 name|Dst
 argument_list|,
@@ -975,6 +977,51 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Run checkers for visiting an obj-c message to nil.
+end_comment
+
+begin_function
+name|void
+name|runCheckersForObjCMessageNil
+parameter_list|(
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|,
+specifier|const
+name|ExplodedNodeSet
+modifier|&
+name|Src
+parameter_list|,
+specifier|const
+name|ObjCMethodCall
+modifier|&
+name|msg
+parameter_list|,
+name|ExprEngine
+modifier|&
+name|Eng
+parameter_list|)
+block|{
+name|runCheckersForObjCMessage
+argument_list|(
+name|ObjCMessageVisitKind
+operator|::
+name|MessageNil
+argument_list|,
+name|Dst
+argument_list|,
+name|Src
+argument_list|,
+name|msg
+argument_list|,
+name|Eng
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Run checkers for visiting obj-c messages.
 end_comment
 
@@ -982,8 +1029,8 @@ begin_function_decl
 name|void
 name|runCheckersForObjCMessage
 parameter_list|(
-name|bool
-name|isPreVisit
+name|ObjCMessageVisitKind
+name|visitKind
 parameter_list|,
 name|ExplodedNodeSet
 modifier|&
@@ -2179,6 +2226,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_registerForObjCMessageNil
+parameter_list|(
+name|CheckObjCMessageFunc
+name|checkfn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_registerForPreCall
 parameter_list|(
 name|CheckCallFunc
@@ -2745,6 +2802,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Returns the checkers that have registered for callbacks of the
+end_comment
+
+begin_comment
+comment|/// given \p Kind.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|CheckObjCMessageFunc
+operator|>
+operator|&
+name|getObjCMessageCheckers
+argument_list|(
+argument|ObjCMessageVisitKind Kind
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|std
 operator|::
@@ -2764,6 +2845,17 @@ operator|<
 name|CheckObjCMessageFunc
 operator|>
 name|PostObjCMessageCheckers
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|CheckObjCMessageFunc
+operator|>
+name|ObjCMessageNilCheckers
 expr_stmt|;
 end_expr_stmt
 

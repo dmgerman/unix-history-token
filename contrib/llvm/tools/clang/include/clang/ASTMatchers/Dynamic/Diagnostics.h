@@ -379,7 +379,7 @@ argument|Diagnostics *Error
 argument_list|,
 argument|StringRef MatcherName
 argument_list|,
-argument|const SourceRange&MatcherRange
+argument|SourceRange MatcherRange
 argument_list|)
 empty_stmt|;
 comment|/// \brief About to recurse into parsing one argument for a matcher.
@@ -397,7 +397,7 @@ argument|Diagnostics *Error
 argument_list|,
 argument|StringRef MatcherName
 argument_list|,
-argument|const SourceRange&MatcherRange
+argument|SourceRange MatcherRange
 argument_list|,
 argument|unsigned ArgNumber
 argument_list|)
@@ -460,9 +460,7 @@ comment|/// error message, using the<< operator.
 name|ArgStream
 name|addError
 parameter_list|(
-specifier|const
 name|SourceRange
-modifier|&
 name|Range
 parameter_list|,
 name|ErrorType

@@ -540,10 +540,11 @@ else|:
 name|ED
 return|;
 block|}
-comment|/// \brief Gets the pointer to the declaration of the typo correction
+comment|/// \brief Get the correction declaration found by name lookup (before we
+comment|/// looked through using shadow declarations and the like).
 name|NamedDecl
 operator|*
-name|getCorrectionDecl
+name|getFoundDecl
 argument_list|()
 specifier|const
 block|{
@@ -559,6 +560,31 @@ name|begin
 argument_list|()
 operator|)
 operator|:
+name|nullptr
+return|;
+block|}
+comment|/// \brief Gets the pointer to the declaration of the typo correction
+name|NamedDecl
+operator|*
+name|getCorrectionDecl
+argument_list|()
+specifier|const
+block|{
+name|auto
+operator|*
+name|D
+operator|=
+name|getFoundDecl
+argument_list|()
+block|;
+return|return
+name|D
+condition|?
+name|D
+operator|->
+name|getUnderlyingDecl
+argument_list|()
+else|:
 name|nullptr
 return|;
 block|}

@@ -309,18 +309,25 @@ operator|:
 comment|/// \brief Iterates over a filtered subrange of clauses applied to a
 comment|/// directive.
 comment|///
-comment|/// This iterator visits only those declarations that meet some run-time
-comment|/// criteria.
+comment|/// This iterator visits only clauses of type SpecificClause.
 name|template
 operator|<
-name|class
-name|FilterPredicate
+name|typename
+name|SpecificClause
 operator|>
 name|class
-name|filtered_clause_iterator
-block|{
-name|protected
+name|specific_clause_iterator
 operator|:
+name|public
+name|llvm
+operator|::
+name|iterator_adaptor_base
+operator|<
+name|specific_clause_iterator
+operator|<
+name|SpecificClause
+operator|>
+block|,
 name|ArrayRef
 operator|<
 name|OMPClause
@@ -328,8 +335,26 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
-name|Current
-block|;
+block|,
+name|std
+operator|::
+name|forward_iterator_tag
+block|,
+specifier|const
+name|SpecificClause
+operator|*
+block|,
+name|ptrdiff_t
+block|,
+specifier|const
+name|SpecificClause
+operator|*
+block|,
+specifier|const
+name|SpecificClause
+operator|*
+operator|>
+block|{
 name|ArrayRef
 operator|<
 name|OMPClause
@@ -338,9 +363,6 @@ operator|>
 operator|::
 name|const_iterator
 name|End
-block|;
-name|FilterPredicate
-name|Pred
 block|;
 name|void
 name|SkipToNextClause
@@ -348,48 +370,48 @@ argument_list|()
 block|{
 while|while
 condition|(
-name|Current
+name|this
+operator|->
+name|I
 operator|!=
 name|End
 operator|&&
 operator|!
-name|Pred
-argument_list|(
+name|isa
+operator|<
+name|SpecificClause
+operator|>
+operator|(
 operator|*
-name|Current
-argument_list|)
+name|this
+operator|->
+name|I
+operator|)
 condition|)
 operator|++
-name|Current
+name|this
+operator|->
+name|I
 expr_stmt|;
 block|}
 name|public
 operator|:
-typedef|typedef
-specifier|const
-name|OMPClause
-modifier|*
-name|value_type
-typedef|;
-name|filtered_clause_iterator
-argument_list|()
-operator|:
-name|Current
-argument_list|()
-block|,
-name|End
-argument_list|()
-block|{}
-name|filtered_clause_iterator
+name|explicit
+name|specific_clause_iterator
 argument_list|(
-argument|ArrayRef<OMPClause *> Arr
-argument_list|,
-argument|FilterPredicate Pred
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+name|Clauses
 argument_list|)
 operator|:
-name|Current
+name|specific_clause_iterator
+operator|::
+name|iterator_adaptor_base
 argument_list|(
-name|Arr
+name|Clauses
 operator|.
 name|begin
 argument_list|()
@@ -397,21 +419,15 @@ argument_list|)
 block|,
 name|End
 argument_list|(
-name|Arr
-operator|.
-name|end
-argument_list|()
-argument_list|)
-block|,
-name|Pred
-argument_list|(
-argument|std::move(Pred)
+argument|Clauses.end()
 argument_list|)
 block|{
 name|SkipToNextClause
 argument_list|()
 block|;     }
-name|value_type
+specifier|const
+name|SpecificClause
+operator|*
 name|operator
 operator|*
 operator|(
@@ -419,11 +435,21 @@ operator|)
 specifier|const
 block|{
 return|return
+name|cast
+operator|<
+name|SpecificClause
+operator|>
+operator|(
 operator|*
-name|Current
+name|this
+operator|->
+name|I
+operator|)
 return|;
 block|}
-name|value_type
+specifier|const
+name|SpecificClause
+operator|*
 name|operator
 operator|->
 expr|(
@@ -432,10 +458,11 @@ specifier|const
 block|{
 return|return
 operator|*
-name|Current
+operator|*
+name|this
 return|;
 block|}
-name|filtered_clause_iterator
+name|specific_clause_iterator
 operator|&
 name|operator
 operator|++
@@ -443,7 +470,9 @@ operator|(
 operator|)
 block|{
 operator|++
-name|Current
+name|this
+operator|->
+name|I
 block|;
 name|SkipToNextClause
 argument_list|()
@@ -453,162 +482,191 @@ operator|*
 name|this
 return|;
 block|}
-name|filtered_clause_iterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-name|filtered_clause_iterator
-name|tmp
-argument_list|(
-operator|*
-name|this
-argument_list|)
+expr|}
 block|;
-operator|++
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
-name|bool
-name|operator
-operator|!
-operator|(
-operator|)
-block|{
-return|return
-name|Current
-operator|==
-name|End
-return|;
-block|}
-name|explicit
-name|operator
-name|bool
-argument_list|()
-block|{
-return|return
-name|Current
-operator|!=
-name|End
-return|;
-block|}
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Current
-operator|==
-name|End
-return|;
-block|}
-block|}
-empty_stmt|;
 name|template
 operator|<
 name|typename
-name|Fn
+name|SpecificClause
 operator|>
-name|filtered_clause_iterator
+specifier|static
+name|llvm
+operator|::
+name|iterator_range
 operator|<
-name|Fn
-operator|>
-name|getFilteredClauses
+name|specific_clause_iterator
+operator|<
+name|SpecificClause
+operator|>>
+name|getClausesOfKind
 argument_list|(
-argument|Fn&&fn
+argument|ArrayRef<OMPClause *> Clauses
 argument_list|)
+block|{
+return|return
+block|{
+name|specific_clause_iterator
+operator|<
+name|SpecificClause
+operator|>
+operator|(
+name|Clauses
+operator|)
+block|,
+name|specific_clause_iterator
+operator|<
+name|SpecificClause
+operator|>
+operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|Clauses
+operator|.
+name|end
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+block|}
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|SpecificClause
+operator|>
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_clause_iterator
+operator|<
+name|SpecificClause
+operator|>>
+name|getClausesOfKind
+argument_list|()
 specifier|const
 block|{
 return|return
-name|filtered_clause_iterator
+name|getClausesOfKind
 operator|<
-name|Fn
+name|SpecificClause
 operator|>
 operator|(
 name|clauses
 argument_list|()
-operator|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|fn
-argument_list|)
 operator|)
 return|;
 block|}
-struct|struct
-name|ClauseKindFilter
-block|{
-name|OpenMPClauseKind
-name|Kind
-decl_stmt|;
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|OMPClause
-operator|*
-name|clause
-operator|)
-specifier|const
-block|{
-return|return
-name|clause
-operator|->
-name|getClauseKind
-argument_list|()
-operator|==
-name|Kind
-return|;
-block|}
-block|}
-struct|;
-name|filtered_clause_iterator
-operator|<
-name|ClauseKindFilter
-operator|>
-name|getClausesOfKind
-argument_list|(
-argument|OpenMPClauseKind Kind
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getFilteredClauses
-argument_list|(
-name|ClauseKindFilter
-block|{
-name|Kind
-block|}
-argument_list|)
-return|;
-block|}
-comment|/// \brief Gets a single clause of the specified kind \a K associated with the
+comment|/// Gets a single clause of the specified kind associated with the
 comment|/// current directive iff there is only one clause of this kind (and assertion
 comment|/// is fired if there is more than one clause is associated with the
-comment|/// directive). Returns nullptr if no clause of kind \a K is associated with
+comment|/// directive). Returns nullptr if no clause of this kind is associated with
 comment|/// the directive.
+name|template
+operator|<
+name|typename
+name|SpecificClause
+operator|>
 specifier|const
-name|OMPClause
-modifier|*
+name|SpecificClause
+operator|*
 name|getSingleClause
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|Clauses
+operator|=
+name|getClausesOfKind
+operator|<
+name|SpecificClause
+operator|>
+operator|(
+operator|)
+block|;
+if|if
+condition|(
+name|Clauses
+operator|.
+name|begin
+argument_list|()
+operator|!=
+name|Clauses
+operator|.
+name|end
+argument_list|()
+condition|)
+block|{
+name|assert
 argument_list|(
-name|OpenMPClauseKind
-name|K
+name|std
+operator|::
+name|next
+argument_list|(
+name|Clauses
+operator|.
+name|begin
+argument_list|()
 argument_list|)
-decl|const
-decl_stmt|;
+operator|==
+name|Clauses
+operator|.
+name|end
+argument_list|()
+operator|&&
+literal|"There are at least 2 clauses of the specified kind"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|Clauses
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// Returns true if the current directive has one or more clauses of a
+comment|/// specific kind.
+name|template
+operator|<
+name|typename
+name|SpecificClause
+operator|>
+name|bool
+name|hasClausesOfKind
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|Clauses
+operator|=
+name|getClausesOfKind
+operator|<
+name|SpecificClause
+operator|>
+operator|(
+operator|)
+block|;
+return|return
+name|Clauses
+operator|.
+name|begin
+argument_list|()
+operator|!=
+name|Clauses
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 comment|/// \brief Returns starting location of directive kind.
 name|SourceLocation
 name|getLocStart
@@ -635,32 +693,28 @@ comment|/// \param Loc New starting location of directive.
 comment|///
 name|void
 name|setLocStart
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
 block|{
 name|StartLoc
 operator|=
 name|Loc
-expr_stmt|;
-block|}
+block|; }
 comment|/// \brief Set ending location of directive.
 comment|///
 comment|/// \param Loc New ending location of directive.
 comment|///
 name|void
 name|setLocEnd
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
 block|{
 name|EndLoc
 operator|=
 name|Loc
-expr_stmt|;
-block|}
+block|; }
 comment|/// \brief Get number of clauses.
 name|unsigned
 name|getNumClauses
@@ -676,13 +730,12 @@ comment|///
 comment|/// \param i Number of clause.
 comment|///
 name|OMPClause
-modifier|*
+operator|*
 name|getClause
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|clauses
@@ -744,12 +797,9 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|const Stmt *S
+argument_list|)
 block|{
 return|return
 name|S
@@ -769,7 +819,7 @@ return|;
 block|}
 name|child_range
 name|children
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -779,13 +829,19 @@ argument_list|()
 condition|)
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 name|Stmt
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|ChildStorage
-init|=
+operator|=
 name|reinterpret_cast
 operator|<
 name|Stmt
@@ -799,7 +855,7 @@ operator|.
 name|end
 argument_list|()
 operator|)
-decl_stmt|;
+block|;
 return|return
 name|child_range
 argument_list|(
@@ -897,6 +953,14 @@ range|:
 name|public
 name|OMPExecutableDirective
 block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief true if the construct has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive (directive keyword).
@@ -913,19 +977,24 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPParallelDirectiveClass
+name|OMPParallelDirectiveClass
 argument_list|,
-argument|OMPD_parallel
+name|OMPD_parallel
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -940,21 +1009,39 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPParallelDirectiveClass
+name|OMPParallelDirectiveClass
 argument_list|,
-argument|OMPD_parallel
+name|OMPD_parallel
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
 argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
+argument_list|)
 block|{}
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -964,6 +1051,7 @@ comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
 comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement associated with the directive.
+comment|/// \param HasCancel true if this directive has inner cancel directive.
 comment|///
 specifier|static
 name|OMPParallelDirective
@@ -979,6 +1067,8 @@ argument_list|,
 argument|ArrayRef<OMPClause *> Clauses
 argument_list|,
 argument|Stmt *AssociatedStmt
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place for \a N clauses.
@@ -998,6 +1088,16 @@ argument_list|,
 argument|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -1173,6 +1273,59 @@ name|CollapsedNum
 operator|)
 return|;
 block|}
+comment|/// \brief Get the private counters storage.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivateCounters
+argument_list|()
+block|{
+name|Expr
+operator|*
+operator|*
+name|Storage
+operator|=
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+operator|&
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|getArraysOffset
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|+
+name|CollapsedNum
+argument_list|)
+operator|)
+block|;
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|Storage
+expr|,
+name|CollapsedNum
+operator|)
+return|;
+block|}
 comment|/// \brief Get the updates storage.
 name|MutableArrayRef
 operator|<
@@ -1209,6 +1362,8 @@ name|getDirectiveKind
 argument_list|()
 argument_list|)
 operator|+
+literal|2
+operator|*
 name|CollapsedNum
 argument_list|)
 operator|)
@@ -1262,7 +1417,7 @@ name|getDirectiveKind
 argument_list|()
 argument_list|)
 operator|+
-literal|2
+literal|3
 operator|*
 name|CollapsedNum
 argument_list|)
@@ -1317,7 +1472,7 @@ name|getDirectiveKind
 argument_list|()
 argument_list|)
 operator|+
-literal|3
+literal|4
 operator|*
 name|CollapsedNum
 argument_list|)
@@ -1411,10 +1566,22 @@ argument|OpenMPDirectiveKind Kind
 argument_list|)
 block|{
 return|return
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|Kind
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|Kind
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|Kind
+argument_list|)
+operator|)
 operator|?
 name|WorksharingEnd
 operator|:
@@ -1437,11 +1604,13 @@ argument_list|(
 name|Kind
 argument_list|)
 operator|+
-literal|4
+literal|5
 operator|*
 name|CollapsedNum
 return|;
-comment|// Counters, Inits, Updates and Finals
+comment|// Counters,
+comment|// PrivateCounters, Inits,
+comment|// Updates and Finals
 block|}
 name|void
 name|setIterationVariable
@@ -1584,11 +1753,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1614,11 +1797,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1644,11 +1841,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1674,11 +1885,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1704,11 +1929,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1734,11 +1973,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1764,11 +2017,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|||
+name|isOpenMPDistributeDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -1788,6 +2055,17 @@ name|NUB
 block|;   }
 name|void
 name|setCounters
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|A
+argument_list|)
+block|;
+name|void
+name|setPrivateCounters
 argument_list|(
 name|ArrayRef
 operator|<
@@ -1921,6 +2199,16 @@ block|,
 literal|4
 operator|>
 name|Counters
+block|;
+comment|/// \brief PrivateCounters Loop counters.
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+block|,
+literal|4
+operator|>
+name|PrivateCounters
 block|;
 comment|/// \brief Expressions for loop counters inits for CodeGen.
 name|SmallVector
@@ -2059,6 +2347,13 @@ argument_list|(
 name|Size
 argument_list|)
 block|;
+name|PrivateCounters
+operator|.
+name|resize
+argument_list|(
+name|Size
+argument_list|)
+block|;
 name|Inits
 operator|.
 name|resize
@@ -2096,6 +2391,13 @@ name|i
 control|)
 block|{
 name|Counters
+index|[
+name|i
+index|]
+operator|=
+name|nullptr
+expr_stmt|;
+name|PrivateCounters
 index|[
 name|i
 index|]
@@ -2383,11 +2685,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2428,11 +2738,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2473,11 +2791,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2518,11 +2844,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2563,11 +2897,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2608,11 +2950,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2653,11 +3003,19 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
+operator|||
+name|isOpenMPTaskLoopDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
@@ -2796,6 +3154,42 @@ name|this
 operator|)
 operator|->
 name|getCounters
+argument_list|()
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|private_counters
+argument_list|()
+block|{
+return|return
+name|getPrivateCounters
+argument_list|()
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|private_counters
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|OMPLoopDirective
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getPrivateCounters
 argument_list|()
 return|;
 block|}
@@ -2949,6 +3343,27 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPParallelForSimdDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskLoopDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskLoopSimdDirectiveClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPDistributeDirectiveClass
 return|;
 block|}
 expr|}
@@ -3127,6 +3542,10 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief true if current directive has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -3147,19 +3566,24 @@ argument_list|)
 operator|:
 name|OMPLoopDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPForDirectiveClass
+name|OMPForDirectiveClass
 argument_list|,
-argument|OMPD_for
+name|OMPD_for
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|CollapsedNum
+name|CollapsedNum
 argument_list|,
-argument|NumClauses
+name|NumClauses
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -3177,21 +3601,39 @@ argument_list|)
 operator|:
 name|OMPLoopDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPForDirectiveClass
+name|OMPForDirectiveClass
 argument_list|,
-argument|OMPD_for
+name|OMPD_for
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|CollapsedNum
+name|CollapsedNum
 argument_list|,
-argument|NumClauses
+name|NumClauses
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -3203,6 +3645,7 @@ comment|/// \param CollapsedNum Number of collapsed loops.
 comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|/// \param Exprs Helper expressions for CodeGen.
+comment|/// \param HasCancel true if current directive has inner cancel directive.
 comment|///
 specifier|static
 name|OMPForDirective
@@ -3222,6 +3665,8 @@ argument_list|,
 argument|Stmt *AssociatedStmt
 argument_list|,
 argument|const HelperExprs&Exprs
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place
@@ -3245,6 +3690,16 @@ argument_list|,
 argument|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -3437,6 +3892,10 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief true if current directive has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -3454,19 +3913,24 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPSectionsDirectiveClass
+name|OMPSectionsDirectiveClass
 argument_list|,
-argument|OMPD_sections
+name|OMPD_sections
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -3481,21 +3945,39 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPSectionsDirectiveClass
+name|OMPSectionsDirectiveClass
 argument_list|,
-argument|OMPD_sections
+name|OMPD_sections
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
 argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
+argument_list|)
 block|{}
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -3505,6 +3987,7 @@ comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
 comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param HasCancel true if current directive has inner directive.
 comment|///
 specifier|static
 name|OMPSectionsDirective
@@ -3520,6 +4003,8 @@ argument_list|,
 argument|ArrayRef<OMPClause *> Clauses
 argument_list|,
 argument|Stmt *AssociatedStmt
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place for \a NumClauses
@@ -3540,6 +4025,16 @@ argument_list|,
 argument|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -3574,6 +4069,10 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief true if current directive has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -3588,19 +4087,24 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPSectionDirectiveClass
+name|OMPSectionDirectiveClass
 argument_list|,
-argument|OMPD_section
+name|OMPD_section
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -3611,19 +4115,26 @@ argument_list|()
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPSectionDirectiveClass
+name|OMPSectionDirectiveClass
 argument_list|,
-argument|OMPD_section
+name|OMPD_section
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|public
@@ -3634,6 +4145,7 @@ comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param HasCancel true if current directive has inner directive.
 comment|///
 specifier|static
 name|OMPSectionDirective
@@ -3647,6 +4159,8 @@ argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|Stmt *AssociatedStmt
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive.
@@ -3666,6 +4180,27 @@ argument_list|,
 name|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -3974,6 +4509,7 @@ comment|///
 comment|/// \param Name Name of the directive.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|OMPCriticalDirective
 argument_list|(
@@ -3982,6 +4518,8 @@ argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -3996,7 +4534,7 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|,
-literal|0
+name|NumClauses
 argument_list|,
 literal|1
 argument_list|)
@@ -4008,9 +4546,13 @@ argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
 comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
 name|explicit
 name|OMPCriticalDirective
-argument_list|()
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
@@ -4026,7 +4568,7 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|,
-literal|0
+name|NumClauses
 argument_list|,
 literal|1
 argument_list|)
@@ -4056,6 +4598,7 @@ comment|/// \param C AST context.
 comment|/// \param Name Name of the directive.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|///
 specifier|static
@@ -4071,24 +4614,26 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
 argument|Stmt *AssociatedStmt
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive.
 comment|///
 comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 specifier|static
 name|OMPCriticalDirective
 operator|*
 name|CreateEmpty
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-name|C
+argument|const ASTContext&C
 argument_list|,
-name|EmptyShell
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
 argument_list|)
 block|;
 comment|/// \brief Return name of the directive.
@@ -4139,6 +4684,10 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief true if current region has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -4159,19 +4708,24 @@ argument_list|)
 operator|:
 name|OMPLoopDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPParallelForDirectiveClass
+name|OMPParallelForDirectiveClass
 argument_list|,
-argument|OMPD_parallel_for
+name|OMPD_parallel_for
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|CollapsedNum
+name|CollapsedNum
 argument_list|,
-argument|NumClauses
+name|NumClauses
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -4189,21 +4743,39 @@ argument_list|)
 operator|:
 name|OMPLoopDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPParallelForDirectiveClass
+name|OMPParallelForDirectiveClass
 argument_list|,
-argument|OMPD_parallel_for
+name|OMPD_parallel_for
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|CollapsedNum
+name|CollapsedNum
 argument_list|,
-argument|NumClauses
+name|NumClauses
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -4215,6 +4787,7 @@ comment|/// \param CollapsedNum Number of collapsed loops.
 comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|/// \param Exprs Helper expressions for CodeGen.
+comment|/// \param HasCancel true if current directive has inner cancel directive.
 comment|///
 specifier|static
 name|OMPParallelForDirective
@@ -4234,6 +4807,8 @@ argument_list|,
 argument|Stmt *AssociatedStmt
 argument_list|,
 argument|const HelperExprs&Exprs
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place
@@ -4257,6 +4832,16 @@ argument_list|,
 argument|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -4450,6 +5035,10 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief true if current directive has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -4467,19 +5056,24 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPParallelSectionsDirectiveClass
+name|OMPParallelSectionsDirectiveClass
 argument_list|,
-argument|OMPD_parallel_sections
+name|OMPD_parallel_sections
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -4494,21 +5088,39 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPParallelSectionsDirectiveClass
+name|OMPParallelSectionsDirectiveClass
 argument_list|,
-argument|OMPD_parallel_sections
+name|OMPD_parallel_sections
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
 argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
+argument_list|)
 block|{}
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -4518,6 +5130,7 @@ comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
 comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param HasCancel true if current directive has inner cancel directive.
 comment|///
 specifier|static
 name|OMPParallelSectionsDirective
@@ -4533,6 +5146,8 @@ argument_list|,
 argument|ArrayRef<OMPClause *> Clauses
 argument_list|,
 argument|Stmt *AssociatedStmt
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place for \a NumClauses
@@ -4553,6 +5168,16 @@ argument_list|,
 argument|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -4589,6 +5214,10 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief true if this directive has inner cancel directive.
+name|bool
+name|HasCancel
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -4606,19 +5235,24 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPTaskDirectiveClass
+name|OMPTaskDirectiveClass
 argument_list|,
-argument|OMPD_task
+name|OMPD_task
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -4633,21 +5267,39 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPTaskDirectiveClass
+name|OMPTaskDirectiveClass
 argument_list|,
-argument|OMPD_task
+name|OMPD_task
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
 literal|1
 argument_list|)
+block|,
+name|HasCancel
+argument_list|(
+argument|false
+argument_list|)
 block|{}
+comment|/// \brief Set cancel state.
+name|void
+name|setHasCancel
+argument_list|(
+argument|bool Has
+argument_list|)
+block|{
+name|HasCancel
+operator|=
+name|Has
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -4657,6 +5309,7 @@ comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
 comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param HasCancel true, if current directive has inner cancel directive.
 comment|///
 specifier|static
 name|OMPTaskDirective
@@ -4672,6 +5325,8 @@ argument_list|,
 argument|ArrayRef<OMPClause *> Clauses
 argument_list|,
 argument|Stmt *AssociatedStmt
+argument_list|,
+argument|bool HasCancel
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place for \a NumClauses
@@ -4692,6 +5347,16 @@ argument_list|,
 argument|EmptyShell
 argument_list|)
 block|;
+comment|/// \brief Return true if current directive has inner cancel directive.
+name|bool
+name|hasCancel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCancel
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -5364,12 +6029,15 @@ comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|OMPOrderedDirective
 argument_list|(
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -5384,16 +6052,20 @@ argument|StartLoc
 argument_list|,
 argument|EndLoc
 argument_list|,
-literal|0
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
 comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
 name|explicit
 name|OMPOrderedDirective
-argument_list|()
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
@@ -5407,7 +6079,7 @@ argument|SourceLocation()
 argument_list|,
 argument|SourceLocation()
 argument_list|,
-literal|0
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
@@ -5419,6 +6091,7 @@ comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|///
 specifier|static
@@ -5432,24 +6105,26 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
 argument|Stmt *AssociatedStmt
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive.
 comment|///
 comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 specifier|static
 name|OMPOrderedDirective
 operator|*
 name|CreateEmpty
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-name|C
+argument|const ASTContext&C
 argument_list|,
-name|EmptyShell
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
 argument_list|)
 block|;
 specifier|static
@@ -6120,6 +6795,145 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief This represents '#pragma omp target data' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target data device(0) if(a) map(b[:])
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target data' has clauses 'device'
+comment|/// with the value '0', 'if' with condition 'a' and 'map' with array
+comment|/// section 'b[:]'.
+comment|///
+name|class
+name|OMPTargetDataDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param NumClauses The number of clauses.
+comment|///
+name|OMPTargetDataDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetDataDirectiveClass
+argument_list|,
+argument|OMPD_target_data
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTargetDataDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTargetDataDirectiveClass
+argument_list|,
+argument|OMPD_target_data
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPTargetDataDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place for \a N clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param N The number of clauses.
+comment|///
+specifier|static
+name|OMPTargetDataDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned N
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTargetDataDirectiveClass
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief This represents '#pragma omp teams' directive.
 comment|///
 comment|/// \code
@@ -6446,12 +7260,15 @@ comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|OMPCancelDirective
 argument_list|(
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -6466,7 +7283,7 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|,
-literal|0
+name|NumClauses
 argument_list|,
 literal|0
 argument_list|)
@@ -6478,9 +7295,12 @@ argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
 comment|///
+comment|/// \param NumClauses Number of clauses.
 name|explicit
 name|OMPCancelDirective
-argument_list|()
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
@@ -6496,7 +7316,7 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|,
-literal|0
+name|NumClauses
 argument_list|,
 literal|0
 argument_list|)
@@ -6525,6 +7345,7 @@ comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
 comment|///
 specifier|static
 name|OMPCancelDirective
@@ -6537,24 +7358,26 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
 argument|OpenMPDirectiveKind CancelRegion
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive.
 comment|///
 comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 specifier|static
 name|OMPCancelDirective
 operator|*
 name|CreateEmpty
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-name|C
+argument|const ASTContext&C
 argument_list|,
-name|EmptyShell
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
 argument_list|)
 block|;
 comment|/// \brief Get cancellation region for the current cancellation point.
@@ -6581,6 +7404,470 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPCancelDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp taskloop' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskloop private(a,b) grainsize(val) num_tasks(num)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp taskloop' has clauses 'private'
+comment|/// with the variables 'a' and 'b', 'grainsize' with expression 'val' and
+comment|/// 'num_tasks' with expression 'num'.
+comment|///
+name|class
+name|OMPTaskLoopDirective
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTaskLoopDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskLoopDirectiveClass
+argument_list|,
+argument|OMPD_taskloop
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTaskLoopDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskLoopDirectiveClass
+argument_list|,
+argument|OMPD_taskloop
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTaskLoopDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTaskLoopDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskLoopDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp taskloop simd' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskloop simd private(a,b) grainsize(val) num_tasks(num)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp taskloop simd' has clauses 'private'
+comment|/// with the variables 'a' and 'b', 'grainsize' with expression 'val' and
+comment|/// 'num_tasks' with expression 'num'.
+comment|///
+name|class
+name|OMPTaskLoopSimdDirective
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTaskLoopSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskLoopSimdDirectiveClass
+argument_list|,
+argument|OMPD_taskloop_simd
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTaskLoopSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskLoopSimdDirectiveClass
+argument_list|,
+argument|OMPD_taskloop_simd
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPTaskLoopSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTaskLoopSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskLoopSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp distribute' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp distribute private(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp distribute' has clauses 'private'
+comment|/// with the variables 'a' and 'b'
+comment|///
+name|class
+name|OMPDistributeDirective
+operator|:
+name|public
+name|OMPLoopDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPDistributeDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPDistributeDirectiveClass
+argument_list|,
+argument|OMPD_distribute
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPDistributeDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPLoopDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPDistributeDirectiveClass
+argument_list|,
+argument|OMPD_distribute
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|CollapsedNum
+argument_list|,
+argument|NumClauses
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|/// \param Exprs Helper expressions for CodeGen.
+comment|///
+specifier|static
+name|OMPDistributeDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|,
+argument|const HelperExprs&Exprs
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPDistributeDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPDistributeDirectiveClass
 return|;
 block|}
 expr|}

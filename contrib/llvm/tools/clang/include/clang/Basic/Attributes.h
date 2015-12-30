@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"clang/Basic/TargetInfo.h"
 end_include
 
 begin_decl_stmt
@@ -83,33 +83,31 @@ comment|/// \brief Return the version number associated with the attribute if we
 comment|/// recognize and implement the attribute specified by the given information.
 name|int
 name|hasAttribute
-argument_list|(
+parameter_list|(
 name|AttrSyntax
 name|Syntax
-argument_list|,
+parameter_list|,
 specifier|const
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Scope
-argument_list|,
+parameter_list|,
 specifier|const
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Attr
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|T
-argument_list|,
+name|TargetInfo
+modifier|&
+name|Target
+parameter_list|,
 specifier|const
 name|LangOptions
-operator|&
+modifier|&
 name|LangOpts
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

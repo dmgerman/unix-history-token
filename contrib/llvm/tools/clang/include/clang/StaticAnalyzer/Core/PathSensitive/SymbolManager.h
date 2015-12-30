@@ -2773,6 +2773,15 @@ operator|*
 name|region
 argument_list|)
 block|;
+name|void
+name|markElementIndicesLive
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|region
+argument_list|)
+block|;
 comment|/// \brief Set to the value of the symbolic store after
 comment|/// StoreManager::removeDeadBindings has been called.
 name|void
@@ -2798,8 +2807,35 @@ block|;
 name|class
 name|SymbolVisitor
 block|{
+name|protected
+operator|:
+operator|~
+name|SymbolVisitor
+argument_list|()
+operator|=
+expr|default
+block|;
 name|public
 operator|:
+name|SymbolVisitor
+argument_list|()
+operator|=
+expr|default
+block|;
+name|SymbolVisitor
+argument_list|(
+specifier|const
+name|SymbolVisitor
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|SymbolVisitor
+argument_list|(
+argument|SymbolVisitor&&
+argument_list|)
+block|{}
 comment|/// \brief A visitor method invoked by ProgramStateManager::scanReachableSymbols.
 comment|///
 comment|/// The method returns \c true if symbols should continue be scanned and \c
@@ -2824,11 +2860,7 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-operator|~
-name|SymbolVisitor
-argument_list|()
-block|; }
+expr|}
 block|;  }
 comment|// end GR namespace
 block|}

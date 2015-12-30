@@ -21,27 +21,6 @@ directive|include
 file|<emmintrin.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__AES__
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"AES instructions not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Define the default attributes for the functions in this file. */
 end_comment
@@ -50,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("aes")))
 end_define
 
 begin_function
@@ -198,7 +177,7 @@ parameter_list|,
 name|R
 parameter_list|)
 define|\
-value|__builtin_ia32_aeskeygenassist128((C), (R))
+value|(__m128i)__builtin_ia32_aeskeygenassist128((__v2di)(__m128i)(C), (int)(R))
 end_define
 
 begin_undef
@@ -206,11 +185,6 @@ undef|#
 directive|undef
 name|__DEFAULT_FN_ATTRS
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

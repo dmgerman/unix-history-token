@@ -29,27 +29,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__LZCNT__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"LZCNT instruction is not enabled"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __LZCNT__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|__LZCNTINTRIN_H
 end_ifndef
 
@@ -67,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("lzcnt")))
 end_define
 
 begin_function
