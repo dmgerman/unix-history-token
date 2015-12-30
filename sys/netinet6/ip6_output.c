@@ -7214,6 +7214,9 @@ name|IPV6_RECVRSSBUCKETID
 case|:
 endif|#
 directive|endif
+case|case
+name|IPV6_BINDMULTI
+case|:
 switch|switch
 condition|(
 name|optname
