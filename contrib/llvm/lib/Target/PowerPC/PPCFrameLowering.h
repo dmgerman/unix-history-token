@@ -117,6 +117,18 @@ specifier|const
 name|unsigned
 name|BasePointerSaveOffset
 block|;
+comment|/**    * \brief Find a register that can be used in function prologue and epilogue    *    * Find a register that can be use as the scratch register in function    * prologue and epilogue to save various registers (Link Register, Base    * Pointer, etc.). Prefer R0, if it is available. If it is not available,    * then choose a different register.    *    * This method will return true if an available register was found (including    * R0). If no available registers are found, the method returns false and sets    * ScratchRegister to R0, as per the recommendation in the ABI.    *    * \param[in] MBB The machine basic block to find an available register for    * \param[in] UseAtEnd Specify whether the scratch register will be used at    *                     the end of the basic block (i.e., will the scratch    *                     register kill a register defined in the basic block)    * \param[out] ScratchRegister The scratch register to use    * \return true if a scratch register was found. false of a scratch register    *         was not found and R0 is being used as the default.    */
+name|bool
+name|findScratchRegister
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|bool UseAtEnd
+argument_list|,
+argument|unsigned *ScratchRegister
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|PPCFrameLowering
@@ -327,6 +339,32 @@ operator|*
 name|getCalleeSavedSpillSlots
 argument_list|(
 argument|unsigned&NumEntries
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|enableShrinkWrapping
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Methods used by shrink wrapping to determine if MBB can be used for the
+comment|/// function prologue/epilogue.
+name|bool
+name|canUseAsPrologue
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|canUseAsEpilogue
+argument_list|(
+argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override

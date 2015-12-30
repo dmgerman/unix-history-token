@@ -111,7 +111,7 @@ name|llvm
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|XRegList
 index|[]
 init|=
@@ -151,7 +151,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|HRegList
 index|[]
 init|=
@@ -191,7 +191,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|SRegList
 index|[]
 init|=
@@ -231,7 +231,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|DRegList
 index|[]
 init|=
@@ -271,7 +271,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|QRegList
 index|[]
 init|=
@@ -355,12 +355,9 @@ operator|.
 name|getMachineFunction
 argument_list|()
 operator|.
-name|getTarget
-argument_list|()
-operator|.
 name|getDataLayout
 argument_list|()
-operator|->
+operator|.
 name|getStackAlignment
 argument_list|()
 decl_stmt|;
@@ -564,7 +561,7 @@ comment|// Try to allocate a contiguous block of registers, each of the correct
 comment|// size to hold one member.
 name|ArrayRef
 operator|<
-name|uint16_t
+name|MCPhysReg
 operator|>
 name|RegList
 expr_stmt|;

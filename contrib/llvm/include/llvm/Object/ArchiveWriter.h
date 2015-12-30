@@ -94,26 +94,21 @@ name|object
 operator|::
 name|Archive
 operator|::
-name|child_iterator
-name|OldI
+name|Child
+name|OldMember
 expr_stmt|;
-name|StringRef
-name|NewFilename
-decl_stmt|;
 name|public
 label|:
 name|NewArchiveIterator
 argument_list|(
-argument|object::Archive::child_iterator I
+argument|const object::Archive::Child&OldMember
 argument_list|,
 argument|StringRef Name
 argument_list|)
 empty_stmt|;
 name|NewArchiveIterator
 argument_list|(
-argument|StringRef I
-argument_list|,
-argument|StringRef Name
+argument|StringRef FileName
 argument_list|)
 empty_stmt|;
 name|bool
@@ -126,11 +121,13 @@ name|getName
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|const
 name|object
 operator|::
 name|Archive
 operator|::
-name|child_iterator
+name|Child
+operator|&
 name|getOld
 argument_list|()
 specifier|const
@@ -186,6 +183,8 @@ argument_list|,
 argument|object::Archive::Kind Kind
 argument_list|,
 argument|bool Deterministic
+argument_list|,
+argument|bool Thin
 argument_list|)
 expr_stmt|;
 block|}

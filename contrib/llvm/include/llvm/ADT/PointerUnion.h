@@ -99,10 +99,14 @@ name|Return
 typedef|;
 block|}
 empty_stmt|;
-comment|/// \brief Get a type based on whether two types are the same or not. For:
-comment|/// @code
-comment|/// typedef typename PointerUnionTypeSelector<T1, T2, EQ, NE>::Return Ret;
-comment|/// @endcode
+comment|/// Get a type based on whether two types are the same or not.
+comment|///
+comment|/// For:
+comment|///
+comment|/// \code
+comment|///   typedef typename PointerUnionTypeSelector<T1, T2, EQ, NE>::Return Ret;
+comment|/// \endcode
+comment|///
 comment|/// Ret will be EQ type if T1 is same as T2 or NE type otherwise.
 name|template
 operator|<
@@ -194,8 +198,7 @@ operator|,
 name|RET_EQ
 operator|,
 name|RET_NE
-operator|>
-expr|>
+operator|>>
 block|{
 typedef|typedef
 name|typename
@@ -296,12 +299,13 @@ name|PT1BitsAv
 operator|:
 name|PT2BitsAv
 block|}
-block|;   }
+block|; }
 expr_stmt|;
-comment|/// PointerUnion - This implements a discriminated union of two pointer types,
-comment|/// and keeps the discriminator bit-mangled into the low bits of the pointer.
-comment|/// This allows the implementation to be extremely efficient in space, but
-comment|/// permits a very natural and type-safe API.
+comment|/// A discriminated union of two pointer types, with the discriminator in the
+comment|/// low bit of the pointer.
+comment|///
+comment|/// This implementation is extremely efficient in space due to leveraging the
+comment|/// low bits of the pointer, while exposing a natural and type-safe API.
 comment|///
 comment|/// Common use patterns would be something like this:
 comment|///    PointerUnion<int*, float*> P;
@@ -341,8 +345,7 @@ operator|<
 name|PT1
 operator|,
 name|PT2
-operator|>
-expr|>
+operator|>>
 name|ValTy
 expr_stmt|;
 name|private
@@ -381,7 +384,7 @@ name|T
 operator|>
 expr|struct
 name|UNION_DOESNT_CONTAIN_TYPE
-block|{ }
+block|{}
 expr_stmt|;
 name|public
 label|:
@@ -395,9 +398,9 @@ argument_list|)
 block|:
 name|Val
 argument_list|(
-argument|const_cast<void *>(PointerLikeTypeTraits<PT1>::getAsVoidPointer(V))
+argument|const_cast<void *>(             PointerLikeTypeTraits<PT1>::getAsVoidPointer(V))
 argument_list|)
-block|{     }
+block|{}
 name|PointerUnion
 argument_list|(
 argument|PT2 V
@@ -409,9 +412,9 @@ argument|const_cast<void *>(PointerLikeTypeTraits<PT2>::getAsVoidPointer(V))
 argument_list|,
 literal|1
 argument_list|)
-block|{     }
-comment|/// isNull - Return true if the pointer held in the union is null,
-comment|/// regardless of which type it is.
+block|{}
+comment|/// Test if the pointer held in the union is null, regardless of
+comment|/// which type it is.
 name|bool
 name|isNull
 argument_list|()
@@ -447,7 +450,7 @@ name|isNull
 argument_list|()
 return|;
 block|}
-comment|/// is<T>() return true if the Union currently holds the type matching T.
+comment|/// Test if the Union currently holds the type matching T.
 name|template
 operator|<
 name|typename
@@ -485,9 +488,7 @@ operator|,
 name|UNION_DOESNT_CONTAIN_TYPE
 operator|<
 name|T
-operator|>
-expr|>
-operator|>
+operator|>>>
 operator|::
 name|Return
 name|Ty
@@ -517,11 +518,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// get<T>() - Return the value of the specified pointer type. If the
+comment|/// Returns the value of the specified pointer type.
 end_comment
 
 begin_comment
-comment|/// specified pointer type is incorrect, assert.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the specified pointer type is incorrect, assert.
 end_comment
 
 begin_expr_stmt
@@ -565,11 +570,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// dyn_cast<T>() - If the current value is of the specified pointer type,
+comment|/// Returns the current pointer if it is of the specified pointer type,
 end_comment
 
 begin_comment
-comment|/// return it, otherwise return null.
+comment|/// otherwises returns null.
 end_comment
 
 begin_expr_stmt
@@ -611,11 +616,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief If the union is set to the first pointer type get an address
+comment|/// If the union is set to the first pointer type get an address pointing to
 end_comment
 
 begin_comment
-comment|/// pointing to it.
+comment|/// it.
 end_comment
 
 begin_expr_stmt
@@ -643,11 +648,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief If the union is set to the first pointer type get an address
+comment|/// If the union is set to the first pointer type get an address pointing to
 end_comment
 
 begin_comment
-comment|/// pointing to it.
+comment|/// it.
 end_comment
 
 begin_function
@@ -699,7 +704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Assignment from nullptr which just clears the union.
+comment|/// Assignment from nullptr which just clears the union.
 end_comment
 
 begin_decl_stmt
@@ -1030,8 +1035,7 @@ operator|<
 name|PT1
 operator|,
 name|PT2
-operator|>
-expr|>
+operator|>>
 block|{
 name|public
 operator|:
@@ -1101,7 +1105,7 @@ block|,
 name|PT2
 decl|>::
 name|ValTy
-decl|>           ::
+decl|>::
 name|NumLowBitsAvailable
 block|}
 enum|;
@@ -1109,11 +1113,11 @@ end_enum
 
 begin_comment
 unit|};
-comment|/// PointerUnion3 - This is a pointer union of three pointer types.  See
+comment|/// A pointer union of three pointer types. See documentation for PointerUnion
 end_comment
 
 begin_comment
-comment|/// documentation for PointerUnion for usage.
+comment|/// for usage.
 end_comment
 
 begin_expr_stmt
@@ -1183,7 +1187,7 @@ name|Val
 argument_list|(
 argument|val
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -1274,7 +1278,7 @@ name|Val
 argument_list|(
 argument|val
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -1392,11 +1396,11 @@ block|}
 end_block
 
 begin_comment
-comment|/// isNull - Return true if the pointer held in the union is null,
+comment|/// Test if the pointer held in the union is null, regardless of
 end_comment
 
 begin_comment
-comment|/// regardless of which type it is.
+comment|/// which type it is.
 end_comment
 
 begin_expr_stmt
@@ -1430,7 +1434,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// is<T>() return true if the Union currently holds the type matching T.
+comment|/// Test if the Union currently holds the type matching T.
 end_comment
 
 begin_expr_stmt
@@ -1470,8 +1474,7 @@ operator|,
 name|IsInnerUnion
 operator|,
 name|IsPT3
-operator|>
-expr|>
+operator|>>
 operator|::
 name|Return
 name|Ty
@@ -1497,11 +1500,15 @@ end_return
 
 begin_comment
 unit|}
-comment|/// get<T>() - Return the value of the specified pointer type. If the
+comment|/// Returns the value of the specified pointer type.
 end_comment
 
 begin_comment
-comment|/// specified pointer type is incorrect, assert.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the specified pointer type is incorrect, assert.
 end_comment
 
 begin_expr_stmt
@@ -1553,8 +1560,7 @@ operator|,
 name|IsInnerUnion
 operator|,
 name|IsPT3
-operator|>
-expr|>
+operator|>>
 operator|::
 name|Return
 name|Ty
@@ -1580,11 +1586,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// dyn_cast<T>() - If the current value is of the specified pointer type,
+comment|/// Returns the current pointer if it is of the specified pointer type,
 end_comment
 
 begin_comment
-comment|/// return it, otherwise return null.
+comment|/// otherwises returns null.
 end_comment
 
 begin_expr_stmt
@@ -1626,7 +1632,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Assignment from nullptr which just clears the union.
+comment|/// Assignment from nullptr which just clears the union.
 end_comment
 
 begin_decl_stmt
@@ -1816,8 +1822,7 @@ operator|,
 name|PT2
 operator|,
 name|PT3
-operator|>
-expr|>
+operator|>>
 block|{
 name|public
 operator|:
@@ -1895,7 +1900,7 @@ block|,
 name|PT3
 decl|>::
 name|ValTy
-decl|>           ::
+decl|>::
 name|NumLowBitsAvailable
 block|}
 enum|;
@@ -1903,11 +1908,11 @@ end_enum
 
 begin_comment
 unit|};
-comment|/// PointerUnion4 - This is a pointer union of four pointer types.  See
+comment|/// A pointer union of four pointer types. See documentation for PointerUnion
 end_comment
 
 begin_comment
-comment|/// documentation for PointerUnion for usage.
+comment|/// for usage.
 end_comment
 
 begin_expr_stmt
@@ -2067,11 +2072,11 @@ block|}
 end_block
 
 begin_comment
-comment|/// isNull - Return true if the pointer held in the union is null,
+comment|/// Test if the pointer held in the union is null, regardless of
 end_comment
 
 begin_comment
-comment|/// regardless of which type it is.
+comment|/// which type it is.
 end_comment
 
 begin_expr_stmt
@@ -2105,7 +2110,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// is<T>() return true if the Union currently holds the type matching T.
+comment|/// Test if the Union currently holds the type matching T.
 end_comment
 
 begin_expr_stmt
@@ -2145,8 +2150,7 @@ operator|,
 name|InnerUnion1
 operator|,
 name|InnerUnion2
-operator|>
-expr|>
+operator|>>
 operator|::
 name|Return
 name|Ty
@@ -2187,11 +2191,15 @@ end_return
 
 begin_comment
 unit|}
-comment|/// get<T>() - Return the value of the specified pointer type. If the
+comment|/// Returns the value of the specified pointer type.
 end_comment
 
 begin_comment
-comment|/// specified pointer type is incorrect, assert.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the specified pointer type is incorrect, assert.
 end_comment
 
 begin_expr_stmt
@@ -2243,8 +2251,7 @@ operator|,
 name|InnerUnion1
 operator|,
 name|InnerUnion2
-operator|>
-expr|>
+operator|>>
 operator|::
 name|Return
 name|Ty
@@ -2275,11 +2282,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// dyn_cast<T>() - If the current value is of the specified pointer type,
+comment|/// Returns the current pointer if it is of the specified pointer type,
 end_comment
 
 begin_comment
-comment|/// return it, otherwise return null.
+comment|/// otherwises returns null.
 end_comment
 
 begin_expr_stmt
@@ -2321,7 +2328,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Assignment from nullptr which just clears the union.
+comment|/// Assignment from nullptr which just clears the union.
 end_comment
 
 begin_decl_stmt
@@ -2546,8 +2553,7 @@ operator|,
 name|PT3
 operator|,
 name|PT4
-operator|>
-expr|>
+operator|>>
 block|{
 name|public
 operator|:
@@ -2633,7 +2639,7 @@ block|,
 name|PT4
 decl|>::
 name|ValTy
-decl|>           ::
+decl|>::
 name|NumLowBitsAvailable
 block|}
 enum|;
@@ -2661,8 +2667,7 @@ operator|<
 name|T
 operator|,
 name|U
-operator|>
-expr|>
+operator|>>
 block|{
 typedef|typedef
 name|PointerUnion
@@ -2840,7 +2845,7 @@ block|}
 end_function
 
 begin_endif
-unit|}; }
+unit|};  }
 endif|#
 directive|endif
 end_endif

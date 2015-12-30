@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MIRParser.h - MIR serialization format parser ----------------------===//
+comment|//===- MIRParser.h - MIR serialization format parser ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -156,6 +156,7 @@ block|;
 operator|~
 name|MIRParser
 argument_list|()
+name|override
 block|;
 comment|/// Parse the optional LLVM IR module that's embedded in the MIR file.
 comment|///
@@ -246,6 +247,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MIRPARSER_MIRPARSER_H
+end_comment
 
 end_unit
 

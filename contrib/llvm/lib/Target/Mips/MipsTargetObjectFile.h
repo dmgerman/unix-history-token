@@ -136,6 +136,8 @@ comment|/// Return true if this constant should be placed into small data sectio
 name|bool
 name|IsConstantInSmallSection
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const Constant *CN
 argument_list|,
 argument|const TargetMachine&TM
@@ -146,6 +148,8 @@ name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C

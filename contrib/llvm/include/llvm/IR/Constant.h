@@ -224,38 +224,14 @@ name|bool
 name|isConstantUsed
 argument_list|()
 specifier|const
-block|;      enum
-name|PossibleRelocationsTy
-block|{
-name|NoRelocation
-operator|=
-literal|0
-block|,
-name|LocalRelocation
-operator|=
-literal|1
-block|,
-name|GlobalRelocations
-operator|=
-literal|2
-block|}
 block|;
-comment|/// getRelocationInfo - This method classifies the entry according to
-comment|/// whether or not it may generate a relocation entry.  This must be
-comment|/// conservative, so if it might codegen to a relocatable entry, it should say
-comment|/// so.  The return values are:
+comment|/// This method classifies the entry according to whether or not it may
+comment|/// generate a relocation entry.  This must be conservative, so if it might
+comment|/// codegen to a relocatable entry, it should say so.
 comment|///
-comment|///  NoRelocation: This constant pool entry is guaranteed to never have a
-comment|///     relocation applied to it (because it holds a simple constant like
-comment|///     '4').
-comment|///  LocalRelocation: This entry has relocations, but the entries are
-comment|///     guaranteed to be resolvable by the static linker, so the dynamic
-comment|///     linker will never see them.
-comment|///  GlobalRelocations: This entry may have arbitrary relocations.
-comment|///
-comment|/// FIXME: This really should not be in VMCore.
-name|PossibleRelocationsTy
-name|getRelocationInfo
+comment|/// FIXME: This really should not be in IR.
+name|bool
+name|needsRelocation
 argument_list|()
 specifier|const
 block|;

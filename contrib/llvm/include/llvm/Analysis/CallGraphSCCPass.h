@@ -278,9 +278,9 @@ block|{}
 name|void
 name|initialize
 argument_list|(
-argument|CallGraphNode*const*I
+argument|CallGraphNode *const *I
 argument_list|,
-argument|CallGraphNode*const*E
+argument|CallGraphNode *const *E
 argument_list|)
 block|{
 name|Nodes

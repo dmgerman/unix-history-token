@@ -74,6 +74,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -156,6 +159,28 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Emit target-specific EH funclet machinery.
+name|virtual
+name|void
+name|beginFunclet
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|Sym
+init|=
+name|nullptr
+parameter_list|)
+block|{}
+name|virtual
+name|void
+name|endFunclet
+parameter_list|()
+block|{}
 comment|/// \brief Process beginning of an instruction.
 name|virtual
 name|void

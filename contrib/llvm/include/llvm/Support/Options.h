@@ -258,7 +258,7 @@ comment|///
 comment|/// \param Key unique key for option
 comment|/// \param O option to map to \p Key
 comment|///
-comment|/// Allocated cl::Options are owened by the OptionRegistry and are deallocated
+comment|/// Allocated cl::Options are owned by the OptionRegistry and are deallocated
 comment|/// on destruction or removal
 name|void
 name|addOption
@@ -299,7 +299,7 @@ comment|///
 comment|/// Options are keyed off the template parameters to generate unique static
 comment|/// characters. The template parameters are (1) the type of the data the
 comment|/// option stores (\p ValT), the class that will read the option (\p Base),
-comment|/// and the memeber that the class will store the data into (\p Mem).
+comment|/// and the member that the class will store the data into (\p Mem).
 name|template
 operator|<
 name|typename

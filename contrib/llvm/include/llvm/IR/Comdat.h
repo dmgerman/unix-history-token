@@ -162,6 +162,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+name|bool
+name|IsForDebug
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

@@ -173,6 +173,12 @@ init|=
 literal|1
 operator|<<
 literal|21
+block|,
+name|VOPAsmPrefer32Bit
+init|=
+literal|1
+operator|<<
+literal|22
 block|}
 enum|;
 block|}

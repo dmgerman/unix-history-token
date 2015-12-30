@@ -280,7 +280,6 @@ name|ThisABI
 return|;
 block|}
 comment|/// The registers to use for byval arguments.
-specifier|const
 name|ArrayRef
 operator|<
 name|MCPhysReg
@@ -290,7 +289,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// The registers to use for the variable argument list.
-specifier|const
 name|ArrayRef
 operator|<
 name|MCPhysReg
@@ -354,12 +352,22 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|unsigned
+name|GetZeroReg
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
 name|GetPtrAdduOp
 argument_list|()
 specifier|const
 expr_stmt|;
 name|unsigned
 name|GetPtrAddiuOp
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
+name|GetGPRMoveOp
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -370,6 +378,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|IsN64
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|AreGprs64bit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsN32
+argument_list|()
+operator|||
 name|IsN64
 argument_list|()
 return|;

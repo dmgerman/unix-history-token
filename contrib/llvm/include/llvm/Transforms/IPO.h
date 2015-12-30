@@ -69,10 +69,19 @@ directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|FunctionInfoIndex
+decl_stmt|;
 name|class
 name|ModulePass
 decl_stmt|;
@@ -193,6 +202,20 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// This pass performs iterative function importing from other modules.
+name|Pass
+modifier|*
+name|createFunctionImportPass
+parameter_list|(
+specifier|const
+name|FunctionInfoIndex
+modifier|*
+name|Index
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createFunctionInliningPass - Return a new pass object that uses a heuristic
 comment|/// to inline direct function calls to small functions.
@@ -415,6 +438,28 @@ name|ModulePass
 modifier|*
 name|createLowerBitSetsPass
 parameter_list|()
+function_decl|;
+comment|/// \brief This pass export CFI checks for use by external modules.
+name|ModulePass
+modifier|*
+name|createCrossDSOCFIPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|// SampleProfilePass - Loads sample profile data from disk and generates
+comment|// IR metadata to reflect the profile.
+name|ModulePass
+modifier|*
+name|createSampleProfileLoaderPass
+parameter_list|()
+function_decl|;
+name|ModulePass
+modifier|*
+name|createSampleProfileLoaderPass
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

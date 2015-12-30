@@ -127,6 +127,8 @@ name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C

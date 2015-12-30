@@ -1049,7 +1049,7 @@ return|;
 block|}
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|RRegList
 index|[]
 init|=
@@ -1073,7 +1073,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|SRegList
 index|[]
 init|=
@@ -1145,7 +1145,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|DRegList
 index|[]
 init|=
@@ -1185,7 +1185,7 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|QRegList
 index|[]
 init|=
@@ -1320,6 +1320,26 @@ name|true
 return|;
 comment|// Try to allocate a contiguous block of registers, each of the correct
 comment|// size to hold one member.
+name|auto
+operator|&
+name|DL
+operator|=
+name|State
+operator|.
+name|getMachineFunction
+argument_list|()
+operator|.
+name|getDataLayout
+argument_list|()
+expr_stmt|;
+name|unsigned
+name|StackAlign
+init|=
+name|DL
+operator|.
+name|getStackAlignment
+argument_list|()
+decl_stmt|;
 name|unsigned
 name|Align
 init|=
@@ -1335,12 +1355,12 @@ operator|.
 name|getExtraInfo
 argument_list|()
 argument_list|,
-literal|8U
+name|StackAlign
 argument_list|)
 decl_stmt|;
 name|ArrayRef
 operator|<
-name|uint16_t
+name|MCPhysReg
 operator|>
 name|RegList
 expr_stmt|;

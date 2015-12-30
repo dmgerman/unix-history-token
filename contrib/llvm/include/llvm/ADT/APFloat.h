@@ -255,6 +255,34 @@ name|fltSemantics
 modifier|&
 parameter_list|)
 function_decl|;
+specifier|static
+name|ExponentType
+name|semanticsMinExponent
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|static
+name|ExponentType
+name|semanticsMaxExponent
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|static
+name|unsigned
+name|int
+name|semanticsSizeInBits
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+parameter_list|)
+function_decl|;
 comment|/// IEEE-754R 5.11: Floating Point Comparison Relations.
 enum|enum
 name|cmpResult
@@ -794,8 +822,6 @@ parameter_list|(
 specifier|const
 name|APFloat
 modifier|&
-parameter_list|,
-name|roundingMode
 parameter_list|)
 function_decl|;
 name|opStatus
@@ -1358,6 +1384,12 @@ comment|/// Returns true if and only if the number has the largest possible fini
 comment|/// magnitude in the current semantics.
 name|bool
 name|isLargest
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if and only if the number is an exact integer.
+name|bool
+name|isInteger
 argument_list|()
 specifier|const
 expr_stmt|;

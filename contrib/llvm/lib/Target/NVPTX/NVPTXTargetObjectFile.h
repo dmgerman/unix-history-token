@@ -203,7 +203,7 @@ name|SV_ELF
 argument_list|,
 name|SectionKind
 operator|::
-name|getDataRel
+name|getData
 argument_list|()
 argument_list|)
 block|;
@@ -451,6 +451,8 @@ name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C

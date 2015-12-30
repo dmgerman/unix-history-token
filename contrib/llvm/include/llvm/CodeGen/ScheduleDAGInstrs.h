@@ -113,9 +113,6 @@ name|class
 name|MachineDominatorTree
 decl_stmt|;
 name|class
-name|LiveIntervals
-decl_stmt|;
-name|class
 name|RegPressureTracker
 decl_stmt|;
 name|class
@@ -128,25 +125,35 @@ block|{
 name|unsigned
 name|VirtReg
 decl_stmt|;
+name|LaneBitmask
+name|LaneMask
+decl_stmt|;
 name|SUnit
 modifier|*
 name|SU
 decl_stmt|;
 name|VReg2SUnit
 argument_list|(
-argument|unsigned reg
+argument|unsigned VReg
 argument_list|,
-argument|SUnit *su
+argument|LaneBitmask LaneMask
+argument_list|,
+argument|SUnit *SU
 argument_list|)
 block|:
 name|VirtReg
 argument_list|(
-name|reg
+name|VReg
+argument_list|)
+operator|,
+name|LaneMask
+argument_list|(
+name|LaneMask
 argument_list|)
 operator|,
 name|SU
 argument_list|(
-argument|su
+argument|SU
 argument_list|)
 block|{}
 name|unsigned
@@ -165,6 +172,43 @@ return|;
 block|}
 block|}
 struct|;
+comment|/// Mapping from virtual register to SUnit including an operand index.
+name|struct
+name|VReg2SUnitOperIdx
+range|:
+name|public
+name|VReg2SUnit
+block|{
+name|unsigned
+name|OperandIndex
+block|;
+name|VReg2SUnitOperIdx
+argument_list|(
+argument|unsigned VReg
+argument_list|,
+argument|LaneBitmask LaneMask
+argument_list|,
+argument|unsigned OperandIndex
+argument_list|,
+argument|SUnit *SU
+argument_list|)
+operator|:
+name|VReg2SUnit
+argument_list|(
+name|VReg
+argument_list|,
+name|LaneMask
+argument_list|,
+name|SU
+argument_list|)
+block|,
+name|OperandIndex
+argument_list|(
+argument|OperandIndex
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
 comment|/// Record a physical register access.
 comment|/// For non-data-dependent uses, OpIdx == -1.
 struct|struct
@@ -257,7 +301,16 @@ name|VReg2SUnit
 operator|,
 name|VirtReg2IndexFunctor
 operator|>
-name|VReg2UseMap
+name|VReg2SUnitMultiMap
+expr_stmt|;
+typedef|typedef
+name|SparseMultiSet
+operator|<
+name|VReg2SUnitOperIdx
+operator|,
+name|VirtReg2IndexFunctor
+operator|>
+name|VReg2SUnitOperIdxMultiMap
 expr_stmt|;
 comment|/// ScheduleDAGInstrs - A ScheduleDAG subclass for scheduling lists of
 comment|/// MachineInstrs.
@@ -279,18 +332,9 @@ name|MachineFrameInfo
 operator|*
 name|MFI
 block|;
-comment|/// Live Intervals provides reaching defs in preRA scheduling.
-name|LiveIntervals
-operator|*
-name|LIS
-block|;
 comment|/// TargetSchedModel provides an interface to the machine model.
 name|TargetSchedModel
 name|SchedModel
-block|;
-comment|/// isPostRA flag indicates vregs cannot be present.
-name|bool
-name|IsPostRA
 block|;
 comment|/// True if the DAG builder should remove kill flags (in preparation for
 comment|/// rescheduling).
@@ -304,6 +348,10 @@ comment|/// TargetInstrInfo::isSchedulingBoundary then enable this flag to indic
 comment|/// it has taken responsibility for scheduling the terminator correctly.
 name|bool
 name|CanHandleTerminators
+block|;
+comment|/// Whether lane masks should get tracked.
+name|bool
+name|TrackLaneMasks
 block|;
 comment|/// State specific to the current scheduling region.
 comment|/// ------------------------------------------------
@@ -343,7 +391,7 @@ block|;
 comment|/// After calling BuildSchedGraph, each vreg used in the scheduling region
 comment|/// is mapped to a set of SUnits. These include all local vreg uses, not
 comment|/// just the uses for a singly defined vreg.
-name|VReg2UseMap
+name|VReg2SUnitMultiMap
 name|VRegUses
 block|;
 comment|/// State internal to DAG building.
@@ -358,9 +406,15 @@ block|;
 name|Reg2SUnitsMap
 name|Uses
 block|;
-comment|/// Track the last instruction in this region defining each virtual register.
-name|VReg2SUnitMap
-name|VRegDefs
+comment|/// Tracks the last instruction(s) in this region defining each virtual
+comment|/// register. There may be multiple current definitions for a register with
+comment|/// disjunct lanemasks.
+name|VReg2SUnitMultiMap
+name|CurrentVRegDefs
+block|;
+comment|/// Tracks the last instructions in this region using each virtual register.
+name|VReg2SUnitOperIdxMultiMap
+name|CurrentVRegUses
 block|;
 comment|/// PendingLoads - Remember where unknown loads are after the most recent
 comment|/// unknown store, as we iterate. As with Defs and Uses, this is here
@@ -421,18 +475,9 @@ modifier|*
 name|mli
 parameter_list|,
 name|bool
-name|IsPostRAFlag
-parameter_list|,
-name|bool
 name|RemoveKillFlags
 init|=
 name|false
-parameter_list|,
-name|LiveIntervals
-modifier|*
-name|LIS
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 operator|~
@@ -440,26 +485,6 @@ name|ScheduleDAGInstrs
 argument_list|()
 name|override
 block|{}
-name|bool
-name|isPostRA
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsPostRA
-return|;
-block|}
-comment|/// \brief Expose LiveIntervals for use in DAG mutators and such.
-name|LiveIntervals
-operator|*
-name|getLIS
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LIS
-return|;
-block|}
 comment|/// \brief Get the machine model for instruction scheduling.
 specifier|const
 name|TargetSchedModel
@@ -627,6 +652,11 @@ modifier|*
 name|PDiffs
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|TrackLaneMasks
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// addSchedBarrierDeps - Add dependencies from instructions in the current
@@ -772,6 +802,26 @@ parameter_list|,
 name|MachineOperand
 modifier|&
 name|MO
+parameter_list|)
+function_decl|;
+comment|/// Returns a mask for which lanes get read/written by the given (register)
+comment|/// machine operand.
+name|LaneBitmask
+name|getLaneMaskForMO
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|collectVRegUses
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
 parameter_list|)
 function_decl|;
 block|}

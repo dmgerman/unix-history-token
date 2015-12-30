@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
+file|"llvm-c/Types.h"
 end_include
 
 begin_include
@@ -268,7 +268,7 @@ name|LLVMTargetMachineRef
 name|T
 parameter_list|)
 function_decl|;
-comment|/** Deprecated: use LLVMGetDataLayout(LLVMModuleRef M) instead. */
+comment|/** Returns the llvm::DataLayout used for this llvm:TargetMachine. */
 name|LLVMTargetDataRef
 name|LLVMGetTargetMachineData
 parameter_list|(

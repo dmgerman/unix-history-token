@@ -314,6 +314,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachinePassRegistry.h"
 end_include
 
@@ -341,9 +347,6 @@ name|llvm
 block|{
 extern|extern cl::opt<bool> ForceTopDown;
 extern|extern cl::opt<bool> ForceBottomUp;
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|LiveIntervals
 decl_stmt|;
@@ -573,6 +576,11 @@ decl_stmt|;
 name|bool
 name|OnlyBottomUp
 decl_stmt|;
+comment|// Disable heuristic that tries to fetch nodes from long dependency chains
+comment|// first.
+name|bool
+name|DisableLatencyHeuristic
+decl_stmt|;
 name|MachineSchedPolicy
 argument_list|()
 operator|:
@@ -587,6 +595,11 @@ name|false
 argument_list|)
 operator|,
 name|OnlyBottomUp
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DisableLatencyHeuristic
 argument_list|(
 argument|false
 argument_list|)
@@ -642,6 +655,11 @@ argument|MachineBasicBlock::iterator End
 argument_list|,
 argument|unsigned NumRegionInstrs
 argument_list|)
+block|{}
+name|virtual
+name|void
+name|dumpPolicy
+argument_list|()
 block|{}
 comment|/// Check if pressure tracking is needed before building the DAG and
 comment|/// initializing this strategy. Called after initPolicy.
@@ -814,6 +832,10 @@ name|AliasAnalysis
 operator|*
 name|AA
 block|;
+name|LiveIntervals
+operator|*
+name|LIS
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -881,7 +903,7 @@ argument|MachineSchedContext *C
 argument_list|,
 argument|std::unique_ptr<MachineSchedStrategy> S
 argument_list|,
-argument|bool IsPostRA
+argument|bool RemoveKillFlags
 argument_list|)
 operator|:
 name|ScheduleDAGInstrs
@@ -895,14 +917,7 @@ name|C
 operator|->
 name|MLI
 argument_list|,
-name|IsPostRA
-argument_list|,
-comment|/*RemoveKillFlags=*/
-name|IsPostRA
-argument_list|,
-name|C
-operator|->
-name|LIS
+name|RemoveKillFlags
 argument_list|)
 block|,
 name|AA
@@ -910,6 +925,13 @@ argument_list|(
 name|C
 operator|->
 name|AA
+argument_list|)
+block|,
+name|LIS
+argument_list|(
+name|C
+operator|->
+name|LIS
 argument_list|)
 block|,
 name|SchedImpl
@@ -962,6 +984,17 @@ name|ScheduleDAGMI
 argument_list|()
 name|override
 block|;
+comment|// Returns LiveIntervals instance for use in DAG mutators and such.
+name|LiveIntervals
+operator|*
+name|getLIS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LIS
+return|;
+block|}
 comment|/// Return true if this DAG supports VReg liveness and RegPressure.
 name|virtual
 name|bool
@@ -1339,7 +1372,7 @@ argument_list|(
 name|S
 argument_list|)
 argument_list|,
-comment|/*IsPostRA=*/
+comment|/*RemoveKillFlags=*/
 name|false
 argument_list|)
 block|,
@@ -3128,6 +3161,11 @@ argument|unsigned NumRegionInstrs
 argument_list|)
 name|override
 block|;
+name|void
+name|dumpPolicy
+argument_list|()
+name|override
+block|;
 name|bool
 name|shouldTrackPressure
 argument_list|()
@@ -3330,7 +3368,6 @@ name|override
 block|{
 comment|/* no configurable policy */
 block|}
-block|;
 comment|/// PostRA scheduling does not track pressure.
 name|bool
 name|shouldTrackPressure

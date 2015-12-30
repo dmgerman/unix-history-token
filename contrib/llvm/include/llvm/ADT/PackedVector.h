@@ -614,7 +614,7 @@ name|Idx
 argument_list|(
 argument|idx
 argument_list|)
-block|{ }
+block|{}
 name|reference
 operator|&
 name|operator
@@ -662,15 +662,14 @@ return|;
 block|}
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 unit|};
 name|PackedVector
 argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|explicit
@@ -932,32 +931,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
-specifier|const
-name|PackedVector
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|PackedVector
-operator|&
-name|RHS
-operator|)
-block|{
-name|Bits
-operator|=
-name|RHS
-operator|.
-name|Bits
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_decl_stmt
-
 begin_expr_stmt
 name|PackedVector
 operator|&
@@ -982,27 +955,6 @@ name|this
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|void
-name|swap
-parameter_list|(
-name|PackedVector
-modifier|&
-name|RHS
-parameter_list|)
-block|{
-name|Bits
-operator|.
-name|swap
-argument_list|(
-name|RHS
-operator|.
-name|Bits
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 unit|};

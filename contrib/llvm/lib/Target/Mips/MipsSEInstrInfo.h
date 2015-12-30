@@ -262,6 +262,15 @@ argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;
+name|void
+name|expandERet
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|pair

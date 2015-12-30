@@ -247,14 +247,6 @@ name|Inst
 argument_list|)
 block|;
 name|void
-name|InsertStackMapShadows
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-block|;
-name|void
 name|LowerSTACKMAP
 argument_list|(
 specifier|const

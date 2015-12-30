@@ -262,9 +262,9 @@ argument_list|(
 argument|A
 argument_list|)
 block|{}
-comment|/// \brief Computes the ODR signature.
+comment|/// \brief Computes the CU signature.
 name|uint64_t
-name|computeDIEODRSignature
+name|computeCUSignature
 argument_list|(
 specifier|const
 name|DIE
@@ -272,16 +272,6 @@ operator|&
 name|Die
 argument_list|)
 expr_stmt|;
-comment|/// \brief Computes the CU signature.
-name|uint64_t
-name|computeCUSignature
-parameter_list|(
-specifier|const
-name|DIE
-modifier|&
-name|Die
-parameter_list|)
-function_decl|;
 comment|/// \brief Computes the type signature.
 name|uint64_t
 name|computeTypeSignature

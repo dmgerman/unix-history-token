@@ -74,7 +74,7 @@ name|Triple
 decl_stmt|;
 comment|// If you need to create another MCAsmInfo class, which inherits from MCAsmInfo,
 comment|// you will need to make sure your new class sets PrivateGlobalPrefix to
-comment|// a prefix that won't appeary in a fuction name.  The default value
+comment|// a prefix that won't appear in a function name.  The default value
 comment|// for PrivateGlobalPrefix is 'L', so it will consider any function starting
 comment|// with 'L' as a local symbol.
 name|class
@@ -93,6 +93,14 @@ name|Triple
 operator|&
 name|TT
 argument_list|)
+block|;
+name|bool
+name|shouldOmitSectionDirective
+argument_list|(
+argument|StringRef SectionName
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

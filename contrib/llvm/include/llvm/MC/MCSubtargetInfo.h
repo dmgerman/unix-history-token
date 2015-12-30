@@ -298,12 +298,16 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-comment|/// Set the features to the default for the given CPU.
+comment|/// Set the features to the default for the given CPU with an appended feature
+comment|/// string.
 name|void
 name|setDefaultFeatures
 parameter_list|(
 name|StringRef
 name|CPU
+parameter_list|,
+name|StringRef
+name|FS
 parameter_list|)
 function_decl|;
 comment|/// ToggleFeature - Toggle a feature and returns the re-computed feature
@@ -583,7 +587,7 @@ name|Found
 init|=
 name|std
 operator|::
-name|find_if
+name|lower_bound
 argument_list|(
 name|ProcDesc
 operator|.
@@ -595,25 +599,8 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-index|[
-operator|=
-index|]
-operator|(
-specifier|const
-name|SubtargetFeatureKV
-operator|&
-name|KV
-operator|)
-block|{
-return|return
 name|CPU
-operator|==
-name|KV
-operator|.
-name|Key
-return|;
-block|}
-block|)
+argument_list|)
 decl_stmt|;
 return|return
 name|Found
@@ -622,17 +609,23 @@ name|ProcDesc
 operator|.
 name|end
 argument_list|()
+operator|&&
+name|StringRef
+argument_list|(
+name|Found
+operator|->
+name|Key
+argument_list|)
+operator|==
+name|CPU
 return|;
 block|}
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

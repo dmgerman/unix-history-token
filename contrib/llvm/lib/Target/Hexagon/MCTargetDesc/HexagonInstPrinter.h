@@ -36,10 +36,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This class prints an Hexagon MCInst to a .s file.
-end_comment
-
-begin_comment
 comment|//
 end_comment
 
@@ -65,63 +61,10 @@ directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCInstrInfo.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|HexagonAsmInstPrinter
-range|:
-name|public
-name|MCInstPrinter
-block|{
-name|public
-operator|:
-name|HexagonAsmInstPrinter
-argument_list|(
-name|MCInstPrinter
-operator|*
-name|RawPrinter
-argument_list|)
-block|;
-name|void
-name|printInst
-argument_list|(
-argument|MCInst const *MI
-argument_list|,
-argument|raw_ostream&O
-argument_list|,
-argument|StringRef Annot
-argument_list|,
-argument|MCSubtargetInfo const&STI
-argument_list|)
-name|override
-block|;
-name|void
-name|printRegName
-argument_list|(
-argument|raw_ostream&O
-argument_list|,
-argument|unsigned RegNo
-argument_list|)
-specifier|const
-name|override
-block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MCInstPrinter
-operator|>
-name|RawPrinter
-block|; }
-decl_stmt|;
 comment|/// Prints bundles as a newline separated list of individual instructions
 comment|/// Duplexes are separated by a vertical tab \v character
 comment|/// A trailing line includes bundle properties such as endloop0/1
@@ -155,21 +98,7 @@ specifier|const
 operator|&
 name|MRI
 argument_list|)
-operator|:
-name|MCInstPrinter
-argument_list|(
-name|MAI
-argument_list|,
-name|MII
-argument_list|,
-name|MRI
-argument_list|)
-block|,
-name|MII
-argument_list|(
-argument|MII
-argument_list|)
-block|{}
+block|;
 name|void
 name|printInst
 argument_list|(
@@ -194,8 +123,8 @@ block|;
 name|void
 name|printInstruction
 argument_list|(
-specifier|const
 name|MCInst
+specifier|const
 operator|*
 name|MI
 argument_list|,
@@ -204,19 +133,16 @@ operator|&
 name|O
 argument_list|)
 block|;
-name|void
-name|printRegName
+name|StringRef
+name|getRegName
 argument_list|(
-argument|raw_ostream&OS
-argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
-name|override
 block|;
 specifier|static
-specifier|const
 name|char
+specifier|const
 operator|*
 name|getRegisterName
 argument_list|(
@@ -224,20 +150,19 @@ argument|unsigned RegNo
 argument_list|)
 block|;
 name|void
-name|printOperand
+name|printRegName
 argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
 argument|raw_ostream&O
+argument_list|,
+argument|unsigned RegNo
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
-name|printImmOperand
+name|printOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -248,7 +173,7 @@ block|;
 name|void
 name|printExtOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -259,7 +184,7 @@ block|;
 name|void
 name|printUnsignedImmOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -270,7 +195,7 @@ block|;
 name|void
 name|printNegImmOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -281,7 +206,7 @@ block|;
 name|void
 name|printNOneImmOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -290,9 +215,9 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|printMEMriOperand
+name|prints3_6ImmOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -301,9 +226,31 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|printFrameIndexOperand
+name|prints3_7ImmOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+name|void
+name|prints4_6ImmOperand
+argument_list|(
+argument|MCInst const *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+name|void
+name|prints4_7ImmOperand
+argument_list|(
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -314,7 +261,7 @@ block|;
 name|void
 name|printBranchOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -325,7 +272,7 @@ block|;
 name|void
 name|printCallOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -336,7 +283,7 @@ block|;
 name|void
 name|printAbsAddrOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -347,7 +294,7 @@ block|;
 name|void
 name|printPredicateOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -358,7 +305,7 @@ block|;
 name|void
 name|printGlobalOperand
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -369,7 +316,7 @@ block|;
 name|void
 name|printJumpTable
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -378,9 +325,9 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|printExtBrtarget
+name|printBrtarget
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -391,7 +338,7 @@ block|;
 name|void
 name|printConstantPool
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -402,7 +349,7 @@ block|;
 name|void
 name|printSymbolHi
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -420,11 +367,11 @@ name|O
 argument_list|,
 name|true
 argument_list|)
-block|; }
+block|;   }
 name|void
 name|printSymbolLo
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -442,9 +389,20 @@ name|O
 argument_list|,
 name|false
 argument_list|)
-block|; }
+block|;   }
+name|MCAsmInfo
 specifier|const
+operator|&
+name|getMAI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MAI
+return|;
+block|}
 name|MCInstrInfo
+specifier|const
 operator|&
 name|getMII
 argument_list|()
@@ -459,7 +417,7 @@ operator|:
 name|void
 name|printSymbol
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -471,8 +429,8 @@ specifier|const
 block|;
 name|private
 operator|:
-specifier|const
 name|MCInstrInfo
+specifier|const
 operator|&
 name|MII
 block|;
@@ -487,7 +445,7 @@ specifier|const
 operator|&
 name|MCI
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

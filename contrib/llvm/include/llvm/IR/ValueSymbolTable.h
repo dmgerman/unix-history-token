@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -85,9 +91,6 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|class
 name|SymbolTableListTraits
@@ -123,8 +126,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|Argument
-operator|,
-name|Function
 operator|>
 expr_stmt|;
 name|friend
@@ -132,8 +133,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|BasicBlock
-operator|,
-name|Function
 operator|>
 expr_stmt|;
 name|friend
@@ -141,8 +140,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|Instruction
-operator|,
-name|BasicBlock
 operator|>
 expr_stmt|;
 name|friend
@@ -150,8 +147,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|Function
-operator|,
-name|Module
 operator|>
 expr_stmt|;
 name|friend
@@ -159,8 +154,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|GlobalVariable
-operator|,
-name|Module
 operator|>
 expr_stmt|;
 name|friend
@@ -168,8 +161,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|GlobalAlias
-operator|,
-name|Module
 operator|>
 expr_stmt|;
 comment|/// @name Types
@@ -352,6 +343,22 @@ comment|/// @name Mutators
 comment|/// @{
 name|private
 label|:
+name|ValueName
+modifier|*
+name|makeUniqueName
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|SmallString
+operator|<
+literal|256
+operator|>
+operator|&
+name|UniqueName
+argument_list|)
+decl_stmt|;
 comment|/// This method adds the provided value \p N to the symbol table.  The Value
 comment|/// must have a name which is used to place the value in the symbol table.
 comment|/// If the inserted name conflicts, this renames the value.

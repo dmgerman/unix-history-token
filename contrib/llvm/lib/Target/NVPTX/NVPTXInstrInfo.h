@@ -174,13 +174,6 @@ argument|unsigned&AddrSpace
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|isReadSpecialReg
-argument_list|(
-argument|MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|bool
 name|CanTailMerge

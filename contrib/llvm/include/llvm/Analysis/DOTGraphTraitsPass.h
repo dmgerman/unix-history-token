@@ -158,6 +158,25 @@ argument_list|(
 argument|GraphName
 argument_list|)
 block|{}
+comment|/// @brief Return true if this function should be processed.
+comment|///
+comment|/// An implementation of this class my override this function to indicate that
+comment|/// only certain functions should be viewed.
+comment|///
+comment|/// @param Analysis The current analysis result for this function.
+name|virtual
+name|bool
+name|processFunction
+argument_list|(
+argument|Function&F
+argument_list|,
+argument|AnalysisT&Analysis
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 name|bool
 name|runOnFunction
 argument_list|(
@@ -165,6 +184,30 @@ argument|Function&F
 argument_list|)
 name|override
 block|{
+name|auto
+operator|&
+name|Analysis
+operator|=
+name|getAnalysis
+operator|<
+name|AnalysisT
+operator|>
+operator|(
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|processFunction
+argument_list|(
+name|F
+argument_list|,
+name|Analysis
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 name|GraphT
 name|Graph
 operator|=
@@ -173,12 +216,7 @@ operator|::
 name|getGraph
 argument_list|(
 operator|&
-name|getAnalysis
-operator|<
-name|AnalysisT
-operator|>
-operator|(
-operator|)
+name|Analysis
 argument_list|)
 block|;
 name|std
@@ -259,21 +297,21 @@ operator|::
 name|string
 name|Name
 block|; }
-block|;
+expr_stmt|;
 name|template
 operator|<
 name|typename
 name|AnalysisT
-block|,
+operator|,
 name|bool
 name|IsSimple
-block|,
+operator|,
 name|typename
 name|GraphT
 operator|=
 name|AnalysisT
 operator|*
-block|,
+operator|,
 name|typename
 name|AnalysisGraphTraitsT
 operator|=
@@ -307,6 +345,25 @@ argument_list|(
 argument|GraphName
 argument_list|)
 block|{}
+comment|/// @brief Return true if this function should be processed.
+comment|///
+comment|/// An implementation of this class my override this function to indicate that
+comment|/// only certain functions should be printed.
+comment|///
+comment|/// @param Analysis The current analysis result for this function.
+name|virtual
+name|bool
+name|processFunction
+argument_list|(
+argument|Function&F
+argument_list|,
+argument|AnalysisT&Analysis
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 name|bool
 name|runOnFunction
 argument_list|(
@@ -314,6 +371,30 @@ argument|Function&F
 argument_list|)
 name|override
 block|{
+name|auto
+operator|&
+name|Analysis
+operator|=
+name|getAnalysis
+operator|<
+name|AnalysisT
+operator|>
+operator|(
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|processFunction
+argument_list|(
+name|F
+argument_list|,
+name|Analysis
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 name|GraphT
 name|Graph
 operator|=
@@ -322,12 +403,7 @@ operator|::
 name|getGraph
 argument_list|(
 operator|&
-name|getAnalysis
-operator|<
-name|AnalysisT
-operator|>
-operator|(
-operator|)
+name|Analysis
 argument_list|)
 block|;
 name|std
@@ -437,24 +513,29 @@ name|errs
 argument_list|()
 operator|<<
 literal|"\n"
-block|;
+expr_stmt|;
 return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 name|override
 block|{
 name|AU
 operator|.
 name|setPreservesAll
 argument_list|()
-block|;
+expr_stmt|;
 name|AU
 operator|.
 name|addRequired
@@ -463,15 +544,25 @@ name|AnalysisT
 operator|>
 operator|(
 operator|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
 name|Name
-block|; }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -600,8 +691,11 @@ name|std
 operator|::
 name|string
 name|Name
-block|; }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -755,6 +849,9 @@ return|return
 name|false
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -780,22 +877,23 @@ operator|(
 operator|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
 name|Name
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

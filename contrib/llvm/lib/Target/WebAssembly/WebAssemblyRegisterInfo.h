@@ -160,18 +160,15 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|// Base pointer (stack realignment) support.
-name|bool
-name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
 specifier|const
-block|;
-name|bool
-name|needsStackRealignment
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
 argument_list|(
 argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Kind =
+literal|0
 argument_list|)
 specifier|const
 name|override

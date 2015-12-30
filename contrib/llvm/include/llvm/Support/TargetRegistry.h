@@ -587,6 +587,7 @@ modifier|*
 name|MCAsmParserCtorTy
 call|)
 argument_list|(
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -768,6 +769,9 @@ name|Emitter
 operator|,
 name|bool
 name|RelaxAll
+operator|,
+name|bool
+name|IncrementalLinkerCompatible
 operator|)
 argument_list|;   typedef
 name|MCTargetStreamer
@@ -1481,6 +1485,7 @@ name|MCTargetAsmParser
 modifier|*
 name|createMCAsmParser
 argument_list|(
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -1734,6 +1739,9 @@ name|bool
 name|RelaxAll
 argument_list|,
 name|bool
+name|IncrementalLinkerCompatible
+argument_list|,
+name|bool
 name|DWARFMustBeAtTheEnd
 argument_list|)
 decl|const
@@ -1784,6 +1792,8 @@ argument_list|,
 name|Emitter
 argument_list|,
 name|RelaxAll
+argument_list|,
+name|IncrementalLinkerCompatible
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4848,7 +4858,7 @@ name|MCTargetAsmParser
 operator|*
 name|Allocator
 argument_list|(
-argument|MCSubtargetInfo&STI
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|MCAsmParser&P
 argument_list|,

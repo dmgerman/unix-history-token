@@ -1578,7 +1578,7 @@ block|}
 end_block
 
 begin_macro
-unit|};  }  namespace
+unit|}; }  namespace
 name|std
 end_macro
 

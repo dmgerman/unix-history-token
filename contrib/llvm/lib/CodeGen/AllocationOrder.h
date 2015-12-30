@@ -94,6 +94,9 @@ name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
+name|LiveRegMatrix
+decl_stmt|;
+name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|AllocationOrder
 block|{
@@ -127,6 +130,8 @@ argument_list|,
 argument|const VirtRegMap&VRM
 argument_list|,
 argument|const RegisterClassInfo&RegClassInfo
+argument_list|,
+argument|const LiveRegMatrix *Matrix
 argument_list|)
 empty_stmt|;
 comment|/// Get the allocation order without reordered hints.

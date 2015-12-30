@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Valgrind.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include

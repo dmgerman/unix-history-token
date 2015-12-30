@@ -1530,8 +1530,15 @@ decl_stmt|;
 name|unsigned
 name|StructAlignment
 decl_stmt|;
+name|bool
+name|IsPadded
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|NumElements
+range|:
+literal|31
 decl_stmt|;
 name|uint64_t
 name|MemberOffsets
@@ -1569,6 +1576,17 @@ specifier|const
 block|{
 return|return
 name|StructAlignment
+return|;
+block|}
+comment|/// Returns whether the struct has padding or not between its fields.
+comment|/// NB: Padding in nested element is not taken into account.
+name|bool
+name|hasPadding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPadded
 return|;
 block|}
 comment|/// \brief Given a valid byte offset into the structure, returns the structure

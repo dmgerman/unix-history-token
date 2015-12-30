@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/TrackingMDRef.h"
 end_include
 
@@ -84,8 +90,15 @@ block|{
 name|class
 name|GlobalValue
 decl_stmt|;
-comment|/// This struct contains the mapping from the slot numbers to unnamed metadata
-comment|/// nodes and global values.
+name|class
+name|Type
+decl_stmt|;
+comment|/// This struct contains the mappings from the slot numbers to unnamed metadata
+comment|/// nodes, global values and types. It also contains the mapping for the named
+comment|/// types.
+comment|/// It can be used to save the parsing state of an LLVM IR module so that the
+comment|/// textual references to the values in the module can be parsed outside of the
+comment|/// module's source.
 struct|struct
 name|SlotMapping
 block|{
@@ -107,6 +120,24 @@ operator|,
 name|TrackingMDNodeRef
 operator|>
 name|MetadataNodes
+expr_stmt|;
+name|StringMap
+operator|<
+name|Type
+operator|*
+operator|>
+name|NamedTypes
+expr_stmt|;
+name|std
+operator|::
+name|map
+operator|<
+name|unsigned
+operator|,
+name|Type
+operator|*
+operator|>
+name|Types
 expr_stmt|;
 block|}
 struct|;

@@ -194,7 +194,7 @@ name|findProgramByName
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|ArrayRef<StringRef> Paths = ArrayRef<StringRef>()
+argument|ArrayRef<StringRef> Paths = None
 argument_list|)
 expr_stmt|;
 comment|// These functions change the specified standard stream (stdin or stdout) to

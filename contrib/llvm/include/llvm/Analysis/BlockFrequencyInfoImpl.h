@@ -309,9 +309,7 @@ operator|&
 name|operator
 operator|+=
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 block|{
@@ -348,9 +346,7 @@ operator|&
 name|operator
 operator|-=
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 block|{
@@ -383,9 +379,7 @@ operator|&
 name|operator
 operator|*=
 operator|(
-specifier|const
 name|BranchProbability
-operator|&
 name|P
 operator|)
 block|{
@@ -407,9 +401,7 @@ name|bool
 name|operator
 operator|==
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 specifier|const
@@ -426,9 +418,7 @@ name|bool
 name|operator
 operator|!=
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 specifier|const
@@ -445,9 +435,7 @@ name|bool
 name|operator
 operator|<=
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 specifier|const
@@ -464,9 +452,7 @@ name|bool
 name|operator
 operator|>=
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 specifier|const
@@ -483,9 +469,7 @@ name|bool
 name|operator
 operator|<
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 specifier|const
@@ -502,9 +486,7 @@ name|bool
 name|operator
 operator|>
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 specifier|const
@@ -551,14 +533,10 @@ name|BlockMass
 name|operator
 operator|+
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|L
 operator|,
-specifier|const
 name|BlockMass
-operator|&
 name|R
 operator|)
 block|{
@@ -576,14 +554,10 @@ name|BlockMass
 name|operator
 operator|-
 operator|(
-specifier|const
 name|BlockMass
-operator|&
 name|L
 operator|,
-specifier|const
 name|BlockMass
-operator|&
 name|R
 operator|)
 block|{
@@ -601,14 +575,10 @@ name|BlockMass
 name|operator
 modifier|*
 parameter_list|(
-specifier|const
 name|BlockMass
-modifier|&
 name|L
 parameter_list|,
-specifier|const
 name|BranchProbability
-modifier|&
 name|R
 parameter_list|)
 block|{
@@ -626,14 +596,10 @@ name|BlockMass
 name|operator
 modifier|*
 parameter_list|(
-specifier|const
 name|BranchProbability
-modifier|&
 name|L
 parameter_list|,
-specifier|const
 name|BlockMass
-modifier|&
 name|R
 parameter_list|)
 block|{
@@ -656,9 +622,7 @@ name|raw_ostream
 operator|&
 name|OS
 operator|,
-specifier|const
 name|BlockMass
-operator|&
 name|X
 operator|)
 block|{
@@ -2338,6 +2302,21 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|setBlockFreq
+parameter_list|(
+specifier|const
+name|BlockNode
+modifier|&
+name|Node
+parameter_list|,
+name|uint64_t
+name|Freq
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|raw_ostream
@@ -4520,21 +4499,21 @@ end_expr_stmt
 
 begin_function_decl
 name|void
-name|doFunction
+name|calculate
 parameter_list|(
 specifier|const
 name|FunctionT
-modifier|*
+modifier|&
 name|F
 parameter_list|,
 specifier|const
 name|BranchProbabilityInfoT
-modifier|*
+modifier|&
 name|BPI
 parameter_list|,
 specifier|const
 name|LoopInfoT
-modifier|*
+modifier|&
 name|LI
 parameter_list|)
 function_decl|;
@@ -4590,6 +4569,21 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|setBlockFreq
+parameter_list|(
+specifier|const
+name|BlockT
+modifier|*
+name|BB
+parameter_list|,
+name|uint64_t
+name|Freq
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|Scaled64
@@ -4735,13 +4729,13 @@ operator|<
 name|BT
 operator|>
 operator|::
-name|doFunction
+name|calculate
 argument_list|(
-argument|const FunctionT *F
+argument|const FunctionT&F
 argument_list|,
-argument|const BranchProbabilityInfoT *BPI
+argument|const BranchProbabilityInfoT&BPI
 argument_list|,
-argument|const LoopInfoT *LI
+argument|const LoopInfoT&LI
 argument_list|)
 block|{
 comment|// Save the parameters.
@@ -4749,18 +4743,21 @@ name|this
 operator|->
 name|BPI
 operator|=
+operator|&
 name|BPI
 block|;
 name|this
 operator|->
 name|LI
 operator|=
+operator|&
 name|LI
 block|;
 name|this
 operator|->
 name|F
 operator|=
+operator|&
 name|F
 block|;
 comment|// Clean up left-over data structures.
@@ -4788,7 +4785,7 @@ operator|<<
 literal|"\nblock-frequency: "
 operator|<<
 name|F
-operator|->
+operator|.
 name|getName
 argument_list|()
 operator|<<
@@ -4799,7 +4796,7 @@ operator|::
 name|string
 argument_list|(
 name|F
-operator|->
+operator|.
 name|getName
 argument_list|()
 operator|.
@@ -4843,6 +4840,84 @@ operator|<
 name|BT
 operator|>
 operator|::
+name|setBlockFreq
+argument_list|(
+argument|const BlockT *BB
+argument_list|,
+argument|uint64_t Freq
+argument_list|)
+block|{
+if|if
+condition|(
+name|Nodes
+operator|.
+name|count
+argument_list|(
+name|BB
+argument_list|)
+condition|)
+name|BlockFrequencyInfoImplBase
+operator|::
+name|setBlockFreq
+argument_list|(
+name|getNode
+argument_list|(
+name|BB
+argument_list|)
+argument_list|,
+name|Freq
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|// If BB is a newly added block after BFI is done, we need to create a new
+comment|// BlockNode for it assigned with a new index. The index can be determined
+comment|// by the size of Freqs.
+name|BlockNode
+name|NewNode
+argument_list|(
+name|Freqs
+operator|.
+name|size
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|Nodes
+index|[
+name|BB
+index|]
+operator|=
+name|NewNode
+expr_stmt|;
+name|Freqs
+operator|.
+name|emplace_back
+argument_list|()
+expr_stmt|;
+name|BlockFrequencyInfoImplBase
+operator|::
+name|setBlockFreq
+argument_list|(
+name|NewNode
+argument_list|,
+name|Freq
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|class
+name|BT
+operator|>
+name|void
+name|BlockFrequencyInfoImpl
+operator|<
+name|BT
+operator|>
+operator|::
 name|initializeRPOT
 argument_list|()
 block|{
@@ -4851,9 +4926,10 @@ name|BlockT
 operator|*
 name|Entry
 operator|=
+operator|&
 name|F
 operator|->
-name|begin
+name|front
 argument_list|()
 block|;
 name|RPOT
@@ -6172,8 +6248,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_block
+unit|}  namespace
+block|{
+comment|// A helper function that converts a branch probability into weight.
+specifier|inline
+name|uint32_t
+name|getWeightFromBranchProb
+parameter_list|(
+specifier|const
+name|BranchProbability
+name|Prob
+parameter_list|)
+block|{
+return|return
+name|Prob
+operator|.
+name|getNumerator
+argument_list|()
+return|;
+block|}
+block|}
+end_block
+
+begin_comment
+comment|// namespace
+end_comment
+
 begin_expr_stmt
-unit|}  template
+name|template
 operator|<
 name|class
 name|BT
@@ -6297,8 +6400,6 @@ condition|;
 operator|++
 name|SI
 control|)
-comment|// Do not dereference SI, or getEdgeWeight() is linear in the number of
-comment|// successors.
 if|if
 condition|(
 operator|!
@@ -6316,13 +6417,16 @@ operator|*
 name|SI
 argument_list|)
 argument_list|,
+name|getWeightFromBranchProb
+argument_list|(
 name|BPI
 operator|->
-name|getEdgeWeight
+name|getEdgeProbability
 argument_list|(
 name|BB
 argument_list|,
 name|SI
+argument_list|)
 argument_list|)
 argument_list|)
 condition|)
@@ -6410,6 +6514,7 @@ range|:
 operator|*
 name|F
 control|)
+block|{
 name|OS
 operator|<<
 literal|" - "
@@ -6423,11 +6528,18 @@ name|BB
 argument_list|)
 operator|<<
 literal|": float = "
-operator|<<
+expr_stmt|;
 name|getFloatingBlockFreq
 argument_list|(
 operator|&
 name|BB
+argument_list|)
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|,
+literal|5
 argument_list|)
 operator|<<
 literal|", int = "
@@ -6443,6 +6555,7 @@ argument_list|()
 operator|<<
 literal|"\n"
 expr_stmt|;
+block|}
 end_for
 
 begin_comment

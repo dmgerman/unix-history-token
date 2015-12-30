@@ -172,6 +172,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|getFixupKind
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|MCFixupKind&MappedKind
+argument_list|)
+specifier|const
+name|override
+block|;
 specifier|const
 name|MCFixupKindInfo
 operator|&

@@ -184,7 +184,14 @@ name|MCVM_IOSVersionMin
 block|,
 comment|///< .ios_version_min
 name|MCVM_OSXVersionMin
+block|,
 comment|///< .macosx_version_min
+name|MCVM_TvOSVersionMin
+block|,
+comment|///< .tvos_version_min
+name|MCVM_WatchOSVersionMin
+block|,
+comment|///< .watchos_version_min
 block|}
 enum|;
 block|}

@@ -217,6 +217,52 @@ return|return
 name|StackAlignment
 return|;
 block|}
+comment|/// alignSPAdjust - This method aligns the stack adjustment to the correct
+comment|/// alignment.
+comment|///
+name|int
+name|alignSPAdjust
+argument_list|(
+name|int
+name|SPAdj
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|SPAdj
+operator|<
+literal|0
+condition|)
+block|{
+name|SPAdj
+operator|=
+operator|-
+name|RoundUpToAlignment
+argument_list|(
+operator|-
+name|SPAdj
+argument_list|,
+name|StackAlignment
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|SPAdj
+operator|=
+name|RoundUpToAlignment
+argument_list|(
+name|SPAdj
+argument_list|,
+name|StackAlignment
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|SPAdj
+return|;
+block|}
 comment|/// getTransientStackAlignment - This method returns the number of bytes to
 comment|/// which the stack pointer must be aligned at all times, even between
 comment|/// calls.
@@ -241,6 +287,20 @@ return|return
 name|StackRealignable
 return|;
 block|}
+comment|/// Return the skew that has to be applied to stack alignment under
+comment|/// certain conditions (e.g. stack was adjusted before function \p MF
+comment|/// was called).
+name|virtual
+name|unsigned
+name|getStackAlignmentSkew
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getOffsetOfLocalArea - This method returns the offset of the local area
 comment|/// from the stack pointer on entrance to a function.
 comment|///
@@ -342,6 +402,22 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if the target will correctly handle shrink wrapping.
+name|virtual
+name|bool
+name|enableShrinkWrapping
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|virtual
@@ -376,6 +452,21 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Replace a StackProbe stub (if any) with the actual probe code inline
+name|virtual
+name|void
+name|inlineStackProbe
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
+argument_list|)
+decl|const
+block|{}
 comment|/// Adjust the prologue to have the function use segmented stacks. This works
 comment|/// by adding a check even before the "normal" function prologue.
 name|virtual
@@ -596,22 +687,6 @@ name|MF
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getFrameIndexOffset - Returns the displacement from the frame register to
-comment|/// the stack frame of the specified index.
-name|virtual
-name|int
-name|getFrameIndexOffset
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|int
-name|FI
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getFrameIndexReference - This method should return the base register
 comment|/// and offset used to reference a frame index location. The offset is
 comment|/// returned directly, and the base register is returned via FrameReg.
@@ -634,7 +709,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Same as above, except that the 'base register' will always be RSP, not
-comment|/// RBP on x86.  This is used exclusively for lowering STATEPOINT nodes.
+comment|/// RBP on x86. This is generally used for emitting statepoint or EH tables
+comment|/// that use offsets from RSP.
 comment|/// TODO: This should really be a parameterizable choice.
 name|virtual
 name|int
@@ -712,6 +788,23 @@ name|nullptr
 argument_list|)
 decl|const
 block|{   }
+name|virtual
+name|unsigned
+name|getWinEHParentFrameOffset
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+name|report_fatal_error
+argument_list|(
+literal|"WinEH not implemented for this target"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// eliminateCallFramePseudoInstr - This method is called during prolog/epilog
 comment|/// code insertion to eliminate call frame setup and destroy pseudo
 comment|/// instructions (but only if the Target is using them).  It is responsible

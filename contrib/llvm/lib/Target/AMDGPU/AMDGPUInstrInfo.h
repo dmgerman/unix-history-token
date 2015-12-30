@@ -389,16 +389,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|ArrayRef<unsigned> Ops
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
 name|unfoldMemoryOperand
 argument_list|(
 argument|MachineFunction&MF
@@ -572,6 +562,23 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableTargetIndices
+argument_list|()
+specifier|const
+name|override
+block|;
 comment|//===---------------------------------------------------------------------===//
 comment|// Pure virtual funtions to be implemented by sub-classes.
 comment|//===---------------------------------------------------------------------===//
@@ -691,6 +698,7 @@ decl_stmt|;
 name|namespace
 name|AMDGPU
 block|{
+name|LLVM_READONLY
 name|int16_t
 name|getNamedOperandIdx
 parameter_list|(

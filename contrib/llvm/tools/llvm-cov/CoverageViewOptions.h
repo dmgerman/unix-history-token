@@ -81,6 +81,9 @@ decl_stmt|;
 name|bool
 name|ShowFunctionInstantiations
 decl_stmt|;
+name|bool
+name|ShowFullFilenames
+decl_stmt|;
 comment|/// \brief Change the output's stream color if the colors are enabled.
 name|ColoredRawOstream
 name|colored_ostream

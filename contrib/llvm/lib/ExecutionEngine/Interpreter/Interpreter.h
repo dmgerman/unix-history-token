@@ -120,9 +120,6 @@ block|{
 name|class
 name|IntrinsicLowering
 decl_stmt|;
-struct_decl|struct
-name|FunctionInfo
-struct_decl|;
 name|template
 operator|<
 name|typename
@@ -474,9 +471,6 @@ name|GenericValue
 name|ExitValue
 decl_stmt|;
 comment|// The return value of the called function
-name|DataLayout
-name|TD
-decl_stmt|;
 name|IntrinsicLowering
 modifier|*
 name|IL

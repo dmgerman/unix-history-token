@@ -62,19 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -128,34 +122,18 @@ name|SampleProfileWriter
 block|{
 name|public
 label|:
-name|SampleProfileWriter
-argument_list|(
-argument|StringRef Filename
-argument_list|,
-argument|std::error_code&EC
-argument_list|,
-argument|sys::fs::OpenFlags Flags
-argument_list|)
-block|:
-name|OS
-argument_list|(
-argument|Filename
-argument_list|,
-argument|EC
-argument_list|,
-argument|Flags
-argument_list|)
-block|{}
 name|virtual
 operator|~
 name|SampleProfileWriter
 argument_list|()
 block|{}
-comment|/// \brief Write sample profiles in \p S for function \p FName.
+comment|/// Write sample profiles in \p S for function \p FName.
 comment|///
-comment|/// \returns true if the file was updated successfully. False, otherwise.
+comment|/// \returns status code of the file update operation.
 name|virtual
-name|bool
+name|std
+operator|::
+name|error_code
 name|write
 argument_list|(
 argument|StringRef FName
@@ -165,111 +143,39 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// \brief Write sample profiles in \p S for function \p F.
-name|bool
-name|write
-parameter_list|(
-specifier|const
-name|Function
-modifier|&
-name|F
-parameter_list|,
-specifier|const
-name|FunctionSamples
-modifier|&
-name|S
-parameter_list|)
-block|{
-return|return
-name|write
-argument_list|(
-name|F
-operator|.
-name|getName
-argument_list|()
-argument_list|,
-name|S
-argument_list|)
-return|;
-block|}
-comment|/// \brief Write all the sample profiles for all the functions in \p M.
+comment|/// Write all the sample profiles in the given map of samples.
 comment|///
-comment|/// \returns true if the file was updated successfully. False, otherwise.
-name|bool
+comment|/// \returns status code of the file update operation.
+name|std
+operator|::
+name|error_code
 name|write
 argument_list|(
-specifier|const
-name|Module
-operator|&
-name|M
-argument_list|,
-name|StringMap
-operator|<
-name|FunctionSamples
-operator|>
-operator|&
-name|P
+argument|const StringMap<FunctionSamples>&ProfileMap
 argument_list|)
 block|{
+if|if
+condition|(
+name|std
+operator|::
+name|error_code
+name|EC
+operator|=
+name|writeHeader
+argument_list|(
+name|ProfileMap
+argument_list|)
+condition|)
+return|return
+name|EC
+return|;
 for|for
 control|(
 specifier|const
 specifier|auto
 modifier|&
-name|F
-range|:
-name|M
-control|)
-block|{
-name|StringRef
-name|Name
-init|=
-name|F
-operator|.
-name|getName
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|write
-argument_list|(
-name|Name
-argument_list|,
-name|P
-index|[
-name|Name
-index|]
-argument_list|)
-condition|)
-return|return
-name|false
-return|;
-block|}
-return|return
-name|true
-return|;
-block|}
-comment|/// \brief Write all the sample profiles in the given map of samples.
-comment|///
-comment|/// \returns true if the file was updated successfully. False, otherwise.
-name|bool
-name|write
-argument_list|(
-name|StringMap
-operator|<
-name|FunctionSamples
-operator|>
-operator|&
-name|ProfileMap
-argument_list|)
-block|{
-for|for
-control|(
-name|auto
-operator|&
 name|I
-operator|:
+range|:
 name|ProfileMap
 control|)
 block|{
@@ -281,6 +187,7 @@ operator|.
 name|first
 argument_list|()
 decl_stmt|;
+specifier|const
 name|FunctionSamples
 modifier|&
 name|Profile
@@ -291,7 +198,11 @@ name|second
 decl_stmt|;
 if|if
 condition|(
-operator|!
+name|std
+operator|::
+name|error_code
+name|EC
+operator|=
 name|write
 argument_list|(
 name|FName
@@ -300,15 +211,28 @@ name|Profile
 argument_list|)
 condition|)
 return|return
-name|false
+name|EC
 return|;
 block|}
 return|return
-name|true
+name|sampleprof_error
+operator|::
+name|success
 return|;
 block|}
-comment|/// \brief Profile writer factory. Create a new writer based on the value of
-comment|/// \p Format.
+name|raw_ostream
+modifier|&
+name|getOutputStream
+parameter_list|()
+block|{
+return|return
+operator|*
+name|OutputStream
+return|;
+block|}
+comment|/// Profile writer factory.
+comment|///
+comment|/// Create a new file writer based on the value of \p Format.
 specifier|static
 name|ErrorOr
 operator|<
@@ -325,12 +249,70 @@ argument_list|,
 argument|SampleProfileFormat Format
 argument_list|)
 expr_stmt|;
+comment|/// Create a new stream writer based on the value of \p Format.
+comment|/// For testing.
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SampleProfileWriter
+operator|>>
+name|create
+argument_list|(
+argument|std::unique_ptr<raw_ostream>&OS
+argument_list|,
+argument|SampleProfileFormat Format
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
-comment|/// \brief Output stream where to emit the profile to.
-name|raw_fd_ostream
+name|SampleProfileWriter
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+operator|>
+operator|&
 name|OS
-decl_stmt|;
+argument_list|)
+operator|:
+name|OutputStream
+argument_list|(
+argument|std::move(OS)
+argument_list|)
+block|{}
+comment|/// \brief Write a file header for the profile file.
+name|virtual
+name|std
+operator|::
+name|error_code
+name|writeHeader
+argument_list|(
+specifier|const
+name|StringMap
+operator|<
+name|FunctionSamples
+operator|>
+operator|&
+name|ProfileMap
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Output stream where to emit the profile to.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+operator|>
+name|OutputStream
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Sample-based profile writer (text format).
@@ -342,23 +324,9 @@ name|SampleProfileWriter
 block|{
 name|public
 operator|:
-name|SampleProfileWriterText
-argument_list|(
-argument|StringRef F
-argument_list|,
-argument|std::error_code&EC
-argument_list|)
-operator|:
-name|SampleProfileWriter
-argument_list|(
-argument|F
-argument_list|,
-argument|EC
-argument_list|,
-argument|sys::fs::F_Text
-argument_list|)
-block|{}
-name|bool
+name|std
+operator|::
+name|error_code
 name|write
 argument_list|(
 argument|StringRef FName
@@ -367,44 +335,84 @@ argument|const FunctionSamples&S
 argument_list|)
 name|override
 block|;
-name|bool
-name|write
+name|protected
+operator|:
+name|SampleProfileWriterText
 argument_list|(
-argument|const Module&M
-argument_list|,
-argument|StringMap<FunctionSamples>&P
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+operator|>
+operator|&
+name|OS
 argument_list|)
+operator|:
+name|SampleProfileWriter
+argument_list|(
+name|OS
+argument_list|)
+block|,
+name|Indent
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|std
+operator|::
+name|error_code
+name|writeHeader
+argument_list|(
+argument|const StringMap<FunctionSamples>&ProfileMap
+argument_list|)
+name|override
 block|{
 return|return
-name|SampleProfileWriter
+name|sampleprof_error
 operator|::
-name|write
-argument_list|(
-name|M
-argument_list|,
-name|P
-argument_list|)
+name|success
 return|;
 block|}
-expr|}
+name|private
+operator|:
+comment|/// Indent level to use when writing.
+comment|///
+comment|/// This is used when printing inlined callees.
+name|unsigned
+name|Indent
 block|;
+name|friend
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SampleProfileWriter
+operator|>>
+name|SampleProfileWriter
+operator|::
+name|create
+argument_list|(
+argument|std::unique_ptr<raw_ostream>&OS
+argument_list|,
+argument|SampleProfileFormat Format
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// \brief Sample-based profile writer (binary format).
 name|class
 name|SampleProfileWriterBinary
-operator|:
+range|:
 name|public
 name|SampleProfileWriter
 block|{
 name|public
 operator|:
-name|SampleProfileWriterBinary
-argument_list|(
-argument|StringRef F
-argument_list|,
-argument|std::error_code&EC
-argument_list|)
-block|;
-name|bool
+name|std
+operator|::
+name|error_code
 name|write
 argument_list|(
 argument|StringRef F
@@ -413,32 +421,108 @@ argument|const FunctionSamples&S
 argument_list|)
 name|override
 block|;
-name|bool
-name|write
+name|protected
+operator|:
+name|SampleProfileWriterBinary
 argument_list|(
-argument|const Module&M
-argument_list|,
-argument|StringMap<FunctionSamples>&P
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+operator|>
+operator|&
+name|OS
 argument_list|)
-block|{
-return|return
+operator|:
+name|SampleProfileWriter
+argument_list|(
+name|OS
+argument_list|)
+block|,
+name|NameTable
+argument_list|()
+block|{}
+name|std
+operator|::
+name|error_code
+name|writeHeader
+argument_list|(
+argument|const StringMap<FunctionSamples>&ProfileMap
+argument_list|)
+name|override
+block|;
+name|std
+operator|::
+name|error_code
+name|writeNameIdx
+argument_list|(
+argument|StringRef FName
+argument_list|)
+block|;
+name|std
+operator|::
+name|error_code
+name|writeBody
+argument_list|(
+argument|StringRef FName
+argument_list|,
+argument|const FunctionSamples&S
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|addName
+argument_list|(
+argument|StringRef FName
+argument_list|)
+block|;
+name|void
+name|addNames
+argument_list|(
+specifier|const
+name|FunctionSamples
+operator|&
+name|S
+argument_list|)
+block|;
+name|MapVector
+operator|<
+name|StringRef
+block|,
+name|uint32_t
+operator|>
+name|NameTable
+block|;
+name|friend
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SampleProfileWriter
+operator|>>
 name|SampleProfileWriter
 operator|::
-name|write
+name|create
 argument_list|(
-name|M
+argument|std::unique_ptr<raw_ostream>&OS
 argument_list|,
-name|P
+argument|SampleProfileFormat Format
 argument_list|)
-return|;
-block|}
-expr|}
-block|;  }
-comment|// End namespace sampleprof
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
+comment|// End namespace sampleprof
+end_comment
+
+begin_comment
+unit|}
 comment|// End namespace llvm
 end_comment
 

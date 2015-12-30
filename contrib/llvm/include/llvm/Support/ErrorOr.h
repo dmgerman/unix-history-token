@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Support/ErrorOr.h - Error Smart Pointer -----------------------===//
+comment|//===- llvm/Support/ErrorOr.h - Error Smart Pointer -------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -386,6 +386,20 @@ name|type
 operator|*
 name|pointer
 expr_stmt|;
+typedef|typedef
+specifier|const
+name|typename
+name|std
+operator|::
+name|remove_reference
+operator|<
+name|T
+operator|>
+operator|::
+name|type
+operator|*
+name|const_pointer
+expr_stmt|;
 name|public
 label|:
 name|template
@@ -726,6 +740,27 @@ return|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+name|const_pointer
+name|operator
+operator|->
+expr|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+specifier|const
+block|{
+return|return
+name|toPointer
+argument_list|(
+name|getStorage
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|reference
 name|operator
@@ -739,6 +774,22 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|const_reference
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+operator|*
+name|getStorage
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_label
 name|private
@@ -1044,6 +1095,21 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|const_pointer
+name|toPointer
+argument_list|(
+name|const_pointer
+name|Val
+argument_list|)
+decl|const
+block|{
+return|return
+name|Val
+return|;
+block|}
+end_decl_stmt
+
 begin_function
 name|pointer
 name|toPointer
@@ -1062,6 +1128,27 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|const_pointer
+name|toPointer
+argument_list|(
+specifier|const
+name|wrap
+operator|*
+name|Val
+argument_list|)
+decl|const
+block|{
+return|return
+operator|&
+name|Val
+operator|->
+name|get
+argument_list|()
+return|;
+block|}
+end_decl_stmt
 
 begin_function
 name|storage_type

@@ -102,34 +102,34 @@ block|{
 name|class
 name|MCSymbol
 decl_stmt|;
-comment|/// MCSectionELF - This represents a section on linux, lots of unix variants
-comment|/// and some bare metal systems.
+comment|/// This represents a section on linux, lots of unix variants and some bare
+comment|/// metal systems.
 name|class
 name|MCSectionELF
+name|final
 range|:
 name|public
 name|MCSection
 block|{
-comment|/// SectionName - This is the name of the section.  The referenced memory is
-comment|/// owned by TargetLoweringObjectFileELF's ELFUniqueMap.
+comment|/// This is the name of the section.  The referenced memory is owned by
+comment|/// TargetLoweringObjectFileELF's ELFUniqueMap.
 name|StringRef
 name|SectionName
 block|;
-comment|/// Type - This is the sh_type field of a section, drawn from the enums below.
+comment|/// This is the sh_type field of a section, drawn from the enums below.
 name|unsigned
 name|Type
 block|;
-comment|/// Flags - This is the sh_flags field of a section, drawn from the enums.
-comment|/// below.
+comment|/// This is the sh_flags field of a section, drawn from the enums below.
 name|unsigned
 name|Flags
 block|;
 name|unsigned
 name|UniqueID
 block|;
-comment|/// EntrySize - The size of each entry in this section. This size only
-comment|/// makes sense for sections that contain fixed-sized entries. If a
-comment|/// section does not contain fixed-sized entries 'EntrySize' will be 0.
+comment|/// The size of each entry in this section. This size only makes sense for
+comment|/// sections that contain fixed-sized entries. If a section does not contain
+comment|/// fixed-sized entries 'EntrySize' will be 0.
 name|unsigned
 name|EntrySize
 block|;
@@ -225,11 +225,6 @@ name|setIsSignature
 argument_list|()
 expr_stmt|;
 block|}
-operator|~
-name|MCSectionELF
-argument_list|()
-name|override
-block|;
 name|void
 name|setSectionName
 argument_list|(
@@ -242,8 +237,12 @@ name|Name
 block|; }
 name|public
 operator|:
-comment|/// ShouldOmitSectionDirective - Decides whether a '.section' directive
-comment|/// should be printed before the section name
+operator|~
+name|MCSectionELF
+argument_list|()
+block|;
+comment|/// Decides whether a '.section' directive should be printed before the
+comment|/// section name
 name|bool
 name|ShouldOmitSectionDirective
 argument_list|(

@@ -231,9 +231,9 @@ specifier|const
 name|override
 block|{}
 block|;
-name|MCSection
+name|MCFragment
 operator|*
-name|findAssociatedSection
+name|findAssociatedFragment
 argument_list|()
 specifier|const
 name|override
@@ -371,9 +371,9 @@ specifier|const
 name|override
 block|{}
 block|;
-name|MCSection
+name|MCFragment
 operator|*
-name|findAssociatedSection
+name|findAssociatedFragment
 argument_list|()
 specifier|const
 name|override

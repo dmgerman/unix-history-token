@@ -170,6 +170,7 @@ name|WebAssemblyTargetMachine
 operator|*
 name|TM
 argument_list|,
+specifier|const
 name|Function
 operator|&
 name|F
@@ -288,6 +289,7 @@ name|getPopcntSupport
 argument_list|(
 argument|unsigned TyWidth
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// @}
 comment|/// \name Vector TTI Implementations

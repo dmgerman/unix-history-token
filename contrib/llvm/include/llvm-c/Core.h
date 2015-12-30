@@ -18,7 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Support.h"
+file|"llvm-c/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/Types.h"
 end_include
 
 begin_ifdef
@@ -35,86 +41,8 @@ endif|#
 directive|endif
 comment|/**  * @defgroup LLVMC LLVM-C: C interface to LLVM  *  * This module exposes parts of the LLVM library as a C API.  *  * @{  */
 comment|/**  * @defgroup LLVMCTransforms Transforms  */
-comment|/**  * @defgroup LLVMCCore Core  *  * This modules provide an interface to libLLVMCore, which implements  * the LLVM intermediate representation as well as other related types  * and utilities.  *  * LLVM uses a polymorphic type hierarchy which C cannot represent, therefore  * parameters must be passed as base types. Despite the declared types, most  * of the functions provided operate only on branches of the type hierarchy.  * The declared parameter names are descriptive and specify which type is  * required. Additionally, each type hierarchy is documented along with the  * functions that operate upon it. For more detail, refer to LLVM's C++ code.  * If in doubt, refer to Core.cpp, which performs parameter downcasts in the  * form unwrap<RequiredType>(Param).  *  * Many exotic languages can interoperate with C code but have a harder time  * with C++ due to name mangling. So in addition to C, this interface enables  * tools written in such languages.  *  * @{  */
+comment|/**  * @defgroup LLVMCCore Core  *  * This modules provide an interface to libLLVMCore, which implements  * the LLVM intermediate representation as well as other related types  * and utilities.  *  * Many exotic languages can interoperate with C code but have a harder time  * with C++ due to name mangling. So in addition to C, this interface enables  * tools written in such languages.  *  * @{  */
 comment|/**  * @defgroup LLVMCCoreTypes Types and Enumerations  *  * @{  */
-comment|/* Opaque types. */
-comment|/**  * The top-level container for all LLVM global data. See the LLVMContext class.  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueContext
-modifier|*
-name|LLVMContextRef
-typedef|;
-comment|/**  * The top-level container for all other LLVM Intermediate Representation (IR)  * objects.  *  * @see llvm::Module  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueModule
-modifier|*
-name|LLVMModuleRef
-typedef|;
-comment|/**  * Each value in the LLVM IR has a type, an LLVMTypeRef.  *  * @see llvm::Type  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueType
-modifier|*
-name|LLVMTypeRef
-typedef|;
-comment|/**  * Represents an individual value in LLVM IR.  *  * This models llvm::Value.  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueValue
-modifier|*
-name|LLVMValueRef
-typedef|;
-comment|/**  * Represents a basic block of instructions in LLVM IR.  *  * This models llvm::BasicBlock.  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueBasicBlock
-modifier|*
-name|LLVMBasicBlockRef
-typedef|;
-comment|/**  * Represents an LLVM basic block builder.  *  * This models llvm::IRBuilder.  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueBuilder
-modifier|*
-name|LLVMBuilderRef
-typedef|;
-comment|/**  * Interface used to provide a module to JIT or interpreter.  * This is now just a synonym for llvm::Module, but we have to keep using the  * different type to keep binary compatibility.  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueModuleProvider
-modifier|*
-name|LLVMModuleProviderRef
-typedef|;
-comment|/** @see llvm::PassManagerBase */
-typedef|typedef
-name|struct
-name|LLVMOpaquePassManager
-modifier|*
-name|LLVMPassManagerRef
-typedef|;
-comment|/** @see llvm::PassRegistry */
-typedef|typedef
-name|struct
-name|LLVMOpaquePassRegistry
-modifier|*
-name|LLVMPassRegistryRef
-typedef|;
-comment|/**  * Used to get the users and usees of a Value.  *  * @see llvm::Use */
-typedef|typedef
-name|struct
-name|LLVMOpaqueUse
-modifier|*
-name|LLVMUseRef
-typedef|;
-comment|/**  * @see llvm::DiagnosticInfo  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueDiagnosticInfo
-modifier|*
-name|LLVMDiagnosticInfoRef
-typedef|;
 typedef|typedef
 enum|enum
 block|{
@@ -524,6 +452,26 @@ block|,
 name|LLVMLandingPad
 init|=
 literal|59
+block|,
+name|LLVMCleanupRet
+init|=
+literal|61
+block|,
+name|LLVMCatchRet
+init|=
+literal|62
+block|,
+name|LLVMCatchPad
+init|=
+literal|63
+block|,
+name|LLVMCleanupPad
+init|=
+literal|64
+block|,
+name|LLVMCatchSwitch
+init|=
+literal|65
 block|}
 name|LLVMOpcode
 typedef|;
@@ -576,7 +524,10 @@ name|LLVMMetadataTypeKind
 block|,
 comment|/**< Metadata */
 name|LLVMX86_MMXTypeKind
+block|,
 comment|/**< X86 MMX */
+name|LLVMTokenTypeKind
+comment|/**< Tokens */
 block|}
 name|LLVMTypeKind
 typedef|;
@@ -942,41 +893,6 @@ parameter_list|(
 name|char
 modifier|*
 name|Message
-parameter_list|)
-function_decl|;
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|LLVMFatalErrorHandler
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Reason
-parameter_list|)
-function_decl|;
-comment|/**  * Install a fatal error handler. By default, if LLVM detects a fatal error, it  * will call exit(1). This may not be appropriate in many contexts. For example,  * doing exit(1) will bypass many crash reporting/tracing system tools. This  * function allows you to install a callback that will be invoked prior to the  * call to exit(1).  */
-name|void
-name|LLVMInstallFatalErrorHandler
-parameter_list|(
-name|LLVMFatalErrorHandler
-name|Handler
-parameter_list|)
-function_decl|;
-comment|/**  * Reset the fatal error handler. This resets LLVM's fatal error handling  * behavior to the default.  */
-name|void
-name|LLVMResetFatalErrorHandler
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/**  * Enable LLVM's built-in stack trace code. This intercepts the OS's crash  * signals and prints which component of LLVM you were in at the time if the  * crash.  */
-name|void
-name|LLVMEnablePrettyStackTrace
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 comment|/**  * @defgroup LLVMCCoreContext Contexts  *  * Contexts are execution states for the core LLVM IR system.  *  * Most types are tied to a context instance. Multiple contexts can  * exist simultaneously. A single context is not thread safe. However,  * different contexts can execute on different threads simultaneously.  *  * @{  */
@@ -1446,6 +1362,13 @@ name|C
 parameter_list|)
 function_decl|;
 name|LLVMTypeRef
+name|LLVMInt128TypeInContext
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|)
+function_decl|;
+name|LLVMTypeRef
 name|LLVMIntTypeInContext
 parameter_list|(
 name|LLVMContextRef
@@ -1482,6 +1405,12 @@ parameter_list|)
 function_decl|;
 name|LLVMTypeRef
 name|LLVMInt64Type
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|LLVMTypeRef
+name|LLVMInt128Type
 parameter_list|(
 name|void
 parameter_list|)
@@ -1888,7 +1817,7 @@ parameter_list|(
 name|macro
 parameter_list|)
 define|\
-value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(User)                               \     macro(Constant)                         \       macro(BlockAddress)                   \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantDataSequential)         \         macro(ConstantDataArray)            \         macro(ConstantDataVector)           \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(GlobalAlias)                  \         macro(GlobalObject)                 \           macro(Function)                   \           macro(GlobalVariable)             \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \         macro(FCmpInst)                     \         macro(ICmpInst)                     \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(LandingPadInst)                 \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(IndirectBrInst)               \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(ResumeInst)                   \       macro(UnaryInstruction)               \         macro(AllocaInst)                   \         macro(CastInst)                     \           macro(AddrSpaceCastInst)          \           macro(BitCastInst)                \           macro(FPExtInst)                  \           macro(FPToSIInst)                 \           macro(FPToUIInst)                 \           macro(FPTruncInst)                \           macro(IntToPtrInst)               \           macro(PtrToIntInst)               \           macro(SExtInst)                   \           macro(SIToFPInst)                 \           macro(TruncInst)                  \           macro(UIToFPInst)                 \           macro(ZExtInst)                   \         macro(ExtractValueInst)             \         macro(LoadInst)                     \         macro(VAArgInst)
+value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(User)                               \     macro(Constant)                         \       macro(BlockAddress)                   \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantDataSequential)         \         macro(ConstantDataArray)            \         macro(ConstantDataVector)           \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantTokenNone)              \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(GlobalAlias)                  \         macro(GlobalObject)                 \           macro(Function)                   \           macro(GlobalVariable)             \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \         macro(FCmpInst)                     \         macro(ICmpInst)                     \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(LandingPadInst)                 \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(IndirectBrInst)               \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(ResumeInst)                   \         macro(CleanupReturnInst)            \         macro(CatchReturnInst)              \       macro(FuncletPadInst)                 \         macro(CatchPadInst)                 \         macro(CleanupPadInst)               \       macro(UnaryInstruction)               \         macro(AllocaInst)                   \         macro(CastInst)                     \           macro(AddrSpaceCastInst)          \           macro(BitCastInst)                \           macro(FPExtInst)                  \           macro(FPToSIInst)                 \           macro(FPToUIInst)                 \           macro(FPTruncInst)                \           macro(IntToPtrInst)               \           macro(PtrToIntInst)               \           macro(SExtInst)                   \           macro(SIToFPInst)                 \           macro(TruncInst)                  \           macro(UIToFPInst)                 \           macro(ZExtInst)                   \         macro(ExtractValueInst)             \         macro(LoadInst)                     \         macro(VAArgInst)
 comment|/**  * @defgroup LLVMCCoreValueGeneral General APIs  *  * Functions in this section work on all LLVMValueRef instances,  * regardless of their sub-type. They correspond to functions available  * on llvm::Value.  *  * @{  */
 comment|/**  * Obtain the type of a value.  *  * @see llvm::Value::getType()  */
 name|LLVMTypeRef
@@ -3469,7 +3398,7 @@ name|LLVMAttribute
 name|PA
 parameter_list|)
 function_decl|;
-comment|/**  * Add a target-dependent attribute to a fuction  * @see llvm::AttrBuilder::addAttribute()  */
+comment|/**  * Add a target-dependent attribute to a function  * @see llvm::AttrBuilder::addAttribute()  */
 name|void
 name|LLVMAddTargetDependentFunctionAttr
 parameter_list|(
@@ -5270,6 +5199,23 @@ name|LLVMBool
 name|IsVolatile
 parameter_list|)
 function_decl|;
+name|LLVMAtomicOrdering
+name|LLVMGetOrdering
+parameter_list|(
+name|LLVMValueRef
+name|MemoryAccessInst
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetOrdering
+parameter_list|(
+name|LLVMValueRef
+name|MemoryAccessInst
+parameter_list|,
+name|LLVMAtomicOrdering
+name|Ordering
+parameter_list|)
+function_decl|;
 comment|/* Casts */
 name|LLVMValueRef
 name|LLVMBuildTrunc
@@ -6137,17 +6083,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !defined(__cplusplus) */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(LLVM_C_CORE_H) */
+comment|/* LLVM_C_CORE_H */
 end_comment
 
 end_unit

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -81,9 +87,6 @@ name|llvm
 block|{
 name|class
 name|MCInst
-decl_stmt|;
-name|class
-name|MCRegisterInfo
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
@@ -366,13 +369,13 @@ name|TSFlags
 decl_stmt|;
 comment|// Target Specific Flag values
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|ImplicitUses
 decl_stmt|;
 comment|// Registers implicitly read by this instr
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|ImplicitDefs
 decl_stmt|;
@@ -1028,8 +1031,8 @@ return|;
 block|}
 comment|/// \brief Return true if this instruction is convergent.
 comment|///
-comment|/// Convergent instructions may only be moved to locations that are
-comment|/// control-equivalent to their original positions.
+comment|/// Convergent instructions may not be made control-dependent on any
+comment|/// additional values.
 name|bool
 name|isConvergent
 argument_list|()
@@ -1331,7 +1334,7 @@ comment|/// marked as implicitly reading the 'CL' register, which it always does
 comment|///
 comment|/// This method returns null if the instruction has no implicit uses.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getImplicitUses
 argument_list|()
@@ -1388,7 +1391,7 @@ comment|/// EAX/EDX/EFLAGS registers.
 comment|///
 comment|/// This method returns null if the instruction has no implicit defs.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getImplicitDefs
 argument_list|()
@@ -1456,7 +1459,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|ImpUses
 init|=

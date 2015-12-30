@@ -121,12 +121,6 @@ argument|SystemZCP::SystemZCPModifier Modifier
 argument_list|)
 block|;
 comment|// Override MachineConstantPoolValue.
-name|unsigned
-name|getRelocationInfo
-argument_list|()
-specifier|const
-name|override
-block|;
 name|int
 name|getExistingMachineCPValue
 argument_list|(

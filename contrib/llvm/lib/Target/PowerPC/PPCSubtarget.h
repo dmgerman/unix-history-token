@@ -237,6 +237,9 @@ name|bool
 name|UseCRBits
 block|;
 name|bool
+name|UseSoftFloat
+block|;
+name|bool
 name|IsPPC64
 block|;
 name|bool
@@ -349,6 +352,12 @@ name|HasDirectMove
 block|;
 name|bool
 name|HasHTM
+block|;
+name|bool
+name|HasFusion
+block|;
+name|bool
+name|HasFloat128
 block|;
 comment|/// When targeting QPX running a stock PPC64 Linux kernel where the stack
 comment|/// alignment has not been changed, we need to keep the 16-byte alignment
@@ -576,6 +585,16 @@ specifier|const
 block|{
 return|return
 name|Has64BitSupport
+return|;
+block|}
+comment|// useSoftFloat - Return true if soft-float option is turned on.
+name|bool
+name|useSoftFloat
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSoftFloat
 return|;
 block|}
 comment|/// use64BitRegs - Return true if in 64-bit mode or if we should use 64-bit
@@ -990,6 +1009,24 @@ return|return
 name|HasHTM
 return|;
 block|}
+name|bool
+name|hasFusion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFusion
+return|;
+block|}
+name|bool
+name|hasFloat128
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFloat128
+return|;
+block|}
 specifier|const
 name|Triple
 operator|&
@@ -1158,6 +1195,19 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
+comment|/// classifyGlobalReference - Classify a global variable reference for the
+comment|/// current subtarget accourding to how we should reference it.
+name|unsigned
+name|char
+name|classifyGlobalReference
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

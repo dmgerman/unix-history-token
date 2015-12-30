@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"HexagonTargetObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -98,8 +104,16 @@ name|TargetLoweringObjectFile
 operator|>
 name|TLOF
 block|;
+name|mutable
+name|StringMap
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|HexagonSubtarget
-name|Subtarget
+operator|>>
+name|SubtargetMap
 block|;
 name|public
 operator|:
@@ -132,16 +146,11 @@ name|HexagonSubtarget
 operator|*
 name|getSubtargetImpl
 argument_list|(
-argument|const Function&
+argument|const Function&F
 argument_list|)
 specifier|const
 name|override
-block|{
-return|return
-operator|&
-name|Subtarget
-return|;
-block|}
+block|;
 specifier|static
 name|unsigned
 name|getModuleMatchQuality
@@ -160,7 +169,12 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
-name|TargetLoweringObjectFile
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
+name|override
+block|;
+name|HexagonTargetObjectFile
 operator|*
 name|getObjFileLowering
 argument_list|()
@@ -168,17 +182,20 @@ specifier|const
 name|override
 block|{
 return|return
+name|static_cast
+operator|<
+name|HexagonTargetObjectFile
+operator|*
+operator|>
+operator|(
 name|TLOF
 operator|.
 name|get
 argument_list|()
+operator|)
 return|;
 block|}
 expr|}
-block|;
-specifier|extern
-name|bool
-name|flag_aligned_memcpy
 block|;  }
 end_decl_stmt
 

@@ -326,6 +326,10 @@ name|IMAGE_FILE_MACHINE_ARMNT
 init|=
 literal|0x1C4
 block|,
+name|IMAGE_FILE_MACHINE_ARM64
+init|=
+literal|0xAA64
+block|,
 name|IMAGE_FILE_MACHINE_EBC
 init|=
 literal|0xEBC
@@ -837,6 +841,10 @@ block|{
 name|SC_Invalid
 init|=
 literal|0xffffffff
+block|,
+name|IMAGE_SCN_TYPE_NOLOAD
+init|=
+literal|0x00000002
 block|,
 name|IMAGE_SCN_TYPE_NO_PAD
 init|=

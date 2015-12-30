@@ -278,6 +278,21 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// \brief Return true if this machine model includes an instruction-level
+comment|/// scheduling model or cycle-to-cycle itinerary data.
+name|bool
+name|hasInstrSchedModelOrItineraries
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasInstrSchedModel
+argument_list|()
+operator|||
+name|hasInstrItineraries
+argument_list|()
+return|;
+block|}
 comment|/// \brief Identify the processor corresponding to the current subtarget.
 name|unsigned
 name|getProcessorID

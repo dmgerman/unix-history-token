@@ -1334,6 +1334,35 @@ comment|/// @name Physical Operators
 comment|/// @{
 comment|/// @brief Make \a path an absolute path.
 comment|///
+comment|/// Makes \a path absolute using the \a current_directory if it is not already.
+comment|/// An empty \a path will result in the \a current_directory.
+comment|///
+comment|/// /absolute/path   => /absolute/path
+comment|/// relative/../path =><current-directory>/relative/../path
+comment|///
+comment|/// @param path A path that is modified to be an absolute path.
+comment|/// @returns errc::success if \a path has been made absolute, otherwise a
+comment|///          platform-specific error_code.
+name|std
+operator|::
+name|error_code
+name|make_absolute
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|current_directory
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|path
+argument_list|)
+expr_stmt|;
+comment|/// @brief Make \a path an absolute path.
+comment|///
 comment|/// Makes \a path absolute using the current directory if it is not already. An
 comment|/// empty \a path will result in the current directory.
 comment|///
@@ -1370,6 +1399,8 @@ argument_list|(
 argument|const Twine&path
 argument_list|,
 argument|bool IgnoreExisting = true
+argument_list|,
+argument|perms Perms = owner_all | group_all
 argument_list|)
 expr_stmt|;
 comment|/// @brief Create the directory in path.
@@ -1386,6 +1417,8 @@ argument_list|(
 argument|const Twine&path
 argument_list|,
 argument|bool IgnoreExisting = true
+argument_list|,
+argument|perms Perms = owner_all | group_all
 argument_list|)
 expr_stmt|;
 comment|/// @brief Create a link from \a from to \a to.
@@ -1576,7 +1609,6 @@ comment|/// @brief Can we execute this file?
 comment|///
 comment|/// @param Path Input path.
 comment|/// @returns True if we can execute it, false otherwise.
-specifier|inline
 name|bool
 name|can_execute
 parameter_list|(
@@ -1585,19 +1617,7 @@ name|Twine
 modifier|&
 name|Path
 parameter_list|)
-block|{
-return|return
-operator|!
-name|access
-argument_list|(
-name|Path
-argument_list|,
-name|AccessMode
-operator|::
-name|Execute
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// @brief Can we write this file?
 comment|///
 comment|/// @param Path Input path.
@@ -2002,15 +2022,15 @@ comment|/// @brief Create a uniquely named file.
 comment|///
 comment|/// Generates a unique path suitable for a temporary file and then opens it as a
 comment|/// file. The name is based on \a model with '%' replaced by a random char in
-comment|/// [0-9a-f]. If \a model is not an absolute path, a suitable temporary
-comment|/// directory will be prepended.
+comment|/// [0-9a-f]. If \a model is not an absolute path, the temporary file will be
+comment|/// created in the current directory.
 comment|///
 comment|/// Example: clang-%%-%%-%%-%%-%%.s => clang-a0-b1-c2-d3-e4.s
 comment|///
 comment|/// This is an atomic operation. Either the file is created and opened, or the
 comment|/// file system is left untouched.
 comment|///
-comment|/// The intendend use is for files that are to be kept, possibly after
+comment|/// The intended use is for files that are to be kept, possibly after
 comment|/// renaming them. For example, when running 'clang -c foo.o', the file can
 comment|/// be first created as foo-abc123.o and then renamed.
 comment|///

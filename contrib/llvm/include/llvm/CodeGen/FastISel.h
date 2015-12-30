@@ -1733,10 +1733,10 @@ name|uint64_t
 name|Imm2
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit a MachineInstr with two register operands and a result
+comment|/// \brief Emit a MachineInstr with a floating point immediate, and a result
 comment|/// register in the given register class.
 name|unsigned
-name|fastEmitInst_rf
+name|fastEmitInst_f
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1745,12 +1745,6 @@ specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
 parameter_list|,
 specifier|const
 name|ConstantFP
@@ -1787,38 +1781,6 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit a MachineInstr with two register operands, two immediates
-comment|/// operands, and a result register in the given register class.
-name|unsigned
-name|fastEmitInst_rrii
-parameter_list|(
-name|unsigned
-name|MachineInstOpcode
-parameter_list|,
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
-parameter_list|,
-name|unsigned
-name|Op1
-parameter_list|,
-name|bool
-name|Op1IsKill
-parameter_list|,
-name|uint64_t
-name|Imm1
-parameter_list|,
-name|uint64_t
-name|Imm2
-parameter_list|)
-function_decl|;
 comment|/// \brief Emit a MachineInstr with a single immediate operand, and a result
 comment|/// register in the given register class.
 name|unsigned
@@ -1834,25 +1796,6 @@ name|RC
 parameter_list|,
 name|uint64_t
 name|Imm
-parameter_list|)
-function_decl|;
-comment|/// \brief Emit a MachineInstr with a two immediate operands.
-name|unsigned
-name|fastEmitInst_ii
-parameter_list|(
-name|unsigned
-name|MachineInstrOpcode
-parameter_list|,
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
-parameter_list|,
-name|uint64_t
-name|Imm1
-parameter_list|,
-name|uint64_t
-name|Imm2
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit a MachineInstr for an extract_subreg from a specified index of
@@ -1899,6 +1842,25 @@ name|MBB
 parameter_list|,
 name|DebugLoc
 name|DL
+parameter_list|)
+function_decl|;
+comment|/// Emit an unconditional branch to \p FalseMBB, obtains the branch weight
+comment|/// and adds TrueMBB and FalseMBB to the successor list.
+name|void
+name|finishCondBranch
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BranchBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|TrueMBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|FalseMBB
 parameter_list|)
 function_decl|;
 comment|/// \brief Update the value map to include the new mapping for this
@@ -2307,6 +2269,15 @@ comment|/// across heavy instructions like calls.
 name|void
 name|flushLocalValueMap
 parameter_list|()
+function_decl|;
+comment|/// \brief Removes dead local value instructions after SavedLastLocalvalue.
+name|void
+name|removeDeadLocalValueCode
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|SavedLastLocalValue
+parameter_list|)
 function_decl|;
 comment|/// \brief Insertion point before trying to select the current instruction.
 name|MachineBasicBlock

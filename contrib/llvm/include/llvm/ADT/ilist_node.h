@@ -75,6 +75,22 @@ operator|>
 expr|struct
 name|ilist_traits
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|NodeTy
+operator|>
+expr|struct
+name|ilist_embedded_sentinel_traits
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|NodeTy
+operator|>
+expr|struct
+name|ilist_half_embedded_sentinel_traits
+expr_stmt|;
 comment|/// ilist_half_node - Base class that provides prev services for sentinels.
 comment|///
 name|template
@@ -88,6 +104,13 @@ block|{
 name|friend
 expr|struct
 name|ilist_traits
+operator|<
+name|NodeTy
+operator|>
+block|;
+name|friend
+expr|struct
+name|ilist_half_embedded_sentinel_traits
 operator|<
 name|NodeTy
 operator|>
@@ -146,6 +169,14 @@ operator|>
 expr|struct
 name|ilist_nextprev_traits
 block|;
+name|template
+operator|<
+name|typename
+name|NodeTy
+operator|>
+name|class
+name|ilist_iterator
+block|;
 comment|/// ilist_node - Base class that provides next/prev services for nodes
 comment|/// that use ilist_nextprev_traits or ilist_default_traits.
 comment|///
@@ -173,6 +204,20 @@ block|;
 name|friend
 expr|struct
 name|ilist_traits
+operator|<
+name|NodeTy
+operator|>
+block|;
+name|friend
+expr|struct
+name|ilist_half_embedded_sentinel_traits
+operator|<
+name|NodeTy
+operator|>
+block|;
+name|friend
+expr|struct
+name|ilist_embedded_sentinel_traits
 operator|<
 name|NodeTy
 operator|>
@@ -223,40 +268,170 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|ilist_iterator
+operator|<
+name|NodeTy
+operator|>
+name|getIterator
+argument_list|()
+block|{
+comment|// FIXME: Stop downcasting to create the iterator (potential UB).
+return|return
+name|ilist_iterator
+operator|<
+name|NodeTy
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|NodeTy
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|)
+return|;
+block|}
+name|ilist_iterator
+operator|<
+specifier|const
+name|NodeTy
+operator|>
+name|getIterator
+argument_list|()
+specifier|const
+block|{
+comment|// FIXME: Stop downcasting to create the iterator (potential UB).
+return|return
+name|ilist_iterator
+operator|<
+specifier|const
+name|NodeTy
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|NodeTy
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// An ilist node that can access its parent list.
+comment|///
+comment|/// Requires \c NodeTy to have \a getParent() to find the parent node, and the
+comment|/// \c ParentTy to have \a getSublistAccess() to get a reference to the list.
+name|template
+operator|<
+name|typename
+name|NodeTy
+block|,
+name|typename
+name|ParentTy
+operator|>
+name|class
+name|ilist_node_with_parent
+operator|:
+name|public
+name|ilist_node
+operator|<
+name|NodeTy
+operator|>
+block|{
+name|protected
+operator|:
+name|ilist_node_with_parent
+argument_list|()
+operator|=
+expr|default
+block|;
+name|private
+operator|:
+comment|/// Forward to NodeTy::getParent().
+comment|///
+comment|/// Note: do not use the name "getParent()".  We want a compile error
+comment|/// (instead of recursion) when the subclass fails to implement \a
+comment|/// getParent().
+specifier|const
+name|ParentTy
+operator|*
+name|getNodeParent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|NodeTy
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getParent
+argument_list|()
+return|;
+block|}
+name|public
+operator|:
 comment|/// @name Adjacent Node Accessors
 comment|/// @{
-comment|/// \brief Get the previous node, or 0 for the list head.
+comment|/// \brief Get the previous node, or \c nullptr for the list head.
 name|NodeTy
 operator|*
 name|getPrevNode
 argument_list|()
 block|{
+comment|// Should be separated to a reused function, but then we couldn't use auto
+comment|// (and would need the type of the list).
+specifier|const
+name|auto
+operator|&
+name|List
+operator|=
+name|getNodeParent
+argument_list|()
+operator|->*
+operator|(
+name|ParentTy
+operator|::
+name|getSublistAccess
+argument_list|(
+operator|(
 name|NodeTy
 operator|*
-name|Prev
-operator|=
-name|this
-operator|->
-name|getPrev
-argument_list|()
-block|;
-comment|// Check for sentinel.
-if|if
-condition|(
-operator|!
-name|Prev
-operator|->
-name|getNext
-argument_list|()
-condition|)
-return|return
+operator|)
 name|nullptr
-return|;
+argument_list|)
+operator|)
+block|;
 return|return
-name|Prev
+name|List
+operator|.
+name|getPrevNode
+argument_list|(
+operator|*
+name|static_cast
+operator|<
+name|NodeTy
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
 return|;
 block|}
-comment|/// \brief Get the previous node, or 0 for the list head.
+comment|/// \brief Get the previous node, or \c nullptr for the list head.
 specifier|const
 name|NodeTy
 operator|*
@@ -264,101 +439,94 @@ name|getPrevNode
 argument_list|()
 specifier|const
 block|{
-specifier|const
-name|NodeTy
+return|return
+name|const_cast
+operator|<
+name|ilist_node_with_parent
 operator|*
-name|Prev
-operator|=
+operator|>
+operator|(
 name|this
+operator|)
 operator|->
-name|getPrev
+name|getPrevNode
 argument_list|()
-block|;
-comment|// Check for sentinel.
-if|if
-condition|(
-operator|!
-name|Prev
-operator|->
-name|getNext
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|Prev
 return|;
 block|}
-comment|/// \brief Get the next node, or 0 for the list tail.
-name|NodeTy
-modifier|*
-name|getNextNode
-parameter_list|()
-block|{
-name|NodeTy
-modifier|*
-name|Next
-init|=
-name|getNext
-argument_list|()
-decl_stmt|;
-comment|// Check for sentinel.
-if|if
-condition|(
-operator|!
-name|Next
-operator|->
-name|getNext
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|Next
-return|;
-block|}
-comment|/// \brief Get the next node, or 0 for the list tail.
-specifier|const
+comment|/// \brief Get the next node, or \c nullptr for the list tail.
 name|NodeTy
 operator|*
 name|getNextNode
 argument_list|()
-specifier|const
 block|{
+comment|// Should be separated to a reused function, but then we couldn't use auto
+comment|// (and would need the type of the list).
 specifier|const
-name|NodeTy
-operator|*
-name|Next
+name|auto
+operator|&
+name|List
 operator|=
-name|getNext
+name|getNodeParent
 argument_list|()
-block|;
-comment|// Check for sentinel.
-if|if
-condition|(
-operator|!
-name|Next
-operator|->
-name|getNext
-argument_list|()
-condition|)
-return|return
+operator|->*
+operator|(
+name|ParentTy
+operator|::
+name|getSublistAccess
+argument_list|(
+operator|(
+name|NodeTy
+operator|*
+operator|)
 name|nullptr
-return|;
+argument_list|)
+operator|)
+block|;
 return|return
-name|Next
+name|List
+operator|.
+name|getNextNode
+argument_list|(
+operator|*
+name|static_cast
+operator|<
+name|NodeTy
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
 return|;
 block|}
+comment|/// \brief Get the next node, or \c nullptr for the list tail.
+specifier|const
+name|NodeTy
+operator|*
+name|getNextNode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|ilist_node_with_parent
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNextNode
+argument_list|()
+return|;
+block|}
+comment|/// @}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|/// @}
-end_comment
-
-begin_comment
-unit|};  }
 comment|// End llvm namespace
 end_comment
 

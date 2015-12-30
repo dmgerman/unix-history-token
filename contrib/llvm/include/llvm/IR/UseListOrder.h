@@ -145,12 +145,12 @@ argument_list|()
 operator|:
 name|V
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|F
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|UseListOrder
@@ -264,6 +264,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_USELISTORDER_H
+end_comment
 
 end_unit
 

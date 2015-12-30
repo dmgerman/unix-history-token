@@ -391,6 +391,7 @@ operator|*
 name|getNoPreservedMask
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// getThisReturnPreservedMask - Returns a call preserved mask specific to the
 comment|/// case that 'returned' is on an i32 first argument if the calling convention
@@ -476,6 +477,8 @@ argument_list|,
 argument|const MachineFunction&MF
 argument_list|,
 argument|const VirtRegMap *VRM
+argument_list|,
+argument|const LiveRegMatrix *Matrix
 argument_list|)
 specifier|const
 name|override
@@ -501,13 +504,6 @@ specifier|const
 block|;
 name|bool
 name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|needsStackRealignment
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

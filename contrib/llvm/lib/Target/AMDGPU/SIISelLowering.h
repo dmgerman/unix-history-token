@@ -128,6 +128,19 @@ specifier|const
 name|override
 block|;
 name|SDValue
+name|lowerImplicitZextParam
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Op
+argument_list|,
+argument|MVT VT
+argument_list|,
+argument|unsigned Offset
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 argument|SDValue Op
@@ -327,6 +340,13 @@ argument|const AddrMode&AM
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|isLegalMUBUFAddressingMode
+argument_list|(
+argument|const AddrMode&AM
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|SITargetLowering
@@ -397,6 +417,23 @@ argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isMemOpUniform
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isNoopAddrSpaceCast
+argument_list|(
+argument|unsigned SrcAS
+argument_list|,
+argument|unsigned DestAS
 argument_list|)
 specifier|const
 name|override
@@ -589,18 +626,6 @@ argument|uint64_t RsrcDword2And3
 argument_list|)
 specifier|const
 block|;
-name|MachineSDNode
-operator|*
-name|buildScratchRSRC
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|SDLoc DL
-argument_list|,
-argument|SDValue Ptr
-argument_list|)
-specifier|const
-block|;
 name|std
 operator|::
 name|pair
@@ -618,6 +643,14 @@ argument_list|,
 argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|ConstraintType
+name|getConstraintType
+argument_list|(
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override

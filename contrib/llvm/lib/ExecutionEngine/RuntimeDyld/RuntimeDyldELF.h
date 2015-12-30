@@ -181,6 +181,20 @@ argument|int32_t Addend
 argument_list|)
 block|;
 name|void
+name|resolvePPC32Relocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int64_t Addend
+argument_list|)
+block|;
+name|void
 name|resolvePPC64Relocation
 argument_list|(
 argument|const SectionEntry&Section
@@ -510,6 +524,20 @@ name|RelocationValueRef
 name|Value
 parameter_list|)
 function_decl|;
+comment|// Return matching *LO16 relocation (Mips specific)
+name|uint32_t
+name|getMatchingLoRelocation
+argument_list|(
+name|uint32_t
+name|RelType
+argument_list|,
+name|bool
+name|IsLocal
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// The tentative ID for the GOT section
 name|unsigned
 name|GOTSectionID
@@ -537,6 +565,23 @@ name|uint64_t
 operator|>
 name|GOTSymbolOffsets
 expr_stmt|;
+comment|// *HI16 relocations will be added for resolving when we find matching
+comment|// *LO16 part. (Mips specific)
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|RelocationValueRef
+operator|,
+name|RelocationEntry
+operator|>
+operator|,
+literal|8
+operator|>
+name|PendingRelocs
+expr_stmt|;
 comment|// When a module is loaded we save the SectionID of the EH frame section
 comment|// in a table until we receive a request to register all unregistered
 comment|// EH frame sections with the memory manager.
@@ -556,6 +601,17 @@ literal|2
 operator|>
 name|RegisteredEHFrameSections
 expr_stmt|;
+name|bool
+name|relocationNeedsStub
+argument_list|(
+specifier|const
+name|RelocationRef
+operator|&
+name|R
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|public
 label|:
 name|RuntimeDyldELF

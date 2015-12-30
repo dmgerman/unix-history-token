@@ -165,7 +165,6 @@ argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
 block|;
-comment|// Debug information queries.
 name|unsigned
 name|getFrameRegister
 argument_list|(
@@ -173,7 +172,15 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
-block|; }
+block|;
+name|bool
+name|canRealignStack
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

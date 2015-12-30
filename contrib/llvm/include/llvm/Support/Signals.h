@@ -141,6 +141,11 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+comment|// Run all registered signal handlers.
+name|void
+name|RunSignalHandlers
+parameter_list|()
+function_decl|;
 comment|/// AddSignalHandler - Add a function to be called when an abort/kill signal
 comment|/// is delivered to the process.  The handler can have a cookie passed to it
 comment|/// to identify what instance of the handler it is.

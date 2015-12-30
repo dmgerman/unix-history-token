@@ -182,6 +182,11 @@ comment|/// This instruction is lowered in PPCRegisterInfo::eliminateFrameIndex 
 comment|/// compute an allocation on the stack.
 name|DYNALLOC
 block|,
+comment|/// This instruction is lowered in PPCRegisterInfo::eliminateFrameIndex to
+comment|/// compute an offset from native SP to the address  of the most recent
+comment|/// dynamic alloca.
+name|DYNAREAOFFSET
+block|,
 comment|/// GlobalBaseReg - On Darwin, this node represents the result of the mflr
 comment|/// at function entry, used for PIC code.
 name|GlobalBaseReg
@@ -702,6 +707,12 @@ name|getTargetNodeName
 argument_list|(
 argument|unsigned Opcode
 argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|useSoftFloat
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -1487,6 +1498,32 @@ name|isArrayTy
 argument_list|()
 return|;
 block|}
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to an EH pad.
+name|unsigned
+name|getExceptionPointerRegister
+argument_list|(
+specifier|const
+name|Constant
+operator|*
+name|PersonalityFn
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
+name|unsigned
+name|getExceptionSelectorRegister
+argument_list|(
+specifier|const
+name|Constant
+operator|*
+name|PersonalityFn
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|private
 label|:
 struct|struct
@@ -1880,6 +1917,23 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerSTACKRESTORE
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|PPCSubtarget
+operator|&
+name|Subtarget
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerGET_DYNAMIC_AREA_OFFSET
 argument_list|(
 name|SDValue
 name|Op
@@ -2888,15 +2942,12 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-name|bool
-name|combineRepeatedFPDivisors
-argument_list|(
 name|unsigned
-name|NumUsers
-argument_list|)
-decl|const
+name|combineRepeatedFPDivisors
+argument_list|()
+specifier|const
 name|override
-decl_stmt|;
+expr_stmt|;
 name|CCAssignFn
 modifier|*
 name|useFastISelCCs

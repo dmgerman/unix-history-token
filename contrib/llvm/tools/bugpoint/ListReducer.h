@@ -265,6 +265,15 @@ name|MaxIterationsWithoutProgress
 init|=
 literal|3
 decl_stmt|;
+comment|// Maximal number of allowed single-element trim iterations. We add a
+comment|// threshhold here as single-element reductions may otherwise take a
+comment|// very long time to complete.
+specifier|const
+name|unsigned
+name|MaxTrimIterationsWithoutBackJump
+operator|=
+literal|3
+block|;
 name|bool
 name|ShufflingEnabled
 operator|=
@@ -601,6 +610,11 @@ name|ElTy
 operator|>
 name|EmptyList
 expr_stmt|;
+name|unsigned
+name|TrimIterations
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
 name|Changed
@@ -731,9 +745,16 @@ return|return
 name|true
 return|;
 block|}
-comment|// This can take a long time if left uncontrolled.  For now, don't
-comment|// iterate.
+if|if
+condition|(
+name|TrimIterations
+operator|>=
+name|MaxTrimIterationsWithoutBackJump
+condition|)
 break|break;
+name|TrimIterations
+operator|++
+expr_stmt|;
 block|}
 block|}
 return|return

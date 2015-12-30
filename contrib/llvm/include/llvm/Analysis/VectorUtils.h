@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
@@ -81,6 +93,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|DemandedBits
+struct_decl|;
 name|class
 name|GetElementPtrInst
 decl_stmt|;
@@ -89,6 +104,9 @@ name|Loop
 decl_stmt|;
 name|class
 name|ScalarEvolution
+decl_stmt|;
+name|class
+name|TargetTransformInfo
 decl_stmt|;
 name|class
 name|Type
@@ -255,6 +273,82 @@ name|unsigned
 name|EltNo
 parameter_list|)
 function_decl|;
+comment|/// \brief Get splat value if the input is a splat vector or return nullptr.
+comment|/// The value may be extracted from a splat constants vector or from
+comment|/// a sequence of instructions that broadcast a single value into a vector.
+specifier|const
+name|Value
+modifier|*
+name|getSplatValue
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// \brief Compute a map of integer instructions to their minimum legal type
+comment|/// size.
+comment|///
+comment|/// C semantics force sub-int-sized values (e.g. i8, i16) to be promoted to int
+comment|/// type (e.g. i32) whenever arithmetic is performed on them.
+comment|///
+comment|/// For targets with native i8 or i16 operations, usually InstCombine can shrink
+comment|/// the arithmetic type down again. However InstCombine refuses to create
+comment|/// illegal types, so for targets without i8 or i16 registers, the lengthening
+comment|/// and shrinking remains.
+comment|///
+comment|/// Most SIMD ISAs (e.g. NEON) however support vectors of i8 or i16 even when
+comment|/// their scalar equivalents do not, so during vectorization it is important to
+comment|/// remove these lengthens and truncates when deciding the profitability of
+comment|/// vectorization.
+comment|///
+comment|/// This function analyzes the given range of instructions and determines the
+comment|/// minimum type size each can be converted to. It attempts to remove or
+comment|/// minimize type size changes across each def-use chain, so for example in the
+comment|/// following code:
+comment|///
+comment|///   %1 = load i8, i8*
+comment|///   %2 = add i8 %1, 2
+comment|///   %3 = load i16, i16*
+comment|///   %4 = zext i8 %2 to i32
+comment|///   %5 = zext i16 %3 to i32
+comment|///   %6 = add i32 %4, %5
+comment|///   %7 = trunc i32 %6 to i16
+comment|///
+comment|/// Instruction %6 must be done at least in i16, so computeMinimumValueSizes
+comment|/// will return: {%1: 16, %2: 16, %3: 16, %4: 16, %5: 16, %6: 16, %7: 16}.
+comment|///
+comment|/// If the optional TargetTransformInfo is provided, this function tries harder
+comment|/// to do less work by only looking at illegal types.
+name|MapVector
+operator|<
+name|Instruction
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|computeMinimumValueSizes
+argument_list|(
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|Blocks
+argument_list|,
+name|DemandedBits
+operator|&
+name|DB
+argument_list|,
+specifier|const
+name|TargetTransformInfo
+operator|*
+name|TTI
+operator|=
+name|nullptr
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -235,16 +235,6 @@ name|ELF
 operator|::
 name|ELFOSABI_FREEBSD
 return|;
-case|case
-name|Triple
-operator|::
-name|Linux
-case|:
-return|return
-name|ELF
-operator|::
-name|ELFOSABI_LINUX
-return|;
 default|default:
 return|return
 name|ELF

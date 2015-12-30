@@ -74,13 +74,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARCInstKind.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/Analysis/ObjCARCInstKind.h"
 end_include
 
 begin_include
@@ -262,7 +262,7 @@ function_decl|;
 block|}
 struct|;
 comment|/// \brief This class summarizes several per-pointer runtime properties which
-comment|/// are propogated through the flow graph.
+comment|/// are propagated through the flow graph.
 name|class
 name|PtrState
 block|{
@@ -597,7 +597,7 @@ name|I
 argument_list|)
 block|;
 comment|/// Return true if this set of releases can be paired with a release. Modifies
-comment|/// state appropriately to reflect that the matching occured if it is
+comment|/// state appropriately to reflect that the matching occurred if it is
 comment|/// successful.
 comment|///
 comment|/// It is assumed that one has already checked that the RCIdentity of the
@@ -656,7 +656,7 @@ argument_list|)
 block|;
 comment|/// Return true if this set of retains can be paired with the given
 comment|/// release. Modifies state appropriately to reflect that the matching
-comment|/// occured.
+comment|/// occurred.
 name|bool
 name|MatchWithRelease
 argument_list|(

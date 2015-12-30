@@ -40,7 +40,7 @@ comment|// Defines an interface to a lib.exe-compatible driver that also underst
 end_comment
 
 begin_comment
-comment|// bitcode files. Used by llvm-lib and lld-link2 /lib.
+comment|// bitcode files. Used by llvm-lib and lld-link /lib.
 end_comment
 
 begin_comment

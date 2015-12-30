@@ -614,7 +614,7 @@ name|getMachineCombinerPatterns
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|SmallVectorImpl<MachineCombinerPattern::MC_PATTERN>&Patterns
+argument|SmallVectorImpl<MachineCombinerPattern>&Patterns
 argument_list|)
 specifier|const
 name|override
@@ -626,7 +626,7 @@ name|genAlternativeCodeSequence
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|MachineCombinerPattern::MC_PATTERN Pattern
+argument|MachineCombinerPattern Pattern
 argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&InsInstrs
 argument_list|,
@@ -651,6 +651,55 @@ name|expandPostRAPseudo
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|decomposeMachineOperandsTargetFlags
+argument_list|(
+argument|unsigned TF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableDirectMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableBitmaskMachineOperandTargetFlags
+argument_list|()
 specifier|const
 name|override
 block|;

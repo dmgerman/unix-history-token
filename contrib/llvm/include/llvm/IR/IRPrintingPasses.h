@@ -181,6 +181,21 @@ operator|=
 literal|""
 argument_list|)
 decl_stmt|;
+comment|/// Print out a name of an LLVM value without any prefixes.
+comment|///
+comment|/// The name is surrounded with ""'s and escaped if it has any special or
+comment|/// non-printable characters in it.
+name|void
+name|printLLVMNameWithoutPrefix
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// \brief Pass for printing a Module as LLVM's text IR assembly.
 comment|///
 comment|/// Note: This pass is for use with the new pass manager. Use the create...Pass

@@ -128,6 +128,35 @@ name|MCSymbol
 operator|*
 name|LabelBegin
 block|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+literal|8
+operator|>
+name|ImportedEntityList
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|ImportedEntityList
+operator|>
+name|ImportedEntityMap
+expr_stmt|;
+name|ImportedEntityMap
+name|ImportedEntities
+decl_stmt|;
 comment|/// GlobalNames - A map of globally visible named entities for this unit.
 name|StringMap
 operator|<
@@ -136,7 +165,7 @@ name|DIE
 operator|*
 operator|>
 name|GlobalNames
-block|;
+expr_stmt|;
 comment|/// GlobalTypes - A map of globally visible types for this unit.
 name|StringMap
 operator|<
@@ -145,57 +174,61 @@ name|DIE
 operator|*
 operator|>
 name|GlobalTypes
-block|;
+expr_stmt|;
 comment|// List of range lists for a given compile unit, separate from the ranges for
 comment|// the CU itself.
 name|SmallVector
 operator|<
 name|RangeSpanList
-block|,
+operator|,
 literal|1
 operator|>
 name|CURangeLists
-block|;
+expr_stmt|;
 comment|// List of ranges for a given compile unit.
 name|SmallVector
 operator|<
 name|RangeSpan
-block|,
+operator|,
 literal|2
 operator|>
 name|CURanges
-block|;
+expr_stmt|;
 comment|// The base address of this unit, if any. Used for relative references in
 comment|// ranges/locs.
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|BaseAddress
-block|;
+decl_stmt|;
 comment|/// \brief Construct a DIE for the given DbgVariable without initializing the
 comment|/// DbgVariable's DIE reference.
 name|DIE
-operator|*
+modifier|*
 name|constructVariableDIEImpl
-argument_list|(
-argument|const DbgVariable&DV
-argument_list|,
-argument|bool Abstract
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|DbgVariable
+modifier|&
+name|DV
+parameter_list|,
+name|bool
+name|Abstract
+parameter_list|)
+function_decl|;
 name|bool
 name|isDwoUnit
 argument_list|()
 specifier|const
 name|override
-block|;
+expr_stmt|;
 name|bool
 name|includeMinimalInlineScopes
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|DwarfCompileUnit
 argument_list|(
 argument|unsigned UID
@@ -208,7 +241,7 @@ argument|DwarfDebug *DW
 argument_list|,
 argument|DwarfFile *DWU
 argument_list|)
-block|;
+empty_stmt|;
 name|DwarfCompileUnit
 operator|*
 name|getSkeleton
@@ -221,52 +254,68 @@ return|;
 block|}
 name|void
 name|initStmtList
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Apply the DW_AT_stmt_list from this compile unit to the specified DIE.
 name|void
 name|applyStmtList
-argument_list|(
+parameter_list|(
 name|DIE
-operator|&
+modifier|&
 name|D
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// getOrCreateGlobalVariableDIE - get or create global variable DIE.
 name|DIE
-operator|*
+modifier|*
 name|getOrCreateGlobalVariableDIE
-argument_list|(
+parameter_list|(
 specifier|const
 name|DIGlobalVariable
-operator|*
+modifier|*
 name|GV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// addLabelAddress - Add a dwarf label attribute data and value using
 comment|/// either DW_FORM_addr or DW_FORM_GNU_addr_index.
 name|void
 name|addLabelAddress
 argument_list|(
-argument|DIE&Die
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|dwarf::Attribute Attribute
+name|dwarf
+operator|::
+name|Attribute
+name|Attribute
 argument_list|,
-argument|const MCSymbol *Label
+specifier|const
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// addLocalLabelAddress - Add a dwarf label attribute data and value using
 comment|/// DW_FORM_addr only.
 name|void
 name|addLocalLabelAddress
 argument_list|(
-argument|DIE&Die
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|dwarf::Attribute Attribute
+name|dwarf
+operator|::
+name|Attribute
+name|Attribute
 argument_list|,
-argument|const MCSymbol *Label
+specifier|const
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// addSectionDelta - Add a label delta attribute data and value.
 name|DIE
 operator|::
@@ -281,12 +330,12 @@ argument|const MCSymbol *Hi
 argument_list|,
 argument|const MCSymbol *Lo
 argument_list|)
-block|;
+expr_stmt|;
 name|DwarfCompileUnit
-operator|&
+modifier|&
 name|getCU
-argument_list|()
-name|override
+parameter_list|()
+function|override
 block|{
 return|return
 operator|*
@@ -296,37 +345,63 @@ block|}
 name|unsigned
 name|getOrCreateSourceID
 argument_list|(
-argument|StringRef FileName
+name|StringRef
+name|FileName
 argument_list|,
-argument|StringRef DirName
+name|StringRef
+name|DirName
 argument_list|)
 name|override
-block|;
+decl_stmt|;
+name|void
+name|addImportedEntity
+parameter_list|(
+specifier|const
+name|DIImportedEntity
+modifier|*
+name|IE
+parameter_list|)
+block|{
+name|ImportedEntities
+index|[
+name|IE
+operator|->
+name|getScope
+argument_list|()
+index|]
+operator|.
+name|push_back
+argument_list|(
+name|IE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// addRange - Add an address range to the list of ranges for this unit.
 name|void
 name|addRange
-argument_list|(
-argument|RangeSpan Range
-argument_list|)
-block|;
+parameter_list|(
+name|RangeSpan
+name|Range
+parameter_list|)
+function_decl|;
 name|void
 name|attachLowHighPC
-argument_list|(
+parameter_list|(
 name|DIE
-operator|&
+modifier|&
 name|D
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|Begin
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|End
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// addSectionLabel - Add a Dwarf section label attribute data and value.
 comment|///
 name|DIE
@@ -342,21 +417,21 @@ argument|const MCSymbol *Label
 argument_list|,
 argument|const MCSymbol *Sec
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Find DIE for the given subprogram and attach appropriate
 comment|/// DW_AT_low_pc and DW_AT_high_pc attributes. If there are global
 comment|/// variables in this scope then create and insert DIEs for these
 comment|/// variables.
 name|DIE
-operator|&
+modifier|&
 name|updateSubprogramScopeDIE
-argument_list|(
+parameter_list|(
 specifier|const
 name|DISubprogram
-operator|*
+modifier|*
 name|SP
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|constructScopeDIE
 argument_list|(
@@ -372,7 +447,7 @@ operator|>
 operator|&
 name|FinalChildren
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief A helper function to construct a RangeSpanList for a given
 comment|/// lexical scope.
 name|void
@@ -390,7 +465,7 @@ literal|2
 operator|>
 name|Range
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|attachRangesOrLowHighPC
 argument_list|(
@@ -406,7 +481,7 @@ literal|2
 operator|>
 name|Ranges
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|attachRangesOrLowHighPC
 argument_list|(
@@ -422,61 +497,66 @@ operator|>
 operator|&
 name|Ranges
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief This scope represents inlined body of a function. Construct
 comment|/// DIE to represent this concrete inlined copy of the function.
 name|DIE
-operator|*
+modifier|*
 name|constructInlinedScopeDIE
-argument_list|(
+parameter_list|(
 name|LexicalScope
-operator|*
+modifier|*
 name|Scope
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Construct new DW_TAG_lexical_block for this scope and
 comment|/// attach DW_AT_low_pc/DW_AT_high_pc labels.
 name|DIE
-operator|*
+modifier|*
 name|constructLexicalScopeDIE
-argument_list|(
+parameter_list|(
 name|LexicalScope
-operator|*
+modifier|*
 name|Scope
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
 name|DIE
-operator|*
+modifier|*
 name|constructVariableDIE
-argument_list|(
-argument|DbgVariable&DV
-argument_list|,
-argument|bool Abstract = false
-argument_list|)
-block|;
-name|DIE
-operator|*
-name|constructVariableDIE
-argument_list|(
+parameter_list|(
 name|DbgVariable
-operator|&
+modifier|&
 name|DV
-argument_list|,
+parameter_list|,
+name|bool
+name|Abstract
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|constructVariableDIE
+parameter_list|(
+name|DbgVariable
+modifier|&
+name|DV
+parameter_list|,
 specifier|const
 name|LexicalScope
-operator|&
+modifier|&
 name|Scope
-argument_list|,
+parameter_list|,
 name|DIE
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|ObjectPointer
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// A helper function to create children of a Scope DIE.
 name|DIE
-operator|*
+modifier|*
 name|createScopeChildrenDIE
 argument_list|(
 name|LexicalScope
@@ -497,78 +577,81 @@ name|ChildScopeCount
 operator|=
 name|nullptr
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Construct a DIE for this subprogram scope.
 name|void
 name|constructSubprogramScopeDIE
-argument_list|(
+parameter_list|(
 name|LexicalScope
-operator|*
+modifier|*
 name|Scope
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|DIE
-operator|*
+modifier|*
 name|createAndAddScopeChildren
-argument_list|(
+parameter_list|(
 name|LexicalScope
-operator|*
+modifier|*
 name|Scope
-argument_list|,
+parameter_list|,
 name|DIE
-operator|&
+modifier|&
 name|ScopeDIE
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|constructAbstractSubprogramScopeDIE
-argument_list|(
+parameter_list|(
 name|LexicalScope
-operator|*
+modifier|*
 name|Scope
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Construct import_module DIE.
 name|DIE
-operator|*
+modifier|*
 name|constructImportedEntityDIE
-argument_list|(
+parameter_list|(
 specifier|const
 name|DIImportedEntity
-operator|*
+modifier|*
 name|Module
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|finishSubprogramDefinition
-argument_list|(
+parameter_list|(
 specifier|const
 name|DISubprogram
-operator|*
+modifier|*
 name|SP
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|collectDeadVariables
-argument_list|(
+parameter_list|(
 specifier|const
 name|DISubprogram
-operator|*
+modifier|*
 name|SP
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Set the skeleton unit associated with this unit.
 name|void
 name|setSkeleton
-argument_list|(
-argument|DwarfCompileUnit&Skel
-argument_list|)
+parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|Skel
+parameter_list|)
 block|{
 name|Skeleton
 operator|=
 operator|&
 name|Skel
-block|; }
+expr_stmt|;
+block|}
 specifier|const
 name|MCSymbol
 operator|*
@@ -590,7 +673,7 @@ return|;
 block|}
 name|unsigned
 name|getLength
-argument_list|()
+parameter_list|()
 block|{
 return|return
 sizeof|sizeof
@@ -611,10 +694,11 @@ block|}
 name|void
 name|emitHeader
 argument_list|(
-argument|bool UseOffsets
+name|bool
+name|UseOffsets
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 name|MCSymbol
 operator|*
 name|getLabelBegin
@@ -634,26 +718,41 @@ comment|/// Add a new global name to the compile unit.
 name|void
 name|addGlobalName
 argument_list|(
-argument|StringRef Name
+name|StringRef
+name|Name
 argument_list|,
-argument|DIE&Die
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|const DIScope *Context
+specifier|const
+name|DIScope
+operator|*
+name|Context
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 comment|/// Add a new global type to the compile unit.
 name|void
 name|addGlobalType
 argument_list|(
-argument|const DIType *Ty
+specifier|const
+name|DIType
+operator|*
+name|Ty
 argument_list|,
-argument|const DIE&Die
+specifier|const
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|const DIScope *Context
+specifier|const
+name|DIScope
+operator|*
+name|Context
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 specifier|const
 name|StringMap
 operator|<
@@ -690,25 +789,39 @@ comment|/// Add DW_AT_location attribute for a DbgVariable based on provided
 comment|/// MachineLocation.
 name|void
 name|addVariableAddress
-argument_list|(
-argument|const DbgVariable&DV
-argument_list|,
-argument|DIE&Die
-argument_list|,
-argument|MachineLocation Location
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|DbgVariable
+modifier|&
+name|DV
+parameter_list|,
+name|DIE
+modifier|&
+name|Die
+parameter_list|,
+name|MachineLocation
+name|Location
+parameter_list|)
+function_decl|;
 comment|/// Add an address attribute to a die based on the location provided.
 name|void
 name|addAddress
 argument_list|(
-argument|DIE&Die
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|dwarf::Attribute Attribute
+name|dwarf
+operator|::
+name|Attribute
+name|Attribute
 argument_list|,
-argument|const MachineLocation&Location
+specifier|const
+name|MachineLocation
+operator|&
+name|Location
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// Start with the address based on the location provided, and generate the
 comment|/// DWARF information necessary to find the actual variable (navigating the
 comment|/// extra location information encoded in the type) based on the starting
@@ -716,63 +829,88 @@ comment|/// location.  Add the DWARF information to the die.
 name|void
 name|addComplexAddress
 argument_list|(
-argument|const DbgVariable&DV
+specifier|const
+name|DbgVariable
+operator|&
+name|DV
 argument_list|,
-argument|DIE&Die
+name|DIE
+operator|&
+name|Die
 argument_list|,
-argument|dwarf::Attribute Attribute
+name|dwarf
+operator|::
+name|Attribute
+name|Attribute
 argument_list|,
-argument|const MachineLocation&Location
+specifier|const
+name|MachineLocation
+operator|&
+name|Location
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// Add a Dwarf loclistptr attribute data and value.
 name|void
 name|addLocationList
 argument_list|(
-argument|DIE&Die
-argument_list|,
-argument|dwarf::Attribute Attribute
-argument_list|,
-argument|unsigned Index
-argument_list|)
-block|;
-name|void
-name|applyVariableAttributes
-argument_list|(
-specifier|const
-name|DbgVariable
-operator|&
-name|Var
-argument_list|,
 name|DIE
 operator|&
-name|VariableDie
+name|Die
+argument_list|,
+name|dwarf
+operator|::
+name|Attribute
+name|Attribute
+argument_list|,
+name|unsigned
+name|Index
 argument_list|)
-block|;
+decl_stmt|;
+name|void
+name|applyVariableAttributes
+parameter_list|(
+specifier|const
+name|DbgVariable
+modifier|&
+name|Var
+parameter_list|,
+name|DIE
+modifier|&
+name|VariableDie
+parameter_list|)
+function_decl|;
 comment|/// Add a Dwarf expression attribute data and value.
 name|void
 name|addExpr
 argument_list|(
-argument|DIELoc&Die
+name|DIELoc
+operator|&
+name|Die
 argument_list|,
-argument|dwarf::Form Form
+name|dwarf
+operator|::
+name|Form
+name|Form
 argument_list|,
-argument|const MCExpr *Expr
+specifier|const
+name|MCExpr
+operator|*
+name|Expr
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|applySubprogramAttributesToDefinition
-argument_list|(
+parameter_list|(
 specifier|const
 name|DISubprogram
-operator|*
+modifier|*
 name|SP
-argument_list|,
+parameter_list|,
 name|DIE
-operator|&
+modifier|&
 name|SPDie
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// getRangeLists - Get the vector of range lists.
 specifier|const
 name|SmallVectorImpl
@@ -814,7 +952,7 @@ block|}
 name|SmallVector
 operator|<
 name|RangeSpan
-block|,
+operator|,
 literal|2
 operator|>
 name|takeRanges
@@ -831,14 +969,18 @@ return|;
 block|}
 name|void
 name|setBaseAddress
-argument_list|(
-argument|const MCSymbol *Base
-argument_list|)
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|*
+name|Base
+parameter_list|)
 block|{
 name|BaseAddress
 operator|=
 name|Base
-block|; }
+expr_stmt|;
+block|}
 specifier|const
 name|MCSymbol
 operator|*
@@ -850,11 +992,15 @@ return|return
 name|BaseAddress
 return|;
 block|}
-expr|}
-block|;  }
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end llvm namespace
 end_comment
 

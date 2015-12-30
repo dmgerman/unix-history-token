@@ -131,11 +131,13 @@ block|;
 name|unsigned
 name|StackPtr
 block|;
-comment|/// Emit a call to the target's stack probe function. This is required for all
+comment|/// Emit target stack probe code. This is required for all
 comment|/// large stack allocations on Windows. The caller is required to materialize
-comment|/// the number of bytes to probe in RAX/EAX.
-name|void
-name|emitStackProbeCall
+comment|/// the number of bytes to probe in RAX/EAX. Returns instruction just
+comment|/// after the expansion.
+name|MachineInstr
+operator|*
+name|emitStackProbe
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
@@ -144,8 +146,21 @@ argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
 argument|DebugLoc DL
+argument_list|,
+argument|bool InProlog
 argument_list|)
 specifier|const
+block|;
+comment|/// Replace a StackProbe inline-stub with the actual probe code inline.
+name|void
+name|inlineStackProbe
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&PrologMBB
+argument_list|)
+specifier|const
+name|override
 block|;
 name|void
 name|emitCalleeSavedFrameMoves
@@ -285,16 +300,6 @@ specifier|const
 name|override
 block|;
 name|int
-name|getFrameIndexOffset
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|)
-specifier|const
-name|override
-block|;
-name|int
 name|getFrameIndexReference
 argument_list|(
 argument|const MachineFunction&MF
@@ -305,15 +310,6 @@ argument|unsigned&FrameReg
 argument_list|)
 specifier|const
 name|override
-block|;
-name|int
-name|getFrameIndexOffsetFromSP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|)
-specifier|const
 block|;
 name|int
 name|getFrameIndexReferenceFromSP
@@ -335,6 +331,24 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getWinEHParentFrameOffset
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|processFunctionBeforeFrameFinalized
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|RegScavenger *RS
 argument_list|)
 specifier|const
 name|override
@@ -390,8 +404,15 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|private
-operator|:
+comment|/// Returns true if the target will correctly handle shrink wrapping.
+name|bool
+name|enableShrinkWrapping
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// convertArgMovsToPushes - This method tries to convert a call sequence
 comment|/// that uses sub and mov instructions to put the argument onto the stack
 comment|/// into a series of pushes.
@@ -409,13 +430,6 @@ argument|uint64_t Amount
 argument_list|)
 specifier|const
 block|;
-name|uint64_t
-name|calculateMaxStackAlign
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 comment|/// Wraps up getting a CFI index and building a MachineInstr for it.
 name|void
 name|BuildCFI
@@ -430,6 +444,83 @@ argument|MCCFIInstruction CFIInst
 argument_list|)
 specifier|const
 block|;
+comment|/// Sets up EBP and optionally ESI based on the incoming EBP value.  Only
+comment|/// needed for 32-bit. Used in funclet prologues and at catchret destinations.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|restoreWin32EHStackPointers
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|bool RestoreSP = false
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|uint64_t
+name|calculateMaxStackAlign
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// Emit target stack probe as a call to a helper function
+name|MachineInstr
+operator|*
+name|emitStackProbeCall
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|bool InProlog
+argument_list|)
+specifier|const
+block|;
+comment|/// Emit target stack probe as an inline sequence.
+name|MachineInstr
+operator|*
+name|emitStackProbeInline
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|bool InProlog
+argument_list|)
+specifier|const
+block|;
+comment|/// Emit a stub to later inline the target stack probe.
+name|MachineInstr
+operator|*
+name|emitStackProbeInlineStub
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|bool InProlog
+argument_list|)
+specifier|const
+block|;
 comment|/// Aligns the stack pointer by ANDing it with -MaxAlign.
 name|void
 name|BuildStackAlignAND
@@ -440,7 +531,23 @@ argument|MachineBasicBlock::iterator MBBI
 argument_list|,
 argument|DebugLoc DL
 argument_list|,
+argument|unsigned Reg
+argument_list|,
 argument|uint64_t MaxAlign
+argument_list|)
+specifier|const
+block|;
+comment|/// Make small positive stack adjustments using POPs.
+name|bool
+name|adjustStackWithPops
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|int Offset
 argument_list|)
 specifier|const
 block|;
@@ -457,6 +564,20 @@ argument_list|,
 argument|int64_t Offset
 argument_list|,
 argument|bool InEpilogue
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getPSPSlotOffsetFromSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getWinEHFuncletFrameSize
+argument_list|(
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|; }

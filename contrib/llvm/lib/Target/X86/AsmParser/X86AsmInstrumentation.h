@@ -99,6 +99,7 @@ name|Ctx
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo
+modifier|*
 modifier|&
 name|STI
 parameter_list|)
@@ -181,6 +182,7 @@ name|Ctx
 parameter_list|,
 specifier|const
 name|MCSubtargetInfo
+modifier|*
 modifier|&
 name|STI
 parameter_list|)
@@ -189,6 +191,7 @@ name|X86AsmInstrumentation
 argument_list|(
 specifier|const
 name|MCSubtargetInfo
+operator|*
 operator|&
 name|STI
 argument_list|)
@@ -221,6 +224,7 @@ parameter_list|)
 function_decl|;
 specifier|const
 name|MCSubtargetInfo
+modifier|*
 modifier|&
 name|STI
 decl_stmt|;

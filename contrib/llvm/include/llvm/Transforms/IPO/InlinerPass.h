@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCacheTracker
+decl_stmt|;
+name|class
 name|CallSite
 decl_stmt|;
 name|class
@@ -233,6 +236,12 @@ name|shouldInline
 argument_list|(
 argument|CallSite CS
 argument_list|)
+block|;
+name|protected
+operator|:
+name|AssumptionCacheTracker
+operator|*
+name|ACT
 block|; }
 decl_stmt|;
 block|}

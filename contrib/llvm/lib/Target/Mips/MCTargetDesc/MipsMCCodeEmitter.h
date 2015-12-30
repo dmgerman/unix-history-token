@@ -426,6 +426,22 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
+comment|// getBranchTarget26OpValueMM - Return binary encoding of the branch
+comment|// offset operand. If the machine operand requires relocation,
+comment|// record the relocation and return zero.
+name|unsigned
+name|getBranchTarget26OpValueMM
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
 comment|// getJumpOffset16OpValue - Return binary encoding of the jump
 comment|// offset operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.
@@ -549,7 +565,33 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
+name|getMemEncodingMMImm9
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
 name|getMemEncodingMMImm12
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemEncodingMMImm16
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -575,19 +617,6 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
-name|getSizeExtEncoding
-argument_list|(
-argument|const MCInst&MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|SmallVectorImpl<MCFixup>&Fixups
-argument_list|,
-argument|const MCSubtargetInfo&STI
-argument_list|)
-specifier|const
-block|;
-name|unsigned
 name|getSizeInsEncoding
 argument_list|(
 argument|const MCInst&MI
@@ -600,9 +629,17 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
-comment|// getLSAImmEncoding - Return binary encoding of LSA immediate.
+comment|/// Subtract Offset then encode as a N-bit unsigned integer.
+name|template
+operator|<
 name|unsigned
-name|getLSAImmEncoding
+name|Bits
+block|,
+name|int
+name|Offset
+operator|>
+name|unsigned
+name|getUImmWithOffsetEncoding
 argument_list|(
 argument|const MCInst&MI
 argument_list|,

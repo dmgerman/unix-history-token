@@ -75,14 +75,36 @@ directive|include
 file|<cstddef>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|detail
+block|{
+comment|// For everything other than an abstract class we can calulate alignment by
+comment|// building a class with a single character and a member of the given type.
 name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|bool
+operator|=
+name|std
+operator|::
+name|is_abstract
+operator|<
+name|T
+operator|>
+operator|::
+name|value
 operator|>
 expr|struct
 name|AlignmentCalcImpl
@@ -122,6 +144,53 @@ block|{}
 comment|// Never instantiate.
 block|}
 expr_stmt|;
+comment|// Abstract base class helper, this will have the minimal alignment and size
+comment|// for any abstract class. We don't even define its destructor because this
+comment|// type should never be used in a way that requires it.
+struct|struct
+name|AlignmentCalcImplBase
+block|{
+name|virtual
+operator|~
+name|AlignmentCalcImplBase
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+block|}
+struct|;
+comment|// When we have an abstract class type, specialize the alignment computation
+comment|// engine to create another abstract class that derives from both an empty
+comment|// abstract base class and the provided type. This has the same effect as the
+comment|// above except that it handles the fact that we can't actually create a member
+comment|// of type T.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|AlignmentCalcImpl
+operator|<
+name|T
+operator|,
+name|true
+operator|>
+operator|:
+name|AlignmentCalcImplBase
+operator|,
+name|T
+block|{
+name|virtual
+operator|~
+name|AlignmentCalcImpl
+argument_list|()
+operator|=
+literal|0
+block|; }
+expr_stmt|;
+block|}
+comment|// End detail namespace.
 comment|/// AlignOf - A templated class that contains an enum value representing
 comment|///  the alignment of the template argument.  For example,
 comment|///  AlignOf<int>::Alignment represents the alignment of type "int".  The
@@ -158,6 +227,8 @@ operator|>
 operator|(
 sizeof|sizeof
 argument_list|(
+name|detail
+operator|::
 name|AlignmentCalcImpl
 operator|<
 name|T
@@ -184,6 +255,8 @@ operator|>
 operator|(
 sizeof|sizeof
 argument_list|(
+name|detail
+operator|::
 name|AlignmentCalcImpl
 operator|<
 name|T

@@ -169,7 +169,7 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|Vol
+name|IsSimple
 argument_list|(
 name|false
 argument_list|)
@@ -195,8 +195,10 @@ expr_stmt|;
 name|bool
 name|WriteMem
 decl_stmt|;
+comment|/// True only if this memory operation is non-volatile, non-atomic, and
+comment|/// unordered.  (See LoadInst/StoreInst for details on each)
 name|bool
-name|Vol
+name|IsSimple
 decl_stmt|;
 comment|// Same Id is set by the target for corresponding load/store intrinsics.
 name|unsigned
@@ -300,11 +302,14 @@ comment|/// \brief Underlying constants for 'cost' values in this interface.
 comment|///
 comment|/// Many APIs in this interface return a cost. This enum defines the
 comment|/// fundamental values that should be used to interpret (and produce) those
-comment|/// costs. The costs are returned as an unsigned rather than a member of this
+comment|/// costs. The costs are returned as an int rather than a member of this
 comment|/// enumeration because it is expected that the cost of one IR instruction
 comment|/// may have a multiplicative factor to it or otherwise won't fit directly
 comment|/// into the enum. Moreover, it is common to sum or average costs which works
 comment|/// better as simple integral values. Thus this enum only provides constants.
+comment|/// Also note that the returned costs are signed integers to make it natural
+comment|/// to add, subtract, and test with zero (a common boundary condition). It is
+comment|/// not expected that 2^32 is a realistic cost to be modeling at any point.
 comment|///
 comment|/// Note that these costs should usually reflect the intersection of code-size
 comment|/// cost and execution cost. A free instruction is typically one that folds
@@ -344,7 +349,7 @@ comment|/// operand type is required.
 comment|///
 comment|/// The returned cost is defined in terms of \c TargetCostConstants, see its
 comment|/// comments for a detailed explanation of the cost values.
-name|unsigned
+name|int
 name|getOperationCost
 argument_list|(
 name|unsigned
@@ -367,9 +372,13 @@ comment|///
 comment|/// The contract for this function is the same as \c getOperationCost except
 comment|/// that it supports an interface that provides extra information specific to
 comment|/// the GEP operation.
-name|unsigned
+name|int
 name|getGEPCost
 argument_list|(
+name|Type
+operator|*
+name|PointeeType
+argument_list|,
 specifier|const
 name|Value
 operator|*
@@ -394,7 +403,7 @@ comment|///
 comment|/// This is the most basic query for estimating call cost: it only knows the
 comment|/// function type and (potentially) the number of arguments at the call site.
 comment|/// The latter is only interesting for varargs function types.
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 name|FunctionType
@@ -413,7 +422,7 @@ comment|/// \brief Estimate the cost of calling a specific function when lowered
 comment|///
 comment|/// This overload adds the ability to reason about the particular function
 comment|/// being called in the event it is a library call with special lowering.
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 specifier|const
@@ -432,7 +441,7 @@ decl_stmt|;
 comment|/// \brief Estimate the cost of calling a specific function when lowered.
 comment|///
 comment|/// This overload allows specifying a set of candidate argument values.
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 specifier|const
@@ -453,7 +462,7 @@ decl_stmt|;
 comment|/// \brief Estimate the cost of an intrinsic when lowered.
 comment|///
 comment|/// Mirrors the \c getCallCost method but uses an intrinsic identifier.
-name|unsigned
+name|int
 name|getIntrinsicCost
 argument_list|(
 name|Intrinsic
@@ -477,7 +486,7 @@ decl_stmt|;
 comment|/// \brief Estimate the cost of an intrinsic when lowered.
 comment|///
 comment|/// Mirrors the \c getCallCost method but uses an intrinsic identifier.
-name|unsigned
+name|int
 name|getIntrinsicCost
 argument_list|(
 name|Intrinsic
@@ -514,7 +523,7 @@ comment|/// cases.
 comment|///
 comment|/// The returned cost is defined in terms of \c TargetCostConstants, see its
 comment|/// comments for a detailed explanation of the cost values.
-name|unsigned
+name|int
 name|getUserCost
 argument_list|(
 specifier|const
@@ -737,19 +746,15 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Return true if the target works with masked instruction
-comment|/// AVX2 allows masks for consecutive load and store for i32 and i64 elements.
-comment|/// AVX-512 architecture will also allow masks for non-consecutive memory
-comment|/// accesses.
+comment|/// \brief Return true if the target supports masked load/store
+comment|/// AVX2 and AVX-512 targets allow masks for consecutive load and store for
+comment|/// 32 and 64 bit elements.
 name|bool
 name|isLegalMaskedStore
 argument_list|(
 name|Type
 operator|*
 name|DataType
-argument_list|,
-name|int
-name|Consecutive
 argument_list|)
 decl|const
 decl_stmt|;
@@ -759,9 +764,27 @@ argument_list|(
 name|Type
 operator|*
 name|DataType
-argument_list|,
-name|int
-name|Consecutive
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return true if the target supports masked gather/scatter
+comment|/// AVX-512 fully supports gather and scatter for vectors with 32 and 64
+comment|/// bits scalar type.
+name|bool
+name|isLegalMaskedScatter
+argument_list|(
+name|Type
+operator|*
+name|DataType
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isLegalMaskedGather
+argument_list|(
+name|Type
+operator|*
+name|DataType
 argument_list|)
 decl|const
 decl_stmt|;
@@ -863,6 +886,12 @@ name|LoopHasReductions
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Enable matching of interleaved access groups.
+name|bool
+name|enableInterleavedAccessVectorization
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return hardware support for population count.
 name|PopcntSupportKind
 name|getPopcntSupport
@@ -884,7 +913,7 @@ decl|const
 decl_stmt|;
 comment|/// \brief Return the expected cost of supporting the floating point operation
 comment|/// of the specified type.
-name|unsigned
+name|int
 name|getFPOpCost
 argument_list|(
 name|Type
@@ -895,7 +924,7 @@ decl|const
 decl_stmt|;
 comment|/// \brief Return the expected cost of materializing for the given integer
 comment|/// immediate of the specified type.
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 specifier|const
@@ -912,7 +941,7 @@ decl_stmt|;
 comment|/// \brief Return the expected cost of materialization for the given integer
 comment|/// immediate of the specified type for a given instruction. The cost can be
 comment|/// zero if the immediate can be folded into the specified instruction.
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 name|unsigned
@@ -932,7 +961,7 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 name|Intrinsic
@@ -1039,7 +1068,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The expected cost of arithmetic ops, such as mul, xor, fsub, etc.
-name|unsigned
+name|int
 name|getArithmeticInstrCost
 argument_list|(
 name|unsigned
@@ -1074,7 +1103,7 @@ decl_stmt|;
 comment|/// \return The cost of a shuffle instruction of kind Kind and of type Tp.
 comment|/// The index and subtype parameters are used by the subvector insertion and
 comment|/// extraction shuffle kinds.
-name|unsigned
+name|int
 name|getShuffleCost
 argument_list|(
 name|ShuffleKind
@@ -1099,7 +1128,7 @@ decl|const
 decl_stmt|;
 comment|/// \return The expected cost of cast instructions, such as bitcast, trunc,
 comment|/// zext, etc.
-name|unsigned
+name|int
 name|getCastInstrCost
 argument_list|(
 name|unsigned
@@ -1117,7 +1146,7 @@ decl|const
 decl_stmt|;
 comment|/// \return The expected cost of control-flow related instructions such as
 comment|/// Phi, Ret, Br.
-name|unsigned
+name|int
 name|getCFInstrCost
 argument_list|(
 name|unsigned
@@ -1126,7 +1155,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \returns The expected cost of compare and select instructions.
-name|unsigned
+name|int
 name|getCmpSelInstrCost
 argument_list|(
 name|unsigned
@@ -1146,7 +1175,7 @@ decl|const
 decl_stmt|;
 comment|/// \return The expected cost of vector Insert and Extract.
 comment|/// Use -1 to indicate that there is no information on the index value.
-name|unsigned
+name|int
 name|getVectorInstrCost
 argument_list|(
 name|unsigned
@@ -1165,7 +1194,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The cost of Load and Store instructions.
-name|unsigned
+name|int
 name|getMemoryOpCost
 argument_list|(
 name|unsigned
@@ -1184,7 +1213,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The cost of masked Load and Store instructions.
-name|unsigned
+name|int
 name|getMaskedMemoryOpCost
 argument_list|(
 name|unsigned
@@ -1202,6 +1231,35 @@ name|AddressSpace
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The cost of Gather or Scatter operation
+comment|/// \p Opcode - is a type of memory access Load or Store
+comment|/// \p DataTy - a vector type of the data to be loaded or stored
+comment|/// \p Ptr - pointer [or vector of pointers] - address[es] in memory
+comment|/// \p VariableMask - true when the memory access is predicated with a mask
+comment|///                   that is not a compile-time constant
+comment|/// \p Alignment - alignment of single element
+name|int
+name|getGatherScatterOpCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|DataTy
+argument_list|,
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|bool
+name|VariableMask
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \return The cost of the interleaved memory operation.
 comment|/// \p Opcode is the memory operation code
 comment|/// \p VecTy is the vector type of the interleaved access.
@@ -1210,7 +1268,7 @@ comment|/// \p Indices is the indices for interleaved load members (as interleav
 comment|///    load allows gaps)
 comment|/// \p Alignment is the alignment of the memory operation
 comment|/// \p AddressSpace is address space of the pointer.
-name|unsigned
+name|int
 name|getInterleavedMemoryOpCost
 argument_list|(
 name|unsigned
@@ -1250,7 +1308,7 @@ comment|///  ((v0+v1), (v2, v3), undef, undef)
 comment|/// Split:
 comment|///  (v0, v1, v2, v3)
 comment|///  ((v0+v2), (v1+v3), undef, undef)
-name|unsigned
+name|int
 name|getReductionCost
 argument_list|(
 name|unsigned
@@ -1265,8 +1323,8 @@ name|IsPairwiseForm
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \returns The cost of Intrinsic instructions.
-name|unsigned
+comment|/// \returns The cost of Intrinsic instructions. Types analysis only.
+name|int
 name|getIntrinsicInstrCost
 argument_list|(
 name|Intrinsic
@@ -1287,8 +1345,30 @@ name|Tys
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The cost of Intrinsic instructions. Analyses the real arguments.
+name|int
+name|getIntrinsicInstrCost
+argument_list|(
+name|Intrinsic
+operator|::
+name|ID
+name|ID
+argument_list|,
+name|Type
+operator|*
+name|RetTy
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \returns The cost of Call instructions.
-name|unsigned
+name|int
 name|getCallInstrCost
 argument_list|(
 name|Function
@@ -1326,7 +1406,7 @@ comment|/// types and scalar types. Such targets should override this function.
 comment|/// The 'IsComplex' parameter is a hint that the address computation is likely
 comment|/// to involve multiple instructions and as such unlikely to be merged into
 comment|/// the address indexing mode.
-name|unsigned
+name|int
 name|getAddressComputationCost
 argument_list|(
 name|Type
@@ -1395,7 +1475,7 @@ decl_stmt|;
 comment|/// \returns True if the two functions have compatible attributes for inlining
 comment|/// purposes.
 name|bool
-name|hasCompatibleFunctionAttributes
+name|areInlineCompatible
 argument_list|(
 specifier|const
 name|Function
@@ -1462,7 +1542,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getOperationCost
 argument_list|(
 argument|unsigned Opcode
@@ -1475,9 +1555,13 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getGEPCost
 argument_list|(
+name|Type
+operator|*
+name|PointeeType
+argument_list|,
 specifier|const
 name|Value
 operator|*
@@ -1495,7 +1579,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 argument|FunctionType *FTy
@@ -1506,7 +1590,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 argument|const Function *F
@@ -1517,7 +1601,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 specifier|const
@@ -1537,7 +1621,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getIntrinsicCost
 argument_list|(
 argument|Intrinsic::ID IID
@@ -1550,7 +1634,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getIntrinsicCost
 argument_list|(
 argument|Intrinsic::ID IID
@@ -1563,7 +1647,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getUserCost
 argument_list|(
 specifier|const
@@ -1661,9 +1745,9 @@ name|virtual
 name|bool
 name|isLegalMaskedStore
 argument_list|(
-argument|Type *DataType
-argument_list|,
-argument|int Consecutive
+name|Type
+operator|*
+name|DataType
 argument_list|)
 operator|=
 literal|0
@@ -1672,9 +1756,31 @@ name|virtual
 name|bool
 name|isLegalMaskedLoad
 argument_list|(
-argument|Type *DataType
-argument_list|,
-argument|int Consecutive
+name|Type
+operator|*
+name|DataType
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalMaskedScatter
+argument_list|(
+name|Type
+operator|*
+name|DataType
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalMaskedGather
+argument_list|(
+name|Type
+operator|*
+name|DataType
 argument_list|)
 operator|=
 literal|0
@@ -1766,6 +1872,13 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|bool
+name|enableInterleavedAccessVectorization
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
 name|PopcntSupportKind
 name|getPopcntSupport
 argument_list|(
@@ -1786,7 +1899,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getFPOpCost
 argument_list|(
 name|Type
@@ -1797,7 +1910,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 specifier|const
@@ -1813,7 +1926,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 argument|unsigned Opc
@@ -1828,7 +1941,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 argument|Intrinsic::ID IID
@@ -1889,7 +2002,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getShuffleCost
 argument_list|(
 argument|ShuffleKind Kind
@@ -1904,7 +2017,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getCastInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -1917,7 +2030,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getCFInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -1926,7 +2039,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getCmpSelInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -1939,7 +2052,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getVectorInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -1952,7 +2065,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getMemoryOpCost
 argument_list|(
 argument|unsigned Opcode
@@ -1967,7 +2080,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getMaskedMemoryOpCost
 argument_list|(
 argument|unsigned Opcode
@@ -1982,7 +2095,24 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
+name|getGatherScatterOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *DataTy
+argument_list|,
+argument|Value *Ptr
+argument_list|,
+argument|bool VariableMask
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
 name|getInterleavedMemoryOpCost
 argument_list|(
 argument|unsigned Opcode
@@ -2001,7 +2131,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getReductionCost
 argument_list|(
 argument|unsigned Opcode
@@ -2014,7 +2144,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getIntrinsicInstrCost
 argument_list|(
 argument|Intrinsic::ID ID
@@ -2027,7 +2157,20 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
+name|getIntrinsicInstrCost
+argument_list|(
+argument|Intrinsic::ID ID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
 name|getCallInstrCost
 argument_list|(
 name|Function
@@ -2060,7 +2203,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|unsigned
+name|int
 name|getAddressComputationCost
 argument_list|(
 argument|Type *Ty
@@ -2117,7 +2260,7 @@ literal|0
 block|;
 name|virtual
 name|bool
-name|hasCompatibleFunctionAttributes
+name|areInlineCompatible
 argument_list|(
 argument|const Function *Caller
 argument_list|,
@@ -2179,7 +2322,7 @@ name|getDataLayout
 argument_list|()
 return|;
 block|}
-name|unsigned
+name|int
 name|getOperationCost
 argument_list|(
 argument|unsigned Opcode
@@ -2203,9 +2346,11 @@ name|OpTy
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getGEPCost
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|const Value *Ptr
 argument_list|,
 argument|ArrayRef<const Value *> Operands
@@ -2217,13 +2362,15 @@ name|Impl
 operator|.
 name|getGEPCost
 argument_list|(
+name|PointeeType
+argument_list|,
 name|Ptr
 argument_list|,
 name|Operands
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 argument|FunctionType *FTy
@@ -2243,7 +2390,7 @@ name|NumArgs
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 argument|const Function *F
@@ -2263,7 +2410,7 @@ name|NumArgs
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getCallCost
 argument_list|(
 argument|const Function *F
@@ -2283,7 +2430,7 @@ name|Arguments
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getIntrinsicCost
 argument_list|(
 argument|Intrinsic::ID IID
@@ -2307,7 +2454,7 @@ name|ParamTys
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getIntrinsicCost
 argument_list|(
 argument|Intrinsic::ID IID
@@ -2331,7 +2478,7 @@ name|Arguments
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getUserCost
 argument_list|(
 argument|const User *U
@@ -2483,8 +2630,6 @@ name|bool
 name|isLegalMaskedStore
 argument_list|(
 argument|Type *DataType
-argument_list|,
-argument|int Consecutive
 argument_list|)
 name|override
 block|{
@@ -2494,8 +2639,6 @@ operator|.
 name|isLegalMaskedStore
 argument_list|(
 name|DataType
-argument_list|,
-name|Consecutive
 argument_list|)
 return|;
 block|}
@@ -2503,8 +2646,6 @@ name|bool
 name|isLegalMaskedLoad
 argument_list|(
 argument|Type *DataType
-argument_list|,
-argument|int Consecutive
 argument_list|)
 name|override
 block|{
@@ -2514,8 +2655,38 @@ operator|.
 name|isLegalMaskedLoad
 argument_list|(
 name|DataType
-argument_list|,
-name|Consecutive
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalMaskedScatter
+argument_list|(
+argument|Type *DataType
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalMaskedScatter
+argument_list|(
+name|DataType
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalMaskedGather
+argument_list|(
+argument|Type *DataType
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalMaskedGather
+argument_list|(
+name|DataType
 argument_list|)
 return|;
 block|}
@@ -2659,6 +2830,18 @@ name|LoopHasReductions
 argument_list|)
 return|;
 block|}
+name|bool
+name|enableInterleavedAccessVectorization
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|enableInterleavedAccessVectorization
+argument_list|()
+return|;
+block|}
 name|PopcntSupportKind
 name|getPopcntSupport
 argument_list|(
@@ -2691,7 +2874,7 @@ name|Ty
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getFPOpCost
 argument_list|(
 argument|Type *Ty
@@ -2707,7 +2890,7 @@ name|Ty
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 argument|const APInt&Imm
@@ -2727,7 +2910,7 @@ name|Ty
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 argument|unsigned Opc
@@ -2755,7 +2938,7 @@ name|Ty
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 argument|Intrinsic::ID IID
@@ -2867,7 +3050,7 @@ name|Opd2PropInfo
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getShuffleCost
 argument_list|(
 argument|ShuffleKind Kind
@@ -2895,7 +3078,7 @@ name|SubTp
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getCastInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -2919,7 +3102,7 @@ name|Src
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getCFInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -2935,7 +3118,7 @@ name|Opcode
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getCmpSelInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -2959,7 +3142,7 @@ name|CondTy
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getVectorInstrCost
 argument_list|(
 argument|unsigned Opcode
@@ -2983,7 +3166,7 @@ name|Index
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getMemoryOpCost
 argument_list|(
 argument|unsigned Opcode
@@ -3011,7 +3194,7 @@ name|AddressSpace
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getMaskedMemoryOpCost
 argument_list|(
 argument|unsigned Opcode
@@ -3039,7 +3222,39 @@ name|AddressSpace
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
+name|getGatherScatterOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *DataTy
+argument_list|,
+argument|Value *Ptr
+argument_list|,
+argument|bool VariableMask
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getGatherScatterOpCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|DataTy
+argument_list|,
+name|Ptr
+argument_list|,
+name|VariableMask
+argument_list|,
+name|Alignment
+argument_list|)
+return|;
+block|}
+name|int
 name|getInterleavedMemoryOpCost
 argument_list|(
 argument|unsigned Opcode
@@ -3075,7 +3290,7 @@ name|AddressSpace
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getReductionCost
 argument_list|(
 argument|unsigned Opcode
@@ -3099,7 +3314,7 @@ name|IsPairwiseForm
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getIntrinsicInstrCost
 argument_list|(
 argument|Intrinsic::ID ID
@@ -3123,7 +3338,31 @@ name|Tys
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
+name|getIntrinsicInstrCost
+argument_list|(
+argument|Intrinsic::ID ID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntrinsicInstrCost
+argument_list|(
+name|ID
+argument_list|,
+name|RetTy
+argument_list|,
+name|Args
+argument_list|)
+return|;
+block|}
+name|int
 name|getCallInstrCost
 argument_list|(
 argument|Function *F
@@ -3163,7 +3402,7 @@ name|Tp
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|int
 name|getAddressComputationCost
 argument_list|(
 argument|Type *Ty
@@ -3241,7 +3480,7 @@ argument_list|)
 return|;
 block|}
 name|bool
-name|hasCompatibleFunctionAttributes
+name|areInlineCompatible
 argument_list|(
 argument|const Function *Caller
 argument_list|,
@@ -3253,7 +3492,7 @@ block|{
 return|return
 name|Impl
 operator|.
-name|hasCompatibleFunctionAttributes
+name|areInlineCompatible
 argument_list|(
 name|Caller
 argument_list|,
@@ -3345,6 +3584,7 @@ name|function
 operator|<
 name|Result
 argument_list|(
+specifier|const
 name|Function
 operator|&
 argument_list|)
@@ -3429,6 +3669,7 @@ block|}
 name|Result
 name|run
 argument_list|(
+specifier|const
 name|Function
 operator|&
 name|F
@@ -3456,6 +3697,7 @@ name|function
 operator|<
 name|Result
 argument_list|(
+specifier|const
 name|Function
 operator|&
 argument_list|)
@@ -3467,6 +3709,7 @@ specifier|static
 name|Result
 name|getDefaultTTI
 argument_list|(
+specifier|const
 name|Function
 operator|&
 name|F
@@ -3520,6 +3763,7 @@ name|TargetTransformInfo
 operator|&
 name|getTTI
 argument_list|(
+specifier|const
 name|Function
 operator|&
 name|F

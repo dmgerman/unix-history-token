@@ -2151,7 +2151,17 @@ comment|// 01  100  0111  1000  110
 name|S12E0W
 init|=
 literal|0x63c7
+block|,
 comment|// 01  100  0111  1000  111
+name|S1E1RP
+init|=
+literal|0x43c8
+block|,
+comment|// 01  000  0111  1001  000
+name|S1E1WP
+init|=
+literal|0x43c9
+comment|// 01  000  0111  1001  001
 block|}
 enum|;
 name|struct
@@ -2533,7 +2543,12 @@ comment|// v8.1a "Privileged Access Never" extension-specific PStates
 name|PAN
 init|=
 literal|0x04
-block|,   }
+block|,
+comment|// v8.2a "User Access Override" extension-specific PStates
+name|UAO
+init|=
+literal|0x03
+block|}
 enum|;
 name|struct
 name|PStateMapper
@@ -2547,6 +2562,41 @@ name|PStateMappings
 index|[]
 block|;
 name|PStateMapper
+argument_list|()
+block|;   }
+decl_stmt|;
+block|}
+name|namespace
+name|AArch64PSBHint
+block|{
+enum|enum
+name|PSBHintValues
+block|{
+name|Invalid
+init|=
+operator|-
+literal|1
+block|,
+comment|// v8.2a "Statistical Profiling" extension-specific PSB operands
+name|CSync
+init|=
+literal|0x11
+block|,
+comment|// psb csync = hint #0x11
+block|}
+enum|;
+name|struct
+name|PSBHintMapper
+range|:
+name|AArch64NamedImmMapper
+block|{
+specifier|const
+specifier|static
+name|Mapping
+name|PSBHintMappings
+index|[]
+block|;
+name|PSBHintMapper
 argument_list|()
 block|;   }
 decl_stmt|;
@@ -3089,6 +3139,11 @@ init|=
 literal|0xc039
 block|,
 comment|// 11  000  0000  0111  001
+name|ID_A64MMFR2_EL1
+init|=
+literal|0xc03a
+block|,
+comment|// 11  000  0000  0111  010
 name|MVFR0_EL1
 init|=
 literal|0xc018
@@ -5962,6 +6017,78 @@ init|=
 literal|0xea01
 block|,
 comment|// 11  101  0100  0000  001
+comment|// v8.2a registers
+name|UAO
+init|=
+literal|0xc214
+block|,
+comment|// 11  000  0100  0010  100
+comment|// v8.2a "Statistical Profiling extension" registers
+name|PMBLIMITR_EL1
+init|=
+literal|0xc4d0
+block|,
+comment|// 11  000  1001  1010  000
+name|PMBPTR_EL1
+init|=
+literal|0xc4d1
+block|,
+comment|// 11  000  1001  1010  001
+name|PMBSR_EL1
+init|=
+literal|0xc4d3
+block|,
+comment|// 11  000  1001  1010  011
+name|PMBIDR_EL1
+init|=
+literal|0xc4d7
+block|,
+comment|// 11  000  1001  1010  111
+name|PMSCR_EL2
+init|=
+literal|0xe4c8
+block|,
+comment|// 11  100  1001  1001  000
+name|PMSCR_EL12
+init|=
+literal|0xecc8
+block|,
+comment|// 11  101  1001  1001  000
+name|PMSCR_EL1
+init|=
+literal|0xc4c8
+block|,
+comment|// 11  000  1001  1001  000
+name|PMSICR_EL1
+init|=
+literal|0xc4ca
+block|,
+comment|// 11  000  1001  1001  010
+name|PMSIRR_EL1
+init|=
+literal|0xc4cb
+block|,
+comment|// 11  000  1001  1001  011
+name|PMSFCR_EL1
+init|=
+literal|0xc4cc
+block|,
+comment|// 11  000  1001  1001  100
+name|PMSEVFR_EL1
+init|=
+literal|0xc4cd
+block|,
+comment|// 11  000  1001  1001  101
+name|PMSLATFR_EL1
+init|=
+literal|0xc4ce
+block|,
+comment|// 11  000  1001  1001  110
+name|PMSIDR_EL1
+init|=
+literal|0xc4cf
+block|,
+comment|// 11  000  1001  1001  111
 comment|// Cyclone specific system registers
 name|CPM_IOACC_CTL_EL3
 init|=

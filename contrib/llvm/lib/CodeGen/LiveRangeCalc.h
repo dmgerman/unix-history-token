@@ -339,7 +339,7 @@ parameter_list|,
 name|unsigned
 name|Reg
 parameter_list|,
-name|unsigned
+name|LaneBitmask
 name|LaneMask
 parameter_list|)
 function_decl|;

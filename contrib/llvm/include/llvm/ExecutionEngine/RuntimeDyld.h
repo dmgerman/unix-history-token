@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Memory.h"
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DIContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_include
@@ -250,13 +262,24 @@ name|RuntimeDyldImpl
 block|;
 name|public
 operator|:
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|object
+operator|::
+name|SectionRef
+operator|,
+name|unsigned
+operator|>
+name|ObjSectionToIDMap
+expr_stmt|;
 name|LoadedObjectInfo
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
 argument_list|,
-argument|unsigned BeginIdx
-argument_list|,
-argument|unsigned EndIdx
+argument|ObjSectionToIDMap ObjSecToIDMap
 argument_list|)
 operator|:
 name|RTDyld
@@ -264,14 +287,9 @@ argument_list|(
 name|RTDyld
 argument_list|)
 block|,
-name|BeginIdx
+name|ObjSecToIDMap
 argument_list|(
-name|BeginIdx
-argument_list|)
-block|,
-name|EndIdx
-argument_list|(
-argument|EndIdx
+argument|ObjSecToIDMap
 argument_list|)
 block|{ }
 name|virtual
@@ -290,31 +308,36 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|;
+decl_stmt|;
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-argument|StringRef Name
-argument_list|)
 specifier|const
-block|;
+name|object
+operator|::
+name|SectionRef
+operator|&
+name|Sec
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|RuntimeDyldImpl
-operator|&
+modifier|&
 name|RTDyld
-block|;
-name|unsigned
-name|BeginIdx
-block|,
-name|EndIdx
-block|;   }
 decl_stmt|;
+name|ObjSectionToIDMap
+name|ObjSecToIDMap
+decl_stmt|;
+block|}
+empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -325,22 +348,36 @@ name|LoadedObjectInfoHelper
 operator|:
 name|LoadedObjectInfo
 block|{
+name|protected
+operator|:
+name|LoadedObjectInfoHelper
+argument_list|(
+specifier|const
+name|LoadedObjectInfoHelper
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|LoadedObjectInfoHelper
+argument_list|()
+operator|=
+expr|default
+block|;
+name|public
+operator|:
 name|LoadedObjectInfoHelper
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
 argument_list|,
-argument|unsigned BeginIdx
-argument_list|,
-argument|unsigned EndIdx
+argument|LoadedObjectInfo::ObjSectionToIDMap ObjSecToIDMap
 argument_list|)
 operator|:
 name|LoadedObjectInfo
 argument_list|(
 argument|RTDyld
 argument_list|,
-argument|BeginIdx
-argument_list|,
-argument|EndIdx
+argument|std::move(ObjSecToIDMap)
 argument_list|)
 block|{}
 name|std
@@ -390,7 +427,6 @@ operator|~
 name|MemoryManager
 argument_list|()
 block|{}
-block|;
 comment|/// Allocate a memory block of (at least) the given size suitable for
 comment|/// executable code. The SectionID is a unique identifier assigned by the
 comment|/// RuntimeDyld instance, and optionally recorded by the memory manager to
@@ -536,7 +572,6 @@ operator|~
 name|SymbolResolver
 argument_list|()
 block|{}
-block|;
 comment|/// This method returns the address of the specified function or variable.
 comment|/// It is used to resolve symbols during module linking.
 comment|///
@@ -755,6 +790,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_RUNTIMEDYLD_H
+end_comment
 
 end_unit
 

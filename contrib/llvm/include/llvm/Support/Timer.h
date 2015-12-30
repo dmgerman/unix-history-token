@@ -283,8 +283,8 @@ name|RHS
 operator|.
 name|MemUsed
 block|;   }
-comment|/// print - Print the current timer to standard error, and reset the "Started"
-comment|/// flag.
+comment|/// Print the current time record to \p OS, with a breakdown showing
+comment|/// contributions to the \p Total time record.
 name|void
 name|print
 argument_list|(
@@ -310,6 +310,11 @@ block|{
 name|TimeRecord
 name|Time
 decl_stmt|;
+comment|// The total time captured
+name|TimeRecord
+name|StartTime
+decl_stmt|;
+comment|// The time startTimer() was last called
 name|std
 operator|::
 name|string
@@ -317,9 +322,13 @@ name|Name
 expr_stmt|;
 comment|// The name of this time variable.
 name|bool
-name|Started
+name|Running
 decl_stmt|;
-comment|// Has this time variable ever been started?
+comment|// Is the timer currently running?
+name|bool
+name|Triggered
+decl_stmt|;
+comment|// Has the timer ever been triggered?
 name|TimerGroup
 modifier|*
 name|TG
@@ -481,20 +490,43 @@ operator|!=
 name|nullptr
 return|;
 block|}
-comment|/// startTimer - Start the timer running.  Time between calls to
-comment|/// startTimer/stopTimer is counted by the Timer class.  Note that these calls
-comment|/// must be correctly paired.
-comment|///
+comment|/// Check if startTimer() has ever been called on this timer.
+name|bool
+name|hasTriggered
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Triggered
+return|;
+block|}
+comment|/// Start the timer running.  Time between calls to startTimer/stopTimer is
+comment|/// counted by the Timer class.  Note that these calls must be correctly
+comment|/// paired.
 name|void
 name|startTimer
 parameter_list|()
 function_decl|;
-comment|/// stopTimer - Stop the timer.
-comment|///
+comment|/// Stop the timer.
 name|void
 name|stopTimer
 parameter_list|()
 function_decl|;
+comment|/// Clear the timer state.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
+comment|/// Return the duration for which this timer has been running.
+name|TimeRecord
+name|getTotalTime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Time
+return|;
+block|}
 name|private
 label|:
 name|friend
@@ -644,8 +676,7 @@ operator|,
 name|std
 operator|::
 name|string
-operator|>
-expr|>
+operator|>>
 name|TimersToPrint
 expr_stmt|;
 name|TimerGroup

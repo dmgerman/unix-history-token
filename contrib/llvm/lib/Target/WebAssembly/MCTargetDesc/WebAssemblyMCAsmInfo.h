@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAsmInfo.h"
+file|"llvm/MC/MCAsmInfoELF.h"
 end_include
 
 begin_decl_stmt
@@ -81,7 +81,7 @@ name|WebAssemblyMCAsmInfo
 name|final
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|public
 operator|:

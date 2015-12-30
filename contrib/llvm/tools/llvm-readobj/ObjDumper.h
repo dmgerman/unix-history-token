@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ObjDumper.h -------------------------------------------------------===//
+comment|//===-- ObjDumper.h ---------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,6 +62,9 @@ block|{
 name|namespace
 name|object
 block|{
+name|class
+name|COFFImportFile
+decl_stmt|;
 name|class
 name|ObjectFile
 decl_stmt|;
@@ -154,6 +157,21 @@ name|void
 name|printHashTable
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printGnuHashTable
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printLoadName
+parameter_list|()
+block|{}
+name|virtual
+name|void
+name|printVersionInfo
+parameter_list|()
+block|{}
 comment|// Only implemented for ARM ELF at this time.
 name|virtual
 name|void
@@ -195,6 +213,42 @@ block|{ }
 name|virtual
 name|void
 name|printCOFFBaseReloc
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printCodeViewDebugInfo
+parameter_list|()
+block|{ }
+comment|// Only implemented for MachO.
+name|virtual
+name|void
+name|printMachODataInCode
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMachOVersionMin
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMachODysymtab
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMachOSegment
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMachOIndirectSymbols
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMachOLinkerOptions
 parameter_list|()
 block|{ }
 name|virtual
@@ -291,6 +345,17 @@ operator|&
 name|Result
 argument_list|)
 expr_stmt|;
+name|void
+name|dumpCOFFImportFile
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|COFFImportFile
+operator|*
+name|File
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

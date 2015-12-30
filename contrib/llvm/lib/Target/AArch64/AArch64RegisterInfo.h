@@ -131,6 +131,16 @@ specifier|const
 name|override
 block|;
 specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegsViaCopy
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
 name|uint32_t
 operator|*
 name|getCallPreservedMask
@@ -342,22 +352,6 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|// Base pointer (stack realignment) support.
-name|bool
-name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|needsStackRealignment
-argument_list|(
-argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override

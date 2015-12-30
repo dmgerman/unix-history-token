@@ -154,16 +154,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
-block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS
-argument_list|)
-specifier|const
-name|override
 block|; }
 decl_stmt|;
 block|}

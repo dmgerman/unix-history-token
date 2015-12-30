@@ -77,9 +77,13 @@ argument|StringRef SOS
 argument_list|,
 argument|StringRef AOS
 argument_list|,
+argument|StringRef LS
+argument_list|,
 argument|bool LE
 argument_list|,
 argument|const DWARFUnitSectionBase&UnitSection
+argument_list|,
+argument|const DWARFUnitIndex::Entry *Entry
 argument_list|)
 operator|:
 name|DWARFUnit
@@ -98,9 +102,13 @@ argument|SOS
 argument_list|,
 argument|AOS
 argument_list|,
+argument|LS
+argument_list|,
 argument|LE
 argument_list|,
 argument|UnitSection
+argument_list|,
+argument|Entry
 argument_list|)
 block|{}
 name|void
@@ -110,6 +118,13 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|)
+block|;
+specifier|static
+specifier|const
+name|DWARFSectionKind
+name|Section
+operator|=
+name|DW_SECT_INFO
 block|;
 comment|// VTable anchor.
 operator|~

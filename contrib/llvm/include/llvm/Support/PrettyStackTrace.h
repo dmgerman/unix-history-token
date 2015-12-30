@@ -241,6 +241,29 @@ specifier|const
 name|override
 block|;   }
 decl_stmt|;
+comment|/// Returns the topmost element of the "pretty" stack state.
+specifier|const
+name|void
+modifier|*
+name|SavePrettyStackState
+parameter_list|()
+function_decl|;
+comment|/// Restores the topmost element of the "pretty" stack state to State, which
+comment|/// should come from a previous call to SavePrettyStackState().  This is
+comment|/// useful when using a CrashRecoveryContext in code that also uses
+comment|/// PrettyStackTraceEntries, to make sure the stack that's printed if a crash
+comment|/// happens after a crash that's been recovered by CrashRecoveryContext
+comment|/// doesn't have frames on it that were added in code unwound by the
+comment|/// CrashRecoveryContext.
+name|void
+name|RestorePrettyStackState
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|State
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

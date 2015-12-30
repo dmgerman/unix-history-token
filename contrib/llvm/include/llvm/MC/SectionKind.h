@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Target/TargetLoweringObjectFile.h - Object Info ----*- C++ -*-===//
+comment|//===-- llvm/MC/SectionKind.h - Classification of sections ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -21,26 +21,6 @@ end_comment
 
 begin_comment
 comment|// License. See LICENSE.TXT for details.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file implements classes used to handle lowerings specific to common
-end_comment
-
-begin_comment
-comment|// object file formats.
 end_comment
 
 begin_comment
@@ -148,21 +128,8 @@ comment|/// definitions, which always have a zero initializer and are never
 comment|/// marked 'constant'.
 name|Common
 block|,
-comment|/// DataRel - This is the most general form of data that is written
-comment|/// to by the program, it can have random relocations to arbitrary
-comment|/// globals.
-name|DataRel
-block|,
-comment|/// DataRelLocal - This is writeable data that has a non-zero
-comment|/// initializer and has relocations in it, but all of the
-comment|/// relocations are known to be within the final linked image
-comment|/// the global is linked into.
-name|DataRelLocal
-block|,
-comment|/// DataNoRel - This is writeable data that has a non-zero
-comment|/// initializer, but whose initializer is known to have no
-comment|/// relocations.
-name|DataNoRel
+comment|/// This is writeable data that has a non-zero initializer.
+name|Data
 block|,
 comment|/// ReadOnlyWithRel - These are global variables that are never
 comment|/// written to by the program, but that have relocations, so they
@@ -171,13 +138,6 @@ comment|/// can write to them.  If it chooses to, the dynamic linker can
 comment|/// mark the pages these globals end up on as read-only after it is
 comment|/// done with its relocation phase.
 name|ReadOnlyWithRel
-block|,
-comment|/// ReadOnlyWithRelLocal - This is data that is readonly by the
-comment|/// program, but must be writeable so that the dynamic linker
-comment|/// can perform relocations in it.  This is used when we know
-comment|/// that all the relocations are to globals in this final
-comment|/// linked image.
-name|ReadOnlyWithRelLocal
 block|}
 name|K
 range|:
@@ -390,7 +350,7 @@ operator|||
 name|isCommon
 argument_list|()
 operator|||
-name|isDataRel
+name|isData
 argument_list|()
 operator|||
 name|isReadOnlyWithRel
@@ -450,48 +410,14 @@ name|Common
 return|;
 block|}
 name|bool
-name|isDataRel
+name|isData
 argument_list|()
 specifier|const
 block|{
 return|return
 name|K
 operator|==
-name|DataRel
-operator|||
-name|K
-operator|==
-name|DataRelLocal
-operator|||
-name|K
-operator|==
-name|DataNoRel
-return|;
-block|}
-name|bool
-name|isDataRelLocal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|K
-operator|==
-name|DataRelLocal
-operator|||
-name|K
-operator|==
-name|DataNoRel
-return|;
-block|}
-name|bool
-name|isDataNoRel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|K
-operator|==
-name|DataNoRel
+name|Data
 return|;
 block|}
 name|bool
@@ -503,21 +429,6 @@ return|return
 name|K
 operator|==
 name|ReadOnlyWithRel
-operator|||
-name|K
-operator|==
-name|ReadOnlyWithRelLocal
-return|;
-block|}
-name|bool
-name|isReadOnlyWithRelLocal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|K
-operator|==
-name|ReadOnlyWithRelLocal
 return|;
 block|}
 name|private
@@ -727,37 +638,13 @@ return|;
 block|}
 specifier|static
 name|SectionKind
-name|getDataRel
+name|getData
 parameter_list|()
 block|{
 return|return
 name|get
 argument_list|(
-name|DataRel
-argument_list|)
-return|;
-block|}
-specifier|static
-name|SectionKind
-name|getDataRelLocal
-parameter_list|()
-block|{
-return|return
-name|get
-argument_list|(
-name|DataRelLocal
-argument_list|)
-return|;
-block|}
-specifier|static
-name|SectionKind
-name|getDataNoRel
-parameter_list|()
-block|{
-return|return
-name|get
-argument_list|(
-name|DataNoRel
+name|Data
 argument_list|)
 return|;
 block|}
@@ -770,18 +657,6 @@ return|return
 name|get
 argument_list|(
 name|ReadOnlyWithRel
-argument_list|)
-return|;
-block|}
-specifier|static
-name|SectionKind
-name|getReadOnlyWithRelLocal
-parameter_list|()
-block|{
-return|return
-name|get
-argument_list|(
-name|ReadOnlyWithRelLocal
 argument_list|)
 return|;
 block|}

@@ -138,9 +138,14 @@ name|ID_Archive
 block|,
 name|ID_MachOUniversalBinary
 block|,
+name|ID_COFFImportFile
+block|,
 name|ID_IR
 block|,
 comment|// LLVM IR
+name|ID_FunctionIndex
+block|,
+comment|// Function summary index
 comment|// Object and children.
 name|ID_StartObjects
 block|,
@@ -364,6 +369,17 @@ name|ID_COFF
 return|;
 block|}
 name|bool
+name|isCOFFImportFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_COFFImportFile
+return|;
+block|}
+name|bool
 name|isIR
 argument_list|()
 specifier|const
@@ -372,6 +388,17 @@ return|return
 name|TypeID
 operator|==
 name|ID_IR
+return|;
+block|}
+name|bool
+name|isFunctionIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_FunctionIndex
 return|;
 block|}
 name|bool

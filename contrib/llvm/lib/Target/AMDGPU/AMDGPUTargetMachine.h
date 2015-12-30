@@ -116,8 +116,12 @@ name|private
 operator|:
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TargetLoweringObjectFile
-operator|*
+operator|>
 name|TLOF
 block|;
 name|AMDGPUSubtarget
@@ -205,6 +209,9 @@ name|override
 block|{
 return|return
 name|TLOF
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 expr|}

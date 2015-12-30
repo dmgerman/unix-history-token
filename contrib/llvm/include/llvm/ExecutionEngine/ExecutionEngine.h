@@ -335,9 +335,13 @@ name|ExecutionEngineState
 name|EEState
 decl_stmt|;
 comment|/// The target data for the platform for which execution is being performed.
+comment|///
+comment|/// Note: the DataLayout is LLVMContext specific because it has an
+comment|/// internal cache based on type pointers. It makes unsafe to reuse the
+comment|/// ExecutionEngine across context, we don't enforce this rule but undefined
+comment|/// behavior can occurs if the user tries to do it.
 specifier|const
 name|DataLayout
-modifier|*
 name|DL
 decl_stmt|;
 comment|/// Whether lazy JIT compilation is enabled.
@@ -379,20 +383,6 @@ literal|1
 operator|>
 name|Modules
 expr_stmt|;
-name|void
-name|setDataLayout
-parameter_list|(
-specifier|const
-name|DataLayout
-modifier|*
-name|Val
-parameter_list|)
-block|{
-name|DL
-operator|=
-name|Val
-expr_stmt|;
-block|}
 comment|/// getMemoryforGV - Allocate memory for a global variable.
 name|virtual
 name|char
@@ -644,7 +634,7 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 specifier|const
 name|DataLayout
-operator|*
+operator|&
 name|getDataLayout
 argument_list|()
 specifier|const
@@ -1342,8 +1332,30 @@ block|}
 name|protected
 label|:
 name|ExecutionEngine
-argument_list|()
+argument_list|(
+argument|const DataLayout DL
+argument_list|)
+block|:
+name|DL
+argument_list|(
+argument|std::move(DL)
+argument_list|)
 block|{}
+name|explicit
+name|ExecutionEngine
+argument_list|(
+name|DataLayout
+name|DL
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|M
+argument_list|)
+decl_stmt|;
 name|explicit
 name|ExecutionEngine
 argument_list|(
@@ -1394,6 +1406,20 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|void
+name|Init
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|M
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 name|namespace

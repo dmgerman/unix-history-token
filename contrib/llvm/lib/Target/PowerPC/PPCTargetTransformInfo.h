@@ -170,6 +170,7 @@ name|PPCTargetMachine
 operator|*
 name|TM
 argument_list|,
+specifier|const
 name|Function
 operator|&
 name|F
@@ -285,7 +286,7 @@ name|BaseT
 operator|::
 name|getIntImmCost
 expr_stmt|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 specifier|const
@@ -298,7 +299,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 name|unsigned
@@ -317,7 +318,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 name|Intrinsic
@@ -370,6 +371,10 @@ name|bool
 name|LoopHasReductions
 parameter_list|)
 function_decl|;
+name|bool
+name|enableInterleavedAccessVectorization
+parameter_list|()
+function_decl|;
 name|unsigned
 name|getNumberOfRegisters
 parameter_list|(
@@ -391,7 +396,7 @@ name|unsigned
 name|VF
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getArithmeticInstrCost
 argument_list|(
 name|unsigned
@@ -438,7 +443,7 @@ operator|::
 name|OP_None
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|int
 name|getShuffleCost
 argument_list|(
 name|TTI
@@ -458,7 +463,7 @@ operator|*
 name|SubTp
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|int
 name|getCastInstrCost
 parameter_list|(
 name|unsigned
@@ -473,7 +478,7 @@ modifier|*
 name|Src
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getCmpSelInstrCost
 parameter_list|(
 name|unsigned
@@ -488,7 +493,7 @@ modifier|*
 name|CondTy
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getVectorInstrCost
 parameter_list|(
 name|unsigned
@@ -502,7 +507,7 @@ name|unsigned
 name|Index
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getMemoryOpCost
 parameter_list|(
 name|unsigned
@@ -519,6 +524,32 @@ name|unsigned
 name|AddressSpace
 parameter_list|)
 function_decl|;
+name|int
+name|getInterleavedMemoryOpCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|VecTy
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddressSpace
+argument_list|)
+decl_stmt|;
 comment|/// @}
 block|}
 end_decl_stmt

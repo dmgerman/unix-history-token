@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Support.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -435,6 +429,8 @@ argument|const Twine&Filename
 argument_list|,
 argument|int64_t FileSize = -
 literal|1
+argument_list|,
+argument|bool RequiresNullTerminator = true
 argument_list|)
 expr_stmt|;
 comment|/// Map a subrange of the specified file as a MemoryBuffer.
@@ -501,11 +497,31 @@ argument_list|()
 block|{}
 name|MemoryBufferRef
 argument_list|(
+name|MemoryBuffer
+operator|&
+name|Buffer
+argument_list|)
+operator|:
+name|Buffer
+argument_list|(
+name|Buffer
+operator|.
+name|getBuffer
+argument_list|()
+argument_list|)
+operator|,
+name|Identifier
+argument_list|(
+argument|Buffer.getBufferIdentifier()
+argument_list|)
+block|{}
+name|MemoryBufferRef
+argument_list|(
 argument|StringRef Buffer
 argument_list|,
 argument|StringRef Identifier
 argument_list|)
-block|:
+operator|:
 name|Buffer
 argument_list|(
 name|Buffer

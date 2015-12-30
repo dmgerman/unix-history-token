@@ -425,7 +425,7 @@ name|NodeType
 operator|*
 name|Eval
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>& DT
+argument|DominatorTreeBase<typename GraphT::NodeType>&DT
 argument_list|,
 argument|typename GraphT::NodeType *VIn
 argument_list|,
@@ -1680,7 +1680,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_endif
-unit|}  }
+unit|} }
 endif|#
 directive|endif
 end_endif

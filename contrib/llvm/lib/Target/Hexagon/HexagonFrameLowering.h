@@ -194,11 +194,13 @@ name|true
 return|;
 block|}
 name|int
-name|getFrameIndexOffset
+name|getFrameIndexReference
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
 argument_list|)
 specifier|const
 name|override
@@ -421,9 +423,17 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+specifier|const
 name|MachineInstr
 operator|*
 name|getAlignaInstr
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
+name|insertCFIInstructions
 argument_list|(
 argument|MachineFunction&MF
 argument_list|)
@@ -510,6 +520,20 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
+name|insertCFIInstructionsAt
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|At
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
 name|adjustForCalleeSavedRegsSpillCall
 argument_list|(
 name|MachineFunction
@@ -562,10 +586,12 @@ name|llvm
 operator|::
 name|MachineFunction
 operator|&
+name|MF
 argument_list|,
 specifier|const
 name|CSIVect
 operator|&
+name|CSI
 argument_list|)
 decl|const
 decl_stmt|;

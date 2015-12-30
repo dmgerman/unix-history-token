@@ -320,9 +320,8 @@ name|override
 block|;
 name|private
 operator|:
-name|LLVM_ATTRIBUTE_NORETURN
 name|void
-name|FatalError
+name|Error
 argument_list|(
 argument|const Twine&Msg
 argument_list|)

@@ -212,10 +212,6 @@ comment|/// is greater than twice the number of buckets.
 name|unsigned
 name|NumNodes
 decl_stmt|;
-operator|~
-name|FoldingSetImpl
-argument_list|()
-expr_stmt|;
 name|explicit
 name|FoldingSetImpl
 parameter_list|(
@@ -225,6 +221,27 @@ init|=
 literal|6
 parameter_list|)
 function_decl|;
+name|FoldingSetImpl
+argument_list|(
+name|FoldingSetImpl
+operator|&&
+name|Arg
+argument_list|)
+expr_stmt|;
+name|FoldingSetImpl
+modifier|&
+name|operator
+init|=
+operator|(
+name|FoldingSetImpl
+operator|&&
+name|RHS
+operator|)
+decl_stmt|;
+operator|~
+name|FoldingSetImpl
+argument_list|()
+expr_stmt|;
 name|public
 label|:
 comment|//===--------------------------------------------------------------------===//
@@ -1270,6 +1287,10 @@ comment|/// FoldingSet - This template class is used to instantiate a specialize
 comment|/// implementation of the folding set to the node class T.  T must be a
 comment|/// subclass of FoldingSetNode and implement a Profile function.
 comment|///
+comment|/// Note that this set type is movable and move-assignable. However, its
+comment|/// moved-from state is not a valid state for anything other than
+comment|/// move-assigning and destroying. This is primarily to enable movable APIs
+comment|/// that incorporate these objects.
 name|template
 operator|<
 name|class
@@ -1424,6 +1445,49 @@ argument_list|(
 argument|Log2InitSize
 argument_list|)
 block|{}
+name|FoldingSet
+argument_list|(
+name|FoldingSet
+operator|&&
+name|Arg
+argument_list|)
+operator|:
+name|FoldingSetImpl
+argument_list|(
+argument|std::move(Arg)
+argument_list|)
+block|{}
+name|FoldingSet
+operator|&
+name|operator
+operator|=
+operator|(
+name|FoldingSet
+operator|&&
+name|RHS
+operator|)
+block|{
+operator|(
+name|void
+operator|)
+name|FoldingSetImpl
+operator|::
+name|operator
+operator|=
+operator|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+argument_list|)
+operator|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 typedef|typedef
 name|FoldingSetIterator
 operator|<
@@ -3123,7 +3187,7 @@ name|AddNodeID
 argument_list|(
 name|FastID
 argument_list|)
-block|;    }
+block|; }
 block|}
 decl_stmt|;
 end_decl_stmt

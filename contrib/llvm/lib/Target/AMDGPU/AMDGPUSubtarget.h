@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=====-- AMDGPUSubtarget.h - Define Subtarget for the AMDIL ---*- C++ -*-====//
+comment|//=====-- AMDGPUSubtarget.h - Define Subtarget for AMDGPU ------*- C++ -*-====//
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUSUBTARGET_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUSUBTARGET_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUSUBTARGET_H
 end_define
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AMDGPUIntrinsicInfo.h"
+file|"AMDGPUISelLowering.h"
 end_include
 
 begin_include
@@ -96,25 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"R600ISelLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"AMDKernelCodeT.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"Utils/AMDGPUBaseInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
@@ -238,6 +220,9 @@ name|bool
 name|FlatAddressSpace
 block|;
 name|bool
+name|FlatForGlobal
+block|;
+name|bool
 name|EnableIRStructurizer
 block|;
 name|bool
@@ -291,7 +276,12 @@ block|;
 name|bool
 name|EnableHugeScratchBuffer
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|AMDGPUFrameLowering
+operator|>
 name|FrameLowering
 block|;
 name|std
@@ -349,8 +339,10 @@ specifier|const
 name|override
 block|{
 return|return
-operator|&
 name|FrameLowering
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -507,6 +499,15 @@ specifier|const
 block|{
 return|return
 name|FlatAddressSpace
+return|;
+block|}
+name|bool
+name|useFlatForGlobal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FlatForGlobal
 return|;
 block|}
 name|bool
@@ -1043,6 +1044,18 @@ operator|?
 literal|0
 operator|:
 literal|36
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getMaxNumUserSGPRs
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|16
 return|;
 block|}
 end_expr_stmt

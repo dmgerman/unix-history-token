@@ -90,9 +90,6 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|template
 operator|<
@@ -103,8 +100,6 @@ name|void
 name|SymbolTableListTraits
 operator|<
 name|ValueSubClass
-operator|,
-name|ItemParentClass
 operator|>
 operator|::
 name|setSymTabObject
@@ -119,8 +114,6 @@ name|ValueSymbolTable
 operator|*
 name|OldST
 operator|=
-name|TraitsClass
-operator|::
 name|getSymTab
 argument_list|(
 name|getListOwner
@@ -138,8 +131,6 @@ name|ValueSymbolTable
 operator|*
 name|NewST
 operator|=
-name|TraitsClass
-operator|::
 name|getSymTab
 argument_list|(
 name|getListOwner
@@ -155,15 +146,10 @@ name|NewST
 condition|)
 return|return;
 comment|// Move all the elements from the old symtab to the new one.
-name|iplist
-operator|<
-name|ValueSubClass
-operator|>
+name|ListTy
 operator|&
 name|ItemList
 operator|=
-name|TraitsClass
-operator|::
 name|getList
 argument_list|(
 name|getListOwner
@@ -186,15 +172,9 @@ block|{
 comment|// Remove all entries from the previous symtab.
 for|for
 control|(
-name|typename
-name|iplist
-operator|<
-name|ValueSubClass
-operator|>
-operator|::
-name|iterator
+name|auto
 name|I
-operator|=
+init|=
 name|ItemList
 operator|.
 name|begin
@@ -236,15 +216,9 @@ block|{
 comment|// Add all of the items to the new symtab.
 for|for
 control|(
-name|typename
-name|iplist
-operator|<
-name|ValueSubClass
-operator|>
-operator|::
-name|iterator
+name|auto
 name|I
-operator|=
+init|=
 name|ItemList
 operator|.
 name|begin
@@ -271,6 +245,8 @@ name|NewST
 operator|->
 name|reinsertValue
 argument_list|(
+operator|&
+operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -283,16 +259,11 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|void
 name|SymbolTableListTraits
 operator|<
 name|ValueSubClass
-operator|,
-name|ItemParentClass
 operator|>
 operator|::
 name|addNodeToList
@@ -338,8 +309,6 @@ name|ValueSymbolTable
 modifier|*
 name|ST
 init|=
-name|TraitsClass
-operator|::
 name|getSymTab
 argument_list|(
 name|Owner
@@ -360,16 +329,11 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|void
 name|SymbolTableListTraits
 operator|<
 name|ValueSubClass
-operator|,
-name|ItemParentClass
 operator|>
 operator|::
 name|removeNodeFromList
@@ -397,8 +361,6 @@ name|ValueSymbolTable
 modifier|*
 name|ST
 init|=
-name|TraitsClass
-operator|::
 name|getSymTab
 argument_list|(
 name|getListOwner
@@ -423,21 +385,16 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|void
 name|SymbolTableListTraits
 operator|<
 name|ValueSubClass
-operator|,
-name|ItemParentClass
 operator|>
 operator|::
 name|transferNodesFromList
 argument_list|(
-argument|ilist_traits<ValueSubClass>&L2
+argument|SymbolTableListTraits&L2
 argument_list|,
 argument|ilist_iterator<ValueSubClass> first
 argument_list|,
@@ -474,8 +431,6 @@ name|ValueSymbolTable
 operator|*
 name|NewST
 operator|=
-name|TraitsClass
-operator|::
 name|getSymTab
 argument_list|(
 name|NewIP
@@ -488,8 +443,6 @@ name|ValueSymbolTable
 modifier|*
 name|OldST
 init|=
-name|TraitsClass
-operator|::
 name|getSymTab
 argument_list|(
 name|OldIP

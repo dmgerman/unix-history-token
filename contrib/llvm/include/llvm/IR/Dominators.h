@@ -273,6 +273,70 @@ begin_comment
 comment|/// normal dominator tree.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Definition: A block is said to be forward statically reachable if there is
+end_comment
+
+begin_comment
+comment|/// a path from the entry of the function to the block.  A statically reachable
+end_comment
+
+begin_comment
+comment|/// block may become statically unreachable during optimization.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// A forward unreachable block may appear in the dominator tree, or it may
+end_comment
+
+begin_comment
+comment|/// not.  If it does, dominance queries will return results as if all reachable
+end_comment
+
+begin_comment
+comment|/// blocks dominate it.  When asking for a Node corresponding to a potentially
+end_comment
+
+begin_comment
+comment|/// unreachable block, calling code must handle the case where the block was
+end_comment
+
+begin_comment
+comment|/// unreachable and the result of getNode() is nullptr.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Generally, a block known to be unreachable when the dominator tree is
+end_comment
+
+begin_comment
+comment|/// constructed will not be in the tree.  One which becomes unreachable after
+end_comment
+
+begin_comment
+comment|/// the dominator tree is initially constructed may still exist in the tree,
+end_comment
+
+begin_comment
+comment|/// even if the tree is properly updated. Calling code should not rely on the
+end_comment
+
+begin_comment
+comment|/// preceding statements; this is stated only to assist human understanding.
+end_comment
+
 begin_decl_stmt
 name|class
 name|DominatorTree
@@ -303,6 +367,27 @@ operator|(
 name|false
 operator|)
 block|{}
+name|explicit
+name|DominatorTree
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|)
+operator|:
+name|DominatorTreeBase
+operator|<
+name|BasicBlock
+operator|>
+operator|(
+name|false
+operator|)
+block|{
+name|recalculate
+argument_list|(
+name|F
+argument_list|)
+block|;   }
 name|DominatorTree
 argument_list|(
 name|DominatorTree
@@ -616,26 +701,43 @@ end_comment
 begin_expr_stmt
 name|template
 operator|<
+name|class
+name|Node
+operator|,
+name|class
+name|ChildIterator
 operator|>
 expr|struct
-name|GraphTraits
-operator|<
-name|DomTreeNode
-operator|*
-operator|>
+name|DomTreeGraphTraitsBase
 block|{
 typedef|typedef
-name|DomTreeNode
+name|Node
 name|NodeType
 typedef|;
 end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|NodeType
-operator|::
-name|iterator
+name|ChildIterator
 name|ChildIteratorType
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|df_iterator
+operator|<
+name|Node
+operator|*
+operator|,
+name|SmallPtrSet
+operator|<
+name|NodeType
+operator|*
+operator|,
+literal|8
+operator|>>
+name|nodes_iterator
 expr_stmt|;
 end_typedef
 
@@ -696,23 +798,12 @@ return|;
 block|}
 end_function
 
-begin_typedef
-typedef|typedef
-name|df_iterator
-operator|<
-name|DomTreeNode
-operator|*
-operator|>
-name|nodes_iterator
-expr_stmt|;
-end_typedef
-
 begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_begin
 parameter_list|(
-name|DomTreeNode
+name|NodeType
 modifier|*
 name|N
 parameter_list|)
@@ -734,7 +825,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_end
 parameter_list|(
-name|DomTreeNode
+name|NodeType
 modifier|*
 name|N
 parameter_list|)
@@ -753,6 +844,56 @@ end_function
 
 begin_expr_stmt
 unit|};
+name|template
+operator|<
+operator|>
+expr|struct
+name|GraphTraits
+operator|<
+name|DomTreeNode
+operator|*
+operator|>
+operator|:
+name|public
+name|DomTreeGraphTraitsBase
+operator|<
+name|DomTreeNode
+operator|,
+name|DomTreeNode
+operator|::
+name|iterator
+operator|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|GraphTraits
+operator|<
+specifier|const
+name|DomTreeNode
+operator|*
+operator|>
+operator|:
+name|public
+name|DomTreeGraphTraitsBase
+operator|<
+specifier|const
+name|DomTreeNode
+operator|,
+name|DomTreeNode
+operator|::
+name|const_iterator
+operator|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>

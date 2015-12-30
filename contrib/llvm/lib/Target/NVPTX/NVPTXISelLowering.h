@@ -927,17 +927,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|SDValue
-name|LowerGlobalAddress
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|int64_t Offset
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
 specifier|const
 name|char
 operator|*
@@ -947,13 +936,6 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 name|override
-block|;
-name|bool
-name|isTypeSupportedInIntrinsic
-argument_list|(
-argument|MVT VT
-argument_list|)
-specifier|const
 block|;
 name|bool
 name|getTgtMemIntrinsic
@@ -986,24 +968,66 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|unsigned
-name|getFunctionAlignment
+name|bool
+name|isTruncateFree
 argument_list|(
-argument|const Function *F
+argument|Type *SrcTy
+argument_list|,
+argument|Type *DstTy
 argument_list|)
 specifier|const
-block|;
+name|override
+block|{
+comment|// Truncating 64-bit to 32-bit is free in SASS.
+if|if
+condition|(
+operator|!
+name|SrcTy
+operator|->
+name|isIntegerTy
+argument_list|()
+operator|||
+operator|!
+name|DstTy
+operator|->
+name|isIntegerTy
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|SrcTy
+operator|->
+name|getPrimitiveSizeInBits
+argument_list|()
+operator|==
+literal|64
+operator|&&
+name|DstTy
+operator|->
+name|getPrimitiveSizeInBits
+argument_list|()
+operator|==
+literal|32
+return|;
+block|}
 name|EVT
 name|getSetCCResultType
 argument_list|(
-argument|const DataLayout&DL
-argument_list|,
-argument|LLVMContext&Ctx
-argument_list|,
-argument|EVT VT
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
 name|override
 block|{
 if|if
@@ -1295,29 +1319,6 @@ name|STI
 decl_stmt|;
 comment|// cache the subtarget here
 name|SDValue
-name|getExtSymb
-argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|,
-name|int
-name|idx
-argument_list|,
-name|EVT
-operator|=
-name|MVT
-operator|::
-name|i32
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
 name|getParamSymbol
 argument_list|(
 name|SelectionDAG
@@ -1331,17 +1332,6 @@ name|EVT
 argument_list|)
 decl|const
 decl_stmt|;
-name|SDValue
-name|getParamHelpSymbol
-parameter_list|(
-name|SelectionDAG
-modifier|&
-name|DAG
-parameter_list|,
-name|int
-name|idx
-parameter_list|)
-function_decl|;
 name|SDValue
 name|LowerCONCAT_VECTORS
 argument_list|(

@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -290,6 +296,13 @@ block|,
 literal|8
 operator|>
 name|DenseBlockSet
+block|;
+comment|/// Indicator that this loops has been "unlooped", so there's no loop here
+comment|/// anymore.
+name|bool
+name|IsUnloop
+operator|=
+name|false
 block|;
 name|LoopBase
 argument_list|(
@@ -706,6 +719,26 @@ name|end
 argument_list|()
 return|;
 block|}
+specifier|inline
+name|iterator_range
+operator|<
+name|block_iterator
+operator|>
+name|blocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|block_begin
+argument_list|()
+argument_list|,
+name|block_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// getNumBlocks - Get the number of blocks in this loop in constant time.
 name|unsigned
 name|getNumBlocks
@@ -717,6 +750,27 @@ name|Blocks
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+comment|/// Mark this loop as having been unlooped - the last backedge was removed and
+comment|/// we no longer have a loop.
+name|void
+name|markUnlooped
+parameter_list|()
+block|{
+name|IsUnloop
+operator|=
+name|true
+expr_stmt|;
+block|}
+comment|/// Return true if this no longer represents a loop.
+name|bool
+name|isUnloop
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUnloop
 return|;
 block|}
 comment|/// isLoopExiting - True if terminator in the block can branch to another
@@ -1949,6 +2003,16 @@ name|DT
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return true if this Loop and all inner subloops are in LCSSA form.
+name|bool
+name|isRecursivelyLCSSAForm
+argument_list|(
+name|DominatorTree
+operator|&
+name|DT
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isLoopSimplifyForm - Return true if the Loop is in the form that
 comment|/// the LoopSimplify form transforms loops to, which is sometimes called
 comment|/// normal form.
@@ -3008,8 +3072,9 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|Analyze
+name|analyze
 argument_list|(
+specifier|const
 name|DominatorTreeBase
 operator|<
 name|BlockT
@@ -3110,6 +3175,18 @@ label|:
 name|LoopInfo
 argument_list|()
 block|{}
+name|explicit
+name|LoopInfo
+argument_list|(
+specifier|const
+name|DominatorTreeBase
+operator|<
+name|BasicBlock
+operator|>
+operator|&
+name|DomTree
+argument_list|)
+decl_stmt|;
 name|LoopInfo
 argument_list|(
 name|LoopInfo
@@ -3160,8 +3237,9 @@ block|}
 comment|// Most of the public interface is provided via LoopInfoBase.
 comment|/// updateUnloop - Update LoopInfo after removing the last backedge from a
 comment|/// loop--now the "unloop". This updates the loop forest and parent loops for
-comment|/// each block so that Unloop is no longer referenced, but the caller must
-comment|/// actually delete the Unloop object.
+comment|/// each block so that Unloop is no longer referenced, but does not actually
+comment|/// delete the Unloop object. Generally, the loop pass manager should manage
+comment|/// deleting the Unloop.
 name|void
 name|updateUnloop
 parameter_list|(
@@ -3261,6 +3339,312 @@ name|getParent
 argument_list|()
 argument_list|)
 argument_list|)
+return|;
+block|}
+comment|/// \brief Checks if moving a specific instruction can break LCSSA in any
+comment|/// loop.
+comment|///
+comment|/// Return true if moving \p Inst to before \p NewLoc will break LCSSA,
+comment|/// assuming that the function containing \p Inst and \p NewLoc is currently
+comment|/// in LCSSA form.
+name|bool
+name|movementPreservesLCSSAForm
+parameter_list|(
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+name|Instruction
+modifier|*
+name|NewLoc
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Inst
+operator|->
+name|getFunction
+argument_list|()
+operator|==
+name|NewLoc
+operator|->
+name|getFunction
+argument_list|()
+operator|&&
+literal|"Can't reason about IPO!"
+argument_list|)
+expr_stmt|;
+name|auto
+operator|*
+name|OldBB
+operator|=
+name|Inst
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+name|auto
+operator|*
+name|NewBB
+operator|=
+name|NewLoc
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+comment|// Movement within the same loop does not break LCSSA (the equality check is
+comment|// to avoid doing a hashtable lookup in case of intra-block movement).
+if|if
+condition|(
+name|OldBB
+operator|==
+name|NewBB
+condition|)
+return|return
+name|true
+return|;
+name|auto
+operator|*
+name|OldLoop
+operator|=
+name|getLoopFor
+argument_list|(
+name|OldBB
+argument_list|)
+expr_stmt|;
+name|auto
+operator|*
+name|NewLoop
+operator|=
+name|getLoopFor
+argument_list|(
+name|NewBB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OldLoop
+operator|==
+name|NewLoop
+condition|)
+return|return
+name|true
+return|;
+comment|// Check if Outer contains Inner; with the null loop counting as the
+comment|// "outermost" loop.
+name|auto
+name|Contains
+init|=
+index|[]
+operator|(
+specifier|const
+name|Loop
+operator|*
+name|Outer
+expr|,
+specifier|const
+name|Loop
+operator|*
+name|Inner
+operator|)
+block|{
+return|return
+operator|!
+name|Outer
+operator|||
+name|Outer
+operator|->
+name|contains
+argument_list|(
+name|Inner
+argument_list|)
+return|;
+block|}
+empty_stmt|;
+comment|// To check that the movement of Inst to before NewLoc does not break LCSSA,
+comment|// we need to check two sets of uses for possible LCSSA violations at
+comment|// NewLoc: the users of NewInst, and the operands of NewInst.
+comment|// If we know we're hoisting Inst out of an inner loop to an outer loop,
+comment|// then the uses *of* Inst don't need to be checked.
+if|if
+condition|(
+operator|!
+name|Contains
+argument_list|(
+name|NewLoop
+argument_list|,
+name|OldLoop
+argument_list|)
+condition|)
+block|{
+for|for
+control|(
+name|Use
+modifier|&
+name|U
+range|:
+name|Inst
+operator|->
+name|uses
+argument_list|()
+control|)
+block|{
+name|auto
+operator|*
+name|UI
+operator|=
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|U
+operator|.
+name|getUser
+argument_list|()
+operator|)
+expr_stmt|;
+name|auto
+operator|*
+name|UBB
+operator|=
+name|isa
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|UI
+operator|)
+condition|?
+name|cast
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|UI
+operator|)
+operator|->
+name|getIncomingBlock
+argument_list|(
+name|U
+argument_list|)
+else|:
+name|UI
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|UBB
+operator|!=
+name|NewBB
+operator|&&
+name|getLoopFor
+argument_list|(
+name|UBB
+argument_list|)
+operator|!=
+name|NewLoop
+condition|)
+return|return
+name|false
+return|;
+block|}
+block|}
+comment|// If we know we're sinking Inst from an outer loop into an inner loop, then
+comment|// the *operands* of Inst don't need to be checked.
+if|if
+condition|(
+operator|!
+name|Contains
+argument_list|(
+name|OldLoop
+argument_list|,
+name|NewLoop
+argument_list|)
+condition|)
+block|{
+comment|// See below on why we can't handle phi nodes here.
+if|if
+condition|(
+name|isa
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|Inst
+operator|)
+condition|)
+return|return
+name|false
+return|;
+for|for
+control|(
+name|Use
+modifier|&
+name|U
+range|:
+name|Inst
+operator|->
+name|operands
+argument_list|()
+control|)
+block|{
+name|auto
+operator|*
+name|DefI
+operator|=
+name|dyn_cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|U
+operator|.
+name|get
+argument_list|()
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DefI
+condition|)
+return|return
+name|false
+return|;
+comment|// This would need adjustment if we allow Inst to be a phi node -- the
+comment|// new use block won't simply be NewBB.
+name|auto
+operator|*
+name|DefBlock
+operator|=
+name|DefI
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|DefBlock
+operator|!=
+name|NewBB
+operator|&&
+name|getLoopFor
+argument_list|(
+name|DefBlock
+argument_list|)
+operator|!=
+name|NewLoop
+condition|)
+return|return
+name|false
+return|;
+block|}
+block|}
+return|return
+name|true
 return|;
 block|}
 block|}
@@ -3671,6 +4055,68 @@ name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Pass for printing a loop's contents as LLVM's text IR assembly.
+end_comment
+
+begin_decl_stmt
+name|class
+name|PrintLoopPass
+block|{
+name|raw_ostream
+modifier|&
+name|OS
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|Banner
+expr_stmt|;
+name|public
+label|:
+name|PrintLoopPass
+argument_list|()
+expr_stmt|;
+name|PrintLoopPass
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+name|PreservedAnalyses
+name|run
+parameter_list|(
+name|Loop
+modifier|&
+name|L
+parameter_list|)
+function_decl|;
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"PrintLoopPass"
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}
