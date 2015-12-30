@@ -90,7 +90,7 @@ parameter_list|,
 name|l3
 parameter_list|)
 define|\
-value|set	mask, r1 ; \ 	SET(ktr_mask, r3, r2) ; \ 	lduw	[r2], r2 ; \ 	and	r2, r1, r1 ; \ 	brz	r1, l3 ## f ; \ 	 nop ; \ 	lduw	[PCPU(CPUID)], r2 ; \ 	mov	_NCPUBITS, r3 ; \ 	mov	%g0, %y ; \ 	udiv	r2, r3, r2 ; \ 	srl	r2, 0, r2 ; \ 	sllx	r2, PTR_SHIFT, r2 ; \ 	SET(ktr_cpumask, r3, r1) ; \ 	ldx	[r1 + r2], r1 ; \ 	lduw	[PCPU(CPUID)], r2 ; \ 	mov	_NCPUBITS, r3 ; \ 	mov	%g0, %y ; \ 	udiv	r2, r3, r2 ; \ 	srl	r2, 0, r2 ; \ 	smul	r2, r3, r3 ; \ 	lduw	[PCPU(CPUID)], r2 ; \ 	sub	r2, r3, r3 ; \ 	mov	1, r2 ; \ 	sllx	r2, r3, r2 ; \ 	andn	r1, r2, r1 ; \ 	brz	r1, l3 ## f ; \ 	 nop ; \ 	ATR(desc, r1, r2, r3, l1, l2)
+value|setx	mask, r3, r1 ; \ 	setx	ktr_mask, r3, r2 ; \ 	ldx	[r2], r2 ; \ 	and	r2, r1, r1 ; \ 	brz	r1, l3 ## f ; \ 	 nop ; \ 	lduw	[PCPU(CPUID)], r2 ; \ 	mov	_NCPUBITS, r3 ; \ 	mov	%g0, %y ; \ 	udiv	r2, r3, r2 ; \ 	srl	r2, 0, r2 ; \ 	sllx	r2, PTR_SHIFT, r2 ; \ 	SET(ktr_cpumask, r3, r1) ; \ 	ldx	[r1 + r2], r1 ; \ 	lduw	[PCPU(CPUID)], r2 ; \ 	mov	_NCPUBITS, r3 ; \ 	mov	%g0, %y ; \ 	udiv	r2, r3, r2 ; \ 	srl	r2, 0, r2 ; \ 	smul	r2, r3, r3 ; \ 	lduw	[PCPU(CPUID)], r2 ; \ 	sub	r2, r3, r3 ; \ 	mov	1, r2 ; \ 	sllx	r2, r3, r2 ; \ 	andn	r1, r2, r1 ; \ 	brz	r1, l3 ## f ; \ 	 nop ; \ 	ATR(desc, r1, r2, r3, l1, l2)
 end_define
 
 begin_endif
