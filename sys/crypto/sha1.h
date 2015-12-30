@@ -89,6 +89,14 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|sha1_ctxt
+name|SHA1_CTX
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -154,14 +162,6 @@ end_function_decl
 begin_comment
 comment|/* compatibilty with other SHA1 source codes */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|sha1_ctxt
-name|SHA1_CTX
-typedef|;
-end_typedef
 
 begin_define
 define|#
