@@ -1264,8 +1264,7 @@ argument_list|()
 operator|:
 name|data_
 argument_list|(
-argument|-
-literal|1
+literal|0
 argument_list|)
 block|{}
 name|explicit
@@ -1318,7 +1317,8 @@ argument_list|()
 block|{
 name|data_
 operator|=
-literal|0
+operator|-
+literal|1
 block|;}
 name|friend
 name|bool

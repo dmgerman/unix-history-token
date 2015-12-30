@@ -51,6 +51,34 @@ begin_comment
 comment|/*     complex.h synopsis  #include<ccomplex>  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<__config>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
+argument_list|)
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|system_header
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -84,28 +112,6 @@ end_endif
 begin_comment
 comment|// __cplusplus
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
-argument_list|)
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|GCC
-name|system_header
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
