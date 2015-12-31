@@ -5354,9 +5354,6 @@ decl_stmt|;
 name|int
 name|scsi_dev_type
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|dev
 operator|=
 name|NULL
@@ -5579,10 +5576,6 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
 goto|goto
 name|bailout
 goto|;
@@ -5715,10 +5708,6 @@ name|CAM_EPF_ALL
 argument_list|,
 name|stderr
 argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-literal|1
 expr_stmt|;
 goto|goto
 name|bailout
