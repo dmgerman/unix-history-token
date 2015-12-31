@@ -2787,8 +2787,6 @@ name|int
 name|error
 decl_stmt|,
 name|rc
-decl_stmt|,
-name|prevcpu
 decl_stmt|;
 name|enum
 name|vm_exitcode
