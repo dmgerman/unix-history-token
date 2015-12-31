@@ -5368,7 +5368,7 @@ operator|==
 name|firstmatch
 condition|)
 block|{
-comment|/* 			 * no matches 			 */
+comment|/* 		 * no matches 		 */
 name|rmescapes
 argument_list|(
 name|pattern
