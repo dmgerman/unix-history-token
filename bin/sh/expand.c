@@ -5273,7 +5273,7 @@ value|(expdir + sizeof(expdir))
 end_define
 
 begin_comment
-comment|/*  * Perform pathname generation and remove control characters.  * At this point, the only control characters should be CTLESC and CTLQUOTEMARK.  * The results are stored in the list dstlist.  */
+comment|/*  * Perform pathname generation and remove control characters.  * At this point, the only control characters should be CTLESC.  * The results are stored in the list dstlist.  */
 end_comment
 
 begin_function
@@ -5567,16 +5567,6 @@ init|;
 condition|;
 control|)
 block|{
-while|while
-condition|(
-operator|*
-name|q
-operator|==
-name|CTLQUOTEMARK
-condition|)
-name|q
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -5626,15 +5616,6 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
-elseif|else
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-name|CTLQUOTEMARK
-condition|)
-continue|continue;
 else|else
 block|{
 if|if
@@ -5701,14 +5682,6 @@ name|p
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-name|CTLQUOTEMARK
-condition|)
-continue|continue;
 if|if
 condition|(
 operator|*
@@ -5798,16 +5771,6 @@ operator|<
 name|start
 condition|)
 block|{
-while|while
-condition|(
-operator|*
-name|p
-operator|==
-name|CTLQUOTEMARK
-condition|)
-name|p
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -5948,16 +5911,6 @@ expr_stmt|;
 name|p
 operator|=
 name|start
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|==
-name|CTLQUOTEMARK
-condition|)
-name|p
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -6533,10 +6486,6 @@ name|backtrack
 goto|;
 break|break;
 case|case
-name|CTLQUOTEMARK
-case|:
-continue|continue;
-case|case
 literal|'?'
 case|:
 if|if
@@ -6595,10 +6544,6 @@ name|p
 expr_stmt|;
 while|while
 condition|(
-name|c
-operator|==
-name|CTLQUOTEMARK
-operator|||
 name|c
 operator|==
 literal|'*'
@@ -6764,13 +6709,6 @@ if|if
 condition|(
 name|c
 operator|==
-name|CTLQUOTEMARK
-condition|)
-continue|continue;
-if|if
-condition|(
-name|c
-operator|==
 literal|'['
 operator|&&
 operator|*
@@ -6869,16 +6807,6 @@ operator|!=
 literal|']'
 condition|)
 block|{
-name|p
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|==
-name|CTLQUOTEMARK
-condition|)
 name|p
 operator|++
 expr_stmt|;
