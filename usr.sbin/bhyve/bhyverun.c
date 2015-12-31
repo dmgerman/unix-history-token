@@ -1228,8 +1228,6 @@ decl_stmt|,
 name|in
 decl_stmt|,
 name|out
-decl_stmt|,
-name|string
 decl_stmt|;
 name|int
 name|vcpu
@@ -1258,16 +1256,6 @@ operator|.
 name|inout
 operator|.
 name|bytes
-expr_stmt|;
-name|string
-operator|=
-name|vme
-operator|->
-name|u
-operator|.
-name|inout
-operator|.
-name|string
 expr_stmt|;
 name|in
 operator|=
@@ -2913,10 +2901,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|prevcpu
-operator|=
-name|vcpu
-expr_stmt|;
 name|exitcode
 operator|=
 name|vmexit
