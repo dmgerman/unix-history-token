@@ -323,11 +323,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|file
+name|filp
+operator|->
+name|_file
 operator|=
 name|NULL
 expr_stmt|;
 block|}
+else|else
+block|{
 name|filp
 operator|->
 name|_file
@@ -350,6 +354,7 @@ operator|&
 name|linuxfileops
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* drop the extra reference */
 name|fput
 argument_list|(

@@ -4095,22 +4095,12 @@ name|rwmask
 decl_stmt|;
 name|int
 name|off
-decl_stmt|,
-name|table_bar
 decl_stmt|;
 name|off
 operator|=
 name|offset
 operator|-
 name|capoff
-expr_stmt|;
-name|table_bar
-operator|=
-name|pi
-operator|->
-name|pi_msix
-operator|.
-name|table_bar
 expr_stmt|;
 comment|/* Message Control Register */
 if|if

@@ -1583,10 +1583,6 @@ name|node
 decl_stmt|;
 name|char
 modifier|*
-name|bus
-decl_stmt|;
-name|char
-modifier|*
 name|type
 decl_stmt|;
 name|char
@@ -1664,10 +1660,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|bus
-operator|=
-name|node
-expr_stmt|;
 operator|*
 name|p
 operator|=

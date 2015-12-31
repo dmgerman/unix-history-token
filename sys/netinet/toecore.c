@@ -1741,7 +1741,6 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-operator|&
 name|lle
 operator|->
 name|ll_addr
