@@ -3515,9 +3515,6 @@ name|if_exists
 argument_list|(
 name|interface
 argument_list|)
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|logmsg
