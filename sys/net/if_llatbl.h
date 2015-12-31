@@ -129,6 +129,17 @@ parameter_list|()
 value|rw_assert(&lltable_rwlock, RA_LOCKED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LLE_MAX_LINKHDR
+value|24
+end_define
+
+begin_comment
+comment|/* Full IB header */
+end_comment
+
 begin_comment
 comment|/*  * Code referencing llentry must at least hold  * a shared lock  */
 end_comment
@@ -156,27 +167,23 @@ decl_stmt|;
 block|}
 name|r_l3addr
 union|;
-union|union
-block|{
-name|uint64_t
-name|mac_aligned
+name|char
+name|r_linkdata
+index|[
+name|LLE_MAX_LINKHDR
+index|]
 decl_stmt|;
-name|uint16_t
-name|mac16
+comment|/* L2 data */
+name|uint8_t
+name|r_hdrlen
+decl_stmt|;
+comment|/* length for LL header */
+name|uint8_t
+name|spare0
 index|[
 literal|3
 index|]
 decl_stmt|;
-name|uint8_t
-name|mac8
-index|[
-literal|20
-index|]
-decl_stmt|;
-comment|/* IB needs 20 bytes. */
-block|}
-name|ll_addr
-union|;
 name|uint16_t
 name|r_flags
 decl_stmt|;
@@ -185,9 +192,6 @@ name|uint16_t
 name|r_skip_req
 decl_stmt|;
 comment|/* feedback from fast path */
-name|uint64_t
-name|spare1
-decl_stmt|;
 name|struct
 name|lltable
 modifier|*
@@ -251,6 +255,11 @@ comment|/* Time when r_skip_req was unset */
 name|int
 name|lle_refcnt
 decl_stmt|;
+name|char
+modifier|*
+name|ll_addr
+decl_stmt|;
+comment|/* link-layer address */
 name|LIST_ENTRY
 argument_list|(
 argument|llentry
@@ -939,6 +948,28 @@ begin_comment
 comment|/* return lle unlocked */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LLE_ADDRONLY
+value|0x4000
+end_define
+
+begin_comment
+comment|/* return lladdr instead of full header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLE_CREATE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* hint to avoid lle lookup */
+end_comment
+
 begin_comment
 comment|/* LLE flags used by fastpath code */
 end_comment
@@ -1121,7 +1152,13 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|lladdr
+name|linkhdr
+parameter_list|,
+name|size_t
+name|linkhdrsize
+parameter_list|,
+name|int
+name|lladdr_off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1143,7 +1180,56 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|linkhdr
+parameter_list|,
+name|size_t
+name|linkhdrsize
+parameter_list|,
+name|int
+name|lladdr_off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lltable_calc_llheader
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|family
+parameter_list|,
+name|char
+modifier|*
 name|lladdr
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+modifier|*
+name|bufsize
+parameter_list|,
+name|int
+modifier|*
+name|lladdr_off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lltable_update_ifaddr
+parameter_list|(
+name|struct
+name|lltable
+modifier|*
+name|llt
 parameter_list|)
 function_decl|;
 end_function_decl

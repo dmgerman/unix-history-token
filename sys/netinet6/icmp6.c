@@ -11777,7 +11777,6 @@ operator|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|&
 name|ln
 operator|->
 name|ll_addr

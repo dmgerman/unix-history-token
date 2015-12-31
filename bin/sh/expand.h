@@ -36,12 +36,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXP_FULL
+name|EXP_SPLIT
 value|0x1
 end_define
 
 begin_comment
-comment|/* perform word splitting& file globbing */
+comment|/* perform word splitting */
 end_comment
 
 begin_define
@@ -98,6 +98,24 @@ end_define
 begin_comment
 comment|/* for EXP_SPLIT_LIT, start off quoted */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_GLOB
+value|0x80
+end_define
+
+begin_comment
+comment|/* perform file globbing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_FULL
+value|(EXP_SPLIT | EXP_GLOB)
+end_define
 
 begin_function_decl
 name|void

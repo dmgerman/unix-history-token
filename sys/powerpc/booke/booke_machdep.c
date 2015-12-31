@@ -1220,8 +1220,40 @@ argument_list|,
 name|mdp
 argument_list|)
 expr_stmt|;
-comment|/* Enable L1 caches */
+comment|/* Default to 32 byte cache line size. */
+switch|switch
+condition|(
+operator|(
+name|mfpvr
+argument_list|()
+operator|)
+operator|>>
+literal|16
+condition|)
+block|{
+case|case
+name|FSL_E500mc
+case|:
+case|case
+name|FSL_E5500
+case|:
+case|case
+name|FSL_E6500
+case|:
+name|cacheline_size
+operator|=
+literal|64
+expr_stmt|;
+break|break;
+block|}
+comment|/* Enable caches */
 name|booke_enable_l1_cache
+argument_list|()
+expr_stmt|;
+name|booke_enable_l2_cache
+argument_list|()
+expr_stmt|;
+name|booke_enable_bpred
 argument_list|()
 expr_stmt|;
 return|return

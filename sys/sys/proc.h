@@ -1652,6 +1652,28 @@ begin_comment
 comment|/* New child indicator for ptrace() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_BORN
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* New LWP indicator for ptrace() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_EXIT
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Exiting LWP indicator for ptrace() */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
@@ -2689,6 +2711,10 @@ name|u_int
 name|p_treeflag
 decl_stmt|;
 comment|/* (e) P_TREE flags */
+name|int
+name|p_pendingexits
+decl_stmt|;
+comment|/* (c) Count of pending thread exits. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -3483,6 +3509,17 @@ end_define
 
 begin_comment
 comment|/* Handles SU ast for kthreads. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2_LWP_EVENTS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Report LWP events via ptrace(2). */
 end_comment
 
 begin_comment

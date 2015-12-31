@@ -44,17 +44,14 @@ name|rtentry
 modifier|*
 name|ro_rt
 decl_stmt|;
-name|struct
-name|llentry
+name|char
 modifier|*
-name|ro_lle
+name|ro_prepend
 decl_stmt|;
-name|struct
-name|in_ifaddr
-modifier|*
-name|ro_ia
+name|uint16_t
+name|ro_plen
 decl_stmt|;
-name|int
+name|uint16_t
 name|ro_flags
 decl_stmt|;
 name|struct
@@ -64,6 +61,39 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RT_L2_ME_BIT
+value|2
+end_define
+
+begin_comment
+comment|/* dst L2 addr is our address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_MAY_LOOP_BIT
+value|3
+end_define
+
+begin_comment
+comment|/* dst may require loop copy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_HAS_HEADER_BIT
+value|4
+end_define
+
+begin_comment
+comment|/* mbuf already have its header prepended */
+end_comment
 
 begin_define
 define|#
@@ -86,6 +116,27 @@ end_define
 begin_comment
 comment|/* doesn't hold reference on ro_rt */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_L2_ME
+value|(1<< RT_L2_ME_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_MAY_LOOP
+value|(1<< RT_MAY_LOOP_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_HAS_HEADER
+value|(1<< RT_HAS_HEADER_BIT)
+end_define
 
 begin_struct
 struct|struct

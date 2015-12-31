@@ -2026,7 +2026,7 @@ name|MLX5E_10GBASE_SR
 init|=
 literal|13
 block|,
-name|MLX5E_10GBASE_ER
+name|MLX5E_10GBASE_LR
 init|=
 literal|14
 block|,
@@ -2562,6 +2562,17 @@ parameter_list|,
 name|u32
 parameter_list|,
 name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mlx5e_refresh_channel_params
+parameter_list|(
+name|struct
+name|mlx5e_priv
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

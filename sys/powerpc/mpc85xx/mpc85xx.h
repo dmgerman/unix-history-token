@@ -53,6 +53,77 @@ name|OCP85XX_BPTR
 value|(CCSRBAR_VA + 0x20)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OCP85XX_BSTRH
+value|(CCSRBAR_VA + 0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BSTRL
+value|(CCSRBAR_VA + 0x24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BSTAR
+value|(CCSRBAR_VA + 0x28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_COREDISR
+value|(CCSRBAR_VA + 0xE0094)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BRR
+value|(CCSRBAR_VA + 0xE00E4)
+end_define
+
+begin_comment
+comment|/*  * Run Control and Power Management registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCSR_CTBENR
+value|(CCSRBAR_VA + 0xE2084)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCSR_CTBCKSELR
+value|(CCSRBAR_VA + 0xE208C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCSR_CTBCHLTCR
+value|(CCSRBAR_VA + 0xE2094)
+end_define
+
+begin_comment
+comment|/*  * DDR Memory controller.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_DDR1_CS0_CONFIG
+value|(CCSRBAR_VA + 0x8080)
+end_define
+
 begin_comment
 comment|/*  * E500 Coherency Module registers  */
 end_comment
@@ -206,6 +277,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCP85XX_TGTIF_DCSR
+value|0x1D
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCP85XX_TGTIF_QMAN
 value|0x3C
 end_define
@@ -271,6 +349,83 @@ define|#
 directive|define
 name|OCP85XX_L2CTL
 value|(CCSRBAR_VA + 0x20000)
+end_define
+
+begin_comment
+comment|/*  * L3 CoreNet platform cache (CPC) registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0
+value|(CCSRBAR_VA + 0x10000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_CE
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_PE
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_FI
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_WT
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_FL
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_LFC
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CFG0
+value|(CCSRBAR_VA + 0x10008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CFG_SZ_MASK
+value|0x00003fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CFG0_SZ_K
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& OCP85XX_CPC_CFG_SZ_MASK)<< 6)
 end_define
 
 begin_comment
@@ -414,6 +569,35 @@ name|int
 name|mpc85xx_attach
 parameter_list|(
 name|platform_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpc85xx_enable_l3_cache
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpc85xx_fix_errata
+parameter_list|(
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dataloss_erratum_access
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

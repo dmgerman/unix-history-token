@@ -374,17 +374,11 @@ decl_stmt|;
 name|size_t
 name|align
 decl_stmt|;
-comment|/* 	 * FILE has a mbstate_t variable. This variable tries to be int64_t 	 * aligned through its definition. int64_t may be larger than void *, 	 * which is the size traditionally used for ALIGNBYTES.  So, use our own 	 * rounding instead of the MI ALIGN macros. If for some reason 	 * ALIGNBYTES is larger than int64_t, respect that too. There appears to 	 * be no portable way to ask for FILE's alignment requirements other 	 * than just knowing here. 	 */
 name|align
 operator|=
-name|MAX
+name|__alignof__
 argument_list|(
-name|ALIGNBYTES
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int64_t
-argument_list|)
+name|FILE
 argument_list|)
 expr_stmt|;
 name|g

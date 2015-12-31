@@ -2464,6 +2464,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"name cannot start with '=': '%s'\n"
+argument_list|,
+name|var
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|var
 index|[
 name|len
@@ -2562,16 +2578,9 @@ literal|6
 index|]
 expr_stmt|;
 block|}
-comment|/* If ldvar is malformed or there's no variable name left, punt. */
+comment|/* If there is no variable name left, punt. */
 if|if
 condition|(
-name|ldvar
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|||
 name|var
 index|[
 literal|0
@@ -2579,7 +2588,14 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"empty variable name\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|val
 operator|=
 name|ub_env_get

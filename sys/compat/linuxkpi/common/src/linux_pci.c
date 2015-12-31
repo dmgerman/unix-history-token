@@ -495,7 +495,7 @@ operator|.
 name|parent
 operator|=
 operator|&
-name|linux_rootdev
+name|linux_root_device
 expr_stmt|;
 name|pdev
 operator|->
@@ -558,7 +558,7 @@ operator|.
 name|kobj
 argument_list|,
 operator|&
-name|dev_ktype
+name|linux_dev_ktype
 argument_list|)
 expr_stmt|;
 name|kobject_set_name
@@ -586,7 +586,7 @@ operator|.
 name|kobj
 argument_list|,
 operator|&
-name|linux_rootdev
+name|linux_root_device
 operator|.
 name|kobj
 argument_list|,
