@@ -259,6 +259,7 @@ name|worddest
 block|{
 name|struct
 name|arglist
+modifier|*
 name|list
 decl_stmt|;
 name|enum
@@ -503,8 +504,7 @@ specifier|static
 name|void
 name|expandmeta
 parameter_list|(
-name|struct
-name|arglist
+name|char
 modifier|*
 parameter_list|,
 name|struct
@@ -920,6 +920,9 @@ parameter_list|(
 name|char
 name|c
 parameter_list|,
+name|int
+name|flag
+parameter_list|,
 name|char
 modifier|*
 name|p
@@ -982,9 +985,27 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|EXP_GLOB
+condition|)
+name|expandmeta
+argument_list|(
+name|grabstackstr
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+name|dst
+operator|->
+name|list
+argument_list|)
+expr_stmt|;
+else|else
 name|appendarglist
 argument_list|(
-operator|&
 name|dst
 operator|->
 name|list
@@ -1027,7 +1048,6 @@ expr_stmt|;
 comment|/* Reserve space while the stack string is empty. */
 name|appendarglist
 argument_list|(
-operator|&
 name|dst
 operator|->
 name|list
@@ -1038,7 +1058,7 @@ expr_stmt|;
 name|dst
 operator|->
 name|list
-operator|.
+operator|->
 name|count
 operator|--
 expr_stmt|;
@@ -1060,11 +1080,13 @@ name|NEXTWORD
 parameter_list|(
 name|c
 parameter_list|,
+name|flag
+parameter_list|,
 name|p
 parameter_list|,
 name|dstlist
 parameter_list|)
-value|p = nextword(c, p, dstlist)
+value|p = nextword(c, flag, p, dstlist)
 end_define
 
 begin_function
@@ -1082,6 +1104,9 @@ specifier|const
 name|char
 modifier|*
 name|syntax
+parameter_list|,
+name|int
+name|flag
 parameter_list|,
 name|char
 modifier|*
@@ -1146,6 +1171,8 @@ name|NEXTWORD
 argument_list|(
 name|c
 argument_list|,
+name|flag
+argument_list|,
 name|p
 argument_list|,
 name|dst
@@ -1155,6 +1182,10 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|flag
+operator|&
+name|EXP_GLOB
+operator|&&
 name|syntax
 index|[
 operator|(
@@ -1197,11 +1228,13 @@ name|data
 parameter_list|,
 name|syntax
 parameter_list|,
+name|flag
+parameter_list|,
 name|p
 parameter_list|,
 name|dst
 parameter_list|)
-value|p = stputs_split((data), syntax, p, dst)
+value|p = stputs_split((data), syntax, flag, p, dst)
 end_define
 
 begin_comment
@@ -1230,6 +1263,15 @@ name|struct
 name|worddest
 name|exparg
 decl_stmt|;
+if|if
+condition|(
+name|fflag
+condition|)
+name|flag
+operator|&=
+operator|~
+name|EXP_GLOB
+expr_stmt|;
 name|argbackq
 operator|=
 name|arg
@@ -1238,13 +1280,11 @@ name|narg
 operator|.
 name|backquote
 expr_stmt|;
-name|emptyarglist
-argument_list|(
-operator|&
 name|exparg
 operator|.
 name|list
-argument_list|)
+operator|=
+name|arglist
 expr_stmt|;
 name|exparg
 operator|.
@@ -1291,7 +1331,7 @@ condition|(
 operator|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|)
 operator|==
 literal|0
@@ -1319,11 +1359,30 @@ if|if
 condition|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 condition|)
+block|{
+if|if
+condition|(
+name|flag
+operator|&
+name|EXP_GLOB
+condition|)
+name|expandmeta
+argument_list|(
+name|grabstackstr
+argument_list|(
+name|expdest
+argument_list|)
+argument_list|,
+name|exparg
+operator|.
+name|list
+argument_list|)
+expr_stmt|;
+else|else
 name|appendarglist
 argument_list|(
-operator|&
 name|exparg
 operator|.
 name|list
@@ -1335,23 +1394,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
+operator|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
+operator|)
+operator|==
+literal|0
 condition|)
-name|expandmeta
-argument_list|(
-operator|&
-name|exparg
-operator|.
-name|list
-argument_list|,
-name|arglist
-argument_list|)
-expr_stmt|;
-else|else
 name|appendarglist
 argument_list|(
 name|arglist
@@ -1366,7 +1419,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR or CTLENDARI character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_FULL or EXP_CASE are set, keep and/or generate CTLESC  * characters to allow for further processing.  *  * If EXP_FULL is set, dst receives any complete words produced.  */
+comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR or CTLENDARI character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_GLOB or EXP_CASE are set, keep and/or generate CTLESC  * characters to allow for further processing.  *  * If EXP_SPLIT is set, dst receives any complete words produced.  */
 end_comment
 
 begin_function
@@ -1397,7 +1450,7 @@ init|=
 name|flag
 operator|&
 operator|(
-name|EXP_FULL
+name|EXP_GLOB
 operator||
 name|EXP_CASE
 operator|)
@@ -1552,7 +1605,7 @@ condition|(
 operator|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|)
 operator|!=
 literal|0
@@ -1612,6 +1665,8 @@ block|{
 name|NEXTWORD
 argument_list|(
 name|c
+argument_list|,
+name|flag
 argument_list|,
 name|expdest
 argument_list|,
@@ -1733,6 +1788,8 @@ name|NEXTWORD
 argument_list|(
 name|c
 argument_list|,
+name|flag
+argument_list|,
 name|expdest
 argument_list|,
 name|dst
@@ -1815,6 +1872,8 @@ block|{
 name|NEXTWORD
 argument_list|(
 name|c
+argument_list|,
+name|flag
 argument_list|,
 name|expdest
 argument_list|,
@@ -2306,7 +2365,7 @@ init|=
 name|flag
 operator|&
 operator|(
-name|EXP_FULL
+name|EXP_GLOB
 operator||
 name|EXP_CASE
 operator|)
@@ -2372,7 +2431,7 @@ name|quoted
 operator|&&
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 condition|)
 name|ifs
 operator|=
@@ -2518,6 +2577,8 @@ name|NEXTWORD
 argument_list|(
 literal|'\n'
 argument_list|,
+name|flag
+argument_list|,
 name|dest
 argument_list|,
 name|dst
@@ -2573,6 +2634,8 @@ condition|)
 name|NEXTWORD
 argument_list|(
 name|lastc
+argument_list|,
+name|flag
 argument_list|,
 name|dest
 argument_list|,
@@ -3839,7 +3902,7 @@ operator||
 operator|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 condition|?
 name|EXP_SPLIT_LIT
 else|:
@@ -3925,7 +3988,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|&&
 operator|*
 name|var
@@ -4381,7 +4444,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|&&
 operator|!
 name|quoted
@@ -4396,6 +4459,8 @@ name|p
 argument_list|,
 name|BASESYNTAX
 argument_list|,
+name|flag
+argument_list|,
 name|expdest
 argument_list|,
 name|dst
@@ -4407,7 +4472,7 @@ condition|(
 name|flag
 operator|&
 operator|(
-name|EXP_FULL
+name|EXP_GLOB
 operator||
 name|EXP_CASE
 operator|)
@@ -4637,7 +4702,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|&&
 operator|(
 name|quoted
@@ -4656,6 +4721,8 @@ condition|)
 name|NEXTWORD
 argument_list|(
 literal|'\0'
+argument_list|,
+name|flag
 argument_list|,
 name|expdest
 argument_list|,
@@ -4873,7 +4940,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|&&
 name|quoted
 condition|)
@@ -4932,6 +4999,8 @@ else|else
 name|NEXTWORD
 argument_list|(
 literal|'\0'
+argument_list|,
+name|flag
 argument_list|,
 name|expdest
 argument_list|,
@@ -5056,7 +5125,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|EXP_FULL
+name|EXP_SPLIT
 operator|&&
 operator|!
 name|quoted
@@ -5083,6 +5152,8 @@ else|else
 name|NEXTWORD
 argument_list|(
 literal|'\0'
+argument_list|,
+name|flag
 argument_list|,
 name|expdest
 argument_list|,
@@ -5210,10 +5281,9 @@ specifier|static
 name|void
 name|expandmeta
 parameter_list|(
-name|struct
-name|arglist
+name|char
 modifier|*
-name|srclist
+name|pattern
 parameter_list|,
 name|struct
 name|arglist
@@ -5228,48 +5298,18 @@ decl_stmt|;
 name|int
 name|firstmatch
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|srclist
-operator|->
-name|count
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|firstmatch
 operator|=
 name|dstlist
 operator|->
 name|count
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fflag
-condition|)
-block|{
 name|p
 operator|=
-name|srclist
-operator|->
-name|args
-index|[
-name|i
-index|]
+name|pattern
 expr_stmt|;
 for|for
 control|(
@@ -5309,12 +5349,7 @@ name|expmeta
 argument_list|(
 name|expdir
 argument_list|,
-name|srclist
-operator|->
-name|args
-index|[
-name|i
-index|]
+name|pattern
 argument_list|,
 name|dstlist
 argument_list|)
@@ -5322,7 +5357,6 @@ expr_stmt|;
 name|INTON
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -5337,24 +5371,14 @@ block|{
 comment|/* 			 * no matches 			 */
 name|rmescapes
 argument_list|(
-name|srclist
-operator|->
-name|args
-index|[
-name|i
-index|]
+name|pattern
 argument_list|)
 expr_stmt|;
 name|appendarglist
 argument_list|(
 name|dstlist
 argument_list|,
-name|srclist
-operator|->
-name|args
-index|[
-name|i
-index|]
+name|pattern
 argument_list|)
 expr_stmt|;
 block|}
@@ -5389,7 +5413,6 @@ argument_list|,
 name|expsortcmp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
