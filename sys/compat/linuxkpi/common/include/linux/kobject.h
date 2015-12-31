@@ -85,9 +85,10 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|kobj_type
-name|kfree_type
+name|linux_kfree_type
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +109,7 @@ name|struct
 name|kref
 name|kref
 decl_stmt|;
+specifier|const
 name|struct
 name|kobj_type
 modifier|*
@@ -225,6 +227,7 @@ name|kobject
 modifier|*
 name|kobj
 parameter_list|,
+specifier|const
 name|struct
 name|kobj_type
 modifier|*
@@ -263,22 +266,8 @@ block|}
 end_function
 
 begin_function_decl
-specifier|static
-specifier|inline
 name|void
-name|kobject_put
-parameter_list|(
-name|struct
-name|kobject
-modifier|*
-name|kobj
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kobject_release
+name|linux_kobject_release
 parameter_list|(
 name|struct
 name|kref
@@ -311,7 +300,7 @@ name|kobj
 operator|->
 name|kref
 argument_list|,
-name|kobject_release
+name|linux_kobject_release
 argument_list|)
 expr_stmt|;
 block|}
@@ -437,7 +426,7 @@ argument_list|(
 name|kobj
 argument_list|,
 operator|&
-name|kfree_type
+name|linux_kfree_type
 argument_list|)
 expr_stmt|;
 return|return
@@ -571,6 +560,7 @@ name|kobject
 modifier|*
 name|kobj
 parameter_list|,
+specifier|const
 name|struct
 name|kobj_type
 modifier|*

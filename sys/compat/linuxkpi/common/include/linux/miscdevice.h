@@ -78,7 +78,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|class
-name|miscclass
+name|linux_class_misc
 decl_stmt|;
 end_decl_stmt
 
@@ -101,10 +101,10 @@ operator|=
 name|device_create
 argument_list|(
 operator|&
-name|miscclass
+name|linux_class_misc
 argument_list|,
 operator|&
-name|linux_rootdev
+name|linux_root_device
 argument_list|,
 literal|0
 argument_list|,
@@ -210,7 +210,7 @@ block|{
 name|device_destroy
 argument_list|(
 operator|&
-name|miscclass
+name|linux_class_misc
 argument_list|,
 name|misc
 operator|->
