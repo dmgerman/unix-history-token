@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/_inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1445,7 +1451,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unknown SEC ID 0x%016llx!\n"
+literal|"unknown SEC ID 0x%16"
+name|PRIx64
+literal|"!\n"
 argument_list|,
 name|id
 argument_list|)
