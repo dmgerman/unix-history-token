@@ -478,7 +478,7 @@ condition|(
 name|size
 operator|==
 operator|~
-literal|0UL
+literal|0
 condition|)
 return|return
 operator|(
@@ -497,7 +497,7 @@ condition|(
 name|size
 operator|==
 operator|(
-literal|1UL
+literal|1U
 operator|<<
 name|n
 operator|)
@@ -1311,7 +1311,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_long
+name|uint32_t
 name|size
 decl_stmt|;
 name|uint32_t
