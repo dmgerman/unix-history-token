@@ -447,7 +447,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:Dd:f:F:M:m:N:o:pr:s:S:t:xZ"
+literal|"B:b:Dd:f:F:M:m:N:o:pR:s:S:t:xZ"
 argument_list|)
 operator|)
 operator|!=
