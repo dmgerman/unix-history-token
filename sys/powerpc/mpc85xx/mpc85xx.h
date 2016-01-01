@@ -472,6 +472,24 @@ value|(CCSRBAR_VA + 0xe00b0)
 end_define
 
 begin_comment
+comment|/*  * Run Control/Power Management Registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_RCPM_CDOZSR
+value|(CCSRBAR_VA + 0xe2004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_RCPM_CDOZCR
+value|(CCSRBAR_VA + 0xe200c)
+end_define
+
+begin_comment
 comment|/*  * Prototypes.  */
 end_comment
 
