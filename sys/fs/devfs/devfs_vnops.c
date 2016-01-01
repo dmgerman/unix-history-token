@@ -5830,7 +5830,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* cleanup any cdevpriv upon error */
+comment|/* Clean up any cdevpriv upon error. */
 if|if
 condition|(
 name|error
