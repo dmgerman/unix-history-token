@@ -2700,22 +2700,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|cpu_idle_wakeup
-parameter_list|(
-name|int
-name|cpu
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|cpu_idle_60x
@@ -2823,34 +2807,21 @@ name|sbintime_t
 name|sbt
 parameter_list|)
 block|{
-name|register_t
-name|msr
-decl_stmt|;
-name|msr
-operator|=
-name|mfmsr
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|E500
-comment|/* Freescale E500 core RM section 6.4.1. */
-asm|__asm __volatile("msync; mtmsr %0; isync" ::
-literal|"r"
-operator|(
-name|msr
-operator||
-name|PSL_WE
-operator|)
-block|)
-function|;
-end_function
-
-begin_endif
+name|platform_cpu_idle
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
-unit|}
 end_unit
 
