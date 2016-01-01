@@ -366,6 +366,10 @@ parameter_list|)
 value|(((x) * 1024) / 1000)
 end_define
 
+begin_comment
+comment|/* XXX TODO: cap this at 1, in case hz is not 1000 */
+end_comment
+
 begin_define
 define|#
 directive|define

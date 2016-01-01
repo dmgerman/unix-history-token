@@ -2644,9 +2644,10 @@ argument_list|(
 name|ic
 argument_list|)
 argument_list|,
-name|hz
-operator|/
-literal|1000
+name|msecs_to_ticks
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
