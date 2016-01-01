@@ -1451,7 +1451,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unknown SEC ID 0x%16"
+literal|"unknown SEC ID 0x%016"
 name|PRIx64
 literal|"!\n"
 argument_list|,
