@@ -6175,26 +6175,6 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|IS_DEFAULT_VNET
-argument_list|(
-name|curvnet
-argument_list|)
-condition|)
-name|iflladdr_tag
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|iflladdr_event
-argument_list|,
-name|arp_iflladdr
-argument_list|,
-name|NULL
-argument_list|,
-name|EVENTHANDLER_PRI_ANY
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -1717,7 +1717,7 @@ name|pflags
 operator|&
 name|RT_MAY_LOOP
 expr_stmt|;
-comment|/* 	 * Add local net header.  If no space in first mbuf, 	 * allocate another. 	 */
+comment|/* 	 * Add local net header.  If no space in first mbuf, 	 * allocate another. 	 * 	 * Note that we do prepend regardless of RT_HAS_HEADER flag. 	 * This is done because BPF code shifts m_data pointer 	 * to the end of ethernet header prior to calling if_output(). 	 */
 name|M_PREPEND
 argument_list|(
 name|m
