@@ -221,8 +221,17 @@ value|51471
 end_define
 
 begin_comment
-comment|/* cosine */
+comment|/* sine and cosine */
 end_comment
+
+begin_function_decl
+name|fp16_t
+name|fp16_sin
+parameter_list|(
+name|fp16_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|fp16_t
