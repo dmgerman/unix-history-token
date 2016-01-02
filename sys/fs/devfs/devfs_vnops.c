@@ -1019,7 +1019,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBADF
+name|ERESTART
 operator|)
 return|;
 block|}
@@ -1046,7 +1046,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBADF
+name|ERESTART
 operator|)
 return|;
 block|}
@@ -1090,7 +1090,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBADF
+name|ERESTART
 operator|)
 return|;
 block|}
