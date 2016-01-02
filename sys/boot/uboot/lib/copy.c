@@ -227,6 +227,9 @@ argument_list|(
 operator|(
 name|uint64_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|_start
 argument_list|,
 name|KERN_ALIGN
