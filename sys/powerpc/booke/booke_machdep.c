@@ -767,6 +767,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|cpu_features
+operator||=
+name|PPC_FEATURE_BOOKE
+expr_stmt|;
 name|pmap_mmu_install
 argument_list|(
 name|MMU_TYPE_BOOKE
