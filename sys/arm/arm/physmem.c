@@ -968,7 +968,7 @@ block|{
 name|vm_offset_t
 name|adj
 decl_stmt|;
-comment|/* 	 * Filter out the page at PA 0x00000000.  The VM can't handle it, as 	 * pmap_extract() == 0 means failure. 	 */
+comment|/* 	 * Filter out the page at PA 0x00000000.  The VM can't handle it, as 	 * pmap_extract() == 0 means failure. 	 * 	 * Also filter out the page at the end of the physical address space -- 	 * if addr is non-zero and addr+size is zero that means we wrapped to 	 * the next byte beyond what vm_paddr_t can express.  The calculations 	 * in vm_page_startup() are going to have the same problem, so just work 	 * around it by leaving the last page out. 	 * 	 * XXX This just in:  subtract out a whole megabyte, not just 1 page. 	 * Reducing the size by anything less than 1MB results in a NULL pointer 	 * deref in _vm_map_lock_read() very early in startup.  Better to give 	 * up a whole megabyte than leave some folks with an unusable system 	 * while we investigate. 	 */
 if|if
 condition|(
 name|pa
@@ -983,6 +983,23 @@ expr_stmt|;
 name|sz
 operator|-=
 name|PAGE_SIZE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pa
+operator|+
+name|sz
+operator|==
+literal|0
+condition|)
+block|{
+name|sz
+operator|-=
+literal|1024
+operator|*
+literal|1024
 expr_stmt|;
 block|}
 comment|/* 	 * Round the starting address up to a page boundary, and truncate the 	 * ending page down to a page boundary. 	 */
