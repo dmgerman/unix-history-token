@@ -114,6 +114,7 @@ return|;
 operator|*
 name|tag
 operator|=
+operator|&
 name|memmap_bus
 expr_stmt|;
 return|return
