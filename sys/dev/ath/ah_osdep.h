@@ -444,6 +444,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* XXX TODO: enforce barriers */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -456,7 +460,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|do {								\ 	bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,		\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));		\ 	OS_BUS_BARRIER_REG((_ah), (_reg), OS_BUS_BARRIER_WRITE);	\ 	} while (0)
+value|bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,		\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val))
 end_define
 
 begin_define
@@ -469,7 +473,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|do {								\ 	OS_BUS_BARRIER_REG((_ah), (_reg), OS_BUS_BARRIER_READ);		\ 	bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,			\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg));			\ 	} while (0)
+value|bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,			\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg))
 end_define
 
 begin_endif
