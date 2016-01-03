@@ -753,10 +753,10 @@ name|in_addr
 name|dst
 parameter_list|,
 name|uint32_t
-name|flowid
+name|flags
 parameter_list|,
 name|uint32_t
-name|flags
+name|flowid
 parameter_list|,
 name|struct
 name|nhop4_extended
