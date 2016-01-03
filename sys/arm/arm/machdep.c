@@ -858,6 +858,14 @@ name|FDT
 end_ifdef
 
 begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|loader_envp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_paddr_t
 name|pmap_pa
 decl_stmt|;
@@ -5193,8 +5201,8 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|init_static_kenv
-argument_list|(
+name|loader_envp
+operator|=
 name|MD_FETCH
 argument_list|(
 name|kmdp
@@ -5204,6 +5212,10 @@ argument_list|,
 name|char
 operator|*
 argument_list|)
+expr_stmt|;
+name|init_static_kenv
+argument_list|(
+name|loader_envp
 argument_list|,
 literal|0
 argument_list|)
@@ -6824,7 +6836,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|kern_envp
+name|loader_envp
 operator|==
 name|NULL
 condition|)
@@ -6838,19 +6850,19 @@ return|return;
 block|}
 name|debugf
 argument_list|(
-literal|" kern_envp = 0x%08x\n"
+literal|" loader_envp = 0x%08x\n"
 argument_list|,
 operator|(
 name|uint32_t
 operator|)
-name|kern_envp
+name|loader_envp
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|cp
 operator|=
-name|kern_envp
+name|loader_envp
 init|;
 name|cp
 operator|!=
