@@ -1945,8 +1945,6 @@ name|optp
 argument_list|,
 name|in6p
 argument_list|,
-name|NULL
-argument_list|,
 name|so
 operator|->
 name|so_cred
@@ -3618,8 +3616,6 @@ operator|->
 name|in6p_outputopts
 argument_list|,
 name|inp
-argument_list|,
-name|NULL
 argument_list|,
 name|so
 operator|->

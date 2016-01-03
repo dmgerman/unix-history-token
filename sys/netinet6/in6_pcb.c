@@ -1611,8 +1611,6 @@ name|in6p_outputopts
 argument_list|,
 name|inp
 argument_list|,
-name|NULL
-argument_list|,
 name|inp
 operator|->
 name|inp_cred

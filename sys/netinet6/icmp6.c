@@ -9447,10 +9447,6 @@ name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
-name|struct
-name|route_in6
-name|ro
-decl_stmt|;
 comment|/* 		 * This case matches to multicasts, our anycast, or unicasts 		 * that we do not own.  Select a source address based on the 		 * source address of the erroneous packet. 		 */
 name|bzero
 argument_list|(
@@ -9487,17 +9483,6 @@ operator|->
 name|ip6_dst
 expr_stmt|;
 comment|/* zone ID should be embedded */
-name|bzero
-argument_list|(
-operator|&
-name|ro
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ro
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|e
 operator|=
 name|in6_selectsrc
@@ -9509,9 +9494,6 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|ro
-argument_list|,
 name|NULL
 argument_list|,
 operator|&
@@ -9521,20 +9503,6 @@ operator|&
 name|src
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|.
-name|ro_rt
-condition|)
-name|RTFREE
-argument_list|(
-name|ro
-operator|.
-name|ro_rt
-argument_list|)
-expr_stmt|;
-comment|/* XXX: we could use this */
 if|if
 condition|(
 name|e

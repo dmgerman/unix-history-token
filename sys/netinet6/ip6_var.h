@@ -2045,10 +2045,6 @@ modifier|*
 name|inp
 parameter_list|,
 name|struct
-name|route_in6
-modifier|*
-parameter_list|,
-name|struct
 name|ucred
 modifier|*
 name|cred

@@ -3183,8 +3183,6 @@ name|optp
 argument_list|,
 name|inp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 operator|->
 name|td_ucred
