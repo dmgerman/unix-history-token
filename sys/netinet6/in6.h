@@ -1212,6 +1212,13 @@ decl_stmt|;
 name|uint16_t
 name|ro_flags
 decl_stmt|;
+name|uint16_t
+name|ro_mtu
+decl_stmt|;
+comment|/* saved ro_rt mtu */
+name|uint16_t
+name|spare
+decl_stmt|;
 name|struct
 name|sockaddr_in6
 name|ro_dst

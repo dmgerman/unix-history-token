@@ -32,7 +32,7 @@ comment|/*  * Kernel resident routing tables.  *  * The routing tables are initi
 end_comment
 
 begin_comment
-comment|/*  * A route consists of a destination address, a reference  * to a routing entry, and a reference to an llentry.    * These are often held by protocols in their control  * blocks, e.g. inpcb.  */
+comment|/*  * Struct route consiste of a destination address,  * a route entry pointer, link-layer prepend data pointer along  * with its length.  */
 end_comment
 
 begin_struct
@@ -53,6 +53,13 @@ name|ro_plen
 decl_stmt|;
 name|uint16_t
 name|ro_flags
+decl_stmt|;
+name|uint16_t
+name|ro_mtu
+decl_stmt|;
+comment|/* saved ro_rt mtu */
+name|uint16_t
+name|spare
 decl_stmt|;
 name|struct
 name|sockaddr
