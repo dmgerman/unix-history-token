@@ -1756,6 +1756,10 @@ return|;
 block|}
 block|}
 comment|/* Allocate irq */
+name|rid
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|sc_irq_res
