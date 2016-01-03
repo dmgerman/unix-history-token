@@ -356,27 +356,8 @@ value|OS_BUS_BARRIER((_ah), (_reg), 4, (_t))
 end_define
 
 begin_comment
-comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  */
+comment|/*  * Register read/write operations are handled through  * platform-dependent routines.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AH_DEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AH_REGOPS_FUNC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AH_DEBUG_ALQ
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -438,48 +419,6 @@ name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* XXX TODO: enforce barriers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OS_REG_WRITE
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_reg
-parameter_list|,
-name|_val
-parameter_list|)
-define|\
-value|bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,		\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|OS_REG_READ
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_reg
-parameter_list|)
-define|\
-value|bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,			\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
