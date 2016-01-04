@@ -966,6 +966,9 @@ decl_stmt|;
 name|bool
 name|hw_lro_en
 decl_stmt|;
+name|bool
+name|cqe_zipping_en
+decl_stmt|;
 name|u32
 name|lro_wqe_sz
 decl_stmt|;
@@ -984,7 +987,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|m(+1, u64 tx_pauseframe_control, "tx_pauseframe_control", "Set to enable TX pause frames. Clear to disable.") \   m(+1, u64 rx_pauseframe_control, "rx_pauseframe_control", "Set to enable RX pause frames. Clear to disable.") \   m(+1, u64 tx_queue_size_max, "tx_queue_size_max", "Max send queue size") \   m(+1, u64 rx_queue_size_max, "rx_queue_size_max", "Max receive queue size") \   m(+1, u64 tx_queue_size, "tx_queue_size", "Default send queue size")	\   m(+1, u64 rx_queue_size, "rx_queue_size", "Default receive queue size") \   m(+1, u64 channels, "channels", "Default number of channels")		\   m(+1, u64 coalesce_usecs_max, "coalesce_usecs_max", "Maximum usecs for joining packets") \   m(+1, u64 coalesce_pkts_max, "coalesce_pkts_max", "Maximum packets to join") \   m(+1, u64 rx_coalesce_usecs, "rx_coalesce_usecs", "Limit in usec for joining rx packets") \   m(+1, u64 rx_coalesce_pkts, "rx_coalesce_pkts", "Maximum number of rx packets to join") \   m(+1, u64 rx_coalesce_mode, "rx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_coalesce_usecs, "tx_coalesce_usecs", "Limit in usec for joining tx packets") \   m(+1, u64 tx_coalesce_pkts, "tx_coalesce_pkts", "Maximum number of tx packets to join") \   m(+1, u64 tx_coalesce_mode, "tx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 hw_lro, "hw_lro", "set to enable hw_lro")
+value|m(+1, u64 tx_pauseframe_control, "tx_pauseframe_control", "Set to enable TX pause frames. Clear to disable.") \   m(+1, u64 rx_pauseframe_control, "rx_pauseframe_control", "Set to enable RX pause frames. Clear to disable.") \   m(+1, u64 tx_queue_size_max, "tx_queue_size_max", "Max send queue size") \   m(+1, u64 rx_queue_size_max, "rx_queue_size_max", "Max receive queue size") \   m(+1, u64 tx_queue_size, "tx_queue_size", "Default send queue size")	\   m(+1, u64 rx_queue_size, "rx_queue_size", "Default receive queue size") \   m(+1, u64 channels, "channels", "Default number of channels")		\   m(+1, u64 coalesce_usecs_max, "coalesce_usecs_max", "Maximum usecs for joining packets") \   m(+1, u64 coalesce_pkts_max, "coalesce_pkts_max", "Maximum packets to join") \   m(+1, u64 rx_coalesce_usecs, "rx_coalesce_usecs", "Limit in usec for joining rx packets") \   m(+1, u64 rx_coalesce_pkts, "rx_coalesce_pkts", "Maximum number of rx packets to join") \   m(+1, u64 rx_coalesce_mode, "rx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_coalesce_usecs, "tx_coalesce_usecs", "Limit in usec for joining tx packets") \   m(+1, u64 tx_coalesce_pkts, "tx_coalesce_pkts", "Maximum number of tx packets to join") \   m(+1, u64 tx_coalesce_mode, "tx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 hw_lro, "hw_lro", "set to enable hw_lro") \   m(+1, u64 cqe_zipping, "cqe_zipping", "0 : CQE zipping disabled")
 end_define
 
 begin_define
