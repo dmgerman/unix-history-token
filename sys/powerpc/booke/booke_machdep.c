@@ -541,9 +541,9 @@ begin_function_decl
 name|uintptr_t
 name|booke_init
 parameter_list|(
-name|uint32_t
+name|u_long
 parameter_list|,
-name|uint32_t
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1039,10 +1039,10 @@ begin_function
 name|uintptr_t
 name|booke_init
 parameter_list|(
-name|uint32_t
+name|u_long
 name|arg1
 parameter_list|,
-name|uint32_t
+name|u_long
 name|arg2
 parameter_list|)
 block|{
