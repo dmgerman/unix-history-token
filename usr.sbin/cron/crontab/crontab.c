@@ -2774,7 +2774,7 @@ if|if
 condition|(
 name|e
 condition|)
-name|free
+name|free_entry
 argument_list|(
 name|e
 argument_list|)
