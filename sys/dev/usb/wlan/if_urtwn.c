@@ -12644,7 +12644,7 @@ argument_list|,
 name|R92C_TXPAUSE
 argument_list|)
 operator||
-literal|0x0f
+name|R92C_TX_QUEUE_AC
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24341,7 +24341,7 @@ name|sc
 argument_list|,
 name|R92C_TXPAUSE
 argument_list|,
-literal|0xff
+name|R92C_TX_QUEUE_ALL
 argument_list|)
 expr_stmt|;
 block|}
@@ -25377,7 +25377,7 @@ name|sc
 argument_list|,
 name|R92C_HWSEQ_CTRL
 argument_list|,
-literal|0xff
+name|R92C_TX_QUEUE_ALL
 argument_list|)
 expr_stmt|;
 comment|/* Enable per-packet TX report. */
