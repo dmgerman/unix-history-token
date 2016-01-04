@@ -134,6 +134,7 @@ comment|/* List of target addresses */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|target_addresslist
 name|target_addresslist
@@ -150,6 +151,7 @@ comment|/* List of target parameters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|target_paramlist
 name|target_paramlist
@@ -166,6 +168,7 @@ comment|/* List of notification targets */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|target_notifylist
 name|target_notifylist
