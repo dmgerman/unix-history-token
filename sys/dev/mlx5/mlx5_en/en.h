@@ -2581,6 +2581,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|mlx5e_refresh_channel_params
+parameter_list|(
+name|struct
+name|mlx5e_priv
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
