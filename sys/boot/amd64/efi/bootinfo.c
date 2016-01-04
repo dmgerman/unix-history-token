@@ -422,7 +422,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|x86_efi_copyin
+name|archsw
+operator|.
+name|arch_copyin
 argument_list|(
 name|ep
 operator|->
@@ -442,7 +444,9 @@ name|len
 expr_stmt|;
 if|if
 condition|(
-name|x86_efi_copyin
+name|archsw
+operator|.
+name|arch_copyin
 argument_list|(
 literal|"="
 argument_list|,
@@ -477,7 +481,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|x86_efi_copyin
+name|archsw
+operator|.
+name|arch_copyin
 argument_list|(
 name|ep
 operator|->
@@ -498,7 +504,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|x86_efi_copyin
+name|archsw
+operator|.
+name|arch_copyin
 argument_list|(
 literal|""
 argument_list|,
@@ -518,7 +526,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|x86_efi_copyin
+name|archsw
+operator|.
+name|arch_copyin
 argument_list|(
 literal|""
 argument_list|,
@@ -557,7 +567,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|{					\ 	uint32_t x = (v);					\ 	if (c)							\ 		x86_efi_copyin(&x, a, sizeof(x));		\ 	a += sizeof(x);						\ }
+value|{					\ 	uint32_t x = (v);					\ 	if (c)							\ 		archsw.arch_copyin(&x, a, sizeof(x));		\ 	a += sizeof(x);						\ }
 end_define
 
 begin_define
@@ -573,7 +583,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{					\ 	COPY32(t, a, c);					\ 	COPY32(strlen(s) + 1, a, c);				\ 	if (c)							\ 		x86_efi_copyin(s, a, strlen(s) + 1);		\ 	a += roundup(strlen(s) + 1, sizeof(uint64_t));		\ }
+value|{					\ 	COPY32(t, a, c);					\ 	COPY32(strlen(s) + 1, a, c);				\ 	if (c)							\ 		archsw.arch_copyin(s, a, strlen(s) + 1);	\ 	a += roundup(strlen(s) + 1, sizeof(u_long));		\ }
 end_define
 
 begin_define
@@ -631,7 +641,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{					\ 	COPY32(t, a, c);					\ 	COPY32(sizeof(s), a, c);				\ 	if (c)							\ 		x86_efi_copyin(&s, a, sizeof(s));		\ 	a += roundup(sizeof(s), sizeof(uint64_t));		\ }
+value|{					\ 	COPY32(t, a, c);					\ 	COPY32(sizeof(s), a, c);				\ 	if (c)							\ 		archsw.arch_copyin(&s, a, sizeof(s));		\ 	a += roundup(sizeof(s), sizeof(u_long));		\ }
 end_define
 
 begin_define
@@ -673,7 +683,7 @@ name|mm
 parameter_list|,
 name|c
 parameter_list|)
-value|{				\ 	COPY32(MODINFO_METADATA | mm->md_type, a, c);		\ 	COPY32(mm->md_size, a, c);				\ 	if (c)							\ 		x86_efi_copyin(mm->md_data, a, mm->md_size);	\ 	a += roundup(mm->md_size, sizeof(uint64_t));		\ }
+value|{				\ 	COPY32(MODINFO_METADATA | mm->md_type, a, c);		\ 	COPY32(mm->md_size, a, c);				\ 	if (c)							\ 		archsw.arch_copyin(mm->md_data, a, mm->md_size);	\ 	a += roundup(mm->md_size, sizeof(u_long));		\ }
 end_define
 
 begin_define
@@ -1234,7 +1244,9 @@ argument_list|(
 literal|"rootdev"
 argument_list|)
 expr_stmt|;
-name|x86_efi_getdev
+name|archsw
+operator|.
+name|arch_getdev
 argument_list|(
 operator|(
 name|void
