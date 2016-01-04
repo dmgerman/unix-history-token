@@ -1211,19 +1211,6 @@ name|mdp
 operator|=
 name|NULL
 expr_stmt|;
-name|ret
-operator|=
-name|powerpc_init
-argument_list|(
-name|dtbp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|mdp
-argument_list|)
-expr_stmt|;
 comment|/* Default to 32 byte cache line size. */
 switch|switch
 condition|(
@@ -1250,6 +1237,19 @@ literal|64
 expr_stmt|;
 break|break;
 block|}
+name|ret
+operator|=
+name|powerpc_init
+argument_list|(
+name|dtbp
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|mdp
+argument_list|)
+expr_stmt|;
 comment|/* Enable caches */
 name|booke_enable_l1_cache
 argument_list|()
