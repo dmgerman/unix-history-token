@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_define
@@ -1494,6 +1494,25 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * A mark is an ifile (input file) plus a position within the file.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mark
+block|{
+name|IFILE
+name|m_ifile
+decl_stmt|;
+name|struct
+name|scrpos
+name|m_scrpos
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 union|union
@@ -1532,6 +1551,35 @@ decl_stmt|;
 name|char
 modifier|*
 name|endstring
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wchar_range
+block|{
+name|LWCHAR
+name|first
+decl_stmt|,
+name|last
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wchar_range_table
+block|{
+name|struct
+name|wchar_range
+modifier|*
+name|table
+decl_stmt|;
+name|int
+name|count
 decl_stmt|;
 block|}
 struct|;
@@ -2034,6 +2082,13 @@ name|CSI
 value|((unsigned char)'\233')
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHAR_END_COMMAND
+value|0x40000000
+end_define
+
 begin_if
 if|#
 directive|if
@@ -2333,6 +2388,36 @@ end_define
 begin_comment
 comment|/* Remove ANSI escape sequences */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_TIME_T
+end_if
+
+begin_define
+define|#
+directive|define
+name|time_type
+value|time_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|time_type
+value|long
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
