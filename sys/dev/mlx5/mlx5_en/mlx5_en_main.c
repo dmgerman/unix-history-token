@@ -11587,6 +11587,9 @@ decl_stmt|;
 name|int
 name|max_mtu
 decl_stmt|;
+name|uint8_t
+name|read_addr
+decl_stmt|;
 name|priv
 operator|=
 name|ifp
@@ -12486,7 +12489,54 @@ goto|goto
 name|err_i2c
 goto|;
 block|}
-comment|/* 		 * Note that we ignore i2c.addr here. The driver hardcodes 		 * the address to 0x50, while standard expects it to be 0xA0. 		 */
+comment|/* 		 * Currently 0XA0 and 0xA2 are the only addresses permitted. 		 * The internal conversion is as follows: 		 */
+if|if
+condition|(
+name|i2c
+operator|.
+name|dev_addr
+operator|==
+literal|0xA0
+condition|)
+name|read_addr
+operator|=
+name|MLX5E_I2C_ADDR_LOW
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|i2c
+operator|.
+name|dev_addr
+operator|==
+literal|0xA2
+condition|)
+name|read_addr
+operator|=
+name|MLX5E_I2C_ADDR_HIGH
+expr_stmt|;
+else|else
+block|{
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"Query eeprom failed, "
+literal|"Invalid Address: %X\n"
+argument_list|,
+name|i2c
+operator|.
+name|dev_addr
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|err_i2c
+goto|;
+block|}
 name|error
 operator|=
 name|mlx5_query_eeprom
@@ -12495,7 +12545,7 @@ name|priv
 operator|->
 name|mdev
 argument_list|,
-name|MLX5E_I2C_ADDR_LOW
+name|read_addr
 argument_list|,
 name|MLX5E_EEPROM_LOW_PAGE
 argument_list|,
@@ -12561,7 +12611,7 @@ name|priv
 operator|->
 name|mdev
 argument_list|,
-name|MLX5E_I2C_ADDR_LOW
+name|read_addr
 argument_list|,
 name|MLX5E_EEPROM_LOW_PAGE
 argument_list|,
