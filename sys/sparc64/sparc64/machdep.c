@@ -1702,8 +1702,8 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|kern_envp
-operator|=
+name|init_static_kenv
+argument_list|(
 name|MD_FETCH
 argument_list|(
 name|kmdp
@@ -1712,6 +1712,9 @@ name|MODINFOMD_ENVP
 argument_list|,
 name|char
 operator|*
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|end

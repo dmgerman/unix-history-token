@@ -32,7 +32,7 @@ comment|/*  * Kernel resident routing tables.  *  * The routing tables are initi
 end_comment
 
 begin_comment
-comment|/*  * A route consists of a destination address, a reference  * to a routing entry, and a reference to an llentry.    * These are often held by protocols in their control  * blocks, e.g. inpcb.  */
+comment|/*  * Struct route consiste of a destination address,  * a route entry pointer, link-layer prepend data pointer along  * with its length.  */
 end_comment
 
 begin_struct
@@ -53,6 +53,13 @@ name|ro_plen
 decl_stmt|;
 name|uint16_t
 name|ro_flags
+decl_stmt|;
+name|uint16_t
+name|ro_mtu
+decl_stmt|;
+comment|/* saved ro_rt mtu */
+name|uint16_t
+name|spare
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -834,6 +841,21 @@ end_define
 
 begin_comment
 comment|/* For future use */
+end_comment
+
+begin_comment
+comment|/* Control plane route request flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHR_COPY
+value|0x100
+end_define
+
+begin_comment
+comment|/* Copy rte data */
 end_comment
 
 begin_comment
@@ -2446,6 +2468,40 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rib_lookup_info
+parameter_list|(
+name|uint32_t
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|rt_addrinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rib_free_info
+parameter_list|(
+name|struct
+name|rt_addrinfo
+modifier|*
+name|info
 parameter_list|)
 function_decl|;
 end_function_decl

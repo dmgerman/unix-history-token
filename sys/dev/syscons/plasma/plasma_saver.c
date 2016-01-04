@@ -352,7 +352,7 @@ expr_stmt|;
 comment|/* divide by 4 to stretch out the pattern */
 name|m
 operator|=
-name|fp16_add
+name|fp16_sub
 argument_list|(
 name|m
 argument_list|,

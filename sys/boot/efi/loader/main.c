@@ -1834,12 +1834,30 @@ name|CMD_OK
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"Current mode: %d\n"
+argument_list|,
+name|conout
+operator|->
+name|Mode
+operator|->
+name|Mode
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<=
+name|conout
+operator|->
+name|Mode
+operator|->
+name|MaxMode
 condition|;
 name|i
 operator|++
@@ -1869,7 +1887,7 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 name|printf
 argument_list|(
 literal|"Mode %d: %u columns, %u rows\n"

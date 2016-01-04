@@ -1201,6 +1201,9 @@ name|ah
 operator|->
 name|ah_sh
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG
 comment|/* Debug - complain if we haven't fully waken things up */
 if|if
 condition|(
@@ -1237,6 +1240,8 @@ name|ah_powerMode
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ath_hal_alq
@@ -1331,6 +1336,15 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+name|OS_BUS_BARRIER_REG
+argument_list|(
+name|ah
+argument_list|,
+name|reg
+argument_list|,
+name|OS_BUS_BARRIER_WRITE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ah
@@ -1379,6 +1393,9 @@ decl_stmt|;
 name|u_int32_t
 name|val
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG
 comment|/* Debug - complain if we haven't fully waken things up */
 if|if
 condition|(
@@ -1413,6 +1430,8 @@ name|ah_powerMode
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ah
@@ -1425,6 +1444,15 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ah_regser_mtx
+argument_list|)
+expr_stmt|;
+name|OS_BUS_BARRIER_REG
+argument_list|(
+name|ah
+argument_list|,
+name|reg
+argument_list|,
+name|OS_BUS_BARRIER_READ
 argument_list|)
 expr_stmt|;
 name|val
@@ -1615,19 +1643,14 @@ block|}
 block|}
 end_function
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|AH_DEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AH_REGOPS_FUNC
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* AH_DEBUG_ALQ */
+end_comment
 
 begin_comment
 comment|/*  * Memory-mapped device register read/write.  These are here  * as routines when debugging support is enabled and/or when  * explicitly configured to use function calls.  The latter is  * for architectures that might need to do something before  * referencing memory (e.g. remap an i/o window).  *  * NB: see the comments in ah_osdep.h about byte-swapping register  *     reads and writes to understand what's going on below.  */
@@ -1664,6 +1687,9 @@ name|ah
 operator|->
 name|ah_sh
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG
 comment|/* Debug - complain if we haven't fully waken things up */
 if|if
 condition|(
@@ -1700,6 +1726,8 @@ name|ah_powerMode
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ah
@@ -1723,6 +1751,15 @@ argument_list|,
 name|reg
 argument_list|,
 name|val
+argument_list|)
+expr_stmt|;
+name|OS_BUS_BARRIER_REG
+argument_list|(
+name|ah
+argument_list|,
+name|reg
+argument_list|,
+name|OS_BUS_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1773,6 +1810,9 @@ decl_stmt|;
 name|u_int32_t
 name|val
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG
 comment|/* Debug - complain if we haven't fully waken things up */
 if|if
 condition|(
@@ -1807,6 +1847,8 @@ name|ah_powerMode
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ah
@@ -1819,6 +1861,15 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ah_regser_mtx
+argument_list|)
+expr_stmt|;
+name|OS_BUS_BARRIER_REG
+argument_list|(
+name|ah
+argument_list|,
+name|reg
+argument_list|,
+name|OS_BUS_BARRIER_READ
 argument_list|)
 expr_stmt|;
 name|val
@@ -1858,7 +1909,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AH_DEBUG || AH_REGOPS_FUNC */
+comment|/* AH_DEBUG_ALQ */
 end_comment
 
 begin_ifdef

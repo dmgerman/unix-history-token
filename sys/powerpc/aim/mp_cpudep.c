@@ -260,7 +260,7 @@ operator|(
 name|SPR_HID4
 operator|)
 operator|,
-literal|"r"
+literal|"b"
 operator|(
 name|bsp_state
 operator|)
@@ -278,7 +278,7 @@ operator|(
 name|SPR_HID5
 operator|)
 operator|,
-literal|"r"
+literal|"b"
 operator|(
 name|bsp_state
 operator|)
@@ -1293,7 +1293,7 @@ operator|(
 name|SPR_HID0
 operator|)
 operator|,
-literal|"r"
+literal|"b"
 operator|(
 name|bsp_state
 operator|)
@@ -1320,7 +1320,7 @@ operator|(
 name|SPR_HID1
 operator|)
 operator|,
-literal|"r"
+literal|"b"
 operator|(
 name|bsp_state
 operator|)
