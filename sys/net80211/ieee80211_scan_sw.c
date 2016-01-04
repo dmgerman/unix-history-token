@@ -1453,7 +1453,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: %s scan, ticks %u duration %lu\n"
+literal|"%s: %s scan, ticks %u duration %u\n"
 argument_list|,
 name|__func__
 argument_list|,
