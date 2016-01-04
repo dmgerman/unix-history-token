@@ -9552,6 +9552,14 @@ argument_list|,
 name|ucode_type
 argument_list|)
 expr_stmt|;
+name|iwm_fw_info_free
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_fw
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -22928,16 +22936,6 @@ name|int
 name|do_net80211
 parameter_list|)
 block|{
-name|struct
-name|iwm_fw_info
-modifier|*
-name|fw
-init|=
-operator|&
-name|sc
-operator|->
-name|sc_fw
-decl_stmt|;
 name|device_t
 name|dev
 init|=
@@ -23027,21 +23025,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Free firmware */
-if|if
-condition|(
-name|fw
-operator|->
-name|fw_fp
-operator|!=
-name|NULL
-condition|)
-name|iwm_fw_info_free
-argument_list|(
-name|fw
-argument_list|)
-expr_stmt|;
-comment|/* free scheduler */
+comment|/* Free scheduler */
 name|iwm_free_sched
 argument_list|(
 name|sc
