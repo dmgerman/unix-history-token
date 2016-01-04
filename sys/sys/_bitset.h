@@ -72,7 +72,7 @@ parameter_list|,
 name|_s
 parameter_list|)
 define|\
-value|struct t {								\         long    __bits[__bitset_words((_s))];				\ };
+value|struct t {								\         long    __bits[__bitset_words((_s))];				\ }
 end_define
 
 begin_define

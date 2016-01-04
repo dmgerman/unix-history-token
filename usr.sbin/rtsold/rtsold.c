@@ -3350,8 +3350,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtsold [-adDfFm1] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] interfaces...\n"
+literal|"usage: rtsold [-dDfFm1] [-O script-name] "
+literal|"[-p pidfile] [-R script-name] interface ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3359,7 +3359,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtsold [-dDfFm1] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] -a\n"
+literal|"[-p pidfile] [-R script-name] -a\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -3369,7 +3369,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtsol [-dDF] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] interfaces...\n"
+literal|"[-p pidfile] [-R script-name] interface ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3377,7 +3377,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtsol [-dDF] [-O script-name] "
-literal|"[-P pidfile] [-R script-name] -a\n"
+literal|"[-p pidfile] [-R script-name] -a\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3880,11 +3880,6 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|argv
@@ -3898,7 +3893,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|char
-operator|*
 operator|*
 argument_list|)
 argument_list|)
@@ -3976,11 +3970,6 @@ condition|)
 block|{
 name|a
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|argv
@@ -3994,7 +3983,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|char
-operator|*
 operator|*
 argument_list|)
 argument_list|)

@@ -162,7 +162,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -311,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
-value|256
+value|1024
 end_define
 
 begin_endif
@@ -354,10 +354,10 @@ name|isrp
 parameter_list|,
 name|semap
 parameter_list|,
-name|mbox0p
+name|info
 parameter_list|)
 define|\
-value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, mbox0p)
+value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, info)
 end_define
 
 begin_define
@@ -734,10 +734,6 @@ name|sendmarker
 operator|:
 literal|1
 operator|,
-name|role
-operator|:
-literal|2
-operator|,
 name|isp_req_ack_active_neg
 operator|:
 literal|1
@@ -1068,17 +1064,6 @@ value|0xfe
 end_define
 
 begin_comment
-comment|/* Use this handle for the base for multi-id firmware SNS logins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPH_SNS_HDLBASE
-value|0x400
-end_define
-
-begin_comment
 comment|/* These are for 2K Login Firmware cards */
 end_comment
 
@@ -1141,7 +1126,7 @@ begin_define
 define|#
 directive|define
 name|NPH_IP_BCST
-value|0x7ff
+value|0x7FF
 end_define
 
 begin_comment
@@ -1248,6 +1233,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VALID_PORT
+parameter_list|(
+name|port
+parameter_list|)
+value|(port != PORT_NONE&& port != PORT_ANY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DOMAIN_CONTROLLER_BASE
 value|0xFFFC00
 end_define
@@ -1343,6 +1338,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HANDLE_CTRL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_HANDLE_SEQ_MASK
 value|0xffff0000
 end_define
@@ -1367,38 +1369,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_VALID_INI_HANDLE
-parameter_list|(
-name|c
-parameter_list|,
-name|hdl
-parameter_list|)
-define|\
-value|(ISP_H2HT(hdl) == ISP_HANDLE_INITIATOR&& (hdl& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 ISP_H2SEQ(hdl) == ISP_H2SEQ((c)->isp_xflist[hdl& ISP_HANDLE_CMD_MASK].handle))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_VALID_TGT_HANDLE
-parameter_list|(
-name|c
-parameter_list|,
-name|hdl
-parameter_list|)
-define|\
-value|(ISP_H2HT(hdl) == ISP_HANDLE_TARGET&& (hdl& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 ISP_H2SEQ(hdl) == ISP_H2SEQ((c)->isp_tgtlist[hdl& ISP_HANDLE_CMD_MASK].handle))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISP_VALID_HANDLE
 parameter_list|(
 name|c
@@ -1406,25 +1376,8 @@ parameter_list|,
 name|hdl
 parameter_list|)
 define|\
-value|(ISP_VALID_INI_HANDLE((c), hdl) || ISP_VALID_TGT_HANDLE((c), hdl))
+value|((ISP_H2HT(hdl) == ISP_HANDLE_INITIATOR || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_TARGET || \ 	  ISP_H2HT(hdl) == ISP_HANDLE_CTRL)&& \ 	 ((hdl)& ISP_HANDLE_CMD_MASK)< (c)->isp_maxcmds&& \ 	 (hdl) == ((c)->isp_xflist[(hdl)& ISP_HANDLE_CMD_MASK].handle))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_VALID_HANDLE
-value|ISP_VALID_INI_HANDLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1456,13 +1409,17 @@ decl_stmt|;
 comment|/* Incoming new PRLI parameters */
 name|uint16_t
 label|:
-literal|12
+literal|11
 operator|,
 name|autologin
 operator|:
 literal|1
 operator|,
 comment|/* F/W does PLOGI/PLOGO */
+name|probational
+operator|:
+literal|1
+operator|,
 name|state
 operator|:
 literal|3
@@ -1512,54 +1469,64 @@ name|FC_PORTDB_STATE_NIL
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|FC_PORTDB_STATE_PROBATIONAL
-value|1
-end_define
+begin_comment
+comment|/* Empty DB slot */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_DEAD
-value|2
+value|1
 end_define
+
+begin_comment
+comment|/* Was valid, but no more. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_CHANGED
-value|3
+value|2
 end_define
+
+begin_comment
+comment|/* Was valid, but changed. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_NEW
-value|4
+value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|FC_PORTDB_STATE_PENDING_VALID
-value|5
-end_define
+begin_comment
+comment|/* Logged in, not announced. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_ZOMBIE
-value|6
+value|4
 end_define
+
+begin_comment
+comment|/* Invalid, but announced. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FC_PORTDB_STATE_VALID
-value|7
+value|5
 end_define
+
+begin_comment
+comment|/* Valid */
+end_comment
 
 begin_define
 define|#
@@ -1605,17 +1572,13 @@ decl_stmt|;
 comment|/* Connection Type */
 name|uint32_t
 label|:
-literal|3
+literal|4
 operator|,
 name|fctape_enabled
 operator|:
 literal|1
 operator|,
 name|sendmarker
-operator|:
-literal|1
-operator|,
-name|loop_seen_once
 operator|:
 literal|1
 operator|,
@@ -1690,6 +1653,12 @@ decl_stmt|;
 name|XS_DMA_ADDR_T
 name|isp_scdma
 decl_stmt|;
+name|uint8_t
+name|isp_scanscratch
+index|[
+name|ISP_FC_SCRLEN
+index|]
+decl_stmt|;
 block|}
 name|fcparam
 typedef|;
@@ -1705,7 +1674,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_WAIT_AL_PA
+name|FW_WAIT_LINK
 value|1
 end_define
 
@@ -1761,57 +1730,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_LIP_RCVD
+name|LOOP_HAVE_LINK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_PDB_RCVD
+name|LOOP_TESTING_LINK
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_LOOP
+name|LOOP_LTEST_DONE
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_LSCAN_DONE
+name|LOOP_SCANNING_LOOP
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_FABRIC
+name|LOOP_LSCAN_DONE
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_FSCAN_DONE
+name|LOOP_SCANNING_FABRIC
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SYNCING_PDB
+name|LOOP_FSCAN_DONE
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_READY
+name|LOOP_SYNCING_PDB
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_READY
+value|9
 end_define
 
 begin_define
@@ -1847,6 +1823,16 @@ define|#
 directive|define
 name|TOPO_PTP_STUB
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPO_IS_FABRIC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == TOPO_FL_PORT || (x) == TOPO_F_PORT)
 end_define
 
 begin_comment
@@ -2110,20 +2096,6 @@ name|isp_hdl_t
 modifier|*
 name|isp_xffree
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-comment|/* 	 * Active target commands are stored here, indexed by handle functions. 	 */
-name|isp_hdl_t
-modifier|*
-name|isp_tgtlist
-decl_stmt|;
-name|isp_hdl_t
-modifier|*
-name|isp_tgtfree
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * request/result queue pointers and DMA handles for them. 	 */
 name|void
 modifier|*
@@ -2320,7 +2292,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_ONEGB
+name|ISP_CFG_1GB
 value|0x10
 end_define
 
@@ -2331,7 +2303,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_TWOGB
+name|ISP_CFG_2GB
 value|0x20
 end_define
 
@@ -2419,7 +2391,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_FOURGB
+name|ISP_CFG_4GB
 value|0x2000
 end_define
 
@@ -2430,7 +2402,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_EIGHTGB
+name|ISP_CFG_8GB
 value|0x4000
 end_define
 
@@ -2441,7 +2413,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_SIXTEENGB
+name|ISP_CFG_16GB
 value|0x8000
 end_define
 
@@ -2890,6 +2862,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_FC_2600
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -3097,6 +3076,16 @@ parameter_list|)
 value|((isp)->isp_type>= ISP_HA_FC_2500)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IS_26XX
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type>= ISP_HA_FC_2600)
+end_define
+
 begin_comment
 comment|/*  * DMA related macros  */
 end_comment
@@ -3222,7 +3211,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 parameter_list|,
 name|uint16_t
 parameter_list|,
@@ -3308,7 +3297,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands locks may be released while this function is called.  *  * ... ISPCTL_RESET_BUS, int channel);  *        Reset BUS on this channel  * ... ISPCTL_RESET_DEV, int channel, int target);  *        Reset Device on this channel at this target.  * ... ISPCTL_ABORT_CMD, XS_T *xs);  *        Abort active transaction described by xs.  * ... IPCTL_UPDATE_PARAMS);  *        Update any operating parameters (speed, etc.)  * ... ISPCTL_FCLINK_TEST, int channel);  *        Test FC link status on this channel  * ... ISPCTL_SCAN_FABRIC, int channel);  *        Scan fabric on this channel  * ... ISPCTL_SCAN_LOOP, int channel);  *        Scan local loop on this channel  * ... ISPCTL_PDB_SYNC, int channel);  *        Synchronize port database on this channel  * ... ISPCTL_SEND_LIP, int channel);  *        Send a LIP on this channel  * ... ISPCTL_GET_NAMES, int channel, int np, uint64_t *wwnn, uint64_t *wwpn)  *        Get a WWNN/WWPN for this N-port handle on this channel  * ... ISPCTL_RUN_MBOXCMD, mbreg_t *mbp)  *        Run this mailbox command  * ... ISPCTL_GET_PDB, int channel, int nphandle, isp_pdb_t *pdb)  *        Get PDB on this channel for this N-port handle  * ... ISPCTL_PLOGX, isp_plcmd_t *)  *        Performa a port login/logout  * ... ISPCTL_CHANGE_ROLE, int channel, int role);  *        Change role of specified channel  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been separated to allow for finer control.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands locks may be released while this function is called.  *  * ... ISPCTL_RESET_BUS, int channel);  *        Reset BUS on this channel  * ... ISPCTL_RESET_DEV, int channel, int target);  *        Reset Device on this channel at this target.  * ... ISPCTL_ABORT_CMD, XS_T *xs);  *        Abort active transaction described by xs.  * ... IPCTL_UPDATE_PARAMS);  *        Update any operating parameters (speed, etc.)  * ... ISPCTL_FCLINK_TEST, int channel);  *        Test FC link status on this channel  * ... ISPCTL_SCAN_LOOP, int channel);  *        Scan local loop on this channel  * ... ISPCTL_SCAN_FABRIC, int channel);  *        Scan fabric on this channel  * ... ISPCTL_PDB_SYNC, int channel);  *        Synchronize port database on this channel  * ... ISPCTL_SEND_LIP, int channel);  *        Send a LIP on this channel  * ... ISPCTL_GET_NAMES, int channel, int np, uint64_t *wwnn, uint64_t *wwpn)  *        Get a WWNN/WWPN for this N-port handle on this channel  * ... ISPCTL_RUN_MBOXCMD, mbreg_t *mbp)  *        Run this mailbox command  * ... ISPCTL_GET_PDB, int channel, int nphandle, isp_pdb_t *pdb)  *        Get PDB on this channel for this N-port handle  * ... ISPCTL_PLOGX, isp_plcmd_t *)  *        Performa a port login/logout  * ... ISPCTL_CHANGE_ROLE, int channel, int role);  *        Change role of specified channel  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_LOOP, and ISPCTL_SCAN_FABRIC.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices.  */
 end_comment
 
 begin_typedef
@@ -3654,7 +3643,7 @@ comment|/* log all debug messages (target) */
 end_comment
 
 begin_comment
-comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	ISP_FC_SCRLEN				FC scratch area DMA length  *  *	ISP_MEMZERO(dst, src)			platform zeroing function  *	ISP_MEMCPY(dst, src, count)		platform copying function  *	ISP_SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	ISP_DELAY(usecs)			microsecond spindelay function  *	ISP_SLEEP(isp, usecs)			microsecond sleep function  *  *	ISP_INLINE				___inline or not- depending on how  *						good your debugger is  *	ISP_MIN					shorthand for ((a)< (b))? (a) : (b)  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get uint64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *	MAXISPREQUEST(ispsoftc_t *)		maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(ispsoftc_t *, barrier_type, offset, size, chan)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(ispsoftc_t *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(ispsoftc_t *, mbreg_t *) wait for cmd to be done  *	MBOX_NOTIFY_COMPLETE(ispsoftc_t *)	notification of mbox cmd donee  *	MBOX_RELEASE(ispsoftc_t *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(ispsoftc_t *, chan)	acquire lock on FC scratch area  *						return -1 if you cannot  *	FC_SCRATCH_RELEASE(ispsoftc_t *, chan)	acquire lock on FC scratch area  *  *	FCP_NEXT_CRN(ispsoftc_t *, XS_T *, rslt, channel, target, lun)	generate the next command reference number. XS_T * may be null.  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T			Platform SCSI transaction type (i.e., command for HBA)  *	XS_DMA_ADDR_T		Platform PCI DMA Address Type  *	XS_GET_DMA_SEG(..)	Get 32 bit dma segment list value  *	XS_GET_DMA64_SEG(..)	Get 64 bit dma segment list value  *	XS_ISP(xs)		gets an instance out of an XS_T  *	XS_CHANNEL(xs)		gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)		gets the target ""  *	XS_LUN(xs)		gets the lun ""  *	XS_CDBP(xs)		gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)		gets the CDB's length ""  *	XS_XFRLEN(xs)		gets the associated data transfer length ""  *	XS_TIME(xs)		gets the time (in milliseconds) for this command  *	XS_GET_RESID(xs)	gets the current residual count  *	XS_GET_RESID(xs, resid)	sets the current residual count  *	XS_STSP(xs)		gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)		gets a pointer to the associate sense data  *	XS_TOT_SNSLEN(xs)	gets the total length of sense data storage  *	XS_CUR_SNSLEN(xs)	gets the currently used lenght of sense data storage  *	XS_SNSKEY(xs)		dereferences XS_SNSP to get the current stored Sense Key  *	XS_SNSASC(xs)		dereferences XS_SNSP to get the current stored Additional Sense Code  *	XS_SNSASCQ(xs)		dereferences XS_SNSP to get the current stored Additional Sense Code Qualifier  *	XS_TAG_P(xs)		predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)		which type of tag to use  *	XS_SETERR(xs)		set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp, total_len, this_len)	save sense data (total and current amount)  *  *	XS_APPEND_SENSE(xs, sp, len)	append more sense data  *  *	XS_SENSE_VALID(xs)		indicates whether sense is valid  *  *	DEFAULT_FRAMESIZE(ispsoftc_t *)		Default Frame Size  *	DEFAULT_EXEC_THROTTLE(ispsoftc_t *)	Default Execution Throttle  *  *	GET_DEFAULT_ROLE(ispsoftc_t *, int)	Get Default Role for a channel  *	SET_DEFAULT_ROLE(ispsoftc_t *, int, int) Set Default Role for a channel  *	DEFAULT_IID(ispsoftc_t *, int)		Default SCSI initiator ID  *	DEFAULT_LOOPID(ispsoftc_t *, int)	Default FC Loop ID  *  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	DEFAULT_NODEWWN(ispsoftc_t *, chan)	Default FC Node WWN to use  *	DEFAULT_PORTWWN(ispsoftc_t *, chan)	Default FC Port WWN to use  *  *		These defines are hooks to allow the setting of node and  *		port WWNs when NVRAM cannot be read or is to be overriden.  *  *	ACTIVE_NODEWWN(ispsoftc_t *, chan)	FC Node WWN to use  *	ACTIVE_PORTWWN(ispsoftc_t *, chan)	FC Port WWN to use  *  *		After NVRAM is read, these will be invoked to get the  *		node and port WWNs that will actually be used for this  *		channel.  *  *  *	ISP_IOXPUT_8(ispsoftc_t *, uint8_t srcval, uint8_t *dstptr)  *	ISP_IOXPUT_16(ispsoftc_t *, uint16_t srcval, uint16_t *dstptr)  *	ISP_IOXPUT_32(ispsoftc_t *, uint32_t srcval, uint32_t *dstptr)  *  *	ISP_IOXGET_8(ispsoftc_t *, uint8_t *srcptr, uint8_t dstrval)  *	ISP_IOXGET_16(ispsoftc_t *, uint16_t *srcptr, uint16_t dstrval)  *	ISP_IOXGET_32(ispsoftc_t *, uint32_t *srcptr, uint32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(ispsoftc_t *, uint16_t *)  *	ISP_SWIZZLE_NVRAM_LONG(ispsoftc_t *, uint32_t *)  *	ISP_SWAP16(ispsoftc_t *, uint16_t srcval)  *	ISP_SWAP32(ispsoftc_t *, uint32_t srcval)  */
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	ISP_FC_SCRLEN				FC scratch area DMA length  *  *	ISP_MEMZERO(dst, src)			platform zeroing function  *	ISP_MEMCPY(dst, src, count)		platform copying function  *	ISP_SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	ISP_DELAY(usecs)			microsecond spindelay function  *	ISP_SLEEP(isp, usecs)			microsecond sleep function  *  *	ISP_INLINE				___inline or not- depending on how  *						good your debugger is  *	ISP_MIN					shorthand for ((a)< (b))? (a) : (b)  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get uint64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *	MAXISPREQUEST(ispsoftc_t *)		maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(ispsoftc_t *, barrier_type, offset, size, chan)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(ispsoftc_t *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(ispsoftc_t *, mbreg_t *) wait for cmd to be done  *	MBOX_NOTIFY_COMPLETE(ispsoftc_t *)	notification of mbox cmd donee  *	MBOX_RELEASE(ispsoftc_t *)		release lock on mailbox regs  *  *	FC_SCRATCH_ACQUIRE(ispsoftc_t *, chan)	acquire lock on FC scratch area  *						return -1 if you cannot  *	FC_SCRATCH_RELEASE(ispsoftc_t *, chan)	acquire lock on FC scratch area  *  *	FCP_NEXT_CRN(ispsoftc_t *, XS_T *, rslt, channel, target, lun)	generate the next command reference number. XS_T * may be null.  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T			Platform SCSI transaction type (i.e., command for HBA)  *	XS_DMA_ADDR_T		Platform PCI DMA Address Type  *	XS_GET_DMA_SEG(..)	Get 32 bit dma segment list value  *	XS_GET_DMA64_SEG(..)	Get 64 bit dma segment list value  *	XS_ISP(xs)		gets an instance out of an XS_T  *	XS_CHANNEL(xs)		gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)		gets the target ""  *	XS_LUN(xs)		gets the lun ""  *	XS_CDBP(xs)		gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)		gets the CDB's length ""  *	XS_XFRLEN(xs)		gets the associated data transfer length ""  *	XS_TIME(xs)		gets the time (in milliseconds) for this command  *	XS_GET_RESID(xs)	gets the current residual count  *	XS_GET_RESID(xs, resid)	sets the current residual count  *	XS_STSP(xs)		gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)		gets a pointer to the associate sense data  *	XS_TOT_SNSLEN(xs)	gets the total length of sense data storage  *	XS_CUR_SNSLEN(xs)	gets the currently used lenght of sense data storage  *	XS_SNSKEY(xs)		dereferences XS_SNSP to get the current stored Sense Key  *	XS_SNSASC(xs)		dereferences XS_SNSP to get the current stored Additional Sense Code  *	XS_SNSASCQ(xs)		dereferences XS_SNSP to get the current stored Additional Sense Code Qualifier  *	XS_TAG_P(xs)		predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)		which type of tag to use  *	XS_SETERR(xs)		set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp, total_len, this_len)	save sense data (total and current amount)  *  *	XS_APPEND_SENSE(xs, sp, len)	append more sense data  *  *	XS_SENSE_VALID(xs)		indicates whether sense is valid  *  *	DEFAULT_FRAMESIZE(ispsoftc_t *)		Default Frame Size  *	DEFAULT_EXEC_THROTTLE(ispsoftc_t *)	Default Execution Throttle  *  *	DEFAULT_ROLE(ispsoftc_t *, int)		Get Default Role for a channel  *	DEFAULT_IID(ispsoftc_t *, int)		Default SCSI initiator ID  *	DEFAULT_LOOPID(ispsoftc_t *, int)	Default FC Loop ID  *  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	DEFAULT_NODEWWN(ispsoftc_t *, chan)	Default FC Node WWN to use  *	DEFAULT_PORTWWN(ispsoftc_t *, chan)	Default FC Port WWN to use  *  *		These defines are hooks to allow the setting of node and  *		port WWNs when NVRAM cannot be read or is to be overriden.  *  *	ACTIVE_NODEWWN(ispsoftc_t *, chan)	FC Node WWN to use  *	ACTIVE_PORTWWN(ispsoftc_t *, chan)	FC Port WWN to use  *  *		After NVRAM is read, these will be invoked to get the  *		node and port WWNs that will actually be used for this  *		channel.  *  *  *	ISP_IOXPUT_8(ispsoftc_t *, uint8_t srcval, uint8_t *dstptr)  *	ISP_IOXPUT_16(ispsoftc_t *, uint16_t srcval, uint16_t *dstptr)  *	ISP_IOXPUT_32(ispsoftc_t *, uint32_t srcval, uint32_t *dstptr)  *  *	ISP_IOXGET_8(ispsoftc_t *, uint8_t *srcptr, uint8_t dstrval)  *	ISP_IOXGET_16(ispsoftc_t *, uint16_t *srcptr, uint16_t dstrval)  *	ISP_IOXGET_32(ispsoftc_t *, uint32_t *srcptr, uint32_t dstrval)  *  *	ISP_SWIZZLE_NVRAM_WORD(ispsoftc_t *, uint16_t *)  *	ISP_SWIZZLE_NVRAM_LONG(ispsoftc_t *, uint32_t *)  *	ISP_SWAP16(ispsoftc_t *, uint16_t srcval)  *	ISP_SWAP32(ispsoftc_t *, uint32_t srcval)  */
 end_comment
 
 begin_ifdef
@@ -3717,52 +3706,6 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Enable/Disable/Modify a logical unit.  * (softc, cmd, bus, tgt, lun, cmd_cnt, inotify_cnt)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DFLT_CMND_CNT
-value|0xff
-end_define
-
-begin_comment
-comment|/* unmonitored */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DFLT_INOT_CNT
-value|0xff
-end_define
-
-begin_comment
-comment|/* unmonitored */
-end_comment
-
-begin_function_decl
-name|int
-name|isp_lun_cmd
-parameter_list|(
-name|ispsoftc_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)

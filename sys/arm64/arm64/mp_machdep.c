@@ -534,6 +534,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -624,11 +629,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Found register:"
+literal|"register<"
 argument_list|)
 expr_stmt|;
 for|for
@@ -646,7 +656,17 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|"%s%x"
+argument_list|,
+operator|(
+name|i
+operator|==
+literal|0
+operator|)
+condition|?
+literal|""
+else|:
+literal|" "
 argument_list|,
 name|reg
 index|[
@@ -656,9 +676,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
+literal|">\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Set the device to start it later */
 name|cpu_list
 index|[
@@ -687,6 +708,8 @@ name|__unused
 parameter_list|)
 block|{
 name|int
+name|cpu
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Setup the IPI handler */
@@ -743,7 +766,37 @@ if|if
 condition|(
 name|smp_started
 condition|)
+block|{
+for|for
+control|(
+name|cpu
+operator|=
+literal|0
+init|;
+name|cpu
+operator|<=
+name|mp_maxid
+condition|;
+name|cpu
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|CPU_ABSENT
+argument_list|(
+name|cpu
+argument_list|)
+condition|)
+continue|continue;
+name|print_cpu_features
+argument_list|(
+name|cpu
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
+block|}
 name|DELAY
 argument_list|(
 literal|1000

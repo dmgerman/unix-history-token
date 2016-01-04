@@ -161,6 +161,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ReadWord
+parameter_list|(
+name|a
+parameter_list|)
+value|(*((volatile unsigned int *)(a)))
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char

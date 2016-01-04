@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -124,11 +130,6 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"1..1\n"
-argument_list|)
-expr_stmt|;
 name|page
 operator|=
 name|mmap
@@ -155,24 +156,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|page
-operator|==
+operator|!=
 name|MAP_FAILED
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fail 1 - mmap\n"
+argument_list|,
+literal|"mmap failed; errno=%d"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|arc4random_buf
 argument_list|(
 operator|&

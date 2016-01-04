@@ -1196,7 +1196,7 @@ name|nm_wsize
 operator|=
 name|NFS_MAXBSIZE
 expr_stmt|;
-comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space. 	 */
+comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space.  It must also be at least NFS_DIRBLKSIZ, since 	 * that is the buffer size used for directories. 	 */
 name|iosize
 operator|=
 name|imax
@@ -1217,6 +1217,15 @@ argument_list|(
 name|iosize
 argument_list|,
 name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|iosize
+operator|=
+name|imax
+argument_list|(
+name|iosize
+argument_list|,
+name|NFS_DIRBLKSIZ
 argument_list|)
 expr_stmt|;
 name|nmp

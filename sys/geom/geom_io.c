@@ -702,7 +702,7 @@ name|bp
 operator|->
 name|bio_cmd
 expr_stmt|;
-comment|/* 		 *  BIO_ORDERED flag may be used by disk drivers to enforce 		 *  ordering restrictions, so this flag needs to be cloned. 		 *  BIO_UNMAPPED should be inherited, to properly indicate 		 *  which way the buffer is passed. 		 *  Other bio flags are not suitable for cloning. 		 */
+comment|/* 		 *  BIO_ORDERED flag may be used by disk drivers to enforce 		 *  ordering restrictions, so this flag needs to be cloned. 		 *  BIO_UNMAPPED and BIO_VLIST should be inherited, to properly 		 *  indicate which way the buffer is passed. 		 *  Other bio flags are not suitable for cloning. 		 */
 name|bp2
 operator|->
 name|bio_flags
@@ -715,6 +715,8 @@ operator|(
 name|BIO_ORDERED
 operator||
 name|BIO_UNMAPPED
+operator||
+name|BIO_VLIST
 operator|)
 expr_stmt|;
 name|bp2
@@ -894,7 +896,11 @@ name|bp
 operator|->
 name|bio_flags
 operator|&
+operator|(
 name|BIO_UNMAPPED
+operator||
+name|BIO_VLIST
+operator|)
 expr_stmt|;
 name|bp2
 operator|->

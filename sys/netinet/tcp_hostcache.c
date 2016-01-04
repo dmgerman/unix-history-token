@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002 Andre Oppermann, Internet Business Solutions A
 end_comment
 
 begin_comment
-comment|/*  * The tcp_hostcache moves the tcp-specific cached metrics from the routing  * table to a dedicated structure indexed by the remote IP address.  It keeps  * information on the measured TCP parameters of past TCP sessions to allow  * better initial start values to be used with later connections to/from the  * same source.  Depending on the network parameters (delay, bandwidth, max  * MTU, congestion window) between local and remote sites, this can lead to  * significant speed-ups for new TCP connections after the first one.  *  * Due to the tcp_hostcache, all TCP-specific metrics information in the  * routing table have been removed.  The inpcb no longer keeps a pointer to  * the routing entry, and protocol-initiated route cloning has been removed  * as well.  With these changes, the routing table has gone back to being  * more lightwight and only carries information related to packet forwarding.  *  * tcp_hostcache is designed for multiple concurrent access in SMP  * environments and high contention.  All bucket rows have their own lock and  * thus multiple lookups and modifies can be done at the same time as long as  * they are in different bucket rows.  If a request for insertion of a new  * record can't be satisfied, it simply returns an empty structure.  Nobody  * and nothing outside of tcp_hostcache.c will ever point directly to any  * entry in the tcp_hostcache.  All communication is done in an  * object-oriented way and only functions of tcp_hostcache will manipulate  * hostcache entries.  Otherwise, we are unable to achieve good behaviour in  * concurrent access situations.  Since tcp_hostcache is only caching  * information, there are no fatal consequences if we either can't satisfy  * any particular request or have to drop/overwrite an existing entry because  * of bucket limit memory constrains.  */
+comment|/*  * The tcp_hostcache moves the tcp-specific cached metrics from the routing  * table to a dedicated structure indexed by the remote IP address.  It keeps  * information on the measured TCP parameters of past TCP sessions to allow  * better initial start values to be used with later connections to/from the  * same source.  Depending on the network parameters (delay, max MTU,  * congestion window) between local and remote sites, this can lead to  * significant speed-ups for new TCP connections after the first one.  *  * Due to the tcp_hostcache, all TCP-specific metrics information in the  * routing table have been removed.  The inpcb no longer keeps a pointer to  * the routing entry, and protocol-initiated route cloning has been removed  * as well.  With these changes, the routing table has gone back to being  * more lightwight and only carries information related to packet forwarding.  *  * tcp_hostcache is designed for multiple concurrent access in SMP  * environments and high contention.  All bucket rows have their own lock and  * thus multiple lookups and modifies can be done at the same time as long as  * they are in different bucket rows.  If a request for insertion of a new  * record can't be satisfied, it simply returns an empty structure.  Nobody  * and nothing outside of tcp_hostcache.c will ever point directly to any  * entry in the tcp_hostcache.  All communication is done in an  * object-oriented way and only functions of tcp_hostcache will manipulate  * hostcache entries.  Otherwise, we are unable to achieve good behaviour in  * concurrent access situations.  Since tcp_hostcache is only caching  * information, there are no fatal consequences if we either can't satisfy  * any particular request or have to drop/overwrite an existing entry because  * of bucket limit memory constrains.  */
 end_comment
 
 begin_comment
@@ -1666,14 +1666,6 @@ name|rmx_rttvar
 expr_stmt|;
 name|hc_metrics_lite
 operator|->
-name|rmx_bandwidth
-operator|=
-name|hc_entry
-operator|->
-name|rmx_bandwidth
-expr_stmt|;
-name|hc_metrics_lite
-operator|->
 name|rmx_cwnd
 operator|=
 name|hc_entry
@@ -2117,50 +2109,6 @@ if|if
 condition|(
 name|hcml
 operator|->
-name|rmx_bandwidth
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|hc_entry
-operator|->
-name|rmx_bandwidth
-operator|==
-literal|0
-condition|)
-name|hc_entry
-operator|->
-name|rmx_bandwidth
-operator|=
-name|hcml
-operator|->
-name|rmx_bandwidth
-expr_stmt|;
-else|else
-name|hc_entry
-operator|->
-name|rmx_bandwidth
-operator|=
-operator|(
-name|hc_entry
-operator|->
-name|rmx_bandwidth
-operator|+
-name|hcml
-operator|->
-name|rmx_bandwidth
-operator|)
-operator|/
-literal|2
-expr_stmt|;
-comment|/* TCPSTAT_INC(tcps_cachedbandwidth); */
-block|}
-if|if
-condition|(
-name|hcml
-operator|->
 name|rmx_cwnd
 operator|!=
 literal|0
@@ -2398,7 +2346,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"\nIP address        MTU  SSTRESH      RTT   RTTVAR BANDWIDTH "
+literal|"\nIP address        MTU  SSTRESH      RTT   RTTVAR "
 literal|"    CWND SENDPIPE RECVPIPE HITS  UPD  EXP\n"
 argument_list|)
 expr_stmt|;
@@ -2452,8 +2400,8 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"%-15s %5lu %8lu %6lums %6lums %9lu %8lu %8lu %8lu "
-literal|"%4lu %4lu %4i\n"
+literal|"%-15s %5lu %8lu %6lums %6lums %8lu %8lu %8lu %4lu "
+literal|"%4lu %4i\n"
 argument_list|,
 name|hc_entry
 operator|->
@@ -2528,12 +2476,6 @@ name|TCP_RTTVAR_SCALE
 operator|)
 operator|)
 argument_list|)
-argument_list|,
-name|hc_entry
-operator|->
-name|rmx_bandwidth
-operator|*
-literal|8
 argument_list|,
 name|hc_entry
 operator|->

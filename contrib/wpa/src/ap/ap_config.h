@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / Configuration definitions and helpers functions  * Copyright (c) 2003-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * hostapd / Configuration definitions and helpers functions  * Copyright (c) 2003-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"common/ieee802_11_defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common/ieee802_11_common.h"
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"wps/wps.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fst/fst.h"
 end_include
 
 begin_comment
@@ -84,10 +96,10 @@ name|mesh_auth_id
 decl_stmt|;
 name|u8
 modifier|*
-name|ies
+name|rsn_ie
 decl_stmt|;
 name|int
-name|ie_len
+name|rsn_ie_len
 decl_stmt|;
 define|#
 directive|define
@@ -183,13 +195,6 @@ end_struct_decl
 begin_define
 define|#
 directive|define
-name|HOSTAPD_MAX_SSID_LEN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|NUM_WEP_KEYS
 value|4
 end_define
@@ -265,7 +270,7 @@ block|{
 name|u8
 name|ssid
 index|[
-name|HOSTAPD_MAX_SSID_LEN
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -396,23 +401,14 @@ literal|1
 index|]
 decl_stmt|;
 name|int
+name|configured
+decl_stmt|;
+name|int
 name|dynamic_vlan
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_FULL_DYNAMIC_VLAN
-define|#
-directive|define
-name|DVLAN_CLEAN_BR
-value|0x1
-define|#
-directive|define
-name|DVLAN_CLEAN_VLAN
-value|0x2
-define|#
-directive|define
-name|DVLAN_CLEAN_VLAN_PORT
-value|0x4
 define|#
 directive|define
 name|DVLAN_CLEAN_WLAN_PORT
@@ -1142,6 +1138,10 @@ decl_stmt|;
 name|int
 name|check_crl
 decl_stmt|;
+name|unsigned
+name|int
+name|tls_session_lifetime
+decl_stmt|;
 name|char
 modifier|*
 name|ocsp_stapling_response
@@ -1596,6 +1596,9 @@ decl_stmt|;
 name|int
 name|proxy_arp
 decl_stmt|;
+name|int
+name|na_mcast_to_ucast
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_HS20
@@ -1678,7 +1681,7 @@ decl_stmt|;
 name|u8
 name|osu_ssid
 index|[
-name|HOSTAPD_MAX_SSID_LEN
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -1793,6 +1796,11 @@ decl_stmt|;
 name|u8
 name|bss_load_test_set
 decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|own_ie_override
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_TESTING_OPTIONS */
@@ -1808,6 +1816,14 @@ name|radio_measurements
 decl_stmt|;
 name|int
 name|vendor_vht
+decl_stmt|;
+name|char
+modifier|*
+name|no_probe_resp_if_seen_on
+decl_stmt|;
+name|char
+modifier|*
+name|no_auth_if_seen_on
 decl_stmt|;
 block|}
 struct|;
@@ -1848,9 +1864,12 @@ decl_stmt|;
 name|u8
 name|channel
 decl_stmt|;
-name|int
-modifier|*
-name|chanlist
+name|u8
+name|acs
+decl_stmt|;
+name|struct
+name|wpa_freq_range_list
+name|acs_ch_list
 decl_stmt|;
 name|enum
 name|hostapd_hw_mode
@@ -1892,6 +1911,14 @@ name|ap_table_max_size
 decl_stmt|;
 name|int
 name|ap_table_expiration_time
+decl_stmt|;
+name|unsigned
+name|int
+name|track_sta_max_num
+decl_stmt|;
+name|unsigned
+name|int
+name|track_sta_max_age
 decl_stmt|;
 name|char
 name|country
@@ -1943,6 +1970,9 @@ name|int
 name|secondary_channel
 decl_stmt|;
 name|int
+name|no_pri_sec_switch
+decl_stmt|;
+name|int
 name|require_ht
 decl_stmt|;
 name|int
@@ -1966,6 +1996,16 @@ decl_stmt|;
 name|u8
 name|vht_oper_centr_freq_seg1_idx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+name|struct
+name|fst_iface_cfg
+name|fst_cfg
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_FST */
 ifdef|#
 directive|ifdef
 name|CONFIG_P2P

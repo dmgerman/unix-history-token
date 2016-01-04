@@ -409,9 +409,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add
@@ -429,9 +427,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__failure
@@ -449,9 +445,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__cred
@@ -469,9 +463,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__force
@@ -489,9 +481,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set
@@ -509,9 +499,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set__failure
@@ -529,9 +517,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub
@@ -549,9 +535,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub__cred
@@ -569,9 +553,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|create
@@ -585,9 +567,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|destroy
@@ -601,9 +581,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|join
@@ -619,9 +597,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|join__failure
@@ -637,9 +613,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|leave
@@ -2373,9 +2347,7 @@ return|return;
 name|SDT_PROBE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|create
@@ -2436,9 +2408,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|destroy
@@ -2593,7 +2563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increase consumption of 'resource' by 'amount' for 'racct'  * and all its parents.  Differently from other cases, 'amount' here  * may be less than zero.  */
+comment|/*  * Increase consumption of 'resource' by 'amount' for 'racct',  * but not its parents.  Differently from other cases, 'amount' here  * may be less than zero.  */
 end_comment
 
 begin_function
@@ -2609,7 +2579,7 @@ parameter_list|,
 name|int
 name|resource
 parameter_list|,
-name|uint64_t
+name|int64_t
 name|amount
 parameter_list|)
 block|{
@@ -2687,7 +2657,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * There are some cases where the racct %cpu resource would grow 	 * beyond 100%. 	 * For example in racct_proc_exit() we add the process %cpu usage 	 * to the ucred racct containers.  If too many processes terminated 	 * in a short time span, the ucred %cpu resource could grow too much. 	 * Also, the 4BSD scheduler sometimes returns for a thread more than 	 * 100% cpu usage.  So we set a boundary here to 100%. 	 */
+comment|/* 	 * There are some cases where the racct %cpu resource would grow 	 * beyond 100% per core.  For example in racct_proc_exit() we add 	 * the process %cpu usage to the ucred racct containers.  If too 	 * many processes terminated in a short time span, the ucred %cpu 	 * resource could grow too much.  Also, the 4BSD scheduler sometimes 	 * returns for a thread more than 100% cpu usage. So we set a sane 	 * boundary here to 100% * the maxumum number of CPUs. 	 */
 if|if
 condition|(
 operator|(
@@ -2707,6 +2677,11 @@ operator|>
 literal|100
 operator|*
 literal|1000000
+operator|*
+operator|(
+name|int64_t
+operator|)
+name|MAXCPU
 operator|)
 condition|)
 name|racct
@@ -2719,6 +2694,11 @@ operator|=
 literal|100
 operator|*
 literal|1000000
+operator|*
+operator|(
+name|int64_t
+operator|)
+name|MAXCPU
 expr_stmt|;
 block|}
 end_function
@@ -2754,9 +2734,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add
@@ -2803,9 +2781,7 @@ block|{
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__failure
@@ -2947,9 +2923,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__cred
@@ -3100,9 +3074,7 @@ return|return;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__force
@@ -3139,13 +3111,7 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|racct_lock
-argument_list|)
-expr_stmt|;
-name|racct_add_cred
+name|racct_add_cred_locked
 argument_list|(
 name|p
 operator|->
@@ -3154,6 +3120,12 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|racct_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -3200,9 +3172,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set
@@ -3328,9 +3298,7 @@ block|{
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set__failure
@@ -3503,9 +3471,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set
@@ -3842,9 +3808,7 @@ return|return;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub
@@ -3991,9 +3955,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub__cred
@@ -5222,6 +5184,14 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|racct_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|resource
 operator|=
 operator|*
@@ -5248,12 +5218,6 @@ operator|<=
 literal|0
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|racct_lock
-argument_list|)
-expr_stmt|;
 name|r_new
 operator|=
 name|r_old
@@ -5271,6 +5235,34 @@ index|]
 operator|=
 name|r_new
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|racct_decay_pre
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|racct_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|racct_decay_post
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5296,6 +5288,10 @@ name|ui_racct_foreach
 argument_list|(
 name|racct_decay_resource
 argument_list|,
+name|racct_decay_pre
+argument_list|,
+name|racct_decay_post
+argument_list|,
 operator|&
 name|resource
 argument_list|,
@@ -5306,6 +5302,10 @@ name|loginclass_racct_foreach
 argument_list|(
 name|racct_decay_resource
 argument_list|,
+name|racct_decay_pre
+argument_list|,
+name|racct_decay_post
+argument_list|,
 operator|&
 name|resource
 argument_list|,
@@ -5315,6 +5315,10 @@ expr_stmt|;
 name|prison_racct_foreach
 argument_list|(
 name|racct_decay_resource
+argument_list|,
+name|racct_decay_pre
+argument_list|,
+name|racct_decay_post
 argument_list|,
 operator|&
 name|resource

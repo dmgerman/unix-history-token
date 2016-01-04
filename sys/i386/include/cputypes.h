@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_CPUTYPES_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<x86/cputypes.h>
+end_include
+
 begin_comment
 comment|/*  * Classes of processor.  */
 end_comment
@@ -255,163 +261,6 @@ end_define
 begin_comment
 comment|/* NS Geode SC1100 */
 end_comment
-
-begin_comment
-comment|/*  * Vendors of processor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_NSC
-value|0x100b
-end_define
-
-begin_comment
-comment|/* NSC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_IBM
-value|0x1014
-end_define
-
-begin_comment
-comment|/* IBM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_AMD
-value|0x1022
-end_define
-
-begin_comment
-comment|/* AMD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_SIS
-value|0x1039
-end_define
-
-begin_comment
-comment|/* SiS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_UMC
-value|0x1060
-end_define
-
-begin_comment
-comment|/* UMC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_NEXGEN
-value|0x1074
-end_define
-
-begin_comment
-comment|/* Nexgen */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_CYRIX
-value|0x1078
-end_define
-
-begin_comment
-comment|/* Cyrix */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_IDT
-value|0x111d
-end_define
-
-begin_comment
-comment|/* Centaur/IDT/VIA */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_TRANSMETA
-value|0x1279
-end_define
-
-begin_comment
-comment|/* Transmeta */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_INTEL
-value|0x8086
-end_define
-
-begin_comment
-comment|/* Intel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_RISE
-value|0xdead2bad
-end_define
-
-begin_comment
-comment|/* Rise */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_CENTAUR
-value|CPU_VENDOR_IDT
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu_class
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -331,18 +331,25 @@ name|DMAP_MAX_ADDRESS
 value|(0xffffffdfffffffffUL)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dmap_phys_base
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|DMAP_MIN_PHYSADDR
-value|(0x0000000000000000UL)
+value|(dmap_phys_base)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MAX_PHYSADDR
-value|(DMAP_MAX_ADDRESS - DMAP_MIN_ADDRESS)
+value|(dmap_phys_base + (DMAP_MAX_ADDRESS - DMAP_MIN_ADDRESS))
 end_define
 
 begin_comment
@@ -356,7 +363,7 @@ name|PHYS_IN_DMAP
 parameter_list|(
 name|pa
 parameter_list|)
-value|((pa)<= DMAP_MAX_PHYSADDR)
+value|((pa)>= DMAP_MIN_PHYSADDR&& \     (pa)<= DMAP_MAX_PHYSADDR)
 end_define
 
 begin_comment
@@ -381,7 +388,7 @@ parameter_list|(
 name|pa
 parameter_list|)
 define|\
-value|({									\ 	KASSERT(PHYS_IN_DMAP(pa),					\ 	    ("%s: PA out of range, PA: 0x%lx", __func__,		\ 	    (vm_paddr_t)(pa)));						\ 	(pa) | DMAP_MIN_ADDRESS;					\ })
+value|({									\ 	KASSERT(PHYS_IN_DMAP(pa),					\ 	    ("%s: PA out of range, PA: 0x%lx", __func__,		\ 	    (vm_paddr_t)(pa)));						\ 	((pa) - dmap_phys_base) | DMAP_MIN_ADDRESS;			\ })
 end_define
 
 begin_define
@@ -392,7 +399,7 @@ parameter_list|(
 name|va
 parameter_list|)
 define|\
-value|({									\ 	KASSERT(VIRT_IN_DMAP(va),					\ 	    ("%s: VA out of range, VA: 0x%lx", __func__,		\ 	    (vm_offset_t)(va)));					\ 	(va)& ~DMAP_MIN_ADDRESS;					\ })
+value|({									\ 	KASSERT(VIRT_IN_DMAP(va),					\ 	    ("%s: VA out of range, VA: 0x%lx", __func__,		\ 	    (vm_offset_t)(va)));					\ 	((va)& ~DMAP_MIN_ADDRESS) + dmap_phys_base;			\ })
 end_define
 
 begin_define
@@ -433,8 +440,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USRSTACK
-value|(VM_MAX_USER_ADDRESS)
+value|SHAREDPAGE
 end_define
 
 begin_comment

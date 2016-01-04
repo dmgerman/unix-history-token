@@ -42,6 +42,42 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lfptest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_unixtime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +106,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ZeroBuffer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +116,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_IntegerAndFractionalBuffer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +126,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_IllegalMicroseconds
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +136,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AlwaysFalseOnWindows
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,10 +146,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -118,6 +173,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -147,12 +203,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"buftvtots.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"buftvtots.c"
@@ -162,28 +212,28 @@ name|RUN_TEST
 argument_list|(
 name|test_ZeroBuffer
 argument_list|,
-literal|16
+literal|14
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_IntegerAndFractionalBuffer
 argument_list|,
-literal|30
+literal|15
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_IllegalMicroseconds
 argument_list|,
-literal|53
+literal|16
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AlwaysFalseOnWindows
 argument_list|,
-literal|66
+literal|17
 argument_list|)
 expr_stmt|;
 return|return

@@ -533,9 +533,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|USRIO_RMII
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* RMII vs MII pins */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USRIO_CLOCK
 value|(1<< 1)
 end_define
+
+begin_comment
+comment|/* Enable the clock! */
+end_comment
 
 begin_endif
 endif|#

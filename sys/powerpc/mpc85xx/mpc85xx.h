@@ -53,6 +53,77 @@ name|OCP85XX_BPTR
 value|(CCSRBAR_VA + 0x20)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OCP85XX_BSTRH
+value|(CCSRBAR_VA + 0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BSTRL
+value|(CCSRBAR_VA + 0x24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BSTAR
+value|(CCSRBAR_VA + 0x28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_COREDISR
+value|(CCSRBAR_VA + 0xE0094)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_BRR
+value|(CCSRBAR_VA + 0xE00E4)
+end_define
+
+begin_comment
+comment|/*  * Run Control and Power Management registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCSR_CTBENR
+value|(CCSRBAR_VA + 0xE2084)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCSR_CTBCKSELR
+value|(CCSRBAR_VA + 0xE208C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCSR_CTBCHLTCR
+value|(CCSRBAR_VA + 0xE2094)
+end_define
+
+begin_comment
+comment|/*  * DDR Memory controller.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_DDR1_CS0_CONFIG
+value|(CCSRBAR_VA + 0x8080)
+end_define
+
 begin_comment
 comment|/*  * E500 Coherency Module registers  */
 end_comment
@@ -68,14 +139,37 @@ begin_comment
 comment|/*  * Local access registers  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QORIQ_DPAA
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Write order: OCP_LAWBARH -> OCP_LAWBARL -> OCP_LAWSR */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|OCP85XX_LAWBAR
+name|OCP85XX_LAWBARH
 parameter_list|(
 name|n
 parameter_list|)
-value|(CCSRBAR_VA + 0xc08 + 0x20 * (n))
+value|(CCSRBAR_VA + 0xc00 + 0x10 * (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_LAWBARL
+parameter_list|(
+name|n
+parameter_list|)
+value|(CCSRBAR_VA + 0xc04 + 0x10 * (n))
 end_define
 
 begin_define
@@ -85,43 +179,166 @@ name|OCP85XX_LAWSR
 parameter_list|(
 name|n
 parameter_list|)
-value|(CCSRBAR_VA + 0xc10 + 0x20 * (n))
+value|(CCSRBAR_VA + 0xc08 + 0x10 * (n))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_LAWBAR
+parameter_list|(
+name|n
+parameter_list|)
+value|(CCSRBAR_VA + 0xc08 + 0x10 * (n))
 end_define
 
 begin_define
 define|#
 directive|define
+name|OCP85XX_LAWSR
+parameter_list|(
+name|n
+parameter_list|)
+value|(CCSRBAR_VA + 0xc10 + 0x10 * (n))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Attribute register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_ENA_MASK
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_DIS_MASK
+value|0x7fffffff
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QORIQ_DPAA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
 name|OCP85XX_TGTIF_LBC
-value|4
+value|0x1f
 end_define
 
 begin_define
 define|#
 directive|define
 name|OCP85XX_TGTIF_RAM_INTL
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCP85XX_TGTIF_RIO
-value|12
+value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
 name|OCP85XX_TGTIF_RAM1
-value|15
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|OCP85XX_TGTIF_RAM2
-value|22
+value|0x11
 end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_BMAN
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_DCSR
+value|0x1D
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_QMAN
+value|0x3C
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TRGT_SHIFT
+value|20
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_LBC
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RAM_INTL
+value|0x0b
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RIO
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RAM1
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RAM2
+value|0x16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * L2 cache registers  */
@@ -132,6 +349,83 @@ define|#
 directive|define
 name|OCP85XX_L2CTL
 value|(CCSRBAR_VA + 0x20000)
+end_define
+
+begin_comment
+comment|/*  * L3 CoreNet platform cache (CPC) registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0
+value|(CCSRBAR_VA + 0x10000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_CE
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_PE
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_FI
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_WT
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_FL
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CSR0_LFC
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CFG0
+value|(CCSRBAR_VA + 0x10008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CFG_SZ_MASK
+value|0x00003fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CPC_CFG0_SZ_K
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& OCP85XX_CPC_CFG_SZ_MASK)<< 6)
 end_define
 
 begin_comment
@@ -178,6 +472,24 @@ value|(CCSRBAR_VA + 0xe00b0)
 end_define
 
 begin_comment
+comment|/*  * Run Control/Power Management Registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_RCPM_CDOZSR
+value|(CCSRBAR_VA + 0xe2004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_RCPM_CDOZCR
+value|(CCSRBAR_VA + 0xe200c)
+end_define
+
+begin_comment
 comment|/*  * Prototypes.  */
 end_comment
 
@@ -211,10 +523,10 @@ parameter_list|(
 name|int
 name|trgt
 parameter_list|,
-name|u_long
-name|addr
+name|uint64_t
+name|bar
 parameter_list|,
-name|u_long
+name|uint32_t
 name|size
 parameter_list|)
 function_decl|;
@@ -227,10 +539,10 @@ parameter_list|(
 name|int
 name|trgt
 parameter_list|,
-name|u_long
-name|addr
+name|uint64_t
+name|bar
 parameter_list|,
-name|u_long
+name|uint32_t
 name|size
 parameter_list|)
 function_decl|;
@@ -275,6 +587,35 @@ name|int
 name|mpc85xx_attach
 parameter_list|(
 name|platform_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpc85xx_enable_l3_cache
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpc85xx_fix_errata
+parameter_list|(
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dataloss_erratum_access
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

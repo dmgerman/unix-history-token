@@ -270,7 +270,7 @@ block|,
 block|{
 name|CTL_PST_SEL_SELCAND
 block|,
-literal|"sel_outlyer"
+literal|"sel_outlier"
 block|}
 block|,
 block|{

@@ -5247,6 +5247,9 @@ name|override_tag
 parameter_list|,
 name|uint32_t
 name|vrf_id
+parameter_list|,
+name|uint16_t
+name|o_strms
 parameter_list|)
 block|{
 name|struct
@@ -6165,11 +6168,7 @@ name|asoc
 operator|->
 name|pre_open_streams
 operator|=
-name|inp
-operator|->
-name|sctp_ep
-operator|.
-name|pre_open_stream_count
+name|o_strms
 expr_stmt|;
 name|SCTP_MALLOC
 argument_list|(
@@ -11474,7 +11473,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: Unknown timer type %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|)
@@ -11503,7 +11502,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: %d:software error to_ticks:%d tmr:%p not set ??\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|,
@@ -12129,7 +12128,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: Unknown timer type %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|)
@@ -20043,7 +20042,7 @@ name|SCTP_DEBUG_UTIL1
 argument_list|,
 literal|"%s: unknown notification %xh (%u)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|notification
 argument_list|,
@@ -29299,7 +29298,7 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|=
 name|SCTP_NEXT_MSG_AVAIL
 expr_stmt|;
@@ -29314,7 +29313,7 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator||=
 name|SCTP_NEXT_MSG_IS_UNORDERED
 expr_stmt|;
@@ -29330,14 +29329,14 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator||=
 name|SCTP_NEXT_MSG_IS_NOTIFICATION
 expr_stmt|;
 block|}
 name|s_extra
 operator|->
-name|sreinfo_next_aid
+name|serinfo_next_aid
 operator|=
 name|nxt
 operator|->
@@ -29345,7 +29344,7 @@ name|sinfo_assoc_id
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_length
+name|serinfo_next_length
 operator|=
 name|nxt
 operator|->
@@ -29353,7 +29352,7 @@ name|length
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_ppid
+name|serinfo_next_ppid
 operator|=
 name|nxt
 operator|->
@@ -29361,7 +29360,7 @@ name|sinfo_ppid
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_stream
+name|serinfo_next_stream
 operator|=
 name|nxt
 operator|->
@@ -29385,7 +29384,7 @@ condition|)
 block|{
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator||=
 name|SCTP_NEXT_MSG_ISCOMPLETE
 expr_stmt|;
@@ -29401,31 +29400,31 @@ name|NULL
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|=
 name|SCTP_NO_NEXT_MSG
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_aid
+name|serinfo_next_aid
 operator|=
 literal|0
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_length
+name|serinfo_next_length
 operator|=
 literal|0
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_ppid
+name|serinfo_next_ppid
 operator|=
 literal|0
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_stream
+name|serinfo_next_stream
 operator|=
 literal|0
 expr_stmt|;
@@ -31863,7 +31862,7 @@ name|sinfo
 expr_stmt|;
 name|s_extra
 operator|->
-name|sreinfo_next_flags
+name|serinfo_next_flags
 operator|=
 name|SCTP_NO_NEXT_MSG
 expr_stmt|;
@@ -35471,6 +35470,49 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+comment|/* 	 * The CSUM_DATA_VALID flags indicates that the HW checked the UDP 	 * checksum and it was valid. Since CSUM_DATA_VALID == 	 * CSUM_SCTP_VALID this would imply that the HW also verified the 	 * SCTP checksum. Therefore, clear the bit. 	 */
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_CRCOFFLOAD
+argument_list|,
+literal|"sctp_recv_udp_tunneled_packet(): Packet of length %d received on %s with csum_flags 0x%b.\n"
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|,
+name|if_name
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+argument_list|,
+name|CSUM_BITS
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&=
+operator|~
+name|CSUM_DATA_VALID
 expr_stmt|;
 name|iph
 operator|=

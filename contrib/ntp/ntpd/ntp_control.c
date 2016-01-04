@@ -13,6 +13,12 @@ directive|ifdef
 name|HAVE_CONFIG_H
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -147,6 +153,12 @@ directive|include
 file|"lib_strbuf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<rc_cmdlength.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -158,47 +170,6 @@ include|#
 directive|include
 file|"ntp_syscall.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|remoteconfig_cmdlength
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|src_buf
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|src_end
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)<= (b)) ? (a) : (b))
-end_define
 
 begin_endif
 endif|#
@@ -3232,9 +3203,6 @@ literal|"clk_wander_threshold"
 block|}
 block|,
 comment|/* 89 */
-ifdef|#
-directive|ifdef
-name|LEAP_SMEAR
 block|{
 name|CS_LEAPSMEARINTV
 block|,
@@ -3253,9 +3221,6 @@ literal|"leapsmearoffset"
 block|}
 block|,
 comment|/* 91 */
-endif|#
-directive|endif
-comment|/* LEAP_SMEAR */
 ifdef|#
 directive|ifdef
 name|AUTOKEY
@@ -5273,6 +5238,37 @@ name|int
 name|restrict_mask
 parameter_list|)
 block|{
+comment|/* block directory traversal by searching for characters that 	 * indicate directory components in a file path. 	 * 	 * Conceptually we should be searching for DIRSEP in filename, 	 * however Windows actually recognizes both forward and 	 * backslashes as equivalent directory separators at the API 	 * level.  On POSIX systems we could allow '\\' but such 	 * filenames are tricky to manipulate from a shell, so just 	 * reject both types of slashes on all platforms. 	 */
+comment|/* TALOS-CAN-0062: block directory traversal for VMS, too */
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|illegal_in_filename
+init|=
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+literal|":[]"
+comment|/* do not allow drive and path components here */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SYS_WINNT
+argument_list|)
+literal|":\\/"
+comment|/* path and drive separators */
+else|#
+directive|else
+literal|"\\/"
+comment|/* separator and critical char for POSIX */
+endif|#
+directive|endif
+decl_stmt|;
 name|char
 name|reply
 index|[
@@ -5515,21 +5511,17 @@ name|filename
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Conceptually we should be searching for DIRSEP in filename, 	 * however Windows actually recognizes both forward and 	 * backslashes as equivalent directory separators at the API 	 * level.  On POSIX systems we could allow '\\' but such 	 * filenames are tricky to manipulate from a shell, so just 	 * reject both types of slashes on all platforms. 	 */
+comment|/* block directory/drive traversal */
+comment|/* TALOS-CAN-0062: block directory traversal for VMS, too */
 if|if
 condition|(
-name|strchr
+name|NULL
+operator|!=
+name|strpbrk
 argument_list|(
 name|filename
 argument_list|,
-literal|'\\'
-argument_list|)
-operator|||
-name|strchr
-argument_list|(
-name|filename
-argument_list|,
-literal|'/'
+name|illegal_in_filename
 argument_list|)
 condition|)
 block|{
@@ -7354,7 +7346,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|tl
 operator|+
@@ -7484,7 +7476,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|tl
 operator|+
@@ -7605,7 +7597,7 @@ operator|++
 operator|=
 literal|'='
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 call|(
 name|size_t
@@ -7738,7 +7730,7 @@ operator|++
 operator|=
 literal|'='
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|cp
@@ -7867,7 +7859,7 @@ operator|->
 name|minute
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|numch
 operator|<
@@ -7985,7 +7977,7 @@ operator|==
 name|tm
 condition|)
 return|return;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|cp
@@ -8134,7 +8126,7 @@ operator|++
 operator|=
 literal|'='
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|cp
@@ -8261,7 +8253,7 @@ operator|++
 operator|=
 literal|'='
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|cp
@@ -8389,7 +8381,7 @@ operator|++
 operator|=
 literal|'='
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 call|(
 name|size_t
@@ -8553,7 +8545,7 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|cp
@@ -8905,7 +8897,7 @@ expr_stmt|;
 name|i
 operator|--
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|cp
@@ -11750,6 +11742,8 @@ break|break;
 endif|#
 directive|endif
 comment|/* AUTOKEY */
+default|default:
+break|break;
 block|}
 block|}
 end_function
@@ -14230,10 +14224,6 @@ operator|&
 name|eol
 return|;
 comment|/* 	 * Look for a first character match on the tag.  If we find 	 * one, see if it is a full match. 	 */
-name|v
-operator|=
-name|var_list
-expr_stmt|;
 name|cp
 operator|=
 name|reqpt
@@ -15063,7 +15053,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|v
 operator|->
@@ -15279,7 +15269,7 @@ name|flags
 operator|)
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|v
 operator|->
@@ -15314,7 +15304,7 @@ operator|&
 name|valuep
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|v
 operator|!=
@@ -15352,7 +15342,7 @@ name|CS_MAXCODE
 operator|+
 literal|1
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|n
 operator|<
@@ -20582,7 +20572,7 @@ operator|&
 name|valuep
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|NULL
 operator|!=
@@ -22082,7 +22072,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|peer
 operator|!=
@@ -22480,7 +22470,7 @@ condition|)
 name|c
 operator|++
 expr_stmt|;
-name|NTP_ENSURE
+name|ENSURE
 argument_list|(
 name|c
 operator|<=

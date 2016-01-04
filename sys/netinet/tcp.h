@@ -337,6 +337,34 @@ name|TCPOLEN_SIGNATURE
 value|18
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCPOPT_FAST_OPEN
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_FAST_OPEN_EMPTY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_FAST_OPEN_MIN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_FAST_OPEN_MAX
+value|18
+end_define
+
 begin_comment
 comment|/* Miscellaneous constants */
 end_comment
@@ -601,6 +629,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCP_FASTOPEN
+value|1025
+end_define
+
+begin_comment
+comment|/* enable TFO / was created via TFO */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCP_PCAP_OUT
 value|2048
 end_define
@@ -618,6 +657,17 @@ end_define
 
 begin_comment
 comment|/* number of input packets to keep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_FUNCTION_BLK
+value|8192
+end_define
+
+begin_comment
+comment|/* Set the tcp function pointers to the specified stack */
 end_comment
 
 begin_comment
@@ -846,6 +896,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TCP_FUNCTION_NAME_LEN_MAX
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|tcp_function_set
+block|{
+name|char
+name|function_set_name
+index|[
+name|TCP_FUNCTION_NAME_LEN_MAX
+index|]
+decl_stmt|;
+name|uint32_t
+name|pcbcnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

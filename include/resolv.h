@@ -516,11 +516,7 @@ name|u_int
 name|_flags
 decl_stmt|;
 comment|/*%< PRIVATE: see below */
-name|u_short
-name|reload_period
-decl_stmt|;
-comment|/*%< seconds between stat(resolv.conf)*/
-name|u_short
+name|u_int
 name|_pad
 decl_stmt|;
 comment|/*%< make _u 64 bit aligned */
@@ -583,15 +579,6 @@ modifier|*
 name|_rnd
 decl_stmt|;
 comment|/*%< PRIVATE: random state */
-name|struct
-name|timespec
-name|conf_mtim
-decl_stmt|;
-comment|/*%< mod time of loaded resolv.conf */
-name|time_t
-name|conf_stat
-decl_stmt|;
-comment|/*%< time of last stat(resolv.conf) */
 block|}
 struct|;
 end_struct

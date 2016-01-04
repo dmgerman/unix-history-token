@@ -15,6 +15,13 @@ directive|define
 name|_BCM2815_BCM2836_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCM2836_GPU_IRQ
+value|8
+end_define
+
 begin_function_decl
 name|int
 name|bcm2836_get_next_irq

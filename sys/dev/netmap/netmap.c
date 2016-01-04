@@ -951,7 +951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convenience function used in drivers.  Waits for current txsync()s/rxsync()s  * to finish and prevents any new one from starting.  Call this before turning  * netmap mode off, or before removing the harware rings (e.g., on module  * onload).  As a rule of thumb for linux drivers, this should be placed near  * each napi_disable().  */
+comment|/*  * Convenience function used in drivers.  Waits for current txsync()s/rxsync()s  * to finish and prevents any new one from starting.  Call this before turning  * netmap mode off, or before removing the hardware rings (e.g., on module  * onload).  As a rule of thumb for linux drivers, this should be placed near  * each napi_disable().  */
 end_comment
 
 begin_function

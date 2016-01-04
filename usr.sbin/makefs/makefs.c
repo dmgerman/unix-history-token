@@ -179,29 +179,22 @@ name|fstypes
 index|[]
 init|=
 block|{
-block|{
-literal|"ffs"
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+value|{ \ 	# name, name ## _prep_opts, name ## _parse_opts, \ 	name ## _cleanup_opts, name ## _makefs  \ }
+name|ENTRY
+argument_list|(
+name|ffs
+argument_list|)
 block|,
-name|ffs_prep_opts
-block|,
-name|ffs_parse_opts
-block|,
-name|ffs_cleanup_opts
-block|,
-name|ffs_makefs
-block|}
-block|,
-block|{
-literal|"cd9660"
-block|,
-name|cd9660_prep_opts
-block|,
-name|cd9660_parse_opts
-block|,
-name|cd9660_cleanup_opts
-block|,
-name|cd9660_makefs
-block|}
+name|ENTRY
+argument_list|(
+name|cd9660
+argument_list|)
 block|,
 block|{
 operator|.
@@ -447,7 +440,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:Dd:f:F:M:m:N:o:pr:s:S:t:xZ"
+literal|"B:b:Dd:f:F:M:m:N:o:pR:s:S:t:xZ"
 argument_list|)
 operator|)
 operator|!=
@@ -854,7 +847,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
+literal|'R'
 case|:
 comment|/* Round image size up to specified block size */
 name|fsoptions
@@ -863,7 +856,7 @@ name|roundup
 operator|=
 name|strsuftoll
 argument_list|(
-literal|"roundup"
+literal|"roundup-size"
 argument_list|,
 name|optarg
 argument_list|,
@@ -1627,7 +1620,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
-literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-r roundup ]\n"
+literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-R roundup-size]\n"
 literal|"\t[-s image-size] [-b free-blocks] [-f free-files] [-F mtree-specfile]\n"
 literal|"\t[-xZ] [-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,

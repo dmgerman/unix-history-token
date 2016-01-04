@@ -509,6 +509,24 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/* Only for devfs d_close() flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLASTCLOSE
+value|O_DIRECTORY
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREVOKE
+value|O_VERIFY
+end_define
+
+begin_comment
 comment|/* convert from open() flags to/from fflags; convert O_RD/WR to FREAD/FWRITE */
 end_comment
 

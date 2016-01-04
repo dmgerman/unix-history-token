@@ -273,6 +273,71 @@ name|V_link_pfil_hook
 value|VNET(link_pfil_hook)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HHOOK_IPSEC_INET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HHOOK_IPSEC_INET6
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HHOOK_IPSEC_COUNT
+value|2
+end_define
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|hhook_head
+operator|*
+argument_list|,
+name|ipsec_hhh_in
+index|[
+name|HHOOK_IPSEC_COUNT
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|hhook_head
+operator|*
+argument_list|,
+name|ipsec_hhh_out
+index|[
+name|HHOOK_IPSEC_COUNT
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipsec_hhh_in
+value|VNET(ipsec_hhh_in)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipsec_hhh_out
+value|VNET(ipsec_hhh_out)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -436,6 +501,85 @@ comment|/* TSO maximum segment size in bytes */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Interface encap request types */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|IFENCAP_LL
+init|=
+literal|1
+comment|/* pre-calculate link-layer header */
+block|}
+name|ife_type
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * The structure below allows to request various pre-calculated L2/L3 headers  * for different media. Requests varies by type (rtype field).  *  * IFENCAP_LL type: pre-calculates link header based on address family  *   and destination lladdr.  *  *   Input data fields:  *     buf: pointer to destination buffer  *     bufsize: buffer size  *     flags: IFENCAP_FLAG_BROADCAST if destination is broadcast  *     family: address family defined by AF_ constant.  *     lladdr: pointer to link-layer address  *     lladdr_len: length of link-layer address  *     hdata: pointer to L3 header (optional, used for ARP requests).  *   Output data fields:  *     buf: encap data is stored here  *     bufsize: resulting encap length is stored here  *     lladdr_off: offset of link-layer address from encap hdr start  *     hdata: L3 header may be altered if necessary  */
+end_comment
+
+begin_struct
+struct|struct
+name|if_encap_req
+block|{
+name|u_char
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* Destination buffer (w) */
+name|size_t
+name|bufsize
+decl_stmt|;
+comment|/* size of provided buffer (r) */
+name|ife_type
+name|rtype
+decl_stmt|;
+comment|/* request type (r) */
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* Request flags (r) */
+name|int
+name|family
+decl_stmt|;
+comment|/* Address family AF_* (r) */
+name|int
+name|lladdr_off
+decl_stmt|;
+comment|/* offset from header start (w) */
+name|int
+name|lladdr_len
+decl_stmt|;
+comment|/* lladdr length (r) */
+name|char
+modifier|*
+name|lladdr
+decl_stmt|;
+comment|/* link-level address pointer (r) */
+name|char
+modifier|*
+name|hdata
+decl_stmt|;
+comment|/* Upper layer header data (rw) */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IFENCAP_FLAG_BROADCAST
+value|0x02
+end_define
+
+begin_comment
+comment|/* Destination is broadcast */
+end_comment
 
 begin_comment
 comment|/*  * Structure defining a network interface.  *  * Size ILP32:  592 (approx)  *	 LP64: 1048 (approx)  */
@@ -820,6 +964,22 @@ name|if_get_counter_t
 name|if_get_counter
 decl_stmt|;
 comment|/* get counter values */
+name|int
+function_decl|(
+modifier|*
+name|if_requestencap
+function_decl|)
+comment|/* make link header from request */
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|if_encap_req
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Statistics. */
 name|counter_u64_t
 name|if_counters

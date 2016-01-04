@@ -391,7 +391,7 @@ value|\ 	pushal ;
 comment|/* 8 ints */
 value|\ 	pushl	$0 ;
 comment|/* save data and extra segments ... */
-value|\ 	mov	%ds,(%esp) ;						\ 	pushl	$0 ;							\ 	mov	%es,(%esp) ;						\ 	pushl	$0 ;							\ 	mov	%fs,(%esp)
+value|\ 	movw	%ds,(%esp) ;						\ 	pushl	$0 ;							\ 	movw	%es,(%esp) ;						\ 	pushl	$0 ;							\ 	movw	%fs,(%esp)
 end_define
 
 begin_define

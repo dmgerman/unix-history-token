@@ -2085,15 +2085,7 @@ begin_comment
 comment|/*  * PC Card (PCMCIA) probe routine  */
 end_comment
 
-begin_function
-specifier|static
-name|int
-name|bt3c_pccard_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
+begin_decl_stmt
 specifier|static
 name|struct
 name|pccard_product
@@ -2114,6 +2106,17 @@ name|NULL
 block|, }
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|bt3c_pccard_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|pccard_product
 specifier|const
@@ -5019,6 +5022,14 @@ argument_list|,
 name|NG_ABI_VERSION
 argument_list|,
 name|NG_ABI_VERSION
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PCCARD_PNP_INFO
+argument_list|(
+name|bt3c_pccard_products
 argument_list|)
 expr_stmt|;
 end_expr_stmt

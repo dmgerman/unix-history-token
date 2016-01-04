@@ -44,15 +44,6 @@ value|EM_SPARCV9
 end_define
 
 begin_function_decl
-name|void
-name|dumpsys_pa_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dumpsys
 parameter_list|(
@@ -129,29 +120,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|dumpsys_write_aux_headers
-parameter_list|(
-name|struct
-name|dumperinfo
-modifier|*
-name|di
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dumpsys_gen_write_aux_headers
-argument_list|(
-name|di
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 

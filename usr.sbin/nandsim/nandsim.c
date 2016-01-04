@@ -2046,7 +2046,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Set loglevel (ctrl:chip pair independant) */
+comment|/* Set loglevel (ctrl:chip pair independent) */
 name|mods
 operator|.
 name|field

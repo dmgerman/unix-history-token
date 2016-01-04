@@ -62,6 +62,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_comment
 comment|/* for test */
 end_comment
@@ -2590,7 +2596,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|UINTPTR_MAX
+name|SIZE_MAX
 argument_list|)
 operator|&&
 name|defined
@@ -2599,9 +2605,13 @@ name|UINT32_MAX
 argument_list|)
 operator|&&
 operator|(
-name|UINTPTR_MAX
-operator|==
 name|UINT32_MAX
+operator|==
+name|SIZE_MAX
+operator|||
+name|INT32_MAX
+operator|==
+name|SIZE_MAX
 operator|)
 comment|/* avoid warning about upcast on 32bit systems */
 name|unsigned

@@ -1689,6 +1689,12 @@ name|NULL
 operator|||
 name|len
 operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|req
+argument_list|)
+operator|+
 name|EAP_PAX_ICV_LEN
 condition|)
 block|{

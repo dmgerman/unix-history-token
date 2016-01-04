@@ -1753,6 +1753,52 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|V1_ROOT
+value|(EXFLAG_V1|EXFLAG_SS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ku_reject
+parameter_list|(
+name|x
+parameter_list|,
+name|usage
+parameter_list|)
+define|\
+value|(((x)->ex_flags& EXFLAG_KUSAGE)&& !((x)->ex_kusage& (usage)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|xku_reject
+parameter_list|(
+name|x
+parameter_list|,
+name|usage
+parameter_list|)
+define|\
+value|(((x)->ex_flags& EXFLAG_XKUSAGE)&& !((x)->ex_xkusage& (usage)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_reject
+parameter_list|(
+name|x
+parameter_list|,
+name|usage
+parameter_list|)
+define|\
+value|(((x)->ex_flags& EXFLAG_NSCERT)&& !((x)->ex_nscert& (usage)))
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1818,29 +1864,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Does subject name match issuer ? */
-if|if
-condition|(
-operator|!
-name|X509_NAME_cmp
-argument_list|(
-name|X509_get_subject_name
-argument_list|(
-name|x
-argument_list|)
-argument_list|,
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-argument_list|)
-condition|)
-name|x
-operator|->
-name|ex_flags
-operator||=
-name|EXFLAG_SI
-expr_stmt|;
 comment|/* V1 should mean no extensions ... */
 if|if
 condition|(
@@ -2279,6 +2302,16 @@ operator||=
 name|XKU_DVCS
 expr_stmt|;
 break|break;
+case|case
+name|NID_anyExtendedKeyUsage
+case|:
+name|x
+operator|->
+name|ex_xkusage
+operator||=
+name|XKU_ANYEKU
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|sk_ASN1_OBJECT_pop_free
@@ -2375,6 +2408,59 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Does subject name match issuer ? */
+if|if
+condition|(
+operator|!
+name|X509_NAME_cmp
+argument_list|(
+name|X509_get_subject_name
+argument_list|(
+name|x
+argument_list|)
+argument_list|,
+name|X509_get_issuer_name
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|x
+operator|->
+name|ex_flags
+operator||=
+name|EXFLAG_SI
+expr_stmt|;
+comment|/* If SKID matches AKID also indicate self signed */
+if|if
+condition|(
+name|X509_check_akid
+argument_list|(
+name|x
+argument_list|,
+name|x
+operator|->
+name|akid
+argument_list|)
+operator|==
+name|X509_V_OK
+operator|&&
+operator|!
+name|ku_reject
+argument_list|(
+name|x
+argument_list|,
+name|KU_KEY_CERT_SIGN
+argument_list|)
+condition|)
+name|x
+operator|->
+name|ex_flags
+operator||=
+name|EXFLAG_SS
+expr_stmt|;
+block|}
 name|x
 operator|->
 name|altname
@@ -2549,52 +2635,6 @@ end_function
 begin_comment
 comment|/*-  * CA checks common to all purposes  * return codes:  * 0 not a CA  * 1 is a CA  * 2 basicConstraints absent so "maybe" a CA  * 3 basicConstraints absent but self signed V1.  * 4 basicConstraints absent but keyUsage present and keyCertSign asserted.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|V1_ROOT
-value|(EXFLAG_V1|EXFLAG_SS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ku_reject
-parameter_list|(
-name|x
-parameter_list|,
-name|usage
-parameter_list|)
-define|\
-value|(((x)->ex_flags& EXFLAG_KUSAGE)&& !((x)->ex_kusage& (usage)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|xku_reject
-parameter_list|(
-name|x
-parameter_list|,
-name|usage
-parameter_list|)
-define|\
-value|(((x)->ex_flags& EXFLAG_XKUSAGE)&& !((x)->ex_xkusage& (usage)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ns_reject
-parameter_list|(
-name|x
-parameter_list|,
-name|usage
-parameter_list|)
-define|\
-value|(((x)->ex_flags& EXFLAG_NSCERT)&& !((x)->ex_nscert& (usage)))
-end_define
 
 begin_function
 specifier|static
@@ -2847,7 +2887,7 @@ argument_list|(
 name|x
 argument_list|)
 return|;
-comment|/* We need to do digital signatures with it */
+comment|/* We need to do digital signatures or key agreement */
 if|if
 condition|(
 name|ku_reject
@@ -2855,6 +2895,8 @@ argument_list|(
 name|x
 argument_list|,
 name|KU_DIGITAL_SIGNATURE
+operator||
+name|KU_KEY_AGREEMENT
 argument_list|)
 condition|)
 return|return
@@ -2878,6 +2920,18 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Key usage needed for TLS/SSL server: digital signature, encipherment or  * key agreement. The ssl code can check this more thoroughly for individual  * key types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KU_TLS
+define|\
+value|KU_DIGITAL_SIGNATURE|KU_KEY_ENCIPHERMENT|KU_KEY_AGREEMENT
+end_define
 
 begin_function
 specifier|static
@@ -2934,16 +2988,13 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Now as for keyUsage: we'll at least need to sign OR encipher */
 if|if
 condition|(
 name|ku_reject
 argument_list|(
 name|x
 argument_list|,
-name|KU_DIGITAL_SIGNATURE
-operator||
-name|KU_KEY_ENCIPHERMENT
+name|KU_TLS
 argument_list|)
 condition|)
 return|return

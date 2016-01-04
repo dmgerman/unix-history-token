@@ -928,8 +928,10 @@ expr_stmt|;
 comment|/* 	 * Allocate a sector to write as metadata. 	 */
 name|sector
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|secsize
 argument_list|)
 expr_stmt|;
@@ -949,15 +951,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|memset
-argument_list|(
-name|sector
-argument_list|,
-literal|0
-argument_list|,
-name|secsize
-argument_list|)
-expr_stmt|;
 name|rsector
 operator|=
 name|malloc
@@ -972,11 +965,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|sector
-argument_list|)
-expr_stmt|;
 name|gctl_error
 argument_list|(
 name|req
@@ -984,7 +972,9 @@ argument_list|,
 literal|"unable to allocate metadata buffer"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* 	 * encode the metadata 	 */
 name|multipath_metadata_encode
@@ -1037,7 +1027,9 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* 	 * Now touch the rest of the providers to hint retaste. 	 */
 for|for
@@ -1170,6 +1162,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|done
+label|:
+name|free
+argument_list|(
+name|rsector
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sector
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

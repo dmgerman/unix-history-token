@@ -1453,7 +1453,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: %s scan, ticks %u duration %lu\n"
+literal|"%s: %s scan, ticks %u duration %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2644,9 +2644,10 @@ argument_list|(
 name|ic
 argument_list|)
 argument_list|,
-name|hz
-operator|/
-literal|1000
+name|msecs_to_ticks
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -4,7 +4,7 @@ comment|/*  * validator/val_neg.h - validator aggressive negative caching functi
 end_comment
 
 begin_comment
-comment|/**  * \file  *  * This file contains helper functions for the validator module.  * The functions help with aggressive negative caching.  * This creates new denials of existance, and proofs for absence of types  * from cached NSEC records.  */
+comment|/**  * \file  *  * This file contains helper functions for the validator module.  * The functions help with aggressive negative caching.  * This creates new denials of existence, and proofs for absence of types  * from cached NSEC records.  */
 end_comment
 
 begin_ifndef

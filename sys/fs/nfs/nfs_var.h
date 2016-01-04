@@ -905,6 +905,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|nfsrv_freeallbackchannel_xprts
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nfs_nfsdserv.c */
 end_comment
@@ -2484,6 +2493,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|nfsrv_cleanusergroup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|nfsrv_checkutf8
 parameter_list|(
@@ -2634,6 +2652,19 @@ name|nfsclsession
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ucred
+modifier|*
+name|nfsrv_getgrpscred
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

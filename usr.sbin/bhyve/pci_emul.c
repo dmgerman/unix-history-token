@@ -1246,7 +1246,7 @@ init|=
 operator|~
 literal|0
 decl_stmt|;
-comment|/* 	 * The PCI standard only allows 4 and 8 byte accesses to the MSI-X 	 * table but we also allow 1 byte access to accomodate reads from 	 * ddb. 	 */
+comment|/* 	 * The PCI standard only allows 4 and 8 byte accesses to the MSI-X 	 * table but we also allow 1 byte access to accommodate reads from 	 * ddb. 	 */
 if|if
 condition|(
 name|size
@@ -4095,22 +4095,12 @@ name|rwmask
 decl_stmt|;
 name|int
 name|off
-decl_stmt|,
-name|table_bar
 decl_stmt|;
 name|off
 operator|=
 name|offset
 operator|-
 name|capoff
-expr_stmt|;
-name|table_bar
-operator|=
-name|pi
-operator|->
-name|pi_msix
-operator|.
-name|table_bar
 expr_stmt|;
 comment|/* Message Control Register */
 if|if

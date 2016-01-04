@@ -39,12 +39,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
 begin_typedef
 typedef|typedef
 name|uint32_t
@@ -65,23 +59,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|int
-name|OF_decode_addr
-parameter_list|(
-name|phandle_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_space_tag_t
-modifier|*
-parameter_list|,
-name|bus_space_handle_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

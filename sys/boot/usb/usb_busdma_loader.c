@@ -860,7 +860,9 @@ name|usb_pc_common_mem_cb
 argument_list|(
 name|pc
 argument_list|,
-name|ptr
+name|pc
+operator|->
+name|buffer
 argument_list|,
 name|size
 argument_list|)

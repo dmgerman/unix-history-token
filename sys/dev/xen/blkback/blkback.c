@@ -4321,7 +4321,9 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"Mapping(%d): Host Addr 0x%lx, flags "
+literal|"Mapping(%d): Host Addr 0x%"
+name|PRIx64
+literal|", flags "
 literal|"0x%x ref 0x%x, dom %d\n"
 argument_list|,
 name|seg_idx

@@ -560,9 +560,6 @@ specifier|const
 name|u8
 modifier|*
 name|vht_capab
-parameter_list|,
-name|size_t
-name|vht_capab_len
 parameter_list|)
 block|{
 comment|/* Disable VHT caps for STAs associated to no-VHT BSSes. */
@@ -570,14 +567,6 @@ if|if
 condition|(
 operator|!
 name|vht_capab
-operator|||
-name|vht_capab_len
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ieee80211_vht_capabilities
-argument_list|)
 operator|||
 name|hapd
 operator|->

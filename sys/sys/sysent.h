@@ -45,6 +45,23 @@ name|ksiginfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_enum
+enum|enum
+name|systrace_probe_t
+block|{
+name|SYSTRACE_ENTRY
+block|,
+name|SYSTRACE_RETURN
+block|, }
+enum|;
+end_enum
+
 begin_typedef
 typedef|typedef
 name|int
@@ -60,10 +77,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|/* Used by the machine dependent syscall() code. */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|void
@@ -72,25 +85,17 @@ modifier|*
 name|systrace_probe_func_t
 function_decl|)
 parameter_list|(
-name|u_int32_t
-parameter_list|,
-name|int
-parameter_list|,
 name|struct
-name|sysent
+name|syscall_args
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|enum
+name|systrace_probe_t
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/*  * Used by loaded syscalls to convert arguments to a DTrace array  * of 64-bit arguments.  */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -105,7 +110,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|int
@@ -252,12 +257,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|syscall_args
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|trapframe
 struct_decl|;
 end_struct_decl
@@ -286,15 +285,6 @@ name|u_int
 name|sv_mask
 decl_stmt|;
 comment|/* optional mask to index */
-name|int
-name|sv_sigsize
-decl_stmt|;
-comment|/* size of signal translation table */
-name|int
-modifier|*
-name|sv_sigtbl
-decl_stmt|;
-comment|/* signal translation table */
 name|int
 name|sv_errsize
 decl_stmt|;
@@ -366,26 +356,6 @@ modifier|*
 name|sv_szsigcode
 decl_stmt|;
 comment|/* size of sigtramp code */
-name|void
-function_decl|(
-modifier|*
-name|sv_prepsyscall
-function_decl|)
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|u_int
-modifier|*
-parameter_list|,
-name|caddr_t
-modifier|*
-parameter_list|)
-function_decl|;
 name|char
 modifier|*
 name|sv_name
@@ -534,6 +504,9 @@ modifier|*
 name|sv_syscallnames
 decl_stmt|;
 name|vm_offset_t
+name|sv_timekeep_base
+decl_stmt|;
+name|vm_offset_t
 name|sv_shared_page_base
 decl_stmt|;
 name|vm_offset_t
@@ -541,18 +514,6 @@ name|sv_shared_page_len
 decl_stmt|;
 name|vm_offset_t
 name|sv_sigcode_base
-decl_stmt|;
-name|vm_offset_t
-name|sv_timekeep_base
-decl_stmt|;
-name|int
-name|sv_timekeep_off
-decl_stmt|;
-name|int
-name|sv_timekeep_curr
-decl_stmt|;
-name|uint32_t
-name|sv_timekeep_gen
 decl_stmt|;
 name|void
 modifier|*
@@ -649,6 +610,13 @@ end_define
 begin_comment
 comment|/* Force cap_enter() on startup. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SV_TIMEKEEP
+value|0x040000
+end_define
 
 begin_define
 define|#
@@ -1217,6 +1185,15 @@ parameter_list|(
 name|void
 modifier|*
 name|param
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|exec_inittk
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

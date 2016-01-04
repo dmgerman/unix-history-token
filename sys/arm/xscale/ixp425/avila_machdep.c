@@ -825,15 +825,12 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|envmode
-operator|==
-literal|1
-condition|)
-name|kern_envp
-operator|=
-name|static_env
+name|init_static_kenv
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param1
@@ -1501,7 +1498,9 @@ name|arm_physmem_exclude_region
 argument_list|(
 name|freemem_pt
 argument_list|,
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|-
 name|freemem_pt
 argument_list|,
@@ -1512,7 +1511,9 @@ name|arm_physmem_exclude_region
 argument_list|(
 name|freemempos
 argument_list|,
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|-
 literal|0x100000
 operator|-
@@ -1544,17 +1545,6 @@ argument_list|)
 expr_stmt|;
 name|kdb_init
 argument_list|()
-expr_stmt|;
-comment|/* use static kernel environment if so configured */
-if|if
-condition|(
-name|envmode
-operator|==
-literal|1
-condition|)
-name|kern_envp
-operator|=
-name|static_env
 expr_stmt|;
 return|return
 operator|(

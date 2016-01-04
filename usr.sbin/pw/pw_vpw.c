@@ -185,10 +185,6 @@ name|linecap
 operator|=
 literal|0
 expr_stmt|;
-name|linelen
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|pwd_fp
@@ -550,10 +546,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|linecap
-operator|=
-literal|0
-expr_stmt|;
-name|linelen
 operator|=
 literal|0
 expr_stmt|;

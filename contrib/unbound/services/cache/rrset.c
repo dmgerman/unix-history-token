@@ -781,6 +781,17 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+name|log_assert
+argument_list|(
+name|k
+operator|->
+name|rk
+operator|.
+name|dname
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* looks up item with a readlock - no editing! */
 if|if
 condition|(

@@ -1106,6 +1106,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|EXC_VECAST_E
+case|:
+case|case
 name|EXC_VECAST_G4
 case|:
 case|case
@@ -1711,6 +1714,14 @@ block|{
 name|uint16_t
 name|ver
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOKE
+name|vm_paddr_t
+name|pa
+decl_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
@@ -1860,9 +1871,29 @@ name|defined
 argument_list|(
 name|BOOKE
 argument_list|)
+name|pa
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MCARU
+argument_list|)
+expr_stmt|;
+name|pa
+operator|=
+operator|(
+name|pa
+operator|<<
+literal|32
+operator|)
+operator||
+name|mfspr
+argument_list|(
+name|SPR_MCAR
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"   mcsr           = 0x%lx\n"
+literal|"   mcsr            = 0x%lx\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1871,6 +1902,16 @@ name|mfspr
 argument_list|(
 name|SPR_MCSR
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   mcar            = 0x%jx\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|pa
 argument_list|)
 expr_stmt|;
 endif|#

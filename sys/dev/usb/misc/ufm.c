@@ -448,6 +448,28 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|ufm_devs
+index|[]
+init|=
+block|{
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_CYPRESS
+argument_list|,
+argument|USB_PRODUCT_CYPRESS_FMRADIO
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -492,27 +514,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|STRUCT_USB_HOST_ID
-name|ufm_devs
-index|[]
-init|=
-block|{
-block|{
-name|USB_VPI
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
 argument_list|(
-argument|USB_VENDOR_CYPRESS
-argument_list|,
-argument|USB_PRODUCT_CYPRESS_FMRADIO
-argument_list|,
-literal|0
+name|ufm_devs
 argument_list|)
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

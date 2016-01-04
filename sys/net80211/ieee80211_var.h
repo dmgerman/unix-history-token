@@ -366,6 +366,10 @@ parameter_list|)
 value|(((x) * 1024) / 1000)
 end_define
 
+begin_comment
+comment|/* XXX TODO: cap this at 1, in case hz is not 1000 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -556,6 +560,11 @@ name|task
 name|ic_wme_task
 decl_stmt|;
 comment|/* deferred WME update */
+name|struct
+name|task
+name|ic_restart_task
+decl_stmt|;
+comment|/* deferred device restart */
 name|counter_u64_t
 name|ic_ierrors
 decl_stmt|;

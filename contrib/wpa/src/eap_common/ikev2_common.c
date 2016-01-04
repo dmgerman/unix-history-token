@@ -47,6 +47,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ikev2_integ_alg
 name|ikev2_integ_algs
@@ -81,6 +82,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ikev2_prf_alg
 name|ikev2_prf_algs
@@ -115,6 +117,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ikev2_encr_alg
 name|ikev2_encr_algs

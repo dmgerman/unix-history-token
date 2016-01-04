@@ -14803,6 +14803,24 @@ operator|+
 literal|16
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|mem
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unable to allocate memory in dummy_malloc()\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|mem

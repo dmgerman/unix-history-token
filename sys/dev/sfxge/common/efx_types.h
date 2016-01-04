@@ -3805,7 +3805,7 @@ parameter_list|,
 name|_byte2
 parameter_list|)
 define|\
-value|do {								\ 		(_byte1).eb_u8[0]&= (_byte2).eb_u8[0];			\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_byte1).eb_u8[0] |= (_byte2).eb_u8[0];			\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_BYTE

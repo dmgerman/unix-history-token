@@ -10003,7 +10003,7 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"enable AMPDU on tid %d (%s), avgpps %d pkts %d"
+literal|"enable AMPDU on tid %d (%s), avgpps %d pkts %d attempt %d"
 argument_list|,
 name|tap
 operator|->
@@ -10026,6 +10026,10 @@ argument_list|,
 name|tap
 operator|->
 name|txa_pkts
+argument_list|,
+name|tap
+operator|->
+name|txa_attempts
 argument_list|)
 expr_stmt|;
 return|return

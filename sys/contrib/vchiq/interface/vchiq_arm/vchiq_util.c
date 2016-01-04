@@ -75,6 +75,12 @@ name|write
 operator|=
 literal|0
 expr_stmt|;
+name|queue
+operator|->
+name|initialized
+operator|=
+literal|1
+expr_stmt|;
 name|_sema_init
 argument_list|(
 operator|&
@@ -222,6 +228,14 @@ modifier|*
 name|header
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|queue
+operator|->
+name|initialized
+condition|)
+return|return;
 while|while
 condition|(
 name|queue

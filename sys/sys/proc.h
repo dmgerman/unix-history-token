@@ -1652,6 +1652,28 @@ begin_comment
 comment|/* New child indicator for ptrace() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_BORN
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* New LWP indicator for ptrace() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_EXIT
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Exiting LWP indicator for ptrace() */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
@@ -1978,12 +2000,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED29
+name|TDP_FORKING
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Thread is being created through fork() */
 end_comment
 
 begin_define
@@ -2689,6 +2711,10 @@ name|u_int
 name|p_treeflag
 decl_stmt|;
 comment|/* (e) P_TREE flags */
+name|int
+name|p_pendingexits
+decl_stmt|;
+comment|/* (c) Count of pending thread exits. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2716,12 +2742,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* (b) Process name. */
-name|struct
-name|pgrp
-modifier|*
-name|p_pgrp
-decl_stmt|;
-comment|/* (c + e) Pointer to process group. */
 name|struct
 name|sysentvec
 modifier|*
@@ -2764,6 +2784,12 @@ define|#
 directive|define
 name|p_endcopy
 value|p_xsig
+name|struct
+name|pgrp
+modifier|*
+name|p_pgrp
+decl_stmt|;
+comment|/* (c + e) Pointer to process group. */
 name|struct
 name|knlist
 name|p_klist
@@ -3485,6 +3511,17 @@ begin_comment
 comment|/* Handles SU ast for kthreads. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P2_LWP_EVENTS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Report LWP events via ptrace(2). */
+end_comment
+
 begin_comment
 comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
 end_comment
@@ -4183,7 +4220,7 @@ name|_PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT) || (p) == curproc,		\ 	    ("PHOLD of exiting process"));				\ 	(p)->p_lock++;							\ 	if (((p)->p_flag& P_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT) || (p) == curproc,		\ 	    ("PHOLD of exiting process %p", p));			\ 	(p)->p_lock++;							\ 	if (((p)->p_flag& P_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
 end_define
 
 begin_define
@@ -4193,7 +4230,7 @@ name|PROC_ASSERT_HELD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {					\ 	KASSERT((p)->p_lock> 0, ("process not held"));			\ } while (0)
+value|do {					\ 	KASSERT((p)->p_lock> 0, ("process %p not held", p));		\ } while (0)
 end_define
 
 begin_define
@@ -4223,7 +4260,7 @@ name|PROC_ASSERT_NOT_HELD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {					\ 	KASSERT((p)->p_lock == 0, ("process held"));			\ } while (0)
+value|do {					\ 	KASSERT((p)->p_lock == 0, ("process %p held", p));		\ } while (0)
 end_define
 
 begin_define

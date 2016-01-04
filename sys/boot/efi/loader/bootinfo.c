@@ -148,8 +148,10 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|UINTN
-name|efi_mapkey
+specifier|extern
+name|EFI_SYSTEM_TABLE
+modifier|*
+name|ST
 decl_stmt|;
 end_decl_stmt
 
@@ -956,9 +958,14 @@ name|size_t
 name|efisz
 decl_stmt|;
 name|UINTN
+name|efi_mapkey
+decl_stmt|;
+name|UINTN
 name|mmsz
 decl_stmt|,
 name|pages
+decl_stmt|,
+name|retry
 decl_stmt|,
 name|sz
 decl_stmt|;
@@ -1085,7 +1092,22 @@ operator|&
 operator|~
 literal|0xf
 expr_stmt|;
-comment|/* 	 * Allocate enough pages to hold the bootinfo block and the memory 	 * map EFI will return to us. The memory map has an unknown size, 	 * so we have to determine that first. Note that the AllocatePages 	 * call can itself modify the memory map, so we have to take that 	 * into account as well. The changes to the memory map are caused 	 * by splitting a range of free memory into two (AFAICT), so that 	 * one is marked as being loader data. 	 */
+comment|/* 	 * It is possible that the first call to ExitBootServices may change 	 * the map key. Fetch a new map key and retry ExitBootServices in that 	 * case. 	 */
+for|for
+control|(
+name|retry
+operator|=
+literal|2
+init|;
+name|retry
+operator|>
+literal|0
+condition|;
+name|retry
+operator|--
+control|)
+block|{
+comment|/* 		 * Allocate enough pages to hold the bootinfo block and the 		 * memory map EFI will return to us. The memory map has an 		 * unknown size, so we have to determine that first. Note that 		 * the AllocatePages call can itself modify the memory map, so 		 * we have to take that into account as well. The changes to 		 * the memory map are caused by splitting a range of free 		 * memory into two (AFAICT), so that one is marked as being 		 * loader data. 		 */
 name|sz
 operator|=
 literal|0
@@ -1159,14 +1181,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: AllocatePages() returned 0x%lx\n"
+literal|"%s: AllocatePages error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1175,7 +1203,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Read the memory map and stash it after bootinfo. Align the 	 * memory map on a 16-byte boundary (the bootinfo block is page 	 * aligned). 	 */
+comment|/* 		 * Read the memory map and stash it after bootinfo. Align the 		 * memory map on a 16-byte boundary (the bootinfo block is page 		 * aligned). 		 */
 name|efihdr
 operator|=
 operator|(
@@ -1242,14 +1270,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: GetMemoryMap() returned 0x%lx\n"
+literal|"%s: GetMemoryMap error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
+call|(
+name|unsigned
 name|long
-operator|)
+call|)
+argument_list|(
 name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1258,6 +1292,27 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|status
+operator|=
+name|BS
+operator|->
+name|ExitBootServices
+argument_list|(
+name|IH
+argument_list|,
+name|efi_mapkey
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|efihdr
 operator|->
 name|memory_size
@@ -1292,6 +1347,38 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+name|BS
+operator|->
+name|FreePages
+argument_list|(
+name|addr
+argument_list|,
+name|pages
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"ExitBootServices error %lu\n"
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|status
+operator|&
+operator|~
+name|EFI_ERROR_MASK
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -1699,6 +1786,19 @@ name|kernend
 argument_list|,
 operator|&
 name|kernend
+argument_list|)
+expr_stmt|;
+name|file_addmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_FW_HANDLE
+argument_list|,
+sizeof|sizeof
+name|ST
+argument_list|,
+operator|&
+name|ST
 argument_list|)
 expr_stmt|;
 name|bi_load_efi_data

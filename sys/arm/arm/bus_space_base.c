@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_platform.h"
 end_include
 
@@ -395,6 +401,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_decl_stmt
 name|bus_space_tag_t
 name|arm_base_bs_tag
@@ -403,6 +417,11 @@ operator|&
 name|arm_base_bus_space
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -301,7 +301,7 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|buf
 argument_list|)
-name|bu_freelist
+name|b_freelist
 expr_stmt|;
 comment|/* (Q) */
 struct|struct
@@ -309,7 +309,7 @@ block|{
 name|void
 function_decl|(
 modifier|*
-name|pg_iodone
+name|b_pgiodone
 function_decl|)
 parameter_list|(
 name|void
@@ -324,22 +324,15 @@ name|int
 parameter_list|)
 function_decl|;
 name|int
-name|pg_reqpage
+name|b_pgbefore
+decl_stmt|;
+name|int
+name|b_pgafter
 decl_stmt|;
 block|}
-name|bu_pager
 struct|;
 block|}
-name|b_union
 union|;
-define|#
-directive|define
-name|b_freelist
-value|b_union.bu_freelist
-define|#
-directive|define
-name|b_pager
-value|b_union.bu_pager
 union|union
 name|cluster_info
 block|{
@@ -610,7 +603,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_000400000
+name|B_00040000
 value|0x00040000
 end_define
 
@@ -621,7 +614,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_000800000
+name|B_00080000
 value|0x00080000
 end_define
 
@@ -632,7 +625,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_001000000
+name|B_00100000
 value|0x00100000
 end_define
 

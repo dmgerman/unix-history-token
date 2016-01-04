@@ -20641,8 +20641,6 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|CTR2
 argument_list|(
 name|KTR_TULIP
@@ -20654,6 +20652,8 @@ argument_list|,
 name|segcnt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|d_status
 operator|=
 literal|0

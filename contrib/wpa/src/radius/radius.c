@@ -547,6 +547,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|radius_attr_type
 name|radius_attrs
@@ -1021,6 +1022,7 @@ end_define
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|radius_attr_type
 modifier|*
@@ -1083,6 +1085,7 @@ modifier|*
 name|hdr
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|radius_attr_type
 modifier|*
@@ -6315,7 +6318,7 @@ name|os_malloc
 argument_list|(
 name|hlen
 operator|+
-name|send_key_len
+name|recv_key_len
 operator|+
 literal|16
 argument_list|)
@@ -7359,7 +7362,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * radius_msg_get_vlanid - Parse RADIUS attributes for VLAN tunnel information  * @msg: RADIUS message  * Returns: VLAN ID for the first tunnel configuration of -1 if none is found  */
+comment|/**  * radius_msg_get_vlanid - Parse RADIUS attributes for VLAN tunnel information  * @msg: RADIUS message  * Returns: VLAN ID for the first tunnel configuration or 0 if none is found  */
 end_comment
 
 begin_function
@@ -7704,8 +7707,7 @@ name|vlanid
 return|;
 block|}
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 end_function

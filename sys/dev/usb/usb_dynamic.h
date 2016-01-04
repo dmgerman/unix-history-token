@@ -122,6 +122,21 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|usb_linux_free_device_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* global function pointers */
 end_comment
@@ -139,6 +154,14 @@ specifier|extern
 name|usb_temp_setup_by_index_t
 modifier|*
 name|usb_temp_setup_by_index_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|usb_linux_free_device_t
+modifier|*
+name|usb_linux_free_device_p
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +199,16 @@ end_decl_stmt
 begin_comment
 comment|/* function prototypes */
 end_comment
+
+begin_function_decl
+name|void
+name|usb_linux_unload
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<x86/apicvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -624,6 +630,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+comment|/* Send an IPI_BITMAP in case there are pending bitmap IPIs. */
+name|lapic_ipi_vectored
+argument_list|(
+name|IPI_BITMAP_VECTOR
+argument_list|,
+name|APIC_IPI_DEST_ALL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|smp_started
@@ -944,7 +958,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}

@@ -1663,7 +1663,7 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|arm_base_bs_tag
+name|fdtbus_bs_tag
 argument_list|)
 expr_stmt|;
 name|res

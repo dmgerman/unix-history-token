@@ -116,6 +116,20 @@ name|ENCIOC_SETSTRING
 value|_IO(ENCIOC, 12)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ENCIOC_GETENCNAME
+value|_IO(ENCIOC, 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCIOC_GETENCID
+value|_IO(ENCIOC, 14)
+end_define
+
 begin_comment
 comment|/*  * Platform Independent Definitions for enclosure devices.  */
 end_comment

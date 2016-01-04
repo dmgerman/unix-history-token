@@ -56,7 +56,7 @@ end_include
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_port_assignment
 parameter_list|(
 name|__in
@@ -84,7 +84,7 @@ name|MC_CMD_GET_PORT_ASSIGNMENT_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -213,7 +213,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -229,7 +229,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_port_modes
 parameter_list|(
 name|__in
@@ -257,7 +257,7 @@ name|MC_CMD_GET_PORT_MODES_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -387,7 +387,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -403,7 +403,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_vadaptor_alloc
 parameter_list|(
 name|__in
@@ -430,7 +430,7 @@ name|MC_CMD_VADAPTOR_ALLOC_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -498,6 +498,25 @@ argument_list|,
 name|port_id
 argument_list|)
 expr_stmt|;
+name|MCDI_IN_POPULATE_DWORD_1
+argument_list|(
+name|req
+argument_list|,
+name|VADAPTOR_ALLOC_IN_FLAGS
+argument_list|,
+name|VADAPTOR_ALLOC_IN_FLAG_PERMIT_SET_MAC_WHEN_FILTERS_INSTALLED
+argument_list|,
+name|enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_allow_set_mac_with_installed_filters
+condition|?
+literal|1
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
 name|efx_mcdi_execute
 argument_list|(
 name|enp
@@ -536,7 +555,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -552,7 +571,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_vadaptor_free
 parameter_list|(
 name|__in
@@ -579,7 +598,7 @@ name|MC_CMD_VADAPTOR_FREE_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -674,7 +693,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -690,7 +709,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_mac_address_pf
 argument_list|(
 name|__in
@@ -723,7 +742,7 @@ name|MC_CMD_GET_MAC_ADDRESSES_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -899,7 +918,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -915,7 +934,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_mac_address_vf
 argument_list|(
 name|__in
@@ -948,7 +967,7 @@ name|MC_CMD_VPORT_GET_MAC_ADDRESSES_OUT_LENMAX
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1133,7 +1152,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1149,7 +1168,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_clock
 parameter_list|(
 name|__in
@@ -1177,7 +1196,7 @@ name|MC_CMD_GET_CLOCK_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1329,7 +1348,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1345,7 +1364,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_vector_cfg
 parameter_list|(
 name|__in
@@ -1383,7 +1402,7 @@ name|MC_CMD_GET_VECTOR_CFG_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1541,7 +1560,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1557,7 +1576,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_capabilities
 parameter_list|(
 name|__in
@@ -1585,7 +1604,7 @@ name|MC_CMD_GET_CAPABILITIES_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1708,7 +1727,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1724,7 +1743,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_alloc_vis
 parameter_list|(
 name|__in
@@ -1765,7 +1784,7 @@ name|MC_CMD_ALLOC_VIS_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1947,7 +1966,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1963,7 +1982,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_free_vis
 parameter_list|(
 name|__in
@@ -1975,7 +1994,7 @@ block|{
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFX_STATIC_ASSERT
@@ -2071,7 +2090,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2087,7 +2106,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_alloc_piobuf
 parameter_list|(
 name|__in
@@ -2115,7 +2134,7 @@ name|MC_CMD_ALLOC_PIOBUF_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2257,7 +2276,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2273,7 +2292,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_free_piobuf
 parameter_list|(
 name|__in
@@ -2281,7 +2300,7 @@ name|efx_nic_t
 modifier|*
 name|enp
 parameter_list|,
-name|__out
+name|__in
 name|efx_piobuf_handle_t
 name|handle
 parameter_list|)
@@ -2300,7 +2319,7 @@ name|MC_CMD_FREE_PIOBUF_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2395,7 +2414,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2411,7 +2430,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_link_piobuf
 parameter_list|(
 name|__in
@@ -2442,7 +2461,7 @@ name|MC_CMD_LINK_PIOBUF_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2546,7 +2565,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2562,7 +2581,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_unlink_piobuf
 parameter_list|(
 name|__in
@@ -2589,7 +2608,7 @@ name|MC_CMD_UNLINK_PIOBUF_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2684,7 +2703,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2720,7 +2739,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2970,7 +2989,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_alloc
 parameter_list|(
 name|__inout
@@ -3021,7 +3040,7 @@ name|buf
 decl_stmt|,
 name|blk
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -3276,7 +3295,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3295,7 +3314,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_free
 parameter_list|(
 name|__inout
@@ -3316,7 +3335,7 @@ name|uint32_t
 modifier|*
 name|map
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -3422,7 +3441,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3437,7 +3456,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_link
 parameter_list|(
 name|__inout
@@ -3471,7 +3490,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_pio_unlink
 parameter_list|(
 name|__inout
@@ -3500,7 +3519,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_get_datapath_caps
 parameter_list|(
 name|__in
@@ -3523,7 +3542,7 @@ decl_stmt|;
 name|efx_dword_t
 name|datapath_capabilities
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -3687,6 +3706,66 @@ operator|=
 name|B_FALSE
 expr_stmt|;
 block|}
+comment|/* Check if the firmware supports disabling scatter on RXQs */
+if|if
+condition|(
+name|MCDI_CMD_DWORD_FIELD
+argument_list|(
+operator|&
+name|datapath_capabilities
+argument_list|,
+name|GET_CAPABILITIES_OUT_RX_DISABLE_SCATTER
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|encp
+operator|->
+name|enc_rx_disable_scatter_supported
+operator|=
+name|B_TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|encp
+operator|->
+name|enc_rx_disable_scatter_supported
+operator|=
+name|B_FALSE
+expr_stmt|;
+block|}
+comment|/* Check if the firmware supports set mac with running filters */
+if|if
+condition|(
+name|MCDI_CMD_DWORD_FIELD
+argument_list|(
+operator|&
+name|datapath_capabilities
+argument_list|,
+name|GET_CAPABILITIES_OUT_VADAPTOR_PERMIT_SET_MAC_WHEN_FILTERS_INSTALLED
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|encp
+operator|->
+name|enc_allow_set_mac_with_installed_filters
+operator|=
+name|B_TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|encp
+operator|->
+name|enc_allow_set_mac_with_installed_filters
+operator|=
+name|B_FALSE
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3705,7 +3784,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3753,19 +3832,13 @@ operator||
 operator|(
 literal|1
 operator|<<
-name|TLV_PORT_MODE_40G
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
 name|TLV_PORT_MODE_10G_10G
 operator|)
 operator||
 operator|(
 literal|1
 operator|<<
-name|TLV_PORT_MODE_40G_40G
+name|TLV_PORT_MODE_10G_10G_10G_10G
 operator|)
 block|,
 literal|1
@@ -3778,7 +3851,13 @@ block|,
 operator|(
 literal|1
 operator|<<
-name|TLV_PORT_MODE_10G_10G_10G_10G
+name|TLV_PORT_MODE_40G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_40G_40G
 operator|)
 operator||
 operator|(
@@ -3795,6 +3874,7 @@ operator|)
 block|,
 literal|2
 block|}
+comment|/* 	 * NOTE: Medford modes will require 4 outputs per port: 	 *	TLV_PORT_MODE_10G_10G_10G_10G_Q 	 *	TLV_PORT_MODE_10G_10G_10G_10G_Q2 	 * The Q2 mode routes outputs to external port 2. Support for this 	 * will require a new field specifying the number to add after 	 * scaling by stride. This is fixed at 1 currently. 	 */
 block|}
 struct|;
 end_struct
@@ -3802,7 +3882,7 @@ end_struct
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_external_port_mapping
 parameter_list|(
 name|__in
@@ -3820,7 +3900,7 @@ modifier|*
 name|external_portp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|int
@@ -3972,7 +4052,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3988,7 +4068,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_board_cfg
 parameter_list|(
 name|__in
@@ -4069,7 +4149,7 @@ name|base
 decl_stmt|,
 name|nvec
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4176,19 +4256,6 @@ argument_list|,
 name|mac_addr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|rc
-operator|=
-name|efx_mcdi_get_mac_address_vf
-argument_list|(
-name|enp
-argument_list|,
-name|mac_addr
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4207,10 +4274,23 @@ literal|0x02
 operator|)
 condition|)
 block|{
-comment|/* 		 * If the static config does not include a global MAC address 		 * pool then the board may return a locally administered MAC 		 * address (this should only happen on incorrectly programmed 		 * boards). 		 */
+comment|/* 			 * If the static config does not include a global MAC 			 * address pool then the board may return a locally 			 * administered MAC address (this should only happen on 			 * incorrectly programmed boards). 			 */
 name|rc
 operator|=
 name|EINVAL
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|rc
+operator|=
+name|efx_mcdi_get_mac_address_vf
+argument_list|(
+name|enp
+argument_list|,
+name|mac_addr
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4961,7 +5041,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4976,7 +5056,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_probe
 parameter_list|(
 name|__in
@@ -5007,7 +5087,7 @@ operator|->
 name|en_drv_cfg
 operator|)
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -5288,7 +5368,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5303,7 +5383,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_set_drv_limits
 parameter_list|(
 name|__inout
@@ -5354,7 +5434,7 @@ name|min_txq_count
 decl_stmt|,
 name|max_txq_count
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -5643,7 +5723,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5658,7 +5738,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_reset
 parameter_list|(
 name|__in
@@ -5681,7 +5761,7 @@ name|MC_CMD_ENTITY_RESET_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* hunt_nic_reset() is called to recover from BADASSERT failures. */
@@ -5837,7 +5917,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5852,7 +5932,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_init
 parameter_list|(
 name|__in
@@ -5885,7 +5965,13 @@ decl_stmt|;
 name|uint32_t
 name|i
 decl_stmt|;
-name|int
+name|uint32_t
+name|retry
+decl_stmt|;
+name|uint32_t
+name|delay_us
+decl_stmt|;
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -6267,8 +6353,16 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/* Allocate a vAdapter attached to our upstream vPort/pPort */
-if|if
+comment|/* 	 * Allocate a vAdaptor attached to our upstream vPort/pPort. 	 * 	 * On a VF, this may fail with MC_CMD_ERR_NO_EVB_PORT (ENOENT) if the PF 	 * driver has yet to bring up the EVB port. See bug 56147. In this case, 	 * retry the request several times after waiting a while. The wait time 	 * between retries starts small (10ms) and exponentially increases. 	 * Total wait time is a little over two seconds. Retry logic in the 	 * client driver may mean this whole loop is repeated if it continues to 	 * fail. 	 */
+name|retry
+operator|=
+literal|0
+expr_stmt|;
+name|delay_us
+operator|=
+literal|10000
+expr_stmt|;
+while|while
 condition|(
 operator|(
 name|rc
@@ -6283,20 +6377,100 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|EFX_PCI_FUNCTION_IS_PF
+argument_list|(
+operator|&
+name|enp
+operator|->
+name|en_nic_cfg
+argument_list|)
+operator|||
+operator|(
+name|rc
+operator|!=
+name|ENOENT
+operator|)
+condition|)
+block|{
+comment|/* 			 * Do not retry alloc for PF, or for other errors on 			 * a VF. 			 */
 goto|goto
 name|fail5
 goto|;
+block|}
+comment|/* VF startup before PF is ready. Retry allocation. */
+if|if
+condition|(
+name|retry
+operator|>
+literal|5
+condition|)
+block|{
+comment|/* Too many attempts */
+name|rc
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|fail6
+goto|;
+block|}
+name|EFSYS_PROBE1
+argument_list|(
+name|mcdi_no_evb_port_retry
+argument_list|,
+name|int
+argument_list|,
+name|retry
+argument_list|)
+expr_stmt|;
+name|EFSYS_SLEEP
+argument_list|(
+name|delay_us
+argument_list|)
+expr_stmt|;
+name|retry
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|delay_us
+operator|<
+literal|500000
+condition|)
+name|delay_us
+operator|<<=
+literal|2
+expr_stmt|;
+block|}
 name|enp
 operator|->
 name|en_vport_id
 operator|=
 name|EVB_PORT_ID_ASSIGNED
 expr_stmt|;
+name|enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_mcdi_max_payload_length
+operator|=
+name|MCDI_CTL_SDU_LEN_MAX_V2
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|fail6
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail6
+argument_list|)
+expr_stmt|;
 name|fail5
 label|:
 name|EFSYS_PROBE
@@ -6336,7 +6510,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6351,7 +6525,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_get_vi_pool
 parameter_list|(
 name|__in
@@ -6398,7 +6572,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_get_bar_region
 parameter_list|(
 name|__in
@@ -6421,7 +6595,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -6515,7 +6689,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6538,6 +6712,12 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+name|uint32_t
+name|i
+decl_stmt|;
+name|efx_rc_t
+name|rc
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -6556,7 +6736,66 @@ name|en_vport_id
 operator|=
 literal|0
 expr_stmt|;
-comment|/* FIXME: do we need to unlink piobufs ? */
+comment|/* Unlink piobufs from extra VIs in WC mapping */
+if|if
+condition|(
+name|enp
+operator|->
+name|en_u
+operator|.
+name|hunt
+operator|.
+name|enu_piobuf_count
+operator|>
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|enp
+operator|->
+name|en_u
+operator|.
+name|hunt
+operator|.
+name|enu_piobuf_count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|rc
+operator|=
+name|efx_mcdi_unlink_piobuf
+argument_list|(
+name|enp
+argument_list|,
+name|enp
+operator|->
+name|en_u
+operator|.
+name|hunt
+operator|.
+name|enu_pio_write_vi_base
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+block|}
+block|}
 name|hunt_nic_free_piobufs
 argument_list|(
 name|enp
@@ -6625,7 +6864,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nic_register_test
 parameter_list|(
 name|__in
@@ -6634,7 +6873,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* FIXME */
@@ -6667,7 +6906,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

@@ -402,7 +402,7 @@ begin_define
 define|#
 directive|define
 name|BIU_R2HST_ISTAT_MASK
-value|0x3f
+value|0xff
 end_define
 
 begin_comment
@@ -478,12 +478,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISPR2HST_RQST_UPDATE
+name|ISPR2HST_RSPQ_UPDATE2
 value|0x14
 end_define
 
 begin_comment
-comment|/* Resquest Queue Update */
+comment|/* Response Queue Update */
 end_comment
 
 begin_define
@@ -517,6 +517,39 @@ end_define
 
 begin_comment
 comment|/* Low 16 bits fast post ctio */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_ATIO_UPDATE
+value|0x1C
+end_define
+
+begin_comment
+comment|/* ATIO Queue Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_ATIO_RSPQ_UPDATE
+value|0x1D
+end_define
+
+begin_comment
+comment|/* ATIO& Request Update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISPR2HST_ATIO_UPDATE2
+value|0x1E
+end_define
+
+begin_comment
+comment|/* ATIO Queue Update */
 end_comment
 
 begin_comment
@@ -1356,19 +1389,6 @@ end_define
 begin_comment
 comment|/* Global interrupt pending */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|INT_PENDING
-parameter_list|(
-name|isp
-parameter_list|,
-name|isr
-parameter_list|)
-define|\
-value|IS_FC(isp)?								\   (IS_24XX(isp)? (isr& BIU2400_ISR_RISC_INT) : (isr& BIU2100_ISR_RISC_INT)) :\   (isr& BIU_ISR_RISC_INT)
-end_define
 
 begin_define
 define|#
@@ -2271,119 +2291,6 @@ name|BIU2400_ISR_RISC_INT
 value|0x8
 end_define
 
-begin_define
-define|#
-directive|define
-name|BIU2400_R2HST_INTR
-value|BIU_R2HST_INTR
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIU2400_R2HST_PAUSED
-value|BIU_R2HST_PAUSED
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIU2400_R2HST_ISTAT_MASK
-value|0x1f
-end_define
-
-begin_comment
-comment|/* interrupt status meanings */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_ROM_MBX_OK
-value|0x1
-end_define
-
-begin_comment
-comment|/* ROM mailbox cmd done ok */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_ROM_MBX_FAIL
-value|0x2
-end_define
-
-begin_comment
-comment|/* ROM mailbox cmd done fail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_MBX_OK
-value|0x10
-end_define
-
-begin_comment
-comment|/* mailbox cmd done ok */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_MBX_FAIL
-value|0x11
-end_define
-
-begin_comment
-comment|/* mailbox cmd done fail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_ASYNC_EVENT
-value|0x12
-end_define
-
-begin_comment
-comment|/* Async Event */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_RSPQ_UPDATE
-value|0x13
-end_define
-
-begin_comment
-comment|/* Response Queue Update */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_ATIO_RSPQ_UPDATE
-value|0x1C
-end_define
-
-begin_comment
-comment|/* ATIO Response Queue Update */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP2400R2HST_ATIO_RQST_UPDATE
-value|0x1D
-end_define
-
-begin_comment
-comment|/* ATIO Request Queue Update */
-end_comment
-
 begin_comment
 comment|/* BIU2400_HCCR definitions */
 end_comment
@@ -2680,19 +2587,14 @@ name|obitm
 decl_stmt|;
 comment|/* bits to mask for register copyout */
 name|uint32_t
-name|lineno
-range|:
-literal|16
-decl_stmt|,
-range|:
-literal|12
-decl_stmt|,
 name|logval
-range|:
-literal|4
 decl_stmt|;
+comment|/* Bitmask of status codes to log */
 name|uint32_t
 name|timeout
+decl_stmt|;
+name|uint32_t
+name|lineno
 decl_stmt|;
 specifier|const
 name|char

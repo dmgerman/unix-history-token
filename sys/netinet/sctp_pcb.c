@@ -4758,7 +4758,7 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -7291,7 +7291,7 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9795,7 +9795,7 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"%s: failed to get asconf lookup addr\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -9904,7 +9904,7 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"%s: failed to get asconf v6 lookup addr\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -10060,7 +10060,7 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"%s: failed to get asconf v4 lookup addr\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -10607,14 +10607,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC
-block|{
-name|struct
-name|inpcbpolicy
-modifier|*
-name|pcb_sp
-init|=
-name|NULL
-decl_stmt|;
 name|error
 operator|=
 name|ipsec_init_policy
@@ -10622,10 +10614,6 @@ argument_list|(
 name|so
 argument_list|,
 operator|&
-name|pcb_sp
-argument_list|)
-expr_stmt|;
-comment|/* Arrange to share the policy */
 name|inp
 operator|->
 name|ip_inp
@@ -10633,30 +10621,8 @@ operator|.
 name|inp
 operator|.
 name|inp_sp
-operator|=
-name|pcb_sp
+argument_list|)
 expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|in6pcb
-operator|*
-operator|)
-operator|(
-operator|&
-name|inp
-operator|->
-name|ip_inp
-operator|.
-name|inp
-operator|)
-operator|)
-operator|->
-name|in6p_sp
-operator|=
-name|pcb_sp
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -10809,6 +10775,21 @@ operator|.
 name|inp_cred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC
+name|ipsec_delete_pcbpolicy
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|ip_inp
+operator|.
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SCTP_ZONE_FREE
 argument_list|(
 name|SCTP_BASE_INFO
@@ -10963,6 +10944,21 @@ operator|.
 name|inp_cred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC
+name|ipsec_delete_pcbpolicy
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|ip_inp
+operator|.
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SCTP_ZONE_FREE
 argument_list|(
 name|SCTP_BASE_INFO
@@ -16052,11 +16048,6 @@ expr_stmt|;
 block|}
 comment|/* Now the sctp_pcb things */
 comment|/* 	 * free each asoc if it is not already closed/free. we can't use the 	 * macro here since le_next will get freed as part of the 	 * sctp_free_assoc() call. 	 */
-if|if
-condition|(
-name|so
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -16067,9 +16058,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPSEC */
-comment|/* Unlocks not needed since the socket is gone now */
-block|}
 if|if
 condition|(
 name|ip_pcb
@@ -18553,6 +18541,9 @@ parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
+name|uint16_t
+name|o_streams
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -19303,6 +19294,8 @@ argument_list|,
 name|override_tag
 argument_list|,
 name|vrf_id
+argument_list|,
+name|o_streams
 argument_list|)
 operator|)
 condition|)
@@ -24181,7 +24174,7 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -28365,7 +28358,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err
@@ -28787,7 +28780,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err

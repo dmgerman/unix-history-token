@@ -22,14 +22,14 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * We need to store:  *  - A magic value to differentiate the buffers  *  - The stack pointer  *  - The link register  *  - 11 general purpose registers  *  - 8 floating point registers  *  - The signal mask (128 bits)  * i.e. 24 64-bit words, this can be rounded up to 32 to give us some  * space to expand into without affecting the ABI.  * XXX: Is this enough space for expansion?  *  * The registers to save are: r19 to r29, and d8 to d15.  */
+comment|/*  * We need to store:  *  - A magic value to differentiate the buffers  *  - The stack pointer  *  - The link register  *  - 11 general purpose registers  *  - 8 floating point registers  *  - The signal mask (128 bits)  * i.e. 24 64-bit words, round this up to 31(+1) 128-bit words to allow for  * CPU extensions with larger registers and stronger alignment requirements.  *  * The registers to save are: r19 to r29, and d8 to d15.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_JBLEN
-value|32
+value|31
 end_define
 
 begin_define
@@ -93,7 +93,7 @@ typedef|typedef
 struct|struct
 name|_sigjmp_buf
 block|{
-name|long
+name|__int128_t
 name|_sjb
 index|[
 name|_JBLEN
@@ -119,7 +119,7 @@ typedef|typedef
 struct|struct
 name|_jmp_buf
 block|{
-name|long
+name|__int128_t
 name|_jb
 index|[
 name|_JBLEN

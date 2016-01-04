@@ -1231,7 +1231,7 @@ name|xml
 operator|=
 name|wpabuf_alloc
 argument_list|(
-literal|10000
+literal|15000
 argument_list|)
 expr_stmt|;
 if|if

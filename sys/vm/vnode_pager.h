@@ -39,7 +39,12 @@ name|int
 name|count
 parameter_list|,
 name|int
-name|reqpage
+modifier|*
+name|rbehind
+parameter_list|,
+name|int
+modifier|*
+name|rahead
 parameter_list|,
 name|vop_getpages_iodone_t
 name|iodone

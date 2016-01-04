@@ -33,17 +33,17 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_SRTP
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|"srtp.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
+end_ifndef
 
 begin_decl_stmt
 specifier|static

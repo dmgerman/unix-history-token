@@ -777,6 +777,17 @@ begin_comment
 comment|/* get/set flush timeout */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_L2CAP_ENCRYPTED
+value|6
+end_define
+
+begin_comment
+comment|/* get/set whether wait for encryptin on connect */
+end_comment
+
 begin_comment
 comment|/*  * Raw L2CAP sockets ioctl's  */
 end_comment

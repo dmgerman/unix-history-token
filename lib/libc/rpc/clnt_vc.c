@@ -3397,14 +3397,6 @@ name|ct_xdrs
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ct
-operator|->
-name|ct_addr
-operator|.
-name|buf
-condition|)
 name|free
 argument_list|(
 name|ct

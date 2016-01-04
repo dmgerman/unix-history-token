@@ -777,6 +777,20 @@ argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" far: %16lx\n"
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" esr:         %.8lx\n"
+argument_list|,
+name|esr
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"data abort in critical section or under mutex"
@@ -952,6 +966,30 @@ name|pcb_onfault
 expr_stmt|;
 return|return;
 block|}
+name|printf
+argument_list|(
+literal|"Fatal data abort:\n"
+argument_list|)
+expr_stmt|;
+name|print_registers
+argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" far: %16lx\n"
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" esr:         %.8lx\n"
+argument_list|,
+name|esr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
@@ -1150,40 +1188,6 @@ condition|)
 return|return;
 endif|#
 directive|endif
-comment|/* 	 * Sanity check we are in an exception er can handle. The IL bit 	 * is used to indicate the instruction length, except in a few 	 * exceptions described in the ARMv8 ARM. 	 * 	 * It is unclear in some cases if the bit is implementation defined. 	 * The Foundation Model and QEMU disagree on if the IL bit should 	 * be set when we are in a data fault from the same EL and the ISV 	 * bit (bit 24) is also set. 	 */
-name|KASSERT
-argument_list|(
-operator|(
-name|esr
-operator|&
-name|ESR_ELx_IL
-operator|)
-operator|==
-name|ESR_ELx_IL
-operator|||
-operator|(
-name|exception
-operator|==
-name|EXCP_DATA_ABORT
-operator|&&
-operator|(
-operator|(
-name|esr
-operator|&
-name|ISS_DATA_ISV
-operator|)
-operator|==
-literal|0
-operator|)
-operator|)
-argument_list|,
-operator|(
-literal|"Invalid instruction length in exception, esr %lx"
-operator|,
-name|esr
-operator|)
-argument_list|)
-expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_TRAP
@@ -1215,6 +1219,13 @@ case|:
 name|print_registers
 argument_list|(
 name|frame
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" esr:         %.8lx\n"
+argument_list|,
+name|esr
 argument_list|)
 expr_stmt|;
 name|panic

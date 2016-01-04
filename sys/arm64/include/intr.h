@@ -98,6 +98,10 @@ name|arm_alloc_msi
 parameter_list|(
 name|device_t
 parameter_list|,
+name|device_t
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -110,6 +114,8 @@ begin_function_decl
 name|int
 name|arm_release_msi
 parameter_list|(
+name|device_t
+parameter_list|,
 name|device_t
 parameter_list|,
 name|int
@@ -126,6 +132,8 @@ name|arm_alloc_msix
 parameter_list|(
 name|device_t
 parameter_list|,
+name|device_t
+parameter_list|,
 name|int
 modifier|*
 parameter_list|)
@@ -138,6 +146,8 @@ name|arm_release_msix
 parameter_list|(
 name|device_t
 parameter_list|,
+name|device_t
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -147,6 +157,8 @@ begin_function_decl
 name|int
 name|arm_map_msi
 parameter_list|(
+name|device_t
+parameter_list|,
 name|device_t
 parameter_list|,
 name|int
@@ -164,6 +176,8 @@ begin_function_decl
 name|int
 name|arm_map_msix
 parameter_list|(
+name|device_t
+parameter_list|,
 name|device_t
 parameter_list|,
 name|int

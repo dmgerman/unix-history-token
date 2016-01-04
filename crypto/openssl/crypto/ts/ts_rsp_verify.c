@@ -2095,7 +2095,7 @@ condition|(
 operator|!
 name|first
 condition|)
-name|strcpy
+name|strcat
 argument_list|(
 name|failure_text
 argument_list|,
@@ -2680,7 +2680,7 @@ expr_stmt|;
 operator|*
 name|imprint
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 return|return
 literal|0

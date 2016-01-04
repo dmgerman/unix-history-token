@@ -40,6 +40,16 @@ name|cell_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* sparc64 doesn't use the interrupt parent #address-cells in interrupt maps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFW_IMAP_NO_IPARENT_ADDR_CELLS
+end_define
+
 begin_function_decl
 name|int
 name|OF_decode_addr

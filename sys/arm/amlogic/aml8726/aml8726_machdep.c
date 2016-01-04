@@ -23,6 +23,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_platform.h"
+end_include
+
 begin_define
 define|#
 directive|define

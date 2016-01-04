@@ -382,7 +382,7 @@ parameter_list|,
 name|u32
 name|cmd
 parameter_list|,
-name|void
+name|u8
 name|__iomem
 modifier|*
 name|uar_page

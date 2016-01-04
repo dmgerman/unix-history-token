@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|CLANG_DEFAULT_OPENMP_RUNTIME
-value|"libgomp"
+value|"libomp"
 end_define
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.7.0"
+value|"LLVM 3.7.1"
 end_define
 
 begin_comment

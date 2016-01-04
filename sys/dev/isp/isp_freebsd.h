@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -703,18 +709,11 @@ decl_stmt|;
 name|uint32_t
 name|hold
 decl_stmt|;
-name|uint32_t
-name|enabled
-range|:
-literal|1
-decl_stmt|,
+name|uint16_t
 name|atio_count
-range|:
-literal|15
-decl_stmt|,
+decl_stmt|;
+name|uint16_t
 name|inot_count
-range|:
-literal|15
 decl_stmt|;
 name|inot_private_data_t
 modifier|*
@@ -856,28 +855,23 @@ begin_struct
 struct|struct
 name|isp_nexus
 block|{
+name|uint64_t
+name|lun
+decl_stmt|;
+comment|/* LUN for target */
+name|uint32_t
+name|tgt
+decl_stmt|;
+comment|/* TGT for target */
+name|uint8_t
+name|crnseed
+decl_stmt|;
+comment|/* next command reference number */
 name|struct
 name|isp_nexus
 modifier|*
 name|next
 decl_stmt|;
-name|uint32_t
-name|crnseed
-range|:
-literal|8
-decl_stmt|;
-comment|/* next command reference number */
-name|uint32_t
-name|tgt
-range|:
-literal|16
-decl_stmt|,
-comment|/* TGT for target */
-name|lun
-range|:
-literal|16
-decl_stmt|;
-comment|/* LUN for target */
 block|}
 struct|;
 end_struct
@@ -946,11 +940,8 @@ name|proc
 modifier|*
 name|kproc
 decl_stmt|;
-name|bus_dma_tag_t
-name|tdmat
-decl_stmt|;
 name|bus_dmamap_t
-name|tdmap
+name|scmap
 decl_stmt|;
 name|uint64_t
 name|def_wwpn
@@ -958,13 +949,13 @@ decl_stmt|;
 name|uint64_t
 name|def_wwnn
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|loop_down_time
 decl_stmt|;
-name|uint32_t
+name|int
 name|loop_down_limit
 decl_stmt|;
-name|uint32_t
+name|int
 name|gone_device_time
 decl_stmt|;
 comment|/* 	 * Per target/lun info- just to keep a per-ITL nexus crn count 	 */
@@ -982,41 +973,11 @@ modifier|*
 name|nexus_free_list
 decl_stmt|;
 name|uint32_t
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|proc_active
-range|:
-literal|1
-decl_stmt|,
-endif|#
-directive|endif
-name|tm_luns_enabled
-range|:
-literal|1
-decl_stmt|,
-name|tm_enable_defer
-range|:
-literal|1
-decl_stmt|,
-name|tm_enabled
-range|:
-literal|1
-decl_stmt|,
-endif|#
-directive|endif
 name|simqfrozen
 range|:
 literal|3
 decl_stmt|,
 name|default_id
-range|:
-literal|8
-decl_stmt|,
-name|hysteresis
 range|:
 literal|8
 decl_stmt|,
@@ -1033,6 +994,10 @@ name|loop_dead
 range|:
 literal|1
 decl_stmt|,
+name|loop_seen_once
+range|:
+literal|1
+decl_stmt|,
 name|fcbsy
 range|:
 literal|1
@@ -1043,18 +1008,9 @@ literal|1
 decl_stmt|;
 name|struct
 name|callout
-name|ldt
-decl_stmt|;
-comment|/* loop down timer */
-name|struct
-name|callout
 name|gdt
 decl_stmt|;
 comment|/* gone device timer */
-name|struct
-name|task
-name|ltask
-decl_stmt|;
 name|struct
 name|task
 name|gtask
@@ -1069,16 +1025,6 @@ index|[
 name|LUN_HASH_SIZE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|struct
-name|proc
-modifier|*
-name|target_proc
-decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -1115,39 +1061,9 @@ modifier|*
 name|path
 decl_stmt|;
 name|uint32_t
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|proc_active
-range|:
-literal|1
-decl_stmt|,
-endif|#
-directive|endif
-name|tm_luns_enabled
-range|:
-literal|1
-decl_stmt|,
-name|tm_enable_defer
-range|:
-literal|1
-decl_stmt|,
-name|tm_enabled
-range|:
-literal|1
-decl_stmt|,
-endif|#
-directive|endif
 name|simqfrozen
 range|:
 literal|3
-decl_stmt|,
-name|def_role
-range|:
-literal|2
 decl_stmt|,
 name|iid
 range|:
@@ -1163,16 +1079,6 @@ index|[
 name|LUN_HASH_SIZE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_INTERNAL_TARGET
-name|struct
-name|proc
-modifier|*
-name|target_proc
-decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|int
@@ -1215,21 +1121,40 @@ name|firmware
 modifier|*
 name|fw
 decl_stmt|;
-comment|/* 	 * DMA related sdtuff 	 */
-name|bus_space_tag_t
-name|bus_tag
+comment|/* 	 * DMA related stuff 	 */
+name|struct
+name|resource
+modifier|*
+name|regs
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|regs2
 decl_stmt|;
 name|bus_dma_tag_t
 name|dmat
 decl_stmt|;
-name|bus_space_handle_t
-name|bus_handle
+name|bus_dma_tag_t
+name|reqdmat
 decl_stmt|;
 name|bus_dma_tag_t
-name|cdmat
+name|respdmat
+decl_stmt|;
+name|bus_dma_tag_t
+name|atiodmat
+decl_stmt|;
+name|bus_dma_tag_t
+name|scdmat
 decl_stmt|;
 name|bus_dmamap_t
-name|cdmap
+name|reqmap
+decl_stmt|;
+name|bus_dmamap_t
+name|respmap
+decl_stmt|;
+name|bus_dmamap_t
+name|atiomap
 decl_stmt|;
 comment|/* 	 * Command and transaction related related stuff 	 */
 name|struct
@@ -1278,10 +1203,6 @@ name|ehook_active
 range|:
 literal|1
 decl_stmt|,
-name|disabled
-range|:
-literal|1
-decl_stmt|,
 name|mbox_sleeping
 range|:
 literal|1
@@ -1313,15 +1234,6 @@ decl_stmt|;
 name|int
 name|cont_max
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-name|cam_status
-modifier|*
-name|rptr
-decl_stmt|;
-endif|#
-directive|endif
 name|bus_addr_t
 name|ecmd_dma
 decl_stmt|;
@@ -1452,15 +1364,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|isp_bus_tag
-value|isp_osinfo.bus_tag
+name|isp_regs
+value|isp_osinfo.regs
 end_define
 
 begin_define
 define|#
 directive|define
-name|isp_bus_handle
-value|isp_osinfo.bus_handle
+name|isp_regs2
+value|isp_osinfo.regs2
 end_define
 
 begin_comment
@@ -1538,8 +1450,19 @@ begin_define
 define|#
 directive|define
 name|ISP_DELAY
-value|DELAY
+parameter_list|(
+name|x
+parameter_list|)
+value|DELAY(x)
 end_define
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000029
+end_if
 
 begin_define
 define|#
@@ -1550,8 +1473,30 @@ name|isp
 parameter_list|,
 name|x
 parameter_list|)
-value|DELAY(x)
+value|msleep(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", ((x) + tick - 1) / tick)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_SLEEP
+parameter_list|(
+name|isp
+parameter_list|,
+name|x
+parameter_list|)
+value|msleep_sbt(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1646,7 +1591,7 @@ parameter_list|,
 name|chan
 parameter_list|)
 define|\
-value|switch (type) {							\ case SYNC_SFORDEV:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(fc->tdmat, fc->tdmap,			\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ }								\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat,			\ 	   isp->isp_osinfo.cdmap, 				\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ case SYNC_SFORCPU:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(fc->tdmat, fc->tdmap,			\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ }								\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat, 			\ 	   isp->isp_osinfo.cdmap,				\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ case SYNC_REG:							\ 	bus_space_barrier(isp->isp_osinfo.bus_tag,		\ 	    isp->isp_osinfo.bus_handle, offset, size,		\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE);	\ 	break;							\ default:							\ 	break;							\ }
+value|switch (type) {							\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_osinfo.reqdmat,		\ 	   isp->isp_osinfo.reqmap, BUS_DMASYNC_PREWRITE);	\ 	break;							\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_osinfo.respdmat, 		\ 	   isp->isp_osinfo.respmap, BUS_DMASYNC_POSTREAD);	\ 	break;							\ case SYNC_SFORDEV:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(isp->isp_osinfo.scdmat, fc->scmap,	\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ }								\ case SYNC_SFORCPU:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(isp->isp_osinfo.scdmat, fc->scmap,	\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ }								\ case SYNC_REG:							\ 	bus_barrier(isp->isp_osinfo.regs, offset, size,		\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE);	\ 	break;							\ case SYNC_ATIOQ:						\ 	bus_dmamap_sync(isp->isp_osinfo.atiodmat, 		\ 	   isp->isp_osinfo.atiomap, BUS_DMASYNC_POSTREAD);	\ 	break;							\ default:							\ 	break;							\ }
 end_define
 
 begin_define
@@ -1665,7 +1610,7 @@ parameter_list|,
 name|chan
 parameter_list|)
 define|\
-value|switch (type) {							\ case SYNC_SFORDEV:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(fc->tdmat, fc->tdmap,			\ 	   BUS_DMASYNC_PREWRITE);				\ 	break;							\ }								\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat,			\ 	   isp->isp_osinfo.cdmap, BUS_DMASYNC_PREWRITE);	\ 	break;							\ case SYNC_SFORCPU:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(fc->tdmat, fc->tdmap,			\ 	   BUS_DMASYNC_POSTWRITE);				\ 	break;							\ }								\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_osinfo.cdmat, 			\ 	   isp->isp_osinfo.cdmap, BUS_DMASYNC_POSTWRITE);	\ 	break;							\ case SYNC_REG:							\ 	bus_space_barrier(isp->isp_osinfo.bus_tag,		\ 	    isp->isp_osinfo.bus_handle, offset, size,		\ 	    BUS_SPACE_BARRIER_WRITE);				\ 	break;							\ default:							\ 	break;							\ }
+value|switch (type) {							\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_osinfo.reqdmat,		\ 	   isp->isp_osinfo.reqmap, BUS_DMASYNC_PREWRITE);	\ 	break;							\ case SYNC_SFORDEV:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(isp->isp_osinfo.scdmat, fc->scmap,	\ 	   BUS_DMASYNC_PREWRITE);				\ 	break;							\ }								\ case SYNC_SFORCPU:						\ {								\ 	struct isp_fc *fc = ISP_FC_PC(isp, chan);		\ 	bus_dmamap_sync(isp->isp_osinfo.scdmat, fc->scmap,	\ 	   BUS_DMASYNC_POSTWRITE);				\ 	break;							\ }								\ case SYNC_REG:							\ 	bus_barrier(isp->isp_osinfo.regs, offset, size,		\ 	    BUS_SPACE_BARRIER_WRITE);				\ 	break;							\ default:							\ 	break;							\ }
 end_define
 
 begin_define
@@ -1868,7 +1813,7 @@ name|XS_LUN
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(uint32_t)((ccb)->ccb_h.target_lun)
+value|(ccb)->ccb_h.target_lun
 end_define
 
 begin_define
@@ -2194,29 +2139,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|GET_DEFAULT_ROLE
+name|DEFAULT_ROLE
 parameter_list|(
 name|isp
 parameter_list|,
 name|chan
 parameter_list|)
 define|\
-value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->def_role : ISP_SPI_PC(isp, chan)->def_role)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_DEFAULT_ROLE
-parameter_list|(
-name|isp
-parameter_list|,
-name|chan
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->def_role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->def_role = val;	\ 	}
+value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->def_role : ISP_ROLE_INITIATOR)
 end_define
 
 begin_define
@@ -2945,13 +2875,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|isp_fabric_hysteresis
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|isp_loop_down_limit
 decl_stmt|;
 end_decl_stmt
@@ -2967,13 +2890,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|isp_quickboot_time
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|isp_autoconfig
 decl_stmt|;
 end_decl_stmt
 
@@ -3153,9 +3069,10 @@ begin_function_decl
 name|void
 name|isp_fcp_reset_crn
 parameter_list|(
-name|struct
-name|isp_fc
+name|ispsoftc_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|uint32_t
 parameter_list|,

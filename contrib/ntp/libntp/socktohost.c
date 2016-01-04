@@ -348,7 +348,7 @@ condition|)
 goto|goto
 name|forward_fail
 goto|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|alist
 operator|!=

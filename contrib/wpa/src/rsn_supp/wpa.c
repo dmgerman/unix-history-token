@@ -1270,6 +1270,38 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|sa
+operator|&&
+operator|!
+name|sm
+operator|->
+name|cur_pmksa
+operator|&&
+name|pmkid
+condition|)
+block|{
+comment|/* 				 * It looks like the authentication server 				 * derived mismatching MSK. This should not 				 * really happen, but bugs happen.. There is not 				 * much we can do here without knowing what 				 * exactly caused the server to misbehave. 				 */
+name|wpa_dbg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_INFO
+argument_list|,
+literal|"RSN: PMKID mismatch - authentication server may have derived different MSK?!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -6642,7 +6674,7 @@ return|return
 operator|-
 literal|1
 return|;
-name|wpa_hexdump
+name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
@@ -6953,6 +6985,29 @@ operator|==
 literal|16
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_NO_RC4
+name|wpa_msg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_WARNING
+argument_list|,
+literal|"WPA: RC4 not supported in the build"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
+comment|/* CONFIG_NO_RC4 */
 name|u8
 name|ek
 index|[
@@ -7096,6 +7151,9 @@ name|ek
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_RC4 */
 block|}
 elseif|else
 if|if
@@ -8313,6 +8371,29 @@ operator|==
 literal|16
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_NO_RC4
+name|wpa_msg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_WARNING
+argument_list|,
+literal|"WPA: RC4 not supported in the build"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
+comment|/* CONFIG_NO_RC4 */
 name|u8
 name|ek
 index|[
@@ -8408,6 +8489,9 @@ name|ek
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_RC4 */
 block|}
 elseif|else
 if|if

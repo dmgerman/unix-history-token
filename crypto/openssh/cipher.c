@@ -4,10 +4,6 @@ comment|/* $OpenBSD: cipher.c,v 1.97 2014/02/07 06:55:54 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 1999 Niels Provos.  All rights reserved.  * Copyright (c) 1999, 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -16,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -1192,49 +1180,19 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
 if|if
 condition|(
 name|c
 operator|==
 name|NULL
 operator|||
-operator|(
 name|c
 operator|->
 name|number
 operator|!=
 name|SSH_CIPHER_SSH2
-operator|&&
-name|c
-operator|->
-name|number
-operator|!=
-name|SSH_CIPHER_NONE
-operator|)
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-name|c
-operator|==
-name|NULL
-operator|||
-operator|(
-name|c
-operator|->
-name|number
-operator|!=
-name|SSH_CIPHER_SSH2
-operator|)
-condition|)
-block|{
-endif|#
-directive|endif
 name|debug
 argument_list|(
 literal|"bad cipher %s [%s]"
@@ -1270,7 +1228,13 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Parses the name of the cipher.  Returns the number of the corresponding  * cipher, or -1 on error.  */
+end_comment
+
+begin_function
 name|int
 name|cipher_number
 parameter_list|(
@@ -1333,6 +1297,9 @@ operator|-
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
 name|char
 modifier|*
 name|cipher_name
@@ -1365,6 +1332,9 @@ operator|->
 name|name
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|cipher_init
 parameter_list|(
@@ -1884,7 +1854,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * cipher_crypt() operates as following:  * Copy 'aadlen' bytes (without en/decryption) from 'src' to 'dest'.  * Theses bytes are treated as additional authenticated data for  * authenticated encryption modes.  * En/Decrypt 'len' bytes at offset 'aadlen' from 'src' to 'dest'.  * Use 'authlen' bytes at offset 'len'+'aadlen' as the authentication tag.  * This tag is written on encryption and verified on decryption.  * Both 'aadlen' and 'authlen' can be set to 0.  * cipher_crypt() returns 0 on success and -1 if the decryption integrity  * check fails.  */
+end_comment
+
+begin_function
 name|int
 name|cipher_crypt
 parameter_list|(
@@ -2227,7 +2203,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* Extract the packet length, including any decryption necessary beforehand */
+end_comment
+
+begin_function
 name|int
 name|cipher_get_length
 parameter_list|(
@@ -2304,6 +2286,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|cipher_cleanup
 parameter_list|(
@@ -2360,7 +2345,13 @@ literal|"cipher_cleanup: EVP_CIPHER_CTX_cleanup failed"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Selects the cipher, and keys if by computing the MD5 checksum of the  * passphrase and using the resulting 16 bytes as the key.  */
+end_comment
+
+begin_function
 name|void
 name|cipher_set_key_string
 parameter_list|(
@@ -2446,7 +2437,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Exports an IV from the CipherContext required to export the key  * state back from the unprivileged child to the privileged parent  * process.  */
+end_comment
+
+begin_function
 name|int
 name|cipher_get_keyiv_len
 parameter_list|(
@@ -2516,6 +2513,9 @@ name|ivlen
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|cipher_get_keyiv
 parameter_list|(
@@ -2584,14 +2584,6 @@ operator|->
 name|number
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-case|case
-name|SSH_CIPHER_NONE
-case|:
-endif|#
-directive|endif
 case|case
 name|SSH_CIPHER_SSH2
 case|:
@@ -2740,6 +2732,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|cipher_set_keyiv
 parameter_list|(
@@ -2788,14 +2783,6 @@ operator|->
 name|number
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-case|case
-name|SSH_CIPHER_NONE
-case|:
-endif|#
-directive|endif
 case|case
 name|SSH_CIPHER_SSH2
 case|:
@@ -2924,6 +2911,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|int
 name|cipher_get_keycontext
 parameter_list|(
@@ -3001,6 +2991,9 @@ name|plen
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|cipher_set_keycontext
 parameter_list|(

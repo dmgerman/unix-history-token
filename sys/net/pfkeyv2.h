@@ -658,7 +658,7 @@ name|u_int32_t
 name|sadb_x_policy_id
 decl_stmt|;
 name|u_int32_t
-name|sadb_x_policy_reserved2
+name|sadb_x_policy_priority
 decl_stmt|;
 block|}
 struct|;

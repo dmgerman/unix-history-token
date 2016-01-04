@@ -362,7 +362,7 @@ comment|/** should remembered EV_ values be used for TCP streams.  	 * Reset aft
 name|int
 name|stick_events
 decl_stmt|;
-comment|/** true if this event is a signaling WSAEvent by the user.  	 * User created and user closed WSAEvent. Only signaled/unsigneled, 	 * no read/write/distinctions needed. */
+comment|/** true if this event is a signaling WSAEvent by the user.  	 * User created and user closed WSAEvent. Only signaled/unsignaled, 	 * no read/write/distinctions needed. */
 name|int
 name|is_signal
 decl_stmt|;

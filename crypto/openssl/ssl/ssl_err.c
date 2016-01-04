@@ -4,7 +4,7 @@ comment|/* ssl/ssl_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2011 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2015 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -69,6 +69,15 @@ block|{
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_CHECK_SUITEB_CIPHER_LIST
+argument_list|)
+block|,
+literal|"CHECK_SUITEB_CIPHER_LIST"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_CLIENT_CERTIFICATE
 argument_list|)
 block|,
@@ -117,7 +126,7 @@ argument_list|(
 name|SSL_F_DO_DTLS1_WRITE
 argument_list|)
 block|,
-literal|"DO_DTLS1_WRITE"
+literal|"do_dtls1_write"
 block|}
 block|,
 block|{
@@ -135,7 +144,7 @@ argument_list|(
 name|SSL_F_DTLS1_ACCEPT
 argument_list|)
 block|,
-literal|"DTLS1_ACCEPT"
+literal|"dtls1_accept"
 block|}
 block|,
 block|{
@@ -162,7 +171,7 @@ argument_list|(
 name|SSL_F_DTLS1_CHECK_TIMEOUT_NUM
 argument_list|)
 block|,
-literal|"DTLS1_CHECK_TIMEOUT_NUM"
+literal|"dtls1_check_timeout_num"
 block|}
 block|,
 block|{
@@ -171,7 +180,7 @@ argument_list|(
 name|SSL_F_DTLS1_CLIENT_HELLO
 argument_list|)
 block|,
-literal|"DTLS1_CLIENT_HELLO"
+literal|"dtls1_client_hello"
 block|}
 block|,
 block|{
@@ -180,16 +189,7 @@ argument_list|(
 name|SSL_F_DTLS1_CONNECT
 argument_list|)
 block|,
-literal|"DTLS1_CONNECT"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_DTLS1_ENC
-argument_list|)
-block|,
-literal|"DTLS1_ENC"
+literal|"dtls1_connect"
 block|}
 block|,
 block|{
@@ -207,7 +207,7 @@ argument_list|(
 name|SSL_F_DTLS1_GET_MESSAGE
 argument_list|)
 block|,
-literal|"DTLS1_GET_MESSAGE"
+literal|"dtls1_get_message"
 block|}
 block|,
 block|{
@@ -225,7 +225,7 @@ argument_list|(
 name|SSL_F_DTLS1_GET_RECORD
 argument_list|)
 block|,
-literal|"DTLS1_GET_RECORD"
+literal|"dtls1_get_record"
 block|}
 block|,
 block|{
@@ -234,7 +234,7 @@ argument_list|(
 name|SSL_F_DTLS1_HANDLE_TIMEOUT
 argument_list|)
 block|,
-literal|"DTLS1_HANDLE_TIMEOUT"
+literal|"dtls1_handle_timeout"
 block|}
 block|,
 block|{
@@ -243,7 +243,7 @@ argument_list|(
 name|SSL_F_DTLS1_HEARTBEAT
 argument_list|)
 block|,
-literal|"DTLS1_HEARTBEAT"
+literal|"dtls1_heartbeat"
 block|}
 block|,
 block|{
@@ -252,7 +252,7 @@ argument_list|(
 name|SSL_F_DTLS1_OUTPUT_CERT_CHAIN
 argument_list|)
 block|,
-literal|"DTLS1_OUTPUT_CERT_CHAIN"
+literal|"dtls1_output_cert_chain"
 block|}
 block|,
 block|{
@@ -288,7 +288,7 @@ argument_list|(
 name|SSL_F_DTLS1_READ_BYTES
 argument_list|)
 block|,
-literal|"DTLS1_READ_BYTES"
+literal|"dtls1_read_bytes"
 block|}
 block|,
 block|{
@@ -297,7 +297,7 @@ argument_list|(
 name|SSL_F_DTLS1_READ_FAILED
 argument_list|)
 block|,
-literal|"DTLS1_READ_FAILED"
+literal|"dtls1_read_failed"
 block|}
 block|,
 block|{
@@ -306,7 +306,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_CERTIFICATE_REQUEST
 argument_list|)
 block|,
-literal|"DTLS1_SEND_CERTIFICATE_REQUEST"
+literal|"dtls1_send_certificate_request"
 block|}
 block|,
 block|{
@@ -315,7 +315,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_CLIENT_CERTIFICATE
 argument_list|)
 block|,
-literal|"DTLS1_SEND_CLIENT_CERTIFICATE"
+literal|"dtls1_send_client_certificate"
 block|}
 block|,
 block|{
@@ -324,7 +324,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_CLIENT_KEY_EXCHANGE
 argument_list|)
 block|,
-literal|"DTLS1_SEND_CLIENT_KEY_EXCHANGE"
+literal|"dtls1_send_client_key_exchange"
 block|}
 block|,
 block|{
@@ -333,7 +333,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_CLIENT_VERIFY
 argument_list|)
 block|,
-literal|"DTLS1_SEND_CLIENT_VERIFY"
+literal|"dtls1_send_client_verify"
 block|}
 block|,
 block|{
@@ -351,7 +351,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_SERVER_CERTIFICATE
 argument_list|)
 block|,
-literal|"DTLS1_SEND_SERVER_CERTIFICATE"
+literal|"dtls1_send_server_certificate"
 block|}
 block|,
 block|{
@@ -360,7 +360,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_SERVER_HELLO
 argument_list|)
 block|,
-literal|"DTLS1_SEND_SERVER_HELLO"
+literal|"dtls1_send_server_hello"
 block|}
 block|,
 block|{
@@ -369,7 +369,7 @@ argument_list|(
 name|SSL_F_DTLS1_SEND_SERVER_KEY_EXCHANGE
 argument_list|)
 block|,
-literal|"DTLS1_SEND_SERVER_KEY_EXCHANGE"
+literal|"dtls1_send_server_key_exchange"
 block|}
 block|,
 block|{
@@ -378,7 +378,7 @@ argument_list|(
 name|SSL_F_DTLS1_WRITE_APP_DATA_BYTES
 argument_list|)
 block|,
-literal|"DTLS1_WRITE_APP_DATA_BYTES"
+literal|"dtls1_write_app_data_bytes"
 block|}
 block|,
 block|{
@@ -424,6 +424,15 @@ name|SSL_F_GET_SERVER_HELLO
 argument_list|)
 block|,
 literal|"GET_SERVER_HELLO"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_GET_SERVER_STATIC_DH_KEY
+argument_list|)
+block|,
+literal|"GET_SERVER_STATIC_DH_KEY"
 block|}
 block|,
 block|{
@@ -495,7 +504,7 @@ argument_list|(
 name|SSL_F_SSL23_ACCEPT
 argument_list|)
 block|,
-literal|"SSL23_ACCEPT"
+literal|"ssl23_accept"
 block|}
 block|,
 block|{
@@ -513,7 +522,7 @@ argument_list|(
 name|SSL_F_SSL23_CONNECT
 argument_list|)
 block|,
-literal|"SSL23_CONNECT"
+literal|"ssl23_connect"
 block|}
 block|,
 block|{
@@ -540,7 +549,7 @@ argument_list|(
 name|SSL_F_SSL23_PEEK
 argument_list|)
 block|,
-literal|"SSL23_PEEK"
+literal|"ssl23_peek"
 block|}
 block|,
 block|{
@@ -549,7 +558,7 @@ argument_list|(
 name|SSL_F_SSL23_READ
 argument_list|)
 block|,
-literal|"SSL23_READ"
+literal|"ssl23_read"
 block|}
 block|,
 block|{
@@ -558,7 +567,7 @@ argument_list|(
 name|SSL_F_SSL23_WRITE
 argument_list|)
 block|,
-literal|"SSL23_WRITE"
+literal|"ssl23_write"
 block|}
 block|,
 block|{
@@ -567,7 +576,7 @@ argument_list|(
 name|SSL_F_SSL2_ACCEPT
 argument_list|)
 block|,
-literal|"SSL2_ACCEPT"
+literal|"ssl2_accept"
 block|}
 block|,
 block|{
@@ -576,7 +585,7 @@ argument_list|(
 name|SSL_F_SSL2_CONNECT
 argument_list|)
 block|,
-literal|"SSL2_CONNECT"
+literal|"ssl2_connect"
 block|}
 block|,
 block|{
@@ -585,7 +594,7 @@ argument_list|(
 name|SSL_F_SSL2_ENC_INIT
 argument_list|)
 block|,
-literal|"SSL2_ENC_INIT"
+literal|"ssl2_enc_init"
 block|}
 block|,
 block|{
@@ -594,7 +603,7 @@ argument_list|(
 name|SSL_F_SSL2_GENERATE_KEY_MATERIAL
 argument_list|)
 block|,
-literal|"SSL2_GENERATE_KEY_MATERIAL"
+literal|"ssl2_generate_key_material"
 block|}
 block|,
 block|{
@@ -603,7 +612,7 @@ argument_list|(
 name|SSL_F_SSL2_PEEK
 argument_list|)
 block|,
-literal|"SSL2_PEEK"
+literal|"ssl2_peek"
 block|}
 block|,
 block|{
@@ -612,7 +621,7 @@ argument_list|(
 name|SSL_F_SSL2_READ
 argument_list|)
 block|,
-literal|"SSL2_READ"
+literal|"ssl2_read"
 block|}
 block|,
 block|{
@@ -630,7 +639,7 @@ argument_list|(
 name|SSL_F_SSL2_SET_CERTIFICATE
 argument_list|)
 block|,
-literal|"SSL2_SET_CERTIFICATE"
+literal|"ssl2_set_certificate"
 block|}
 block|,
 block|{
@@ -639,7 +648,7 @@ argument_list|(
 name|SSL_F_SSL2_WRITE
 argument_list|)
 block|,
-literal|"SSL2_WRITE"
+literal|"ssl2_write"
 block|}
 block|,
 block|{
@@ -648,7 +657,7 @@ argument_list|(
 name|SSL_F_SSL3_ACCEPT
 argument_list|)
 block|,
-literal|"SSL3_ACCEPT"
+literal|"ssl3_accept"
 block|}
 block|,
 block|{
@@ -666,7 +675,7 @@ argument_list|(
 name|SSL_F_SSL3_CALLBACK_CTRL
 argument_list|)
 block|,
-literal|"SSL3_CALLBACK_CTRL"
+literal|"ssl3_callback_ctrl"
 block|}
 block|,
 block|{
@@ -675,7 +684,7 @@ argument_list|(
 name|SSL_F_SSL3_CHANGE_CIPHER_STATE
 argument_list|)
 block|,
-literal|"SSL3_CHANGE_CIPHER_STATE"
+literal|"ssl3_change_cipher_state"
 block|}
 block|,
 block|{
@@ -684,7 +693,7 @@ argument_list|(
 name|SSL_F_SSL3_CHECK_CERT_AND_ALGORITHM
 argument_list|)
 block|,
-literal|"SSL3_CHECK_CERT_AND_ALGORITHM"
+literal|"ssl3_check_cert_and_algorithm"
 block|}
 block|,
 block|{
@@ -693,70 +702,7 @@ argument_list|(
 name|SSL_F_SSL3_CHECK_CLIENT_HELLO
 argument_list|)
 block|,
-literal|"SSL3_CHECK_CLIENT_HELLO"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_CLIENT_HELLO
-argument_list|)
-block|,
-literal|"SSL3_CLIENT_HELLO"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_CONNECT
-argument_list|)
-block|,
-literal|"SSL3_CONNECT"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_CTRL
-argument_list|)
-block|,
-literal|"SSL3_CTRL"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_CTX_CTRL
-argument_list|)
-block|,
-literal|"SSL3_CTX_CTRL"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_DIGEST_CACHED_RECORDS
-argument_list|)
-block|,
-literal|"SSL3_DIGEST_CACHED_RECORDS"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_DO_CHANGE_CIPHER_SPEC
-argument_list|)
-block|,
-literal|"SSL3_DO_CHANGE_CIPHER_SPEC"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
-name|SSL_F_SSL3_ENC
-argument_list|)
-block|,
-literal|"SSL3_ENC"
+literal|"ssl3_check_client_hello"
 block|}
 block|,
 block|{
@@ -771,6 +717,69 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_CLIENT_HELLO
+argument_list|)
+block|,
+literal|"ssl3_client_hello"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_CONNECT
+argument_list|)
+block|,
+literal|"ssl3_connect"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_CTRL
+argument_list|)
+block|,
+literal|"ssl3_ctrl"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_CTX_CTRL
+argument_list|)
+block|,
+literal|"ssl3_ctx_ctrl"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_DIGEST_CACHED_RECORDS
+argument_list|)
+block|,
+literal|"ssl3_digest_cached_records"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_DO_CHANGE_CIPHER_SPEC
+argument_list|)
+block|,
+literal|"ssl3_do_change_cipher_spec"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_ENC
+argument_list|)
+block|,
+literal|"ssl3_enc"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_GENERATE_KEY_BLOCK
 argument_list|)
 block|,
@@ -780,10 +789,19 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_GENERATE_MASTER_SECRET
+argument_list|)
+block|,
+literal|"ssl3_generate_master_secret"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_GET_CERTIFICATE_REQUEST
 argument_list|)
 block|,
-literal|"SSL3_GET_CERTIFICATE_REQUEST"
+literal|"ssl3_get_certificate_request"
 block|}
 block|,
 block|{
@@ -792,7 +810,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_CERT_STATUS
 argument_list|)
 block|,
-literal|"SSL3_GET_CERT_STATUS"
+literal|"ssl3_get_cert_status"
 block|}
 block|,
 block|{
@@ -801,7 +819,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_CERT_VERIFY
 argument_list|)
 block|,
-literal|"SSL3_GET_CERT_VERIFY"
+literal|"ssl3_get_cert_verify"
 block|}
 block|,
 block|{
@@ -810,7 +828,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_CERTIFICATE
 argument_list|)
 block|,
-literal|"SSL3_GET_CLIENT_CERTIFICATE"
+literal|"ssl3_get_client_certificate"
 block|}
 block|,
 block|{
@@ -819,7 +837,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_HELLO
 argument_list|)
 block|,
-literal|"SSL3_GET_CLIENT_HELLO"
+literal|"ssl3_get_client_hello"
 block|}
 block|,
 block|{
@@ -828,7 +846,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
 argument_list|)
 block|,
-literal|"SSL3_GET_CLIENT_KEY_EXCHANGE"
+literal|"ssl3_get_client_key_exchange"
 block|}
 block|,
 block|{
@@ -837,7 +855,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_FINISHED
 argument_list|)
 block|,
-literal|"SSL3_GET_FINISHED"
+literal|"ssl3_get_finished"
 block|}
 block|,
 block|{
@@ -846,7 +864,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_KEY_EXCHANGE
 argument_list|)
 block|,
-literal|"SSL3_GET_KEY_EXCHANGE"
+literal|"ssl3_get_key_exchange"
 block|}
 block|,
 block|{
@@ -855,7 +873,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_MESSAGE
 argument_list|)
 block|,
-literal|"SSL3_GET_MESSAGE"
+literal|"ssl3_get_message"
 block|}
 block|,
 block|{
@@ -864,7 +882,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_NEW_SESSION_TICKET
 argument_list|)
 block|,
-literal|"SSL3_GET_NEW_SESSION_TICKET"
+literal|"ssl3_get_new_session_ticket"
 block|}
 block|,
 block|{
@@ -873,7 +891,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_NEXT_PROTO
 argument_list|)
 block|,
-literal|"SSL3_GET_NEXT_PROTO"
+literal|"ssl3_get_next_proto"
 block|}
 block|,
 block|{
@@ -891,7 +909,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_SERVER_CERTIFICATE
 argument_list|)
 block|,
-literal|"SSL3_GET_SERVER_CERTIFICATE"
+literal|"ssl3_get_server_certificate"
 block|}
 block|,
 block|{
@@ -900,7 +918,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_SERVER_DONE
 argument_list|)
 block|,
-literal|"SSL3_GET_SERVER_DONE"
+literal|"ssl3_get_server_done"
 block|}
 block|,
 block|{
@@ -909,7 +927,7 @@ argument_list|(
 name|SSL_F_SSL3_GET_SERVER_HELLO
 argument_list|)
 block|,
-literal|"SSL3_GET_SERVER_HELLO"
+literal|"ssl3_get_server_hello"
 block|}
 block|,
 block|{
@@ -936,7 +954,7 @@ argument_list|(
 name|SSL_F_SSL3_OUTPUT_CERT_CHAIN
 argument_list|)
 block|,
-literal|"SSL3_OUTPUT_CERT_CHAIN"
+literal|"ssl3_output_cert_chain"
 block|}
 block|,
 block|{
@@ -945,7 +963,7 @@ argument_list|(
 name|SSL_F_SSL3_PEEK
 argument_list|)
 block|,
-literal|"SSL3_PEEK"
+literal|"ssl3_peek"
 block|}
 block|,
 block|{
@@ -954,7 +972,7 @@ argument_list|(
 name|SSL_F_SSL3_READ_BYTES
 argument_list|)
 block|,
-literal|"SSL3_READ_BYTES"
+literal|"ssl3_read_bytes"
 block|}
 block|,
 block|{
@@ -963,7 +981,7 @@ argument_list|(
 name|SSL_F_SSL3_READ_N
 argument_list|)
 block|,
-literal|"SSL3_READ_N"
+literal|"ssl3_read_n"
 block|}
 block|,
 block|{
@@ -972,7 +990,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_CERTIFICATE_REQUEST
 argument_list|)
 block|,
-literal|"SSL3_SEND_CERTIFICATE_REQUEST"
+literal|"ssl3_send_certificate_request"
 block|}
 block|,
 block|{
@@ -981,7 +999,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_CLIENT_CERTIFICATE
 argument_list|)
 block|,
-literal|"SSL3_SEND_CLIENT_CERTIFICATE"
+literal|"ssl3_send_client_certificate"
 block|}
 block|,
 block|{
@@ -990,7 +1008,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_CLIENT_KEY_EXCHANGE
 argument_list|)
 block|,
-literal|"SSL3_SEND_CLIENT_KEY_EXCHANGE"
+literal|"ssl3_send_client_key_exchange"
 block|}
 block|,
 block|{
@@ -999,7 +1017,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_CLIENT_VERIFY
 argument_list|)
 block|,
-literal|"SSL3_SEND_CLIENT_VERIFY"
+literal|"ssl3_send_client_verify"
 block|}
 block|,
 block|{
@@ -1008,7 +1026,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_SERVER_CERTIFICATE
 argument_list|)
 block|,
-literal|"SSL3_SEND_SERVER_CERTIFICATE"
+literal|"ssl3_send_server_certificate"
 block|}
 block|,
 block|{
@@ -1017,7 +1035,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_SERVER_HELLO
 argument_list|)
 block|,
-literal|"SSL3_SEND_SERVER_HELLO"
+literal|"ssl3_send_server_hello"
 block|}
 block|,
 block|{
@@ -1026,7 +1044,7 @@ argument_list|(
 name|SSL_F_SSL3_SEND_SERVER_KEY_EXCHANGE
 argument_list|)
 block|,
-literal|"SSL3_SEND_SERVER_KEY_EXCHANGE"
+literal|"ssl3_send_server_key_exchange"
 block|}
 block|,
 block|{
@@ -1035,7 +1053,7 @@ argument_list|(
 name|SSL_F_SSL3_SETUP_KEY_BLOCK
 argument_list|)
 block|,
-literal|"SSL3_SETUP_KEY_BLOCK"
+literal|"ssl3_setup_key_block"
 block|}
 block|,
 block|{
@@ -1044,7 +1062,7 @@ argument_list|(
 name|SSL_F_SSL3_SETUP_READ_BUFFER
 argument_list|)
 block|,
-literal|"SSL3_SETUP_READ_BUFFER"
+literal|"ssl3_setup_read_buffer"
 block|}
 block|,
 block|{
@@ -1053,7 +1071,7 @@ argument_list|(
 name|SSL_F_SSL3_SETUP_WRITE_BUFFER
 argument_list|)
 block|,
-literal|"SSL3_SETUP_WRITE_BUFFER"
+literal|"ssl3_setup_write_buffer"
 block|}
 block|,
 block|{
@@ -1062,7 +1080,7 @@ argument_list|(
 name|SSL_F_SSL3_WRITE_BYTES
 argument_list|)
 block|,
-literal|"SSL3_WRITE_BYTES"
+literal|"ssl3_write_bytes"
 block|}
 block|,
 block|{
@@ -1071,7 +1089,25 @@ argument_list|(
 name|SSL_F_SSL3_WRITE_PENDING
 argument_list|)
 block|,
-literal|"SSL3_WRITE_PENDING"
+literal|"ssl3_write_pending"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_ADD_CERT_CHAIN
+argument_list|)
+block|,
+literal|"ssl_add_cert_chain"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_ADD_CERT_TO_BUF
+argument_list|)
+block|,
+literal|"SSL_ADD_CERT_TO_BUF"
 block|}
 block|,
 block|{
@@ -1080,7 +1116,7 @@ argument_list|(
 name|SSL_F_SSL_ADD_CLIENTHELLO_RENEGOTIATE_EXT
 argument_list|)
 block|,
-literal|"SSL_ADD_CLIENTHELLO_RENEGOTIATE_EXT"
+literal|"ssl_add_clienthello_renegotiate_ext"
 block|}
 block|,
 block|{
@@ -1089,7 +1125,7 @@ argument_list|(
 name|SSL_F_SSL_ADD_CLIENTHELLO_TLSEXT
 argument_list|)
 block|,
-literal|"SSL_ADD_CLIENTHELLO_TLSEXT"
+literal|"ssl_add_clienthello_tlsext"
 block|}
 block|,
 block|{
@@ -1098,7 +1134,7 @@ argument_list|(
 name|SSL_F_SSL_ADD_CLIENTHELLO_USE_SRTP_EXT
 argument_list|)
 block|,
-literal|"SSL_ADD_CLIENTHELLO_USE_SRTP_EXT"
+literal|"ssl_add_clienthello_use_srtp_ext"
 block|}
 block|,
 block|{
@@ -1125,7 +1161,7 @@ argument_list|(
 name|SSL_F_SSL_ADD_SERVERHELLO_RENEGOTIATE_EXT
 argument_list|)
 block|,
-literal|"SSL_ADD_SERVERHELLO_RENEGOTIATE_EXT"
+literal|"ssl_add_serverhello_renegotiate_ext"
 block|}
 block|,
 block|{
@@ -1134,7 +1170,7 @@ argument_list|(
 name|SSL_F_SSL_ADD_SERVERHELLO_TLSEXT
 argument_list|)
 block|,
-literal|"SSL_ADD_SERVERHELLO_TLSEXT"
+literal|"ssl_add_serverhello_tlsext"
 block|}
 block|,
 block|{
@@ -1143,7 +1179,7 @@ argument_list|(
 name|SSL_F_SSL_ADD_SERVERHELLO_USE_SRTP_EXT
 argument_list|)
 block|,
-literal|"SSL_ADD_SERVERHELLO_USE_SRTP_EXT"
+literal|"ssl_add_serverhello_use_srtp_ext"
 block|}
 block|,
 block|{
@@ -1152,7 +1188,16 @@ argument_list|(
 name|SSL_F_SSL_BAD_METHOD
 argument_list|)
 block|,
-literal|"SSL_BAD_METHOD"
+literal|"ssl_bad_method"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_BUILD_CERT_CHAIN
+argument_list|)
+block|,
+literal|"ssl_build_cert_chain"
 block|}
 block|,
 block|{
@@ -1161,7 +1206,7 @@ argument_list|(
 name|SSL_F_SSL_BYTES_TO_CIPHER_LIST
 argument_list|)
 block|,
-literal|"SSL_BYTES_TO_CIPHER_LIST"
+literal|"ssl_bytes_to_cipher_list"
 block|}
 block|,
 block|{
@@ -1170,7 +1215,7 @@ argument_list|(
 name|SSL_F_SSL_CERT_DUP
 argument_list|)
 block|,
-literal|"SSL_CERT_DUP"
+literal|"ssl_cert_dup"
 block|}
 block|,
 block|{
@@ -1179,7 +1224,7 @@ argument_list|(
 name|SSL_F_SSL_CERT_INST
 argument_list|)
 block|,
-literal|"SSL_CERT_INST"
+literal|"ssl_cert_inst"
 block|}
 block|,
 block|{
@@ -1197,7 +1242,7 @@ argument_list|(
 name|SSL_F_SSL_CERT_NEW
 argument_list|)
 block|,
-literal|"SSL_CERT_NEW"
+literal|"ssl_cert_new"
 block|}
 block|,
 block|{
@@ -1224,7 +1269,7 @@ argument_list|(
 name|SSL_F_SSL_CHECK_SRVR_ECC_CERT_AND_ALG
 argument_list|)
 block|,
-literal|"SSL_CHECK_SRVR_ECC_CERT_AND_ALG"
+literal|"ssl_check_srvr_ecc_cert_and_alg"
 block|}
 block|,
 block|{
@@ -1266,10 +1311,19 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_CONF_CMD
+argument_list|)
+block|,
+literal|"SSL_CONF_cmd"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_CREATE_CIPHER_LIST
 argument_list|)
 block|,
-literal|"SSL_CREATE_CIPHER_LIST"
+literal|"ssl_create_cipher_list"
 block|}
 block|,
 block|{
@@ -1464,6 +1518,24 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_CTX_USE_SERVERINFO
+argument_list|)
+block|,
+literal|"SSL_CTX_use_serverinfo"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_CTX_USE_SERVERINFO_FILE
+argument_list|)
+block|,
+literal|"SSL_CTX_use_serverinfo_file"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_DO_HANDSHAKE
 argument_list|)
 block|,
@@ -1476,7 +1548,7 @@ argument_list|(
 name|SSL_F_SSL_GET_NEW_SESSION
 argument_list|)
 block|,
-literal|"SSL_GET_NEW_SESSION"
+literal|"ssl_get_new_session"
 block|}
 block|,
 block|{
@@ -1485,7 +1557,16 @@ argument_list|(
 name|SSL_F_SSL_GET_PREV_SESSION
 argument_list|)
 block|,
-literal|"SSL_GET_PREV_SESSION"
+literal|"ssl_get_prev_session"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_GET_SERVER_CERT_INDEX
+argument_list|)
+block|,
+literal|"SSL_GET_SERVER_CERT_INDEX"
 block|}
 block|,
 block|{
@@ -1503,7 +1584,7 @@ argument_list|(
 name|SSL_F_SSL_GET_SERVER_SEND_PKEY
 argument_list|)
 block|,
-literal|"SSL_GET_SERVER_SEND_PKEY"
+literal|"ssl_get_server_send_pkey"
 block|}
 block|,
 block|{
@@ -1512,7 +1593,7 @@ argument_list|(
 name|SSL_F_SSL_GET_SIGN_PKEY
 argument_list|)
 block|,
-literal|"SSL_GET_SIGN_PKEY"
+literal|"ssl_get_sign_pkey"
 block|}
 block|,
 block|{
@@ -1521,7 +1602,7 @@ argument_list|(
 name|SSL_F_SSL_INIT_WBIO_BUFFER
 argument_list|)
 block|,
-literal|"SSL_INIT_WBIO_BUFFER"
+literal|"ssl_init_wbio_buffer"
 block|}
 block|,
 block|{
@@ -1548,7 +1629,7 @@ argument_list|(
 name|SSL_F_SSL_PARSE_CLIENTHELLO_RENEGOTIATE_EXT
 argument_list|)
 block|,
-literal|"SSL_PARSE_CLIENTHELLO_RENEGOTIATE_EXT"
+literal|"ssl_parse_clienthello_renegotiate_ext"
 block|}
 block|,
 block|{
@@ -1557,7 +1638,7 @@ argument_list|(
 name|SSL_F_SSL_PARSE_CLIENTHELLO_TLSEXT
 argument_list|)
 block|,
-literal|"SSL_PARSE_CLIENTHELLO_TLSEXT"
+literal|"ssl_parse_clienthello_tlsext"
 block|}
 block|,
 block|{
@@ -1566,7 +1647,7 @@ argument_list|(
 name|SSL_F_SSL_PARSE_CLIENTHELLO_USE_SRTP_EXT
 argument_list|)
 block|,
-literal|"SSL_PARSE_CLIENTHELLO_USE_SRTP_EXT"
+literal|"ssl_parse_clienthello_use_srtp_ext"
 block|}
 block|,
 block|{
@@ -1575,7 +1656,7 @@ argument_list|(
 name|SSL_F_SSL_PARSE_SERVERHELLO_RENEGOTIATE_EXT
 argument_list|)
 block|,
-literal|"SSL_PARSE_SERVERHELLO_RENEGOTIATE_EXT"
+literal|"ssl_parse_serverhello_renegotiate_ext"
 block|}
 block|,
 block|{
@@ -1584,7 +1665,7 @@ argument_list|(
 name|SSL_F_SSL_PARSE_SERVERHELLO_TLSEXT
 argument_list|)
 block|,
-literal|"SSL_PARSE_SERVERHELLO_TLSEXT"
+literal|"ssl_parse_serverhello_tlsext"
 block|}
 block|,
 block|{
@@ -1593,7 +1674,7 @@ argument_list|(
 name|SSL_F_SSL_PARSE_SERVERHELLO_USE_SRTP_EXT
 argument_list|)
 block|,
-literal|"SSL_PARSE_SERVERHELLO_USE_SRTP_EXT"
+literal|"ssl_parse_serverhello_use_srtp_ext"
 block|}
 block|,
 block|{
@@ -1611,7 +1692,7 @@ argument_list|(
 name|SSL_F_SSL_PREPARE_CLIENTHELLO_TLSEXT
 argument_list|)
 block|,
-literal|"SSL_PREPARE_CLIENTHELLO_TLSEXT"
+literal|"ssl_prepare_clienthello_tlsext"
 block|}
 block|,
 block|{
@@ -1620,7 +1701,7 @@ argument_list|(
 name|SSL_F_SSL_PREPARE_SERVERHELLO_TLSEXT
 argument_list|)
 block|,
-literal|"SSL_PREPARE_SERVERHELLO_TLSEXT"
+literal|"ssl_prepare_serverhello_tlsext"
 block|}
 block|,
 block|{
@@ -1648,6 +1729,24 @@ name|SSL_F_SSL_RSA_PUBLIC_ENCRYPT
 argument_list|)
 block|,
 literal|"SSL_RSA_PUBLIC_ENCRYPT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_SCAN_CLIENTHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_SCAN_CLIENTHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_SCAN_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_SCAN_SERVERHELLO_TLSEXT"
 block|}
 block|,
 block|{
@@ -1692,7 +1791,7 @@ argument_list|(
 name|SSL_F_SSL_SESS_CERT_NEW
 argument_list|)
 block|,
-literal|"SSL_SESS_CERT_NEW"
+literal|"ssl_sess_cert_new"
 block|}
 block|,
 block|{
@@ -1818,7 +1917,7 @@ argument_list|(
 name|SSL_F_SSL_UNDEFINED_CONST_FUNCTION
 argument_list|)
 block|,
-literal|"SSL_UNDEFINED_CONST_FUNCTION"
+literal|"ssl_undefined_const_function"
 block|}
 block|,
 block|{
@@ -1827,7 +1926,7 @@ argument_list|(
 name|SSL_F_SSL_UNDEFINED_FUNCTION
 argument_list|)
 block|,
-literal|"SSL_UNDEFINED_FUNCTION"
+literal|"ssl_undefined_function"
 block|}
 block|,
 block|{
@@ -1836,7 +1935,7 @@ argument_list|(
 name|SSL_F_SSL_UNDEFINED_VOID_FUNCTION
 argument_list|)
 block|,
-literal|"SSL_UNDEFINED_VOID_FUNCTION"
+literal|"ssl_undefined_void_function"
 block|}
 block|,
 block|{
@@ -1935,7 +2034,7 @@ argument_list|(
 name|SSL_F_SSL_VERIFY_CERT_CHAIN
 argument_list|)
 block|,
-literal|"SSL_VERIFY_CERT_CHAIN"
+literal|"ssl_verify_cert_chain"
 block|}
 block|,
 block|{
@@ -1945,6 +2044,15 @@ name|SSL_F_SSL_WRITE
 argument_list|)
 block|,
 literal|"SSL_write"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS12_CHECK_PEER_SIGALG
+argument_list|)
+block|,
+literal|"tls12_check_peer_sigalg"
 block|}
 block|,
 block|{
@@ -1962,7 +2070,7 @@ argument_list|(
 name|SSL_F_TLS1_CHANGE_CIPHER_STATE
 argument_list|)
 block|,
-literal|"TLS1_CHANGE_CIPHER_STATE"
+literal|"tls1_change_cipher_state"
 block|}
 block|,
 block|{
@@ -1980,7 +2088,7 @@ argument_list|(
 name|SSL_F_TLS1_ENC
 argument_list|)
 block|,
-literal|"TLS1_ENC"
+literal|"tls1_enc"
 block|}
 block|,
 block|{
@@ -1989,7 +2097,16 @@ argument_list|(
 name|SSL_F_TLS1_EXPORT_KEYING_MATERIAL
 argument_list|)
 block|,
-literal|"TLS1_EXPORT_KEYING_MATERIAL"
+literal|"tls1_export_keying_material"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_GET_CURVELIST
+argument_list|)
+block|,
+literal|"TLS1_GET_CURVELIST"
 block|}
 block|,
 block|{
@@ -1998,7 +2115,7 @@ argument_list|(
 name|SSL_F_TLS1_HEARTBEAT
 argument_list|)
 block|,
-literal|"SSL_F_TLS1_HEARTBEAT"
+literal|"tls1_heartbeat"
 block|}
 block|,
 block|{
@@ -2034,7 +2151,16 @@ argument_list|(
 name|SSL_F_TLS1_SETUP_KEY_BLOCK
 argument_list|)
 block|,
-literal|"TLS1_SETUP_KEY_BLOCK"
+literal|"tls1_setup_key_block"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_TLS1_SET_SERVER_SIGALGS
+argument_list|)
+block|,
+literal|"tls1_set_server_sigalgs"
 block|}
 block|,
 block|{
@@ -2119,6 +2245,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_DATA
+argument_list|)
+block|,
+literal|"bad data"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_DATA_RETURNED_BY_CALLBACK
 argument_list|)
 block|,
@@ -2146,6 +2281,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_DH_G_VALUE
+argument_list|)
+block|,
+literal|"bad dh g value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_DH_PUB_KEY_LENGTH
 argument_list|)
 block|,
@@ -2155,10 +2299,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_DH_PUB_KEY_VALUE
+argument_list|)
+block|,
+literal|"bad dh pub key value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_DH_P_LENGTH
 argument_list|)
 block|,
 literal|"bad dh p length"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_BAD_DH_P_VALUE
+argument_list|)
+block|,
+literal|"bad dh p value"
 block|}
 block|,
 block|{
@@ -2452,6 +2614,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_VALUE
+argument_list|)
+block|,
+literal|"bad value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_WRITE_RETRY
 argument_list|)
 block|,
@@ -2519,6 +2690,15 @@ name|SSL_R_CERTIFICATE_VERIFY_FAILED
 argument_list|)
 block|,
 literal|"certificate verify failed"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_CERT_CB_ERROR
+argument_list|)
+block|,
+literal|"cert cb error"
 block|}
 block|,
 block|{
@@ -2767,6 +2947,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_ECDH_REQUIRED_FOR_SUITEB_MODE
+argument_list|)
+block|,
+literal|"ecdh required for suiteb mode"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_ECGROUP_TOO_LARGE_FOR_CIPHER
 argument_list|)
 block|,
@@ -2884,6 +3073,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_ILLEGAL_SUITEB_DIGEST
+argument_list|)
+block|,
+literal|"illegal Suite B digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_INAPPROPRIATE_FALLBACK
 argument_list|)
 block|,
@@ -2929,10 +3127,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_INVALID_NULL_CMD_NAME
+argument_list|)
+block|,
+literal|"invalid null cmd name"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_INVALID_PURPOSE
 argument_list|)
 block|,
 literal|"invalid purpose"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_INVALID_SERVERINFO_DATA
+argument_list|)
+block|,
+literal|"invalid serverinfo data"
 block|}
 block|,
 block|{
@@ -3158,6 +3374,24 @@ name|SSL_R_MISSING_DSA_SIGNING_CERT
 argument_list|)
 block|,
 literal|"missing dsa signing cert"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_MISSING_ECDH_CERT
+argument_list|)
+block|,
+literal|"missing ecdh cert"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_MISSING_ECDSA_SIGNING_CERT
+argument_list|)
+block|,
+literal|"missing ecdsa signing cert"
 block|}
 block|,
 block|{
@@ -3415,6 +3649,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_NO_PEM_EXTENSIONS
+argument_list|)
+block|,
+literal|"no pem extensions"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_NO_PRIVATEKEY
 argument_list|)
 block|,
@@ -3478,6 +3721,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_NO_SHARED_SIGATURE_ALGORITHMS
+argument_list|)
+block|,
+literal|"no shared sigature algorithms"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_NO_SRTP_PROFILES
 argument_list|)
 block|,
@@ -3527,6 +3779,24 @@ name|SSL_R_OLD_SESSION_COMPRESSION_ALGORITHM_NOT_RETURNED
 argument_list|)
 block|,
 literal|"old session compression algorithm not returned"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_ONLY_DTLS_1_2_ALLOWED_IN_SUITEB_MODE
+argument_list|)
+block|,
+literal|"only DTLS 1.2 allowed in Suite B mode"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_ONLY_TLS_1_2_ALLOWED_IN_SUITEB_MODE
+argument_list|)
+block|,
+literal|"only TLS 1.2 allowed in Suite B mode"
 block|}
 block|,
 block|{
@@ -3626,6 +3896,24 @@ name|SSL_R_PEER_ERROR_UNSUPPORTED_CERTIFICATE_TYPE
 argument_list|)
 block|,
 literal|"peer error unsupported certificate type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_PEM_NAME_BAD_PREFIX
+argument_list|)
+block|,
+literal|"pem name bad prefix"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_PEM_NAME_TOO_SHORT
+argument_list|)
+block|,
+literal|"pem name too short"
 block|}
 block|,
 block|{
@@ -4549,6 +4837,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_UNKNOWN_CMD_NAME
+argument_list|)
+block|,
+literal|"unknown cmd name"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_UNKNOWN_DIGEST
 argument_list|)
 block|,
@@ -4702,10 +4999,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_WRONG_CERTIFICATE_TYPE
+argument_list|)
+block|,
+literal|"wrong certificate type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_WRONG_CIPHER_RETURNED
 argument_list|)
 block|,
 literal|"wrong cipher returned"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_WRONG_CURVE
+argument_list|)
+block|,
+literal|"wrong curve"
 block|}
 block|,
 block|{

@@ -530,11 +530,6 @@ name|sc_disassoctask
 decl_stmt|;
 name|struct
 name|task
-name|sc_wmetask
-decl_stmt|;
-comment|/* set wme parameters */
-name|struct
-name|task
 name|sc_monitortask
 decl_stmt|;
 name|unsigned

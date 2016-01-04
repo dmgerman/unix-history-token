@@ -59,23 +59,6 @@ typedef|;
 end_typedef
 
 begin_function_decl
-name|int
-name|OF_decode_addr
-parameter_list|(
-name|phandle_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_space_tag_t
-modifier|*
-parameter_list|,
-name|bus_space_handle_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|OF_getetheraddr
 parameter_list|(

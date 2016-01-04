@@ -1784,6 +1784,12 @@ case|case
 name|AR71XX_SOC_AR9344
 case|:
 case|case
+name|AR71XX_SOC_QCA9533
+case|:
+case|case
+name|AR71XX_SOC_QCA9533_V2
+case|:
+case|case
 name|AR71XX_SOC_QCA9556
 case|:
 case|case
@@ -1814,6 +1820,17 @@ name|sc_eventstab
 index|[
 name|irq
 index|]
+expr_stmt|;
+comment|/* always count interrupts; spurious or otherwise */
+name|mips_intrcnt_inc
+argument_list|(
+name|sc
+operator|->
+name|sc_intr_counter
+index|[
+name|irq
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1866,16 +1883,6 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-name|mips_intrcnt_inc
-argument_list|(
-name|sc
-operator|->
-name|sc_intr_counter
-index|[
-name|irq
-index|]
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* Ignore timer interrupts */
@@ -1916,16 +1923,6 @@ name|curthread
 argument_list|)
 operator|->
 name|td_intr_frame
-argument_list|)
-expr_stmt|;
-name|mips_intrcnt_inc
-argument_list|(
-name|sc
-operator|->
-name|sc_intr_counter
-index|[
-name|irq
-index|]
 argument_list|)
 expr_stmt|;
 block|}

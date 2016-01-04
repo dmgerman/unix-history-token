@@ -304,9 +304,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|create
 argument_list|,
 literal|"struct proc *"
@@ -2443,11 +2441,15 @@ name|td2
 operator|->
 name|td_pflags
 operator||=
+operator|(
 name|td
 operator|->
 name|td_pflags
 operator|&
 name|TDP_ALTSTACK
+operator|)
+operator||
+name|TDP_FORKING
 expr_stmt|;
 name|SESS_LOCK
 argument_list|(
@@ -3115,9 +3117,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|create
 argument_list|,
 name|p2
@@ -3560,11 +3560,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail2
+goto|;
 block|}
 name|mem_charged
 operator|=
@@ -4282,6 +4280,13 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_FORKING
+expr_stmt|;
 block|}
 end_function
 
@@ -4480,6 +4485,12 @@ operator|->
 name|p_flag
 operator|&
 name|P_TRACED
+operator|||
+name|td
+operator|->
+name|td_dbgflags
+operator|&
+name|TDB_BORN
 condition|)
 block|{
 comment|/* 		 * This is the start of a new thread in a traced 		 * process.  Report a system call exit event. 		 */
@@ -4516,6 +4527,16 @@ name|S_PT_SCX
 operator|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|td
+operator|->
+name|td_dbgflags
+operator|&
+name|TDB_BORN
+operator|)
+operator|!=
+literal|0
 condition|)
 name|ptracestop
 argument_list|(
@@ -4529,7 +4550,11 @@ operator|->
 name|td_dbgflags
 operator|&=
 operator|~
+operator|(
 name|TDB_SCX
+operator||
+name|TDB_BORN
+operator|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(

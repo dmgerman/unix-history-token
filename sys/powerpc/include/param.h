@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|MAXCPU
-value|32
+value|256
 end_define
 
 begin_endif
@@ -274,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_MASK
-value|(vm_offset_t)(PAGE_SIZE - 1)
+value|(PAGE_SIZE - 1)
 end_define
 
 begin_define
@@ -377,7 +377,7 @@ name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)& ~(PAGE_MASK))
+value|((x)& ~(PAGE_MASK))
 end_define
 
 begin_define
@@ -397,7 +397,7 @@ name|atop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -407,7 +407,7 @@ name|ptoa
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -417,7 +417,7 @@ name|powerpc_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -427,7 +427,7 @@ name|powerpc_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -438,6 +438,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x) * (PAGE_SIZE / 1024UL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|btoc
+parameter_list|(
+name|x
+parameter_list|)
+value|((vm_offset_t)(((x)+PAGE_MASK)>>PAGE_SHIFT))
 end_define
 
 begin_endif

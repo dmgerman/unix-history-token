@@ -528,6 +528,13 @@ comment|/* XXX should say QCA, not AR */
 return|return
 literal|"9565"
 return|;
+case|case
+name|AR_SREV_VERSION_QCA9530
+case|:
+comment|/* XXX should say QCA, not AR */
+return|return
+literal|"9530"
+return|;
 block|}
 return|return
 literal|"????"
@@ -6651,16 +6658,13 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
-modifier|*
-name|ichan
+name|int
+name|freq
 parameter_list|)
 block|{
 if|if
 condition|(
-name|ichan
-operator|->
-name|channel
+name|freq
 operator|==
 literal|2484
 condition|)
@@ -6669,9 +6673,7 @@ literal|14
 return|;
 if|if
 condition|(
-name|ichan
-operator|->
-name|channel
+name|freq
 operator|<
 literal|2484
 condition|)
@@ -6680,9 +6682,7 @@ operator|(
 operator|(
 name|int
 operator|)
-name|ichan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|2407
 operator|)
@@ -6695,9 +6695,7 @@ literal|15
 operator|+
 operator|(
 operator|(
-name|ichan
-operator|->
-name|channel
+name|freq
 operator|-
 literal|2512
 operator|)

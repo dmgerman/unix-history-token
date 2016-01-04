@@ -268,7 +268,12 @@ define|#
 directive|define
 name|TLSEXT_TYPE_heartbeat
 value|15
-comment|/*  * ExtensionType value for TLS padding extension.  * http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml  * http://tools.ietf.org/html/draft-agl-tls-padding-03  */
+comment|/* ExtensionType value from RFC7301 */
+define|#
+directive|define
+name|TLSEXT_TYPE_application_layer_protocol_negotiation
+value|16
+comment|/*  * ExtensionType value for TLS padding extension.  * http://tools.ietf.org/html/draft-agl-tls-padding  */
 define|#
 directive|define
 name|TLSEXT_TYPE_padding
@@ -286,7 +291,7 @@ comment|/*  * will have to be provided externally for now ,  * i.e. build with -
 define|#
 directive|define
 name|TLSEXT_TYPE_opaque_prf_input
-value|?? */
+value|??
 endif|#
 directive|endif
 comment|/* Temporary extension type */
@@ -304,17 +309,17 @@ name|TLSEXT_TYPE_next_proto_neg
 value|13172
 endif|#
 directive|endif
-comment|/* NameType value from RFC 3546 */
+comment|/* NameType value from RFC3546 */
 define|#
 directive|define
 name|TLSEXT_NAMETYPE_host_name
 value|0
-comment|/* status request value from RFC 3546 */
+comment|/* status request value from RFC3546 */
 define|#
 directive|define
 name|TLSEXT_STATUSTYPE_ocsp
 value|1
-comment|/* ECPointFormat values from draft-ietf-tls-ecc-12 */
+comment|/* ECPointFormat values from RFC4492 */
 define|#
 directive|define
 name|TLSEXT_ECPOINTFORMAT_first
@@ -335,7 +340,7 @@ define|#
 directive|define
 name|TLSEXT_ECPOINTFORMAT_last
 value|2
-comment|/* Signature and hash algorithms from RFC 5246 */
+comment|/* Signature and hash algorithms from RFC5246 */
 define|#
 directive|define
 name|TLSEXT_signature_anonymous
@@ -352,6 +357,11 @@ define|#
 directive|define
 name|TLSEXT_signature_ecdsa
 value|3
+comment|/* Total number of different signature algorithms */
+define|#
+directive|define
+name|TLSEXT_signature_num
+value|4
 define|#
 directive|define
 name|TLSEXT_hash_none
@@ -380,6 +390,25 @@ define|#
 directive|define
 name|TLSEXT_hash_sha512
 value|6
+comment|/* Total number of different digest algorithms */
+define|#
+directive|define
+name|TLSEXT_hash_num
+value|7
+comment|/* Flag set for unrecognised algorithms */
+define|#
+directive|define
+name|TLSEXT_nid_unknown
+value|0x1000000
+comment|/* ECC curves */
+define|#
+directive|define
+name|TLSEXT_curve_P_256
+value|23
+define|#
+directive|define
+name|TLSEXT_curve_P_384
+value|24
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLSEXT
@@ -448,6 +477,95 @@ name|int
 name|use_context
 parameter_list|)
 function_decl|;
+name|int
+name|SSL_get_sigalgs
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|int
+modifier|*
+name|psign
+parameter_list|,
+name|int
+modifier|*
+name|phash
+parameter_list|,
+name|int
+modifier|*
+name|psignandhash
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|rsig
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|rhash
+parameter_list|)
+function_decl|;
+name|int
+name|SSL_get_shared_sigalgs
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|int
+modifier|*
+name|psign
+parameter_list|,
+name|int
+modifier|*
+name|phash
+parameter_list|,
+name|int
+modifier|*
+name|psignandhash
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|rsig
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|rhash
+parameter_list|)
+function_decl|;
+name|int
+name|SSL_check_chain
+argument_list|(
+name|SSL
+operator|*
+name|s
+argument_list|,
+name|X509
+operator|*
+name|x
+argument_list|,
+name|EVP_PKEY
+operator|*
+name|pk
+argument_list|,
+name|STACK_OF
+argument_list|(
+name|X509
+argument_list|)
+operator|*
+name|chain
+argument_list|)
+decl_stmt|;
 define|#
 directive|define
 name|SSL_set_tlsext_host_name
@@ -1188,7 +1306,7 @@ define|#
 directive|define
 name|TLS1_CK_ECDH_RSA_WITH_AES_256_GCM_SHA384
 value|0x0300C032
-comment|/*  * XXX Inconsistency alert: The OpenSSL names of ciphers with ephemeral DH  * here include the string "DHE", while elsewhere it has always been "EDH".  * (The alias for the list of all such ciphers also is "EDH".) The  * specifications speak of "EDH"; maybe we should allow both forms for  * everything.  */
+comment|/*  * XXX * Backward compatibility alert: + * Older versions of OpenSSL gave  * some DHE ciphers names with "EDH" + * instead of "DHE".  Going forward, we  * should be using DHE + * everywhere, though we may indefinitely maintain  * aliases for users + * or configurations that used "EDH" +  */
 define|#
 directive|define
 name|TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5
@@ -1266,7 +1384,7 @@ define|#
 directive|define
 name|TLS1_TXT_ADH_WITH_AES_256_SHA
 value|"ADH-AES256-SHA"
-comment|/* ECC ciphersuites from draft-ietf-tls-ecc-01.txt (Mar 15, 2001) */
+comment|/* ECC ciphersuites from RFC4492 */
 define|#
 directive|define
 name|TLS1_TXT_ECDH_ECDSA_WITH_NULL_SHA

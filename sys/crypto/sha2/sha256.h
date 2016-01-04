@@ -32,6 +32,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SHA256_BLOCK_LENGTH
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA256_DIGEST_LENGTH
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA256_DIGEST_STRING_LENGTH
+value|(SHA256_DIGEST_LENGTH * 2 + 1)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -49,7 +70,7 @@ decl_stmt|;
 name|uint8_t
 name|buf
 index|[
-literal|64
+name|SHA256_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -173,7 +194,7 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
-literal|32
+name|SHA256_DIGEST_LENGTH
 index|]
 parameter_list|,
 name|SHA256_CTX
@@ -181,6 +202,12 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function_decl
 name|char
@@ -213,12 +240,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
 
 begin_function_decl
 name|char

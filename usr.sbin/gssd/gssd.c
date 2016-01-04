@@ -1126,6 +1126,11 @@ expr_stmt|;
 name|svc_run
 argument_list|()
 expr_stmt|;
+name|gssd_syscall
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6585,6 +6590,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|gssd_syscall
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0

@@ -3992,7 +3992,6 @@ block|}
 comment|/* no SSLv2, SSLv3 because has defects */
 if|if
 condition|(
-operator|!
 operator|(
 name|SSL_CTX_set_options
 argument_list|(
@@ -4003,6 +4002,8 @@ argument_list|)
 operator|&
 name|SSL_OP_NO_SSLv2
 operator|)
+operator|!=
+name|SSL_OP_NO_SSLv2
 condition|)
 block|{
 name|log_crypto_err
@@ -4021,7 +4022,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|SSL_CTX_set_options
 argument_list|(
@@ -4032,6 +4032,8 @@ argument_list|)
 operator|&
 name|SSL_OP_NO_SSLv3
 operator|)
+operator|!=
+name|SSL_OP_NO_SSLv3
 condition|)
 block|{
 name|log_crypto_err
@@ -4358,7 +4360,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|SSL_CTX_set_options
 argument_list|(
@@ -4369,6 +4370,8 @@ argument_list|)
 operator|&
 name|SSL_OP_NO_SSLv2
 operator|)
+operator|!=
+name|SSL_OP_NO_SSLv2
 condition|)
 block|{
 name|log_crypto_err
@@ -4387,7 +4390,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|SSL_CTX_set_options
 argument_list|(
@@ -4398,6 +4400,8 @@ argument_list|)
 operator|&
 name|SSL_OP_NO_SSLv3
 operator|)
+operator|!=
+name|SSL_OP_NO_SSLv3
 condition|)
 block|{
 name|log_crypto_err

@@ -546,50 +546,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NFSUSERHASHSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NFSUSERHASHSIZE
-value|30
-end_define
-
-begin_comment
-comment|/* Size of user id hash table */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFSGROUPHASHSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NFSGROUPHASHSIZE
-value|5
-end_define
-
-begin_comment
-comment|/* Size of group id hash table */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|NFSCLDELEGHIGHWATER
 end_ifndef
 
@@ -1032,6 +988,51 @@ end_struct
 begin_struct
 struct|struct
 name|nfsd_idargs
+block|{
+name|int
+name|nid_flag
+decl_stmt|;
+comment|/* Flags (see below) */
+name|uid_t
+name|nid_uid
+decl_stmt|;
+comment|/* user/group id */
+name|gid_t
+name|nid_gid
+decl_stmt|;
+name|int
+name|nid_usermax
+decl_stmt|;
+comment|/* Upper bound on user name cache */
+name|int
+name|nid_usertimeout
+decl_stmt|;
+comment|/* User name timeout (minutes) */
+name|u_char
+modifier|*
+name|nid_name
+decl_stmt|;
+comment|/* Name */
+name|int
+name|nid_namelen
+decl_stmt|;
+comment|/* and its length */
+name|gid_t
+modifier|*
+name|nid_grps
+decl_stmt|;
+comment|/* and the list */
+name|int
+name|nid_ngroup
+decl_stmt|;
+comment|/* Size of groups list */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nfsd_oidargs
 block|{
 name|int
 name|nid_flag

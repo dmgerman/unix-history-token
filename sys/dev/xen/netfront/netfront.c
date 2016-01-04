@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -92,24 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -134,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_media.h>
 end_include
 
@@ -153,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
 end_include
 
 begin_include
@@ -179,14 +143,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-end_if
-
 begin_include
 include|#
 directive|include
@@ -198,11 +154,6 @@ include|#
 directive|include
 file|<netinet/tcp_lro.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -219,53 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* for DELAY */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
 end_include
 
 begin_include
@@ -341,14 +246,6 @@ name|NET_RX_RING_SIZE
 value|__RING_SIZE((netif_rx_sring_t *)0, PAGE_SIZE)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-end_if
-
 begin_comment
 comment|/*  * Should the driver do LRO on the RX end  *  this can be toggled on the fly, but the  *  interface must be reset (down/up) for it  *  to take effect.  */
 end_comment
@@ -372,132 +269,6 @@ name|xn_enable_lro
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO4
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_XEN
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|MODPARM_rx_copy
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|module_param_named
-argument_list|(
-name|rx_copy
-argument_list|,
-name|MODPARM_rx_copy
-argument_list|,
-name|bool
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_PARM_DESC
-argument_list|(
-name|rx_copy
-argument_list|,
-literal|"Copy packets from network card (rather than flip)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|MODPARM_rx_flip
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|module_param_named
-argument_list|(
-name|rx_flip
-argument_list|,
-name|MODPARM_rx_flip
-argument_list|,
-name|bool
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_PARM_DESC
-argument_list|(
-name|rx_flip
-argument_list|,
-literal|"Flip packets from network card (rather than copy)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|MODPARM_rx_copy
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|MODPARM_rx_flip
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * \brief The maximum allowed data fragments in a single transmit  *        request.  *  * This limit is imposed by the backend driver.  We assume here that  * we are dealing with a Linux driver domain and have set our limit  * to mirror the Linux MAX_SKB_FRAGS constant.  */
@@ -978,10 +749,6 @@ name|mbuf
 modifier|*
 modifier|*
 name|list
-parameter_list|,
-name|int
-modifier|*
-name|pages_flipped_p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1040,7 +807,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|net_device_stats
+name|netfront_stats
 block|{
 name|u_long
 name|rx_packets
@@ -1066,68 +833,6 @@ name|u_long
 name|tx_errors
 decl_stmt|;
 comment|/* packet transmit problems	*/
-name|u_long
-name|rx_dropped
-decl_stmt|;
-comment|/* no space in linux buffers	*/
-name|u_long
-name|tx_dropped
-decl_stmt|;
-comment|/* no space available in linux	*/
-name|u_long
-name|multicast
-decl_stmt|;
-comment|/* multicast packets received	*/
-name|u_long
-name|collisions
-decl_stmt|;
-comment|/* detailed rx_errors: */
-name|u_long
-name|rx_length_errors
-decl_stmt|;
-name|u_long
-name|rx_over_errors
-decl_stmt|;
-comment|/* receiver ring buff overflow	*/
-name|u_long
-name|rx_crc_errors
-decl_stmt|;
-comment|/* recved pkt with crc error	*/
-name|u_long
-name|rx_frame_errors
-decl_stmt|;
-comment|/* recv'd frame alignment error */
-name|u_long
-name|rx_fifo_errors
-decl_stmt|;
-comment|/* recv'r fifo overrun		*/
-name|u_long
-name|rx_missed_errors
-decl_stmt|;
-comment|/* receiver missed packet	*/
-comment|/* detailed tx_errors */
-name|u_long
-name|tx_aborted_errors
-decl_stmt|;
-name|u_long
-name|tx_carrier_errors
-decl_stmt|;
-name|u_long
-name|tx_fifo_errors
-decl_stmt|;
-name|u_long
-name|tx_heartbeat_errors
-decl_stmt|;
-name|u_long
-name|tx_window_errors
-decl_stmt|;
-comment|/* for cslip etc */
-name|u_long
-name|rx_compressed
-decl_stmt|;
-name|u_long
-name|tx_compressed
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1141,19 +846,12 @@ name|ifnet
 modifier|*
 name|xn_ifp
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 name|struct
 name|lro_ctrl
 name|xn_lro
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
-name|net_device_stats
+name|netfront_stats
 name|stats
 decl_stmt|;
 name|u_int
@@ -1179,9 +877,6 @@ name|sc_lock
 decl_stmt|;
 name|xen_intr_handle_t
 name|xen_intr_handle
-decl_stmt|;
-name|u_int
-name|copying_receiver
 decl_stmt|;
 name|u_int
 name|carrier
@@ -1261,7 +956,7 @@ name|struct
 name|callout
 name|xn_stat_ch
 decl_stmt|;
-name|u_long
+name|xen_pfn_t
 name|rx_pfn_array
 index|[
 name|NET_RX_RING_SIZE
@@ -1290,19 +985,6 @@ define|#
 directive|define
 name|tx_mbufs
 value|xn_cdata.xn_tx_chain
-end_define
-
-begin_define
-define|#
-directive|define
-name|XN_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_name
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->tx_lock, #_name"_tx", "network transmit lock", MTX_DEF); \         mtx_init(&(_sc)->rx_lock, #_name"_rx", "network receive lock", MTX_DEF);  \         mtx_init(&(_sc)->sc_lock, #_name"_sc", "netfront softc lock", MTX_DEF)
 end_define
 
 begin_define
@@ -1393,16 +1075,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_lock, MA_OWNED);
-end_define
-
-begin_define
-define|#
-directive|define
-name|XN_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->rx_lock); \                                mtx_destroy(&(_sc)->tx_lock); \                                mtx_destroy(&(_sc)->sc_lock);
 end_define
 
 begin_struct
@@ -2127,11 +1799,6 @@ name|err
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -2161,8 +1828,6 @@ argument_list|,
 literal|"Large Receive Offload"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2486,9 +2151,7 @@ literal|"request-rx-copy"
 argument_list|,
 literal|"%u"
 argument_list|,
-name|info
-operator|->
-name|copying_receiver
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2560,11 +2223,6 @@ goto|goto
 name|abort_transaction
 goto|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 name|err
 operator|=
 name|xs_printf
@@ -2593,8 +2251,6 @@ goto|goto
 name|abort_transaction
 goto|;
 block|}
-endif|#
-directive|endif
 name|err
 operator|=
 name|xs_transaction_end
@@ -3162,7 +2818,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|int i; 	 	for (i = 0; i< NET_RX_RING_SIZE; i++) { 		if (sc->xn_cdata.rx_mbufs[i] != NULL) { 			m_freem(sc->rx_mbufs[i]); 			sc->rx_mbufs[i] = NULL; 		} 	} 	 	sc->rx.rsp_cons = 0; 	sc->xn_rx_if->req_prod = 0; 	sc->xn_rx_if->event = sc->rx.rsp_cons ;
+block|int i;  	for (i = 0; i< NET_RX_RING_SIZE; i++) { 		if (sc->xn_cdata.rx_mbufs[i] != NULL) { 			m_freem(sc->rx_mbufs[i]); 			sc->rx_mbufs[i] = NULL; 		} 	}  	sc->rx.rsp_cons = 0; 	sc->xn_rx_if->req_prod = 0; 	sc->xn_rx_if->event = sc->rx.rsp_cons ;
 endif|#
 directive|endif
 block|}
@@ -3182,7 +2838,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|int i; 	 	for (i = 0; i< NET_TX_RING_SIZE; i++) { 		if (sc->tx_mbufs[i] != NULL) { 			m_freem(sc->tx_mbufs[i]); 			sc->xn_cdata.xn_tx_chain[i] = NULL; 		} 	} 	 	return;
+block|int i;  	for (i = 0; i< NET_TX_RING_SIZE; i++) { 		if (sc->tx_mbufs[i] != NULL) { 			m_freem(sc->tx_mbufs[i]); 			sc->xn_cdata.xn_tx_chain[i] = NULL; 		} 	}  	return;
 endif|#
 directive|endif
 block|}
@@ -3397,15 +3053,8 @@ decl_stmt|;
 name|RING_IDX
 name|req_prod
 decl_stmt|;
-name|struct
-name|xen_memory_reservation
-name|reservation
-decl_stmt|;
 name|grant_ref_t
 name|ref
-decl_stmt|;
-name|int
-name|nr_flips
 decl_stmt|;
 name|netif_rx_request_t
 modifier|*
@@ -3564,7 +3213,7 @@ name|push
 goto|;
 return|return;
 block|}
-comment|/* 	 * Double floating fill target if we risked having the backend 	 * run out of empty buffers for receive traffic.  We define "running 	 * low" as having less than a fourth of our target buffers free 	 * at the time we refilled the queue.  	 */
+comment|/* 	 * Double floating fill target if we risked having the backend 	 * run out of empty buffers for receive traffic.  We define "running 	 * low" as having less than a fourth of our target buffers free 	 * at the time we refilled the queue. 	 */
 if|if
 condition|(
 operator|(
@@ -3617,8 +3266,6 @@ name|refill
 label|:
 for|for
 control|(
-name|nr_flips
-operator|=
 name|i
 operator|=
 literal|0
@@ -3767,39 +3414,6 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|copying_receiver
-operator|==
-literal|0
-condition|)
-block|{
-name|gnttab_grant_foreign_transfer_ref
-argument_list|(
-name|ref
-argument_list|,
-name|otherend_id
-argument_list|,
-name|pfn
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|rx_pfn_array
-index|[
-name|nr_flips
-index|]
-operator|=
-name|pfn
-expr_stmt|;
-name|nr_flips
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
 name|gnttab_grant_foreign_access_ref
 argument_list|(
 name|ref
@@ -3811,7 +3425,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|req
 operator|->
 name|id
@@ -3872,66 +3485,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We may have allocated buffers which have entries outstanding 	 * in the page * update queue -- make sure we flush those first! 	 */
-if|if
-condition|(
-name|nr_flips
-operator|!=
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* Tell the ballon driver what is going on. */
-name|balloon_update_driver_allowance
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|set_xen_guest_handle
-argument_list|(
-name|reservation
-operator|.
-name|extent_start
-argument_list|,
-name|sc
-operator|->
-name|rx_pfn_array
-argument_list|)
-expr_stmt|;
-name|reservation
-operator|.
-name|nr_extents
-operator|=
-name|i
-expr_stmt|;
-name|reservation
-operator|.
-name|extent_order
-operator|=
-literal|0
-expr_stmt|;
-name|reservation
-operator|.
-name|address_bits
-operator|=
-literal|0
-expr_stmt|;
-name|reservation
-operator|.
-name|domid
-operator|=
-name|DOMID_SELF
-expr_stmt|;
-block|}
-else|else
-block|{
 name|wmb
 argument_list|()
 expr_stmt|;
-block|}
 comment|/* Above is a suitable barrier to ensure backend will see requests. */
 name|sc
 operator|->
@@ -3987,10 +3543,6 @@ name|ifp
 decl_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -4060,10 +3612,6 @@ name|errq
 decl_stmt|;
 name|int
 name|err
-decl_stmt|,
-name|pages_flipped
-init|=
-literal|0
 decl_stmt|,
 name|work_to_do
 decl_stmt|;
@@ -4192,9 +3740,6 @@ name|i
 argument_list|,
 operator|&
 name|m
-argument_list|,
-operator|&
-name|pages_flipped
 argument_list|)
 expr_stmt|;
 if|if
@@ -4312,31 +3857,13 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pages_flipped
-condition|)
-block|{
-comment|/* Some pages are no longer absent... */
-ifdef|#
-directive|ifdef
-name|notyet
-name|balloon_update_driver_allowance
-argument_list|(
-operator|-
-name|pages_flipped
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|mbufq_drain
 argument_list|(
 operator|&
 name|errq
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
+comment|/* 		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
 while|while
 condition|(
 operator|(
@@ -4369,10 +3896,6 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -4459,10 +3982,6 @@ name|i
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -4522,7 +4041,7 @@ directive|if
 literal|0
 comment|/* If we get a callback with very few responses, reduce fill target. */
 comment|/* NB. Note exponential increase, linear decrease. */
-block|if (((np->rx.req_prod_pvt - np->rx.sring->rsp_prod)>  			((3*np->rx_target) / 4))&& (--np->rx_target< np->rx_min_target)) 			np->rx_target = np->rx_min_target;
+block|if (((np->rx.req_prod_pvt - np->rx.sring->rsp_prod)> 			((3*np->rx_target) / 4))&& (--np->rx_target< np->rx_min_target)) 			np->rx_target = np->rx_min_target;
 endif|#
 directive|endif
 name|network_alloc_rx_buffers
@@ -5360,18 +4879,8 @@ name|mbuf
 modifier|*
 modifier|*
 name|list
-parameter_list|,
-name|int
-modifier|*
-name|pages_flipped_p
 parameter_list|)
 block|{
-name|int
-name|pages_flipped
-init|=
-operator|*
-name|pages_flipped_p
-decl_stmt|;
 name|struct
 name|netif_rx_response
 modifier|*
@@ -5497,9 +5006,6 @@ init|;
 condition|;
 control|)
 block|{
-name|u_long
-name|mfn
-decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -5598,64 +5104,6 @@ goto|goto
 name|next
 goto|;
 block|}
-if|if
-condition|(
-operator|!
-name|np
-operator|->
-name|copying_receiver
-condition|)
-block|{
-comment|/* Memory pressure, insufficient buffer 			 * headroom, ... 			 */
-if|if
-condition|(
-operator|!
-operator|(
-name|mfn
-operator|=
-name|gnttab_end_foreign_transfer_ref
-argument_list|(
-name|ref
-argument_list|)
-operator|)
-condition|)
-block|{
-name|WPRINTK
-argument_list|(
-literal|"Unfulfilled rx req (id=%d, st=%d).\n"
-argument_list|,
-name|rx
-operator|->
-name|id
-argument_list|,
-name|rx
-operator|->
-name|status
-argument_list|)
-expr_stmt|;
-name|xennet_move_rx_slot
-argument_list|(
-name|np
-argument_list|,
-name|m
-argument_list|,
-name|ref
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|next
-goto|;
-block|}
-name|pages_flipped
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
 name|ret
 operator|=
 name|gnttab_end_foreign_access_ref
@@ -5668,11 +5116,10 @@ argument_list|(
 name|ret
 argument_list|,
 operator|(
-literal|"ret != 0"
+literal|"Unable to end access to grant references"
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|gnttab_release_grant_reference
 argument_list|(
 operator|&
@@ -5772,7 +5219,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Note that m can be NULL, if rx->status< 0 or if 		 * rx->offset + rx->status> PAGE_SIZE above.   		 */
+comment|/* 		 * Note that m can be NULL, if rx->status< 0 or if 		 * rx->offset + rx->status> PAGE_SIZE above. 		 */
 name|m_prev
 operator|=
 name|m
@@ -5804,7 +5251,7 @@ operator|+
 name|frags
 argument_list|)
 expr_stmt|;
-comment|/* 		 * m_prev == NULL can happen if rx->status< 0 or if 		 * rx->offset + * rx->status> PAGE_SIZE above.   		 */
+comment|/* 		 * m_prev == NULL can happen if rx->status< 0 or if 		 * rx->offset + * rx->status> PAGE_SIZE above. 		 */
 if|if
 condition|(
 name|m_prev
@@ -5817,7 +5264,7 @@ name|m_next
 operator|=
 name|m
 expr_stmt|;
-comment|/* 		 * m0 can be NULL if rx->status< 0 or if * rx->offset + 		 * rx->status> PAGE_SIZE above.   		 */
+comment|/* 		 * m0 can be NULL if rx->status< 0 or if * rx->offset + 		 * rx->status> PAGE_SIZE above. 		 */
 if|if
 condition|(
 name|m0
@@ -5866,11 +5313,6 @@ operator|*
 name|cons
 operator|+=
 name|frags
-expr_stmt|;
-operator|*
-name|pages_flipped_p
-operator|=
-name|pages_flipped
 expr_stmt|;
 return|return
 operator|(
@@ -6426,11 +5868,6 @@ name|NETTXF_data_validated
 operator|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 if|if
 condition|(
 name|m
@@ -6530,8 +5967,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -7326,11 +6761,6 @@ operator|^=
 name|IFCAP_RXCSUM
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 if|if
 condition|(
 name|mask
@@ -7413,8 +6843,6 @@ operator|^=
 name|IFCAP_LRO
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|error
 operator|=
 literal|0
@@ -7460,7 +6888,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* FALLTHROUGH */
+break|break;
 case|case
 name|SIOCSIFMEDIA
 case|:
@@ -7601,8 +7029,6 @@ name|req
 decl_stmt|;
 name|u_int
 name|feature_rx_copy
-decl_stmt|,
-name|feature_rx_flip
 decl_stmt|;
 name|error
 operator|=
@@ -7635,57 +7061,17 @@ name|feature_rx_copy
 operator|=
 literal|0
 expr_stmt|;
-name|error
-operator|=
-name|xs_scanf
-argument_list|(
-name|XST_NIL
-argument_list|,
-name|xenbus_get_otherend_path
-argument_list|(
-name|np
-operator|->
-name|xbdev
-argument_list|)
-argument_list|,
-literal|"feature-rx-flip"
-argument_list|,
-name|NULL
-argument_list|,
-literal|"%u"
-argument_list|,
-operator|&
-name|feature_rx_flip
-argument_list|)
-expr_stmt|;
+comment|/* We only support rx copy. */
 if|if
 condition|(
-name|error
-condition|)
-name|feature_rx_flip
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 	 * Copy packets on receive path if: 	 *  (a) This was requested by user, and the backend supports it; or 	 *  (b) Flipping was requested, but this is unsupported by the backend. 	 */
-name|np
-operator|->
-name|copying_receiver
-operator|=
-operator|(
-operator|(
-name|MODPARM_rx_copy
-operator|&&
-name|feature_rx_copy
-operator|)
-operator|||
-operator|(
-name|MODPARM_rx_flip
-operator|&&
 operator|!
-name|feature_rx_flip
+name|feature_rx_copy
+condition|)
+return|return
+operator|(
+name|EPROTONOSUPPORT
 operator|)
-operator|)
-expr_stmt|;
+return|;
 comment|/* Recovery procedure: */
 name|error
 operator|=
@@ -7820,31 +7206,6 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|np
-operator|->
-name|copying_receiver
-condition|)
-block|{
-name|gnttab_grant_foreign_transfer_ref
-argument_list|(
-name|ref
-argument_list|,
-name|xenbus_get_otherend_id
-argument_list|(
-name|np
-operator|->
-name|xbdev
-argument_list|)
-argument_list|,
-name|pfn
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|gnttab_grant_foreign_access_ref
 argument_list|(
 name|ref
@@ -7861,7 +7222,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|req
 operator|->
 name|gref
@@ -8151,10 +7511,6 @@ name|UINT_MAX
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -8226,10 +7582,6 @@ name|CSUM_TSO
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -8396,11 +7748,46 @@ name|xbdev
 operator|=
 name|dev
 expr_stmt|;
-name|XN_LOCK_INIT
+name|mtx_init
 argument_list|(
+operator|&
 name|np
+operator|->
+name|tx_lock
 argument_list|,
-name|xennetif
+literal|"xntx"
+argument_list|,
+literal|"netfront transmit lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|rx_lock
+argument_list|,
+literal|"xnrx"
+argument_list|,
+literal|"netfront receive lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|sc_lock
+argument_list|,
+literal|"xnsc"
+argument_list|,
+literal|"netfront softc lock"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|ifmedia_init
@@ -8590,7 +7977,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|exit
+name|error
 goto|;
 block|}
 comment|/* A grant for every rx ring slot */
@@ -8626,7 +8013,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|exit
+name|error
 goto|;
 block|}
 name|err
@@ -8644,9 +8031,25 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+name|gnttab_free_grant_references
+argument_list|(
+name|np
+operator|->
+name|gref_rx_head
+argument_list|)
+expr_stmt|;
+name|gnttab_free_grant_references
+argument_list|(
+name|np
+operator|->
+name|gref_tx_head
+argument_list|)
+expr_stmt|;
 goto|goto
-name|out
+name|error
 goto|;
+block|}
 comment|/* Set up ifnet structure */
 name|ifp
 operator|=
@@ -8692,12 +8095,6 @@ operator|->
 name|if_ioctl
 operator|=
 name|xn_ioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_output
-operator|=
-name|ether_output
 expr_stmt|;
 name|ifp
 operator|->
@@ -8797,17 +8194,19 @@ operator|(
 literal|0
 operator|)
 return|;
-name|exit
+name|error
 label|:
-name|gnttab_free_grant_references
+name|KASSERT
 argument_list|(
-name|np
-operator|->
-name|gref_tx_head
+name|err
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"Error path with no error code specified"
+operator|)
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
 name|err
@@ -9231,7 +8630,7 @@ argument_list|(
 expr|struct
 name|netfront_info
 argument_list|)
-block|,                       }
+block|, }
 decl_stmt|;
 end_decl_stmt
 

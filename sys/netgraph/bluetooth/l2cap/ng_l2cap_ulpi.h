@@ -384,6 +384,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ng_l2cap_l2ca_encryption_change
+parameter_list|(
+name|ng_l2cap_chan_p
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

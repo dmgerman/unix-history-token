@@ -1994,9 +1994,11 @@ condition|(
 name|udev
 operator|->
 name|linux_endpoint_start
+operator|!=
+name|NULL
 condition|)
 block|{
-name|usb_linux_free_device
+name|usb_linux_free_device_p
 argument_list|(
 name|udev
 argument_list|)

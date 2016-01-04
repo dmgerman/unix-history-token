@@ -1129,9 +1129,6 @@ name|u16
 name|next_to_clean
 decl_stmt|;
 name|u16
-name|process_limit
-decl_stmt|;
-name|u16
 name|num_desc
 decl_stmt|;
 enum|enum
@@ -1580,6 +1577,9 @@ name|wol
 decl_stmt|;
 name|int
 name|rx_process_limit
+decl_stmt|;
+name|int
+name|tx_process_limit
 decl_stmt|;
 name|u16
 name|vf_ifp

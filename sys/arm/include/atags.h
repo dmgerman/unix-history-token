@@ -205,7 +205,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * ATAG_INITRD2 - Compressed ramdisk image details  */
+comment|/*  * ATAG_INITRD2 - Compressed ramdisk image details  */
 end_comment
 
 begin_struct

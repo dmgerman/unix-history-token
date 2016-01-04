@@ -4501,12 +4501,6 @@ operator|->
 name|event_buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|drv
-operator|!=
-name|NULL
-condition|)
 name|os_free
 argument_list|(
 name|drv
@@ -4646,12 +4640,15 @@ name|u8
 modifier|*
 name|addr
 parameter_list|,
+name|unsigned
 name|int
 name|total_flags
 parameter_list|,
+name|unsigned
 name|int
 name|flags_or
 parameter_list|,
+name|unsigned
 name|int
 name|flags_and
 parameter_list|)
@@ -5420,9 +5417,16 @@ break|break;
 case|case
 name|IEEE80211_MODE_IBSS
 case|:
+comment|/* 		 * Ref bin/203086 - FreeBSD's net80211 currently uses 		 * IFM_IEEE80211_ADHOC. 		 */
+if|#
+directive|if
+literal|0
+block|mode = IFM_IEEE80211_IBSS;
+endif|#
+directive|endif
 name|mode
 operator|=
-name|IFM_IEEE80211_IBSS
+name|IFM_IEEE80211_ADHOC
 expr_stmt|;
 break|break;
 case|case
@@ -5666,6 +5670,22 @@ name|WLAN_EID_RSN
 condition|?
 literal|2
 else|:
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+comment|/* 	 * NB: interface must be marked UP for association 	 * or scanning (ap_scan=2) 	 */
+if|if
+condition|(
+name|bsd_ctrl_iface
+argument_list|(
+name|drv
+argument_list|,
 literal|1
 argument_list|)
 operator|<
@@ -7713,6 +7733,17 @@ name|IFM_IEEE80211_HOSTAP
 condition|)
 return|return
 name|IEEE80211_M_HOSTAP
+return|;
+if|if
+condition|(
+name|ifmr
+operator|.
+name|ifm_current
+operator|&
+name|IFM_IEEE80211_IBSS
+condition|)
+return|return
+name|IEEE80211_M_IBSS
 return|;
 if|if
 condition|(

@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/drm2/i915/intel_drv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/drm2/i915/i915_drm.h>
 end_include
 
@@ -57,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<dev/drm2/i915/i915_drv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/drm2/i915/intel_drv.h>
 end_include
 
 begin_function
@@ -111,6 +111,8 @@ decl_stmt|;
 name|struct
 name|drm_mode_fb_cmd2
 name|mode_cmd
+init|=
+block|{}
 decl_stmt|;
 name|struct
 name|drm_i915_gem_object

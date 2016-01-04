@@ -602,11 +602,6 @@ name|q
 decl_stmt|;
 name|q
 operator|=
-operator|(
-expr|struct
-name|circleq_dnsentry
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

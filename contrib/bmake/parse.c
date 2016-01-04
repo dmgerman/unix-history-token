@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $"
+literal|"$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $"
+literal|"$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1765,6 +1765,9 @@ name|SUCCESS
 condition|)
 block|{
 comment|/* found a size, try mmap */
+ifdef|#
+directive|ifdef
+name|_SC_PAGESIZE
 name|pagesize
 operator|=
 name|sysconf
@@ -1772,6 +1775,14 @@ argument_list|(
 name|_SC_PAGESIZE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|pagesize
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pagesize
@@ -2997,7 +3008,9 @@ name|line
 argument_list|,
 name|VAR_CMD
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Parse_Error
@@ -4084,6 +4097,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|,
@@ -6270,6 +6285,8 @@ argument_list|,
 name|ctxt
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|oldVars
@@ -6331,6 +6348,8 @@ argument_list|,
 name|cp
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
@@ -7501,6 +7520,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Parse_include_file
@@ -7831,6 +7852,10 @@ name|old
 decl_stmt|;
 name|char
 modifier|*
+name|ep
+decl_stmt|;
+name|char
+modifier|*
 name|fp
 init|=
 name|NULL
@@ -7860,6 +7885,17 @@ condition|(
 name|old
 condition|)
 block|{
+name|ep
+operator|=
+name|old
+operator|+
+name|strlen
+argument_list|(
+name|old
+argument_list|)
+operator|-
+name|name_len
+expr_stmt|;
 comment|/* does it contain name? */
 for|for
 control|(
@@ -7888,6 +7924,14 @@ condition|)
 name|old
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|old
+operator|>=
+name|ep
+condition|)
+break|break;
+comment|/* cannot contain name */
 if|if
 condition|(
 name|memcmp
@@ -8308,6 +8352,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8530,6 +8576,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -10542,6 +10590,8 @@ argument_list|,
 name|line
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)

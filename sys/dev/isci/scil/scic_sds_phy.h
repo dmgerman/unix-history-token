@@ -150,7 +150,7 @@ block|,
 name|SCIC_SDS_MAX_PHY_PROTOCOLS
 block|}
 enum|;
-comment|/**  * @struct SCIC_SDS_PHY  *  * @brief This structure  contains or references all of the data necessary to  *        represent the core phy object and SCU harware protocol engine.  */
+comment|/**  * @struct SCIC_SDS_PHY  *  * @brief This structure  contains or references all of the data necessary to  *        represent the core phy object and SCU hardware protocol engine.  */
 typedef|typedef
 struct|struct
 name|SCIC_SDS_PHY

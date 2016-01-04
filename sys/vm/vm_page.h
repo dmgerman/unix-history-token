@@ -502,6 +502,9 @@ name|vmd_pass
 decl_stmt|;
 comment|/* local pagedaemon pass */
 name|int
+name|vmd_oom_seq
+decl_stmt|;
+name|int
 name|vmd_last_active_scan
 decl_stmt|;
 name|struct
@@ -509,6 +512,11 @@ name|vm_page
 name|vmd_marker
 decl_stmt|;
 comment|/* marker for pagedaemon private use */
+name|struct
+name|vm_page
+name|vmd_inacthead
+decl_stmt|;
+comment|/* marker for LRU-defeating insertions */
 block|}
 struct|;
 end_struct
@@ -1144,6 +1152,10 @@ name|entry
 parameter_list|)
 value|((entry)->phys_addr)
 end_define
+
+begin_comment
+comment|/*  * PHYS_TO_VM_PAGE() returns the vm_page_t object that represents a memory  * page to which the given physical address belongs. The correct vm_page_t  * object is returned for addresses that are not page-aligned.  */
+end_comment
 
 begin_function_decl
 name|vm_page_t
@@ -1824,6 +1836,31 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|vm_page_reclaim_contig
+parameter_list|(
+name|int
+name|req
+parameter_list|,
+name|u_long
+name|npages
+parameter_list|,
+name|vm_paddr_t
+name|low
+parameter_list|,
+name|vm_paddr_t
+name|high
+parameter_list|,
+name|u_long
+name|alignment
+parameter_list|,
+name|vm_paddr_t
+name|boundary
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_page_reference
 parameter_list|(
@@ -1897,6 +1934,31 @@ name|vm_page_sbusied
 parameter_list|(
 name|vm_page_t
 name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_page_scan_contig
+parameter_list|(
+name|u_long
+name|npages
+parameter_list|,
+name|vm_page_t
+name|m_start
+parameter_list|,
+name|vm_page_t
+name|m_end
+parameter_list|,
+name|u_long
+name|alignment
+parameter_list|,
+name|vm_paddr_t
+name|boundary
+parameter_list|,
+name|int
+name|options
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2260,7 +2322,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(vm_page_sbusied(m),					\ 	    ("vm_page_assert_sbusied: page %p not shared busy @ %s:%d", \ 	    (void *)m, __FILE__, __LINE__));
+value|KASSERT(vm_page_sbusied(m),					\ 	    ("vm_page_assert_sbusied: page %p not shared busy @ %s:%d", \ 	    (m), __FILE__, __LINE__))
 end_define
 
 begin_define
@@ -2271,7 +2333,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(!vm_page_busied(m),					\ 	    ("vm_page_assert_unbusied: page %p busy @ %s:%d",		\ 	    (void *)m, __FILE__, __LINE__));
+value|KASSERT(!vm_page_busied(m),					\ 	    ("vm_page_assert_unbusied: page %p busy @ %s:%d",		\ 	    (m), __FILE__, __LINE__))
 end_define
 
 begin_define
@@ -2282,7 +2344,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(vm_page_xbusied(m),					\ 	    ("vm_page_assert_xbusied: page %p not exclusive busy @ %s:%d", \ 	    (void *)m, __FILE__, __LINE__));
+value|KASSERT(vm_page_xbusied(m),					\ 	    ("vm_page_assert_xbusied: page %p not exclusive busy @ %s:%d", \ 	    (m), __FILE__, __LINE__))
 end_define
 
 begin_define
@@ -2303,7 +2365,7 @@ name|vm_page_sbusy
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	if (!vm_page_trysbusy(m))					\ 		panic("%s: page %p failed shared busing", __func__, m);	\ } while (0)
+value|do {						\ 	if (!vm_page_trysbusy(m))					\ 		panic("%s: page %p failed shared busying", __func__,	\ 		    (m));						\ } while (0)
 end_define
 
 begin_define
@@ -2314,7 +2376,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|(atomic_cmpset_acq_int(&m->busy_lock, VPB_UNBUSIED,		\ 	    VPB_SINGLE_EXCLUSIVER))
+value|(atomic_cmpset_acq_int(&(m)->busy_lock, VPB_UNBUSIED,		\ 	    VPB_SINGLE_EXCLUSIVER))
 end_define
 
 begin_define
@@ -2325,7 +2387,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m->busy_lock& VPB_SINGLE_EXCLUSIVER) != 0)
+value|(((m)->busy_lock& VPB_SINGLE_EXCLUSIVER) != 0)
 end_define
 
 begin_define
@@ -2335,7 +2397,7 @@ name|vm_page_xbusy
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	if (!vm_page_tryxbusy(m))					\ 		panic("%s: page %p failed exclusive busing", __func__,	\ 		    m);							\ } while (0)
+value|do {						\ 	if (!vm_page_tryxbusy(m))					\ 		panic("%s: page %p failed exclusive busying", __func__,	\ 		    (m));						\ } while (0)
 end_define
 
 begin_define
@@ -2748,6 +2810,68 @@ operator|->
 name|dirty
 operator|=
 literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_replace_checked
+parameter_list|(
+name|vm_page_t
+name|mnew
+parameter_list|,
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
+parameter_list|,
+name|vm_page_t
+name|mold
+parameter_list|)
+block|{
+name|vm_page_t
+name|mret
+decl_stmt|;
+name|mret
+operator|=
+name|vm_page_replace
+argument_list|(
+name|mnew
+argument_list|,
+name|object
+argument_list|,
+name|pindex
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mret
+operator|==
+name|mold
+argument_list|,
+operator|(
+literal|"invalid page replacement, mold=%p, mret=%p"
+operator|,
+name|mold
+operator|,
+name|mret
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Unused if !INVARIANTS. */
+operator|(
+name|void
+operator|)
+name|mold
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mret
 expr_stmt|;
 block|}
 end_function

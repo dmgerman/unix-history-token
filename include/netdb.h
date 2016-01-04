@@ -294,7 +294,7 @@ comment|/* AI_PASSIVE, AI_CANONNAME, AI_NUMERICHOST */
 name|int
 name|ai_family
 decl_stmt|;
-comment|/* PF_xxx */
+comment|/* AF_xxx */
 name|int
 name|ai_socktype
 decl_stmt|;
@@ -661,7 +661,7 @@ define|#
 directive|define
 name|AI_MASK
 define|\
-value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_NUMERICSERV | \     AI_ADDRCONFIG)
+value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_NUMERICSERV | \     AI_ADDRCONFIG | AI_ALL | AI_V4MAPPED)
 end_define
 
 begin_define

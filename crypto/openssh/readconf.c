@@ -4,10 +4,6 @@ comment|/* $OpenBSD: readconf.c,v 1.218 2014/02/23 20:11:36 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions for reading the configuration files.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -451,15 +447,6 @@ name|oTcpRcvBufPoll
 block|,
 name|oTcpRcvBuf
 block|,
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-name|oNoneEnabled
-block|,
-name|oNoneSwitch
-block|,
-endif|#
-directive|endif
 name|oVersionAddendum
 block|,
 name|oDeprecated
@@ -1125,23 +1112,6 @@ block|,
 name|oTcpRcvBuf
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-block|{
-literal|"noneenabled"
-block|,
-name|oNoneEnabled
-block|}
-block|,
-block|{
-literal|"noneswitch"
-block|,
-name|oNoneSwitch
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"versionaddendum"
 block|,
@@ -6852,78 +6822,6 @@ expr_stmt|;
 goto|goto
 name|parse_int
 goto|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-case|case
-name|oNoneEnabled
-case|:
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|none_enabled
-expr_stmt|;
-goto|goto
-name|parse_flag
-goto|;
-comment|/* 	 * We check to see if the command comes from the command line or not. 	 * If it does then enable it otherwise fail.  NONE must never be a 	 * default configuration. 	 */
-case|case
-name|oNoneSwitch
-case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|filename
-argument_list|,
-literal|"command-line"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|none_switch
-expr_stmt|;
-goto|goto
-name|parse_flag
-goto|;
-block|}
-else|else
-block|{
-name|debug
-argument_list|(
-literal|"NoneSwitch directive found in %.200s."
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"NoneSwitch is found in %.200s.\n"
-literal|"You may only use this configuration option "
-literal|"from the command line"
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Continuing..."
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-endif|#
-directive|endif
 case|case
 name|oVersionAddendum
 case|:
@@ -8293,25 +8191,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-name|options
-operator|->
-name|none_enabled
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|options
-operator|->
-name|none_switch
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -9621,27 +9500,6 @@ name|tcp_rcv_buf_poll
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-comment|/* options->none_enabled must not be set by default */
-if|if
-condition|(
-name|options
-operator|->
-name|none_switch
-operator|==
-operator|-
-literal|1
-condition|)
-name|options
-operator|->
-name|none_switch
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

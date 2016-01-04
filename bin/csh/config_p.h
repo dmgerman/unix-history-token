@@ -20,7 +20,7 @@ name|_h_config
 end_define
 
 begin_comment
-comment|/****************** System dependant compilation flags ****************/
+comment|/****************** System dependent compilation flags ****************/
 end_comment
 
 begin_comment

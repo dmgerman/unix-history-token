@@ -94,6 +94,12 @@ directive|include
 file|"test_regex.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -120,6 +126,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_comment
 comment|/*  * regprint - print a regexp for debugging  */
 end_comment
@@ -137,9 +154,6 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|struct
 name|re_guts
 modifier|*
@@ -632,8 +646,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -878,9 +890,6 @@ operator|)
 name|opnd
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|cs
 operator|=
 operator|&
@@ -997,8 +1006,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 name|fprintf
 argument_list|(
 name|d
@@ -1392,26 +1399,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|fprintf
-argument_list|(
-name|d
-argument_list|,
-literal|"!%ld(%ld)!"
-argument_list|,
-name|OP
-argument_list|(
-operator|*
-name|s
-argument_list|)
-argument_list|,
-name|opnd
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|d
@@ -1427,8 +1414,6 @@ argument_list|,
 name|opnd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 if|if
@@ -1502,6 +1487,31 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|regprint
+parameter_list|(
+name|regex_t
+modifier|*
+name|r
+parameter_list|,
+name|FILE
+modifier|*
+name|d
+parameter_list|)
+block|{  }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

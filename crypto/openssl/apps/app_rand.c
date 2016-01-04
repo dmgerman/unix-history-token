@@ -94,27 +94,8 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_WINDOWS
-name|BIO_printf
-argument_list|(
-name|bio_e
-argument_list|,
-literal|"Loading 'screen' into random state -"
-argument_list|)
-expr_stmt|;
-name|BIO_flush
-argument_list|(
-name|bio_e
-argument_list|)
-expr_stmt|;
 name|RAND_screen
 argument_list|()
-expr_stmt|;
-name|BIO_printf
-argument_list|(
-name|bio_e
-argument_list|,
-literal|" done\n"
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

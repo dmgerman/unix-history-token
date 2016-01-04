@@ -2197,6 +2197,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*  * Object destroy callback. Intended to free resources allocated by  * create_object callback.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|ipfw_obj_destroy_cb
+function_decl|)
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|struct
+name|named_object
+modifier|*
+name|no
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|opcode_obj_rewrite
@@ -2234,6 +2258,11 @@ modifier|*
 name|create_object
 decl_stmt|;
 comment|/* Create named object */
+name|ipfw_obj_destroy_cb
+modifier|*
+name|destroy_object
+decl_stmt|;
+comment|/* Destroy named object */
 block|}
 struct|;
 end_struct
@@ -3092,6 +3121,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ipfw_export_obj_ntlv
+parameter_list|(
+name|struct
+name|named_object
+modifier|*
+name|no
+parameter_list|,
+name|ipfw_obj_ntlv
+modifier|*
+name|ntlv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ipfw_init_obj_rewriter
 parameter_list|(
 name|void
@@ -3316,6 +3361,18 @@ name|struct
 name|ip_fw_chain
 modifier|*
 name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipfw_check_object_name_generic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

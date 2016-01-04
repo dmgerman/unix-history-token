@@ -139,7 +139,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bootcfg_verify
 argument_list|(
 name|__in
@@ -174,7 +174,7 @@ name|used
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Start parsing tags immediatly after the checksum */
@@ -349,7 +349,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -363,7 +363,7 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|efx_rc_t
 name|efx_bootcfg_read
 argument_list|(
 name|__in
@@ -395,7 +395,7 @@ decl_stmt|;
 name|size_t
 name|sector_length
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|rc
@@ -777,7 +777,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -791,7 +791,7 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|efx_rc_t
 name|efx_bootcfg_write
 argument_list|(
 name|__in
@@ -833,7 +833,7 @@ decl_stmt|;
 name|size_t
 name|remaining
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|rc
@@ -1221,7 +1221,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

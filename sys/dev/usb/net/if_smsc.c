@@ -6475,6 +6475,8 @@ operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_RXCSUM
+operator||
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|ifp
 operator|->
@@ -7122,6 +7124,14 @@ argument_list|(
 name|smsc
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|smsc_devs
 argument_list|)
 expr_stmt|;
 end_expr_stmt

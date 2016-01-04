@@ -64,7 +64,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_init
 parameter_list|(
 name|__in
@@ -91,7 +91,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_restore
 parameter_list|(
 name|__in
@@ -105,7 +105,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_add
 parameter_list|(
 name|__in
@@ -128,7 +128,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_delete
 parameter_list|(
 name|__in
@@ -147,7 +147,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_supported_filters
 parameter_list|(
 name|__in
@@ -317,7 +317,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_insert
 parameter_list|(
 name|__in
@@ -389,7 +389,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_remove
 parameter_list|(
 name|__in
@@ -472,7 +472,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_restore
 parameter_list|(
 name|__in
@@ -481,7 +481,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -526,7 +526,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -541,7 +541,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_init
 parameter_list|(
 name|__in
@@ -554,7 +554,7 @@ name|efx_filter_ops_t
 modifier|*
 name|efop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Check that efx_filter_spec_t is 64 bytes. */
@@ -728,7 +728,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -824,7 +824,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_supported_filters
 parameter_list|(
 name|__in
@@ -843,7 +843,7 @@ modifier|*
 name|length
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -925,7 +925,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -940,7 +940,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_reconfigure
 argument_list|(
 name|__in
@@ -988,7 +988,7 @@ name|int
 name|count
 argument_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1081,7 +1081,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1276,7 +1276,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_ipv4_local
 parameter_list|(
 name|__inout
@@ -1361,7 +1361,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_ipv4_full
 parameter_list|(
 name|__inout
@@ -1475,7 +1475,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_eth_local
 parameter_list|(
 name|__inout
@@ -1586,7 +1586,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_uc_def
 parameter_list|(
 name|__inout
@@ -1624,7 +1624,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_mc_def
 parameter_list|(
 name|__inout
@@ -1705,7 +1705,7 @@ end_define
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_spec_from_gen_spec
 parameter_list|(
 name|__out
@@ -1719,7 +1719,7 @@ modifier|*
 name|gen_spec
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|boolean_t
@@ -2367,7 +2367,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3706,7 +3706,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_push_entry
 parameter_list|(
 name|__inout
@@ -3728,7 +3728,7 @@ modifier|*
 name|eop
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 switch|switch
@@ -3970,7 +3970,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_search
 parameter_list|(
 name|__in
@@ -4327,7 +4327,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_init
 parameter_list|(
 name|__in
@@ -4347,7 +4347,7 @@ decl_stmt|;
 name|int
 name|tbl_id
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_KMEM_ALLOC
@@ -4705,7 +4705,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4937,7 +4937,7 @@ end_comment
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_restore
 parameter_list|(
 name|__in
@@ -4976,7 +4976,7 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_LOCK
@@ -5132,7 +5132,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5157,7 +5157,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_add
 parameter_list|(
 name|__in
@@ -5175,7 +5175,7 @@ name|boolean_t
 name|may_replace
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|falconsiena_filter_spec_t
@@ -5501,7 +5501,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5517,7 +5517,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_delete
 parameter_list|(
 name|__in
@@ -5531,7 +5531,7 @@ modifier|*
 name|spec
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|falconsiena_filter_spec_t
@@ -5553,10 +5553,6 @@ decl_stmt|;
 name|falconsiena_filter_tbl_t
 modifier|*
 name|fsftp
-decl_stmt|;
-name|falconsiena_filter_spec_t
-modifier|*
-name|saved_spec
 decl_stmt|;
 name|efx_oword_t
 name|filter
@@ -5670,16 +5666,6 @@ condition|)
 goto|goto
 name|fail2
 goto|;
-name|saved_spec
-operator|=
-operator|&
-name|fsftp
-operator|->
-name|fsft_spec
-index|[
-name|filter_idx
-index|]
-expr_stmt|;
 name|falconsiena_filter_clear_entry
 argument_list|(
 name|enp
@@ -5740,7 +5726,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5763,7 +5749,7 @@ end_define
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_filter_supported_filters
 parameter_list|(
 name|__in
@@ -5793,7 +5779,7 @@ index|[
 name|MAX_SUPPORTED
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if

@@ -195,9 +195,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|callout_execute
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|callout__start
 argument_list|,
 literal|"struct callout *"
@@ -209,9 +207,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|callout_execute
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|callout__end
 argument_list|,
 literal|"struct callout *"
@@ -582,6 +578,16 @@ name|callout
 modifier|*
 name|cc_curr
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|cc_drain
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -708,6 +714,18 @@ parameter_list|,
 name|dir
 parameter_list|)
 value|cc->cc_exec_entity[dir].cc_curr
+end_define
+
+begin_define
+define|#
+directive|define
+name|cc_exec_drain
+parameter_list|(
+name|cc
+parameter_list|,
+name|dir
+parameter_list|)
+value|cc->cc_exec_entity[dir].cc_drain
 end_define
 
 begin_define
@@ -3188,6 +3206,15 @@ argument_list|)
 operator|=
 name|false
 expr_stmt|;
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
 name|cc
@@ -3380,9 +3407,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|callout_execute
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|callout__start
 argument_list|,
 name|c
@@ -3396,9 +3421,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|callout_execute
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|callout__end
 argument_list|,
 name|c
@@ -3557,6 +3580,60 @@ argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+condition|)
+block|{
+name|void
+function_decl|(
+modifier|*
+name|drain
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|drain
+operator|=
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+expr_stmt|;
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+name|CC_UNLOCK
+argument_list|(
+name|cc
+argument_list|)
+expr_stmt|;
+name|drain
+argument_list|(
+name|c_arg
+argument_list|)
+expr_stmt|;
+name|CC_LOCK
+argument_list|(
+name|cc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cc_exec_waiting
@@ -5146,6 +5223,16 @@ name|c
 parameter_list|,
 name|int
 name|safe
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|drain
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -5418,6 +5505,7 @@ name|CALLOUT_PENDING
 operator|)
 condition|)
 block|{
+comment|/* 		 * If it wasn't on the queue and it isn't the current 		 * callout, then we can't stop it, so just bail. 		 * It probably has already been run (if locking 		 * is properly done). You could get here if the caller 		 * calls stop twice in a row for example. The second 		 * call would fall here without CALLOUT_ACTIVE set. 		 */
 name|c
 operator|->
 name|c_flags
@@ -5425,7 +5513,6 @@ operator|&=
 operator|~
 name|CALLOUT_ACTIVE
 expr_stmt|;
-comment|/* 		 * If it wasn't on the queue and it isn't the current 		 * callout, then we can't stop it, so just bail. 		 */
 if|if
 condition|(
 name|cc_exec_curr
@@ -5477,7 +5564,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -5620,9 +5708,15 @@ name|cc
 argument_list|,
 name|direct
 argument_list|)
+operator|&&
+operator|(
+name|drain
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
-comment|/* 			 * The current callout is waiting for its 			 * lock which we hold.  Cancel the callout 			 * and return.  After our caller drops the 			 * lock, the callout will be skipped in 			 * softclock(). 			 */
+comment|/* 			 * The current callout is waiting for its 			 * lock which we hold.  Cancel the callout 			 * and return.  After our caller drops the 			 * lock, the callout will be skipped in 			 * softclock(). This *only* works with a 			 * callout_stop() *not* callout_drain() or 			 * callout_async_drain(). 			 */
 name|cc_exec_cancel
 argument_list|(
 name|cc
@@ -5836,6 +5930,21 @@ operator|->
 name|c_arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drain
+condition|)
+block|{
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+operator|=
+name|drain
+expr_stmt|;
+block|}
 name|CC_UNLOCK
 argument_list|(
 name|cc
@@ -5864,6 +5973,21 @@ operator|->
 name|c_arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drain
+condition|)
+block|{
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+operator|=
+name|drain
+expr_stmt|;
+block|}
 name|CC_UNLOCK
 argument_list|(
 name|cc

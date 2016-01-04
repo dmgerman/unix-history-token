@@ -240,32 +240,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*---------------------------- Extern Declarations ---------------------------*/
-end_comment
-
-begin_comment
-comment|/* Variables used by mp_machdep to perform the MMU related IPIs */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__amd64__
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pmap_pcid_enabled
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*---------------------------------- Macros ----------------------------------*/
 end_comment
 

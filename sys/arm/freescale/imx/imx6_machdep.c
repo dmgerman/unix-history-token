@@ -148,6 +148,12 @@ name|gpio1_node
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_comment
 comment|/*  * Work around the linux workaround for imx6 erratum 006687, in which some  * ethernet interrupts don't go to the GPC and thus won't wake the system from  * Wait mode. We don't use Wait mode (which halts the GIC, leaving only GPC  * interrupts able to wake the system), so we don't experience the bug at all.  * The linux workaround is to reconfigure GPIO1_6 as the ENET interrupt by  * writing magic values to an undocumented IOMUX register, then letting the gpio  * interrupt driver notify the ethernet driver.  We'll be able to do all that  * (even though we don't need to) once the INTRNG project is committed and the  * imx_gpio driver becomes an interrupt driver.  Until then, this crazy little  * workaround watches for requests to map an interrupt 6 with the interrupt  * controller node referring to gpio1, and it substitutes the proper ffec  * interrupt number.  */
 end_comment
@@ -251,6 +257,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|vm_offset_t
@@ -301,6 +312,17 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
+specifier|const
+name|uint32_t
+name|IMX6_WDOG_SR_PHYS
+init|=
+literal|0x020bc004
+decl_stmt|;
+name|imx_wdog_init_last_reset
+argument_list|(
+name|IMX6_WDOG_SR_PHYS
+argument_list|)
+expr_stmt|;
 comment|/* Cache the gpio1 node handle for imx6_decode_fdt() workaround code. */
 name|gpio1_node
 operator|=

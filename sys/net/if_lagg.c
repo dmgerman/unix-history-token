@@ -530,6 +530,8 @@ modifier|*
 parameter_list|,
 name|uint8_t
 modifier|*
+parameter_list|,
+name|lagg_llqtype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3148,6 +3150,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|LAGG_UNLOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifmedia_removeall
 argument_list|(
 operator|&
@@ -3209,8 +3216,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Set link-layer address on the lagg interface itself.  *   * Set noinline to be dtrace-friendly  */
+end_comment
+
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|lagg_lladdr
 parameter_list|(
@@ -3277,6 +3289,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Send notification request for lagg interface 	 * itself. Note that new lladdr is already set. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -3302,12 +3315,15 @@ name|lp_softc
 operator|=
 name|sc
 expr_stmt|;
+comment|/* Do not request lladdr change */
 name|lagg_port_lladdr
 argument_list|(
 operator|&
 name|lp
 argument_list|,
 name|lladdr
+argument_list|,
+name|LAGG_LLQTYPE_VIRT
 argument_list|)
 expr_stmt|;
 block|}
@@ -3550,8 +3566,13 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Enqueue interface lladdr notification.  * If request is already queued, it is updated.  * If setting lladdr is also desired, @do_change has to be set to 1.  *  * Set noinline to be dtrace-friendly  */
+end_comment
+
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|lagg_port_lladdr
 parameter_list|(
@@ -3563,6 +3584,9 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|lladdr
+parameter_list|,
+name|lagg_llqtype
+name|llq_type
 parameter_list|)
 block|{
 name|struct
@@ -3588,60 +3612,31 @@ name|lagg_llq
 modifier|*
 name|llq
 decl_stmt|;
-name|int
-name|pending
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|primary
-decl_stmt|;
 name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|primary
-operator|=
-operator|(
-name|sc
-operator|->
-name|sc_primary
-operator|->
-name|lp_ifp
-operator|==
-name|ifp
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-expr_stmt|;
+comment|/* 	 * Do not enqueue requests where lladdr is the same for 	 * "physical" interfaces (e.g. ports in lagg) 	 */
 if|if
 condition|(
-name|primary
+name|llq_type
 operator|==
-literal|0
+name|LAGG_LLQTYPE_PHYS
 operator|&&
-operator|(
-name|lp
-operator|->
-name|lp_detaching
-operator|||
 name|memcmp
 argument_list|(
-name|lladdr
-argument_list|,
 name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
 argument_list|,
+name|lladdr
+argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 return|return;
 comment|/* Check to make sure its not already queued to be changed */
@@ -3661,27 +3656,23 @@ operator|->
 name|llq_ifp
 operator|==
 name|ifp
-operator|&&
+condition|)
+block|{
+comment|/* Update lladdr, it may have changed */
+name|bcopy
+argument_list|(
+name|lladdr
+argument_list|,
 name|llq
 operator|->
-name|llq_primary
-operator|==
-name|primary
-condition|)
-block|{
-name|pending
-operator|=
-literal|1
+name|llq_lladdr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|pending
-condition|)
-block|{
 name|llq
 operator|=
 name|malloc
@@ -3695,6 +3686,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3705,8 +3698,6 @@ name|NULL
 condition|)
 comment|/* XXX what to do */
 return|return;
-block|}
-comment|/* Update the lladdr even if pending, it may have changed */
 name|llq
 operator|->
 name|llq_ifp
@@ -3715,9 +3706,9 @@ name|ifp
 expr_stmt|;
 name|llq
 operator|->
-name|llq_primary
+name|llq_type
 operator|=
-name|primary
+name|llq_type
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -3730,11 +3721,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pending
-condition|)
+comment|/* XXX: We should insert to tail */
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3761,11 +3748,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the interface MAC address from a taskqueue to avoid a LOR.  */
+comment|/*  * Set the interface MAC address from a taskqueue to avoid a LOR.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|lagg_port_setlladdr
 parameter_list|(
@@ -3801,9 +3789,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 comment|/* Grab a local reference of the queue and remove it from the softc */
 name|LAGG_WLOCK
@@ -3865,18 +3850,15 @@ operator|->
 name|if_vnet
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Set the link layer address on the laggport interface. 		 * Note that if_setlladdr() or iflladdr_event handler 		 * may result in arp transmission / lltable updates. 		 */
 if|if
 condition|(
 name|llq
 operator|->
-name|llq_primary
+name|llq_type
 operator|==
-literal|0
+name|LAGG_LLQTYPE_PHYS
 condition|)
-block|{
-comment|/* 			 * Set the link layer address on the laggport interface. 			 * if_setlladdr() triggers gratuitous ARPs for INET. 			 */
-name|error
-operator|=
 name|if_setlladdr
 argument_list|(
 name|ifp
@@ -3888,22 +3870,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|printf
-argument_list|(
-literal|"%s: setlladdr failed on %s\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -4041,6 +4007,12 @@ operator|->
 name|if_type
 operator|!=
 name|IFT_ETHER
+operator|&&
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_L2VLAN
 condition|)
 return|return
 operator|(
@@ -4302,6 +4274,7 @@ name|sc_primary
 operator|=
 name|lp
 expr_stmt|;
+comment|/* First port in lagg. Update/notify lagg lladdress */
 name|lagg_lladdr
 argument_list|(
 name|sc
@@ -4315,7 +4288,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Update link layer address for this port */
+comment|/* 		 * Update link layer address for this port and 		 * send notifications to other subsystems. 		 */
 name|lagg_port_lladdr
 argument_list|(
 name|lp
@@ -4326,6 +4299,8 @@ name|sc
 operator|->
 name|sc_ifp
 argument_list|)
+argument_list|,
+name|LAGG_LLQTYPE_PHYS
 argument_list|)
 expr_stmt|;
 block|}
@@ -4710,6 +4685,8 @@ argument_list|,
 name|lp
 operator|->
 name|lp_lladdr
+argument_list|,
+name|LAGG_LLQTYPE_PHYS
 argument_list|)
 expr_stmt|;
 block|}
@@ -4879,7 +4856,14 @@ argument_list|,
 name|lladdr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Update link layer address for each port.  No port is 		 * marked as primary at this moment. 		 */
+comment|/* Mark lp0 as new primary */
+name|sc
+operator|->
+name|sc_primary
+operator|=
+name|lp0
+expr_stmt|;
+comment|/* 		 * Enqueue lladdr update/notification for each port 		 * (new primary needs update as well, to switch from 		 * old lladdr to its 'real' one). 		 */
 name|SLIST_FOREACH
 argument_list|(
 argument|lp_ptr
@@ -4893,20 +4877,8 @@ argument_list|(
 name|lp_ptr
 argument_list|,
 name|lladdr
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Mark lp0 as the new primary.  This invokes an 		 * iflladdr_event. 		 */
-name|sc
-operator|->
-name|sc_primary
-operator|=
-name|lp0
-expr_stmt|;
-name|lagg_port_lladdr
-argument_list|(
-name|lp0
 argument_list|,
-name|lladdr
+name|LAGG_LLQTYPE_PHYS
 argument_list|)
 expr_stmt|;
 block|}
@@ -5853,11 +5825,6 @@ operator|)
 name|xsc
 decl_stmt|;
 name|struct
-name|lagg_port
-modifier|*
-name|lp
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -5865,6 +5832,11 @@ init|=
 name|sc
 operator|->
 name|sc_ifp
+decl_stmt|;
+name|struct
+name|lagg_port
+modifier|*
+name|lp
 decl_stmt|;
 if|if
 condition|(
@@ -5886,7 +5858,7 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
-comment|/* Update the port lladdrs */
+comment|/* 	 * Update the port lladdrs if needed. 	 * This might be if_setlladdr() notification 	 * that lladdr has been changed. 	 */
 name|SLIST_FOREACH
 argument_list|(
 argument|lp
@@ -5903,6 +5875,8 @@ name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
+argument_list|,
+name|LAGG_LLQTYPE_PHYS
 argument_list|)
 expr_stmt|;
 name|lagg_proto_init
@@ -6371,6 +6345,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|lagg_proto_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|LAGG_UNLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)

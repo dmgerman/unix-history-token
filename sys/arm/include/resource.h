@@ -75,6 +75,28 @@ begin_comment
 comment|/* general purpose i/o */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCI_RES_BUS
+value|6
+end_define
+
+begin_comment
+comment|/* PCI bus numbers */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

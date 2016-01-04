@@ -355,11 +355,19 @@ directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MPC85XX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|QORIQ_DPAA
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -533,9 +541,9 @@ begin_function_decl
 name|uintptr_t
 name|booke_init
 parameter_list|(
-name|uint32_t
+name|u_long
 parameter_list|,
-name|uint32_t
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -609,6 +617,14 @@ begin_decl_stmt
 specifier|extern
 name|void
 modifier|*
+name|int_fpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
 name|int_program
 decl_stmt|;
 end_decl_stmt
@@ -666,6 +682,22 @@ specifier|extern
 name|void
 modifier|*
 name|int_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|int_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|int_vecast
 decl_stmt|;
 end_decl_stmt
 
@@ -735,6 +767,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|cpu_features
+operator||=
+name|PPC_FEATURE_BOOKE
+expr_stmt|;
 name|pmap_mmu_install
 argument_list|(
 name|MMU_TYPE_BOOKE
@@ -877,6 +913,50 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+switch|switch
+condition|(
+operator|(
+name|mfpvr
+argument_list|()
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
+condition|)
+block|{
+case|case
+name|FSL_E6500
+case|:
+name|SET_TRAP
+argument_list|(
+name|SPR_IVOR32
+argument_list|,
+name|int_vec
+argument_list|)
+expr_stmt|;
+name|SET_TRAP
+argument_list|(
+name|SPR_IVOR33
+argument_list|,
+name|int_vecast
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|FSL_E500mc
+case|:
+case|case
+name|FSL_E5500
+case|:
+name|SET_TRAP
+argument_list|(
+name|SPR_IVOR7
+argument_list|,
+name|int_fpu
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -959,10 +1039,10 @@ begin_function
 name|uintptr_t
 name|booke_init
 parameter_list|(
-name|uint32_t
+name|u_long
 name|arg1
 parameter_list|,
-name|uint32_t
+name|u_long
 name|arg2
 parameter_list|)
 block|{
@@ -1018,7 +1098,7 @@ expr_stmt|;
 name|tlb1_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Handle the various ways we can get loaded and started: 	 *  -	FreeBSD's loader passes the pointer to the metadata 	 *	in arg1, with arg2 undefined. arg1 has a value that's 	 *	relative to the kernel's link address (i.e. larger 	 *	than 0xc0000000). 	 *  -	Juniper's loader passes the metadata pointer in arg2 	 *	and sets arg1 to zero. This is to signal that the 	 *	loader maps the kernel and starts it at its link 	 *	address (unlike the FreeBSD loader). 	 *  -	U-Boot passes the standard argc and argv parameters 	 *	in arg1 and arg2 (resp). arg1 is between 1 and some 	 *	relatively small number, such as 64K. arg2 is the 	 *	physical address of the argv vector. 	 *  -   ePAPR loaders pass an FDT blob in r3 (arg1) and the magic hex 	 *      string 0x45504150 ('ePAP') in r6 (which has been lost by now). 	 *      r4 (arg2) is supposed to be set to zero, but is not always. 	 */
+comment|/* 	 * Handle the various ways we can get loaded and started: 	 *  -	FreeBSD's loader passes the pointer to the metadata 	 *	in arg1, with arg2 undefined. arg1 has a value that's 	 *	relative to the kernel's link address (i.e. larger 	 *	than 0xc0000000). 	 *  -	Juniper's loader passes the metadata pointer in arg2 	 *	and sets arg1 to zero. This is to signal that the 	 *	loader maps the kernel and starts it at its link 	 *	address (unlike the FreeBSD loader). 	 *  -	U-Boot passes the standard argc and argv parameters 	 *	in arg1 and arg2 (resp). arg1 is between 1 and some 	 *	relatively small number, such as 64K. arg2 is the 	 *	physical address of the argv vector. 	 *  -   ePAPR loaders pass an FDT blob in r3 (arg1) and the magic hex 	 *      string 0x45504150 ('EPAP') in r6 (which has been lost by now). 	 *      r4 (arg2) is supposed to be set to zero, but is not always. 	 */
 if|if
 condition|(
 name|arg1
@@ -1131,10 +1211,32 @@ name|mdp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Reset TLB1 to get rid of temporary mappings */
-name|tlb1_init
+comment|/* Default to 32 byte cache line size. */
+switch|switch
+condition|(
+operator|(
+name|mfpvr
 argument_list|()
+operator|)
+operator|>>
+literal|16
+condition|)
+block|{
+case|case
+name|FSL_E500mc
+case|:
+case|case
+name|FSL_E5500
+case|:
+case|case
+name|FSL_E6500
+case|:
+name|cacheline_size
+operator|=
+literal|64
 expr_stmt|;
+break|break;
+block|}
 name|ret
 operator|=
 name|powerpc_init
@@ -1148,8 +1250,14 @@ argument_list|,
 name|mdp
 argument_list|)
 expr_stmt|;
-comment|/* Enable L1 caches */
+comment|/* Enable caches */
 name|booke_enable_l1_cache
+argument_list|()
+expr_stmt|;
+name|booke_enable_l2_cache
+argument_list|()
+expr_stmt|;
+name|booke_enable_bpred
 argument_list|()
 expr_stmt|;
 return|return

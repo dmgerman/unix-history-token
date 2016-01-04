@@ -130,6 +130,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ng_hci_lp_enc_change
+parameter_list|(
+name|ng_hci_unit_con_p
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ng_hci_process_con_timeout
 parameter_list|(

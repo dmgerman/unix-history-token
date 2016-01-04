@@ -2812,12 +2812,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * tlsv1_client_get_keys - Get master key and random data from TLS connection  * @conn: TLSv1 client connection data from tlsv1_client_init()  * @keys: Structure of key/random data (filled on success)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * tlsv1_client_get_random - Get random data from TLS connection  * @conn: TLSv1 client connection data from tlsv1_client_init()  * @keys: Structure of random data (filled on success)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
 name|int
-name|tlsv1_client_get_keys
+name|tlsv1_client_get_random
 parameter_list|(
 name|struct
 name|tlsv1_client
@@ -2825,7 +2825,7 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|tls_keys
+name|tls_random
 modifier|*
 name|keys
 parameter_list|)
@@ -2891,20 +2891,6 @@ operator|->
 name|server_random_len
 operator|=
 name|TLS_RANDOM_LEN
-expr_stmt|;
-name|keys
-operator|->
-name|master_key
-operator|=
-name|conn
-operator|->
-name|master_secret
-expr_stmt|;
-name|keys
-operator|->
-name|master_key_len
-operator|=
-name|TLS_MASTER_SECRET_LEN
 expr_stmt|;
 block|}
 return|return

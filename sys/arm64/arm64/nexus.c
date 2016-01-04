@@ -623,13 +623,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|devclass_t
-name|nexus_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|driver_t
 name|nexus_driver
 init|=
@@ -643,24 +636,6 @@ comment|/* no softc */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|nexus
-argument_list|,
-name|root
-argument_list|,
-name|nexus_driver
-argument_list|,
-name|nexus_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -1795,7 +1770,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|nexus_fdt
 argument_list|,
@@ -1808,6 +1783,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_BUS
+operator|+
+name|BUS_PASS_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2028,7 +2007,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|nexus_acpi
 argument_list|,
@@ -2041,6 +2020,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_BUS
+operator|+
+name|BUS_PASS_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt

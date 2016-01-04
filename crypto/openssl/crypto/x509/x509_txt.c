@@ -524,6 +524,78 @@ operator|(
 literal|"CRL path validation error"
 operator|)
 return|;
+case|case
+name|X509_V_ERR_SUITE_B_INVALID_VERSION
+case|:
+return|return
+operator|(
+literal|"Suite B: certificate version invalid"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_SUITE_B_INVALID_ALGORITHM
+case|:
+return|return
+operator|(
+literal|"Suite B: invalid public key algorithm"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_SUITE_B_INVALID_CURVE
+case|:
+return|return
+operator|(
+literal|"Suite B: invalid ECC curve"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_SUITE_B_INVALID_SIGNATURE_ALGORITHM
+case|:
+return|return
+operator|(
+literal|"Suite B: invalid signature algorithm"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_SUITE_B_LOS_NOT_ALLOWED
+case|:
+return|return
+operator|(
+literal|"Suite B: curve not allowed for this LOS"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_SUITE_B_CANNOT_SIGN_P_384_WITH_P_256
+case|:
+return|return
+operator|(
+literal|"Suite B: cannot sign P-384 with P-256"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_HOSTNAME_MISMATCH
+case|:
+return|return
+operator|(
+literal|"Hostname mismatch"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_EMAIL_MISMATCH
+case|:
+return|return
+operator|(
+literal|"Email address mismatch"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_IP_ADDRESS_MISMATCH
+case|:
+return|return
+operator|(
+literal|"IP address mismatch"
+operator|)
+return|;
 default|default:
 name|BIO_snprintf
 argument_list|(

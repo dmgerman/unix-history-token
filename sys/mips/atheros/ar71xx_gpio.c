@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/qca953xreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/qca955xreg.h>
 end_include
 
@@ -441,6 +447,7 @@ name|uint32_t
 name|mask
 parameter_list|)
 block|{
+comment|/* 	 * XXX TODO: refactor this out into a per-chipset method. 	 */
 if|if
 condition|(
 name|ar71xx_soc
@@ -454,6 +461,14 @@ operator|||
 name|ar71xx_soc
 operator|==
 name|AR71XX_SOC_AR9344
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9533
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9533_V2
 operator|||
 name|ar71xx_soc
 operator|==
@@ -499,6 +514,7 @@ name|uint32_t
 name|mask
 parameter_list|)
 block|{
+comment|/* 	 * XXX TODO: refactor this out into a per-chipset method. 	 */
 if|if
 condition|(
 name|ar71xx_soc
@@ -512,6 +528,14 @@ operator|||
 name|ar71xx_soc
 operator|==
 name|AR71XX_SOC_AR9344
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9533
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9533_V2
 operator|||
 name|ar71xx_soc
 operator|==
@@ -749,6 +773,20 @@ operator|*
 name|maxpin
 operator|=
 name|AR934X_GPIO_COUNT
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|AR71XX_SOC_QCA9533
+case|:
+case|case
+name|AR71XX_SOC_QCA9533_V2
+case|:
+operator|*
+name|maxpin
+operator|=
+name|QCA953X_GPIO_COUNT
 operator|-
 literal|1
 expr_stmt|;

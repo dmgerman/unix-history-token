@@ -1968,6 +1968,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -427,7 +427,7 @@ name|iswalnum
 parameter_list|(
 name|wc
 parameter_list|)
-value|__istype((wc), _CTYPE_A|_CTYPE_D)
+value|__istype((wc), _CTYPE_A|_CTYPE_D|_CTYPE_N)
 end_define
 
 begin_define
@@ -479,7 +479,7 @@ name|iswdigit
 parameter_list|(
 name|wc
 parameter_list|)
-value|__isctype((wc), _CTYPE_D)
+value|__istype((wc), _CTYPE_D)
 end_define
 
 begin_define
@@ -549,7 +549,7 @@ name|iswxdigit
 parameter_list|(
 name|wc
 parameter_list|)
-value|__isctype((wc), _CTYPE_X)
+value|__istype((wc), _CTYPE_X)
 end_define
 
 begin_define
@@ -598,6 +598,10 @@ parameter_list|)
 value|__istype((wc), _CTYPE_X)
 end_define
 
+begin_comment
+comment|/* alias of iswxdigit */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -615,7 +619,7 @@ name|iswnumber
 parameter_list|(
 name|wc
 parameter_list|)
-value|__istype((wc), _CTYPE_D)
+value|__istype((wc), _CTYPE_D|_CTYPE_N)
 end_define
 
 begin_define

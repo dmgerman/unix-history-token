@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_pmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -98,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/xen-os.h>
 end_include
 
@@ -148,20 +148,6 @@ include|#
 directive|include
 file|<vm/pmap.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|cmpxchg
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|atomic_cmpset_int((volatile u_int *)(a),(b),(c))
-end_define
 
 begin_comment
 comment|/* External tools reserve first few grant table entries. */
@@ -1202,7 +1188,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|cpu_relax
+name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
@@ -1226,7 +1212,7 @@ index|]
 operator|.
 name|flags
 expr_stmt|;
-name|cpu_relax
+name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}

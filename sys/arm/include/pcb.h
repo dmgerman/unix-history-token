@@ -59,19 +59,11 @@ name|caddr_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* On fault handler */
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-name|uint32_t
-name|pcb_pagedir
-decl_stmt|;
-comment|/* TTB0 value */
-else|#
-directive|else
 name|vm_offset_t
 name|pcb_pagedir
 decl_stmt|;
-comment|/* PT hooks */
+comment|/* TTB0 value */
+comment|/* 	 * XXX: 	 * Variables pcb_pl1vec, pcb_l1vec, pcb_dacr are used solely 	 * by old PMAP. Keep them here for PCB binary compatibility 	 * between old and new PMAP. 	 */
 name|uint32_t
 modifier|*
 name|pcb_pl1vec
@@ -85,8 +77,6 @@ name|u_int
 name|pcb_dacr
 decl_stmt|;
 comment|/* Domain Access Control Reg */
-endif|#
-directive|endif
 name|struct
 name|vfp_state
 name|pcb_vfpstate
@@ -105,7 +95,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and ARM ABI require it 		 * to by aligned on 8 bytes. 		 */
+comment|/* 		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and ARM ABI require it 		 * to by aligned on 8 bytes. 		 */
 end_comment
 
 begin_comment

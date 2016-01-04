@@ -238,7 +238,7 @@ typedef|typedef
 struct|struct
 name|efx_ev_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eevo_init
@@ -258,7 +258,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eevo_qcreate
@@ -291,7 +291,7 @@ name|efx_evq_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eevo_qprime
@@ -316,7 +316,7 @@ parameter_list|,
 name|uint16_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eevo_qmoderate
@@ -354,7 +354,7 @@ typedef|typedef
 struct|struct
 name|efx_tx_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_init
@@ -374,7 +374,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qcreate
@@ -419,7 +419,7 @@ name|efx_txq_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qpost
@@ -458,7 +458,7 @@ name|unsigned
 name|int
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qpace
@@ -471,7 +471,7 @@ name|unsigned
 name|int
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qflush
@@ -491,7 +491,7 @@ name|efx_txq_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qpio_enable
@@ -511,7 +511,7 @@ name|efx_txq_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qpio_write
@@ -528,7 +528,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qpio_post
@@ -547,7 +547,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|etxo_qdesc_post
@@ -648,7 +648,7 @@ typedef|typedef
 struct|struct
 name|efx_rx_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_init
@@ -671,7 +671,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_RX_HDR_SPLIT
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_hdr_split_enable
@@ -692,7 +692,7 @@ directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCATTER
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_scatter_enable
@@ -710,7 +710,7 @@ directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCALE
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_scale_mode_set
@@ -726,7 +726,7 @@ parameter_list|,
 name|boolean_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_scale_key_set
@@ -741,7 +741,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_scale_tbl_set
@@ -800,7 +800,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_qflush
@@ -820,7 +820,7 @@ name|efx_rxq_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|erxo_qcreate
@@ -869,7 +869,7 @@ typedef|typedef
 struct|struct
 name|efx_mac_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_reset
@@ -880,7 +880,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* optional */
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_poll
@@ -893,7 +893,7 @@ name|efx_link_mode_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_up
@@ -906,7 +906,7 @@ name|boolean_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_addr_set
@@ -916,7 +916,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_reconfigure
@@ -926,7 +926,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_multicast_list_set
@@ -936,7 +936,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_filter_default_rxq_set
@@ -964,7 +964,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_LOOPBACK
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_loopback_set
@@ -984,7 +984,7 @@ comment|/* EFSYS_OPT_LOOPBACK */
 if|#
 directive|if
 name|EFSYS_OPT_MAC_STATS
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_stats_upload
@@ -997,7 +997,7 @@ name|efsys_mem_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_stats_periodic
@@ -1014,7 +1014,7 @@ parameter_list|,
 name|boolean_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_stats_update
@@ -1043,7 +1043,7 @@ typedef|typedef
 struct|struct
 name|efx_phy_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_power
@@ -1056,7 +1056,7 @@ name|boolean_t
 parameter_list|)
 function_decl|;
 comment|/* optional */
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_reset
@@ -1066,7 +1066,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_reconfigure
@@ -1076,7 +1076,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_verify
@@ -1086,7 +1086,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_uplink_check
@@ -1100,7 +1100,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* optional */
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_downlink_check
@@ -1120,7 +1120,7 @@ name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_oui_get
@@ -1136,7 +1136,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_PHY_STATS
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_stats_update
@@ -1179,7 +1179,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_prop_get
@@ -1197,7 +1197,7 @@ name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_prop_set
@@ -1218,7 +1218,7 @@ comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
 name|EFSYS_OPT_BIST
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_bist_enable_offline
@@ -1228,7 +1228,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_bist_start
@@ -1240,7 +1240,7 @@ parameter_list|,
 name|efx_bist_type_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epo_bist_poll
@@ -1289,7 +1289,7 @@ typedef|typedef
 struct|struct
 name|efx_filter_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|efo_init
@@ -1309,7 +1309,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|efo_restore
@@ -1319,7 +1319,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|efo_add
@@ -1335,7 +1335,7 @@ name|boolean_t
 name|may_replace
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|efo_delete
@@ -1348,7 +1348,7 @@ name|efx_filter_spec_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|efo_supported_filters
@@ -1364,7 +1364,7 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|efo_reconfigure
@@ -1397,7 +1397,7 @@ name|efx_filter_ops_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_reconfigure
 argument_list|(
 name|__in
@@ -1452,7 +1452,7 @@ typedef|typedef
 struct|struct
 name|efx_pktfilter_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epfo_set
@@ -1471,7 +1471,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_MCAST_FILTER_LIST
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epfo_mcast_list_set
@@ -1492,7 +1492,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MCAST_FILTER_LIST */
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|epfo_mcast_all
@@ -1684,7 +1684,7 @@ typedef|typedef
 struct|struct
 name|efx_mon_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_reset
@@ -1694,7 +1694,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_reconfigure
@@ -1707,7 +1707,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emo_stats_update
@@ -1747,7 +1747,7 @@ typedef|typedef
 struct|struct
 name|efx_intr_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eio_init
@@ -1792,7 +1792,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eio_trigger
@@ -1844,7 +1844,7 @@ typedef|typedef
 struct|struct
 name|efx_nic_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_probe
@@ -1854,7 +1854,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_set_drv_limits
@@ -1867,7 +1867,7 @@ name|efx_drv_limits_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_reset
@@ -1877,7 +1877,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_init
@@ -1887,7 +1887,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_get_vi_pool
@@ -1900,7 +1900,7 @@ name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_get_bar_region
@@ -1921,7 +1921,7 @@ function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_sram_test
@@ -1933,7 +1933,7 @@ parameter_list|,
 name|efx_sram_pattern_fn_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|eno_register_test
@@ -2198,7 +2198,7 @@ typedef|typedef
 struct|struct
 name|efx_mcdi_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emco_init
@@ -2232,16 +2232,6 @@ parameter_list|,
 name|boolean_t
 parameter_list|)
 function_decl|;
-name|boolean_t
-function_decl|(
-modifier|*
-name|emco_request_poll
-function_decl|)
-parameter_list|(
-name|efx_nic_t
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 function_decl|(
 modifier|*
@@ -2255,7 +2245,7 @@ name|efx_mcdi_req_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|emco_poll_reboot
@@ -2263,6 +2253,33 @@ function_decl|)
 parameter_list|(
 name|efx_nic_t
 modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+function_decl|(
+modifier|*
+name|emco_poll_response
+function_decl|)
+parameter_list|(
+name|efx_nic_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|emco_read_response
+function_decl|)
+parameter_list|(
+name|efx_nic_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 name|void
@@ -2275,27 +2292,16 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
-name|emco_fw_update_supported
+name|emco_feature_supported
 function_decl|)
 parameter_list|(
 name|efx_nic_t
 modifier|*
 parameter_list|,
-name|boolean_t
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|emco_macaddr_change_supported
-function_decl|)
-parameter_list|(
-name|efx_nic_t
-modifier|*
+name|efx_mcdi_feature_id_t
 parameter_list|,
 name|boolean_t
 modifier|*
@@ -2336,7 +2342,7 @@ block|{
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_test
@@ -2349,7 +2355,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_size
@@ -2364,7 +2370,7 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_get_version
@@ -2382,7 +2388,7 @@ name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_rw_start
@@ -2397,7 +2403,7 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_read_chunk
@@ -2416,7 +2422,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_erase
@@ -2428,7 +2434,7 @@ parameter_list|,
 name|efx_nvram_type_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_write_chunk
@@ -2459,7 +2465,7 @@ parameter_list|,
 name|efx_nvram_type_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_set_version
@@ -2487,7 +2493,7 @@ typedef|typedef
 struct|struct
 name|efx_vpd_ops_s
 block|{
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_init
@@ -2497,7 +2503,7 @@ name|efx_nic_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_size
@@ -2510,7 +2516,7 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_read
@@ -2524,7 +2530,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_verify
@@ -2538,7 +2544,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_reinit
@@ -2552,7 +2558,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_get
@@ -2569,7 +2575,7 @@ name|efx_vpd_value_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_set
@@ -2586,7 +2592,7 @@ name|efx_vpd_value_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_next
@@ -2607,7 +2613,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|evpdo_write
@@ -2643,7 +2649,7 @@ name|EFSYS_OPT_VPD
 operator|||
 name|EFSYS_OPT_NVRAM
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_partitions
 argument_list|(
 name|__in
@@ -2670,7 +2676,7 @@ name|npartnp
 argument_list|)
 decl_stmt|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_metadata
 argument_list|(
 name|__in
@@ -2711,7 +2717,7 @@ name|size
 argument_list|)
 decl_stmt|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_info
 parameter_list|(
 name|__in
@@ -2737,10 +2743,15 @@ name|__out_opt
 name|uint32_t
 modifier|*
 name|erase_sizep
+parameter_list|,
+name|__out_opt
+name|uint32_t
+modifier|*
+name|write_sizep
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_update_start
 parameter_list|(
 name|__in
@@ -2754,7 +2765,7 @@ name|partn
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_read
 argument_list|(
 name|__in
@@ -2783,7 +2794,7 @@ name|size
 argument_list|)
 decl_stmt|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_erase
 parameter_list|(
 name|__in
@@ -2805,7 +2816,7 @@ name|size
 parameter_list|)
 function_decl|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_write
 argument_list|(
 name|__in
@@ -2834,7 +2845,7 @@ name|size
 argument_list|)
 decl_stmt|;
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_update_finish
 parameter_list|(
 name|__in
@@ -2855,7 +2866,7 @@ if|#
 directive|if
 name|EFSYS_OPT_DIAG
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_test
 parameter_list|(
 name|__in
@@ -3689,7 +3700,7 @@ comment|/*						\ 			 * It is cheaper to sync entire map than sync	\ 			 * two p
 value|\ 			EFSYS_DMA_SYNC_FOR_DEVICE((_esmp),		\ 			    0,						\ 			    (_entries) * sizeof (efx_desc_t));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_biu_test
 parameter_list|(
 name|__in
@@ -3700,7 +3711,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_select
 parameter_list|(
 name|__in
@@ -3740,7 +3751,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_probe
 parameter_list|(
 name|__in
@@ -3765,7 +3776,7 @@ name|EFSYS_OPT_VPD
 comment|/* VPD utility functions */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_length
 argument_list|(
 name|__in_bcount
@@ -3787,7 +3798,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_verify
 argument_list|(
 name|__in_bcount
@@ -3809,7 +3820,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_reinit
 argument_list|(
 name|__in_bcount
@@ -3830,7 +3841,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_get
 argument_list|(
 name|__in_bcount
@@ -3866,7 +3877,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_next
 argument_list|(
 name|__in_bcount
@@ -3913,7 +3924,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_hunk_set
 argument_list|(
 name|__in_bcount
@@ -3968,7 +3979,7 @@ name|efx_register_set_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_test_registers
 parameter_list|(
 name|__in
@@ -3988,7 +3999,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_test_tables
 parameter_list|(
 name|__in
@@ -4018,7 +4029,7 @@ directive|if
 name|EFSYS_OPT_MCDI
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_set_workaround
 parameter_list|(
 name|__in
@@ -4042,7 +4053,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_workarounds
 parameter_list|(
 name|__in

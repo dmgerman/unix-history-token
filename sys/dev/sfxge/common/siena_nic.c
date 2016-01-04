@@ -50,7 +50,7 @@ end_if
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_get_partn_mask
 parameter_list|(
 name|__in
@@ -79,7 +79,7 @@ name|MC_CMD_NVRAM_TYPES_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -199,7 +199,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -220,7 +220,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_pcie_extended_sync
 parameter_list|(
 name|__in
@@ -229,7 +229,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -265,7 +265,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -290,7 +290,7 @@ end_comment
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_board_cfg
 parameter_list|(
 name|__in
@@ -329,7 +329,7 @@ name|nrxq
 decl_stmt|,
 name|ntxq
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* External port identifier using one-based port numbering */
@@ -594,6 +594,12 @@ name|enc_fw_assisted_tso_enabled
 operator|=
 name|B_FALSE
 expr_stmt|;
+name|encp
+operator|->
+name|enc_allow_set_mac_with_installed_filters
+operator|=
+name|B_TRUE
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -612,7 +618,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -628,7 +634,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_cfg
 parameter_list|(
 name|__in
@@ -648,7 +654,7 @@ operator|->
 name|en_nic_cfg
 operator|)
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Fill out fields in enp->en_port and enp->en_nic_cfg from MCDI */
@@ -704,7 +710,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -719,7 +725,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_probe
 parameter_list|(
 name|__in
@@ -760,7 +766,7 @@ decl_stmt|;
 name|efx_oword_t
 name|oword
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1190,7 +1196,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1205,7 +1211,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_reset
 parameter_list|(
 name|__in
@@ -1217,7 +1223,7 @@ block|{
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1354,7 +1360,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1482,7 +1488,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_init
 parameter_list|(
 name|__in
@@ -1491,7 +1497,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1556,6 +1562,14 @@ condition|)
 goto|goto
 name|fail2
 goto|;
+name|enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_mcdi_max_payload_length
+operator|=
+name|MCDI_CTL_SDU_LEN_MAX_V1
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1574,7 +1588,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2008,7 +2022,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_register_test
 parameter_list|(
 name|__in
@@ -2034,7 +2048,7 @@ name|unsigned
 name|int
 name|count
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Fill out the register mask entries */
@@ -2367,7 +2381,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

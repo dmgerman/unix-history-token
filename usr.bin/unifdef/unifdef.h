@@ -58,7 +58,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/* portabiity stubs */
+comment|/* portability stubs */
 end_comment
 
 begin_define

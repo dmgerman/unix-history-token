@@ -67,8 +67,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGE_RX_ALIGN
+name|ARGE_RX_ALIGN_4BYTE
 value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_RX_ALIGN_1BYTE
+value|sizeof(char)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_TX_ALIGN_4BYTE
+value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_TX_ALIGN_1BYTE
+value|sizeof(char)
 end_define
 
 begin_define
@@ -198,7 +219,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 	} while (0)
+value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 		ARGE_READ((sc), (reg)); \ 	} while (0)
 end_define
 
 begin_define
@@ -259,7 +280,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|do { \ 		ARGE_WRITE((_sc), (_reg), (_val)); \ 		ARGE_READ((_sc), (_reg)); \ 	} while (0)
+value|ARGE_WRITE((_sc), (_reg), (_val))
 end_define
 
 begin_define
@@ -302,7 +323,7 @@ name|ARGE_MDIO_BARRIER_RW
 parameter_list|(
 name|_sc
 parameter_list|)
-value|ARGE_BARRIER_READ_RW(_sc)
+value|ARGE_BARRIER_RW(_sc)
 end_define
 
 begin_define
@@ -496,6 +517,42 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Hardware specific behaviours.  */
+end_comment
+
+begin_comment
+comment|/*  * Older chips support 4 byte only transmit and receive  * addresses.  *  * Later chips support arbitrary TX and later later,  * arbitrary RX addresses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARGE_HW_FLG_TX_DESC_ALIGN_4BYTE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_HW_FLG_RX_DESC_ALIGN_4BYTE
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_HW_FLG_TX_DESC_ALIGN_1BYTE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_HW_FLG_RX_DESC_ALIGN_1BYTE
+value|0x00000008
+end_define
+
 begin_struct
 struct|struct
 name|arge_softc
@@ -601,6 +658,9 @@ name|int
 name|arge_if_flags
 decl_stmt|;
 name|uint32_t
+name|arge_hw_flags
+decl_stmt|;
+name|uint32_t
 name|arge_debug
 decl_stmt|;
 name|uint32_t
@@ -612,6 +672,15 @@ name|uint32_t
 name|tx_pkts_unaligned
 decl_stmt|;
 name|uint32_t
+name|tx_pkts_unaligned_start
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_unaligned_len
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_nosegs
+decl_stmt|;
+name|uint32_t
 name|tx_pkts_aligned
 decl_stmt|;
 name|uint32_t
@@ -620,8 +689,28 @@ decl_stmt|;
 name|uint32_t
 name|tx_underflow
 decl_stmt|;
+name|uint32_t
+name|intr_stray
+decl_stmt|;
+name|uint32_t
+name|intr_stray2
+decl_stmt|;
+name|uint32_t
+name|intr_ok
+decl_stmt|;
 block|}
 name|stats
+struct|;
+struct|struct
+block|{
+name|uint32_t
+name|count
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|intr_stats
 struct|;
 block|}
 struct|;

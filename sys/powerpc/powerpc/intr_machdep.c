@@ -1507,6 +1507,19 @@ name|npics
 operator|++
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|npics
+operator|<
+name|MAX_PICS
+argument_list|,
+operator|(
+literal|"Number of PICs exceeds maximum (%d)"
+operator|,
+name|MAX_PICS
+operator|)
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1645,6 +1658,19 @@ literal|128
 expr_stmt|;
 name|npics
 operator|++
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|npics
+operator|<
+name|MAX_PICS
+argument_list|,
+operator|(
+literal|"Number of PICs exceeds maximum (%d)"
+operator|,
+name|MAX_PICS
+operator|)
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

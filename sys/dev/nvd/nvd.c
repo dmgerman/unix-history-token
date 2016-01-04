@@ -1131,6 +1131,15 @@ argument_list|(
 name|ns
 argument_list|)
 expr_stmt|;
+name|disk
+operator|->
+name|d_stripesize
+operator|=
+name|nvme_ns_get_optimal_sector_size
+argument_list|(
+name|ns
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TAILQ_EMPTY

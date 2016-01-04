@@ -582,6 +582,12 @@ directive|define
 name|__checkReturn
 define|#
 directive|define
+name|__success
+parameter_list|(
+name|_x
+parameter_list|)
+define|#
+directive|define
 name|__drv_when
 parameter_list|(
 name|_p
@@ -628,6 +634,14 @@ define|#
 directive|define
 name|EFSYS_OPT_MCDI
 value|1
+define|#
+directive|define
+name|EFSYS_OPT_MCDI_LOGGING
+value|0
+define|#
+directive|define
+name|EFSYS_OPT_MCDI_PROXY_AUTH
+value|0
 define|#
 directive|define
 name|EFSYS_OPT_MAC_FALCON_GMAC

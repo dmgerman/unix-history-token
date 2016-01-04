@@ -551,6 +551,49 @@ name|ipheth_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|STRUCT_USB_HOST_ID
+name|ipheth_devs
+index|[]
+init|=
+block|{
+if|#
+directive|if
+literal|0
+block|{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_3G, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_3GS, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_4, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_4S, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_5, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)},
+else|#
+directive|else
+comment|/* product agnostic interface match */
+block|{
+name|USB_VENDOR
+argument_list|(
+name|USB_VENDOR_APPLE
+argument_list|)
+block|,
+name|USB_IFACE_CLASS
+argument_list|(
+name|IPHETH_USBINTF_CLASS
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|IPHETH_USBINTF_SUBCLASS
+argument_list|)
+block|,
+name|USB_IFACE_PROTOCOL
+argument_list|(
+argument|IPHETH_USBINTF_PROTO
+argument_list|)
+block|}
+block|,
+endif|#
+directive|endif
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -627,6 +670,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|ipheth_devs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -691,49 +742,6 @@ parameter_list|)
 define|\
 value|USB_VENDOR(v), USB_PRODUCT(p), \     USB_IFACE_CLASS(c), USB_IFACE_SUBCLASS(sc), \     USB_IFACE_PROTOCOL(pt)
 end_define
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|STRUCT_USB_HOST_ID
-name|ipheth_devs
-index|[]
-init|=
-block|{
-if|#
-directive|if
-literal|0
-block|{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_3G, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_3GS, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_4, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_4S, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)}, 	{IPHETH_ID(USB_VENDOR_APPLE, USB_PRODUCT_APPLE_IPHONE_5, 	    IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS, 	    IPHETH_USBINTF_PROTO)},
-else|#
-directive|else
-comment|/* product agnostic interface match */
-block|{
-name|USB_VENDOR
-argument_list|(
-name|USB_VENDOR_APPLE
-argument_list|)
-block|,
-name|USB_IFACE_CLASS
-argument_list|(
-name|IPHETH_USBINTF_CLASS
-argument_list|)
-block|,
-name|USB_IFACE_SUBCLASS
-argument_list|(
-name|IPHETH_USBINTF_SUBCLASS
-argument_list|)
-block|,
-name|USB_IFACE_PROTOCOL
-argument_list|(
-argument|IPHETH_USBINTF_PROTO
-argument_list|)
-block|}
-block|,
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static

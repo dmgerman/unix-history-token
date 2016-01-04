@@ -132,7 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/etherswitch/mdio.h>
+file|<dev/mdio/mdio.h>
 end_include
 
 begin_include
@@ -194,6 +194,10 @@ include|#
 directive|include
 file|"etherswitch_if.h"
 end_include
+
+begin_comment
+comment|/*  * AR8327 TODO:  *  * There should be a default hardware setup hint set for the default  * switch config.  Otherwise the default is "all ports in one vlangroup",  * which means both CPU ports can see each other and that will quickly  * lead to traffic storms/loops.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3493,15 +3497,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If dot1q - set pvid; dot1q, etc. 	 */
-name|sc
-operator|->
-name|vid
-index|[
-literal|0
-index|]
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3511,6 +3506,15 @@ operator|==
 name|ETHERSWITCH_VLAN_DOT1Q
 condition|)
 block|{
+name|sc
+operator|->
+name|vid
+index|[
+literal|0
+index|]
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i

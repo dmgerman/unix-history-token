@@ -1303,12 +1303,7 @@ comment|/* max backlog */
 argument_list|)
 operator|<
 literal|0
-condition|)
-goto|goto
-name|fail
-goto|;
-if|if
-condition|(
+operator|||
 name|fcntl
 argument_list|(
 name|srv
@@ -1321,12 +1316,7 @@ name|O_NONBLOCK
 argument_list|)
 operator|<
 literal|0
-condition|)
-goto|goto
-name|fail
-goto|;
-if|if
-condition|(
+operator|||
 name|eloop_register_sock
 argument_list|(
 name|srv

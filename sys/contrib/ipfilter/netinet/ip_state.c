@@ -18509,11 +18509,6 @@ block|{
 name|int
 name|refs
 decl_stmt|;
-name|is
-operator|->
-name|is_ref
-operator|--
-expr_stmt|;
 name|refs
 operator|=
 name|is
@@ -18596,11 +18591,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ASSERT
+argument_list|(
 name|is
 operator|->
 name|is_ref
-operator|=
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(

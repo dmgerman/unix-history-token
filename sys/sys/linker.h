@@ -919,6 +919,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MODINFOMD_FW_HANDLE
+value|0x000c
+end_define
+
+begin_comment
+comment|/* Firmware dependent handle */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MODINFOMD_NOCOPY
 value|0x8000
 end_define

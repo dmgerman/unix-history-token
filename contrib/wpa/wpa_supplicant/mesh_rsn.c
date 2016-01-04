@@ -1038,6 +1038,12 @@ name|mgtk
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rsn
+operator|->
+name|auth
+condition|)
 name|wpa_deinit
 argument_list|(
 name|rsn
@@ -1137,6 +1143,11 @@ argument_list|(
 name|mesh_rsn
 argument_list|)
 expr_stmt|;
+name|os_free
+argument_list|(
+name|mesh_rsn
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -1163,7 +1174,7 @@ argument_list|)
 expr_stmt|;
 name|conf
 operator|->
-name|ies
+name|rsn_ie
 operator|=
 operator|(
 name|u8
@@ -1173,7 +1184,7 @@ name|ie
 expr_stmt|;
 name|conf
 operator|->
-name|ie_len
+name|rsn_ie_len
 operator|=
 name|ie_len
 expr_stmt|;

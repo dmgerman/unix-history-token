@@ -1167,7 +1167,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MAP: \"%s\" can't parse/use start value\n"
+literal|"MAP: \"%s\" can't parse/use end value\n"
 argument_list|,
 name|name
 argument_list|)

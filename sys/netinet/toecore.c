@@ -1741,7 +1741,6 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-operator|&
 name|lle
 operator|->
 name|ll_addr
@@ -2064,7 +2063,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tcp_output
+name|tp
+operator|->
+name|t_fb
+operator|->
+name|tfb_tcp_output
 argument_list|(
 name|tp
 argument_list|)

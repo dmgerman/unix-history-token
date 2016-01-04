@@ -670,7 +670,7 @@ block|{
 comment|/** 	 * WPA_DISCONNECTED - Disconnected state 	 * 	 * This state indicates that client is not associated, but is likely to 	 * start looking for an access point. This state is entered when a 	 * connection is lost. 	 */
 name|WPA_DISCONNECTED
 block|,
-comment|/** 	 * WPA_INTERFACE_DISABLED - Interface disabled 	 * 	 * This stat eis entered if the network interface is disabled, e.g., 	 * due to rfkill. wpa_supplicant refuses any new operations that would 	 * use the radio until the interface has been enabled. 	 */
+comment|/** 	 * WPA_INTERFACE_DISABLED - Interface disabled 	 * 	 * This state is entered if the network interface is disabled, e.g., 	 * due to rfkill. wpa_supplicant refuses any new operations that would 	 * use the radio until the interface has been enabled. 	 */
 name|WPA_INTERFACE_DISABLED
 block|,
 comment|/** 	 * WPA_INACTIVE - Inactive state (wpa_supplicant disabled) 	 * 	 * This state is entered if there are no enabled networks in the 	 * configuration. wpa_supplicant is not trying to associate with a new 	 * network and external interaction (e.g., ctrl_iface call to add or 	 * enable a network) is needed to start association. 	 */
@@ -788,6 +788,8 @@ name|HOSTAPD_MODE_IEEE80211A
 block|,
 name|HOSTAPD_MODE_IEEE80211AD
 block|,
+name|HOSTAPD_MODE_IEEE80211ANY
+block|,
 name|NUM_HOSTAPD_MODES
 block|}
 enum|;
@@ -816,6 +818,8 @@ block|,
 name|WPA_CTRL_REQ_EAP_PASSPHRASE
 block|,
 name|WPA_CTRL_REQ_SIM
+block|,
+name|WPA_CTRL_REQ_PSK_PASSPHRASE
 block|,
 name|NUM_WPA_CTRL_REQS
 block|}
@@ -853,6 +857,19 @@ name|PLINK_HOLDING
 block|,
 name|PLINK_BLOCKED
 block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|set_band
+block|{
+name|WPA_SETBAND_AUTO
+block|,
+name|WPA_SETBAND_5G
+block|,
+name|WPA_SETBAND_2G
+block|}
 enum|;
 end_enum
 

@@ -315,7 +315,7 @@ name|BIGNUM
 modifier|*
 name|pub_key
 decl_stmt|;
-comment|/* g^x */
+comment|/* g^x % p */
 name|BIGNUM
 modifier|*
 name|priv_key
@@ -392,6 +392,18 @@ define|#
 directive|define
 name|DH_NOT_SUITABLE_GENERATOR
 value|0x08
+define|#
+directive|define
+name|DH_CHECK_Q_NOT_PRIME
+value|0x10
+define|#
+directive|define
+name|DH_CHECK_INVALID_Q_VALUE
+value|0x20
+define|#
+directive|define
+name|DH_CHECK_INVALID_J_VALUE
+value|0x40
 comment|/* DH_check_pub_key error codes */
 define|#
 directive|define
@@ -691,6 +703,24 @@ modifier|*
 name|dh
 parameter_list|)
 function_decl|;
+name|int
+name|DH_compute_key_padded
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|BIGNUM
+modifier|*
+name|pub_key
+parameter_list|,
+name|DH
+modifier|*
+name|dh
+parameter_list|)
+function_decl|;
 name|DH
 modifier|*
 name|d2i_DHparams
@@ -713,6 +743,41 @@ parameter_list|)
 function_decl|;
 name|int
 name|i2d_DHparams
+parameter_list|(
+specifier|const
+name|DH
+modifier|*
+name|a
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|pp
+parameter_list|)
+function_decl|;
+name|DH
+modifier|*
+name|d2i_DHxparams
+parameter_list|(
+name|DH
+modifier|*
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|pp
+parameter_list|,
+name|long
+name|length
+parameter_list|)
+function_decl|;
+name|int
+name|i2d_DHxparams
 parameter_list|(
 specifier|const
 name|DH
@@ -777,6 +842,68 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/* RFC 5114 parameters */
+name|DH
+modifier|*
+name|DH_get_1024_160
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|DH
+modifier|*
+name|DH_get_2048_224
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|DH
+modifier|*
+name|DH_get_2048_256
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* RFC2631 KDF */
+name|int
+name|DH_KDF_X9_42
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|out
+parameter_list|,
+name|size_t
+name|outlen
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|Z
+parameter_list|,
+name|size_t
+name|Zlen
+parameter_list|,
+name|ASN1_OBJECT
+modifier|*
+name|key_oid
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|ukm
+parameter_list|,
+name|size_t
+name|ukmlen
+parameter_list|,
+specifier|const
+name|EVP_MD
+modifier|*
+name|md
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|EVP_PKEY_CTX_set_dh_paramgen_prime_len
@@ -789,6 +916,26 @@ define|\
 value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH, EVP_PKEY_OP_PARAMGEN, \                         EVP_PKEY_CTRL_DH_PARAMGEN_PRIME_LEN, len, NULL)
 define|#
 directive|define
+name|EVP_PKEY_CTX_set_dh_paramgen_subprime_len
+parameter_list|(
+name|ctx
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH, EVP_PKEY_OP_PARAMGEN, \                         EVP_PKEY_CTRL_DH_PARAMGEN_SUBPRIME_LEN, len, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_dh_paramgen_type
+parameter_list|(
+name|ctx
+parameter_list|,
+name|typ
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH, EVP_PKEY_OP_PARAMGEN, \                         EVP_PKEY_CTRL_DH_PARAMGEN_TYPE, typ, NULL)
+define|#
+directive|define
 name|EVP_PKEY_CTX_set_dh_paramgen_generator
 parameter_list|(
 name|ctx
@@ -799,12 +946,189 @@ define|\
 value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH, EVP_PKEY_OP_PARAMGEN, \                         EVP_PKEY_CTRL_DH_PARAMGEN_GENERATOR, gen, NULL)
 define|#
 directive|define
+name|EVP_PKEY_CTX_set_dh_rfc5114
+parameter_list|(
+name|ctx
+parameter_list|,
+name|gen
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_PARAMGEN, \                         EVP_PKEY_CTRL_DH_RFC5114, gen, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_dhx_rfc5114
+parameter_list|(
+name|ctx
+parameter_list|,
+name|gen
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_PARAMGEN, \                         EVP_PKEY_CTRL_DH_RFC5114, gen, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_dh_kdf_type
+parameter_list|(
+name|ctx
+parameter_list|,
+name|kdf
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_DH_KDF_TYPE, kdf, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_dh_kdf_type
+parameter_list|(
+name|ctx
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_DH_KDF_TYPE, -2, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set0_dh_kdf_oid
+parameter_list|(
+name|ctx
+parameter_list|,
+name|oid
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_DH_KDF_OID, 0, (void *)oid)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get0_dh_kdf_oid
+parameter_list|(
+name|ctx
+parameter_list|,
+name|poid
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_GET_DH_KDF_OID, 0, (void *)poid)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_dh_kdf_md
+parameter_list|(
+name|ctx
+parameter_list|,
+name|md
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_DH_KDF_MD, 0, (void *)md)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_dh_kdf_md
+parameter_list|(
+name|ctx
+parameter_list|,
+name|pmd
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_GET_DH_KDF_MD, 0, (void *)pmd)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set_dh_kdf_outlen
+parameter_list|(
+name|ctx
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_DH_KDF_OUTLEN, len, NULL)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get_dh_kdf_outlen
+parameter_list|(
+name|ctx
+parameter_list|,
+name|plen
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                         EVP_PKEY_CTRL_GET_DH_KDF_OUTLEN, 0, (void *)plen)
+define|#
+directive|define
+name|EVP_PKEY_CTX_set0_dh_kdf_ukm
+parameter_list|(
+name|ctx
+parameter_list|,
+name|p
+parameter_list|,
+name|plen
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_DH_KDF_UKM, plen, (void *)p)
+define|#
+directive|define
+name|EVP_PKEY_CTX_get0_dh_kdf_ukm
+parameter_list|(
+name|ctx
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, \                                 EVP_PKEY_OP_DERIVE, \                                 EVP_PKEY_CTRL_GET_DH_KDF_UKM, 0, (void *)p)
+define|#
+directive|define
 name|EVP_PKEY_CTRL_DH_PARAMGEN_PRIME_LEN
 value|(EVP_PKEY_ALG_CTRL + 1)
 define|#
 directive|define
 name|EVP_PKEY_CTRL_DH_PARAMGEN_GENERATOR
 value|(EVP_PKEY_ALG_CTRL + 2)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_RFC5114
+value|(EVP_PKEY_ALG_CTRL + 3)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_PARAMGEN_SUBPRIME_LEN
+value|(EVP_PKEY_ALG_CTRL + 4)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_PARAMGEN_TYPE
+value|(EVP_PKEY_ALG_CTRL + 5)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_KDF_TYPE
+value|(EVP_PKEY_ALG_CTRL + 6)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_KDF_MD
+value|(EVP_PKEY_ALG_CTRL + 7)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_DH_KDF_MD
+value|(EVP_PKEY_ALG_CTRL + 8)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_KDF_OUTLEN
+value|(EVP_PKEY_ALG_CTRL + 9)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_DH_KDF_OUTLEN
+value|(EVP_PKEY_ALG_CTRL + 10)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_KDF_UKM
+value|(EVP_PKEY_ALG_CTRL + 11)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_DH_KDF_UKM
+value|(EVP_PKEY_ALG_CTRL + 12)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_DH_KDF_OID
+value|(EVP_PKEY_ALG_CTRL + 13)
+define|#
+directive|define
+name|EVP_PKEY_CTRL_GET_DH_KDF_OID
+value|(EVP_PKEY_ALG_CTRL + 14)
+comment|/* KDF types */
+define|#
+directive|define
+name|EVP_PKEY_DH_KDF_NONE
+value|1
+define|#
+directive|define
+name|EVP_PKEY_DH_KDF_X9_42
+value|2
 comment|/* BEGIN ERROR CODES */
 comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
@@ -827,6 +1151,18 @@ define|#
 directive|define
 name|DH_F_DH_BUILTIN_GENPARAMS
 value|106
+define|#
+directive|define
+name|DH_F_DH_CMS_DECRYPT
+value|117
+define|#
+directive|define
+name|DH_F_DH_CMS_SET_PEERKEY
+value|118
+define|#
+directive|define
+name|DH_F_DH_CMS_SET_SHARED_INFO
+value|119
 define|#
 directive|define
 name|DH_F_DH_COMPUTE_KEY
@@ -906,6 +1242,10 @@ name|DH_R_INVALID_PUBKEY
 value|102
 define|#
 directive|define
+name|DH_R_KDF_PARAMETER_ERROR
+value|112
+define|#
+directive|define
 name|DH_R_KEYS_NOT_SET
 value|108
 define|#
@@ -932,6 +1272,14 @@ define|#
 directive|define
 name|DH_R_PARAMETER_ENCODING_ERROR
 value|105
+define|#
+directive|define
+name|DH_R_PEER_KEY_ERROR
+value|113
+define|#
+directive|define
+name|DH_R_SHARED_INFO_ERROR
+value|114
 ifdef|#
 directive|ifdef
 name|__cplusplus

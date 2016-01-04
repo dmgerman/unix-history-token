@@ -511,7 +511,7 @@ name|idx
 index|]
 expr_stmt|;
 comment|/* 	 * The above stores must be visible before the next one, so 	 * that a lockless searcher always sees a valid path through 	 * the tree. 	 */
-name|mb
+name|powerpc_lwsync
 argument_list|()
 expr_stmt|;
 name|idx
@@ -760,7 +760,7 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-name|mb
+name|powerpc_lwsync
 argument_list|()
 expr_stmt|;
 comment|/* Set up parent to point to intermediate node ... */
@@ -979,6 +979,7 @@ else|:
 name|NULL
 operator|)
 return|;
+comment|/* 		 * The following accesses are implicitly ordered under the POWER 		 * ISA by load dependencies (the store ordering is provided by 		 * the powerpc_lwsync() calls elsewhere) and so are run without 		 * barriers. 		 */
 name|ua
 operator|=
 name|ua

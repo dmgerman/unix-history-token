@@ -3047,6 +3047,53 @@ define|\
 value|bus_write_multi_stream_4((res), (offset), (addr), (count))
 end_define
 
+begin_comment
+comment|/*  * On some platforms, we must ensure proper interdevice write ordering.  * The AHCI interrupt status register must be updated in HW before  * registers in interrupt controller.  * Unfortunately, only way how we can do it is readback.  *  * Currently, only ARM is known to have this issue.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATA_RBL
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|bus_read_4((res), (offset))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATA_RBL
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

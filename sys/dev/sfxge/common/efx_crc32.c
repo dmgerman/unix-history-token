@@ -49,7 +49,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-name|crc32_table
+name|efx_crc32_table
 index|[
 literal|256
 index|]
@@ -636,7 +636,7 @@ operator|>>
 literal|8
 operator|)
 operator|^
-name|crc32_table
+name|efx_crc32_table
 index|[
 operator|(
 name|crc

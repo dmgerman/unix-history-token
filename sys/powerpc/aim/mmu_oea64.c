@@ -2803,7 +2803,7 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|OF_finddevice
 argument_list|(
@@ -2823,7 +2823,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|mmu
 argument_list|,
@@ -4573,7 +4573,7 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|chosen
 argument_list|,

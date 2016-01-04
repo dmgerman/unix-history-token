@@ -824,7 +824,7 @@ decl_stmt|;
 name|uint8_t
 name|dmac
 index|[
-name|ETHER_ADDR_LEN
+name|ETHER_HDR_LEN
 index|]
 decl_stmt|;
 name|uint16_t

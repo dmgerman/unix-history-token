@@ -610,6 +610,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211W */
+comment|/* Number of references except those in struct wpa_group->next */
+name|unsigned
+name|int
+name|references
+decl_stmt|;
 block|}
 struct|;
 end_struct

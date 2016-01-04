@@ -2259,7 +2259,7 @@ comment|/* EV92527: we do not need a reset if we see this signature */
 end_comment
 
 begin_comment
-unit|HALDEBUG(ah, HAL_DEBUG_DFS, "%s: BB Panic -- 0x1300000a\n", __func__);         return AH_TRUE;     } else if (AR_SREV_WASP(ah)&& (status == 0x04000409)) {         return AH_TRUE;     } else {         if (ar9300_get_capability(ah, HAL_CAP_LDPCWAR, 0, AH_NULL) == HAL_OK&&             (status& 0xff00000f) == 0x04000009&&             status != 0x04000409&&             status != 0x04000b09&&             status != 0x04000e09&&             (status& 0x0000ff00))         {
+unit|HALDEBUG(ah, HAL_DEBUG_DFS, "%s: BB Panic -- 0x1300000a\n", __func__);         return AH_TRUE;     } else if ((AR_SREV_WASP(ah) || AR_SREV_HONEYBEE(ah))&& (status == 0x04000409)) {         return AH_TRUE;     } else {         if (ar9300_get_capability(ah, HAL_CAP_LDPCWAR, 0, AH_NULL) == HAL_OK&&             (status& 0xff00000f) == 0x04000009&&             status != 0x04000409&&             status != 0x04000b09&&             status != 0x04000e09&&             (status& 0x0000ff00))         {
 comment|/* disable RIFS Rx */
 end_comment
 

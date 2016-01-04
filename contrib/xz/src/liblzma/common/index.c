@@ -1030,7 +1030,7 @@ parameter_list|,
 name|lzma_vli
 name|uncompressed_base
 parameter_list|,
-name|lzma_vli
+name|uint32_t
 name|stream_number
 parameter_list|,
 name|lzma_vli
@@ -4102,6 +4102,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|// NOTE: lzma_index_iter.stream.number is lzma_vli but we use uint32_t
+comment|// internally.
 name|iter
 operator|->
 name|stream

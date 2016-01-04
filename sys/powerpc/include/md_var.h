@@ -45,6 +45,9 @@ specifier|extern
 name|char
 name|sigcode64
 index|[]
+decl_stmt|,
+name|sigcode64_elfv2
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +55,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|szsigcode64
+decl_stmt|,
+name|szsigcode64_elfv2
 decl_stmt|;
 end_decl_stmt
 

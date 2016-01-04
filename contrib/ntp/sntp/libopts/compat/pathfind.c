@@ -441,6 +441,18 @@ argument_list|(
 name|string
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+comment|/* couldn't allocate memory    */
+block|}
 block|}
 else|else
 block|{
@@ -471,6 +483,18 @@ name|string
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+comment|/* couldn't allocate memory    */
+block|}
 name|strcpy
 argument_list|(
 name|result
@@ -531,6 +555,18 @@ name|string
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+comment|/* couldn't allocate memory    */
+block|}
 name|result
 index|[
 literal|0
@@ -607,6 +643,18 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+comment|/* couldn't allocate memory    */
+block|}
 name|stub_char
 operator|=
 operator|(

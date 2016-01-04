@@ -994,6 +994,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Sets a function to run when limit is reached  *  * Arguments:  *	zone  The zone to which this applies  *	fx  The function ro run  *  * Returns:  *	Nothing  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|uma_maxaction_t
+function_decl|)
+parameter_list|(
+name|uma_zone_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|void
+name|uma_zone_set_maxaction
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|uma_maxaction_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Obtains the approximate current number of items allocated from a zone  *  * Arguments:  *	zone  The zone to obtain the current allocation count from  *  * Return:  *	int  The approximate current number of items allocated from the zone  */
 end_comment
 

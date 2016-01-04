@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -86,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"citrus_namespace.h"
 end_include
 
@@ -149,7 +161,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|open
+name|_open
 argument_list|(
 name|path
 argument_list|,
@@ -169,7 +181,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|fd
 argument_list|,
@@ -269,7 +281,7 @@ label|:
 operator|(
 name|void
 operator|)
-name|close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

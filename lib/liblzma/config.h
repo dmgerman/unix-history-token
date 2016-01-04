@@ -642,17 +642,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `pipe2' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PIPE2
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `posix_fadvise' function. */
 end_comment
 
@@ -1108,7 +1097,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"XZ Utils 5.2.1"
+value|"XZ Utils 5.2.2"
 end_define
 
 begin_comment
@@ -1141,7 +1130,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.2.1"
+value|"5.2.2"
 end_define
 
 begin_comment
@@ -1398,7 +1387,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.2.1"
+value|"5.2.2"
 end_define
 
 begin_comment

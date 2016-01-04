@@ -197,6 +197,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/u8_textprep.h>
 end_include
 
@@ -346,7 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When the fasttrap provider is loaded, fasttrap_max is set to either  * FASTTRAP_MAX_DEFAULT or the value for fasttrap-max-probes in the  * fasttrap.conf file. Each time a probe is created, fasttrap_total is  * incremented by the number of tracepoints that may be associated with that  * probe; fasttrap_total is capped at fasttrap_max.  */
+comment|/*  * When the fasttrap provider is loaded, fasttrap_max is set to either  * FASTTRAP_MAX_DEFAULT, or the value for fasttrap-max-probes in the  * fasttrap.conf file (Illumos), or the value provied in the loader.conf (FreeBSD).  * Each time a probe is created, fasttrap_total is incremented by the number  * of tracepoints that may be associated with that probe; fasttrap_total is capped  * at fasttrap_max.  */
 end_comment
 
 begin_define
@@ -360,6 +366,8 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|fasttrap_max
+init|=
+name|FASTTRAP_MAX_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -629,6 +637,95 @@ name|eventhandler_tag
 name|fasttrap_thread_dtor_tag
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|tpoints_hash_size
+init|=
+name|FASTTRAP_TPOINTS_DEFAULT_SIZE
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_dtrace
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern_dtrace
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|fasttrap
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"DTrace fasttrap parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_dtrace_fasttrap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_probes
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|fasttrap_max
+argument_list|,
+name|FASTTRAP_MAX_DEFAULT
+argument_list|,
+literal|"Maximum number of fasttrap probes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_kern_dtrace_fasttrap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tpoints_hash_size
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|tpoints_hash_size
+argument_list|,
+name|FASTTRAP_TPOINTS_DEFAULT_SIZE
+argument_list|,
+literal|"Size of the tracepoint hash table"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -7883,6 +7980,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * We know a few things about our context here:  we know that the probe being  * created doesn't already exist (DTrace won't load DOF at the same address  * twice, even if explicitly told to do so) and we know that we are  * single-threaded with respect to the meta provider machinery. Knowing that  * this is a new probe and that there is no way for us to race with another  * operation on this provider allows us an important optimization: we need not  * lookup a probe before adding it.  Saving this lookup is important because  * this code is in the fork path for processes with USDT probes, and lookups  * here are potentially very expensive because of long hash conflicts on  * module, function and name (DTrace doesn't hash on provider name).  */
+end_comment
+
+begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
@@ -8061,49 +8162,6 @@ index|]
 condition|)
 return|return;
 block|}
-comment|/* 	 * Grab the creation lock to ensure consistency between calls to 	 * dtrace_probe_lookup() and dtrace_probe_create() in the face of 	 * other threads creating probes. 	 */
-name|mutex_enter
-argument_list|(
-operator|&
-name|provider
-operator|->
-name|ftp_cmtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dtrace_probe_lookup
-argument_list|(
-name|provider
-operator|->
-name|ftp_provid
-argument_list|,
-name|dhpb
-operator|->
-name|dthpb_mod
-argument_list|,
-name|dhpb
-operator|->
-name|dthpb_func
-argument_list|,
-name|dhpb
-operator|->
-name|dthpb_name
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|mutex_exit
-argument_list|(
-operator|&
-name|provider
-operator|->
-name|ftp_cmtx
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|ntps
 operator|=
 name|dhpb
@@ -8143,14 +8201,6 @@ name|fasttrap_total
 argument_list|,
 operator|-
 name|ntps
-argument_list|)
-expr_stmt|;
-name|mutex_exit
-argument_list|(
-operator|&
-name|provider
-operator|->
-name|ftp_cmtx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8499,14 +8549,6 @@ argument_list|,
 name|FASTTRAP_OFFSET_AFRAMES
 argument_list|,
 name|pp
-argument_list|)
-expr_stmt|;
-name|mutex_exit
-argument_list|(
-operator|&
-name|provider
-operator|->
-name|ftp_cmtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -9620,12 +9662,6 @@ argument_list|,
 name|FASTTRAP_MAX_DEFAULT
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fasttrap_max
-operator|=
-name|FASTTRAP_MAX_DEFAULT
-expr_stmt|;
 endif|#
 directive|endif
 name|fasttrap_total
@@ -9655,7 +9691,7 @@ else|#
 directive|else
 name|nent
 operator|=
-name|FASTTRAP_TPOINTS_DEFAULT_SIZE
+name|tpoints_hash_size
 expr_stmt|;
 endif|#
 directive|endif
@@ -9672,6 +9708,10 @@ condition|)
 name|nent
 operator|=
 name|FASTTRAP_TPOINTS_DEFAULT_SIZE
+expr_stmt|;
+name|tpoints_hash_size
+operator|=
+name|nent
 expr_stmt|;
 if|if
 condition|(

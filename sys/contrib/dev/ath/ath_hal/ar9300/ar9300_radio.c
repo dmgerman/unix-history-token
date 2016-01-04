@@ -205,6 +205,9 @@ decl_stmt|;
 name|int
 name|load_synth_channel
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG_ALQ
 name|HAL_CHANNEL_INTERNAL
 modifier|*
 name|ichan
@@ -216,6 +219,8 @@ argument_list|,
 name|chan
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * Put this behind AH_DEBUG_ALQ for now until the Hornet      * channel_sel code below is made to work.      */
 ifdef|#
 directive|ifdef
@@ -279,13 +284,14 @@ directive|endif
 name|uint32_t
 name|i
 decl_stmt|;
+comment|/*              * Pay close attention to this bit!              *              * We need to map the actual desired synth frequency to              * one of the channel select array entries.              *              * For HT20, it'll align with the channel we select.              *              * For HT40 though it won't - the centre frequency              * will not be the frequency of chan->ic_freq or ichan->freq;              * it needs to be whatever frequency maps to 'freq'.              */
 name|i
 operator|=
 name|ath_hal_mhz2ieee_2ghz
 argument_list|(
 name|ah
 argument_list|,
-name|ichan
+name|freq
 argument_list|)
 expr_stmt|;
 name|HALASSERT
@@ -398,6 +404,11 @@ name|AR_SREV_SCORPION
 argument_list|(
 name|ah
 argument_list|)
+operator|||
+name|AR_SREV_HONEYBEE
+argument_list|(
+name|ah
+argument_list|)
 condition|)
 block|{
 name|u_int32_t
@@ -412,6 +423,11 @@ comment|/*                   * freq_ref = (50 / (refdiva>> a_mode_ref_sel));    
 if|if
 condition|(
 name|AR_SREV_SCORPION
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_HONEYBEE
 argument_list|(
 name|ah
 argument_list|)

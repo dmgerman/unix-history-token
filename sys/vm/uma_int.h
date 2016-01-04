@@ -752,7 +752,7 @@ name|uint16_t
 name|uz_count_min
 decl_stmt|;
 comment|/* Minimal amount of items there */
-comment|/* The next three fields are used to print a rate-limited warnings. */
+comment|/* The next two fields are used to print a rate-limited warnings. */
 specifier|const
 name|char
 modifier|*
@@ -764,6 +764,10 @@ name|timeval
 name|uz_ratecheck
 decl_stmt|;
 comment|/* Warnings rate-limiting */
+name|uma_maxaction_t
+name|uz_maxaction
+decl_stmt|;
+comment|/* Function to run when at limit */
 comment|/* 	 * This HAS to be the last item because we adjust the zone size 	 * based on NCPU and then allocate the space for the zones. 	 */
 name|struct
 name|uma_cache

@@ -936,18 +936,8 @@ return|return
 literal|1
 return|;
 block|}
-name|i
-operator|=
-name|ASN1_STRING_length
-argument_list|(
-name|rb
-operator|->
-name|response
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|br
 operator|=
@@ -956,6 +946,8 @@ argument_list|(
 name|o
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|err

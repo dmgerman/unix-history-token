@@ -10148,6 +10148,7 @@ argument_list|,
 literal|")"
 argument_list|)
 expr_stmt|;
+comment|/* t is unused here, but if we don't track it and 		 * need it later, that's a bug waiting to happen. 		 */
 block|}
 return|return
 name|buffer

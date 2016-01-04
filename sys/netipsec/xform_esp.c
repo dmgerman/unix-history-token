@@ -764,7 +764,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-comment|/* 	 * NB: The null xform needs a non-zero blocksize to keep the 	 *      crypto code happy but if we use it to set ivlen then 	 *      the ESP header will be processed incorrectly.  The 	 *      compromise is to force it to zero here. 	 */
 if|if
 condition|(
 name|SAV_ISCTRORGCM
@@ -784,18 +783,9 @@ name|sav
 operator|->
 name|ivlen
 operator|=
-operator|(
-name|txform
-operator|==
-operator|&
-name|enc_xform_null
-condition|?
-literal|0
-else|:
 name|txform
 operator|->
 name|ivsize
-operator|)
 expr_stmt|;
 comment|/* 	 * Setup AH-related state. 	 */
 if|if

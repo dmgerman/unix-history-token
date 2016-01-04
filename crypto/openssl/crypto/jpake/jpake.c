@@ -29,6 +29,12 @@ directive|include
 file|<memory.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * In the definition, (xa, xb, xc, xd) are Alice's (x1, x2, x3, x4) or  * Bob's (x3, x4, x1, x2). If you see what I mean.  */
 end_comment
@@ -1153,6 +1159,27 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|==
+name|NULL
+operator|||
+name|t1
+operator|==
+name|NULL
+operator|||
+name|t2
+operator|==
+name|NULL
+operator|||
+name|t3
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|end
+goto|;
 name|zkp_hash
 argument_list|(
 name|h
@@ -1262,6 +1289,8 @@ argument_list|,
 name|JPAKE_R_ZKP_VERIFY_FAILED
 argument_list|)
 expr_stmt|;
+name|end
+label|:
 comment|/* cleanup */
 name|BN_free
 argument_list|(

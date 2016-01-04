@@ -51,6 +51,9 @@ decl_stmt|;
 name|int
 name|write
 decl_stmt|;
+name|int
+name|initialized
+decl_stmt|;
 name|struct
 name|semaphore
 name|pop

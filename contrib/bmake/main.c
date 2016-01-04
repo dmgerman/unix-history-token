@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.232 2015/03/26 22:20:42 sjg Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.235 2015/10/25 05:24:44 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.232 2015/03/26 22:20:42 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.235 2015/10/25 05:24:44 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.232 2015/03/26 22:20:42 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.235 2015/10/25 05:24:44 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -515,6 +515,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* -w flag */
+end_comment
+
+begin_decl_stmt
+name|Boolean
+name|enterFlagObj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -w and objdir != srcdir */
 end_comment
 
 begin_decl_stmt
@@ -2999,7 +3009,9 @@ name|buf
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3113,6 +3125,23 @@ name|Dir_InitDot
 argument_list|()
 expr_stmt|;
 name|rc
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|enterFlag
+operator|&&
+name|strcmp
+argument_list|(
+name|objdir
+argument_list|,
+name|curdir
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|enterFlagObj
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3388,7 +3417,9 @@ literal|":tl}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5308,7 +5339,9 @@ literal|"}"
 argument_list|,
 name|VAR_CMD
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5367,7 +5400,9 @@ literal|"${.MAKE.DEPENDFILE:T}"
 argument_list|,
 name|VAR_CMD
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|doing_depend
@@ -5389,6 +5424,19 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|enterFlagObj
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Entering directory `%s'\n"
+argument_list|,
+name|progname
+argument_list|,
+name|objdir
+argument_list|)
+expr_stmt|;
 name|MakeMode
 argument_list|(
 name|NULL
@@ -5500,6 +5548,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|path
@@ -5687,7 +5737,9 @@ name|var
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5750,7 +5802,9 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5911,6 +5965,19 @@ argument_list|(
 name|MAKEEND
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|enterFlagObj
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Leaving directory `%s'\n"
+argument_list|,
+name|progname
+argument_list|,
+name|objdir
 argument_list|)
 expr_stmt|;
 if|if
@@ -7647,7 +7714,9 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7673,6 +7742,11 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 comment|/*      * Finally, see if there is a .ERROR target, and run it if so.      */
 name|en
 operator|=
@@ -7762,7 +7836,9 @@ name|tmp
 argument_list|,
 name|VAR_CMD
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7840,7 +7916,9 @@ literal|"}/"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8100,7 +8178,9 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if

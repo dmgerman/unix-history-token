@@ -2773,6 +2773,9 @@ name|eap_msg_alloc
 argument_list|(
 name|EAP_VENDOR_IETF
 argument_list|,
+operator|(
+name|EapType
+operator|)
 name|EAP_ERP_TYPE_REAUTH
 argument_list|,
 literal|1
@@ -3408,13 +3411,13 @@ name|os_memcpy
 argument_list|(
 name|sm
 operator|->
-name|last_md5
+name|last_sha1
 argument_list|,
 name|sm
 operator|->
-name|req_md5
+name|req_sha1
 argument_list|,
-literal|16
+literal|20
 argument_list|)
 expr_stmt|;
 name|sm
@@ -4231,19 +4234,19 @@ name|os_memcmp
 argument_list|(
 name|sm
 operator|->
-name|req_md5
+name|req_sha1
 argument_list|,
 name|sm
 operator|->
-name|last_md5
+name|last_sha1
 argument_list|,
-literal|16
+literal|20
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * RFC 4137 uses (reqId == lastId) as the only verification for 		 * duplicate EAP requests. However, this misses cases where the 		 * AS is incorrectly using the same id again; and 		 * unfortunately, such implementations exist. Use MD5 hash as 		 * an extra verification for the packets being duplicate to 		 * workaround these issues. 		 */
+comment|/* 		 * RFC 4137 uses (reqId == lastId) as the only verification for 		 * duplicate EAP requests. However, this misses cases where the 		 * AS is incorrectly using the same id again; and 		 * unfortunately, such implementations exist. Use SHA1 hash as 		 * an extra verification for the packets being duplicate to 		 * workaround these issues. 		 */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -8255,7 +8258,7 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-name|md5_vector
+name|sha1_vector
 argument_list|(
 literal|1
 argument_list|,
@@ -8266,7 +8269,7 @@ name|plen
 argument_list|,
 name|sm
 operator|->
-name|req_md5
+name|req_sha1
 argument_list|)
 expr_stmt|;
 block|}
@@ -8877,6 +8880,7 @@ name|void
 modifier|*
 name|eapol_ctx
 parameter_list|,
+specifier|const
 name|struct
 name|eapol_callbacks
 modifier|*
@@ -10543,7 +10547,7 @@ block|{
 name|int
 name|v
 decl_stmt|;
-name|u8
+name|u32
 name|type
 init|=
 name|eap_peer_get_type

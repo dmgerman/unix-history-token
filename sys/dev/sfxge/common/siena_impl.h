@@ -73,7 +73,7 @@ name|SIENA_NVRAM_CHUNK
 value|0x80
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_probe
 parameter_list|(
 name|__in
@@ -87,7 +87,7 @@ directive|if
 name|EFSYS_OPT_PCIE_TUNE
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_pcie_extended_sync
 parameter_list|(
 name|__in
@@ -100,7 +100,7 @@ endif|#
 directive|endif
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_reset
 parameter_list|(
 name|__in
@@ -111,7 +111,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_init
 parameter_list|(
 name|__in
@@ -125,7 +125,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nic_register_test
 parameter_list|(
 name|__in
@@ -176,7 +176,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_sram_test
 parameter_list|(
 name|__in
@@ -197,7 +197,7 @@ directive|if
 name|EFSYS_OPT_MCDI
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mcdi_init
 parameter_list|(
 name|__in
@@ -243,12 +243,35 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|boolean_t
-name|siena_mcdi_request_poll
+name|siena_mcdi_poll_response
 parameter_list|(
 name|__in
 name|efx_nic_t
 modifier|*
 name|enp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|siena_mcdi_read_response
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__out
+name|void
+modifier|*
+name|bufferp
+parameter_list|,
+name|__in
+name|size_t
+name|offset
+parameter_list|,
+name|__in
+name|size_t
+name|length
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -267,7 +290,7 @@ name|emrp
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|efx_rc_t
 name|siena_mcdi_poll_reboot
 parameter_list|(
 name|__in
@@ -288,29 +311,17 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
-name|siena_mcdi_fw_update_supported
+name|efx_rc_t
+name|siena_mcdi_feature_supported
 parameter_list|(
 name|__in
 name|efx_nic_t
 modifier|*
 name|enp
 parameter_list|,
-name|__out
-name|boolean_t
-modifier|*
-name|supportedp
-parameter_list|)
-function_decl|;
-specifier|extern
-name|__checkReturn
-name|int
-name|siena_mcdi_macaddr_change_supported
-parameter_list|(
 name|__in
-name|efx_nic_t
-modifier|*
-name|enp
+name|efx_mcdi_feature_id_t
+name|id
 parameter_list|,
 name|__out
 name|boolean_t
@@ -328,7 +339,7 @@ operator|||
 name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_size
 parameter_list|(
 name|__in
@@ -349,7 +360,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_lock
 parameter_list|(
 name|__in
@@ -365,7 +376,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_read
 argument_list|(
 name|__in
@@ -397,7 +408,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_erase
 parameter_list|(
 name|__in
@@ -422,7 +433,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_partn_write
 argument_list|(
 name|__in
@@ -469,7 +480,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_get_dynamic_cfg
 parameter_list|(
 name|__in
@@ -509,7 +520,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_test
 parameter_list|(
 name|__in
@@ -523,7 +534,7 @@ directive|endif
 comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_size
 parameter_list|(
 name|__in
@@ -543,7 +554,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_get_subtype
 parameter_list|(
 name|__in
@@ -564,7 +575,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_get_version
 argument_list|(
 name|__in
@@ -594,7 +605,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_rw_start
 parameter_list|(
 name|__in
@@ -614,7 +625,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_read_chunk
 argument_list|(
 name|__in
@@ -645,7 +656,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_erase
 parameter_list|(
 name|__in
@@ -660,7 +671,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_write_chunk
 argument_list|(
 name|__in
@@ -705,7 +716,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_nvram_set_version
 argument_list|(
 name|__in
@@ -736,7 +747,7 @@ directive|if
 name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_init
 parameter_list|(
 name|__in
@@ -747,7 +758,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_size
 parameter_list|(
 name|__in
@@ -763,7 +774,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_read
 argument_list|(
 name|__in
@@ -785,7 +796,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_verify
 argument_list|(
 name|__in
@@ -807,7 +818,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_reinit
 argument_list|(
 name|__in
@@ -829,7 +840,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_get
 argument_list|(
 name|__in
@@ -856,7 +867,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_set
 argument_list|(
 name|__in
@@ -883,7 +894,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_next
 argument_list|(
 name|__in
@@ -916,7 +927,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_vpd_write
 argument_list|(
 name|__in
@@ -1002,7 +1013,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_get_link
 parameter_list|(
 name|__in
@@ -1018,7 +1029,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_power
 parameter_list|(
 name|__in
@@ -1033,7 +1044,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_reconfigure
 parameter_list|(
 name|__in
@@ -1044,7 +1055,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_verify
 parameter_list|(
 name|__in
@@ -1055,7 +1066,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_oui_get
 parameter_list|(
 name|__in
@@ -1095,7 +1106,7 @@ name|uint64_t
 operator|*
 name|smaskp
 argument_list|,
-name|__out_ecount_opt
+name|__inout_ecount_opt
 argument_list|(
 argument|EFX_PHY_NSTATS
 argument_list|)
@@ -1106,7 +1117,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_stats_update
 argument_list|(
 name|__in
@@ -1119,7 +1130,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_PHY_NSTATS
 argument_list|)
@@ -1159,7 +1170,7 @@ directive|endif
 comment|/* EFSYS_OPT_NAMES */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_prop_get
 parameter_list|(
 name|__in
@@ -1184,7 +1195,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_prop_set
 parameter_list|(
 name|__in
@@ -1210,7 +1221,7 @@ directive|if
 name|EFSYS_OPT_BIST
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_bist_start
 parameter_list|(
 name|__in
@@ -1225,7 +1236,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_phy_bist_poll
 argument_list|(
 name|__in
@@ -1294,7 +1305,7 @@ directive|endif
 comment|/* EFSYS_OPT_BIST */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_poll
 parameter_list|(
 name|__in
@@ -1310,7 +1321,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_up
 parameter_list|(
 name|__in
@@ -1326,7 +1337,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_reconfigure
 parameter_list|(
 name|__in
@@ -1340,7 +1351,7 @@ directive|if
 name|EFSYS_OPT_LOOPBACK
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_loopback_set
 parameter_list|(
 name|__in
@@ -1365,7 +1376,7 @@ directive|if
 name|EFSYS_OPT_MAC_STATS
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_stats_update
 argument_list|(
 name|__in
@@ -1378,7 +1389,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_MAC_NSTATS
 argument_list|)
@@ -1386,7 +1397,7 @@ name|efsys_stat_t
 operator|*
 name|stat
 argument_list|,
-name|__out_opt
+name|__inout_opt
 name|uint32_t
 operator|*
 name|generationp

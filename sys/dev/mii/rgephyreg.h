@@ -1281,6 +1281,106 @@ begin_comment
 comment|/* Jabber */
 end_comment
 
+begin_comment
+comment|/* RTL8211F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_EPAGSR
+value|0x1F
+end_define
+
+begin_comment
+comment|/* Extension page select register */
+end_comment
+
+begin_comment
+comment|/* RTL8211F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_MMD_DEV_7
+value|0x07
+end_define
+
+begin_comment
+comment|/* RTL8211F MMD device 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_MMD_EEEAR
+value|0x3C
+end_define
+
+begin_comment
+comment|/* EEE advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEEAR_1000T
+value|0x0004
+end_define
+
+begin_comment
+comment|/* adv. 1000baseT EEE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEEAR_100TX
+value|0x0002
+end_define
+
+begin_comment
+comment|/* adv. 100baseTX EEE */
+end_comment
+
+begin_comment
+comment|/* RTL8211F MMD device 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_MMD_EEELPAR
+value|0x3D
+end_define
+
+begin_comment
+comment|/* EEE link partner abilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEELPAR_1000T
+value|0x0004
+end_define
+
+begin_comment
+comment|/* link partner 1000baseT EEE capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEELPAR_100TX
+value|0x0002
+end_define
+
+begin_comment
+comment|/* link partner 100baseTX EEE capable */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

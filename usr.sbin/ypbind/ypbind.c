@@ -988,11 +988,6 @@ return|;
 block|}
 name|ypdb
 operator|=
-operator|(
-expr|struct
-name|_dom_binding
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1971,7 +1966,7 @@ argument_list|,
 literal|"another ypbind is already running. Aborting"
 argument_list|)
 expr_stmt|;
-comment|/* XXX domainname will be overriden if we use restricted mode */
+comment|/* XXX domainname will be overridden if we use restricted mode */
 name|yp_get_default_domain
 argument_list|(
 operator|&
@@ -2324,11 +2319,6 @@ expr_stmt|;
 comment|/* build initial domain binding, make it "unsuccessful" */
 name|ypbindlist
 operator|=
-operator|(
-expr|struct
-name|_dom_binding
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4232,11 +4222,6 @@ condition|)
 return|return;
 name|ypdb
 operator|=
-operator|(
-expr|struct
-name|_dom_binding
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

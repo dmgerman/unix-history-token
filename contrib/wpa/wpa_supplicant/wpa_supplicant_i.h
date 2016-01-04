@@ -62,6 +62,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_version
 decl_stmt|;
 end_decl_stmt
@@ -71,6 +72,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_license
 decl_stmt|;
 end_decl_stmt
@@ -86,6 +88,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_full_license1
 decl_stmt|;
 end_decl_stmt
@@ -95,6 +98,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_full_license2
 decl_stmt|;
 end_decl_stmt
@@ -104,6 +108,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_full_license3
 decl_stmt|;
 end_decl_stmt
@@ -113,6 +118,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_full_license4
 decl_stmt|;
 end_decl_stmt
@@ -122,6 +128,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|wpa_supplicant_full_license5
 decl_stmt|;
 end_decl_stmt
@@ -225,18 +232,6 @@ name|char
 modifier|*
 name|confanother
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_P2P
-comment|/** 	 * conf_p2p_dev - Configuration file used to hold the 	 * P2P Device configuration parameters. 	 * 	 * This can also be %NULL. In such a case, if a P2P Device dedicated 	 * interfaces is created, the main configuration file will be used. 	 */
-specifier|const
-name|char
-modifier|*
-name|conf_p2p_dev
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_P2P */
 comment|/** 	 * ctrl_interface - Control interface parameter 	 * 	 * If a configuration file is not used, this variable can be used to 	 * set the ctrl_interface parameter that would have otherwise been read 	 * from the configuration file. If both confname and ctrl_interface are 	 * set, ctrl_interface is used to override the value from configuration 	 * file. 	 */
 specifier|const
 name|char
@@ -351,6 +346,17 @@ name|char
 modifier|*
 name|entropy_file
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_P2P
+comment|/** 	 * conf_p2p_dev - Configuration file used to hold the 	 * P2P Device configuration parameters. 	 * 	 * This can also be %NULL. In such a case, if a P2P Device dedicated 	 * interfaces is created, the main configuration file will be used. 	 */
+name|char
+modifier|*
+name|conf_p2p_dev
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_P2P */
 block|}
 struct|;
 end_struct
@@ -909,6 +915,16 @@ name|struct
 name|os_reltime
 name|last_attempt
 decl_stmt|;
+name|unsigned
+name|int
+name|pbc_active
+decl_stmt|;
+name|u8
+name|uuid
+index|[
+name|WPS_UUID_LEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -920,7 +936,7 @@ block|{
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -1244,16 +1260,10 @@ decl_stmt|;
 name|size_t
 name|disallow_aps_ssid_count
 decl_stmt|;
-enum|enum
-block|{
-name|WPA_SETBAND_AUTO
-block|,
-name|WPA_SETBAND_5G
-block|,
-name|WPA_SETBAND_2G
-block|}
+name|enum
+name|set_band
 name|setband
-enum|;
+decl_stmt|;
 comment|/* Preferred network for the next connection attempt */
 name|struct
 name|wpa_ssid
@@ -1349,6 +1359,7 @@ name|struct
 name|os_reltime
 name|last_scan
 decl_stmt|;
+specifier|const
 name|struct
 name|wpa_driver_ops
 modifier|*
@@ -1457,6 +1468,11 @@ name|scan_trigger_time
 decl_stmt|,
 name|scan_start_time
 decl_stmt|;
+comment|/* Minimum freshness requirement for connection purposes */
+name|struct
+name|os_reltime
+name|scan_min_time
+decl_stmt|;
 name|int
 name|scan_runs
 decl_stmt|;
@@ -1538,6 +1554,15 @@ decl_stmt|;
 name|unsigned
 name|int
 name|scan_id_count
+decl_stmt|;
+name|struct
+name|wpa_ssid_value
+modifier|*
+name|ssids_from_scan_req
+decl_stmt|;
+name|unsigned
+name|int
+name|num_ssids_from_scan_req
 decl_stmt|;
 name|u64
 name|drv_flags
@@ -1621,6 +1646,10 @@ name|unsigned
 name|int
 name|wps_run
 decl_stmt|;
+name|struct
+name|os_reltime
+name|wps_pin_start_time
+decl_stmt|;
 name|int
 name|blacklist_cleared
 decl_stmt|;
@@ -1664,6 +1693,12 @@ name|mac_addr_changed
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|int
+name|added_vif
+range|:
+literal|1
+decl_stmt|;
 name|struct
 name|os_reltime
 name|last_mac_addr_change
@@ -1696,7 +1731,7 @@ block|{
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -1986,11 +2021,6 @@ ifdef|#
 directive|ifdef
 name|CONFIG_P2P
 name|struct
-name|wpa_supplicant
-modifier|*
-name|p2p_dev
-decl_stmt|;
-name|struct
 name|p2p_go_neg_results
 modifier|*
 name|go_params
@@ -2105,7 +2135,7 @@ decl_stmt|;
 name|u8
 name|p2p_join_ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -2241,7 +2271,13 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|int
-name|p2ps_join_addr_valid
+name|p2ps_method_config_any
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|p2p_cli_probe
 range|:
 literal|1
 decl_stmt|;
@@ -2778,6 +2814,28 @@ name|struct
 name|rrm_data
 name|rrm
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+name|struct
+name|fst_iface
+modifier|*
+name|fst
+decl_stmt|;
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|fst_ies
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|received_mb_ies
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_FST */
 block|}
 struct|;
 end_struct
@@ -3935,7 +3993,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Utility method to tell if a given network is a persistent group  * @ssid: Network object  * Returns: 1 if network is a persistent group, 0 otherwise  */
+comment|/**  * Utility method to tell if a given network is for persistent group storage  * @ssid: Network object  * Returns: 1 if network is a persistent group, 0 otherwise  */
 end_comment
 
 begin_function
@@ -3951,19 +4009,15 @@ name|ssid
 parameter_list|)
 block|{
 return|return
-operator|(
-operator|(
 name|ssid
 operator|->
 name|disabled
 operator|==
 literal|2
-operator|)
-operator|||
+operator|&&
 name|ssid
 operator|->
 name|p2p_persistent_group
-operator|)
 return|;
 block|}
 end_function
@@ -4080,6 +4134,59 @@ name|len
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|wpas_network_reenabled
+parameter_list|(
+name|void
+modifier|*
+name|eloop_ctx
+parameter_list|,
+name|void
+modifier|*
+name|timeout_ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|fst_wpa_obj
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|fst_wpa_supplicant_fill_iface_obj
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+name|struct
+name|fst_wpa_obj
+modifier|*
+name|iface_obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_FST */
+end_comment
 
 begin_endif
 endif|#

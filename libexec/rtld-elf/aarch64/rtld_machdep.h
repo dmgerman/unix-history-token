@@ -233,6 +233,15 @@ name|RTLD_DEFAULT_STACK_EXEC
 value|PROT_EXEC
 end_define
 
+begin_define
+define|#
+directive|define
+name|md_abi_variant_hook
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif

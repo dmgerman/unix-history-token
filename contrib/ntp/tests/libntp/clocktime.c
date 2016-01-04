@@ -29,28 +29,111 @@ directive|include
 file|"test-libntp.h"
 end_include
 
-begin_comment
-comment|// ---------------------------------------------------------------------
-end_comment
+begin_function_decl
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tearDown
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_CurrentYear
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_CurrentYearFuzz
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_TimeZoneOffset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_WrongYearStart
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_PreviousYear
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_NextYear
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_NoReasonableConversion
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isLE
+parameter_list|(
+name|u_int32
+name|diff
+parameter_list|,
+name|u_int32
+name|actual
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AlwaysInLimit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|// test fixture
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The clocktimeTest uses the NTP calendar feature to use a mockup
-end_comment
-
-begin_comment
-comment|// function for getting the current system time, so the tests are not
-end_comment
-
-begin_comment
-comment|// dependent on the actual system time.
+comment|/* ---------------------------------------------------------------------  * test fixture  *  * The clocktimeTest uses the NTP calendar feature to use a mockup  * function for getting the current system time, so the tests are not  * dependent on the actual system time.  */
 end_comment
 
 begin_function
@@ -95,19 +178,17 @@ block|}
 end_function
 
 begin_comment
-comment|// ---------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// test cases
+comment|/* ---------------------------------------------------------------------  * test cases  */
 end_comment
 
 begin_function
 name|void
 name|test_CurrentYear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-comment|// Timestamp: 2010-06-24 12:50:00Z
+comment|/* Timestamp: 2010-06-24 12:50:00Z */
 specifier|const
 name|u_int32
 name|timestamp
@@ -120,7 +201,7 @@ name|expected
 init|=
 name|timestamp
 decl_stmt|;
-comment|// exactly the same.
+comment|/* exactly the same. */
 specifier|const
 name|int
 name|yday
@@ -188,7 +269,9 @@ end_function
 begin_function
 name|void
 name|test_CurrentYearFuzz
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/*  	 * Timestamp (rec_ui) is: 2010-06-24 12:50:00 	 * Time sent into function is 12:00:00. 	 * 	 * Since the fuzz is rather small, we should get a NTP 	 * timestamp for the 12:00:00 time. 	 */
 specifier|const
@@ -197,14 +280,14 @@ name|timestamp
 init|=
 literal|3486372600UL
 decl_stmt|;
-comment|// 2010-06-24 12:50:00Z
+comment|/* 2010-06-24 12:50:00Z */
 specifier|const
 name|u_int32
 name|expected
 init|=
 literal|3486369600UL
 decl_stmt|;
-comment|// 2010-06-24 12:00:00Z
+comment|/* 2010-06-24 12:00:00Z */
 specifier|const
 name|int
 name|yday
@@ -272,7 +355,9 @@ end_function
 begin_function
 name|void
 name|test_TimeZoneOffset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * Timestamp (rec_ui) is: 2010-06-24 12:00:00 +0800 	 * (which is 2010-06-24 04:00:00Z) 	 * 	 * Time sent into function is 04:00:00 +0800 	 */
 specifier|const
@@ -354,7 +439,9 @@ end_function
 begin_function
 name|void
 name|test_WrongYearStart
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/*  	 * Timestamp (rec_ui) is: 2010-01-02 11:00:00Z 	 * Time sent into function is 11:00:00. 	 * Yearstart sent into function is the yearstart of 2009! 	 */
 specifier|const
@@ -396,7 +483,7 @@ name|yearstart
 init|=
 literal|302024100UL
 decl_stmt|;
-comment|// Yearstart of 2009.
+comment|/* Yearstart of 2009. */
 name|u_int32
 name|actual
 decl_stmt|;
@@ -437,7 +524,9 @@ end_function
 begin_function
 name|void
 name|test_PreviousYear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * Timestamp is: 2010-01-01 01:00:00Z 	 * Time sent into function is 23:00:00 	 * (which is meant to be 2009-12-31 23:00:00Z) 	 */
 specifier|const
@@ -519,7 +608,9 @@ end_function
 begin_function
 name|void
 name|test_NextYear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * Timestamp is: 2009-12-31 23:00:00Z 	 * Time sent into function is 01:00:00 	 * (which is meant to be 2010-01-01 01:00:00Z) 	 */
 specifier|const
@@ -601,7 +692,9 @@ end_function
 begin_function
 name|void
 name|test_NoReasonableConversion
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Timestamp is: 2010-01-02 11:00:00Z */
 specifier|const
@@ -667,16 +760,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|// *** FUNCTION isLE, to simulate gtest's ASSERT_LE using Unity's TEST_ASSERT_TRUE
-end_comment
-
-begin_comment
-comment|//tehnically boolean
-end_comment
-
 begin_function
 name|int
+comment|/*BOOL*/
 name|isLE
 parameter_list|(
 name|u_int32
@@ -707,7 +793,9 @@ end_function
 begin_function
 name|void
 name|test_AlwaysInLimit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Timestamp is: 2010-01-02 11:00:00Z */
 specifier|const
@@ -748,9 +836,6 @@ name|hour
 decl_stmt|;
 name|int
 name|minute
-decl_stmt|;
-name|int
-name|second
 decl_stmt|;
 name|u_long
 name|yearstart
@@ -918,8 +1003,6 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// adding new function to return TRUE if first number is less or equal the second
-comment|//TEST_ASSERT_LE(diff, (183u * SECSPERDAY));
 block|}
 block|}
 block|}

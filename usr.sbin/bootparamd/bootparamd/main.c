@@ -173,14 +173,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
-name|void
-name|bootparamprog_1
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|usage
@@ -194,18 +186,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|SVCXPRT
 modifier|*
@@ -525,7 +513,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(

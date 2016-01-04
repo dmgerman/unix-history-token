@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: binary.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: binary.c 3270 2015-12-11 18:48:56Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -584,6 +584,13 @@ name|data_end
 decl_stmt|,
 name|data_size
 decl_stmt|;
+name|char
+modifier|*
+name|sym_basename
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|;
 comment|/* Reset internal section list. */
 if|if
 condition|(
@@ -963,13 +970,58 @@ argument_list|,
 name|EV_CURRENT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sym_basename
+operator|=
+name|strdup
+argument_list|(
+name|ifn
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup"
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|sym_basename
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'_'
+expr_stmt|;
 define|#
 directive|define
 name|_GEN_SYMNAME
 parameter_list|(
 name|S
 parameter_list|)
-value|do {						\ 	snprintf(name, sizeof(name), "%s%s%s", "_binary_", ifn, S);	\ } while (0)
+value|do {						\ 	snprintf(name, sizeof(name), "%s%s%s", "_binary_", sym_basename, S); \ } while (0)
 comment|/* 	 * Create symbol table. 	 */
 name|create_external_symtab
 argument_list|(
@@ -1094,6 +1146,11 @@ expr_stmt|;
 undef|#
 directive|undef
 name|_GEN_SYMNAME
+name|free
+argument_list|(
+name|sym_basename
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Write the underlying ehdr. Note that it should be called 	 * before elf_setshstrndx() since it will overwrite e->e_shstrndx. 	 */
 if|if
 condition|(

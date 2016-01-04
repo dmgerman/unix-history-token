@@ -1145,7 +1145,7 @@ name|dropIgnoredIncoming
 operator|&=
 name|PKT_ALIAS_DENY_INCOMING
 expr_stmt|;
-comment|/*  * Create divert sockets. Use only one socket if -p was specified  * on command line. Otherwise, create separate sockets for  * outgoing and incoming connnections.  */
+comment|/*  * Create divert sockets. Use only one socket if -p was specified  * on command line. Otherwise, create separate sockets for  * outgoing and incoming connections.  */
 if|if
 condition|(
 name|mip

@@ -811,7 +811,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"trustedbsd-audit@TrustesdBSD.org"
+value|"trustedbsd-audit@TrustedBSD.org"
 end_define
 
 begin_comment
@@ -833,7 +833,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.2-alpha3"
+value|"OpenBSM 1.2-alpha4"
 end_define
 
 begin_comment
@@ -866,7 +866,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.2-alpha3"
+value|"1.2-alpha4"
 end_define
 
 begin_comment
@@ -980,7 +980,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.2-alpha3"
+value|"1.2-alpha4"
 end_define
 
 begin_comment

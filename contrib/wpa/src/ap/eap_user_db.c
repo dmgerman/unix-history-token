@@ -836,9 +836,35 @@ argument_list|(
 name|id_str
 argument_list|)
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"%s: identity len too big: %d>= %d"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|int
+operator|)
+name|identity_len
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|id_str
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|os_memcpy
 argument_list|(
 name|id_str
@@ -1197,7 +1223,18 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"DB: Failed to complete SQL operation"
+literal|"DB: Failed to complete SQL operation: %s  db: %s"
+argument_list|,
+name|sqlite3_errmsg
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+name|hapd
+operator|->
+name|conf
+operator|->
+name|eap_user_sqlite
 argument_list|)
 expr_stmt|;
 block|}
@@ -1273,8 +1310,18 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"DB: Failed to complete SQL "
-literal|"operation"
+literal|"DB: Failed to complete SQL operation: %s  db: %s"
+argument_list|,
+name|sqlite3_errmsg
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+name|hapd
+operator|->
+name|conf
+operator|->
+name|eap_user_sqlite
 argument_list|)
 expr_stmt|;
 block|}

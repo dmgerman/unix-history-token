@@ -828,6 +828,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Physical address of the EFI System Table. Stashed from the metadata hints  * passed into the kernel and used by the EFI code to call runtime services.  */
+end_comment
+
+begin_decl_stmt
+name|vm_paddr_t
+name|efi_systbl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Intel ICH registers */
 end_comment
 
@@ -3860,32 +3870,22 @@ begin_function
 name|void
 name|setidt
 parameter_list|(
-name|idx
-parameter_list|,
-name|func
-parameter_list|,
-name|typ
-parameter_list|,
-name|dpl
-parameter_list|,
-name|ist
-parameter_list|)
 name|int
 name|idx
-decl_stmt|;
+parameter_list|,
 name|inthand_t
 modifier|*
 name|func
-decl_stmt|;
+parameter_list|,
 name|int
 name|typ
-decl_stmt|;
+parameter_list|,
 name|int
 name|dpl
-decl_stmt|;
+parameter_list|,
 name|int
 name|ist
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gate_descriptor
@@ -6947,6 +6947,10 @@ block|{
 name|caddr_t
 name|kmdp
 decl_stmt|;
+name|char
+modifier|*
+name|envp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -7008,7 +7012,7 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|kern_envp
+name|envp
 operator|=
 name|MD_FETCH
 argument_list|(
@@ -7019,8 +7023,23 @@ argument_list|,
 name|char
 operator|*
 argument_list|)
-operator|+
+expr_stmt|;
+if|if
+condition|(
+name|envp
+operator|!=
+name|NULL
+condition|)
+name|envp
+operator|+=
 name|KERNBASE
+expr_stmt|;
+name|init_static_kenv
+argument_list|(
+name|envp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7056,6 +7075,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|efi_systbl
+operator|=
+name|MD_FETCH
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFOMD_FW_HANDLE
+argument_list|,
+name|vm_paddr_t
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|kmdp
@@ -7909,7 +7939,7 @@ comment|/* 	 * Initialize the clock before the console so that console 	 * initi
 name|clock_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 */
+comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 * Once bootblocks have updated, we can test directly for 	 * efi_systbl != NULL here... 	 */
 if|if
 condition|(
 name|preload_search_info

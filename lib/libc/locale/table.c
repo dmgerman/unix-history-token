@@ -279,6 +279,8 @@ name|_CTYPE_G
 operator||
 name|_CTYPE_X
 operator||
+name|_CTYPE_N
+operator||
 literal|0
 block|,
 name|_CTYPE_D
@@ -288,6 +290,8 @@ operator||
 name|_CTYPE_G
 operator||
 name|_CTYPE_X
+operator||
+name|_CTYPE_N
 operator||
 literal|1
 block|,
@@ -299,6 +303,8 @@ name|_CTYPE_G
 operator||
 name|_CTYPE_X
 operator||
+name|_CTYPE_N
+operator||
 literal|2
 block|,
 name|_CTYPE_D
@@ -308,6 +314,8 @@ operator||
 name|_CTYPE_G
 operator||
 name|_CTYPE_X
+operator||
+name|_CTYPE_N
 operator||
 literal|3
 block|,
@@ -319,6 +327,8 @@ name|_CTYPE_G
 operator||
 name|_CTYPE_X
 operator||
+name|_CTYPE_N
+operator||
 literal|4
 block|,
 name|_CTYPE_D
@@ -328,6 +338,8 @@ operator||
 name|_CTYPE_G
 operator||
 name|_CTYPE_X
+operator||
+name|_CTYPE_N
 operator||
 literal|5
 block|,
@@ -339,6 +351,8 @@ name|_CTYPE_G
 operator||
 name|_CTYPE_X
 operator||
+name|_CTYPE_N
+operator||
 literal|6
 block|,
 name|_CTYPE_D
@@ -348,6 +362,8 @@ operator||
 name|_CTYPE_G
 operator||
 name|_CTYPE_X
+operator||
+name|_CTYPE_N
 operator||
 literal|7
 block|,
@@ -360,6 +376,8 @@ name|_CTYPE_G
 operator||
 name|_CTYPE_X
 operator||
+name|_CTYPE_N
+operator||
 literal|8
 block|,
 name|_CTYPE_D
@@ -369,6 +387,8 @@ operator||
 name|_CTYPE_G
 operator||
 name|_CTYPE_X
+operator||
+name|_CTYPE_N
 operator||
 literal|9
 block|,

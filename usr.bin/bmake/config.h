@@ -209,6 +209,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<libgen.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBGEN_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<limits.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
 end_comment
 
@@ -549,6 +571,17 @@ comment|/* #undef HAVE_SYS_NDIR_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/param.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PARAM_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/select.h> header file. */
 end_comment
 
@@ -825,7 +858,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"bmake 20140214"
+value|"bmake 20151022"
 end_define
 
 begin_comment
@@ -858,7 +891,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"20140214"
+value|"20151022"
 end_define
 
 begin_comment
@@ -1100,6 +1133,14 @@ comment|/* #undef _POSIX_SOURCE */
 end_comment
 
 begin_comment
+comment|/* Define for Solaris 2.5.1 so the uint32_t typedef from<sys/synch.h>,<pthread.h>, or<semaphore.h> is not used. If the typedef were allowed, the    #define below would cause a syntax error. */
+end_comment
+
+begin_comment
+comment|/* #undef _UINT32_T */
+end_comment
+
+begin_comment
 comment|/* C99 function name */
 end_comment
 
@@ -1137,6 +1178,14 @@ end_comment
 
 begin_comment
 comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of an unsigned integer type of width exactly 32 bits if    such a type exists and the standard includes do not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef uint32_t */
 end_comment
 
 begin_comment

@@ -117,7 +117,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|arm_init_secondary_ic
+name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
 block|}
@@ -134,6 +134,10 @@ name|mp_maxid
 operator|=
 literal|1
 expr_stmt|;
+name|mp_ncpus
+operator|=
+literal|2
+expr_stmt|;
 block|}
 end_function
 
@@ -144,10 +148,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mp_ncpus
-operator|=
-literal|2
-expr_stmt|;
 return|return
 operator|(
 literal|1

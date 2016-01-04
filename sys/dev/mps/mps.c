@@ -7023,11 +7023,6 @@ argument_list|,
 literal|"enable SSU to SATA SSD/HDD at shutdown"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
 name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|sysctl_ctx
@@ -7051,9 +7046,6 @@ argument_list|,
 literal|"chain allocation failures"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|//FreeBSD_version>= 900030
 name|SYSCTL_ADD_INT
 argument_list|(
 name|sysctl_ctx

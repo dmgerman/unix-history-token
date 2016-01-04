@@ -4,10 +4,6 @@ comment|/* $OpenBSD: servconf.c,v 1.249 2014/01/29 06:18:35 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -893,18 +889,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-name|options
-operator|->
-name|none_enabled
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2271,13 +2255,6 @@ name|sHPNBufferSize
 block|,
 name|sTcpRcvBufPoll
 block|,
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-name|sNoneEnabled
-block|,
-endif|#
-directive|endif
 name|sDeprecated
 block|,
 name|sUnsupported
@@ -3189,19 +3166,6 @@ block|,
 name|SSHCFG_ALL
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-block|{
-literal|"noneenabled"
-block|,
-name|sNoneEnabled
-block|,
-name|SSHCFG_ALL
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|,
@@ -9082,24 +9046,6 @@ expr_stmt|;
 goto|goto
 name|parse_flag
 goto|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-case|case
-name|sNoneEnabled
-case|:
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|none_enabled
-expr_stmt|;
-goto|goto
-name|parse_flag
-goto|;
-endif|#
-directive|endif
 case|case
 name|sDeprecated
 case|:

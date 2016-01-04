@@ -25,6 +25,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_CBCDR
+value|0x014
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBCDR_MMDC_CH1_AXI_PODF_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBCDR_MMDC_CH1_AXI_PODF_MASK
+value|(7<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CSCMR1
 value|0x01C
 end_define
@@ -83,6 +104,13 @@ define|#
 directive|define
 name|CCM_CSCMR2
 value|0x020
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSCMR2_LDB_DI0_IPU_DIV_SHIFT
+value|10
 end_define
 
 begin_define
@@ -158,6 +186,90 @@ end_define
 begin_define
 define|#
 directive|define
+name|LDB_DI0_CLK_SEL_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDB_DI0_CLK_SEL_MASK
+value|(3<< LDB_DI0_CLK_SEL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_CHSCCDR
+value|0x034
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU1_DI0_PRE_CLK_SEL_MASK
+value|(0x7<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU1_DI0_PRE_CLK_SEL_SHIFT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU1_DI0_PODF_MASK
+value|(0x7<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU1_DI0_PODF_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU1_DI0_CLK_SEL_MASK
+value|(0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU1_DI0_CLK_SEL_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_CLK_SEL_LDB_DI0
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_PODF_DIVIDE_BY_3
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHSCCDR_IPU_PRE_CLK_540M_PFD
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CSCDR2
 value|0x038
 end_define
@@ -221,8 +333,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCGR0_AIPS_TZ1
+value|(0x3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR0_AIPS_TZ2
+value|(0x3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR0_ABPHDMA
+value|(0x3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CCGR1
 value|0x06C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR1_ENET
+value|(0x3<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR1_GPT
+value|(0x3<< 20)
 end_define
 
 begin_define
@@ -235,8 +382,190 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCGR2_HDMI_TX
+value|(0x3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_HDMI_TX_ISFR
+value|(0x3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_I2C1
+value|(0x3<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_I2C2
+value|(0x3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_I2C3
+value|(0x3<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IIM
+value|(0x3<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IOMUX_IPT
+value|(0x3<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IPMUX1
+value|(0x3<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IPMUX2
+value|(0x3<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IPMUX3
+value|(0x3<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IPSYNC_IP2APB_TZASC1
+value|(0x3<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IPSYNC_IP2APB_TZASC2
+value|(0x3<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR2_IPSYNC_VDOA
+value|(0x3<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CCGR3
 value|0x074
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_IPU1_IPU
+value|(0x3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_IPU1_DI0
+value|(0x3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_IPU1_DI1
+value|(0x3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_IPU2_IPU
+value|(0x3<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_IPU2_DI0
+value|(0x3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_IPU2_DI1
+value|(0x3<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_LDB_DI0
+value|(0x3<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_LDB_DI1
+value|(0x3<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_MMDC_CORE_ACLK_FAST
+value|(0x3<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_CG11
+value|(0x3<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_MMDC_CORE_IPG
+value|(0x3<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_CG13
+value|(0x3<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR3_OCRAM
+value|(0x3<< 28)
 end_define
 
 begin_define
@@ -249,6 +578,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCGR4_PL301_MX6QFAST1_S133
+value|(0x3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR4_PL301_MX6QPER1_BCH
+value|(0x3<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR4_PL301_MX6QPER2_MAIN
+value|(0x3<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CCGR5
 value|0x07C
 end_define
@@ -256,8 +606,85 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCGR5_SDMA
+value|(0x3<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR5_SSI1
+value|(0x3<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR5_SSI2
+value|(0x3<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR5_SSI3
+value|(0x3<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR5_UART
+value|(0x3<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR5_UART_SERIAL
+value|(0x3<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CCGR6
 value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR6_USBOH3
+value|(0x3<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR6_USDHC1
+value|(0x3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR6_USDHC2
+value|(0x3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR6_USDHC3
+value|(0x3<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCGR6_USDHC4
+value|(0x3<< 8)
 end_define
 
 begin_define

@@ -84,7 +84,7 @@ end_endif
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_init_txq
 parameter_list|(
 name|__in
@@ -148,7 +148,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -288,7 +288,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|EFX_CKSUM_IPV4
+name|EFX_TXQ_CKSUM_IPV4
 operator|)
 condition|?
 literal|0
@@ -300,7 +300,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|EFX_CKSUM_TCPUDP
+name|EFX_TXQ_CKSUM_TCPUDP
 operator|)
 condition|?
 literal|0
@@ -451,7 +451,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -467,7 +467,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_fini_txq
 parameter_list|(
 name|__in
@@ -494,7 +494,7 @@ name|MC_CMD_FINI_TXQ_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -599,7 +599,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -614,7 +614,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_init
 parameter_list|(
 name|__in
@@ -654,7 +654,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qcreate
 parameter_list|(
 name|__in
@@ -709,7 +709,7 @@ block|{
 name|efx_qword_t
 name|desc
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -765,7 +765,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|EFX_CKSUM_TCPUDP
+name|EFX_TXQ_CKSUM_TCPUDP
 operator|)
 condition|?
 literal|1
@@ -777,7 +777,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|EFX_CKSUM_IPV4
+name|EFX_TXQ_CKSUM_IPV4
 operator|)
 condition|?
 literal|1
@@ -818,7 +818,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -852,7 +852,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpio_enable
 parameter_list|(
 name|__in
@@ -872,7 +872,7 @@ decl_stmt|;
 name|efx_piobuf_handle_t
 name|handle
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1033,7 +1033,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1115,7 +1115,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpio_write
 argument_list|(
 name|__in
@@ -1166,7 +1166,7 @@ name|efx_qword_t
 modifier|*
 name|eqp
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1285,7 +1285,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1300,7 +1300,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpio_post
 parameter_list|(
 name|__in
@@ -1341,7 +1341,7 @@ init|=
 operator|*
 name|addedp
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1495,7 +1495,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1510,7 +1510,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpost
 argument_list|(
 name|__in
@@ -1554,7 +1554,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1786,7 +1786,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1952,7 +1952,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qdesc_post
 argument_list|(
 name|__in
@@ -1996,7 +1996,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2129,7 +2129,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2404,7 +2404,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qpace
 parameter_list|(
 name|__in
@@ -2418,7 +2418,7 @@ name|int
 name|ns
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* FIXME */
@@ -2451,7 +2451,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2466,7 +2466,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_tx_qflush
 parameter_list|(
 name|__in
@@ -2483,7 +2483,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2517,7 +2517,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

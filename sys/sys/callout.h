@@ -237,7 +237,7 @@ name|callout_drain
 parameter_list|(
 name|c
 parameter_list|)
-value|_callout_stop_safe(c, 1)
+value|_callout_stop_safe(c, 1, NULL)
 end_define
 
 begin_function_decl
@@ -552,7 +552,7 @@ name|callout_stop
 parameter_list|(
 name|c
 parameter_list|)
-value|_callout_stop_safe(c, 0)
+value|_callout_stop_safe(c, 0, NULL)
 end_define
 
 begin_function_decl
@@ -564,6 +564,15 @@ name|callout
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -577,6 +586,19 @@ name|now
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|callout_async_drain
+parameter_list|(
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|_callout_stop_safe(c, 0, d)
+end_define
 
 begin_endif
 endif|#

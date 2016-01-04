@@ -290,6 +290,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|PCCARD_PNP_INFO
+argument_list|(
+name|snc_pccard_products
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *      snc_pccard_detach - detach this instance from the device.  */
 end_comment

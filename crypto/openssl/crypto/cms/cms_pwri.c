@@ -314,6 +314,17 @@ operator|=
 name|X509_ALGOR_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|encalg
+operator|==
+name|NULL
+condition|)
+block|{
+goto|goto
+name|merr
+goto|;
+block|}
 name|EVP_CIPHER_CTX_init
 argument_list|(
 operator|&

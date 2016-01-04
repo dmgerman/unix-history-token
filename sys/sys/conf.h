@@ -1636,10 +1636,7 @@ end_define
 begin_typedef
 typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|cdevpriv_dtr_t
-function_decl|)
+name|d_priv_dtor_t
 parameter_list|(
 name|void
 modifier|*
@@ -1668,7 +1665,8 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|cdevpriv_dtr_t
+name|d_priv_dtor_t
+modifier|*
 name|dtr
 parameter_list|)
 function_decl|;

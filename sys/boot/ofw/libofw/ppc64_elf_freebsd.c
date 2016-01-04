@@ -245,7 +245,26 @@ name|fmp
 operator|->
 name|md_data
 expr_stmt|;
-comment|/* Handle function descriptor */
+comment|/* Handle function descriptor for ELFv1 kernels */
+if|if
+condition|(
+operator|(
+name|e
+operator|->
+name|e_flags
+operator|&
+literal|3
+operator|)
+operator|==
+literal|2
+condition|)
+name|entry
+operator|=
+name|e
+operator|->
+name|e_entry
+expr_stmt|;
+else|else
 name|entry
 operator|=
 operator|*

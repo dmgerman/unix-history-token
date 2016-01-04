@@ -384,6 +384,12 @@ directive|include
 file|<dev/ath/if_athdfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_descdma.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

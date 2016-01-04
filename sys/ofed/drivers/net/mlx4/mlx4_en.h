@@ -144,20 +144,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRV_VERSION
-value|"2.1"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRV_RELDATE
-value|__DATE__
-end_define
-
-begin_define
-define|#
-directive|define
 name|MLX4_EN_MSG_LEVEL
 value|(NETIF_MSG_LINK | NETIF_MSG_IFDOWN)
 end_define
@@ -314,24 +300,6 @@ value|4094
 end_define
 
 begin_comment
-comment|/* Typical TSO descriptor with 16 gather entries is 352 bytes... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_DESC_SIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_DESC_TXBBS
-value|(MAX_DESC_SIZE / TXBB_SIZE)
-end_define
-
-begin_comment
 comment|/*  * OS related constants and tunables  */
 end_comment
 
@@ -370,96 +338,6 @@ literal|1
 block|, }
 enum|;
 end_enum
-
-begin_comment
-comment|/* Receive fragment sizes; we use at most 3 fragments (for 9600 byte MTU  * and 4K allocations) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|MJUMPAGESIZE
-operator|==
-literal|4096
-end_if
-
-begin_enum
-enum|enum
-block|{
-name|FRAG_SZ0
-init|=
-name|MCLBYTES
-block|,
-name|FRAG_SZ1
-init|=
-name|MJUMPAGESIZE
-block|,
-name|FRAG_SZ2
-init|=
-name|MJUMPAGESIZE
-block|, }
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|MLX4_EN_MAX_RX_FRAGS
-value|3
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|MJUMPAGESIZE
-operator|==
-literal|8192
-end_elif
-
-begin_enum
-enum|enum
-block|{
-name|FRAG_SZ0
-init|=
-name|MCLBYTES
-block|,
-name|FRAG_SZ1
-init|=
-name|MJUMPAGESIZE
-block|, }
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|MLX4_EN_MAX_RX_FRAGS
-value|2
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|MJUMPAGESIZE
-operator|==
-literal|8192
-end_elif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"Unknown PAGE_SIZE"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Maximum ring sizes */
@@ -551,7 +429,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TX_RINGS
-value|(MLX4_EN_MAX_TX_RING_P_UP * \ 					 MLX4_EN_NUM_UP)
+value|(MLX4_EN_MAX_TX_RING_P_UP * \ 					MLX4_EN_NUM_UP)
 end_define
 
 begin_define
@@ -957,6 +835,9 @@ begin_struct
 struct|struct
 name|mlx4_en_tx_info
 block|{
+name|bus_dmamap_t
+name|dma_map
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -968,24 +849,6 @@ decl_stmt|;
 name|u32
 name|nr_bytes
 decl_stmt|;
-name|u8
-name|linear
-decl_stmt|;
-name|u8
-name|nr_segs
-decl_stmt|;
-name|u8
-name|data_offset
-decl_stmt|;
-name|u8
-name|inl
-decl_stmt|;
-if|#
-directive|if
-literal|0
-block|u8 ts_requested;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1057,20 +920,66 @@ end_define
 begin_define
 define|#
 directive|define
-name|MLX4_EN_TX_BUDGET
-value|64*4
+name|MLX4_EN_RX_BUDGET
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_MAX_DESC_SIZE
+value|512
 end_define
 
 begin_comment
-comment|//Compensate for no NAPI in freeBSD - might need some fine tunning in the future.
+comment|/* bytes */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MLX4_EN_RX_BUDGET
-value|64
+name|MLX4_EN_TX_MAX_MBUF_SIZE
+value|65536
 end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_MAX_PAYLOAD_SIZE
+value|65536
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_MAX_MBUF_FRAGS
+define|\
+value|((MLX4_EN_TX_MAX_DESC_SIZE - 128) / DS_SIZE_ALIGNMENT)
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TX_WQE_MAX_WQEBBS
+define|\
+value|(MLX4_EN_TX_MAX_DESC_SIZE / TXBB_SIZE)
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
 
 begin_define
 define|#
@@ -1092,6 +1001,9 @@ name|mlx4_en_tx_ring
 block|{
 name|spinlock_t
 name|tx_lock
+decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag
 decl_stmt|;
 name|struct
 name|mlx4_hwq_resources
@@ -1123,7 +1035,7 @@ decl_stmt|;
 name|u32
 name|doorbell_qpn
 decl_stmt|;
-name|void
+name|u8
 modifier|*
 name|buf
 decl_stmt|;
@@ -1137,10 +1049,6 @@ name|struct
 name|mlx4_en_tx_info
 modifier|*
 name|tx_info
-decl_stmt|;
-name|u8
-modifier|*
-name|bounce_buf
 decl_stmt|;
 name|u8
 name|queue_index
@@ -1193,6 +1101,10 @@ name|queue_stopped
 decl_stmt|;
 name|unsigned
 name|long
+name|oversized_packets
+decl_stmt|;
+name|unsigned
+name|long
 name|wake_queue
 decl_stmt|;
 name|struct
@@ -1202,19 +1114,11 @@ decl_stmt|;
 name|bool
 name|bf_enabled
 decl_stmt|;
-name|struct
-name|netdev_queue
-modifier|*
-name|tx_queue
-decl_stmt|;
 name|int
 name|hwtstamp_tx_type
 decl_stmt|;
 name|spinlock_t
 name|comp_lock
-decl_stmt|;
-name|int
-name|full_size
 decl_stmt|;
 name|int
 name|inline_thold
@@ -1244,19 +1148,34 @@ end_struct
 
 begin_struct
 struct|struct
-name|mlx4_en_rx_buf
+name|mlx4_en_rx_mbuf
 block|{
-name|dma_addr_t
-name|dma
+name|bus_dmamap_t
+name|dma_map
 decl_stmt|;
 name|struct
-name|page
+name|mbuf
 modifier|*
-name|page
+name|mbuf
 decl_stmt|;
-name|unsigned
-name|int
-name|page_offset
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mlx4_en_rx_spare
+block|{
+name|bus_dmamap_t
+name|dma_map
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+decl_stmt|;
+name|u64
+name|paddr_be
 decl_stmt|;
 block|}
 struct|;
@@ -1269,6 +1188,13 @@ block|{
 name|struct
 name|mlx4_hwq_resources
 name|wqres
+decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag
+decl_stmt|;
+name|struct
+name|mlx4_en_rx_spare
+name|spare
 decl_stmt|;
 name|u32
 name|size
@@ -1317,13 +1243,14 @@ decl_stmt|;
 name|int
 name|qpn
 decl_stmt|;
-name|void
+name|u8
 modifier|*
 name|buf
 decl_stmt|;
-name|void
+name|struct
+name|mlx4_en_rx_mbuf
 modifier|*
-name|rx_info
+name|mbuf
 decl_stmt|;
 name|unsigned
 name|long
@@ -1521,6 +1448,9 @@ name|tot_rx
 decl_stmt|;
 name|u32
 name|tot_tx
+decl_stmt|;
+name|u32
+name|curr_poll_rx_cpu_id
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1973,20 +1903,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|mlx4_en_frag_info
-block|{
-name|u16
-name|frag_size
-decl_stmt|;
-name|u16
-name|frag_prefix_size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|mlx4_en_priv
 block|{
 name|struct
@@ -2146,9 +2062,6 @@ name|struct
 name|mlx4_en_rss_map
 name|rss_map
 decl_stmt|;
-name|__be32
-name|ctrl_flags
-decl_stmt|;
 name|u32
 name|flags
 decl_stmt|;
@@ -2164,13 +2077,6 @@ decl_stmt|;
 name|u32
 name|rx_mb_size
 decl_stmt|;
-name|struct
-name|mlx4_en_frag_info
-name|frag_info
-index|[
-name|MLX4_EN_MAX_RX_FRAGS
-index|]
-decl_stmt|;
 name|u16
 name|rx_alloc_order
 decl_stmt|;
@@ -2179,12 +2085,6 @@ name|rx_alloc_size
 decl_stmt|;
 name|u32
 name|rx_buf_size
-decl_stmt|;
-name|u16
-name|num_frags
-decl_stmt|;
-name|u16
-name|log_rx_info
 decl_stmt|;
 name|struct
 name|mlx4_en_tx_ring

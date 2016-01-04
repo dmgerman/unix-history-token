@@ -16,10 +16,17 @@ name|mips
 argument_list|)
 operator|&&
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|NetBSD
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FreeBSD
+argument_list|)
+operator|)
 end_if
 
 begin_include
@@ -51,7 +58,7 @@ value|(1<< FBITS)
 end_define
 
 begin_comment
-comment|/* mips */
+comment|/* RISC/os on mips */
 end_comment
 
 begin_endif

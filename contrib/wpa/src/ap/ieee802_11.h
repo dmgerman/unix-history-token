@@ -47,6 +47,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|ieee80211_vht_capabilities
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ieee80211_mgmt
 struct_decl|;
 end_struct_decl
@@ -253,14 +259,6 @@ name|struct
 name|hostapd_data
 modifier|*
 name|hapd
-parameter_list|,
-name|struct
-name|sta_info
-modifier|*
-name|sta
-parameter_list|,
-name|int
-name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -529,9 +527,6 @@ specifier|const
 name|u8
 modifier|*
 name|ht_capab
-parameter_list|,
-name|size_t
-name|ht_capab_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -630,9 +625,6 @@ specifier|const
 name|u8
 modifier|*
 name|vht_capab
-parameter_list|,
-name|size_t
-name|vht_capab_len
 parameter_list|)
 function_decl|;
 end_function_decl

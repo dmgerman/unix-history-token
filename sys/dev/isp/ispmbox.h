@@ -108,9 +108,12 @@ name|MBOX_LOAD_RISC_RAM
 value|0x000b
 end_define
 
-begin_comment
-comment|/*   c */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_DUMP_RISC_RAM
+value|0x000c
+end_define
 
 begin_define
 define|#
@@ -569,6 +572,70 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MBOX_LOAD_FLASH_FIRMWARE
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_WRITE_FC_SERDES_REG
+value|0x0003
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_READ_FC_SERDES_REG
+value|0x0004
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_IO_STATUS
+value|0x0012
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_TRANSMIT_PARAMS
+value|0x0019
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_PORT_PARAMS
+value|0x001a
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_LOAD_OP_FW_PARAMS
+value|0x001b
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_INIT_MULTIPLE_QUEUE
+value|0x001f
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_GET_LOOP_ID
 value|0x0020
 end_define
@@ -608,8 +675,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_TIMEOUT_PARAMS
+value|0x0022
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_GET_FIRMWARE_OPTIONS
 value|0x0028
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GENERATE_SYSTEM_ERROR
+value|0x002a
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_WRITE_SFP
+value|0x0030
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_READ_SFP
+value|0x0031
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_TIMEOUT_PARAMS
+value|0x0032
 end_define
 
 begin_define
@@ -618,6 +720,53 @@ directive|define
 name|MBOX_SET_FIRMWARE_OPTIONS
 value|0x0038
 end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_SET_FC_LED_CONF
+value|0x003b
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_RESTART_NIC_FIRMWARE
+value|0x003d
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_ACCESS_CONTROL
+value|0x003e
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_LOOP_PORT_BYPASS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_LOOP_PORT_ENABLE
+value|0x0041
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
 
 begin_define
 define|#
@@ -631,6 +780,20 @@ define|#
 directive|define
 name|MBOX_REQUEST_OFFLINE_MODE
 value|0x0043
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_DIAGNOSTIC_ECHO_TEST
+value|0x0044
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_DIAGNOSTIC_LOOPBACK
+value|0x0045
 end_define
 
 begin_define
@@ -676,8 +839,184 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MBOX_GET_FCF_LIST
+value|0x0050
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_DCBX_PARAMETERS
+value|0x0051
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_HOST_MEMORY_COPY
+value|0x0053
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_EXEC_COMMAND_IOCB_A64
 value|0x0054
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SEND_RNID
+value|0x0057
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_PARAMETERS
+value|0x0059
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_PARAMETERS
+value|0x005a
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_DRIVER_HEARTBEAT
+value|0x005B
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_FW_HEARTBEAT
+value|0x005C
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_SET_DATA_RATE
+value|0x005D
+end_define
+
+begin_comment
+comment|/*>=23XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_GET_RATE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_SET_RATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_SET_RATE_NOW
+value|2
+end_define
+
+begin_comment
+comment|/* 24XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_1GB
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_2GB
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_AUTO
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_4GB
+value|0x03
+end_define
+
+begin_comment
+comment|/* 24XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_8GB
+value|0x04
+end_define
+
+begin_comment
+comment|/* 25XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_16GB
+value|0x05
+end_define
+
+begin_comment
+comment|/* 26XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_10GB
+value|0x13
+end_define
+
+begin_comment
+comment|/* 26XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX_SEND_RNFT
+value|0x005e
 end_define
 
 begin_define
@@ -774,6 +1113,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_LINK_STAT_PR_DATA_CNT
+value|0x006D
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_SEND_SNS
 value|0x006E
 end_define
@@ -809,102 +1155,44 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_PORT_NODE_NAME_LIST
+value|0x0075
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_VENDOR_ID
+value|0x0076
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_XGMAC_STATS
+value|0x007a
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_ID_LIST
+value|0x007C
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SEND_LFA
+value|0x007d
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_LUN_RESET
 value|0x007E
 end_define
-
-begin_define
-define|#
-directive|define
-name|MBOX_DRIVER_HEARTBEAT
-value|0x005B
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBOX_FW_HEARTBEAT
-value|0x005C
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBOX_GET_SET_DATA_RATE
-value|0x005D
-end_define
-
-begin_comment
-comment|/* 24XX/23XX only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBGSD_GET_RATE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBGSD_SET_RATE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBGSD_SET_RATE_NOW
-value|2
-end_define
-
-begin_comment
-comment|/* 24XX only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBGSD_ONEGB
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBGSD_TWOGB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBGSD_AUTO
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBGSD_FOURGB
-value|3
-end_define
-
-begin_comment
-comment|/* 24XX only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBGSD_EIGHTGB
-value|4
-end_define
-
-begin_comment
-comment|/* 25XX only */
-end_comment
 
 begin_define
 define|#
@@ -994,6 +1282,34 @@ name|MBOX_NOT_LOGGED_IN
 value|0x400A
 end_define
 
+begin_define
+define|#
+directive|define
+name|MBOX_LINK_DOWN_ERROR
+value|0x400B
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_LOOPBACK_ERROR
+value|0x400C
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_CHECKSUM_ERROR
+value|0x4010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_INVALID_PRODUCT_KEY
+value|0x4020
+end_define
+
 begin_comment
 comment|/* pseudo mailbox completion codes */
 end_comment
@@ -1024,14 +1340,14 @@ begin_define
 define|#
 directive|define
 name|MBLOGALL
-value|0x000f
+value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBLOGNONE
-value|0x0000
+value|0x00000000
 end_define
 
 begin_define
@@ -1041,7 +1357,7 @@ name|MBLOGMASK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0xf)
+value|(1<< (((x) - 1)& 0x1f))
 end_define
 
 begin_comment
@@ -1143,6 +1459,10 @@ name|ASYNC_LIP_OCCURRED
 value|0x8010
 end_define
 
+begin_comment
+comment|/* FC only */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1164,6 +1484,10 @@ name|ASYNC_LOOP_RESET
 value|0x8013
 end_define
 
+begin_comment
+comment|/* FC only */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1181,15 +1505,30 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASYNC_LIP_F8
+name|ASYNC_LIP_NOS_OLS_RECV
 value|0x8016
 end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ASYNC_LIP_ERROR
 value|0x8017
+end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTO_PLOGI_RJT
+value|0x8018
 end_define
 
 begin_define
@@ -1272,9 +1611,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASYNC_ERR_LOGGING_DISABLED
+value|0x8029
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASYNC_PTPMODE
 value|0x8030
 end_define
+
+begin_comment
+comment|/* FC only */
+end_comment
 
 begin_define
 define|#
@@ -1356,6 +1706,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASYNC_P2P_INIT_ERR
+value|0x8037
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASYNC_RIOZIO_STALL
 value|0x8040
 end_define
@@ -1380,6 +1737,107 @@ define|#
 directive|define
 name|ASYNC_RCV_ERR
 value|0x8048
+end_define
+
+begin_comment
+comment|/*  * 2.01.31 2200 Only. Need Bit 13 in Mailbox 1 for Set Firmware Options  * mailbox command to enable this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_QFULL_SENT
+value|0x8049
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_RJT_SENT
+value|0x8049
+end_define
+
+begin_comment
+comment|/* 24XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_SEL_CLASS2_P_RJT_SENT
+value|0x804f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_FW_RESTART_COMPLETE
+value|0x8060
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_TEMPERATURE_ALERT
+value|0x8070
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_INTER_DRIVER_COMP
+value|0x8100
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_INTER_DRIVER_NOTIFY
+value|0x8101
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_INTER_DRIVER_TIME_EXT
+value|0x8102
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_NIC_FW_STATE_CHANGE
+value|0x8200
+end_define
+
+begin_comment
+comment|/* FCoE only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTOLOAD_FW_COMPLETE
+value|0x8400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTOLOAD_FW_FAILURE
+value|0x8401
 end_define
 
 begin_comment
@@ -1501,39 +1959,6 @@ define|#
 directive|define
 name|IFCOPT3_RNDASYNC
 value|(1<< 1)
-end_define
-
-begin_comment
-comment|/*  * 2.01.31 2200 Only. Need Bit 13 in Mailbox 1 for Set Firmware Options  * mailbox command to enable this.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASYNC_QFULL_SENT
-value|0x8049
-end_define
-
-begin_comment
-comment|/*  * Needs to be enabled  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASYNC_AUTO_PLOGI_RJT
-value|0x8018
-end_define
-
-begin_comment
-comment|/*  * 24XX only  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASYNC_RJT_SENT
-value|0x8049
 end_define
 
 begin_comment
@@ -2306,7 +2731,10 @@ decl_stmt|;
 name|uint16_t
 name|req_flags
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|req_crn
+decl_stmt|;
+name|uint8_t
 name|req_reserved
 decl_stmt|;
 name|uint16_t
@@ -2822,10 +3250,13 @@ decl_stmt|;
 name|uint32_t
 name|abrt_cmd_handle
 decl_stmt|;
+name|uint16_t
+name|abrt_queue_number
+decl_stmt|;
 name|uint8_t
 name|abrt_reserved
 index|[
-literal|32
+literal|30
 index|]
 decl_stmt|;
 name|uint16_t
@@ -3040,8 +3471,9 @@ name|uint16_t
 name|req_state_flags
 decl_stmt|;
 name|uint16_t
-name|req_reserved1
+name|req_retry_delay
 decl_stmt|;
+comment|/* aka Status Qualifier */
 name|uint16_t
 name|req_scsi_status
 decl_stmt|;
@@ -3072,8 +3504,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RQCS_CR
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Confirmation Request */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RQCS_RU
-value|0x800
+value|0x0800
 end_define
 
 begin_comment
@@ -3084,7 +3527,7 @@ begin_define
 define|#
 directive|define
 name|RQCS_RO
-value|0x400
+value|0x0400
 end_define
 
 begin_comment
@@ -3102,7 +3545,7 @@ begin_define
 define|#
 directive|define
 name|RQCS_SV
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
@@ -3113,7 +3556,7 @@ begin_define
 define|#
 directive|define
 name|RQCS_RV
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -3914,6 +4357,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP2400_FW_ATTR_MQ
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_MSIX
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_FCOE
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP2400_FW_ATTR_VP0
 value|0x1000
 end_define
@@ -3928,8 +4392,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP2400_FW_ATTR_HOTFW
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP2400_FW_ATTR_EXTNDED
 value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_EXTVP
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_VN2VN
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_EXMOFF
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_NPMOFF
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_DIFCHOP
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_SRIOV
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_ASICTMP
+value|0x0200000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2400_FW_ATTR_ATIOMQ
+value|0x0400000000
 end_define
 
 begin_comment
@@ -3995,6 +4522,17 @@ name|tag
 parameter_list|)
 define|\
 value|(ISP_CAP_MULTI_ID(isp) ? tag : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_CAP_VP0
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_24XX(isp)? (isp->isp_fwattr& ISP2400_FW_ATTR_VP0) : 0)
 end_define
 
 begin_comment
@@ -4226,7 +4764,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICBOPT_PREVLOOP
+name|ICBOPT_PREV_ADDRESS
 value|0x0800
 end_define
 
@@ -4466,7 +5004,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBZOPT_RATE_ONEGB
+name|ICBZOPT_RATE_1GB
 value|0x0000
 end_define
 
@@ -4480,7 +5018,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBZOPT_RATE_TWOGB
+name|ICBZOPT_RATE_2GB
 value|0x4000
 end_define
 
@@ -4489,6 +5027,13 @@ define|#
 directive|define
 name|ICBZOPT_50_OHM
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_NO_LOCAL_PLOGI
+value|0x0080
 end_define
 
 begin_define
@@ -4572,7 +5117,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT1_PREVLOOP
+name|ICB2400_OPT1_PREV_ADDRESS
 value|0x00000800
 end_define
 
@@ -4623,6 +5168,55 @@ define|#
 directive|define
 name|ICB2400_OPT1_HARD_ADDRESS
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_ATIOMQ
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_IHA
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_QOS
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_IOCBS
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_IHR
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_VMS
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT2_ENA_TA
+value|0x00100000
 end_define
 
 begin_define
@@ -4719,7 +5313,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_75_OHM
+name|ICB2400_OPT3_NO_CTXDIS
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_ENA_ETH_RESP
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_ENA_ETH_ATIO
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_ENA_MFCF
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_SKIP_4GB
 value|0x00010000
 end_define
 
@@ -4733,14 +5355,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_ONEGB
+name|ICB2400_OPT3_RATE_1GB
 value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_TWOGB
+name|ICB2400_OPT3_RATE_2GB
 value|0x00002000
 end_define
 
@@ -4754,15 +5376,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_FOURGB
+name|ICB2400_OPT3_RATE_4GB
 value|0x00006000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT3_RATE_EIGHTGB
+name|ICB2400_OPT3_RATE_8GB
 value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_RATE_16GB
+value|0x0000A000
 end_define
 
 begin_define
@@ -4770,6 +5399,13 @@ define|#
 directive|define
 name|ICB2400_OPT3_ENA_OOF_XFRDY
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB2400_OPT3_NO_N2N_LOGI
+value|0x00000100
 end_define
 
 begin_define
@@ -4878,7 +5514,7 @@ begin_define
 define|#
 directive|define
 name|ICB_LOGIN_TOV
-value|30
+value|10
 end_define
 
 begin_define
@@ -4969,9 +5605,15 @@ literal|4
 index|]
 decl_stmt|;
 name|uint16_t
+name|icb_msixresp
+decl_stmt|;
+name|uint16_t
+name|icb_msixatio
+decl_stmt|;
+name|uint16_t
 name|icb_reserved1
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 name|uint16_t
@@ -5002,9 +5644,27 @@ name|uint32_t
 name|icb_fwoptions3
 decl_stmt|;
 name|uint16_t
+name|icb_qos
+decl_stmt|;
+name|uint16_t
 name|icb_reserved2
 index|[
-literal|12
+literal|3
+index|]
+decl_stmt|;
+name|uint16_t
+name|icb_enodemac
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint16_t
+name|icb_disctime
+decl_stmt|;
+name|uint16_t
+name|icb_reserved3
+index|[
+literal|4
 index|]
 decl_stmt|;
 block|}
@@ -5167,12 +5827,23 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|ICB2400_VPOPT_ENA_SNSLOGIN
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Enable SNS Login and SCR for Virtual Ports */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICB2400_VPOPT_TGT_DISABLE
 value|0x00000020
 end_define
 
 begin_comment
-comment|/* disable target mode */
+comment|/* Target Mode Disabled */
 end_comment
 
 begin_define
@@ -5183,7 +5854,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* enable initiator mode */
+comment|/* Initiator Mode Enabled */
 end_comment
 
 begin_define
@@ -5193,6 +5864,10 @@ name|ICB2400_VPOPT_ENABLED
 value|0x00000008
 end_define
 
+begin_comment
+comment|/* VP Enabled */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5200,12 +5875,20 @@ name|ICB2400_VPOPT_NOPLAY
 value|0x00000004
 end_define
 
+begin_comment
+comment|/* ID Not Acquired */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ICB2400_VPOPT_PREVLOOP
+name|ICB2400_VPOPT_PREV_ADDRESS
 value|0x00000002
 end_define
+
+begin_comment
+comment|/* Previously Assigned ID */
+end_comment
 
 begin_define
 define|#
@@ -5213,6 +5896,10 @@ directive|define
 name|ICB2400_VPOPT_HARD_ADDRESS
 value|0x00000001
 end_define
+
+begin_comment
+comment|/* Hard Assigned ID */
+end_comment
 
 begin_define
 define|#
@@ -5259,7 +5946,7 @@ parameter_list|(
 name|chan
 parameter_list|)
 define|\
-value|ICB2400_VPINFO_OFF + 			\     sizeof (isp_icb_2400_vpinfo_t) + ((chan - 1) * ICB2400_VPOPT_WRITE_SIZE)
+value|(ICB2400_VPINFO_OFF + 			\      sizeof (isp_icb_2400_vpinfo_t) + (chan * ICB2400_VPOPT_WRITE_SIZE))
 end_define
 
 begin_define
@@ -5295,6 +5982,28 @@ begin_comment
 comment|/* Allow VP0 decoupling if firmware supports it */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICB2400_VPGOPT_SUSP_FDISK
+value|0x10
+end_define
+
+begin_comment
+comment|/* Suspend FDISC for Enabled VPs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICB2400_VPGOPT_GEN_RIDA
+value|0x20
+end_define
+
+begin_comment
+comment|/* Generate RIDA if FLOGI Fails */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -5320,14 +6029,17 @@ decl_stmt|;
 name|uint16_t
 name|vp_ctrl_idmap
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|vp_ctrl_reserved
 index|[
-literal|32
+literal|7
 index|]
+decl_stmt|;
+name|uint16_t
+name|vp_ctrl_fcf_index
 decl_stmt|;
 block|}
 name|vp_ctrl_info_t
@@ -5338,28 +6050,35 @@ begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_ENABLE_VP
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_DISABLE_VP
-value|8
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_DISABLE_VP_REINIT_LINK
-value|9
+value|0x09
 end_define
 
 begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_DISABLE_VP_LOGO
-value|0xA
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP_CTRL_CMD_DISABLE_VP_LOGO_ALL
+value|0x0B
 end_define
 
 begin_comment
@@ -5479,7 +6198,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VP_MODIFY_VP
+name|VP_MODIFY
 value|0x00
 end_define
 
@@ -5488,6 +6207,20 @@ define|#
 directive|define
 name|VP_MODIFY_ENA
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP_MODIFY_OPT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP_RESUME
+value|0x03
 end_define
 
 begin_comment
@@ -5987,6 +6720,110 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Port/Node Name List Element  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint8_t
+name|pnnle_name
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint16_t
+name|pnnle_handle
+decl_stmt|;
+name|uint16_t
+name|pnnle_reserved
+decl_stmt|;
+block|}
+name|isp_pnnle_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PNNL_OPTIONS_NODE_NAMES
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNNL_OPTIONS_PORT_DATA
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNNL_OPTIONS_INITIATORS
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/*  * Port and N-Port Handle List Element  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|pnhle_port_id_lo
+decl_stmt|;
+name|uint16_t
+name|pnhle_port_id_hi_handle
+decl_stmt|;
+block|}
+name|isp_pnhle_21xx_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|pnhle_port_id_lo
+decl_stmt|;
+name|uint16_t
+name|pnhle_port_id_hi
+decl_stmt|;
+name|uint16_t
+name|pnhle_handle
+decl_stmt|;
+block|}
+name|isp_pnhle_23xx_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|pnhle_port_id_lo
+decl_stmt|;
+name|uint16_t
+name|pnhle_port_id_hi
+decl_stmt|;
+name|uint16_t
+name|pnhle_handle
+decl_stmt|;
+name|uint16_t
+name|pnhle_reserved
+decl_stmt|;
+block|}
+name|isp_pnhle_24xx_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Port Database Changed Async Event information for 24XX cards  */
 end_comment
 
@@ -6328,7 +7165,7 @@ begin_define
 define|#
 directive|define
 name|PLOGX_IOCBERR_NOLOGIN
-value|0x08
+value|0x09
 end_define
 
 begin_comment
@@ -6566,27 +7403,11 @@ decl_stmt|;
 name|uint32_t
 name|ridacq_handle
 decl_stmt|;
-union|union
-block|{
-struct|struct
-block|{
 name|uint8_t
 name|ridacq_vp_acquired
 decl_stmt|;
 name|uint8_t
 name|ridacq_vp_setup
-decl_stmt|;
-name|uint16_t
-name|ridacq_reserved0
-decl_stmt|;
-block|}
-name|type0
-struct|;
-comment|/* type 0 */
-struct|struct
-block|{
-name|uint16_t
-name|ridacq_vp_count
 decl_stmt|;
 name|uint8_t
 name|ridacq_vp_index
@@ -6594,13 +7415,6 @@ decl_stmt|;
 name|uint8_t
 name|ridacq_vp_status
 decl_stmt|;
-block|}
-name|type1
-struct|;
-comment|/* type 1 */
-block|}
-name|un
-union|;
 name|uint16_t
 name|ridacq_vp_port_lo
 decl_stmt|;
@@ -6646,7 +7460,35 @@ begin_define
 define|#
 directive|define
 name|RIDACQ_STS_CHANGED
-value|20
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIDACQ_STS_SNS_TIMEOUT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIDACQ_STS_SNS_REJECTED
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIDACQ_STS_SCR_TIMEOUT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIDACQ_STS_SCR_REJECTED
+value|6
 end_define
 
 begin_comment
@@ -6693,6 +7535,13 @@ define|#
 directive|define
 name|SNS_RFT_ID
 value|0x217
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_RFF_ID
+value|0x21F
 end_define
 
 begin_typedef
@@ -8088,7 +8937,7 @@ name|uint8_t
 name|in_status_subcode
 decl_stmt|;
 name|uint8_t
-name|in_reserved2
+name|in_fwhandle
 decl_stmt|;
 name|uint32_t
 name|in_rxid
@@ -8181,6 +9030,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN24XX_FLAG_N2N_PRLI
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN24XX_FLAG_PN_NN_VALID
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN24XX_LIP_RESET
 value|0x0E
 end_define
@@ -8234,6 +9097,20 @@ end_comment
 begin_comment
 comment|/*  * For f/w> 4.0.25, these offsets in the Immediate Notify contain  * the WWNN/WWPN if the ELS is PLOGI, PDISC or ADISC. The WWN is in  * Big Endian format.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IN24XX_PRLI_WWNN_OFF
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN24XX_PRLI_WWPN_OFF
+value|0x28
+end_define
 
 begin_define
 define|#
@@ -8642,7 +9519,7 @@ name|uint8_t
 name|na_status_subcode
 decl_stmt|;
 name|uint8_t
-name|na_reserved2
+name|na_fwhandle
 decl_stmt|;
 name|uint32_t
 name|na_rxid

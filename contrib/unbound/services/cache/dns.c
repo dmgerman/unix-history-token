@@ -4098,6 +4098,8 @@ name|LDNS_RR_TYPE_SOA
 block|,
 name|LDNS_RR_TYPE_NS
 block|,
+name|LDNS_RR_TYPE_DNAME
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -4106,7 +4108,7 @@ name|i
 decl_stmt|,
 name|num
 init|=
-literal|5
+literal|6
 decl_stmt|;
 comment|/* number of RR types to look up */
 name|log_assert

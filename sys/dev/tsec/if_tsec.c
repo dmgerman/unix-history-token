@@ -2757,7 +2757,7 @@ argument_list|)
 operator|)
 argument_list|,
 operator|(
-literal|"tsec_set_mac_address: (%d<= %d"
+literal|"tsec_set_mac_address: (%d<= %zd"
 operator|,
 name|ETHER_ADDR_LEN
 operator|,

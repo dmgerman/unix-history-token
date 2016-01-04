@@ -124,14 +124,14 @@ file|"un-namespace.h"
 end_include
 
 begin_comment
-comment|/* There is no a.out support on arm64 */
+comment|/* i386 is the only current FreeBSD architecture that used a.out format. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__aarch64__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_define
 define|#

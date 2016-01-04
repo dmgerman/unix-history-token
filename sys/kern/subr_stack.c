@@ -624,11 +624,19 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DDB
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WITNESS
+argument_list|)
+end_if
 
 begin_function
 name|void
@@ -864,11 +872,19 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DDB
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WITNESS
+argument_list|)
+end_if
 
 begin_function
 name|void

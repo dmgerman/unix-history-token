@@ -736,7 +736,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -782,7 +782,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -803,7 +803,7 @@ name|irq
 argument_list|)
 condition|)
 block|{
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|child
 argument_list|,

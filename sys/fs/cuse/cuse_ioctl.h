@@ -91,12 +91,10 @@ begin_struct
 struct|struct
 name|cuse_data_chunk
 block|{
-name|unsigned
-name|long
+name|uintptr_t
 name|local_ptr
 decl_stmt|;
-name|unsigned
-name|long
+name|uintptr_t
 name|peer_ptr
 decl_stmt|;
 name|unsigned
@@ -136,12 +134,10 @@ name|unsigned
 name|long
 name|fflags
 decl_stmt|;
-name|unsigned
-name|long
+name|uintptr_t
 name|per_file_handle
 decl_stmt|;
-name|unsigned
-name|long
+name|uintptr_t
 name|data_pointer
 decl_stmt|;
 name|unsigned
@@ -243,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|CUSE_IOCTL_SET_PFH
-value|_IOW('C', 7, unsigned long)
+value|_IOW('C', 7, uintptr_t)
 end_define
 
 begin_define

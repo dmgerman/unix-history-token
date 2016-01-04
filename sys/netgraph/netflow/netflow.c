@@ -2243,7 +2243,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|NG_NETFLOW_CONF_NODSTLOOKUP
+name|NG_NETFLOW_CONF_NOSRCLOOKUP
 operator|)
 operator|==
 literal|0

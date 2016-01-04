@@ -43,7 +43,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_poll
 parameter_list|(
 name|__in
@@ -71,7 +71,7 @@ decl_stmt|;
 name|siena_link_state_t
 name|sls
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -127,7 +127,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -147,7 +147,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_up
 parameter_list|(
 name|__in
@@ -164,7 +164,7 @@ block|{
 name|siena_link_state_t
 name|sls
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Because Siena doesn't *require* polling, we can't rely on 	 * siena_mac_poll() being executed to populate epp->ep_mac_up. 	 */
@@ -205,7 +205,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -220,7 +220,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_reconfigure
 parameter_list|(
 name|__in
@@ -274,7 +274,7 @@ name|unsigned
 name|int
 name|fcntl
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -666,7 +666,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -687,7 +687,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_loopback_set
 parameter_list|(
 name|__in
@@ -729,7 +729,7 @@ decl_stmt|;
 name|efx_link_mode_t
 name|old_loopback_link_mode
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* The PHY object handles this on Siena */
@@ -839,7 +839,7 @@ end_define
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|siena_mac_stats_update
 argument_list|(
 name|__in
@@ -852,7 +852,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_MAC_NSTATS
 argument_list|)
@@ -860,7 +860,7 @@ name|efsys_stat_t
 operator|*
 name|stat
 argument_list|,
-name|__out_opt
+name|__inout_opt
 name|uint32_t
 operator|*
 name|generationp

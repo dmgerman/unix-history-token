@@ -132,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/am335x/hdmi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"iicbus_if.h"
 end_include
 
@@ -3509,7 +3503,11 @@ name|EVENTHANDLER_INVOKE
 argument_list|(
 name|hdmi_event
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|HDMI_EVENT_CONNECTED
 argument_list|)
 expr_stmt|;
 name|done
@@ -3982,8 +3980,6 @@ name|iicbus_get_addr
 argument_list|(
 name|dev
 argument_list|)
-operator|<<
-literal|1
 expr_stmt|;
 name|sc
 operator|->

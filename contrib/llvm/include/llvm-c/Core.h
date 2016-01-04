@@ -4465,6 +4465,9 @@ parameter_list|,
 name|LLVMTypeRef
 name|Ty
 parameter_list|,
+name|LLVMValueRef
+name|PersFn
+parameter_list|,
 name|unsigned
 name|NumClauses
 parameter_list|,

@@ -985,6 +985,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|pkey
+operator|==
+name|NULL
+operator|||
 operator|!
 name|EVP_PKEY_set_type
 argument_list|(
@@ -1389,6 +1393,12 @@ operator|->
 name|type
 operator|!=
 name|EVP_PKEY_DH
+operator|&&
+name|pkey
+operator|->
+name|type
+operator|!=
+name|EVP_PKEY_DHX
 condition|)
 block|{
 name|EVPerr

@@ -859,7 +859,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 modifier|*
 name|dmem
 decl_stmt|;
@@ -895,7 +895,7 @@ operator|)
 return|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|phandle
 argument_list|,
@@ -964,13 +964,12 @@ index|]
 decl_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|phandle
 argument_list|,
 literal|"ibm,dynamic-memory"
 argument_list|,
-operator|&
 name|arr
 argument_list|,
 sizeof|sizeof
@@ -1002,10 +1001,6 @@ expr_stmt|;
 comment|/* First address, in arr[1], arr[2]*/
 name|dmem
 operator|=
-operator|(
-name|uint64_t
-operator|*
-operator|)
 operator|&
 name|arr
 index|[
@@ -1028,17 +1023,33 @@ control|)
 block|{
 name|base
 operator|=
-operator|*
+operator|(
+operator|(
+name|uint64_t
+operator|)
 name|dmem
+index|[
+literal|0
+index|]
+operator|<<
+literal|32
+operator|)
+operator|+
+name|dmem
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|dmem
 operator|+=
-literal|2
+literal|4
 expr_stmt|;
 name|flags
 operator|=
-operator|*
 name|dmem
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* Use region only if available and not reserved. */
 if|if
@@ -1113,7 +1124,8 @@ operator|++
 expr_stmt|;
 block|}
 name|dmem
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 block|}
 block|}
@@ -1339,7 +1351,7 @@ name|cpuref
 operator|->
 name|cr_hwref
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|phandle
 argument_list|,
@@ -1566,7 +1578,7 @@ name|cpu
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|cpu
 argument_list|,
@@ -1589,7 +1601,7 @@ literal|0
 condition|)
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|cpu
 argument_list|,
@@ -1688,7 +1700,7 @@ name|cell_t
 argument_list|)
 index|]
 decl_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|cpuref
 operator|->
@@ -1829,7 +1841,7 @@ name|cpu
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|cpu
 argument_list|,
@@ -1852,7 +1864,7 @@ literal|0
 condition|)
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|cpu
 argument_list|,
@@ -1938,7 +1950,7 @@ operator|)
 return|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|chosen
 argument_list|,
@@ -1980,7 +1992,7 @@ name|bsp
 expr_stmt|;
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|bsp
 argument_list|,
@@ -2003,7 +2015,7 @@ literal|0
 condition|)
 name|res
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|bsp
 argument_list|,

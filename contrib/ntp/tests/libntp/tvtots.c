@@ -30,8 +30,35 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|// Required on Solaris for ldexp.
+comment|/* Required on Solaris for ldexp. */
 end_comment
+
+begin_function_decl
+name|void
+name|test_Seconds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_MicrosecondsRounded
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_MicrosecondsExact
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -50,12 +77,14 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// 500.0 s
+comment|/* 500.0 s */
 name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|500
+block|}
 block|,
 literal|0
 block|}
@@ -103,12 +132,14 @@ block|,
 literal|500
 block|}
 decl_stmt|;
-comment|// 0.0005 exact
+comment|/* 0.0005 exact */
 name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|0
+block|}
 block|,
 name|HALF_PROMILLE_UP
 block|}
@@ -145,7 +176,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// 0.5 can be represented exact in both l_fp and timeval.
+comment|/* 0.5 can be represented exact in both l_fp and timeval. */
 specifier|const
 name|struct
 name|timeval
@@ -157,18 +188,20 @@ block|,
 literal|500000
 block|}
 decl_stmt|;
-comment|// 0.5 exact
+comment|/* 0.5 exact */
 specifier|const
 name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|10
+block|}
 block|,
 name|HALF
 block|}
 decl_stmt|;
-comment|// 0.5 exact
+comment|/* 0.5 exact */
 name|l_fp
 name|actual
 decl_stmt|;
@@ -181,7 +214,7 @@ operator|&
 name|actual
 argument_list|)
 expr_stmt|;
-comment|// Compare the fractional part with an absolute error given.
+comment|/* Compare the fractional part with an absolute error given. */
 name|TEST_ASSERT_EQUAL_UINT
 argument_list|(
 name|expected
@@ -220,10 +253,10 @@ argument_list|,
 name|actualDouble
 argument_list|)
 expr_stmt|;
-comment|// The error should be less than 0.5 us
+comment|/* The error should be less than 0.5 us */
 name|TEST_ASSERT_DOUBLE_WITHIN
 argument_list|(
-literal|0000005
+literal|0.0000005
 argument_list|,
 name|expectedDouble
 argument_list|,

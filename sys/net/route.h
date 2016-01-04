@@ -32,7 +32,7 @@ comment|/*  * Kernel resident routing tables.  *  * The routing tables are initi
 end_comment
 
 begin_comment
-comment|/*  * A route consists of a destination address, a reference  * to a routing entry, and a reference to an llentry.    * These are often held by protocols in their control  * blocks, e.g. inpcb.  */
+comment|/*  * Struct route consiste of a destination address,  * a route entry pointer, link-layer prepend data pointer along  * with its length.  */
 end_comment
 
 begin_struct
@@ -44,18 +44,22 @@ name|rtentry
 modifier|*
 name|ro_rt
 decl_stmt|;
-name|struct
-name|llentry
+name|char
 modifier|*
-name|ro_lle
+name|ro_prepend
 decl_stmt|;
-name|struct
-name|in_ifaddr
-modifier|*
-name|ro_ia
+name|uint16_t
+name|ro_plen
 decl_stmt|;
-name|int
+name|uint16_t
 name|ro_flags
+decl_stmt|;
+name|uint16_t
+name|ro_mtu
+decl_stmt|;
+comment|/* saved ro_rt mtu */
+name|uint16_t
+name|spare
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -64,6 +68,39 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RT_L2_ME_BIT
+value|2
+end_define
+
+begin_comment
+comment|/* dst L2 addr is our address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_MAY_LOOP_BIT
+value|3
+end_define
+
+begin_comment
+comment|/* dst may require loop copy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_HAS_HEADER_BIT
+value|4
+end_define
+
+begin_comment
+comment|/* mbuf already have its header prepended */
+end_comment
 
 begin_define
 define|#
@@ -86,6 +123,27 @@ end_define
 begin_comment
 comment|/* doesn't hold reference on ro_rt */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_L2_ME
+value|(1<< RT_L2_ME_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_MAY_LOOP
+value|(1<< RT_MAY_LOOP_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_HAS_HEADER
+value|(1<< RT_HAS_HEADER_BIT)
+end_define
 
 begin_struct
 struct|struct
@@ -169,6 +227,17 @@ parameter_list|(
 name|r
 parameter_list|)
 value|((r) / (RTM_RTTUNIT / PR_SLOWHZ))
+end_define
+
+begin_comment
+comment|/* lle state is exported in rmx_state rt_metrics field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rmx_state
+value|rmx_weight
 end_define
 
 begin_define
@@ -370,6 +439,12 @@ name|mtx
 name|rt_mtx
 decl_stmt|;
 comment|/* mutex for routing entry */
+name|struct
+name|rtentry
+modifier|*
+name|rt_chain
+decl_stmt|;
+comment|/* pointer to next rtentry to delete */
 block|}
 struct|;
 end_struct
@@ -667,6 +742,210 @@ name|RTF_FMASK
 define|\
 value|(RTF_PROTO1 | RTF_PROTO2 | RTF_PROTO3 | RTF_BLACKHOLE | \ 	 RTF_REJECT | RTF_STATIC | RTF_STICKY)
 end_define
+
+begin_comment
+comment|/*  * fib_ nexthop API flags.  */
+end_comment
+
+begin_comment
+comment|/* Consumer-visible nexthop info flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHF_REJECT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* RTF_REJECT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHF_BLACKHOLE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* RTF_BLACKHOLE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHF_REDIRECT
+value|0x0040
+end_define
+
+begin_comment
+comment|/* RTF_DYNAMIC|RTF_MODIFIED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHF_DEFAULT
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Default route */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHF_BROADCAST
+value|0x0100
+end_define
+
+begin_comment
+comment|/* RTF_BROADCAST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHF_GATEWAY
+value|0x0200
+end_define
+
+begin_comment
+comment|/* RTF_GATEWAY */
+end_comment
+
+begin_comment
+comment|/* Nexthop request flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHR_IFAIF
+value|0x01
+end_define
+
+begin_comment
+comment|/* Return ifa_ifp interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHR_REF
+value|0x02
+end_define
+
+begin_comment
+comment|/* For future use */
+end_comment
+
+begin_comment
+comment|/* Control plane route request flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHR_COPY
+value|0x100
+end_define
+
+begin_comment
+comment|/* Copy rte data */
+end_comment
+
+begin_comment
+comment|/* rte<>nhop translation */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|uint16_t
+name|fib_rte_to_nh_flags
+parameter_list|(
+name|int
+name|rt_flags
+parameter_list|)
+block|{
+name|uint16_t
+name|res
+decl_stmt|;
+name|res
+operator|=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_REJECT
+operator|)
+condition|?
+name|NHF_REJECT
+else|:
+literal|0
+expr_stmt|;
+name|res
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_BLACKHOLE
+operator|)
+condition|?
+name|NHF_BLACKHOLE
+else|:
+literal|0
+expr_stmt|;
+name|res
+operator||=
+operator|(
+name|rt_flags
+operator|&
+operator|(
+name|RTF_DYNAMIC
+operator||
+name|RTF_MODIFIED
+operator|)
+operator|)
+condition|?
+name|NHF_REDIRECT
+else|:
+literal|0
+expr_stmt|;
+name|res
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_BROADCAST
+operator|)
+condition|?
+name|NHF_BROADCAST
+else|:
+literal|0
+expr_stmt|;
+name|res
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_GATEWAY
+operator|)
+condition|?
+name|NHF_GATEWAY
+else|:
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Routing statistics.  */
@@ -1258,6 +1537,22 @@ begin_comment
 comment|/* size of array to allocate */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|rt_filter_f_t
+parameter_list|(
+specifier|const
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|rt_addrinfo
@@ -1265,6 +1560,11 @@ block|{
 name|int
 name|rti_addrs
 decl_stmt|;
+comment|/* Route RTF_ flags */
+name|int
+name|rti_flags
+decl_stmt|;
+comment|/* Route RTF_ flags */
 name|struct
 name|sockaddr
 modifier|*
@@ -1273,27 +1573,43 @@ index|[
 name|RTAX_MAX
 index|]
 decl_stmt|;
-name|int
-name|rti_flags
-decl_stmt|;
+comment|/* Sockaddr data */
 name|struct
 name|ifaddr
 modifier|*
 name|rti_ifa
 decl_stmt|;
+comment|/* value of rt_ifa addr */
 name|struct
 name|ifnet
 modifier|*
 name|rti_ifp
 decl_stmt|;
+comment|/* route interface */
+name|rt_filter_f_t
+modifier|*
+name|rti_filter
+decl_stmt|;
+comment|/* filter function */
+name|void
+modifier|*
+name|rti_filterdata
+decl_stmt|;
+comment|/* filter paramenters */
 name|u_long
 name|rti_mflags
 decl_stmt|;
+comment|/* metrics RTV_ flags */
+name|u_long
+name|rti_spare
+decl_stmt|;
+comment|/* Will be used for fib */
 name|struct
 name|rt_metrics
 modifier|*
 name|rti_rmx
 decl_stmt|;
+comment|/* Pointer to route metrics */
 block|}
 struct|;
 end_struct
@@ -1833,6 +2149,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rt_foreach_fib_walk_del
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+name|rt_filter_f_t
+modifier|*
+name|filter_f
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rt_flushifroutes
 parameter_list|(
 name|struct
@@ -1850,17 +2184,6 @@ end_comment
 begin_comment
 comment|/* Thes are used by old code not yet converted to use multiple FIBS */
 end_comment
-
-begin_function_decl
-name|int
-name|rt_getifa
-parameter_list|(
-name|struct
-name|rt_addrinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -2145,6 +2468,40 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rib_lookup_info
+parameter_list|(
+name|uint32_t
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|rt_addrinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rib_free_info
+parameter_list|(
+name|struct
+name|rt_addrinfo
+modifier|*
+name|info
 parameter_list|)
 function_decl|;
 end_function_decl

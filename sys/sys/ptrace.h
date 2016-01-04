@@ -270,6 +270,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_LWP_EVENTS
+value|24
+end_define
+
+begin_comment
+comment|/* report LWP birth and exit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
@@ -518,6 +529,16 @@ directive|define
 name|PL_FLAG_CHILD
 value|0x80
 comment|/* I am from child */
+define|#
+directive|define
+name|PL_FLAG_BORN
+value|0x100
+comment|/* new LWP */
+define|#
+directive|define
+name|PL_FLAG_EXITED
+value|0x200
+comment|/* exiting LWP */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
@@ -540,7 +561,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* LWP name */
-name|int
+name|pid_t
 name|pl_child_pid
 decl_stmt|;
 comment|/* New child pid */
@@ -859,6 +880,60 @@ name|struct
 name|uio
 modifier|*
 name|_uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|proc_readmem
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|_td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|_p
+parameter_list|,
+name|vm_offset_t
+name|_va
+parameter_list|,
+name|void
+modifier|*
+name|_buf
+parameter_list|,
+name|size_t
+name|_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|proc_writemem
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|_td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|_p
+parameter_list|,
+name|vm_offset_t
+name|_va
+parameter_list|,
+name|void
+modifier|*
+name|_buf
+parameter_list|,
+name|size_t
+name|_len
 parameter_list|)
 function_decl|;
 end_function_decl

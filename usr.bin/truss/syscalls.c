@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysdecode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -224,27 +230,6 @@ include|#
 directive|include
 file|"syscall.h"
 end_include
-
-begin_comment
-comment|/* usr.bin/kdump/utrace.c */
-end_comment
-
-begin_function_decl
-name|int
-name|kdump_print_utrace
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* 64-bit alignment on 32-bit platforms. */
@@ -11215,15 +11200,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|kdump_print_utrace
+name|sysdecode_utrace
 argument_list|(
 name|fp
 argument_list|,
 name|utrace_addr
 argument_list|,
 name|len
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 block|{
@@ -12283,7 +12266,7 @@ index|]
 expr_stmt|;
 name|temp
 operator|=
-name|ioctlname
+name|sysdecode_ioctlname
 argument_list|(
 name|cmd
 argument_list|)

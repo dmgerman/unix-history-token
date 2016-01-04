@@ -137,6 +137,27 @@ name|md5_block_data_order
 value|md5_block_asm_data_order
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|md5_block_data_order
+value|md5_block_asm_data_order
+end_define
+
 begin_endif
 endif|#
 directive|endif

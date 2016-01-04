@@ -1711,7 +1711,7 @@ directive|endif
 default|default:
 name|panic
 argument_list|(
-literal|"Unknown Ti SoC, unable to reset the i2c"
+literal|"Unknown TI SoC, unable to reset the i2c"
 argument_list|)
 expr_stmt|;
 block|}

@@ -2673,6 +2673,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|USB_PNP_HOST_INFO
+argument_list|(
+name|ural_devs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -9820,17 +9828,10 @@ name|eifs
 decl_stmt|;
 name|slottime
 operator|=
-operator|(
+name|IEEE80211_GET_SLOTTIME
+argument_list|(
 name|ic
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_SHSLOT
-operator|)
-condition|?
-literal|9
-else|:
-literal|20
+argument_list|)
 expr_stmt|;
 comment|/* 	 * These settings may sound a bit inconsistent but this is what the 	 * reference driver does. 	 */
 if|if

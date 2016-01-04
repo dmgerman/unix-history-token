@@ -317,7 +317,7 @@ name|isalnum
 parameter_list|(
 name|c
 parameter_list|)
-value|__sbistype((c), _CTYPE_A|_CTYPE_D)
+value|__sbistype((c), _CTYPE_A|_CTYPE_D|_CTYPE_N)
 end_define
 
 begin_define
@@ -347,12 +347,8 @@ name|isdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|__isctype((c), _CTYPE_D)
+value|__sbistype((c), _CTYPE_D)
 end_define
-
-begin_comment
-comment|/* ANSI -- locale independent */
-end_comment
 
 begin_define
 define|#
@@ -421,12 +417,8 @@ name|isxdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|__isctype((c), _CTYPE_X)
+value|__sbistype((c), _CTYPE_X)
 end_define
-
-begin_comment
-comment|/* ANSI -- locale independent */
-end_comment
 
 begin_define
 define|#
@@ -584,7 +576,7 @@ name|isnumber
 parameter_list|(
 name|c
 parameter_list|)
-value|__sbistype((c), _CTYPE_D)
+value|__sbistype((c), _CTYPE_D|_CTYPE_N)
 end_define
 
 begin_define

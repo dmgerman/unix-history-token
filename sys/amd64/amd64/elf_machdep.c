@@ -147,16 +147,6 @@ operator|=
 literal|0
 block|,
 operator|.
-name|sv_sigsize
-operator|=
-literal|0
-block|,
-operator|.
-name|sv_sigtbl
-operator|=
-name|NULL
-block|,
-operator|.
 name|sv_errsize
 operator|=
 literal|0
@@ -194,11 +184,6 @@ name|sv_szsigcode
 operator|=
 operator|&
 name|szsigcode
-block|,
-operator|.
-name|sv_prepsyscall
-operator|=
-name|NULL
 block|,
 operator|.
 name|sv_name
@@ -281,6 +266,8 @@ operator||
 name|SV_LP64
 operator||
 name|SV_SHP
+operator||
+name|SV_TIMEKEEP
 block|,
 operator|.
 name|sv_set_syscall_retval
