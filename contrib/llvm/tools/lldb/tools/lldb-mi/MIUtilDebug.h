@@ -76,18 +76,6 @@ comment|// Details: MI debugging aid utility class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors:
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -101,25 +89,19 @@ label|:
 specifier|static
 name|void
 name|ShowDlgWaitForDbgAttach
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|static
 name|void
 name|WaitForDbgAttachInfinteLoop
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Methods:
 name|public
 label|:
 comment|/* ctor */
 name|CMIUtilDebug
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Overrideable:
 name|public
@@ -129,9 +111,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilDebug
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -173,18 +153,6 @@ comment|//          tracing code.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 07/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -212,9 +180,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilDebugFnTrace
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Attributes:
 name|private

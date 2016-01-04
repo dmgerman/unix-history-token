@@ -364,17 +364,12 @@ name|SBTypeFormat
 name|GetTypeFormat
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|LLDB_DISABLE_PYTHON
 name|lldb
 operator|::
 name|SBTypeSummary
 name|GetTypeSummary
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|lldb
 operator|::
 name|SBTypeFilter
@@ -509,6 +504,10 @@ comment|/// we have a 'Point' type and we have a SBValue that contains a
 comment|/// pointer to a 'Point' type, then the child at index zero will be
 comment|/// the 'x' member, and the child at index 1 will be the 'y' member
 comment|/// (the child at index zero won't be a 'Point' instance).
+comment|///
+comment|/// If you actually need an SBValue that represents the type pointed
+comment|/// to by a SBValue for which GetType().IsPointeeType() returns true,
+comment|/// regardless of the pointee type, you can do that with SBValue::Dereference.
 comment|///
 comment|/// Arrays have a preset number of children that can be accessed by
 comment|/// index and will returns invalid child values for indexes that are
@@ -710,6 +709,13 @@ name|uint32_t
 name|GetNumChildren
 parameter_list|()
 function_decl|;
+name|uint32_t
+name|GetNumChildren
+parameter_list|(
+name|uint32_t
+name|max
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|GetOpaqueType
@@ -745,6 +751,7 @@ name|SBValue
 name|Dereference
 argument_list|()
 expr_stmt|;
+comment|// Deprecated - please use GetType().IsPointerType() instead.
 name|bool
 name|TypeIsPointerType
 parameter_list|()

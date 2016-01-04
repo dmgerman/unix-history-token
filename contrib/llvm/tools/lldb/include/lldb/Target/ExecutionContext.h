@@ -31,98 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|/// Execution context objects refer to objects in the execution of the
-end_comment
-
-begin_comment
-comment|/// program that is being debugged. The consist of one or more of the
-end_comment
-
-begin_comment
-comment|/// following objects: target, process, thread, and frame. Many objects
-end_comment
-
-begin_comment
-comment|/// in the debugger need to track different executions contexts. For
-end_comment
-
-begin_comment
-comment|/// example, a local function variable might have an execution context
-end_comment
-
-begin_comment
-comment|/// that refers to a stack frame. A global or static variable might
-end_comment
-
-begin_comment
-comment|/// refer to a target since a stack frame isn't required in order to
-end_comment
-
-begin_comment
-comment|/// evaluate a global or static variable (a process isn't necessarily
-end_comment
-
-begin_comment
-comment|/// needed for a global variable since we might be able to read the
-end_comment
-
-begin_comment
-comment|/// variable value from a data section in one of the object files in
-end_comment
-
-begin_comment
-comment|/// a target). There are two types of objects that hold onto execution
-end_comment
-
-begin_comment
-comment|/// contexts: ExecutionContextRef and ExecutionContext. Both of these
-end_comment
-
-begin_comment
-comment|/// objects are described below.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Not all objects in an ExectionContext objects will be valid. If you want
-end_comment
-
-begin_comment
-comment|/// to refer strongly (ExectionContext) or weakly (ExectionContextRef) to
-end_comment
-
-begin_comment
-comment|/// a process, then only the process and target references will be valid.
-end_comment
-
-begin_comment
-comment|/// For threads, only the thread, process and target references will be
-end_comment
-
-begin_comment
-comment|/// filled in. For frames, all of the objects will be filled in.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// These classes are designed to be used as baton objects that get passed
-end_comment
-
-begin_comment
-comment|/// to a wide variety of functions that require execution contexts.
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -134,6 +42,22 @@ define|#
 directive|define
 name|liblldb_ExecutionContext_h_
 end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -157,6 +81,30 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+comment|//===----------------------------------------------------------------------===//
+comment|/// Execution context objects refer to objects in the execution of the
+comment|/// program that is being debugged. The consist of one or more of the
+comment|/// following objects: target, process, thread, and frame. Many objects
+comment|/// in the debugger need to track different executions contexts. For
+comment|/// example, a local function variable might have an execution context
+comment|/// that refers to a stack frame. A global or static variable might
+comment|/// refer to a target since a stack frame isn't required in order to
+comment|/// evaluate a global or static variable (a process isn't necessarily
+comment|/// needed for a global variable since we might be able to read the
+comment|/// variable value from a data section in one of the object files in
+comment|/// a target). There are two types of objects that hold onto execution
+comment|/// contexts: ExecutionContextRef and ExecutionContext. Both of these
+comment|/// objects are described below.
+comment|///
+comment|/// Not all objects in an ExectionContext objects will be valid. If you want
+comment|/// to refer strongly (ExectionContext) or weakly (ExectionContextRef) to
+comment|/// a process, then only the process and target references will be valid.
+comment|/// For threads, only the thread, process and target references will be
+comment|/// filled in. For frames, all of the objects will be filled in.
+comment|///
+comment|/// These classes are designed to be used as baton objects that get passed
+comment|/// to a wide variety of functions that require execution contexts.
+comment|//===----------------------------------------------------------------------===//
 comment|//----------------------------------------------------------------------
 comment|/// @class ExecutionContextRef ExecutionContext.h "lldb/Target/ExecutionContext.h"
 comment|/// @brief A class that holds a weak reference to an execution context.
@@ -211,7 +159,7 @@ name|rhs
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Construct using an ExecutionContext object that might be NULL.
+comment|/// Construct using an ExecutionContext object that might be nullptr.
 comment|///
 comment|/// If \a exe_ctx_ptr is valid, then make weak references to any
 comment|/// valid objects in the ExecutionContext, otherwise no weak
@@ -238,38 +186,6 @@ operator|&
 name|exe_ctx
 argument_list|)
 expr_stmt|;
-comment|//------------------------------------------------------------------
-comment|/// Assignment operator
-comment|///
-comment|/// Copy all weak references in \a rhs.
-comment|//------------------------------------------------------------------
-name|ExecutionContextRef
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|ExecutionContextRef
-operator|&
-name|rhs
-operator|)
-decl_stmt|;
-comment|//------------------------------------------------------------------
-comment|/// Assignment operator from a ExecutionContext
-comment|///
-comment|/// Make weak references to any strongly referenced objects in \a exe_ctx.
-comment|//------------------------------------------------------------------
-name|ExecutionContextRef
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|ExecutionContext
-operator|&
-name|exe_ctx
-operator|)
-decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Construct using the target and all the selected items inside of it
 comment|/// (the process and its selected thread, and the thread's selected
@@ -326,9 +242,41 @@ name|ExecutionContextRef
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Assignment operator
+comment|///
+comment|/// Copy all weak references in \a rhs.
+comment|//------------------------------------------------------------------
+name|ExecutionContextRef
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ExecutionContextRef
+operator|&
+name|rhs
+operator|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Assignment operator from a ExecutionContext
+comment|///
+comment|/// Make weak references to any strongly referenced objects in \a exe_ctx.
+comment|//------------------------------------------------------------------
+name|ExecutionContextRef
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ExecutionContext
+operator|&
+name|exe_ctx
+operator|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
 comment|/// Clear the object's state.
 comment|///
-comment|/// Sets the process and thread to NULL, and the frame index to an
+comment|/// Sets the process and thread to nullptr, and the frame index to an
 comment|/// invalid value.
 comment|//------------------------------------------------------------------
 name|void
@@ -838,6 +786,43 @@ operator|&
 name|exe_scope
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Construct with process, thread, and frame index.
+comment|///
+comment|/// Initialize with process \a p, thread \a t, and frame index \a f.
+comment|///
+comment|/// @param[in] process
+comment|///     The process for this execution context.
+comment|///
+comment|/// @param[in] thread
+comment|///     The thread for this execution context.
+comment|///
+comment|/// @param[in] frame
+comment|///     The frame index for this execution context.
+comment|//------------------------------------------------------------------
+name|ExecutionContext
+argument_list|(
+name|Process
+operator|*
+name|process
+argument_list|,
+name|Thread
+operator|*
+name|thread
+operator|=
+name|nullptr
+argument_list|,
+name|StackFrame
+operator|*
+name|frame
+operator|=
+name|nullptr
+argument_list|)
+expr_stmt|;
+operator|~
+name|ExecutionContext
+argument_list|()
+expr_stmt|;
 name|ExecutionContext
 modifier|&
 name|operator
@@ -872,46 +857,9 @@ operator|)
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Construct with process, thread, and frame index.
-comment|///
-comment|/// Initialize with process \a p, thread \a t, and frame index \a f.
-comment|///
-comment|/// @param[in] process
-comment|///     The process for this execution context.
-comment|///
-comment|/// @param[in] thread
-comment|///     The thread for this execution context.
-comment|///
-comment|/// @param[in] frame
-comment|///     The frame index for this execution context.
-comment|//------------------------------------------------------------------
-name|ExecutionContext
-argument_list|(
-name|Process
-operator|*
-name|process
-argument_list|,
-name|Thread
-operator|*
-name|thread
-operator|=
-name|NULL
-argument_list|,
-name|StackFrame
-operator|*
-name|frame
-operator|=
-name|NULL
-argument_list|)
-expr_stmt|;
-operator|~
-name|ExecutionContext
-argument_list|()
-expr_stmt|;
-comment|//------------------------------------------------------------------
 comment|/// Clear the object's state.
 comment|///
-comment|/// Sets the process and thread to NULL, and the frame index to an
+comment|/// Sets the process and thread to nullptr, and the frame index to an
 comment|/// invalid value.
 comment|//------------------------------------------------------------------
 name|void
@@ -945,10 +893,10 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns a pointer to the target object.
 comment|///
-comment|/// The returned pointer might be NULL. Calling HasTargetScope(),
+comment|/// The returned pointer might be nullptr. Calling HasTargetScope(),
 comment|/// HasProcessScope(), HasThreadScope(), or HasFrameScope()
 comment|/// can help to pre-validate this pointer so that this accessor can
-comment|/// freely be used without having to check for NULL each time.
+comment|/// freely be used without having to check for nullptr each time.
 comment|///
 comment|/// @see ExecutionContext::HasTargetScope() const
 comment|/// @see ExecutionContext::HasProcessScope() const
@@ -964,10 +912,10 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns a pointer to the process object.
 comment|///
-comment|/// The returned pointer might be NULL. Calling HasProcessScope(),
+comment|/// The returned pointer might be nullptr. Calling HasProcessScope(),
 comment|/// HasThreadScope(), or HasFrameScope()  can help to pre-validate
 comment|/// this pointer so that this accessor can freely be used without
-comment|/// having to check for NULL each time.
+comment|/// having to check for nullptr each time.
 comment|///
 comment|/// @see ExecutionContext::HasProcessScope() const
 comment|/// @see ExecutionContext::HasThreadScope() const
@@ -982,10 +930,10 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns a pointer to the thread object.
 comment|///
-comment|/// The returned pointer might be NULL. Calling HasThreadScope() or
+comment|/// The returned pointer might be nullptr. Calling HasThreadScope() or
 comment|/// HasFrameScope() can help to pre-validate this pointer so that
 comment|/// this accessor can freely be used without having to check for
-comment|/// NULL each time.
+comment|/// nullptr each time.
 comment|///
 comment|/// @see ExecutionContext::HasThreadScope() const
 comment|/// @see ExecutionContext::HasFrameScope() const
@@ -1006,9 +954,9 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Returns a pointer to the frame object.
 comment|///
-comment|/// The returned pointer might be NULL. Calling HasFrameScope(),
+comment|/// The returned pointer might be nullptr. Calling HasFrameScope(),
 comment|/// can help to pre-validate this pointer so that this accessor can
-comment|/// freely be used without having to check for NULL each time.
+comment|/// freely be used without having to check for nullptr each time.
 comment|///
 comment|/// @see ExecutionContext::HasFrameScope() const
 comment|//------------------------------------------------------------------

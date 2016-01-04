@@ -161,10 +161,10 @@ operator|*
 name|listener_name
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|GDBRemoteCommunicationServer
 argument_list|()
+name|override
 block|;
 name|void
 name|RegisterPacketHandler
@@ -245,9 +245,6 @@ argument_list|()
 block|;
 name|private
 operator|:
-comment|//------------------------------------------------------------------
-comment|// For GDBRemoteCommunicationServer only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|GDBRemoteCommunicationServer

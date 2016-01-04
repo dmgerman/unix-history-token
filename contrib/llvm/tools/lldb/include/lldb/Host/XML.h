@@ -93,6 +93,12 @@ begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -101,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -331,7 +331,7 @@ name|GetAttributeValue
 argument_list|(
 argument|const char *name
 argument_list|,
-argument|const char *fail_value = NULL
+argument|const char *fail_value = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -512,7 +512,7 @@ literal|"untitled.xml"
 parameter_list|)
 function_decl|;
 comment|//----------------------------------------------------------------------
-comment|// If \a name is NULL, just get the root element node, else only return
+comment|// If \a name is nullptr, just get the root element node, else only return
 comment|// a value XMLNode if the name of the root element matches \a name.
 comment|//----------------------------------------------------------------------
 name|XMLNode

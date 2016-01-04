@@ -43,20 +43,13 @@ directive|define
 name|liblldb_UniqueCStringMap_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
@@ -69,6 +62,14 @@ include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -107,7 +108,7 @@ argument_list|()
 operator|:
 name|cstring
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|value
@@ -409,25 +410,26 @@ argument|uint32_t idx
 argument_list|)
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|idx
 operator|<
 name|m_map
 operator|.
 name|size
 argument_list|()
-condition|)
-return|return
+operator|)
+operator|?
 name|m_map
 index|[
 name|idx
 index|]
 operator|.
 name|cstring
-return|;
-return|return
-name|NULL
+operator|:
+name|nullptr
+operator|)
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -441,33 +443,29 @@ comment|//------------------------------------------------------------------
 name|T
 name|Find
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|unique_cstr
+argument|const char *unique_cstr
 argument_list|,
-name|T
-name|fail_value
+argument|T fail_value
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|Entry
 name|search_entry
-parameter_list|(
+argument_list|(
 name|unique_cstr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|const_iterator
 name|end
-init|=
+operator|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
+block|;
 name|const_iterator
 name|pos
-init|=
+operator|=
 name|std
 operator|::
 name|lower_bound
@@ -481,7 +479,7 @@ name|end
 argument_list|,
 name|search_entry
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|pos
@@ -508,7 +506,7 @@ name|fail_value
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|// Get a pointer to the first entry that matches "name". NULL will
+comment|// Get a pointer to the first entry that matches "name". nullptr will
 comment|// be returned if there is no entry that matches "name".
 comment|//
 comment|// The caller is responsible for ensuring that the collection does
@@ -516,33 +514,30 @@ comment|// not change during while using the returned pointer.
 comment|//------------------------------------------------------------------
 specifier|const
 name|Entry
-modifier|*
+operator|*
 name|FindFirstValueForName
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|unique_cstr
+argument|const char *unique_cstr
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|Entry
 name|search_entry
-parameter_list|(
+argument_list|(
 name|unique_cstr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|const_iterator
 name|end
-init|=
+operator|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
+block|;
 name|const_iterator
 name|pos
-init|=
+operator|=
 name|std
 operator|::
 name|lower_bound
@@ -556,7 +551,7 @@ name|end
 argument_list|,
 name|search_entry
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|pos
@@ -588,12 +583,12 @@ operator|)
 return|;
 block|}
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
 comment|// Get a pointer to the next entry that matches "name" from a
-comment|// previously returned Entry pointer. NULL will be returned if there
+comment|// previously returned Entry pointer. nullptr will be returned if there
 comment|// is no subsequent entry that matches "name".
 comment|//
 comment|// The caller is responsible for ensuring that the collection does
@@ -601,15 +596,12 @@ comment|// not change during while using the returned pointer.
 comment|//------------------------------------------------------------------
 specifier|const
 name|Entry
-modifier|*
+operator|*
 name|FindNextValueForName
 argument_list|(
-specifier|const
-name|Entry
-operator|*
-name|entry_ptr
+argument|const Entry *entry_ptr
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -679,53 +671,43 @@ return|;
 block|}
 block|}
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|size_t
 name|GetValues
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|unique_cstr
+argument|const char *unique_cstr
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|T
-operator|>
-operator|&
-name|values
+argument|std::vector<T>&values
 argument_list|)
-decl|const
+specifier|const
 block|{
 specifier|const
 name|size_t
 name|start_size
-init|=
+operator|=
 name|values
 operator|.
 name|size
 argument_list|()
-decl_stmt|;
+block|;
 name|Entry
 name|search_entry
-parameter_list|(
+argument_list|(
 name|unique_cstr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|const_iterator
 name|pos
-decl_stmt|,
+block|,
 name|end
-init|=
+operator|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
+block|;
 for|for
 control|(
 name|pos
@@ -784,41 +766,31 @@ block|}
 name|size_t
 name|GetValues
 argument_list|(
-specifier|const
-name|RegularExpression
-operator|&
-name|regex
+argument|const RegularExpression& regex
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|T
-operator|>
-operator|&
-name|values
+argument|std::vector<T>&values
 argument_list|)
-decl|const
+specifier|const
 block|{
 specifier|const
 name|size_t
 name|start_size
-init|=
+operator|=
 name|values
 operator|.
 name|size
 argument_list|()
-decl_stmt|;
+block|;
 name|const_iterator
 name|pos
-decl_stmt|,
+block|,
 name|end
-init|=
+operator|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
+block|;
 for|for
 control|(
 name|pos
@@ -904,10 +876,9 @@ comment|// call to UniqueCStringMap::Sort()) or to UniqueCStringMap::Insert().
 comment|//------------------------------------------------------------------
 name|void
 name|Reserve
-parameter_list|(
-name|size_t
-name|n
-parameter_list|)
+argument_list|(
+argument|size_t n
+argument_list|)
 block|{
 name|m_map
 operator|.
@@ -915,8 +886,7 @@ name|reserve
 argument_list|(
 name|n
 argument_list|)
-expr_stmt|;
-block|}
+block|;     }
 comment|//------------------------------------------------------------------
 comment|// Sort the unsorted contents in this map. A typical code flow would
 comment|// be:
@@ -931,7 +901,7 @@ comment|// my_map.Sort();
 comment|//------------------------------------------------------------------
 name|void
 name|Sort
-parameter_list|()
+argument_list|()
 block|{
 name|std
 operator|::
@@ -947,8 +917,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
+block|;     }
 comment|//------------------------------------------------------------------
 comment|// Since we are using a vector to contain our items it will always
 comment|// double its memory consumption as things are added to the vector,
@@ -959,7 +928,7 @@ comment|// part of the finalization of the string map.
 comment|//------------------------------------------------------------------
 name|void
 name|SizeToFit
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -999,43 +968,40 @@ block|}
 block|}
 name|size_t
 name|Erase
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|unique_cstr
-parameter_list|)
+argument_list|(
+argument|const char *unique_cstr
+argument_list|)
 block|{
 name|size_t
 name|num_removed
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|Entry
 name|search_entry
 argument_list|(
 name|unique_cstr
 argument_list|)
-decl_stmt|;
+block|;
 name|iterator
 name|end
-init|=
+operator|=
 name|m_map
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
+block|;
 name|iterator
 name|begin
-init|=
+operator|=
 name|m_map
 operator|.
 name|begin
 argument_list|()
-decl_stmt|;
+block|;
 name|iterator
 name|lower_pos
-init|=
+operator|=
 name|std
 operator|::
 name|lower_bound
@@ -1046,7 +1012,7 @@ name|end
 argument_list|,
 name|search_entry
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|lower_pos
@@ -1126,7 +1092,7 @@ name|num_removed
 return|;
 block|}
 name|protected
-label|:
+operator|:
 typedef|typedef
 name|std
 operator|::
@@ -1163,15 +1129,6 @@ end_empty_stmt
 begin_comment
 unit|}
 comment|// namespace lldb_private
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
 end_comment
 
 begin_endif

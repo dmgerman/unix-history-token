@@ -150,10 +150,10 @@ block|;
 comment|/* host data pointer */
 block|}
 block|;
-name|virtual
 operator|~
 name|ABI
 argument_list|()
+name|override
 block|;
 name|virtual
 name|size_t
@@ -225,7 +225,7 @@ name|GetReturnValueObject
 argument_list|(
 argument|Thread&thread
 argument_list|,
-argument|ClangASTType&type
+argument|CompilerType&type
 argument_list|,
 argument|bool persistent = true
 argument_list|)
@@ -277,7 +277,7 @@ name|GetReturnValueObjectImpl
 argument_list|(
 argument|Thread&thread
 argument_list|,
-argument|ClangASTType&ast_type
+argument|CompilerType&ast_type
 argument_list|)
 specifier|const
 operator|=

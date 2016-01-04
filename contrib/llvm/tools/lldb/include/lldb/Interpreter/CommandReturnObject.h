@@ -572,7 +572,7 @@ name|char
 modifier|*
 name|fallback_error_cstr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 end_function_decl

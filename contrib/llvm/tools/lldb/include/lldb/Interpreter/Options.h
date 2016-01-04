@@ -157,7 +157,7 @@ comment|///             {
 comment|///             case 'g': debug = true; break;
 comment|///             case 'v': verbose = true; break;
 comment|///             case 'l': log_file = option_arg; break;
-comment|///             case 'f': log_flags = strtoull(option_arg, NULL, 0); break;
+comment|///             case 'f': log_flags = strtoull(option_arg, nullptr, 0); break;
 comment|///             default:
 comment|///                 error.SetErrorStringWithFormat("unrecognized short option %c", option_val);
 comment|///                 break;
@@ -180,11 +180,11 @@ comment|///     };
 comment|///
 comment|///     struct option CommandOptions::g_options[] =
 comment|///     {
-comment|///         { "debug",              no_argument,        NULL,   'g' },
-comment|///         { "log-file",           required_argument,  NULL,   'l' },
-comment|///         { "log-flags",          required_argument,  NULL,   'f' },
-comment|///         { "verbose",            no_argument,        NULL,   'v' },
-comment|///         { NULL,                 0,                  NULL,   0   }
+comment|///         { "debug",              no_argument,        nullptr,   'g' },
+comment|///         { "log-file",           required_argument,  nullptr,   'l' },
+comment|///         { "log-flags",          required_argument,  nullptr,   'f' },
+comment|///         { "verbose",            no_argument,        nullptr,   'v' },
+comment|///         { nullptr,              0,                  nullptr,   0   }
 comment|///     };
 comment|///
 comment|///     int main (int argc, const char **argv, const char **envp)
@@ -315,7 +315,7 @@ name|GetDefinitions
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|// Call this prior to parsing any options. This call will call the
@@ -340,7 +340,7 @@ comment|///     by Options::GetLongOptions().
 comment|///
 comment|/// @param[in] option_arg
 comment|///     The argument value for the option that the user entered, or
-comment|///     NULL if there is no argument for the current option.
+comment|///     nullptr if there is no argument for the current option.
 comment|///
 comment|///
 comment|/// @see Args::ParseOptions (Options&)
@@ -666,19 +666,23 @@ name|public
 label|:
 name|OptionGroup
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 operator|~
 name|OptionGroup
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|uint32_t
 name|GetNumDefinitions
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 specifier|const
 name|OptionDefinition
@@ -769,11 +773,13 @@ argument_list|(
 argument|false
 argument_list|)
 block|{         }
-name|virtual
 operator|~
 name|OptionGroupOptions
 argument_list|()
-block|{         }
+name|override
+operator|=
+expr|default
+block|;
 comment|//----------------------------------------------------------------------
 comment|/// Append options from a OptionGroup class.
 comment|///
@@ -836,7 +842,6 @@ return|return
 name|m_did_finalize
 return|;
 block|}
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -844,22 +849,24 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_arg
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|OptionParsingFinished
 argument_list|()
+name|override
 block|;
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|{
 name|assert
 argument_list|(

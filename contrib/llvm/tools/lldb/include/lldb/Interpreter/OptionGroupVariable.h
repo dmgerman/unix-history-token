@@ -91,24 +91,23 @@ argument_list|(
 argument|bool show_frame_options
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|OptionGroupVariable
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -118,15 +117,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_arg
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 name|bool
 name|include_frame_options

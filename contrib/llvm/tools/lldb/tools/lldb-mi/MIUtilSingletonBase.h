@@ -51,14 +51,12 @@ comment|//
 comment|//   // Overridden:
 comment|//   public:
 comment|//       // From MI::ISingleton
-comment|//       bool Initialize(void) override;
-comment|//       bool Shutdown(void) override;
+comment|//       bool Initialize() override;
+comment|//       bool Shutdown() override;
 comment|//   };
 comment|//++ ============================================================================
 comment|// Details: Base class for the singleton pattern.
 comment|// Gotchas: Derived class must specify MI::ISingleton<> as a friend class.
-comment|// Authors: Aidan Dodds 17/03/2014.
-comment|// Changes: None.
 comment|//--
 name|template
 operator|<
@@ -76,9 +74,7 @@ specifier|static
 name|T
 operator|&
 name|Instance
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 comment|// This will fail if the derived class has not
 comment|// declared itself to be a friend of MI::ISingleton
@@ -96,18 +92,14 @@ operator|:
 name|virtual
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 operator|=
 literal|0
 block|;
 name|virtual
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 operator|=
 literal|0
 block|;
@@ -116,11 +108,9 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|ISingleton
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{}
-block|; }
+block|}
 expr_stmt|;
 block|}
 end_decl_stmt

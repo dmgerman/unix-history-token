@@ -51,12 +51,6 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -96,7 +90,7 @@ name|char
 operator|*
 name|value
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 operator|:
 name|OptionValue
@@ -107,27 +101,28 @@ argument_list|(
 argument|value
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|OptionValueRegex
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+block|;
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
-name|virtual
 name|OptionValue
 operator|::
 name|Type
 name|GetType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|eTypeRegex
 return|;
 block|}
-name|virtual
 name|void
 name|DumpValue
 argument_list|(
@@ -137,8 +132,8 @@ argument|Stream&strm
 argument_list|,
 argument|uint32_t dump_mask
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Error
 name|SetValueFromString
 argument_list|(
@@ -146,11 +141,12 @@ argument|llvm::StringRef value
 argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Clear
 argument_list|()
+name|override
 block|{
 name|m_regex
 operator|.
@@ -165,13 +161,13 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|OptionValueSP
 name|DeepCopy
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|//---------------------------------------------------------------------
 comment|// Subclass specific functions
@@ -183,29 +179,25 @@ name|GetCurrentValue
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|m_regex
 operator|.
 name|IsValid
 argument_list|()
-condition|)
-return|return
+operator|?
 operator|&
 name|m_regex
-return|;
-return|return
-name|NULL
+operator|:
+name|nullptr
+operator|)
 return|;
 block|}
 name|void
 name|SetCurrentValue
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|value
-parameter_list|)
+argument_list|(
+argument|const char *value
+argument_list|)
 block|{
 if|if
 condition|(
@@ -243,19 +235,15 @@ argument_list|()
 return|;
 block|}
 name|protected
-label|:
+operator|:
 name|RegularExpression
 name|m_regex
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

@@ -319,10 +319,10 @@ comment|///
 comment|/// The destructor is virtual since this class is designed to be
 comment|/// inherited from by the plug-in instance.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|ObjectFile
 argument_list|()
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Dump a description of this object to a Stream.
@@ -728,7 +728,12 @@ name|virtual
 name|SectionList
 modifier|*
 name|GetSectionList
-parameter_list|()
+parameter_list|(
+name|bool
+name|update_module_section_list
+init|=
+name|true
+parameter_list|)
 function_decl|;
 name|virtual
 name|void
@@ -1565,6 +1570,17 @@ name|str
 argument_list|()
 return|;
 block|}
+specifier|static
+name|lldb
+operator|::
+name|SymbolType
+name|GetSymbolTypeFromName
+argument_list|(
+argument|llvm::StringRef name
+argument_list|,
+argument|lldb::SymbolType symbol_type_hint = lldb::eSymbolTypeUndefined
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------

@@ -612,12 +612,11 @@ argument_list|,
 argument|StringList&matches
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|Completer
 argument_list|()
+name|override
 block|;
-name|virtual
 name|CallbackReturn
 name|SearchCallback
 argument_list|(
@@ -629,13 +628,14 @@ argument|Address *addr
 argument_list|,
 argument|bool complete
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
-name|virtual
 name|Depth
 name|GetDepth
 argument_list|()
+name|override
 operator|=
 literal|0
 block|;
@@ -705,14 +705,13 @@ argument_list|,
 argument|StringList&matches
 argument_list|)
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|Depth
 name|GetDepth
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|CallbackReturn
@@ -726,14 +725,14 @@ argument|Address *addr
 argument_list|,
 argument|bool complete
 argument_list|)
+name|override
 block|;
 name|size_t
 name|DoCompletion
 argument_list|(
-name|SearchFilter
-operator|*
-name|filter
+argument|SearchFilter *filter
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -757,7 +756,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|SourceFileCompleter
 argument_list|)
-block|;      }
+block|;     }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// ModuleCompleter implements the module completer
@@ -783,14 +782,13 @@ argument_list|,
 argument|StringList&matches
 argument_list|)
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|Depth
 name|GetDepth
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|CallbackReturn
@@ -804,14 +802,14 @@ argument|Address *addr
 argument_list|,
 argument|bool complete
 argument_list|)
+name|override
 block|;
 name|size_t
 name|DoCompletion
 argument_list|(
-name|SearchFilter
-operator|*
-name|filter
+argument|SearchFilter *filter
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -829,7 +827,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ModuleCompleter
 argument_list|)
-block|;      }
+block|;     }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// SymbolCompleter implements the symbol completer
@@ -855,14 +853,13 @@ argument_list|,
 argument|StringList&matches
 argument_list|)
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|Depth
 name|GetDepth
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|CallbackReturn
@@ -876,14 +873,14 @@ argument|Address *addr
 argument_list|,
 argument|bool complete
 argument_list|)
+name|override
 block|;
 name|size_t
 name|DoCompletion
 argument_list|(
-name|SearchFilter
-operator|*
-name|filter
+argument|SearchFilter *filter
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

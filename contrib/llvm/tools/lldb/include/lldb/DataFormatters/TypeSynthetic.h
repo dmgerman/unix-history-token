@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- TypeSynthetic.h -------------------------------------------*- C++ -*-===//
+comment|//===-- TypeSynthetic.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -56,6 +56,24 @@ end_include
 begin_comment
 comment|// C++ Includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
 
 begin_include
 include|#
@@ -157,14 +175,40 @@ name|virtual
 operator|~
 name|SyntheticChildrenFrontEnd
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|size_t
 name|CalculateNumChildren
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
+name|virtual
+name|size_t
+name|CalculateNumChildren
+parameter_list|(
+name|uint32_t
+name|max
+parameter_list|)
+block|{
+name|auto
+name|count
+init|=
+name|CalculateNumChildren
+argument_list|()
+decl_stmt|;
+return|return
+name|count
+operator|<=
+name|max
+condition|?
+name|count
+else|:
+name|max
+return|;
+block|}
 name|virtual
 name|lldb
 operator|::
@@ -276,7 +320,7 @@ argument|uint64_t address
 argument_list|,
 argument|const ExecutionContext& exe_ctx
 argument_list|,
-argument|ClangASTType type
+argument|CompilerType type
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -290,7 +334,7 @@ argument|const DataExtractor& data
 argument_list|,
 argument|const ExecutionContext& exe_ctx
 argument_list|,
-argument|ClangASTType type
+argument|CompilerType type
 argument_list|)
 expr_stmt|;
 name|private
@@ -325,21 +369,22 @@ argument_list|(
 argument|backend
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|SyntheticValueProviderFrontEnd
 argument_list|()
-block|{         }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|CalculateNumChildren
 argument_list|()
+name|override
 block|{
 return|return
 literal|0
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -347,46 +392,47 @@ name|GetChildAtIndex
 argument_list|(
 argument|size_t idx
 argument_list|)
+name|override
 block|{
 return|return
 name|nullptr
 return|;
 block|}
-name|virtual
 name|size_t
 name|GetIndexOfChildWithName
 argument_list|(
 argument|const ConstString&name
 argument_list|)
+name|override
 block|{
 return|return
 name|UINT32_MAX
 return|;
 block|}
-name|virtual
 name|bool
 name|Update
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|MightHaveChildren
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|GetSyntheticValue
 argument_list|()
+name|override
 operator|=
 literal|0
 block|;
@@ -754,7 +800,9 @@ name|virtual
 operator|~
 name|SyntheticChildren
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|bool
 name|Cascades
 argument_list|()
@@ -926,25 +974,6 @@ operator|<
 name|SyntheticChildren
 operator|>
 name|SharedPointer
-expr_stmt|;
-typedef|typedef
-name|bool
-argument_list|(
-operator|*
-name|SyntheticChildrenCallback
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|ConstString
-argument_list|,
-specifier|const
-name|SyntheticChildren
-operator|::
-name|SharedPointer
-operator|&
-argument_list|)
 expr_stmt|;
 name|uint32_t
 modifier|&
@@ -1156,6 +1185,7 @@ block|;
 name|bool
 name|IsScripted
 argument_list|()
+name|override
 block|{
 return|return
 name|false
@@ -1166,6 +1196,7 @@ operator|::
 name|string
 name|GetDescription
 argument_list|()
+name|override
 block|;
 name|class
 name|FrontEnd
@@ -1173,12 +1204,6 @@ operator|:
 name|public
 name|SyntheticChildrenFrontEnd
 block|{
-name|private
-operator|:
-name|TypeFilterImpl
-operator|*
-name|filter
-block|;
 name|public
 operator|:
 name|FrontEnd
@@ -1202,15 +1227,17 @@ argument_list|(
 argument|flt
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|FrontEnd
 argument_list|()
-block|{             }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|CalculateNumChildren
 argument_list|()
+name|override
 block|{
 return|return
 name|filter
@@ -1219,7 +1246,6 @@ name|GetCount
 argument_list|()
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -1227,6 +1253,7 @@ name|GetChildAtIndex
 argument_list|(
 argument|size_t idx
 argument_list|)
+name|override
 block|{
 if|if
 condition|(
@@ -1259,19 +1286,19 @@ name|true
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|Update
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|MightHaveChildren
 argument_list|()
+name|override
 block|{
 return|return
 name|filter
@@ -1282,15 +1309,12 @@ operator|>
 literal|0
 return|;
 block|}
-name|virtual
 name|size_t
 name|GetIndexOfChildWithName
 argument_list|(
-specifier|const
-name|ConstString
-operator|&
-name|name
+argument|const ConstString&name
 argument_list|)
+name|override
 block|;
 typedef|typedef
 name|std
@@ -1303,16 +1327,22 @@ name|SharedPointer
 expr_stmt|;
 name|private
 operator|:
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
-name|FrontEnd
-argument_list|)
+name|TypeFilterImpl
+operator|*
+name|filter
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|FrontEnd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 unit|};
-name|virtual
 name|SyntheticChildrenFrontEnd
 operator|::
 name|AutoPointer
@@ -1320,6 +1350,7 @@ name|GetFrontEnd
 argument_list|(
 argument|ValueObject&backend
 argument_list|)
+name|override
 block|{
 return|return
 name|SyntheticChildrenFrontEnd
@@ -1331,6 +1362,18 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeFilterImpl
+operator|>
+name|SharedPointer
+expr_stmt|;
+end_typedef
 
 begin_label
 name|private
@@ -1356,40 +1399,23 @@ block|{
 name|public
 operator|:
 typedef|typedef
-name|SyntheticChildrenFrontEnd
-modifier|*
-typedef|(
-modifier|*
-name|CreateFrontEndCallback
-typedef|)
-parameter_list|(
-name|CXXSyntheticChildren
-modifier|*
-parameter_list|,
-typedef|lldb::
-name|ValueObjectSP
-typedef|);
-name|protected
-operator|:
-name|CreateFrontEndCallback
-name|m_create_callback
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|std
 operator|::
-name|string
-name|m_description
+name|function
+operator|<
+name|SyntheticChildrenFrontEnd
+operator|*
+operator|(
+name|CXXSyntheticChildren
+operator|*
+expr|,
+name|lldb
+operator|::
+name|ValueObjectSP
+operator|)
+operator|>
+name|CreateFrontEndCallback
 expr_stmt|;
-end_expr_stmt
-
-begin_label
-name|public
-label|:
-end_label
-
-begin_macro
 name|CXXSyntheticChildren
 argument_list|(
 argument|const SyntheticChildren::Flags& flags
@@ -1398,20 +1424,17 @@ argument|const char* description
 argument_list|,
 argument|CreateFrontEndCallback callback
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+operator|:
 name|SyntheticChildren
 argument_list|(
 name|flags
 argument_list|)
-operator|,
+block|,
 name|m_create_callback
 argument_list|(
 name|callback
 argument_list|)
-operator|,
+block|,
 name|m_description
 argument_list|(
 argument|description ? description :
@@ -1421,12 +1444,13 @@ block|{         }
 name|bool
 name|IsScripted
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_expr_stmt
 name|std
@@ -1434,11 +1458,11 @@ operator|::
 name|string
 name|GetDescription
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|SyntheticChildrenFrontEnd
 operator|::
 name|AutoPointer
@@ -1446,6 +1470,7 @@ name|GetFrontEnd
 argument_list|(
 argument|ValueObject&backend
 argument_list|)
+name|override
 block|{
 return|return
 name|SyntheticChildrenFrontEnd
@@ -1464,6 +1489,25 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_decl_stmt
+name|CreateFrontEndCallback
+name|m_create_callback
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|m_description
+expr_stmt|;
 end_expr_stmt
 
 begin_label
@@ -1524,7 +1568,7 @@ name|char
 operator|*
 name|pcode
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 operator|:
 name|SyntheticChildren
@@ -1640,6 +1684,7 @@ operator|::
 name|string
 name|GetDescription
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -1647,6 +1692,7 @@ begin_function
 name|bool
 name|IsScripted
 parameter_list|()
+function|override
 block|{
 return|return
 name|true
@@ -1661,22 +1707,6 @@ range|:
 name|public
 name|SyntheticChildrenFrontEnd
 block|{
-name|private
-operator|:
-name|std
-operator|::
-name|string
-name|m_python_class
-block|;
-name|StructuredData
-operator|::
-name|ObjectSP
-name|m_wrapper_sp
-block|;
-name|ScriptInterpreter
-operator|*
-name|m_interpreter
-block|;
 name|public
 operator|:
 name|FrontEnd
@@ -1686,21 +1716,27 @@ argument_list|,
 argument|ValueObject&backend
 argument_list|)
 block|;
+operator|~
+name|FrontEnd
+argument_list|()
+name|override
+block|;
 name|bool
 name|IsValid
 argument_list|()
 block|;
-name|virtual
-operator|~
-name|FrontEnd
-argument_list|()
-block|;
-name|virtual
 name|size_t
 name|CalculateNumChildren
 argument_list|()
+name|override
 block|;
-name|virtual
+name|size_t
+name|CalculateNumChildren
+argument_list|(
+argument|uint32_t max
+argument_list|)
+name|override
+block|;
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -1708,33 +1744,31 @@ name|GetChildAtIndex
 argument_list|(
 argument|size_t idx
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Update
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|MightHaveChildren
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetIndexOfChildWithName
 argument_list|(
-specifier|const
-name|ConstString
-operator|&
-name|name
+argument|const ConstString&name
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|GetSyntheticValue
 argument_list|()
+name|override
 block|;
 typedef|typedef
 name|std
@@ -1747,16 +1781,38 @@ name|SharedPointer
 expr_stmt|;
 name|private
 operator|:
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
-name|FrontEnd
-argument_list|)
+name|std
+operator|::
+name|string
+name|m_python_class
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|StructuredData
+operator|::
+name|ObjectSP
+name|m_wrapper_sp
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|ScriptInterpreter
+modifier|*
+name|m_interpreter
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|FrontEnd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 unit|};
-name|virtual
 name|SyntheticChildrenFrontEnd
 operator|::
 name|AutoPointer
@@ -1764,6 +1820,7 @@ name|GetFrontEnd
 argument_list|(
 argument|ValueObject&backend
 argument_list|)
+name|override
 block|{
 name|auto
 name|synth_ptr
@@ -1800,7 +1857,7 @@ end_expr_stmt
 
 begin_return
 return|return
-name|NULL
+name|nullptr
 return|;
 end_return
 

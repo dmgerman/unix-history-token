@@ -109,10 +109,10 @@ argument_list|,
 argument|bool is_removable
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectRegexCommand
 argument_list|()
+name|override
 block|;
 name|bool
 name|IsRemovable

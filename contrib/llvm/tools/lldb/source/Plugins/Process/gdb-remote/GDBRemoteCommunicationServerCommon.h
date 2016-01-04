@@ -54,11 +54,15 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<set>
+file|<string>
 end_include
 
 begin_comment
 comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -78,10 +82,6 @@ include|#
 directive|include
 file|"lldb/Target/Process.h"
 end_include
-
-begin_comment
-comment|// Project includes
-end_comment
 
 begin_include
 include|#
@@ -132,26 +132,13 @@ operator|*
 name|listener_name
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|GDBRemoteCommunicationServerCommon
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
-name|std
-operator|::
-name|set
-operator|<
-name|lldb
-operator|::
-name|pid_t
-operator|>
-name|m_spawned_pids
-block|;
-name|Mutex
-name|m_spawned_pids_mutex
-block|;
 name|ProcessLaunchInfo
 name|m_process_launch_info
 block|;
@@ -228,14 +215,6 @@ argument_list|)
 block|;
 name|PacketResult
 name|Handle_qSpeedTest
-argument_list|(
-name|StringExtractorGDBRemote
-operator|&
-name|packet
-argument_list|)
-block|;
-name|PacketResult
-name|Handle_qKillSpawnedProcess
 argument_list|(
 name|StringExtractorGDBRemote
 operator|&
@@ -464,12 +443,6 @@ argument_list|(
 name|StringExtractorGDBRemote
 operator|&
 name|packet
-argument_list|)
-block|;
-name|bool
-name|KillSpawnedProcess
-argument_list|(
-argument|lldb::pid_t pid
 argument_list|)
 block|;
 specifier|static

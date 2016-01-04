@@ -110,7 +110,17 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-operator|||
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/freebsd/Config.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__NetBSD__
@@ -120,7 +130,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|"lldb/Host/freebsd/Config.h"
+file|"lldb/Host/netbsd/Config.h"
 end_include
 
 begin_elif

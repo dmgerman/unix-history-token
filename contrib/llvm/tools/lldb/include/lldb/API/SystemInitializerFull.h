@@ -72,10 +72,10 @@ operator|:
 name|SystemInitializerFull
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|SystemInitializerFull
 argument_list|()
+name|override
 block|;
 name|void
 name|Initialize
@@ -92,19 +92,23 @@ operator|:
 name|void
 name|InitializeSWIG
 argument_list|()
-block|;
-name|void
-name|TerminateSWIG
-argument_list|()
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLDB_API_SYSTEM_INITIALIZER_FULL_H
+end_comment
 
 end_unit
 

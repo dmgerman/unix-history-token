@@ -270,6 +270,35 @@ name|rhs
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Give the range for this LineEntry + any additional LineEntries for
+comment|/// this same source line that are contiguous.
+comment|///
+comment|/// A compiler may emit multiple line entries for a single source line,
+comment|/// e.g. to indicate subexpressions at different columns.  This method
+comment|/// will get the AddressRange for all of the LineEntries for this source
+comment|/// line that are contiguous.
+comment|//
+comment|/// Line entries with a line number of 0 are treated specially - these
+comment|/// are compiler-generated line table entries that the user did not
+comment|/// write in their source code, and we want to skip past in the debugger.
+comment|/// If this LineEntry is for line 32, and the following LineEntry is for
+comment|/// line 0, we will extend the range to include the AddressRange of the
+comment|/// line 0 LineEntry (and it will include the range of the following
+comment|/// LineEntries that match either 32 or 0.)
+comment|///
+comment|/// If the initial LineEntry this method is called on is a line #0, only
+comment|/// the range of contiuous LineEntries with line #0 will be included in
+comment|/// the complete range.
+comment|///
+comment|/// @return
+comment|///     The contiguous AddressRange for this source line.
+comment|//------------------------------------------------------------------
+name|AddressRange
+name|GetSameLineContiguousAddressRange
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
 name|AddressRange

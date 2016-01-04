@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SymbolFileDWARF.h"
+file|"DWARFDIE.h"
 end_include
 
 begin_include
@@ -75,8 +75,8 @@ name|void
 name|Append
 argument_list|(
 specifier|const
-name|DWARFDebugInfoEntry
-operator|*
+name|DWARFDIE
+operator|&
 name|die
 argument_list|)
 expr_stmt|;
@@ -96,10 +96,8 @@ name|title
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|DWARFDebugInfoEntry
-modifier|*
-name|GetDIEPtrAtIndex
+name|DWARFDIE
+name|GetDIEAtIndex
 argument_list|(
 name|uint32_t
 name|idx
@@ -110,8 +108,8 @@ name|bool
 name|Insert
 parameter_list|(
 specifier|const
-name|DWARFDebugInfoEntry
-modifier|*
+name|DWARFDIE
+modifier|&
 name|die
 parameter_list|)
 function_decl|;
@@ -127,9 +125,7 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|DWARFDebugInfoEntry
-operator|*
+name|DWARFDIE
 operator|>
 name|collection
 expr_stmt|;

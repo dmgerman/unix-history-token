@@ -85,10 +85,10 @@ argument_list|(
 argument|OptionValue::ConvertTypeToMask (OptionValue::eTypeString)
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|OptionValueArgs
 argument_list|()
+name|override
 block|{     }
 name|size_t
 name|GetArgs
@@ -98,11 +98,11 @@ operator|&
 name|args
 argument_list|)
 block|;
-name|virtual
 name|Type
 name|GetType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|eTypeArgs

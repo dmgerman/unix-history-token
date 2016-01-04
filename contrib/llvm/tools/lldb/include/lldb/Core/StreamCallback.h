@@ -86,17 +86,16 @@ argument_list|,
 argument|void *baton
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|StreamCallback
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Flush
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|Write
 argument_list|(
@@ -104,6 +103,7 @@ argument|const void *src
 argument_list|,
 argument|size_t src_len
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -163,7 +163,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_StreamCallback_h
+comment|// liblldb_StreamCallback_h
 end_comment
 
 end_unit

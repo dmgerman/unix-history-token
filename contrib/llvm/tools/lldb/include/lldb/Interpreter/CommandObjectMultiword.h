@@ -51,12 +51,6 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -101,123 +95,87 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const char *help = NULL
+argument|const char *help = nullptr
 argument_list|,
-argument|const char *syntax = NULL
+argument|const char *syntax = nullptr
 argument_list|,
 argument|uint32_t flags =
 literal|0
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectMultiword
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IsMultiwordObject
 argument_list|()
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|LoadSubCommand
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|cmd_name
+argument|const char *cmd_name
 argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|CommandObjectSP
-operator|&
-name|command_obj
+argument|const lldb::CommandObjectSP& command_obj
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|GenerateHelpText
 argument_list|(
-name|Stream
-operator|&
-name|output_stream
+argument|Stream&output_stream
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|CommandObjectSP
 name|GetSubcommandSP
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|sub_cmd
+argument|const char *sub_cmd
 argument_list|,
-name|StringList
-operator|*
-name|matches
-operator|=
-name|NULL
+argument|StringList *matches = nullptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|CommandObject
 operator|*
 name|GetSubcommandObject
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|sub_cmd
+argument|const char *sub_cmd
 argument_list|,
-name|StringList
-operator|*
-name|matches
-operator|=
-name|NULL
+argument|StringList *matches = nullptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|AproposAllSubCommands
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|prefix
+argument|const char *prefix
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|search_word
+argument|const char *search_word
 argument_list|,
-name|StringList
-operator|&
-name|commands_found
+argument|StringList&commands_found
 argument_list|,
-name|StringList
-operator|&
-name|commands_help
+argument|StringList&commands_help
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WantsRawCommandString
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-block|;
-name|virtual
 name|int
 name|HandleCompletion
 argument_list|(
@@ -235,8 +193,8 @@ argument|bool&word_complete
 argument_list|,
 argument|StringList&matches
 argument_list|)
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -246,26 +204,22 @@ argument|Args&current_command_args
 argument_list|,
 argument|uint32_t index
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|args_string
+argument|const char *args_string
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|IsRemovable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|m_can_be_removed
@@ -306,18 +260,18 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const char *help = NULL
+argument|const char *help = nullptr
 argument_list|,
-argument|const char *syntax = NULL
+argument|const char *syntax = nullptr
 argument_list|,
 argument|uint32_t flags =
 literal|0
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectProxy
 argument_list|()
+name|override
 block|;
 comment|// Subclasses must provide a command object that will be transparently
 comment|// used for this object.
@@ -329,116 +283,90 @@ argument_list|()
 operator|=
 literal|0
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetHelpLong
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IsRemovable
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|IsMultiwordObject
 argument_list|()
+name|override
 block|;
-name|virtual
+name|void
+name|GenerateHelpText
+argument_list|(
+argument|Stream&result
+argument_list|)
+name|override
+block|;
 name|lldb
 operator|::
 name|CommandObjectSP
 name|GetSubcommandSP
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|sub_cmd
+argument|const char *sub_cmd
 argument_list|,
-name|StringList
-operator|*
-name|matches
-operator|=
-name|NULL
+argument|StringList *matches = nullptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|CommandObject
 operator|*
 name|GetSubcommandObject
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|sub_cmd
+argument|const char *sub_cmd
 argument_list|,
-name|StringList
-operator|*
-name|matches
-operator|=
-name|NULL
+argument|StringList *matches = nullptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|AproposAllSubCommands
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|prefix
+argument|const char *prefix
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|search_word
+argument|const char *search_word
 argument_list|,
-name|StringList
-operator|&
-name|commands_found
+argument|StringList&commands_found
 argument_list|,
-name|StringList
-operator|&
-name|commands_help
+argument|StringList&commands_help
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|LoadSubCommand
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|cmd_name
+argument|const char *cmd_name
 argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|CommandObjectSP
-operator|&
-name|command_obj
+argument|const lldb::CommandObjectSP& command_obj
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WantsRawCommandString
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|WantsCompletion
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Options
 operator|*
 name|GetOptions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|int
 name|HandleCompletion
 argument_list|(
@@ -456,8 +384,8 @@ argument|bool&word_complete
 argument_list|,
 argument|StringList&matches
 argument_list|)
+name|override
 block|;
-name|virtual
 name|int
 name|HandleArgumentCompletion
 argument_list|(
@@ -477,8 +405,8 @@ argument|bool&word_complete
 argument_list|,
 argument|StringList&matches
 argument_list|)
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -488,20 +416,16 @@ argument|Args&current_command_args
 argument_list|,
 argument|uint32_t index
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|args_string
+argument|const char *args_string
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -513,7 +437,7 @@ block|;
 name|friend
 name|class
 name|CommandObjectSyntax
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

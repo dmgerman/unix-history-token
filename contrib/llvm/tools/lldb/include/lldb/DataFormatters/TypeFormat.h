@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -452,25 +458,6 @@ name|TypeFormatImpl
 operator|>
 name|SharedPointer
 expr_stmt|;
-typedef|typedef
-name|bool
-argument_list|(
-operator|*
-name|ValueCallback
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|ConstString
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|TypeFormatImplSP
-operator|&
-argument_list|)
-expr_stmt|;
 name|virtual
 operator|~
 name|TypeFormatImpl
@@ -718,37 +705,12 @@ name|TypeFormatImpl_Format
 operator|>
 name|SharedPointer
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|bool
-argument_list|(
-operator|*
-name|ValueCallback
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|ConstString
-argument_list|,
-specifier|const
-name|TypeFormatImpl_Format
-operator|::
-name|SharedPointer
-operator|&
-argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|virtual
 operator|~
 name|TypeFormatImpl_Format
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|lldb
@@ -782,12 +744,12 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|TypeFormatImpl
 operator|::
 name|Type
 name|GetType
 argument_list|()
+name|override
 block|{
 return|return
 name|TypeFormatImpl
@@ -800,7 +762,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|bool
 name|FormatObject
 argument_list|(
@@ -815,16 +776,17 @@ operator|&
 name|dest
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
 name|GetDescription
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -882,36 +844,12 @@ name|TypeFormatImpl_EnumType
 operator|>
 name|SharedPointer
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|bool
-argument_list|(
-operator|*
-name|ValueCallback
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|ConstString
-argument_list|,
-specifier|const
-name|TypeFormatImpl_EnumType
-operator|::
-name|SharedPointer
-operator|&
-argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 operator|~
 name|TypeFormatImpl_EnumType
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|ConstString
@@ -940,12 +878,12 @@ block|}
 end_function
 
 begin_expr_stmt
-name|virtual
 name|TypeFormatImpl
 operator|::
 name|Type
 name|GetType
 argument_list|()
+name|override
 block|{
 return|return
 name|TypeFormatImpl
@@ -958,7 +896,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|bool
 name|FormatObject
 argument_list|(
@@ -973,16 +910,17 @@ operator|&
 name|dest
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
 name|GetDescription
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -1006,7 +944,7 @@ operator|<
 name|void
 operator|*
 operator|,
-name|ClangASTType
+name|CompilerType
 operator|>
 name|m_types
 expr_stmt|;

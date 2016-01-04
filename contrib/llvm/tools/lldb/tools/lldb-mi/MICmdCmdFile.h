@@ -124,14 +124,6 @@ comment|//          See MIextensions.txt for details.
 end_comment
 
 begin_comment
-comment|// Authors: Illya Rudkin 25/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -150,18 +142,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdFileExecAndSymbols
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -169,39 +157,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdFileExecAndSymbols
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|GetExitAppOnCommandFailure
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -212,11 +190,6 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgNameFile
 block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThreadGrp
-block|;
-comment|// Not handled by *this command. Not specified in MI spec but Eclipse gives this option sometimes
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedPlatformName

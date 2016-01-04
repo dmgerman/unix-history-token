@@ -118,12 +118,11 @@ argument_list|,
 argument|bool given_ranges_only = false
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadPlanStepRange
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
@@ -131,69 +130,64 @@ argument|Stream *s
 argument_list|,
 argument|lldb::DescriptionLevel level
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
-name|virtual
 name|bool
 name|ValidatePlan
 argument_list|(
-name|Stream
-operator|*
-name|error
+argument|Stream *error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ShouldStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
-name|virtual
 name|Vote
 name|ShouldReportStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|StopOthers
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|StateType
 name|GetPlanRunState
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|WillStop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|MischiefManaged
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidPush
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IsPlanStale
 argument_list|()
+name|override
 block|;
 name|void
 name|AddRange
@@ -321,7 +315,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanStepRange
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

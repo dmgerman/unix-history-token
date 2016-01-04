@@ -256,6 +256,16 @@ expr_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP
+name|GetArmUnwindUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
 name|GetArchDefaultUnwindPlan
 argument_list|(
 name|Thread
@@ -324,6 +334,11 @@ expr_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP
+name|m_unwind_plan_arm_unwind_sp
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
 name|m_unwind_plan_fast_sp
 expr_stmt|;
 name|lldb
@@ -352,6 +367,10 @@ range|:
 literal|1
 decl_stmt|,
 name|m_tried_unwind_plan_compact_unwind
+range|:
+literal|1
+decl_stmt|,
+name|m_tried_unwind_plan_arm_unwind
 range|:
 literal|1
 decl_stmt|,

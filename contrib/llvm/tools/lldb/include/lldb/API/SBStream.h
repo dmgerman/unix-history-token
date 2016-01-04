@@ -68,6 +68,13 @@ label|:
 name|SBStream
 argument_list|()
 expr_stmt|;
+name|SBStream
+argument_list|(
+name|SBStream
+operator|&&
+name|rhs
+argument_list|)
+expr_stmt|;
 operator|~
 name|SBStream
 argument_list|()

@@ -43,11 +43,33 @@ directive|define
 name|LLDB_SBCommandReturnObject_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -77,6 +99,10 @@ name|SBCommandReturnObject
 operator|&
 name|rhs
 argument_list|)
+expr_stmt|;
+operator|~
+name|SBCommandReturnObject
+argument_list|()
 expr_stmt|;
 specifier|const
 name|lldb
@@ -108,10 +134,6 @@ operator|::
 name|CommandReturnObject
 operator|*
 name|Release
-argument_list|()
-expr_stmt|;
-operator|~
-name|SBCommandReturnObject
 argument_list|()
 expr_stmt|;
 name|bool
@@ -305,7 +327,7 @@ name|char
 operator|*
 name|fallback_error_cstr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt

@@ -31,18 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -115,18 +103,6 @@ comment|//          Embed Mutexes in your Active Object and then use them throug
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Aidan Dodds 10/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -139,31 +115,22 @@ name|public
 label|:
 comment|/* ctor */
 name|CMIUtilThreadMutex
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{}
-empty_stmt|;
 comment|//
 name|void
 name|Lock
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Wait until mutex can be obtained
 name|void
 name|Unlock
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Release the mutex
 name|bool
 name|TryLock
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Gain the lock if available
 comment|// Overrideable:
@@ -174,14 +141,11 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilThreadMutex
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{}
-expr_stmt|;
 comment|// Attributes:
 name|private
-label|:
+operator|:
 name|std
 operator|::
 name|recursive_mutex
@@ -200,18 +164,6 @@ end_comment
 
 begin_comment
 comment|// Details: MI common code utility class. Thread object.
-end_comment
-
-begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Aidan Dodds 10/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -242,9 +194,7 @@ name|public
 label|:
 comment|/* ctor */
 name|CMIUtilThread
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|//
 name|bool
@@ -261,23 +211,17 @@ function_decl|;
 comment|// Start execution of this thread
 name|bool
 name|Join
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Wait for this thread to stop
 name|bool
 name|IsActive
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Returns true if this thread is running
 name|void
 name|Finish
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Finish this thread
 comment|// Overrideable:
@@ -287,9 +231,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilThread
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Methods:
 name|private
@@ -326,18 +268,6 @@ comment|//          object. Runs an 'captive thread'.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Aidan Dodds 10/03/2014..
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -350,58 +280,42 @@ name|public
 label|:
 comment|/* ctor */
 name|CMIUtilThreadActiveObjBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|//
 name|bool
 name|Acquire
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Obtain a reference to this object
 name|bool
 name|Release
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Release a reference to this object
 name|bool
 name|ThreadIsActive
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Return true if this object is running
 name|bool
 name|ThreadJoin
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Wait for this thread to stop running
 name|bool
 name|ThreadKill
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Force this thread to stop, regardless of references
 name|bool
 name|ThreadExecute
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Start this objects execution in another thread
 name|void
 name|ThreadManage
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Overrideable:
 name|public
@@ -410,24 +324,20 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilThreadActiveObjBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|//
 comment|// Each thread object must supple a unique name that can be used to locate it
 name|virtual
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|ThreadGetName
-argument_list|(
-name|void
-argument_list|)
-decl|const
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 comment|// Statics:
 name|protected
 label|:
@@ -459,9 +369,7 @@ comment|// Call the main worker method
 name|virtual
 name|bool
 name|ThreadFinish
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 init|=
 literal|0
 function_decl|;
@@ -511,18 +419,6 @@ comment|//          data shared with the captive thread.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Aidan Dodds 10/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -558,9 +454,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilThreadLock
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 name|m_rMutex
 operator|.

@@ -54,12 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -75,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ClangForward.h"
 end_include
 
 begin_include
@@ -104,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_decl_stmt
@@ -329,6 +317,30 @@ block|}
 comment|// Casts a vector, if valid, to an unsigned int of matching or largest supported size.
 comment|// Truncates to the beginning of the vector if required.
 comment|// Returns a default constructed Scalar if the Vector data is internally inconsistent.
+name|llvm
+operator|::
+name|APInt
+name|rhs
+operator|=
+name|llvm
+operator|::
+name|APInt
+argument_list|(
+name|BITWIDTH_INT128
+argument_list|,
+name|NUM_OF_WORDS_INT128
+argument_list|,
+operator|(
+operator|(
+name|type128
+operator|*
+operator|)
+name|bytes
+operator|)
+operator|->
+name|x
+argument_list|)
+expr_stmt|;
 name|Scalar
 name|GetAsScalar
 argument_list|()
@@ -410,12 +422,6 @@ operator|*
 operator|)
 name|bytes
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENABLE_128_BIT_SUPPORT
-argument_list|)
 elseif|else
 if|if
 condition|(
@@ -425,35 +431,8 @@ literal|16
 condition|)
 name|scalar
 operator|=
-operator|*
-operator|(
-specifier|const
-name|__uint128_t
-operator|*
-operator|)
-name|bytes
+name|rhs
 expr_stmt|;
-else|#
-directive|else
-elseif|else
-if|if
-condition|(
-name|length
-operator|>=
-literal|16
-condition|)
-name|scalar
-operator|=
-operator|*
-operator|(
-specifier|const
-name|uint64_t
-operator|*
-operator|)
-name|bytes
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 name|scalar
@@ -531,18 +510,18 @@ name|rhs
 operator|)
 decl_stmt|;
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
-name|GetClangType
+name|GetCompilerType
 parameter_list|()
 function_decl|;
 name|void
-name|SetClangType
+name|SetCompilerType
 parameter_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
-name|clang_type
+name|compiler_type
 parameter_list|)
 function_decl|;
 name|ValueType
@@ -582,7 +561,7 @@ parameter_list|()
 block|{
 name|m_context
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|m_context_type
 operator|=
@@ -850,6 +829,10 @@ parameter_list|(
 name|Error
 modifier|*
 name|error_ptr
+parameter_list|,
+name|ExecutionContext
+modifier|*
+name|exe_ctx
 parameter_list|)
 function_decl|;
 name|Error
@@ -871,7 +854,7 @@ modifier|*
 name|module
 parameter_list|)
 function_decl|;
-comment|// Can be NULL
+comment|// Can be nullptr
 specifier|static
 specifier|const
 name|char
@@ -912,8 +895,8 @@ decl_stmt|;
 name|Vector
 name|m_vector
 decl_stmt|;
-name|ClangASTType
-name|m_clang_type
+name|CompilerType
+name|m_compiler_type
 decl_stmt|;
 name|void
 modifier|*
@@ -952,19 +935,21 @@ expr_stmt|;
 operator|~
 name|ValueList
 argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 specifier|const
 name|ValueList
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|ValueList
 operator|&
 name|rhs
 operator|)
-expr_stmt|;
+decl_stmt|;
 comment|// void InsertValue (Value *value, size_t idx);
 name|void
 name|PushValue
@@ -991,8 +976,6 @@ name|void
 name|Clear
 parameter_list|()
 function_decl|;
-name|protected
-label|:
 name|private
 label|:
 typedef|typedef

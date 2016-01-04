@@ -43,17 +43,45 @@ directive|define
 name|liblldb_IOHandler_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
 
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<stack>
+file|<memory>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -134,6 +162,10 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace curses
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -156,6 +188,8 @@ operator|,
 name|Curses
 operator|,
 name|Expression
+operator|,
+name|REPL
 operator|,
 name|ProcessIO
 operator|,
@@ -301,7 +335,7 @@ parameter_list|()
 block|{
 comment|// Prompt support isn't mandatory
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -340,7 +374,7 @@ name|GetCommandPrefix
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -351,7 +385,7 @@ name|GetHelpPrologue
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|int
@@ -614,40 +648,61 @@ name|virtual
 operator|~
 name|IOHandlerDelegate
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|IOHandlerActivated
-argument_list|(
-argument|IOHandler&io_handler
-argument_list|)
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|)
 block|{         }
 name|virtual
 name|void
 name|IOHandlerDeactivated
-argument_list|(
-argument|IOHandler&io_handler
-argument_list|)
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|)
 block|{         }
 name|virtual
 name|int
 name|IOHandlerComplete
-argument_list|(
-argument|IOHandler&io_handler
-argument_list|,
-argument|const char *current_line
-argument_list|,
-argument|const char *cursor
-argument_list|,
-argument|const char *last_char
-argument_list|,
-argument|int skip_first_n_matches
-argument_list|,
-argument|int max_matches
-argument_list|,
-argument|StringList&matches
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|current_line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cursor
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|last_char
+parameter_list|,
+name|int
+name|skip_first_n_matches
+parameter_list|,
+name|int
+name|max_matches
+parameter_list|,
+name|StringList
+modifier|&
+name|matches
+parameter_list|)
+function_decl|;
 name|virtual
 specifier|const
 name|char
@@ -656,7 +711,7 @@ name|IOHandlerGetFixIndentationCharacters
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -801,7 +856,7 @@ name|IOHandlerGetCommandPrefix
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -812,7 +867,7 @@ name|IOHandlerGetHelpPrologue
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -880,11 +935,13 @@ argument|]) ? end_line :
 literal|""
 argument_list|)
 block|{         }
-name|virtual
 operator|~
 name|IOHandlerDelegateMultiline
 argument_list|()
-block|{         }
+name|override
+operator|=
+expr|default
+block|;
 name|ConstString
 name|IOHandlerGetControlSequence
 argument_list|(
@@ -1044,10 +1101,10 @@ comment|// If non-zero show line numbers starting at 'line_number_start'
 argument|IOHandlerDelegate&delegate
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|IOHandlerEditline
 argument_list|()
+name|override
 block|;
 name|void
 name|Run
@@ -1371,10 +1428,10 @@ argument_list|,
 argument|bool default_response
 argument_list|)
 empty_stmt|;
-name|virtual
 operator|~
 name|IOHandlerConfirm
 argument_list|()
+name|override
 expr_stmt|;
 name|bool
 name|GetResponse
@@ -1531,10 +1588,10 @@ operator|&
 name|valobj_list
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|IOHandlerCursesValueObjectList
 argument_list|()
+name|override
 block|;
 name|void
 name|Run
@@ -1575,13 +1632,15 @@ argument_list|)
 operator|,
 name|m_top
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{         }
 operator|~
 name|IOHandlerStack
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|size_t
 name|GetSize
 argument_list|()
@@ -1756,20 +1815,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Set m_top the non-locking IsTop() call
-if|if
-condition|(
+name|m_top
+operator|=
+operator|(
 name|m_stack
 operator|.
 name|empty
 argument_list|()
-condition|)
-name|m_top
-operator|=
-name|NULL
-expr_stmt|;
-else|else
-name|m_top
-operator|=
+condition|?
+name|nullptr
+else|:
 name|m_stack
 operator|.
 name|back
@@ -1777,6 +1832,7 @@ argument_list|()
 operator|.
 name|get
 argument_list|()
+operator|)
 expr_stmt|;
 block|}
 name|Mutex
@@ -1840,8 +1896,8 @@ operator|.
 name|size
 argument_list|()
 decl_stmt|;
-if|if
-condition|(
+return|return
+operator|(
 name|num_io_handlers
 operator|>=
 literal|2
@@ -1869,14 +1925,7 @@ name|GetType
 argument_list|()
 operator|==
 name|second_top_type
-condition|)
-block|{
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
+operator|)
 return|;
 block|}
 name|ConstString
@@ -1886,21 +1935,24 @@ name|char
 name|ch
 parameter_list|)
 block|{
-if|if
-condition|(
-name|m_top
-condition|)
 return|return
+operator|(
+operator|(
+name|m_top
+operator|!=
+name|nullptr
+operator|)
+condition|?
 name|m_top
 operator|->
 name|GetControlSequence
 argument_list|(
 name|ch
 argument_list|)
-return|;
-return|return
+else|:
 name|ConstString
 argument_list|()
+operator|)
 return|;
 block|}
 specifier|const
@@ -1909,18 +1961,21 @@ modifier|*
 name|GetTopIOHandlerCommandPrefix
 parameter_list|()
 block|{
-if|if
-condition|(
-name|m_top
-condition|)
 return|return
+operator|(
+operator|(
+name|m_top
+operator|!=
+name|nullptr
+operator|)
+condition|?
 name|m_top
 operator|->
 name|GetCommandPrefix
 argument_list|()
-return|;
-return|return
-name|NULL
+else|:
+name|nullptr
+operator|)
 return|;
 block|}
 specifier|const
@@ -1929,18 +1984,21 @@ modifier|*
 name|GetTopIOHandlerHelpPrologue
 parameter_list|()
 block|{
-if|if
-condition|(
-name|m_top
-condition|)
 return|return
+operator|(
+operator|(
+name|m_top
+operator|!=
+name|nullptr
+operator|)
+condition|?
 name|m_top
 operator|->
 name|GetHelpPrologue
 argument_list|()
-return|;
-return|return
-name|NULL
+else|:
+name|nullptr
+operator|)
 return|;
 block|}
 name|void
@@ -2008,7 +2066,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_IOHandler_h_
+comment|// liblldb_IOHandler_h_
 end_comment
 
 end_unit

@@ -90,7 +90,7 @@ name|ValueObjectConstResultChild
 argument_list|(
 argument|ValueObject&parent
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -105,25 +105,26 @@ argument_list|,
 argument|bool is_base_class
 argument_list|,
 argument|bool is_deref_of_parent
+argument_list|,
+argument|lldb::addr_t live_address
+argument_list|,
+argument|uint64_t language_flags
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ValueObjectConstResultChild
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|Dereference
 argument_list|(
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|ValueObject
 operator|*
 name|CreateChildAtIndex
@@ -134,20 +135,20 @@ argument|bool synthetic_array_member
 argument_list|,
 argument|int32_t synthetic_index
 argument_list|)
+name|override
 block|;
 name|virtual
-name|ClangASTType
-name|GetClangType
+name|CompilerType
+name|GetCompilerType
 argument_list|()
 block|{
 return|return
 name|ValueObjectChild
 operator|::
-name|GetClangType
+name|GetCompilerType
 argument_list|()
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -155,23 +156,21 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const ClangASTType& type
+argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|AddressOf
 argument_list|(
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetPointeeData
 argument_list|(
@@ -183,6 +182,16 @@ argument_list|,
 argument|uint32_t item_count =
 literal|1
 argument_list|)
+name|override
+block|;
+name|lldb
+operator|::
+name|ValueObjectSP
+name|Cast
+argument_list|(
+argument|const CompilerType&compiler_type
+argument_list|)
+name|override
 block|;
 name|protected
 operator|:

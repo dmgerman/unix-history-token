@@ -43,20 +43,19 @@ directive|define
 name|liblldb_STLUtils_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
@@ -75,6 +74,14 @@ include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_comment
 comment|//----------------------------------------------------------------------
@@ -198,11 +205,6 @@ operator|>
 name|class
 name|ValueEquals
 block|{
-name|private
-operator|:
-name|S
-name|second_value
-block|;
 name|public
 operator|:
 name|ValueEquals
@@ -243,6 +245,11 @@ operator|==
 name|second_value
 return|;
 block|}
+name|private
+operator|:
+name|S
+name|second_value
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -260,9 +267,9 @@ argument|std::ostream&s
 argument_list|,
 argument|const T& coll
 argument_list|,
-argument|const char* header_cstr=NULL
+argument|const char* header_cstr = nullptr
 argument_list|,
-argument|const char* separator_cstr=
+argument|const char* separator_cstr =
 literal|" "
 argument_list|)
 block|{
@@ -397,15 +404,6 @@ operator|>
 name|CStringArray
 expr_stmt|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
-end_comment
 
 begin_endif
 endif|#

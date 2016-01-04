@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<list>
+file|<memory>
 end_include
 
 begin_comment
@@ -134,6 +134,7 @@ label|:
 operator|~
 name|BreakpointLocation
 argument_list|()
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Gets the load address for this breakpoint location
@@ -147,6 +148,7 @@ name|addr_t
 name|GetLoadAddress
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Gets the Address for this breakpoint location
@@ -168,6 +170,11 @@ modifier|&
 name|GetBreakpoint
 parameter_list|()
 function_decl|;
+name|Target
+modifier|&
+name|GetTarget
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Determines whether we should stop due to a hit at this
 comment|/// breakpoint location.
@@ -182,12 +189,13 @@ comment|///     \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|ShouldStop
-parameter_list|(
+argument_list|(
 name|StoppointCallbackContext
-modifier|*
+operator|*
 name|context
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// The next section deals with various breakpoint options.
 comment|//------------------------------------------------------------------
@@ -305,7 +313,7 @@ comment|//------------------------------------------------------------------
 comment|/// Return a pointer to the text of the condition expression.
 comment|///
 comment|/// @return
-comment|///    A pointer to the condition expression text, or NULL if no
+comment|///    A pointer to the condition expression text, or nullptr if no
 comment|//     condition has been set.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -317,7 +325,7 @@ name|size_t
 operator|*
 name|hash
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -482,6 +490,7 @@ operator|*
 name|s
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Use this to set location specific breakpoint options.
@@ -767,7 +776,7 @@ name|BreakpointOptions
 operator|>
 name|m_options_ap
 expr_stmt|;
-comment|///< Breakpoint options pointer, NULL if we're using our breakpoint's options.
+comment|///< Breakpoint options pointer, nullptr if we're using our breakpoint's options.
 name|lldb
 operator|::
 name|BreakpointSiteSP
@@ -776,7 +785,7 @@ expr_stmt|;
 comment|///< Our breakpoint site (it may be shared by more than one location.)
 name|lldb
 operator|::
-name|ClangUserExpressionSP
+name|UserExpressionSP
 name|m_user_expression_sp
 expr_stmt|;
 comment|///< The compiled expression to use in testing our condition.

@@ -43,6 +43,22 @@ directive|define
 name|lldb_Host_MonitoringProcessLauncher_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -73,19 +89,14 @@ operator|>
 name|delegate_launcher
 argument_list|)
 block|;
-name|virtual
 name|HostProcess
 name|LaunchProcess
 argument_list|(
-specifier|const
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|const ProcessLaunchInfo&launch_info
 argument_list|,
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -101,10 +112,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// lldb_Host_MonitoringProcessLauncher_h_
+end_comment
 
 end_unit
 

@@ -103,27 +103,26 @@ argument_list|(
 argument|raw_value_dump
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|OptionValueArray
 argument_list|()
+name|override
 block|{     }
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
-name|virtual
 name|OptionValue
 operator|::
 name|Type
 name|GetType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|eTypeArray
 return|;
 block|}
-name|virtual
 name|void
 name|DumpValue
 argument_list|(
@@ -133,8 +132,8 @@ argument|Stream&strm
 argument_list|,
 argument|uint32_t dump_mask
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Error
 name|SetValueFromString
 argument_list|(
@@ -142,11 +141,12 @@ argument|llvm::StringRef value
 argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Clear
 argument_list|()
+name|override
 block|{
 name|m_values
 operator|.
@@ -161,25 +161,24 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|OptionValueSP
 name|DeepCopy
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|IsAggregateValue
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|OptionValueSP
@@ -194,6 +193,7 @@ argument_list|,
 argument|Error&error
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|//---------------------------------------------------------------------
 comment|// Subclass specific functions

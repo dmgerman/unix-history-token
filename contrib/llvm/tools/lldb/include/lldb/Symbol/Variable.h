@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Variable.h ----------------------------------------------*- C++ -*-===//
+comment|//===-- Variable.h ----------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -42,6 +46,12 @@ define|#
 directive|define
 name|liblldb_Variable_h_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
 
 begin_include
 include|#
@@ -94,9 +104,17 @@ name|Variable
 range|:
 name|public
 name|UserID
+decl_stmt|,
+name|public
+name|std
+decl|::
+name|enable_shared_from_this
+decl|<
+name|Variable
+decl|>
 block|{
 name|public
-operator|:
+label|:
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -122,32 +140,41 @@ argument_list|,
 argument|bool external
 argument_list|,
 argument|bool artificial
+argument_list|,
+argument|bool static_member = false
 argument_list|)
-block|;
+empty_stmt|;
 name|virtual
 operator|~
 name|Variable
 argument_list|()
-block|;
+expr_stmt|;
 name|void
 name|Dump
 argument_list|(
-argument|Stream *s
+name|Stream
+operator|*
+name|s
 argument_list|,
-argument|bool show_context
+name|bool
+name|show_context
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|bool
 name|DumpDeclaration
-argument_list|(
-argument|Stream *s
-argument_list|,
-argument|bool show_fullpaths
-argument_list|,
-argument|bool show_module
-argument_list|)
-block|;
+parameter_list|(
+name|Stream
+modifier|*
+name|s
+parameter_list|,
+name|bool
+name|show_fullpaths
+parameter_list|,
+name|bool
+name|show_module
+parameter_list|)
+function_decl|;
 specifier|const
 name|Declaration
 operator|&
@@ -163,7 +190,12 @@ name|ConstString
 name|GetName
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+name|ConstString
+name|GetUnqualifiedName
+argument_list|()
+specifier|const
+expr_stmt|;
 name|SymbolContextScope
 operator|*
 name|GetSymbolContextScope
@@ -182,29 +214,35 @@ comment|// sure we match anything we come across.
 name|bool
 name|NameMatches
 argument_list|(
-argument|const ConstString&name
-argument_list|)
 specifier|const
-block|;
+name|ConstString
+operator|&
+name|name
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|NameMatches
 argument_list|(
-argument|const RegularExpression& regex
-argument_list|)
 specifier|const
-block|;
+name|RegularExpression
+operator|&
+name|regex
+argument_list|)
+decl|const
+decl_stmt|;
 name|Type
-operator|*
+modifier|*
 name|GetType
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|lldb
 operator|::
 name|LanguageType
 name|GetLanguage
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|lldb
 operator|::
 name|ValueType
@@ -234,10 +272,19 @@ return|return
 name|m_artificial
 return|;
 block|}
-name|DWARFExpression
-operator|&
-name|LocationExpression
+name|bool
+name|IsStaticMember
 argument_list|()
+specifier|const
+block|{
+return|return
+name|m_static_member
+return|;
+block|}
+name|DWARFExpression
+modifier|&
+name|LocationExpression
+parameter_list|()
 block|{
 return|return
 name|m_location
@@ -256,55 +303,55 @@ return|;
 block|}
 name|bool
 name|DumpLocationForAddress
-argument_list|(
+parameter_list|(
 name|Stream
-operator|*
+modifier|*
 name|s
-argument_list|,
+parameter_list|,
 specifier|const
 name|Address
-operator|&
+modifier|&
 name|address
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|size_t
 name|MemorySize
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|CalculateSymbolContext
-argument_list|(
+parameter_list|(
 name|SymbolContext
-operator|*
+modifier|*
 name|sc
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|IsInScope
-argument_list|(
+parameter_list|(
 name|StackFrame
-operator|*
+modifier|*
 name|frame
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|LocationIsValidForFrame
-argument_list|(
+parameter_list|(
 name|StackFrame
-operator|*
+modifier|*
 name|frame
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|LocationIsValidForAddress
-argument_list|(
+parameter_list|(
 specifier|const
 name|Address
-operator|&
+modifier|&
 name|address
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|GetLocationIsConstantValueData
 argument_list|()
@@ -316,14 +363,16 @@ return|;
 block|}
 name|void
 name|SetLocationIsConstantValueData
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
 name|m_loc_is_const_data
 operator|=
 name|b
-block|;     }
+expr_stmt|;
+block|}
 typedef|typedef
 name|size_t
 function_decl|(
@@ -348,20 +397,32 @@ function_decl|;
 specifier|static
 name|Error
 name|GetValuesForVariableExpressionPath
-argument_list|(
-argument|const char *variable_expr_path
-argument_list|,
-argument|ExecutionContextScope *scope
-argument_list|,
-argument|GetVariableCallback callback
-argument_list|,
-argument|void *baton
-argument_list|,
-argument|VariableList&variable_list
-argument_list|,
-argument|ValueObjectList&valobj_list
-argument_list|)
-decl_stmt|;
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|variable_expr_path
+parameter_list|,
+name|ExecutionContextScope
+modifier|*
+name|scope
+parameter_list|,
+name|GetVariableCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|VariableList
+modifier|&
+name|variable_list
+parameter_list|,
+name|ValueObjectList
+modifier|&
+name|valobj_list
+parameter_list|)
+function_decl|;
 specifier|static
 name|size_t
 name|AutoComplete
@@ -384,6 +445,14 @@ name|bool
 modifier|&
 name|word_complete
 parameter_list|)
+function_decl|;
+name|CompilerDeclContext
+name|GetDeclContext
+parameter_list|()
+function_decl|;
+name|CompilerDecl
+name|GetDecl
+parameter_list|()
 function_decl|;
 name|protected
 label|:
@@ -434,8 +503,13 @@ comment|// Non-zero if the variable is not explicitly declared in source
 name|m_loc_is_const_data
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|// The m_location expression contains the constant variable value data, not a DWARF location
+name|m_static_member
+range|:
+literal|1
+decl_stmt|;
+comment|// Non-zero if variable is static member of a class or struct.
 name|private
 label|:
 name|Variable
@@ -458,14 +532,11 @@ name|rhs
 operator|)
 decl_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

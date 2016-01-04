@@ -182,10 +182,10 @@ comment|///
 comment|/// The destructor is virtual since this class is designed to be
 comment|/// inherited by the plug-in instance.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|SystemRuntime
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Called after attaching to a process.

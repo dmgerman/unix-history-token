@@ -93,6 +93,10 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -784,6 +788,8 @@ block|{
 if|if
 condition|(
 name|bytes
+operator|!=
+name|nullptr
 operator|&&
 name|length
 operator|>
@@ -870,23 +876,24 @@ name|GetOpcodeBytes
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|m_type
 operator|==
 name|Opcode
 operator|::
 name|eTypeBytes
-condition|)
-return|return
+operator|)
+operator|?
 name|m_data
 operator|.
 name|inst
 operator|.
 name|bytes
-return|;
-return|return
-name|NULL
+operator|:
+name|nullptr
+operator|)
 return|;
 block|}
 name|uint32_t
@@ -1078,7 +1085,7 @@ name|bytes
 return|;
 block|}
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|lldb
@@ -1101,8 +1108,6 @@ name|lldb
 operator|::
 name|eByteOrderBig
 operator|&&
-name|lldb
-operator|::
 name|endian
 operator|::
 name|InlHostByteOrder
@@ -1120,8 +1125,6 @@ name|lldb
 operator|::
 name|eByteOrderLittle
 operator|&&
-name|lldb
-operator|::
 name|endian
 operator|::
 name|InlHostByteOrder
@@ -1176,14 +1179,11 @@ block|}
 name|m_data
 union|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

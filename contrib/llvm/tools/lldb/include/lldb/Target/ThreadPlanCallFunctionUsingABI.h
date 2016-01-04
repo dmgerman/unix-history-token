@@ -153,6 +153,7 @@ block|;
 operator|~
 name|ThreadPlanCallFunctionUsingABI
 argument_list|()
+name|override
 block|;
 name|void
 name|GetDescription

@@ -386,7 +386,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace lldb
+comment|// namespace lldb_utility
 end_comment
 
 begin_endif

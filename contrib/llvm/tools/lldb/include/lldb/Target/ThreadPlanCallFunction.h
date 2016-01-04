@@ -95,7 +95,7 @@ name|ThreadPlan
 block|{
 comment|// Create a thread plan to call a function at the address passed in the "function"
 comment|// argument.  If you plan to call GetReturnValueObject, then pass in the
-comment|// return type, otherwise just pass in an invalid ClangASTType.
+comment|// return type, otherwise just pass in an invalid CompilerType.
 name|public
 operator|:
 name|ThreadPlanCallFunction
@@ -110,7 +110,7 @@ operator|&
 name|function
 argument_list|,
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
 name|return_type
 argument_list|,
@@ -147,12 +147,11 @@ operator|&
 name|options
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadPlanCallFunction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
@@ -160,60 +159,55 @@ argument|Stream *s
 argument_list|,
 argument|lldb::DescriptionLevel level
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ValidatePlan
 argument_list|(
-name|Stream
-operator|*
-name|error
+argument|Stream *error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ShouldStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Vote
 name|ShouldReportStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|StopOthers
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|StateType
 name|GetPlanRunState
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidPush
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|WillStop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|MischiefManaged
 argument_list|()
+name|override
 block|;
 comment|// To get the return value from a function call you must create a
 comment|// lldb::ValueSP that contains a valid clang type in its context and call
@@ -223,12 +217,12 @@ comment|// value. If there is, the return value will be retrieved using the
 comment|// ABI::GetReturnValue() for the ABI in the process. Then after the thread
 comment|// plan is complete, you can call "GetReturnValue()" to retrieve the value
 comment|// that was extracted.
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|GetReturnValueObject
 argument_list|()
+name|override
 block|{
 return|return
 name|m_return_valobj_sp
@@ -248,25 +242,25 @@ return|return
 name|m_function_sp
 return|;
 block|}
-comment|// Classes that derive from ClangFunction, and implement
+comment|// Classes that derive from FunctionCaller, and implement
 comment|// their own WillPop methods should call this so that the
 comment|// thread state gets restored if the plan gets discarded.
-name|virtual
 name|void
 name|WillPop
 argument_list|()
+name|override
 block|;
 comment|// If the thread plan stops mid-course, this will be the stop reason that interrupted us.
 comment|// Once DoTakedown is called, this will be the real stop reason at the end of the function call.
 comment|// If it hasn't been set for one or the other of these reasons, we'll return the PrivateStopReason.
 comment|// This is needed because we want the CallFunction thread plans not to show up as the stop reason.
 comment|// But if something bad goes wrong, it is nice to be able to tell the user what really happened.
-name|virtual
 name|lldb
 operator|::
 name|StopInfoSP
 name|GetRealStopInfo
 argument_list|()
+name|override
 block|{
 if|if
 condition|(
@@ -291,26 +285,26 @@ return|return
 name|m_stop_address
 return|;
 block|}
-name|virtual
 name|bool
 name|RestoreThreadState
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|ThreadDestroyed
 argument_list|()
+name|override
 block|{
 name|m_takedown_done
 operator|=
 name|true
 block|;     }
-name|virtual
 name|void
 name|SetStopOthers
 argument_list|(
 argument|bool new_value
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -323,14 +317,12 @@ operator|*
 name|message
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|DoPlanExplainsStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
@@ -463,7 +455,7 @@ block|;
 comment|// This is the address we stopped at.  Also set in DoTakedown;
 name|private
 operator|:
-name|ClangASTType
+name|CompilerType
 name|m_return_type
 block|;
 name|DISALLOW_COPY_AND_ASSIGN

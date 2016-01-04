@@ -43,6 +43,28 @@ directive|define
 name|liblldb_Block_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -88,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_decl_stmt
@@ -173,10 +195,10 @@ empty_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|Block
 argument_list|()
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Add a child to this object.
@@ -225,40 +247,40 @@ comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CalculateSymbolContext
-parameter_list|(
+argument_list|(
 name|SymbolContext
-modifier|*
+operator|*
 name|sc
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|ModuleSP
 name|CalculateSymbolContextModule
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|CompileUnit
-modifier|*
+operator|*
 name|CalculateSymbolContextCompileUnit
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 name|Function
-modifier|*
+operator|*
 name|CalculateSymbolContextFunction
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 name|Block
-modifier|*
+operator|*
 name|CalculateSymbolContextBlock
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Check if an offset is in one of the block offset ranges.
 comment|///
@@ -364,15 +386,15 @@ comment|/// @copydoc SymbolContextScope::DumpSymbolContext(Stream*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DumpSymbolContext
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|DumpAddressRanges
 argument_list|(
@@ -412,7 +434,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get the parent block.
 comment|///
 comment|/// @return
-comment|///     The parent block pointer, or NULL if this block has no
+comment|///     The parent block pointer, or nullptr if this block has no
 comment|///     parent.
 comment|//------------------------------------------------------------------
 name|Block
@@ -427,7 +449,7 @@ comment|///
 comment|/// @return
 comment|///     If this block contains inlined function info, it will return
 comment|///     this block, else parent blocks will be searched to see if
-comment|///     any contain this block. NULL will be returned if this block
+comment|///     any contain this block. nullptr will be returned if this block
 comment|///     nor any parent blocks are inlined function blocks.
 comment|//------------------------------------------------------------------
 name|Block
@@ -439,7 +461,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get the inlined parent block for this block.
 comment|///
 comment|/// @return
-comment|///     The parent block pointer, or NULL if this block has no
+comment|///     The parent block pointer, or nullptr if this block has no
 comment|///     parent.
 comment|//------------------------------------------------------------------
 name|Block
@@ -451,7 +473,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get the sibling block for this block.
 comment|///
 comment|/// @return
-comment|///     The sibling block pointer, or NULL if this block has no
+comment|///     The sibling block pointer, or nullptr if this block has no
 comment|///     sibling.
 comment|//------------------------------------------------------------------
 name|Block
@@ -464,7 +486,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get the first child block.
 comment|///
 comment|/// @return
-comment|///     The first child block pointer, or NULL if this block has no
+comment|///     The first child block pointer, or nullptr if this block has no
 comment|///     children.
 comment|//------------------------------------------------------------------
 name|Block
@@ -473,17 +495,15 @@ name|GetFirstChild
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|m_children
 operator|.
 name|empty
 argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-return|return
+operator|?
+name|nullptr
+operator|:
 name|m_children
 operator|.
 name|front
@@ -491,6 +511,7 @@ argument_list|()
 operator|.
 name|get
 argument_list|()
+operator|)
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -575,7 +596,7 @@ comment|///     If \b true, all variables from all parent blocks will be
 comment|///     added to the variable list until there are no parent blocks
 comment|///     or the parent block has inlined function info.
 comment|///
-comment|/// @param[in/out] variable_list
+comment|/// @param[in,out] variable_list
 comment|///     All variables in this block, and optionally all parent
 comment|///     blocks will be added to this list.
 comment|///
@@ -604,7 +625,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get const accessor for any inlined function information.
 comment|///
 comment|/// @return
-comment|///     A const pointer to any inlined function information, or NULL
+comment|///     A const pointer to any inlined function information, or nullptr
 comment|///     if this is a regular block.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -621,13 +642,10 @@ name|get
 argument_list|()
 return|;
 block|}
-name|clang
-operator|::
-name|DeclContext
-operator|*
-name|GetClangDeclContext
-argument_list|()
-expr_stmt|;
+name|CompilerDeclContext
+name|GetDeclContext
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Get the memory cost of this object.
 comment|///
@@ -647,16 +665,16 @@ comment|/// Set accessor for any inlined function information.
 comment|///
 comment|/// @param[in] name
 comment|///     The method name for the inlined function. This value should
-comment|///     not be NULL.
+comment|///     not be nullptr.
 comment|///
 comment|/// @param[in] mangled
 comment|///     The mangled method name for the inlined function. This can
-comment|///     be NULL if there is no mangled name for an inlined function
+comment|///     be nullptr if there is no mangled name for an inlined function
 comment|///     or if the name is the same as \a name.
 comment|///
 comment|/// @param[in] decl_ptr
 comment|///     A optional pointer to declaration information for the
-comment|///     inlined function information. This value can be NULL to
+comment|///     inlined function information. This value can be nullptr to
 comment|///     indicate that no declaration information is available.
 comment|///
 comment|/// @param[in] call_decl_ptr
@@ -925,14 +943,11 @@ name|Block
 argument_list|)
 expr_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

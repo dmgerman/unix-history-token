@@ -43,11 +43,27 @@ directive|define
 name|lldb_UnwindLLDB_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -111,12 +127,13 @@ operator|&
 name|thread
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|UnwindLLDB
 argument_list|()
-block|{ }
-expr|enum
+name|override
+operator|=
+expr|default
+block|;      enum
 name|RegisterSearchResult
 block|{
 name|eRegisterFound
@@ -190,6 +207,7 @@ block|;
 name|void
 name|DoClear
 argument_list|()
+name|override
 block|{
 name|m_frames
 operator|.
@@ -205,10 +223,10 @@ name|m_unwind_complete
 operator|=
 name|false
 block|;     }
-name|virtual
 name|uint32_t
 name|DoGetFrameCount
 argument_list|()
+name|override
 block|;
 name|bool
 name|DoGetFrameInfoAtIndex
@@ -219,18 +237,16 @@ argument|lldb::addr_t& cfa
 argument_list|,
 argument|lldb::addr_t& start_pc
 argument_list|)
+name|override
 block|;
 name|lldb
 operator|::
 name|RegisterContextSP
 name|DoCreateRegisterContextForFrame
 argument_list|(
-name|lldb_private
-operator|::
-name|StackFrame
-operator|*
-name|frame
+argument|lldb_private::StackFrame *frame
 argument_list|)
+name|override
 block|;
 typedef|typedef
 name|std
@@ -388,6 +404,20 @@ name|ConstString
 operator|>
 name|m_user_supplied_trap_handler_functions
 expr_stmt|;
+comment|//-----------------------------------------------------------------
+comment|// Check if Full UnwindPlan of First frame is valid or not.
+comment|// If not then try Fallback UnwindPlan of the frame. If Fallback
+comment|// UnwindPlan succeeds then update the Full UnwindPlan with the
+comment|// Fallback UnwindPlan.
+comment|//-----------------------------------------------------------------
+name|void
+name|UpdateUnwindPlanForFirstFrameIfInvalid
+parameter_list|(
+name|ABI
+modifier|*
+name|abi
+parameter_list|)
+function_decl|;
 name|CursorSP
 name|GetOneMoreFrame
 parameter_list|(

@@ -84,10 +84,10 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectMemory
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 block|}

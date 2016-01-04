@@ -43,15 +43,6 @@ directive|define
 name|liblldb_DataBufferMemoryMap_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -112,10 +103,10 @@ comment|///
 comment|/// Virtual destructor since this class inherits from a pure virtual
 comment|/// base class #DataBuffer.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|DataBufferMemoryMap
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Reverts this object to an empty state by unmapping any memory
@@ -128,33 +119,33 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// @copydoc DataBuffer::GetBytes()
 comment|//------------------------------------------------------------------
-name|virtual
 name|uint8_t
 operator|*
 name|GetBytes
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// @copydoc DataBuffer::GetBytes() const
 comment|//------------------------------------------------------------------
-name|virtual
 specifier|const
 name|uint8_t
 operator|*
 name|GetBytes
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// @copydoc DataBuffer::GetByteSize() const
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|offset_t
 name|GetByteSize
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Error get accessor.
@@ -285,15 +276,6 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace lldb_private
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
 end_comment
 
 begin_endif

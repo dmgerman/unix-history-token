@@ -87,7 +87,7 @@ comment|// Locating the file should happen only on the local computer or using
 comment|// the current computers global settings.
 comment|//----------------------------------------------------------------------
 specifier|static
-name|FileSpec
+name|ModuleSpec
 name|LocateExecutableObjectFile
 parameter_list|(
 specifier|const

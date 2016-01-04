@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/AddressRange.h"
 end_include
 
@@ -386,6 +380,7 @@ comment|//------------------------------------------------------------------
 operator|~
 name|InlineFunctionInfo
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Compare two inlined function information objects.
@@ -519,11 +514,11 @@ comment|///     shared string values.
 comment|///
 comment|/// @see ConstString::StaticMemorySize ()
 comment|//------------------------------------------------------------------
-name|virtual
 name|size_t
 name|MemorySize
 argument_list|()
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -671,40 +666,41 @@ comment|//------------------------------------------------------------------
 operator|~
 name|Function
 argument_list|()
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CalculateSymbolContext
-parameter_list|(
+argument_list|(
 name|SymbolContext
-modifier|*
+operator|*
 name|sc
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|ModuleSP
 name|CalculateSymbolContextModule
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|CompileUnit
-modifier|*
+operator|*
 name|CalculateSymbolContextCompileUnit
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 name|Function
-modifier|*
+operator|*
 name|CalculateSymbolContextFunction
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 specifier|const
 name|AddressRange
 modifier|&
@@ -892,13 +888,10 @@ comment|///
 comment|/// @return
 comment|///     The DeclContext, or NULL if none exists.
 comment|//------------------------------------------------------------------
-name|clang
-operator|::
-name|DeclContext
-operator|*
-name|GetClangDeclContext
-argument_list|()
-expr_stmt|;
+name|CompilerDeclContext
+name|GetDeclContext
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Get accessor for the type that describes the function
 comment|/// return value type, and parameter types.
@@ -925,8 +918,8 @@ name|GetType
 argument_list|()
 specifier|const
 expr_stmt|;
-name|ClangASTType
-name|GetClangType
+name|CompilerType
+name|GetCompilerType
 parameter_list|()
 function_decl|;
 name|uint32_t
@@ -963,15 +956,15 @@ comment|/// @copydoc SymbolContextScope::DumpSymbolContext(Stream*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DumpSymbolContext
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get the memory cost of this object.
 comment|///
@@ -987,6 +980,44 @@ name|MemorySize
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get whether compiler optimizations were enabled for this function
+comment|///
+comment|/// The debug information may provide information about whether this
+comment|/// function was compiled with optimization or not.  In this case,
+comment|/// "optimized" means that the debug experience may be difficult
+comment|/// for the user to understand.  Variables may not be available when
+comment|/// the developer would expect them, stepping through the source lines
+comment|/// in the function may appear strange, etc.
+comment|///
+comment|/// @return
+comment|///     Returns 'true' if this function was compiled with
+comment|///     optimization.  'false' indicates that either the optimization
+comment|///     is unknown, or this function was built without optimization.
+comment|//------------------------------------------------------------------
+name|bool
+name|GetIsOptimized
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get whether this function represents a 'top-level' function
+comment|///
+comment|/// The concept of a top-level function is language-specific, mostly
+comment|/// meant to represent the notion of scripting-style code that has
+comment|/// global visibility of the variables/symbols/functions/...
+comment|/// defined within the containing file/module
+comment|///
+comment|/// If stopped in a top-level function, LLDB will expose global variables
+comment|/// as-if locals in the 'frame variable' command
+comment|///
+comment|/// @return
+comment|///     Returns 'true' if this function is a top-level function,
+comment|///     'false' otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|IsTopLevelFunction
+parameter_list|()
+function_decl|;
 name|lldb
 operator|::
 name|DisassemblerSP

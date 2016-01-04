@@ -72,18 +72,6 @@ comment|// Details: MI common code implementation base class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 28/01/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -96,26 +84,20 @@ name|public
 label|:
 comment|/* ctor */
 name|CMICmnBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|bool
 name|HaveErrorDescription
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetErrorDescription
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|SetErrorDescription
 argument_list|(
@@ -149,11 +131,9 @@ decl|const
 decl_stmt|;
 name|void
 name|ClrErrorDescription
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Overrideable:
 name|public
 label|:
@@ -161,9 +141,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMICmnBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Attributes:
 name|protected

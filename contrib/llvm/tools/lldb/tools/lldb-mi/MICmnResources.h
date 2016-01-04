@@ -136,8 +136,6 @@ name|IDS_LOG_MEDIUM_ERR_WRITE_ANY
 block|,
 name|IDS_LOG_MEDIUM_ERR_WRITE_MEDIUMFAIL
 block|,
-name|IDE_MEDIUMFILE_ERR_GET_FILE_PATHNAME_SYS
-block|,
 name|IDS_MEDIUMFILE_NAME
 block|,
 name|IDS_MEDIUMFILE_ERR_INVALID_PATH
@@ -309,8 +307,6 @@ block|,
 name|IDS_LLDBOUTOFBAND_ERR_SETNEWDRIVERSTATE
 block|,
 name|IDS_LLDBOUTOFBAND_ERR_BRKPT_CNT_EXCEEDED
-block|,
-name|IDS_DBGSESSION_ERR_SHARED_DATA_RELEASE
 block|,
 name|IDS_DBGSESSION_ERR_SHARED_DATA_ADD
 block|,
@@ -554,18 +550,6 @@ comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 29/01/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -598,18 +582,14 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|CMIUtilString
 name|GetString
 argument_list|(
@@ -689,9 +669,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnResources
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnResources
@@ -725,9 +703,7 @@ decl|const
 decl_stmt|;
 name|bool
 name|ReadResourceStringData
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Overridden:
 name|private
@@ -736,9 +712,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnResources
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

@@ -38,16 +38,6 @@ name|once
 end_pragma
 
 begin_comment
-comment|// Third party headers:
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_comment
 comment|// In-house headers:
 end_comment
 
@@ -152,18 +142,6 @@ comment|//          http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gd
 end_comment
 
 begin_comment
-comment|//          Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 24/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -214,233 +192,74 @@ block|,
 name|eOutOfBand_TargetModuleUnloaded
 block|,
 name|eOutOfBand_TargetStreamOutput
-block|,
-name|eOutOfBand_count
-comment|// Always the last one
 block|}
 block|;
-comment|// Typedefs:
+comment|// Methods:
 name|public
 operator|:
-typedef|typedef
-name|std
-operator|::
-name|map
-operator|<
-name|OutOfBand_e
-operator|,
-name|CMIUtilString
-operator|>
-name|MapOutOfBandToOutOfBandText_t
-expr_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|map
-operator|<
-name|OutOfBand_e
-operator|,
-name|CMIUtilString
-operator|>
-name|MapOutOfBandToToken_t
-expr_stmt|;
-end_typedef
-
-begin_comment
-comment|// Methods:
-end_comment
-
-begin_label
-name|public
-label|:
-end_label
-
-begin_comment
 comment|/* ctor */
-end_comment
-
-begin_expr_stmt
+name|CMICmnMIOutOfBandRecord
+argument_list|()
+block|;
+comment|/* ctor */
 name|CMICmnMIOutOfBandRecord
 argument_list|(
-name|void
+argument|OutOfBand_e veType
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/* ctor */
-end_comment
-
-begin_macro
 name|CMICmnMIOutOfBandRecord
 argument_list|(
-argument|const OutOfBand_e veType
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* ctor */
-end_comment
-
-begin_macro
-name|CMICmnMIOutOfBandRecord
-argument_list|(
-argument|const OutOfBand_e veType
+argument|OutOfBand_e veType
 argument_list|,
 argument|const CMICmnMIValueConst&vConst
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|;
 comment|/* ctor */
-end_comment
-
-begin_macro
 name|CMICmnMIOutOfBandRecord
 argument_list|(
-argument|const OutOfBand_e veType
+argument|OutOfBand_e veType
 argument_list|,
 argument|const CMICmnMIValueResult&vResult
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|;
 comment|//
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetString
-argument_list|(
+argument_list|()
+specifier|const
+block|;
 name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|bool
 name|Add
-parameter_list|(
+argument_list|(
 specifier|const
 name|CMICmnMIValueResult
-modifier|&
+operator|&
 name|vResult
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|// Overridden:
-end_comment
-
-begin_label
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// From CMICmnBase
-end_comment
-
-begin_comment
 comment|/* dtor */
-end_comment
-
-begin_expr_stmt
 operator|~
 name|CMICmnMIOutOfBandRecord
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Methods:
-end_comment
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_function_decl
-name|bool
-name|BuildAsyncRecord
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+block|;
 comment|// Attributes:
-end_comment
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_decl_stmt
-specifier|static
-name|MapOutOfBandToOutOfBandText_t
-name|ms_constMapOutOfBandToAsyncRecordText
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|MapOutOfBandToToken_t
-name|ms_constMapOutOfBandTextToToken
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//
-end_comment
-
-begin_decl_stmt
-name|OutOfBand_e
-name|m_eResultAsyncRecordClass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+operator|:
 name|CMIUtilString
 name|m_strAsyncRecord
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Holds the text version of the result record to date
-end_comment
-
-begin_decl_stmt
-name|CMICmnMIValueResult
-name|m_partResult
+block|}
 decl_stmt|;
 end_decl_stmt
 
-unit|};
 end_unit
 

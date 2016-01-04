@@ -162,12 +162,10 @@ label|:
 name|void
 name|UnregisterReadObject
 argument_list|(
-specifier|const
-name|lldb
+name|IOObject
 operator|::
-name|IOObjectSP
-operator|&
-name|object_sp
+name|WaitableHandle
+name|handle
 argument_list|)
 name|override
 decl_stmt|;

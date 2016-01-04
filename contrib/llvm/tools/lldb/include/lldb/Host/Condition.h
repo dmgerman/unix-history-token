@@ -34,23 +34,30 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_DBCondition_h_
+name|liblldb_Condition_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_DBCondition_h_
+name|liblldb_Condition_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -131,9 +138,9 @@ comment|/// waiting on this object's condition variable, and unblocks
 comment|/// \a mutex. The waiting thread unblocks only after another thread
 comment|/// signals or broadcasts this object's condition variable.
 comment|///
-comment|/// If \a abstime is non-NULL, this function will return when the
+comment|/// If \a abstime is non-nullptr, this function will return when the
 comment|/// system time reaches the time specified in \a abstime if the
-comment|/// condition variable doesn't get unblocked. If \a abstime is NULL
+comment|/// condition variable doesn't get unblocked. If \a abstime is nullptr
 comment|/// this function will wait for an infinite amount of time for the
 comment|/// condition variable to be unblocked.
 comment|///
@@ -145,12 +152,12 @@ comment|///     The mutex to use in the \c pthread_cond_timedwait() or
 comment|///     \c pthread_cond_wait() calls.
 comment|///
 comment|/// @param[in] abstime
-comment|///     An absolute time at which to stop waiting if non-NULL, else
+comment|///     An absolute time at which to stop waiting if non-nullptr, else
 comment|///     wait an infinite amount of time for the condition variable
 comment|///     toget signaled.
 comment|///
 comment|/// @param[out] timed_out
-comment|///     If not NULL, will be set to true if the wait timed out, and
+comment|///     If not nullptr, will be set to true if the wait timed out, and
 comment|//      false otherwise.
 comment|///
 comment|/// @see Condition::Broadcast()
@@ -168,13 +175,13 @@ name|TimeValue
 modifier|*
 name|abstime
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 name|bool
 modifier|*
 name|timed_out
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|protected
@@ -216,13 +223,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined(__cplusplus)
+comment|// liblldb_Condition_h_
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -119,10 +119,10 @@ name|PluginInterface
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|LanguageRuntime
 argument_list|()
+name|override
 block|;
 specifier|static
 name|LanguageRuntime
@@ -199,10 +199,29 @@ argument_list|,
 argument|TypeAndOrName&class_type_or_name
 argument_list|,
 argument|Address&address
+argument_list|,
+argument|Value::ValueType&value_type
 argument_list|)
 operator|=
 literal|0
 block|;
+comment|// This call should return a CompilerType given a generic type name
+comment|// and an ExecutionContextScope in which one can actually fetch
+comment|// any specialization information required.
+name|virtual
+name|CompilerType
+name|GetConcreteType
+argument_list|(
+argument|ExecutionContextScope *exe_scope
+argument_list|,
+argument|ConstString abstract_type_name
+argument_list|)
+block|{
+return|return
+name|CompilerType
+argument_list|()
+return|;
+block|}
 comment|// This should be a fast test to determine whether it is likely that this value would
 comment|// have a dynamic type.
 name|virtual
@@ -212,6 +231,26 @@ argument_list|(
 name|ValueObject
 operator|&
 name|in_value
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|// The contract for GetDynamicTypeAndAddress() is to return a "bare-bones" dynamic type
+comment|// For instance, given a Base* pointer, GetDynamicTypeAndAddress() will return the type of
+comment|// Derived, not Derived*. The job of this API is to correct this misalignment between the
+comment|// static type and the discovered dynamic type
+name|virtual
+name|TypeAndOrName
+name|FixUpDynamicType
+argument_list|(
+specifier|const
+name|TypeAndOrName
+operator|&
+name|type_and_or_name
+argument_list|,
+name|ValueObject
+operator|&
+name|static_value
 argument_list|)
 operator|=
 literal|0
@@ -276,53 +315,6 @@ argument_list|,
 argument|bool throw_bp
 argument_list|)
 block|;
-specifier|static
-name|lldb
-operator|::
-name|LanguageType
-name|GetLanguageTypeFromString
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|string
-argument_list|)
-block|;
-specifier|static
-specifier|const
-name|char
-operator|*
-name|GetNameForLanguageType
-argument_list|(
-argument|lldb::LanguageType language
-argument_list|)
-block|;
-specifier|static
-name|void
-name|PrintAllLanguages
-argument_list|(
-name|Stream
-operator|&
-name|s
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|prefix
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|suffix
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|LanguageIsCPlusPlus
-argument_list|(
-argument|lldb::LanguageType language
-argument_list|)
-block|;
 name|Process
 operator|*
 name|GetProcess
@@ -330,6 +322,18 @@ argument_list|()
 block|{
 return|return
 name|m_process
+return|;
+block|}
+name|Target
+operator|&
+name|GetTargetRef
+argument_list|()
+block|{
+return|return
+name|m_process
+operator|->
+name|GetTarget
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -358,7 +362,7 @@ name|virtual
 name|bool
 name|GetTypeBitSize
 argument_list|(
-argument|const ClangASTType& clang_type
+argument|const CompilerType& compiler_type
 argument_list|,
 argument|uint64_t&size
 argument_list|)
@@ -384,9 +388,7 @@ name|ModulesDidLoad
 argument_list|(
 argument|const ModuleList&module_list
 argument_list|)
-block|{
-return|return;
-block|}
+block|{     }
 name|protected
 operator|:
 comment|//------------------------------------------------------------------

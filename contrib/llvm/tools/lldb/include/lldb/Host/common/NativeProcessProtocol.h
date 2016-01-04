@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/MainLoop.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -651,12 +657,6 @@ operator|&
 name|native_delegate
 argument_list|)
 block|;
-comment|// Called before termination of NativeProcessProtocol's instance.
-name|virtual
-name|void
-name|Terminate
-argument_list|()
-block|;
 name|virtual
 name|Error
 name|GetLoadedModuleFileSpec
@@ -706,6 +706,11 @@ comment|///     The delegate that will receive messages regarding the
 comment|///     inferior.  Must outlive the NativeProcessProtocol
 comment|///     instance.
 comment|///
+comment|/// @param[in] mainloop
+comment|///     The mainloop instance with which the process can register
+comment|///     callbacks. Must outlive the NativeProcessProtocol
+comment|///     instance.
+comment|///
 comment|/// @param[out] process_sp
 comment|///     On successful return from the method, this parameter
 comment|///     contains the shared pointer to the
@@ -728,6 +733,10 @@ name|NativeDelegate
 operator|&
 name|native_delegate
 argument_list|,
+name|MainLoop
+operator|&
+name|mainloop
+argument_list|,
 name|NativeProcessProtocolSP
 operator|&
 name|process_sp
@@ -744,6 +753,11 @@ comment|///
 comment|/// @param[in] native_delegate
 comment|///     The delegate that will receive messages regarding the
 comment|///     inferior.  Must outlive the NativeProcessProtocol
+comment|///     instance.
+comment|///
+comment|/// @param[in] mainloop
+comment|///     The mainloop instance with which the process can register
+comment|///     callbacks. Must outlive the NativeProcessProtocol
 comment|///     instance.
 comment|///
 comment|/// @param[out] process_sp
@@ -763,6 +777,8 @@ argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
 argument|NativeDelegate&native_delegate
+argument_list|,
+argument|MainLoop&mainloop
 argument_list|,
 argument|NativeProcessProtocolSP&process_sp
 argument_list|)

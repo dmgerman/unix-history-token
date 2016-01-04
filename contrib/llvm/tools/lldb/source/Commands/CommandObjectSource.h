@@ -99,11 +99,11 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectMultiwordSource
 argument_list|()
-block|;  }
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -118,7 +118,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_CommandObjectSource.h_h_
+comment|// liblldb_CommandObjectSource_h_
 end_comment
 
 end_unit

@@ -64,18 +64,6 @@ comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 14/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -88,9 +76,7 @@ name|public
 label|:
 comment|/* ctor */
 name|CMICmdArgContext
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmdArgContext
@@ -104,36 +90,28 @@ expr_stmt|;
 comment|//
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetArgsLeftToParse
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|MIuint
+argument_list|()
+specifier|const
+expr_stmt|;
+name|size_t
 name|GetNumberArgsPresent
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|CMIUtilString
 operator|::
 name|VecString_t
 name|GetArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
 name|IsEmpty
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|RemoveArg
 parameter_list|(
@@ -151,8 +129,7 @@ name|CMIUtilString
 modifier|&
 name|vArg
 parameter_list|,
-specifier|const
-name|MIuint
+name|size_t
 name|nArgIndex
 parameter_list|)
 function_decl|;
@@ -176,9 +153,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMICmdArgContext
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Attributes:
 name|private

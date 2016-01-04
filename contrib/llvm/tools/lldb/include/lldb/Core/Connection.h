@@ -128,7 +128,7 @@ comment|///     subclass to connect to another client.
 comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
-comment|///     approriate error value if this method returns false. This
+comment|///     appropriate error value if this method returns false. This
 comment|///     value can be NULL if the error value should be ignored.
 comment|///
 comment|/// @return
@@ -162,7 +162,7 @@ comment|/// connected.
 comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
-comment|///     approriate error value if this method returns false. This
+comment|///     appropriate error value if this method returns false. This
 comment|///     value can be NULL if the error value should be ignored.
 comment|///
 comment|/// @return
@@ -215,12 +215,12 @@ comment|/// @param[in] timeout_usec
 comment|///     The number of microseconds to wait for the data.
 comment|///
 comment|/// @param[out] status
-comment|///     On return, indicates whether the call was sucessful or terminated
+comment|///     On return, indicates whether the call was successful or terminated
 comment|///     due to some error condition.
 comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
-comment|///     approriate error value if this method returns zero. This
+comment|///     appropriate error value if this method returns zero. This
 comment|///     value can be NULL if the error value should be ignored.
 comment|///
 comment|/// @return
@@ -271,7 +271,7 @@ comment|///     number of bytes are currently available in \a dst.
 comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
-comment|///     approriate error value if this method returns zero. This
+comment|///     appropriate error value if this method returns zero. This
 comment|///     value can be NULL if the error value should be ignored.
 comment|///
 comment|/// @return
@@ -330,7 +330,7 @@ comment|/// interrupt request (which will remain queued for the next Read()
 comment|/// operation).
 comment|///
 comment|/// @return
-comment|///     Returns true is the interrupt request was sucessful.
+comment|///     Returns true is the interrupt request was successful.
 comment|//------------------------------------------------------------------
 name|virtual
 name|bool

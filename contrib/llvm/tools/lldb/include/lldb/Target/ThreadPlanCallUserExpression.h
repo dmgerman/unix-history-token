@@ -128,17 +128,16 @@ name|options
 argument_list|,
 name|lldb
 operator|::
-name|ClangUserExpressionSP
+name|UserExpressionSP
 operator|&
 name|user_expression_sp
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadPlanCallUserExpression
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
@@ -146,23 +145,24 @@ argument|Stream *s
 argument_list|,
 argument|lldb::DescriptionLevel level
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|WillPop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|StopInfoSP
 name|GetRealStopInfo
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|MischiefManaged
 argument_list|()
+name|override
 block|;
 name|void
 name|TransferExpressionOwnership
@@ -172,12 +172,12 @@ name|m_manage_materialization
 operator|=
 name|true
 block|;     }
-name|virtual
 name|lldb
 operator|::
-name|ClangExpressionVariableSP
+name|ExpressionVariableSP
 name|GetExpressionVariable
 argument_list|()
+name|override
 block|{
 return|return
 name|m_result_var_sp
@@ -189,7 +189,7 @@ name|private
 operator|:
 name|lldb
 operator|::
-name|ClangUserExpressionSP
+name|UserExpressionSP
 name|m_user_expression_sp
 block|;
 comment|// This is currently just used to ensure the
@@ -202,7 +202,7 @@ name|false
 block|;
 name|lldb
 operator|::
-name|ClangExpressionVariableSP
+name|ExpressionVariableSP
 name|m_result_var_sp
 block|;
 comment|// If we are left to manage the materialization,

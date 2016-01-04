@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<vector>
 end_include
 
 begin_comment
@@ -143,7 +143,7 @@ comment|/// @param[in] addr
 comment|///     The address to look for.
 comment|///
 comment|/// @result
-comment|///     A shared pointer to the breakpoint.  May contain a NULL
+comment|///     A shared pointer to the breakpoint. May contain a nullptr
 comment|///     pointer if the breakpoint doesn't exist.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -164,7 +164,7 @@ comment|/// @param[in] breakID
 comment|///     The breakpoint location ID to seek for.
 comment|///
 comment|/// @result
-comment|///     A shared pointer to the breakpoint.  May contain a NULL
+comment|///     A shared pointer to the breakpoint. May contain a nullptr
 comment|///     pointer if the breakpoint doesn't exist.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -232,7 +232,7 @@ comment|/// @param[in] i
 comment|///     The breakpoint location index to seek for.
 comment|///
 comment|/// @result
-comment|///     A shared pointer to the breakpoint.  May contain a NULL
+comment|///     A shared pointer to the breakpoint. May contain a nullptr
 comment|///     pointer if the breakpoint doesn't exist.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -251,7 +251,7 @@ comment|/// @param[in] i
 comment|///     The breakpoint location index to seek for.
 comment|///
 comment|/// @result
-comment|///     A shared pointer to the breakpoint.  May contain a NULL
+comment|///     A shared pointer to the breakpoint. May contain a nullptr
 comment|///     pointer if the breakpoint doesn't exist.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -430,7 +430,7 @@ argument|const Address&addr
 argument_list|,
 argument|bool resolve_indirect_symbols
 argument_list|,
-argument|bool *new_location = NULL
+argument|bool *new_location = nullptr
 argument_list|)
 expr_stmt|;
 name|void

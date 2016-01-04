@@ -93,12 +93,11 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectHelp
 argument_list|()
+name|override
 block|;
-name|virtual
 name|int
 name|HandleCompletion
 argument_list|(
@@ -116,6 +115,7 @@ argument|bool&word_complete
 argument_list|,
 argument|StringList&matches
 argument_list|)
+name|override
 block|;
 name|class
 name|CommandOptions
@@ -137,12 +137,11 @@ argument_list|(
 argument|interpreter
 argument_list|)
 block|{         }
-name|virtual
 operator|~
 name|CommandOptions
 argument_list|()
+name|override
 block|{}
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -150,6 +149,7 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_arg
 argument_list|)
+name|override
 block|{
 name|Error
 name|error
@@ -213,6 +213,7 @@ block|}
 name|void
 name|OptionParsingStarting
 argument_list|()
+name|override
 block|{
 name|m_show_aliases
 operator|=
@@ -231,6 +232,7 @@ name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|{
 return|return
 name|g_option_table
@@ -253,11 +255,11 @@ name|bool
 name|m_show_hidden
 block|;     }
 block|;
-name|virtual
 name|Options
 operator|*
 name|GetOptions
 argument_list|()
+name|override
 block|{
 return|return
 operator|&
@@ -266,24 +268,20 @@ return|;
 block|}
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoExecute
 argument_list|(
-name|Args
-operator|&
-name|command
+argument|Args& command
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
 name|CommandOptions
 name|m_options
-block|;      }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

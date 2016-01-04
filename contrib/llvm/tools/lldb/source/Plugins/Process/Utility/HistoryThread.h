@@ -43,6 +43,22 @@ directive|define
 name|liblldb_HistoryThread_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -133,37 +149,36 @@ argument_list|,
 argument|bool stop_id_is_valid
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|HistoryThread
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
 name|GetRegisterContext
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
 name|CreateRegisterContextForFrame
 argument_list|(
-name|StackFrame
-operator|*
-name|frame
+argument|StackFrame *frame
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|{ }
 name|bool
 name|CalculateStopInfo
 argument_list|()
+name|override
 block|{
 return|return
 name|false
@@ -174,6 +189,7 @@ name|SetExtendedBacktraceToken
 argument_list|(
 argument|uint64_t token
 argument_list|)
+name|override
 block|{
 name|m_extended_unwind_token
 operator|=
@@ -182,6 +198,7 @@ block|;     }
 name|uint64_t
 name|GetExtendedBacktraceToken
 argument_list|()
+name|override
 block|{
 return|return
 name|m_extended_unwind_token
@@ -192,6 +209,7 @@ name|char
 operator|*
 name|GetQueueName
 argument_list|()
+name|override
 block|{
 return|return
 name|m_queue_name
@@ -205,6 +223,7 @@ name|SetQueueName
 argument_list|(
 argument|const char *name
 argument_list|)
+name|override
 block|{
 name|m_queue_name
 operator|=
@@ -215,6 +234,7 @@ operator|::
 name|queue_id_t
 name|GetQueueID
 argument_list|()
+name|override
 block|{
 return|return
 name|m_queue_id
@@ -225,6 +245,7 @@ name|SetQueueID
 argument_list|(
 argument|lldb::queue_id_t queue
 argument_list|)
+name|override
 block|{
 name|m_queue_id
 operator|=
@@ -246,6 +267,7 @@ block|}
 name|uint32_t
 name|GetExtendedBacktraceOriginatingIndexID
 argument_list|()
+name|override
 block|;
 name|void
 name|SetThreadName
@@ -257,12 +279,12 @@ name|m_thread_name
 operator|=
 name|name
 block|;     }
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetName
 argument_list|()
+name|override
 block|{
 return|return
 name|m_thread_name
@@ -271,12 +293,12 @@ name|c_str
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|SetName
 argument_list|(
 argument|const char *name
 argument_list|)
+name|override
 block|{
 name|m_thread_name
 operator|=

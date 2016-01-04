@@ -106,33 +106,32 @@ argument_list|,
 argument|bool no_argument_toggle_default
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|OptionGroupBoolean
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|virtual
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|{
 return|return
 operator|&
 name|m_option_definition
 return|;
 block|}
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -142,15 +141,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 name|OptionValueBoolean
 operator|&
@@ -179,7 +177,7 @@ name|m_value
 block|;
 name|OptionDefinition
 name|m_option_definition
-block|;              }
+block|;     }
 decl_stmt|;
 block|}
 end_decl_stmt

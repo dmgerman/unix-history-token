@@ -91,14 +91,16 @@ operator|:
 operator|~
 name|ABIMacOSX_arm64
 argument_list|()
-block|{ }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|GetRedZoneSize
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|PrepareTrivialCall
 argument_list|(
@@ -113,8 +115,8 @@ argument_list|,
 argument|llvm::ArrayRef<lldb::addr_t> args
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|GetArgumentValues
 argument_list|(
@@ -123,40 +125,28 @@ argument_list|,
 argument|lldb_private::ValueList&values
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|CreateFunctionEntryUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|CreateDefaultUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|RegisterIsVolatile
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|)
+name|override
 block|;
 comment|// The arm64 ABI requires that stack frames be 16 byte aligned.
 comment|// When there is a trap handler on the stack, e.g. _sigtramp in userland
@@ -168,12 +158,12 @@ comment|// To work around this, we relax that alignment to be just word-size (8-
 comment|// Whitelisting the trap handlers for user space would be easy (_sigtramp) but
 comment|// in other environments there can be a large number of different functions
 comment|// involved in async traps.
-name|virtual
 name|bool
 name|CallFrameAddressIsValid
 argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
+name|override
 block|{
 comment|// Make sure the stack call frame addresses are are 8 byte aligned
 if|if
@@ -211,16 +201,19 @@ name|true
 return|;
 end_return
 
-begin_decl_stmt
-unit|}          virtual
-name|bool
+begin_macro
+unit|}          bool
 name|CodeAddressIsValid
 argument_list|(
-name|lldb
-operator|::
-name|addr_t
-name|pc
+argument|lldb::addr_t pc
 argument_list|)
+end_macro
+
+begin_macro
+name|override
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -241,10 +234,9 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_expr_stmt
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -252,10 +244,9 @@ name|RegisterInfo
 operator|*
 name|GetRegisterInfoArray
 argument_list|(
-name|uint32_t
-operator|&
-name|count
+argument|uint32_t&count
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -327,12 +318,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|{
 return|return
 name|GetPluginNameStatic
@@ -341,43 +332,25 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
-name|virtual
-specifier|const
-name|char
-modifier|*
-name|GetShortPluginName
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|uint32_t
 name|GetPluginVersion
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|SetReturnValueObject
 argument_list|(
-name|lldb
-operator|::
-name|StackFrameSP
-operator|&
-name|frame_sp
+argument|lldb::StackFrameSP&frame_sp
 argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
-operator|&
-name|new_value
+argument|lldb::ValueObjectSP&new_value
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -387,7 +360,6 @@ label|:
 end_label
 
 begin_expr_stmt
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -395,9 +367,10 @@ name|GetReturnValueObjectImpl
 argument_list|(
 argument|lldb_private::Thread&thread
 argument_list|,
-argument|lldb_private::ClangASTType&ast_type
+argument|lldb_private::CompilerType&ast_type
 argument_list|)
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -426,7 +399,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_ABI_h_
+comment|// liblldb_ABIMacOSX_arm64_h_
 end_comment
 
 end_unit

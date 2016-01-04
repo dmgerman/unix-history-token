@@ -34,14 +34,30 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_RegisterContextPOSIX_mips64_H_
+name|liblldb_RegisterContextPOSIX_mips64_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_RegisterContextPOSIX_mips64_H_
+name|liblldb_RegisterContextPOSIX_mips64_h_
 end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -52,7 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"lldb/Target/RegisterContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"RegisterInfoInterface.h"
 end_include
 
 begin_include
@@ -103,6 +125,7 @@ block|;
 operator|~
 name|RegisterContextPOSIX_mips64
 argument_list|()
+name|override
 block|;
 name|void
 name|Invalidate
@@ -111,10 +134,12 @@ block|;
 name|void
 name|InvalidateAllRegisters
 argument_list|()
+name|override
 block|;
 name|size_t
 name|GetRegisterCount
 argument_list|()
+name|override
 block|;
 name|virtual
 name|size_t
@@ -144,10 +169,12 @@ name|GetRegisterInfoAtIndex
 argument_list|(
 argument|size_t reg
 argument_list|)
+name|override
 block|;
 name|size_t
 name|GetRegisterSetCount
 argument_list|()
+name|override
 block|;
 specifier|const
 name|lldb_private
@@ -158,6 +185,7 @@ name|GetRegisterSet
 argument_list|(
 argument|size_t set
 argument_list|)
+name|override
 block|;
 specifier|const
 name|char
@@ -174,6 +202,7 @@ argument|lldb::RegisterKind kind
 argument_list|,
 argument|uint32_t num
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -267,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_RegisterContextPOSIX_mips64_H_
+comment|// liblldb_RegisterContextPOSIX_mips64_h_
 end_comment
 
 end_unit

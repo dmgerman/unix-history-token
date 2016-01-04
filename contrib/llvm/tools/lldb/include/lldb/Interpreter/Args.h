@@ -1088,6 +1088,17 @@ operator|&
 name|dst
 argument_list|)
 decl_stmt|;
+specifier|static
+name|std
+operator|::
+name|string
+name|EscapeLLDBCommandArgument
+argument_list|(
+argument|const std::string& arg
+argument_list|,
+argument|char quote_char
+argument_list|)
+expr_stmt|;
 comment|// This one isn't really relevant to Arguments per se, but we're using the Args as a
 comment|// general strings container, so...
 name|void

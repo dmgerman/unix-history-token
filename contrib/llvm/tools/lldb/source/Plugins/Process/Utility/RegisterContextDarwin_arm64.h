@@ -146,22 +146,21 @@ argument_list|,
 argument|uint32_t concrete_frame_idx
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|RegisterContextDarwin_arm64
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|InvalidateAllRegisters
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetRegisterCount
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -171,13 +170,13 @@ name|GetRegisterInfoAtIndex
 argument_list|(
 argument|size_t reg
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetRegisterSetCount
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -187,68 +186,40 @@ name|GetRegisterSet
 argument_list|(
 argument|size_t set
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ReadRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|reg_value
+argument|lldb_private::RegisterValue&reg_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|reg_value
+argument|const lldb_private::RegisterValue&reg_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ReadAllRegisterValues
 argument_list|(
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteAllRegisterValues
 argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|ConvertRegisterKindToRegisterNumber
 argument_list|(
@@ -256,13 +227,13 @@ argument|lldb::RegisterKind kind
 argument_list|,
 argument|uint32_t num
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|NumSupportedHardwareWatchpoints
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|SetHardwareWatchpoint
 argument_list|(
@@ -274,13 +245,14 @@ argument|bool read
 argument_list|,
 argument|bool write
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ClearHardwareWatchpoint
 argument_list|(
 argument|uint32_t hw_index
 argument_list|)
+name|override
 block|;
 comment|// mirrors<mach/arm/thread_status.h> arm_thread_state64_t
 block|struct
@@ -314,7 +286,7 @@ name|cpsr
 block|;
 comment|// cpsr
 block|}
-block|;       struct
+block|;      struct
 name|VReg
 block|{
 name|uint8_t

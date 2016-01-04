@@ -43,11 +43,27 @@ directive|define
 name|liblldb_ThreadGDBRemote_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -98,10 +114,10 @@ argument_list|,
 argument|lldb::tid_t tid
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadGDBRemote
 argument_list|()
+name|override
 block|;
 name|void
 name|WillResume
@@ -272,30 +288,6 @@ name|friend
 name|class
 name|ProcessGDBRemote
 block|;
-name|bool
-name|PrivateSetRegisterValue
-argument_list|(
-argument|uint32_t reg
-argument_list|,
-argument|StringExtractor&response
-argument_list|)
-block|;
-name|bool
-name|CachedQueueInfoIsValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_queue_kind
-operator|!=
-name|lldb
-operator|::
-name|eQueueKindUnknown
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|// Member variables.
-comment|//------------------------------------------------------------------
 name|std
 operator|::
 name|string
@@ -321,9 +313,35 @@ name|uint64_t
 name|m_queue_serial
 block|;
 comment|// Queue info from stop reply/stop info for thread
-comment|//------------------------------------------------------------------
-comment|// Member variables.
-comment|//------------------------------------------------------------------
+name|bool
+name|PrivateSetRegisterValue
+argument_list|(
+argument|uint32_t reg
+argument_list|,
+argument|StringExtractor&response
+argument_list|)
+block|;
+name|bool
+name|PrivateSetRegisterValue
+argument_list|(
+argument|uint32_t reg
+argument_list|,
+argument|uint64_t regval
+argument_list|)
+block|;
+name|bool
+name|CachedQueueInfoIsValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_queue_kind
+operator|!=
+name|lldb
+operator|::
+name|eQueueKindUnknown
+return|;
+block|}
 name|void
 name|SetStopInfoFromPacket
 argument_list|(

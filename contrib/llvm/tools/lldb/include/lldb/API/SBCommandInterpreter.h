@@ -43,6 +43,28 @@ directive|define
 name|LLDB_SBCommandInterpreter_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -237,6 +259,10 @@ operator|&
 name|rhs
 argument_list|)
 expr_stmt|;
+operator|~
+name|SBCommandInterpreter
+argument_list|()
+expr_stmt|;
 specifier|const
 name|lldb
 operator|::
@@ -252,10 +278,6 @@ name|SBCommandInterpreter
 operator|&
 name|rhs
 operator|)
-expr_stmt|;
-operator|~
-name|SBCommandInterpreter
-argument_list|()
 expr_stmt|;
 specifier|static
 specifier|const
@@ -560,7 +582,7 @@ name|CommandInterpreter
 operator|*
 name|interpreter_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|// Access using SBDebugger::GetCommandInterpreter();
@@ -589,7 +611,7 @@ comment|///     The character that was typed along with the control key
 comment|///
 comment|/// @return
 comment|///     The string that should be written into the file handle that is
-comment|///     feeding the input stream for the debugger, or NULL if there is
+comment|///     feeding the input stream for the debugger, or nullptr if there is
 comment|///     no string for this control key.
 comment|//----------------------------------------------------------------------
 specifier|const
@@ -679,6 +701,13 @@ block|{
 name|public
 label|:
 name|virtual
+operator|~
+name|SBCommandPluginInterface
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|virtual
 name|bool
 name|DoExecute
 argument_list|(
@@ -703,11 +732,6 @@ return|return
 name|false
 return|;
 block|}
-name|virtual
-operator|~
-name|SBCommandPluginInterface
-argument_list|()
-block|{}
 block|}
 empty_stmt|;
 name|class
@@ -782,7 +806,7 @@ name|char
 operator|*
 name|help
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -806,7 +830,7 @@ name|char
 operator|*
 name|help
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|private

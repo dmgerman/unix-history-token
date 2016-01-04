@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DynamicLoaderPOSIX.h ------------------------------------*- C++ -*-===//
+comment|//===-- DynamicLoaderPOSIXDYLD.h --------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_DynamicLoaderPOSIX_H_
+name|liblldb_DynamicLoaderPOSIXDYLD_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_DynamicLoaderPOSIX_H_
+name|liblldb_DynamicLoaderPOSIXDYLD_h_
 end_define
 
 begin_comment
@@ -53,6 +53,10 @@ end_comment
 
 begin_comment
 comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -90,6 +94,20 @@ name|DynamicLoader
 block|{
 name|public
 operator|:
+name|DynamicLoaderPOSIXDYLD
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|)
+block|;
+operator|~
+name|DynamicLoaderPOSIXDYLD
+argument_list|()
+name|override
+block|;
 specifier|static
 name|void
 name|Initialize
@@ -126,34 +144,19 @@ argument_list|,
 argument|bool force
 argument_list|)
 block|;
-name|DynamicLoaderPOSIXDYLD
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|DynamicLoaderPOSIXDYLD
-argument_list|()
-block|;
 comment|//------------------------------------------------------------------
 comment|// DynamicLoader protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DidAttach
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidLaunch
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadPlanSP
@@ -163,15 +166,15 @@ argument|lldb_private::Thread&thread
 argument_list|,
 argument|bool stop_others
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|CanLoadImage
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|addr_t
@@ -181,76 +184,22 @@ argument|const lldb::ModuleSP module
 argument_list|,
 argument|const lldb::ThreadSP thread
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
-block|;
-name|virtual
-name|void
-name|GetPluginCommandHelp
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|command
-argument_list|,
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|)
-block|;
-name|virtual
-name|lldb_private
-operator|::
-name|Error
-name|ExecutePluginCommand
-argument_list|(
-name|lldb_private
-operator|::
-name|Args
-operator|&
-name|command
-argument_list|,
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|)
-block|;
-name|virtual
-name|lldb_private
-operator|::
-name|Log
-operator|*
-name|EnablePluginLogging
-argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|,
-name|lldb_private
-operator|::
-name|Args
-operator|&
-name|command
-argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -285,6 +234,13 @@ operator|::
 name|break_id_t
 name|m_dyld_bid
 block|;
+comment|/// Contains AT_SYSINFO_EHDR, which means a vDSO has been
+comment|/// mapped to the address space
+name|lldb
+operator|::
+name|addr_t
+name|m_vdso_base
+block|;
 comment|/// Loaded module list. (link map for each module)
 name|std
 operator|::
@@ -310,6 +266,7 @@ name|m_loaded_modules
 block|;
 comment|/// Enables a breakpoint on a function called by the runtime
 comment|/// linker each time a module is loaded or unloaded.
+name|virtual
 name|void
 name|SetRendezvousBreakpoint
 argument_list|()
@@ -342,7 +299,6 @@ comment|///
 comment|/// @param link_map_addr The virtual address of the link map for the @p module.
 comment|///
 comment|/// @param base_addr The virtual base address @p module is loaded at.
-name|virtual
 name|void
 name|UpdateLoadedSections
 argument_list|(
@@ -351,17 +307,20 @@ argument_list|,
 argument|lldb::addr_t link_map_addr
 argument_list|,
 argument|lldb::addr_t base_addr
+argument_list|,
+argument|bool base_addr_is_offset
 argument_list|)
+name|override
 block|;
 comment|/// Removes the loaded sections from the target in @p module.
 comment|///
 comment|/// @param module The module to traverse.
-name|virtual
 name|void
 name|UnloadSections
 argument_list|(
 argument|const lldb::ModuleSP module
 argument_list|)
+name|override
 block|;
 comment|/// Resolves the entry point for the current inferior process and sets a
 comment|/// breakpoint at that address.
@@ -389,6 +348,7 @@ argument_list|)
 block|;
 comment|/// Helper for the entry breakpoint callback.  Resolves the load addresses
 comment|/// of all dependent modules.
+name|virtual
 name|void
 name|LoadAllCurrentModules
 argument_list|()
@@ -407,6 +367,12 @@ name|lldb
 operator|::
 name|addr_t
 name|GetEntryPoint
+argument_list|()
+block|;
+comment|/// Evaluate if Aux vectors contain vDSO information
+comment|/// in case they do, read and assign the address to m_vdso_base
+name|void
+name|EvalVdsoStatus
 argument_list|()
 block|;
 comment|/// Loads Module from inferior process.
@@ -436,7 +402,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_DynamicLoaderPOSIXDYLD_H_
+comment|// liblldb_DynamicLoaderPOSIXDYLD_h_
 end_comment
 
 end_unit

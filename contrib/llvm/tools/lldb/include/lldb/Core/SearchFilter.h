@@ -573,7 +573,10 @@ block|{}
 operator|~
 name|SearchFilterForUnconstrainedSearches
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+block|;
 name|bool
 name|ModulePasses
 argument_list|(
@@ -598,7 +601,7 @@ argument_list|(
 argument|Breakpoint&breakpoint
 argument_list|)
 name|override
-block|;  }
+block|; }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class SearchFilterByModule SearchFilter.h "lldb/Core/SearchFilter.h"
@@ -645,10 +648,10 @@ operator|&
 name|rhs
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|SearchFilterByModule
 argument_list|()
+name|override
 block|;
 specifier|const
 name|SearchFilterByModule
@@ -782,10 +785,10 @@ operator|&
 name|rhs
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|SearchFilterByModuleList
 argument_list|()
+name|override
 block|;
 specifier|const
 name|SearchFilterByModuleList
@@ -872,7 +875,7 @@ argument|Breakpoint&breakpoint
 argument_list|)
 name|override
 block|;
-name|private
+name|protected
 operator|:
 name|FileSpecList
 name|m_module_spec_list
@@ -924,10 +927,10 @@ operator|&
 name|rhs
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|SearchFilterByModuleListAndCU
 argument_list|()
+name|override
 block|;
 specifier|const
 name|SearchFilterByModuleListAndCU
@@ -1002,9 +1005,6 @@ name|override
 block|;
 name|private
 operator|:
-name|FileSpecList
-name|m_module_spec_list
-block|;
 name|FileSpecList
 name|m_cu_spec_list
 block|; }

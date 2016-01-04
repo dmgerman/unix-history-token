@@ -62,6 +62,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
@@ -624,6 +630,20 @@ literal|0xFFFF
 comment|// all commands
 block|}
 enum|;
+name|CommandInterpreter
+argument_list|(
+argument|Debugger&debugger
+argument_list|,
+argument|lldb::ScriptLanguage script_language
+argument_list|,
+argument|bool synchronous_execution
+argument_list|)
+empty_stmt|;
+operator|~
+name|CommandInterpreter
+argument_list|()
+name|override
+expr_stmt|;
 comment|// These two functions fill out the Broadcaster interface:
 specifier|static
 name|ConstString
@@ -631,12 +651,12 @@ modifier|&
 name|GetStaticBroadcasterClass
 parameter_list|()
 function_decl|;
-name|virtual
 name|ConstString
 operator|&
 name|GetBroadcasterClass
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetStaticBroadcasterClass
@@ -654,20 +674,6 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
-name|CommandInterpreter
-argument_list|(
-argument|Debugger&debugger
-argument_list|,
-argument|lldb::ScriptLanguage script_language
-argument_list|,
-argument|bool synchronous_execution
-argument_list|)
-empty_stmt|;
-name|virtual
-operator|~
-name|CommandInterpreter
-argument_list|()
-expr_stmt|;
 name|bool
 name|AddCommand
 argument_list|(
@@ -742,7 +748,7 @@ name|StringList
 modifier|*
 name|matches
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -935,7 +941,7 @@ name|ExecutionContext
 modifier|*
 name|override_context
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 name|bool
 name|repeat_on_empty_command
@@ -953,8 +959,8 @@ comment|/// Execute a list of commands in sequence.
 comment|///
 comment|/// @param[in] commands
 comment|///    The list of commands to execute.
-comment|/// @param[in/out] context
-comment|///    The execution context in which to run the commands.  Can be NULL in which case the default
+comment|/// @param[in,out] context
+comment|///    The execution context in which to run the commands. Can be nullptr in which case the default
 comment|///    context will be used.
 comment|/// @param[in] options
 comment|///    This object holds the options used to control when to stop, whether to execute commands,
@@ -989,8 +995,8 @@ comment|/// Execute a list of commands from a file.
 comment|///
 comment|/// @param[in] file
 comment|///    The file from which to read in commands.
-comment|/// @param[in/out] context
-comment|///    The execution context in which to run the commands.  Can be NULL in which case the default
+comment|/// @param[in,out] context
+comment|///    The execution context in which to run the commands. Can be nullptr in which case the default
 comment|///    context will be used.
 comment|/// @param[in] options
 comment|///    This object holds the options used to control when to stop, whether to execute commands,
@@ -1390,6 +1396,10 @@ name|true
 parameter_list|)
 function_decl|;
 name|void
+name|SetScriptInterpreter
+parameter_list|()
+function_decl|;
+name|void
 name|SkipLLDBInitFiles
 parameter_list|(
 name|bool
@@ -1672,7 +1682,7 @@ name|GetIOHandler
 argument_list|(
 argument|bool force_create = false
 argument_list|,
-argument|CommandInterpreterRunOptions *options = NULL
+argument|CommandInterpreterRunOptions *options = nullptr
 argument_list|)
 expr_stmt|;
 name|bool
@@ -1684,6 +1694,11 @@ return|return
 name|m_stopped_for_crash
 return|;
 block|}
+name|bool
+name|GetSpaceReplPrompts
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|friend
@@ -1693,7 +1708,6 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// IOHandlerDelegate functions
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|IOHandlerInputComplete
 argument_list|(
@@ -1707,14 +1721,15 @@ name|string
 operator|&
 name|line
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|ConstString
 name|IOHandlerGetControlSequence
 parameter_list|(
 name|char
 name|ch
 parameter_list|)
+function|override
 block|{
 if|if
 condition|(
@@ -1733,15 +1748,15 @@ name|ConstString
 argument_list|()
 return|;
 block|}
-name|virtual
 name|bool
 name|IOHandlerInterrupt
-parameter_list|(
+argument_list|(
 name|IOHandler
-modifier|&
+operator|&
 name|io_handler
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|size_t
 name|GetProcessOutput
 parameter_list|()
@@ -1764,7 +1779,7 @@ argument|bool include_aliases = true
 argument_list|,
 argument|bool exact = true
 argument_list|,
-argument|StringList *matches = NULL
+argument|StringList *matches = nullptr
 argument_list|)
 expr_stmt|;
 name|private
@@ -1846,13 +1861,10 @@ name|string
 name|m_repeat_command
 expr_stmt|;
 comment|// Stores the command that will be executed for an empty command string.
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|ScriptInterpreter
-operator|>
-name|m_script_interpreter_ap
+name|ScriptInterpreterSP
+name|m_script_interpreter_sp
 expr_stmt|;
 name|lldb
 operator|::

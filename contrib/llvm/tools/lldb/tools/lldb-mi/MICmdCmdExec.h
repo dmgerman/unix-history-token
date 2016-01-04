@@ -146,18 +146,6 @@ comment|//          *this class implements MI command "exec-run".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 07/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -176,18 +164,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecRun
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -195,30 +179,34 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecRun
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
+specifier|const
+name|CMIUtilString
+name|m_constStrArgStart
+block|;
+comment|// StopAtEntry - run to first instruction or main() if specified
 name|lldb
 operator|::
 name|SBCommandReturnObject
@@ -240,18 +228,6 @@ comment|//          *this class implements MI command "exec-continue".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 07/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -270,18 +246,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecContinue
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -289,25 +261,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecContinue
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -334,18 +300,6 @@ comment|//          *this class implements MI command "exec-next".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 25/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -364,18 +318,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecNext
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -383,32 +333,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecNext
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -419,11 +361,6 @@ operator|::
 name|SBCommandReturnObject
 name|m_lldbResult
 block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
@@ -446,18 +383,6 @@ comment|//          *this class implements MI command "exec-step".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 25/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -476,18 +401,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecStep
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -495,32 +416,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecStep
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -531,11 +444,6 @@ operator|::
 name|SBCommandReturnObject
 name|m_lldbResult
 block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
@@ -558,18 +466,6 @@ comment|//          *this class implements MI command "exec-next-instruction".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 25/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -588,18 +484,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecNextInstruction
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -607,32 +499,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecNextInstruction
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -643,11 +527,6 @@ operator|::
 name|SBCommandReturnObject
 name|m_lldbResult
 block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
@@ -670,18 +549,6 @@ comment|//          *this class implements MI command "exec-step-instruction".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 25/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -700,18 +567,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecStepInstruction
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -719,32 +582,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecStepInstruction
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -755,11 +610,6 @@ operator|::
 name|SBCommandReturnObject
 name|m_lldbResult
 block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
@@ -782,18 +632,6 @@ comment|//          *this class implements MI command "exec-finish".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 25/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -812,18 +650,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecFinish
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -831,32 +665,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecFinish
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -866,18 +692,7 @@ name|lldb
 operator|::
 name|SBCommandReturnObject
 name|m_lldbResult
-block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
-specifier|const
-name|CMIUtilString
-name|m_constStrArgFrame
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
-block|}
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -906,14 +721,6 @@ comment|//          SIGINT signal is received while running an inferior program.
 end_comment
 
 begin_comment
-comment|// Authors: Illya Rudkin 03/06/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -932,18 +739,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecInterrupt
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -951,25 +754,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecInterrupt
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -996,18 +793,6 @@ comment|//          *this class implements MI command "exec-arguments".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Ilia Kirianovskii 25/11/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -1026,18 +811,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecArguments
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -1045,32 +826,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecArguments
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -1114,18 +887,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdExecAbort
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -1133,25 +902,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdExecAbort
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|; }
 decl_stmt|;

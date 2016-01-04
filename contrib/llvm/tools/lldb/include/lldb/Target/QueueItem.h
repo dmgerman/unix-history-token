@@ -43,11 +43,39 @@ directive|define
 name|liblldb_QueueItem_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -196,7 +224,7 @@ operator|.
 name|lock
 argument_list|()
 operator|!=
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -453,14 +481,11 @@ name|m_target_queue_label
 block|;
 name|private
 operator|:
-comment|//------------------------------------------------------------------
-comment|// For QueueItem only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|QueueItem
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

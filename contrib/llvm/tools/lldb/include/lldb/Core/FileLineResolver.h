@@ -105,12 +105,11 @@ argument_list|,
 argument|bool check_inlines
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|FileLineResolver
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|CallbackReturn
@@ -124,22 +123,21 @@ argument|Address *addr
 argument_list|,
 argument|bool containing
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|Depth
 name|GetDepth
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
-name|Stream
-operator|*
-name|s
+argument|Stream *s
 argument_list|)
+name|override
 block|;
 specifier|const
 name|SymbolContextList

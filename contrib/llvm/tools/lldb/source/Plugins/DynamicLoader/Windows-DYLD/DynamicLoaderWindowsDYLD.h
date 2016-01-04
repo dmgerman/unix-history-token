@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DynamicLoaderWindowsDYLDh ----------------------------------*- C++ -*-===//
+comment|//===-- DynamicLoaderWindowsDYLD.h ------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,14 +34,30 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_Plugins_Process_Windows_DynamicLoaderWindowsDYLD_H_
+name|liblldb_Plugins_Process_Windows_DynamicLoaderWindowsDYLD_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_Plugins_Process_Windows_DynamicLoaderWindowsDYLD_H_
+name|liblldb_Plugins_Process_Windows_DynamicLoaderWindowsDYLD_h_
 end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -74,10 +90,10 @@ operator|*
 name|process
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|DynamicLoaderWindowsDYLD
 argument_list|()
+name|override
 block|;
 specifier|static
 name|void
@@ -151,10 +167,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_Plugins_Process_Windows_DynamicLoaderWindowsDYLD_h_
+end_comment
 
 end_unit
 

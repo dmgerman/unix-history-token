@@ -297,10 +297,10 @@ comment|/// Destructor.
 comment|///
 comment|/// The destructor is virtual since this class gets subclassed.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|Communication
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|Clear
@@ -359,7 +359,7 @@ name|Error
 operator|*
 name|error_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -539,7 +539,7 @@ name|Error
 modifier|*
 name|error_ptr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -557,7 +557,7 @@ name|Error
 modifier|*
 name|error_ptr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|virtual
@@ -568,7 +568,7 @@ name|Error
 modifier|*
 name|error_ptr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -666,28 +666,18 @@ modifier|&
 name|GetStaticBroadcasterClass
 parameter_list|()
 function_decl|;
-name|virtual
 name|ConstString
 operator|&
 name|GetBroadcasterClass
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetStaticBroadcasterClass
 argument_list|()
 return|;
 block|}
-name|private
-label|:
-comment|//------------------------------------------------------------------
-comment|// For Communication only
-comment|//------------------------------------------------------------------
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
-name|Communication
-argument_list|)
-expr_stmt|;
 name|protected
 label|:
 name|lldb
@@ -837,6 +827,13 @@ name|size_t
 name|dst_len
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|Communication
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
