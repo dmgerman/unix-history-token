@@ -2041,7 +2041,7 @@ name|MLX5E_10GBASE_SR
 init|=
 literal|13
 block|,
-name|MLX5E_10GBASE_ER
+name|MLX5E_10GBASE_LR
 init|=
 literal|14
 block|,
