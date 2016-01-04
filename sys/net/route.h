@@ -844,6 +844,21 @@ comment|/* For future use */
 end_comment
 
 begin_comment
+comment|/* Control plane route request flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHR_COPY
+value|0x100
+end_define
+
+begin_comment
+comment|/* Copy rte data */
+end_comment
+
+begin_comment
 comment|/* rte<>nhop translation */
 end_comment
 
@@ -2453,6 +2468,40 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rib_lookup_info
+parameter_list|(
+name|uint32_t
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|rt_addrinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rib_free_info
+parameter_list|(
+name|struct
+name|rt_addrinfo
+modifier|*
+name|info
 parameter_list|)
 function_decl|;
 end_function_decl
