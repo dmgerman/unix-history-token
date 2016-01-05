@@ -3906,7 +3906,10 @@ name|MARVELL
 argument_list|,
 name|SHEEVAPLUG
 argument_list|,
+name|UFTDI_JTAG_IFACE
+argument_list|(
 literal|0
+argument_list|)
 argument_list|)
 block|,
 name|UFTDI_DEV
