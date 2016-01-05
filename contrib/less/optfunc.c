@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -138,6 +138,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|every_first_cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|IFILE
 name|curr_ifile
 decl_stmt|;
@@ -240,6 +248,14 @@ specifier|extern
 name|char
 modifier|*
 name|tags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ztags
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -358,7 +374,10 @@ name|INIT
 case|:
 name|namelogfile
 operator|=
+name|save
+argument_list|(
 name|s
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -402,6 +421,17 @@ operator|=
 name|skipsp
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|namelogfile
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|namelogfile
 argument_list|)
 expr_stmt|;
 name|namelogfile
@@ -664,6 +694,9 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -904,6 +937,9 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -1090,7 +1126,10 @@ name|INIT
 case|:
 name|tagoption
 operator|=
+name|save
+argument_list|(
 name|s
+argument_list|)
 expr_stmt|;
 comment|/* Do the rest in main() */
 break|break;
@@ -1199,7 +1238,10 @@ name|INIT
 case|:
 name|tags
 operator|=
+name|save
+argument_list|(
 name|s
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1210,6 +1252,21 @@ operator|=
 name|skipsp
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tags
+operator|!=
+name|NULL
+operator|&&
+name|tags
+operator|!=
+name|ztags
+condition|)
+name|free
+argument_list|(
+name|tags
 argument_list|)
 expr_stmt|;
 name|tags
@@ -1277,27 +1334,44 @@ block|{
 case|case
 name|INIT
 case|:
-comment|/* 		 * Unget a search command for the specified string. 		 * {{ This won't work if the "/" command is 		 *    changed or invalidated by a .lesskey file. }} 		 */
+comment|/* 		 * Unget a command for the specified string. 		 */
+if|if
+condition|(
+name|less_is_more
+condition|)
+block|{
+comment|/* 			 * In "more" mode, the -p argument is a command, 			 * not a search string, so we don't need a slash. 			 */
+name|every_first_cmd
+operator|=
+name|save
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|plusoption
 operator|=
 name|TRUE
+expr_stmt|;
+name|ungetcc
+argument_list|(
+name|CHAR_END_COMMAND
+argument_list|)
 expr_stmt|;
 name|ungetsc
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 		 * In "more" mode, the -p argument is a command, 		 * not a search string, so we don't need a slash. 		 */
-if|if
-condition|(
-operator|!
-name|less_is_more
-condition|)
+comment|/* 			  * {{ This won't work if the "/" command is 			  *    changed or invalidated by a .lesskey file. }} 			  */
 name|ungetsc
 argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -1739,7 +1813,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"Copyright (C) 1984-2012 Mark Nudelman\n\n"
+literal|"Copyright (C) 1984-2015  Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr

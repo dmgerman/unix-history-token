@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -468,11 +468,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|ungetcc
+argument_list|(
+name|CHAR_END_COMMAND
+argument_list|)
+expr_stmt|;
 name|ungetsc
 argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|str
@@ -2362,9 +2369,9 @@ comment|/* When less_is_more is set, the -e flag semantics are different. */
 return|return
 name|quit_at_eof
 condition|?
-name|OPT_ON
-else|:
 name|OPT_ONPLUS
+else|:
+name|OPT_ON
 return|;
 block|}
 end_function
