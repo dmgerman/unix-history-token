@@ -167,6 +167,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|size_t
+name|ioat_get_max_io_size
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Set interrupt coalescing on a DMA channel.  *  * The argument is in microseconds.  A zero value disables coalescing.  Any  * other value delays interrupt generation for N microseconds to provide  * opportunity to coalesce multiple operations into a single interrupt.  *  * Returns an error status, or zero on success.  *  * - ERANGE if the given value exceeds the delay supported by the hardware.  *   (All current hardware supports a maximum of 0x3fff microseconds delay.)  * - ENODEV if the hardware does not support interrupt coalescing.  */
 end_comment
