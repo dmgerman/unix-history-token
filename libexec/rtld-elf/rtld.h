@@ -1072,6 +1072,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* dlopen()-ed (vs. load statically) */
+name|bool
+name|writable_dynamic
+range|:
+literal|1
+decl_stmt|;
+comment|/* PT_DYNAMIC is writable */
 name|struct
 name|link_map
 name|linkmap
