@@ -13,12 +13,6 @@ directive|ifdef
 name|HAVE_CONFIG_H
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
