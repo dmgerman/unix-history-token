@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -153,6 +153,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|hshift
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bs_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -315,6 +322,13 @@ name|forw_prompt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|same_pos_bell
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -428,6 +442,13 @@ name|save_hshift
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|save_bs_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -458,6 +479,9 @@ decl_stmt|;
 name|char
 name|ug_char
 decl_stmt|;
+name|char
+name|ug_end_command
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -470,15 +494,6 @@ modifier|*
 name|ungot
 init|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|unget_end
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +747,10 @@ argument_list|(
 literal|"?"
 argument_list|)
 expr_stmt|;
+name|forw_prompt
+operator|=
+literal|0
+expr_stmt|;
 name|set_mlist
 argument_list|(
 name|ml_search
@@ -848,6 +867,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|forw_prompt
+operator|=
+literal|0
+expr_stmt|;
 name|set_mlist
 argument_list|(
 name|NULL
@@ -900,6 +923,8 @@ operator|(
 name|int
 operator|)
 name|number
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2318,6 +2343,11 @@ condition|(
 name|ungot
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|ungot
+operator|->
+name|ug_end_command
 condition|)
 block|{
 comment|/* 		 * No prompt necessary if commands are from  		 * ungotten chars rather than from the user. 		 */
@@ -2533,70 +2563,6 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|unget_end
-condition|)
-block|{
-comment|/* 		 * We have just run out of ungotten chars. 		 */
-name|unget_end
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|len_cmdbuf
-argument_list|()
-operator|==
-literal|0
-operator|||
-operator|!
-name|empty_screen
-argument_list|()
-condition|)
-return|return
-operator|(
-name|getchr
-argument_list|()
-operator|)
-return|;
-comment|/* 		 * Command is incomplete, so try to complete it. 		 */
-switch|switch
-condition|(
-name|mca
-condition|)
-block|{
-case|case
-name|A_DIGIT
-case|:
-comment|/* 			 * We have a number but no command.  Treat as #g. 			 */
-return|return
-operator|(
-literal|'g'
-operator|)
-return|;
-case|case
-name|A_F_SEARCH
-case|:
-case|case
-name|A_B_SEARCH
-case|:
-comment|/* 			 * We have "/string" but no newline.  Add the \n. 			 */
-return|return
-operator|(
-literal|'\n'
-operator|)
-return|;
-default|default:
-comment|/* 			 * Some other incomplete command.  Let user complete it. 			 */
-return|return
-operator|(
-name|getchr
-argument_list|()
-operator|)
-return|;
-block|}
-block|}
-if|if
-condition|(
 name|ungot
 operator|==
 name|NULL
@@ -2626,6 +2592,13 @@ name|ug
 operator|->
 name|ug_char
 decl_stmt|;
+name|int
+name|end_command
+init|=
+name|ug
+operator|->
+name|ug_end_command
+decl_stmt|;
 name|ungot
 operator|=
 name|ug
@@ -2637,14 +2610,48 @@ argument_list|(
 name|ug
 argument_list|)
 expr_stmt|;
-name|unget_end
-operator|=
+if|if
+condition|(
+name|end_command
+condition|)
+block|{
+comment|/* 			 * Command is incomplete, so try to complete it. 			 */
+switch|switch
+condition|(
+name|mca
+condition|)
+block|{
+case|case
+name|A_DIGIT
+case|:
+comment|/* 				 * We have a number but no command.  Treat as #g. 				 */
+return|return
 operator|(
-name|ungot
-operator|==
-name|NULL
+literal|'g'
 operator|)
-expr_stmt|;
+return|;
+case|case
+name|A_F_SEARCH
+case|:
+case|case
+name|A_B_SEARCH
+case|:
+comment|/* 				 * We have "/string" but no newline.  Add the \n. 				 */
+return|return
+operator|(
+literal|'\n'
+operator|)
+return|;
+default|default:
+comment|/* 				 * Some other incomplete command.  Let user complete it. 				 */
+return|return
+operator|(
+name|getchr
+argument_list|()
+operator|)
+return|;
+block|}
+block|}
 return|return
 operator|(
 name|c
@@ -2694,7 +2701,20 @@ name|ug
 operator|->
 name|ug_char
 operator|=
+operator|(
+name|char
+operator|)
 name|c
+expr_stmt|;
+name|ug
+operator|->
+name|ug_end_command
+operator|=
+operator|(
+name|c
+operator|==
+name|CHAR_END_COMMAND
+operator|)
 expr_stmt|;
 name|ug
 operator|->
@@ -2705,10 +2725,6 @@ expr_stmt|;
 name|ungot
 operator|=
 name|ug
-expr_stmt|;
-name|unget_end
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
@@ -2775,6 +2791,8 @@ parameter_list|(
 name|pattern
 parameter_list|,
 name|n
+parameter_list|,
+name|silent
 parameter_list|)
 name|char
 modifier|*
@@ -2782,6 +2800,9 @@ name|pattern
 decl_stmt|;
 name|int
 name|n
+decl_stmt|;
+name|int
+name|silent
 decl_stmt|;
 block|{
 specifier|register
@@ -2946,6 +2967,9 @@ condition|(
 name|n
 operator|>
 literal|0
+operator|&&
+operator|!
+name|silent
 condition|)
 name|error
 argument_list|(
@@ -3010,7 +3034,7 @@ return|;
 name|cmd_exec
 argument_list|()
 expr_stmt|;
-name|jump_forw
+name|jump_forw_buffered
 argument_list|()
 expr_stmt|;
 name|curr_len
@@ -3147,11 +3171,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tagfile
-decl_stmt|;
-name|int
-name|until_hilite
-init|=
-literal|0
 decl_stmt|;
 name|search_type
 operator|=
@@ -3716,6 +3735,15 @@ case|case
 name|A_F_FOREVER
 case|:
 comment|/* 			 * Forward forever, ignoring EOF. 			 */
+if|if
+condition|(
+name|show_attn
+condition|)
+name|set_attnpos
+argument_list|(
+name|bottompos
+argument_list|)
+expr_stmt|;
 name|newaction
 operator|=
 name|forw_loop
@@ -3922,6 +3950,29 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|A_GOEND_BUF
+case|:
+comment|/* 			 * Go to line N, default last buffered byte. 			 */
+name|cmd_exec
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|number
+operator|<=
+literal|0
+condition|)
+name|jump_forw_buffered
+argument_list|()
+expr_stmt|;
+else|else
+name|jump_back
+argument_list|(
+name|number
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|A_GOPOS
 case|:
 comment|/* 			 * Go to a specified byte position in the file. 			 */
@@ -4012,6 +4063,10 @@ name|hshift
 operator|=
 name|save_hshift
 expr_stmt|;
+name|bs_mode
+operator|=
+name|save_bs_mode
+expr_stmt|;
 if|if
 condition|(
 name|edit_prev
@@ -4047,7 +4102,7 @@ directive|define
 name|DO_SEARCH
 parameter_list|()
 define|\
-value|if (number<= 0) number = 1;	\ 			mca_search();			\ 			cmd_exec();			\ 			multi_search((char *)NULL, (int) number);
+value|if (number<= 0) number = 1;	\ 			mca_search();			\ 			cmd_exec();			\ 			multi_search((char *)NULL, (int) number, 0);
 case|case
 name|A_F_SEARCH
 case|:
@@ -4240,6 +4295,14 @@ expr_stmt|;
 name|hshift
 operator|=
 literal|0
+expr_stmt|;
+name|save_bs_mode
+operator|=
+name|bs_mode
+expr_stmt|;
+name|bs_mode
+operator|=
+name|BS_SPECIAL
 expr_stmt|;
 operator|(
 name|void

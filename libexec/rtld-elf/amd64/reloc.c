@@ -868,7 +868,7 @@ comment|/* missing: R_X86_64_GOT32 R_X86_64_PLT32 */
 case|case
 name|R_X86_64_COPY
 case|:
-comment|/* 			 * These are deferred until all other relocations have 			 * been done.  All we do here is make sure that the COPY 			 * relocation is not in a shared library.  They are allowed 			 * only in executable files. 			 */
+comment|/* 			 * These are deferred until all other relocations have 			 * been done.  All we do here is make sure that the COPY 			 * relocation is not in a shared library.  They are 			 * allowed only in executable files. 			 */
 if|if
 condition|(
 operator|!

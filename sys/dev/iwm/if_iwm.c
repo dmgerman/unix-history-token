@@ -2446,22 +2446,16 @@ name|firmware_put
 argument_list|(
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
 argument_list|,
 name|FIRMWARE_UNLOAD
 argument_list|)
 expr_stmt|;
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
 operator|=
 name|NULL
-expr_stmt|;
-name|fw
-operator|->
-name|fw_rawsize
-operator|=
-literal|0
 expr_stmt|;
 comment|/* don't touch fw->fw_status */
 name|memset
@@ -2593,7 +2587,7 @@ if|if
 condition|(
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
 operator|!=
 name|NULL
 condition|)
@@ -2602,7 +2596,7 @@ argument_list|(
 name|fw
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Load firmware into driver memory. 	 * fw_rawdata and fw_rawsize will be set. 	 */
+comment|/* 	 * Load firmware into driver memory. 	 * fw_fp will be set. 	 */
 name|IWM_UNLOCK
 argument_list|(
 name|sc
@@ -2615,6 +2609,11 @@ argument_list|(
 name|sc
 operator|->
 name|sc_fwname
+argument_list|)
+expr_stmt|;
+name|IWM_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2639,35 +2638,15 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|IWM_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-name|IWM_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
 operator|=
 name|fwp
-operator|->
-name|data
-expr_stmt|;
-name|fw
-operator|->
-name|fw_rawsize
-operator|=
-name|fwp
-operator|->
-name|datasize
 expr_stmt|;
 comment|/* 	 * Parse firmware contents 	 */
 name|uhdr
@@ -2679,7 +2658,9 @@ operator|*
 operator|)
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
+operator|->
+name|data
 expr_stmt|;
 if|if
 condition|(
@@ -2691,7 +2672,9 @@ operator|*
 operator|)
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
+operator|->
+name|data
 operator|!=
 literal|0
 operator|||
@@ -2747,7 +2730,9 @@ name|len
 operator|=
 name|fw
 operator|->
-name|fw_rawsize
+name|fw_fp
+operator|->
+name|datasize
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -3531,7 +3516,7 @@ if|if
 condition|(
 name|fw
 operator|->
-name|fw_rawdata
+name|fw_fp
 operator|!=
 name|NULL
 condition|)
@@ -9565,6 +9550,14 @@ argument_list|(
 name|sc
 argument_list|,
 name|ucode_type
+argument_list|)
+expr_stmt|;
+name|iwm_fw_info_free
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_fw
 argument_list|)
 expr_stmt|;
 if|if
@@ -22943,16 +22936,6 @@ name|int
 name|do_net80211
 parameter_list|)
 block|{
-name|struct
-name|iwm_fw_info
-modifier|*
-name|fw
-init|=
-operator|&
-name|sc
-operator|->
-name|sc_fw
-decl_stmt|;
 name|device_t
 name|dev
 init|=
@@ -23042,21 +23025,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Free firmware */
-if|if
-condition|(
-name|fw
-operator|->
-name|fw_rawdata
-operator|!=
-name|NULL
-condition|)
-name|iwm_fw_info_free
-argument_list|(
-name|fw
-argument_list|)
-expr_stmt|;
-comment|/* free scheduler */
+comment|/* Free scheduler */
 name|iwm_free_sched
 argument_list|(
 name|sc

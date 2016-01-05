@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -28,10 +28,20 @@ end_if
 begin_decl_stmt
 name|public
 name|char
+name|ztags
+index|[]
+init|=
+literal|"tags"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|char
 modifier|*
 name|tags
 init|=
-literal|"tags"
+name|ztags
 decl_stmt|;
 end_decl_stmt
 
@@ -974,6 +984,9 @@ literal|0
 expr_stmt|;
 name|taglen
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|tag
@@ -1407,6 +1420,9 @@ expr_stmt|;
 comment|/* 		 * Test the line to see if we have a match. 		 * Use strncmp because the pattern may be 		 * truncated (in the tags file) if it is too long. 		 * If tagendline is set, make sure we match all 		 * the way to end of line (no extra chars after the match). 		 */
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|curtag
@@ -1549,7 +1565,7 @@ expr_stmt|;
 comment|/* Set tag default because we cannot read stdin again. */
 name|tags
 operator|=
-literal|"tags"
+name|ztags
 expr_stmt|;
 block|}
 else|else
@@ -1793,6 +1809,9 @@ return|;
 block|}
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf

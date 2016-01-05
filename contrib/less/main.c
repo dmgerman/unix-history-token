@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -289,13 +289,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|know_dumb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|quit_if_one_screen
 decl_stmt|;
 end_decl_stmt
 
@@ -713,17 +706,6 @@ condition|(
 name|less_is_more
 condition|)
 name|no_init
-operator|=
-name|TRUE
-expr_stmt|;
-if|if
-condition|(
-name|less_is_more
-operator|&&
-name|get_quit_at_eof
-argument_list|()
-condition|)
-name|quit_if_one_screen
 operator|=
 name|TRUE
 expr_stmt|;
