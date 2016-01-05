@@ -3088,6 +3088,8 @@ comment|/* Hardware Lock Elision */
 literal|"\005HLE"
 comment|/* Advanced Vector Instructions 2 */
 literal|"\006AVX2"
+comment|/* FDP_EXCPTN_ONLY */
+literal|"\007FDPEXC"
 comment|/* Supervisor Mode Execution Prot. */
 literal|"\010SMEP"
 comment|/* Bit Manipulation Instructions */
