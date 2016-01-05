@@ -3120,11 +3120,7 @@ operator|!
 name|issetugid
 argument_list|()
 expr_stmt|;
-name|md_abi_variant_hook
-argument_list|(
-name|aux_info
-argument_list|)
-expr_stmt|;
+comment|/*  md_abi_variant_hook(aux_info); */
 name|ld_bind_now
 operator|=
 name|getenv
