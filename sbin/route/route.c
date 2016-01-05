@@ -6521,6 +6521,16 @@ operator|(
 literal|1
 operator|)
 return|;
+else|else
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"interface '%s' does not exist"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
