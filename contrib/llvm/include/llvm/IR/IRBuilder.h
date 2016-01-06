@@ -252,6 +252,12 @@ decl_stmt|;
 name|FastMathFlags
 name|FMF
 decl_stmt|;
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|DefaultOperandBundles
+expr_stmt|;
 name|public
 label|:
 name|IRBuilderBase
@@ -265,6 +271,14 @@ operator|*
 name|FPMathTag
 operator|=
 name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|OpBundles
+operator|=
+name|None
 argument_list|)
 operator|:
 name|Context
@@ -279,6 +293,11 @@ argument_list|)
 operator|,
 name|FMF
 argument_list|()
+operator|,
+name|DefaultOperandBundles
+argument_list|(
+argument|OpBundles
+argument_list|)
 block|{
 name|ClearInsertionPoint
 argument_list|()
@@ -2312,6 +2331,8 @@ argument_list|,
 argument|Inserter I = Inserter()
 argument_list|,
 argument|MDNode *FPMathTag = nullptr
+argument_list|,
+argument|ArrayRef<OperandBundleDef> OpBundles = None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2319,6 +2340,8 @@ argument_list|(
 name|C
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Inserter
@@ -2348,6 +2371,14 @@ operator|*
 name|FPMathTag
 operator|=
 name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|OpBundles
+operator|=
+name|None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2355,11 +2386,13 @@ argument_list|(
 name|C
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Folder
 argument_list|()
-block|{   }
+block|{}
 name|explicit
 name|IRBuilder
 argument_list|(
@@ -2377,6 +2410,14 @@ operator|*
 name|FPMathTag
 operator|=
 name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|OpBundles
+operator|=
+name|None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2387,6 +2428,8 @@ name|getContext
 argument_list|()
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Folder
@@ -2411,6 +2454,14 @@ operator|*
 name|FPMathTag
 operator|=
 name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|OpBundles
+operator|=
+name|None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2421,6 +2472,8 @@ name|getContext
 argument_list|()
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Folder
@@ -2443,6 +2496,14 @@ operator|*
 name|FPMathTag
 operator|=
 name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|OpBundles
+operator|=
+name|None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2453,6 +2514,8 @@ name|getContext
 argument_list|()
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Folder
@@ -2469,9 +2532,11 @@ argument|BasicBlock *TheBB
 argument_list|,
 argument|BasicBlock::iterator IP
 argument_list|,
-argument|const T& F
+argument|const T&F
 argument_list|,
 argument|MDNode *FPMathTag = nullptr
+argument_list|,
+argument|ArrayRef<OperandBundleDef> OpBundles = None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2482,6 +2547,8 @@ name|getContext
 argument_list|()
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Folder
@@ -2503,6 +2570,8 @@ argument_list|,
 argument|BasicBlock::iterator IP
 argument_list|,
 argument|MDNode *FPMathTag = nullptr
+argument_list|,
+argument|ArrayRef<OperandBundleDef> OpBundles = None
 argument_list|)
 operator|:
 name|IRBuilderBase
@@ -2513,6 +2582,8 @@ name|getContext
 argument_list|()
 argument_list|,
 name|FPMathTag
+argument_list|,
+name|OpBundles
 argument_list|)
 block|,
 name|Folder
@@ -11626,11 +11697,18 @@ operator|&
 name|Name
 operator|=
 literal|""
+argument_list|,
+name|MDNode
+operator|*
+name|FPMathTag
+operator|=
+name|nullptr
 argument_list|)
 block|{
-return|return
-name|Insert
-argument_list|(
+name|CallInst
+modifier|*
+name|CI
+init|=
 name|CallInst
 operator|::
 name|Create
@@ -11641,6 +11719,38 @@ name|Args
 argument_list|,
 name|OpBundles
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|isa
+operator|<
+name|FPMathOperator
+operator|>
+operator|(
+name|CI
+operator|)
+condition|)
+name|CI
+operator|=
+name|cast
+operator|<
+name|CallInst
+operator|>
+operator|(
+name|AddFPMathAttributes
+argument_list|(
+name|CI
+argument_list|,
+name|FPMathTag
+argument_list|,
+name|FMF
+argument_list|)
+operator|)
+expr_stmt|;
+return|return
+name|Insert
+argument_list|(
+name|CI
 argument_list|,
 name|Name
 argument_list|)
@@ -11772,6 +11882,8 @@ argument_list|,
 name|Callee
 argument_list|,
 name|Args
+argument_list|,
+name|DefaultOperandBundles
 argument_list|)
 decl_stmt|;
 if|if

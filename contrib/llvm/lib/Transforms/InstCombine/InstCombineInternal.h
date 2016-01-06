@@ -2272,7 +2272,7 @@ block|}
 comment|/// \brief A combiner-aware RAUW-like routine.
 comment|///
 comment|/// This method is to be used when an instruction is found to be dead,
-comment|/// replacable with another preexisting expression. Here we add all uses of
+comment|/// replaceable with another preexisting expression. Here we add all uses of
 comment|/// I to the worklist, replace all uses of I with the new value, then return
 comment|/// I, so that the inst combiner will know that I was modified.
 name|Instruction

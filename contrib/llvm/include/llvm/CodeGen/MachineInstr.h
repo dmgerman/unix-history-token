@@ -3918,31 +3918,86 @@ name|mmo_iterator
 name|NewMemRefsEnd
 parameter_list|)
 block|{
+name|setMemRefs
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|NewMemRefs
+argument_list|,
+name|NewMemRefsEnd
+operator|-
+name|NewMemRefs
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Assign this MachineInstr's memory reference descriptor list.  First
+comment|/// element in the pair is the begin iterator/pointer to the array; the
+comment|/// second is the number of MemoryOperands.  This does not transfer ownership
+comment|/// of the underlying memory.
+name|void
+name|setMemRefs
+argument_list|(
+name|std
+operator|::
+name|pair
+operator|<
+name|mmo_iterator
+argument_list|,
+name|unsigned
+operator|>
+name|NewMemRefs
+argument_list|)
+block|{
 name|MemRefs
 operator|=
 name|NewMemRefs
+operator|.
+name|first
 expr_stmt|;
 name|NumMemRefs
 operator|=
 name|uint8_t
 argument_list|(
-name|NewMemRefsEnd
-operator|-
 name|NewMemRefs
+operator|.
+name|second
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
 name|NumMemRefs
 operator|==
-name|NewMemRefsEnd
-operator|-
 name|NewMemRefs
+operator|.
+name|second
 operator|&&
-literal|"Too many memrefs"
+literal|"Too many memrefs - must drop memory operands"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Return a set of memrefs (begin iterator, size) which conservatively
+comment|/// describe the memory behavior of both MachineInstrs.  This is appropriate
+comment|/// for use when merging two MachineInstrs into one. This routine does not
+comment|/// modify the memrefs of the this MachineInstr.
+name|std
+operator|::
+name|pair
+operator|<
+name|mmo_iterator
+operator|,
+name|unsigned
+operator|>
+name|mergeMemRefsWith
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|Other
+argument_list|)
+expr_stmt|;
 comment|/// Clear this MachineInstr's memory reference descriptor list.  This resets
 comment|/// the memrefs to their most conservative state.  This should be used only
 comment|/// as a last resort since it greatly pessimizes our knowledge of the memory

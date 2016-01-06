@@ -441,6 +441,15 @@ name|StringRef
 name|FuncName
 argument_list|)
 decl_stmt|;
+comment|/// Return the initializer in string of the PGO name var \c NameVar.
+name|StringRef
+name|getPGOFuncNameVarInitializer
+parameter_list|(
+name|GlobalVariable
+modifier|*
+name|NameVar
+parameter_list|)
+function_decl|;
 comment|/// Given a PGO function name, remove the filename prefix and return
 comment|/// the original (static) function name.
 name|StringRef
@@ -451,6 +460,82 @@ name|PGOFuncName
 parameter_list|,
 name|StringRef
 name|FileName
+parameter_list|)
+function_decl|;
+comment|/// Given a vector of strings (function PGO names) \c NameStrs, the
+comment|/// method generates a combined string \c Result thatis ready to be
+comment|/// serialized.  The \c Result string is comprised of three fields:
+comment|/// The first field is the legnth of the uncompressed strings, and the
+comment|/// the second field is the length of the zlib-compressed string.
+comment|/// Both fields are encoded in ULEB128.  If \c doCompress is false, the
+comment|///  third field is the uncompressed strings; otherwise it is the
+comment|/// compressed string. When the string compression is off, the
+comment|/// second field will have value zero.
+name|int
+name|collectPGOFuncNameStrings
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|NameStrs
+argument_list|,
+name|bool
+name|doCompression
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+comment|/// Produce \c Result string with the same format described above. The input
+comment|/// is vector of PGO function name variables that are referenced.
+name|int
+name|collectPGOFuncNameStrings
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|GlobalVariable
+operator|*
+operator|>
+operator|&
+name|NameVars
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+name|class
+name|InstrProfSymtab
+decl_stmt|;
+comment|/// \c NameStrings is a string composed of one of more sub-strings encoded in
+comment|/// the
+comment|/// format described above. The substrings are seperated by 0 or more zero
+comment|/// bytes.
+comment|/// This method decodes the string and populates the \c Symtab.
+name|int
+name|readPGOFuncNameStrings
+parameter_list|(
+name|StringRef
+name|NameStrings
+parameter_list|,
+name|InstrProfSymtab
+modifier|&
+name|Symtab
 parameter_list|)
 function_decl|;
 specifier|const
@@ -700,6 +785,19 @@ argument_list|,
 argument|uint64_t BaseAddr
 argument_list|)
 expr_stmt|;
+comment|/// \c NameStrings is a string composed of one of more sub-strings
+comment|///  encoded in the format described above. The substrings are
+comment|/// seperated by 0 or more zero bytes. This method decodes the
+comment|/// string and populates the \c Symtab.
+specifier|inline
+name|std
+operator|::
+name|error_code
+name|create
+argument_list|(
+argument|StringRef NameStrings
+argument_list|)
+expr_stmt|;
 comment|/// Create InstrProfSymtab from a set of names iteratable from
 comment|/// \p IterRange. This interface is used by IndexedProfReader.
 name|template
@@ -793,8 +891,8 @@ return|return
 name|AddrToMD5Map
 return|;
 block|}
-comment|/// Return function's PGO name from the function name's symabol
-comment|/// address in the object file. If an error occurs, Return
+comment|/// Return function's PGO name from the function name's symbol
+comment|/// address in the object file. If an error occurs, return
 comment|/// an empty string.
 name|StringRef
 name|getFuncName
@@ -845,6 +943,44 @@ name|error_code
 argument_list|()
 return|;
 block|}
+name|std
+operator|::
+name|error_code
+name|InstrProfSymtab
+operator|::
+name|create
+argument_list|(
+argument|StringRef NameStrings
+argument_list|)
+block|{
+if|if
+condition|(
+name|readPGOFuncNameStrings
+argument_list|(
+name|NameStrings
+argument_list|,
+operator|*
+name|this
+argument_list|)
+condition|)
+return|return
+name|make_error_code
+argument_list|(
+name|instrprof_error
+operator|::
+name|malformed
+argument_list|)
+return|;
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -890,11 +1026,10 @@ expr_stmt|;
 name|finalizeSymtab
 argument_list|()
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_expr_stmt
-name|void
+unit|}  void
 name|InstrProfSymtab
 operator|::
 name|finalizeSymtab
@@ -2343,6 +2478,29 @@ directive|include
 file|"llvm/ProfileData/InstrProfData.inc"
 block|}
 expr_stmt|;
+comment|// Per module coverage mapping data header, i.e. CoverageMapFileHeader
+comment|// documented above.
+struct|struct
+name|CovMapHeader
+block|{
+define|#
+directive|define
+name|COVMAP_HEADER
+parameter_list|(
+name|Type
+parameter_list|,
+name|LLVMType
+parameter_list|,
+name|Name
+parameter_list|,
+name|Init
+parameter_list|)
+value|Type Name;
+include|#
+directive|include
+file|"llvm/ProfileData/InstrProfData.inc"
+block|}
+struct|;
 name|LLVM_PACKED_END
 block|}
 end_decl_stmt

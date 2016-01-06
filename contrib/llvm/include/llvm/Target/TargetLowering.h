@@ -7380,6 +7380,20 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the MachineFunction contains a COPY which would imply
+comment|/// HasOpaqueSPAdjustment.
+name|virtual
+name|bool
+name|hasCopyImplyingStackAdjustment
+argument_list|(
+argument|MachineFunction *MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Perform necessary initialization to handle a subset of CSRs explicitly
 comment|/// via copies. This function is called at the beginning of instruction
 comment|/// selection.

@@ -217,6 +217,8 @@ block|,
 name|Krait
 block|,
 name|Swift
+block|,
+name|ExynosM1
 block|}
 block|;   enum
 name|ARMProcClassEnum

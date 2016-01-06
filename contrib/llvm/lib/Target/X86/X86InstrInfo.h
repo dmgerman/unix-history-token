@@ -100,9 +100,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MachineInstrBuilder
-decl_stmt|;
-name|class
 name|X86RegisterInfo
 decl_stmt|;
 name|class
@@ -2291,16 +2288,6 @@ argument_list|,
 name|int
 operator|&
 name|FrameIndex
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Expand the MOVImmSExti8 pseudo-instructions.
-name|bool
-name|ExpandMOVImmSExti8
-argument_list|(
-name|MachineInstrBuilder
-operator|&
-name|MIB
 argument_list|)
 decl|const
 decl_stmt|;

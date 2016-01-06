@@ -152,6 +152,8 @@ block|,
 name|CortexA57
 block|,
 name|Cyclone
+block|,
+name|ExynosM1
 block|}
 block|;
 comment|/// ARMProcFamily - ARM processor family: Cortex-A53, Cortex-A57, and others.
@@ -633,6 +635,17 @@ return|return
 name|CPUString
 operator|==
 literal|"cortex-a53"
+return|;
+block|}
+name|bool
+name|isExynosM1
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CPUString
+operator|==
+literal|"exynos-m1"
 return|;
 block|}
 name|bool

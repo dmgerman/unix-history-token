@@ -237,6 +237,9 @@ block|;
 name|bool
 name|EnableUnsafeDSOffsetFolding
 block|;
+name|bool
+name|EnableXNACK
+block|;
 name|unsigned
 name|WavefrontSize
 block|;
@@ -980,6 +983,18 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|isXNACKEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EnableXNACK
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|unsigned

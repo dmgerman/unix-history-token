@@ -361,8 +361,11 @@ decl_stmt|;
 comment|/// Return true if the given arguments fit within system-specific
 comment|/// argument length limits.
 name|bool
-name|argumentsFitWithinSystemLimits
+name|commandLineFitsWithinSystemLimits
 argument_list|(
+name|StringRef
+name|Program
+argument_list|,
 name|ArrayRef
 operator|<
 specifier|const

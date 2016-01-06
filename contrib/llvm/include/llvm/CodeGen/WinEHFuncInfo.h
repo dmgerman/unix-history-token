@@ -268,8 +268,14 @@ name|uint32_t
 name|TypeToken
 decl_stmt|;
 name|int
-name|Parent
+name|HandlerParentState
 decl_stmt|;
+comment|///< Outer handler enclosing this entry's handler
+name|int
+name|TryParentState
+decl_stmt|;
+comment|///< Outer try region enclosing this entry's try region,
+comment|///< treating later catches on same try as "outer"
 name|ClrHandlerType
 name|HandlerType
 decl_stmt|;

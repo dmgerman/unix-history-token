@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/EHPersonalities.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Dominators.h"
 end_include
 
@@ -137,6 +143,16 @@ name|bool
 name|HeaderMayThrow
 decl_stmt|;
 comment|// Same as previous, but specific to loop header
+comment|// Used to update funclet bundle operands.
+name|DenseMap
+operator|<
+name|BasicBlock
+operator|*
+operator|,
+name|ColorVector
+operator|>
+name|BlockColors
+expr_stmt|;
 name|LICMSafetyInfo
 argument_list|()
 operator|:

@@ -923,6 +923,11 @@ literal|4
 operator|>
 name|UseMap
 expr_stmt|;
+comment|/// Flag that can be set to false if this metadata should not be
+comment|/// RAUW'ed, e.g. if it is used as the key of a map.
+name|bool
+name|CanReplace
+decl_stmt|;
 name|public
 label|:
 name|ReplaceableMetadataImpl
@@ -941,6 +946,11 @@ name|NextIndex
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|CanReplace
+argument_list|(
+argument|true
+argument_list|)
 block|{}
 operator|~
 name|ReplaceableMetadataImpl
@@ -956,6 +966,17 @@ operator|&&
 literal|"Cannot destroy in-use replaceable metadata"
 argument_list|)
 block|;   }
+comment|/// Set the CanReplace flag to the given value.
+name|void
+name|setCanReplace
+argument_list|(
+argument|bool Replaceable
+argument_list|)
+block|{
+name|CanReplace
+operator|=
+name|Replaceable
+block|; }
 name|LLVMContext
 operator|&
 name|getContext
@@ -4086,6 +4107,31 @@ block|}
 end_function
 
 begin_comment
+comment|/// Set the CanReplace flag to the given value.
+end_comment
+
+begin_function
+name|void
+name|setCanReplace
+parameter_list|(
+name|bool
+name|Replaceable
+parameter_list|)
+block|{
+name|Context
+operator|.
+name|getReplaceableUses
+argument_list|()
+operator|->
+name|setCanReplace
+argument_list|(
+name|Replaceable
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Resolve cycles.
 end_comment
 
@@ -4098,7 +4144,7 @@ comment|/// Once all forward declarations have been resolved, force cycles to be
 end_comment
 
 begin_comment
-comment|/// resolved. If \p MDMaterialized is true, then any temporary metadata
+comment|/// resolved. If \p AllowTemps is true, then any temporary metadata
 end_comment
 
 begin_comment
@@ -4118,9 +4164,9 @@ name|void
 name|resolveCycles
 parameter_list|(
 name|bool
-name|MDMaterialized
+name|AllowTemps
 init|=
-name|true
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
