@@ -8541,17 +8541,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
+name|reinterpret_cast
 operator|<
-name|CallExpr
+name|Expr
+operator|*
 operator|*
 operator|>
 operator|(
-name|this
-operator|)
-operator|->
-name|getArgs
+name|SubExprs
+operator|+
+name|getNumPreArgs
 argument_list|()
+operator|+
+name|PREARGS_START
+operator|)
 return|;
 block|}
 comment|/// getArg - Return the specified argument.
@@ -16957,9 +16960,21 @@ comment|/// designators, one array designator for @c [2] followed by one field
 comment|/// designator for @c .y. The initialization expression will be 1.0.
 name|class
 name|DesignatedInitExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|DesignatedInitExpr
+block|,
+name|Stmt
+operator|*
+operator|>
 block|{
 name|public
 operator|:
@@ -18105,17 +18120,12 @@ operator|<
 name|Expr
 operator|>
 operator|(
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-specifier|const
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|Idx
@@ -18146,16 +18156,12 @@ operator|&&
 literal|"Subscript out of range"
 argument_list|)
 expr_stmt|;
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|Idx
@@ -18261,16 +18267,12 @@ modifier|*
 modifier|*
 name|begin
 init|=
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 decl_stmt|;
 return|return
@@ -18285,6 +18287,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -20088,9 +20096,21 @@ comment|/// part of the user model.  The name of this class encourages this
 comment|/// modelling design.
 name|class
 name|PseudoObjectExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|PseudoObjectExpr
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
 comment|// PseudoObjectExprBits.NumSubExprs - The number of sub-expressions.
 comment|// Always at least two, because the first sub-expression is the
@@ -20108,16 +20128,12 @@ name|getSubExprsBuffer
 argument_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -20131,25 +20147,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|Expr
-operator|*
-specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
-name|friend
-name|class
-name|ASTStmtReader
-block|;
 name|PseudoObjectExpr
 argument_list|(
 argument|QualType type
@@ -20588,7 +20594,13 @@ operator|==
 name|PseudoObjectExprClass
 return|;
 block|}
-expr|}
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
 block|;
 comment|/// AtomicExpr - Variadic atomic builtins: __atomic_exchange, __atomic_fetch_*,
 comment|/// __atomic_load, __atomic_store, and __atomic_compare_exchange_*, for the

@@ -647,6 +647,19 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
+comment|// A gcc tool has an "integrated" assembler that it will call to produce an
+comment|// object. Let it use that assembler so that we don't have to deal with
+comment|// assembly syntax incompatibilities.
+name|bool
+name|hasIntegratedAssembler
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|ConstructJob
 argument_list|(

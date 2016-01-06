@@ -335,41 +335,22 @@ name|Expr
 operator|*
 operator|>
 operator|(
-name|reinterpret_cast
+name|static_cast
 operator|<
-name|Expr
-operator|*
-operator|*
-operator|>
-operator|(
-name|reinterpret_cast
-operator|<
-name|char
+name|T
 operator|*
 operator|>
 operator|(
 name|this
 operator|)
-operator|+
-name|llvm
-operator|::
-name|RoundUpToAlignment
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|T
-argument_list|)
-argument_list|,
-name|llvm
-operator|::
-name|alignOf
+operator|->
+name|template
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
 operator|>
 operator|(
-operator|)
-argument_list|)
 operator|)
 operator|,
 name|NumVars
@@ -399,52 +380,11 @@ name|std
 operator|::
 name|copy
 argument_list|(
-name|VL
-operator|.
-name|begin
-argument_list|()
+argument|VL.begin()
 argument_list|,
-name|VL
-operator|.
-name|end
-argument_list|()
+argument|VL.end()
 argument_list|,
-name|reinterpret_cast
-operator|<
-name|Expr
-operator|*
-operator|*
-operator|>
-operator|(
-name|reinterpret_cast
-operator|<
-name|char
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-name|llvm
-operator|::
-name|RoundUpToAlignment
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|T
-argument_list|)
-argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|)
-operator|)
+argument|static_cast<T *>(this)->template getTrailingObjects<Expr *>()
 argument_list|)
 block|;   }
 comment|/// \brief Build a clause with \a N variables
@@ -668,48 +608,9 @@ name|llvm
 operator|::
 name|makeArrayRef
 argument_list|(
-name|reinterpret_cast
-operator|<
-specifier|const
-name|Expr
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-name|reinterpret_cast
-operator|<
-specifier|const
-name|char
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-name|llvm
-operator|::
-name|RoundUpToAlignment
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|T
-argument_list|)
+argument|static_cast<const T *>(this)->template getTrailingObjects<Expr *>()
 argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|)
-operator|)
-argument_list|,
-name|NumVars
+argument|NumVars
 argument_list|)
 return|;
 block|}
@@ -3877,13 +3778,31 @@ comment|/// with the variables 'a' and 'b'.
 comment|///
 name|class
 name|OMPPrivateClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPPrivateClause
 operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPPrivateClause
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 name|friend
 name|class
 name|OMPClauseReader
@@ -4199,13 +4118,31 @@ comment|/// with the variables 'a' and 'b'.
 comment|///
 name|class
 name|OMPFirstprivateClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPFirstprivateClause
 operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPFirstprivateClause
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 name|friend
 name|class
 name|OMPClauseReader
@@ -4675,11 +4612,23 @@ comment|/// In this example directive '#pragma omp simd' has clause 'lastprivate
 comment|/// with the variables 'a' and 'b'.
 name|class
 name|OMPLastprivateClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPLastprivateClause
+operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPLastprivateClause
+block|,
+name|Expr
+operator|*
 operator|>
 block|{
 comment|// There are 4 additional tail-allocated arrays at the end of the class:
@@ -4699,6 +4648,12 @@ comment|// \endcode
 comment|// Required for proper codegen of final assignment performed by the
 comment|// lastprivate clause.
 comment|//
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 name|friend
 name|class
 name|OMPClauseReader
@@ -5361,13 +5316,31 @@ comment|/// with the variables 'a' and 'b'.
 comment|///
 name|class
 name|OMPSharedClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPSharedClause
 operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPSharedClause
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -5532,13 +5505,31 @@ comment|/// with operator '+' and the variables 'a' and 'b'.
 comment|///
 name|class
 name|OMPReductionClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPReductionClause
 operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPReductionClause
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 name|friend
 name|class
 name|OMPClauseReader
@@ -6328,13 +6319,31 @@ comment|/// with variables 'a', 'b' and linear step '2'.
 comment|///
 name|class
 name|OMPLinearClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPLinearClause
 operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPLinearClause
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 name|friend
 name|class
 name|OMPClauseReader
@@ -7435,34 +7444,55 @@ end_comment
 begin_decl_stmt
 name|class
 name|OMPAlignedClause
+name|final
 range|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPAlignedClause
 operator|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPAlignedClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
 block|{
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of ':'.
 name|SourceLocation
 name|ColonLoc
-block|;
+decl_stmt|;
 comment|/// \brief Sets the alignment for clause.
 name|void
 name|setAlignment
-argument_list|(
-argument|Expr *A
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|A
+parameter_list|)
 block|{
 operator|*
 name|varlist_end
 argument_list|()
 operator|=
 name|A
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Build 'aligned' clause with given number of variables \a NumVars.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -7483,23 +7513,23 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|unsigned NumVars
 argument_list|)
-operator|:
+block|:
 name|OMPVarListClause
 operator|<
 name|OMPAlignedClause
 operator|>
 operator|(
 name|OMPC_aligned
-expr|,
+operator|,
 name|StartLoc
-expr|,
+operator|,
 name|LParenLoc
-expr|,
+operator|,
 name|EndLoc
-expr|,
+operator|,
 name|NumVars
 operator|)
-block|,
+operator|,
 name|ColonLoc
 argument_list|(
 argument|ColonLoc
@@ -7521,19 +7551,19 @@ name|OMPAlignedClause
 operator|>
 operator|(
 name|OMPC_aligned
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|NumVars
 operator|)
-block|,
+operator|,
 name|ColonLoc
 argument_list|(
 argument|SourceLocation()
@@ -7569,7 +7599,7 @@ argument|ArrayRef<Expr *> VL
 argument_list|,
 argument|Expr *A
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
 comment|///
 comment|/// \param C AST context.
@@ -7577,25 +7607,31 @@ comment|/// \param NumVars Number of variables.
 comment|///
 specifier|static
 name|OMPAlignedClause
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned NumVars
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|NumVars
+parameter_list|)
+function_decl|;
 comment|/// \brief Sets the location of ':'.
 name|void
 name|setColonLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|ColonLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Returns the location of ':'.
 name|SourceLocation
 name|getColonLoc
@@ -7608,9 +7644,9 @@ return|;
 block|}
 comment|/// \brief Returns alignment.
 name|Expr
-operator|*
+modifier|*
 name|getAlignment
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -7634,7 +7670,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -7666,9 +7702,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -7679,24 +7718,66 @@ operator|==
 name|OMPC_aligned
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents clause 'copyin' in the '#pragma omp ...' directives.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp parallel copyin(a,b)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp parallel' has clause 'copyin'
+end_comment
+
+begin_comment
 comment|/// with the variables 'a' and 'b'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPCopyinClause
-operator|:
+name|final
+range|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPCopyinClause
 operator|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPCopyinClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
 block|{
 comment|// Class has 3 additional tail allocated arrays:
 comment|// 1. List of helper expressions for proper generation of assignment operation
@@ -7711,9 +7792,15 @@ comment|// Required for proper codegen of propagation of master's thread values 
 comment|// threadprivate variables to local instances of that variables in other
 comment|// implicit threads.
 name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
+name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -7731,20 +7818,20 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|unsigned N
 argument_list|)
-operator|:
+block|:
 name|OMPVarListClause
 operator|<
 name|OMPCopyinClause
 operator|>
 operator|(
 name|OMPC_copyin
-expr|,
+operator|,
 name|StartLoc
-expr|,
+operator|,
 name|LParenLoc
-expr|,
+operator|,
 name|EndLoc
-expr|,
+operator|,
 name|N
 operator|)
 block|{}
@@ -7764,16 +7851,16 @@ name|OMPCopyinClause
 operator|>
 operator|(
 name|OMPC_copyin
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|N
 operator|)
 block|{}
@@ -7790,7 +7877,7 @@ operator|*
 operator|>
 name|SrcExprs
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Get the list of helper source expressions.
 name|MutableArrayRef
 operator|<
@@ -7809,7 +7896,7 @@ operator|>
 operator|(
 name|varlist_end
 argument_list|()
-expr|,
+operator|,
 name|varlist_size
 argument_list|()
 operator|)
@@ -7851,7 +7938,7 @@ operator|*
 operator|>
 name|DstExprs
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Get the list of helper destination expressions.
 name|MutableArrayRef
 operator|<
@@ -7873,7 +7960,7 @@ argument_list|()
 operator|.
 name|end
 argument_list|()
-expr|,
+operator|,
 name|varlist_size
 argument_list|()
 operator|)
@@ -7919,7 +8006,7 @@ operator|*
 operator|>
 name|AssignmentOps
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Get the list of helper assignment expressions.
 name|MutableArrayRef
 operator|<
@@ -7941,7 +8028,7 @@ argument_list|()
 operator|.
 name|end
 argument_list|()
-expr|,
+operator|,
 name|varlist_size
 argument_list|()
 operator|)
@@ -7974,7 +8061,7 @@ argument_list|)
 return|;
 block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Creates clause with a list of variables \a VL.
 comment|///
 comment|/// \param C AST context.
@@ -7999,26 +8086,52 @@ comment|/// implicit threads.
 comment|///
 specifier|static
 name|OMPCopyinClause
-operator|*
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&C
+specifier|const
+name|ASTContext
+operator|&
+name|C
 argument_list|,
-argument|SourceLocation StartLoc
+name|SourceLocation
+name|StartLoc
 argument_list|,
-argument|SourceLocation LParenLoc
+name|SourceLocation
+name|LParenLoc
 argument_list|,
-argument|SourceLocation EndLoc
+name|SourceLocation
+name|EndLoc
 argument_list|,
-argument|ArrayRef<Expr *> VL
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
 argument_list|,
-argument|ArrayRef<Expr *> SrcExprs
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|SrcExprs
 argument_list|,
-argument|ArrayRef<Expr *> DstExprs
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|DstExprs
 argument_list|,
-argument|ArrayRef<Expr *> AssignmentOps
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|AssignmentOps
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Creates an empty clause with \a N variables.
 comment|///
 comment|/// \param C AST context.
@@ -8026,14 +8139,18 @@ comment|/// \param N The number of variables.
 comment|///
 specifier|static
 name|OMPCopyinClause
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|MutableArrayRef
 operator|<
@@ -8055,9 +8172,6 @@ operator|::
 name|iterator
 name|helper_expr_const_iterator
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -8067,9 +8181,6 @@ name|helper_expr_iterator
 operator|>
 name|helper_expr_range
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -8079,9 +8190,6 @@ name|helper_expr_const_iterator
 operator|>
 name|helper_expr_const_range
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|helper_expr_const_range
 name|source_exprs
 argument_list|()
@@ -8104,9 +8212,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|helper_expr_range
 name|source_exprs
 parameter_list|()
@@ -8128,9 +8233,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|helper_expr_const_range
 name|destination_exprs
 argument_list|()
@@ -8153,9 +8255,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|helper_expr_range
 name|destination_exprs
 parameter_list|()
@@ -8177,9 +8276,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|helper_expr_const_range
 name|assignment_ops
 argument_list|()
@@ -8202,9 +8298,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|helper_expr_range
 name|assignment_ops
 parameter_list|()
@@ -8226,9 +8319,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|child_range
 name|children
 parameter_list|()
@@ -8260,9 +8350,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -8282,10 +8369,14 @@ operator|==
 name|OMPC_copyin
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief This represents clause 'copyprivate' in the '#pragma omp ...'
 end_comment
 
@@ -8324,17 +8415,35 @@ end_comment
 begin_decl_stmt
 name|class
 name|OMPCopyprivateClause
+name|final
 range|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPCopyprivateClause
 operator|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPCopyprivateClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
 block|{
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -8352,20 +8461,20 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|unsigned N
 argument_list|)
-operator|:
+block|:
 name|OMPVarListClause
 operator|<
 name|OMPCopyprivateClause
 operator|>
 operator|(
 name|OMPC_copyprivate
-expr|,
+operator|,
 name|StartLoc
-expr|,
+operator|,
 name|LParenLoc
-expr|,
+operator|,
 name|EndLoc
-expr|,
+operator|,
 name|N
 operator|)
 block|{}
@@ -8385,16 +8494,16 @@ name|OMPCopyprivateClause
 operator|>
 operator|(
 name|OMPC_copyprivate
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|N
 operator|)
 block|{}
@@ -8411,7 +8520,7 @@ operator|*
 operator|>
 name|SrcExprs
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Get the list of helper source expressions.
 name|MutableArrayRef
 operator|<
@@ -8430,7 +8539,7 @@ operator|>
 operator|(
 name|varlist_end
 argument_list|()
-expr|,
+operator|,
 name|varlist_size
 argument_list|()
 operator|)
@@ -8472,7 +8581,7 @@ operator|*
 operator|>
 name|DstExprs
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Get the list of helper destination expressions.
 name|MutableArrayRef
 operator|<
@@ -8494,7 +8603,7 @@ argument_list|()
 operator|.
 name|end
 argument_list|()
-expr|,
+operator|,
 name|varlist_size
 argument_list|()
 operator|)
@@ -8540,7 +8649,7 @@ operator|*
 operator|>
 name|AssignmentOps
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Get the list of helper assignment expressions.
 name|MutableArrayRef
 operator|<
@@ -8562,7 +8671,7 @@ argument_list|()
 operator|.
 name|end
 argument_list|()
-expr|,
+operator|,
 name|varlist_size
 argument_list|()
 operator|)
@@ -8595,7 +8704,7 @@ argument_list|)
 return|;
 block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Creates clause with a list of variables \a VL.
 comment|///
 comment|/// \param C AST context.
@@ -8619,26 +8728,52 @@ comment|/// copyprivate clause.
 comment|///
 specifier|static
 name|OMPCopyprivateClause
-operator|*
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&C
+specifier|const
+name|ASTContext
+operator|&
+name|C
 argument_list|,
-argument|SourceLocation StartLoc
+name|SourceLocation
+name|StartLoc
 argument_list|,
-argument|SourceLocation LParenLoc
+name|SourceLocation
+name|LParenLoc
 argument_list|,
-argument|SourceLocation EndLoc
+name|SourceLocation
+name|EndLoc
 argument_list|,
-argument|ArrayRef<Expr *> VL
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
 argument_list|,
-argument|ArrayRef<Expr *> SrcExprs
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|SrcExprs
 argument_list|,
-argument|ArrayRef<Expr *> DstExprs
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|DstExprs
 argument_list|,
-argument|ArrayRef<Expr *> AssignmentOps
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|AssignmentOps
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Creates an empty clause with \a N variables.
 comment|///
 comment|/// \param C AST context.
@@ -8646,14 +8781,18 @@ comment|/// \param N The number of variables.
 comment|///
 specifier|static
 name|OMPCopyprivateClause
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|MutableArrayRef
 operator|<
@@ -8664,9 +8803,6 @@ operator|::
 name|iterator
 name|helper_expr_iterator
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|ArrayRef
 operator|<
@@ -8678,9 +8814,6 @@ operator|::
 name|iterator
 name|helper_expr_const_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -8690,9 +8823,6 @@ name|helper_expr_iterator
 operator|>
 name|helper_expr_range
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -8702,9 +8832,6 @@ name|helper_expr_const_iterator
 operator|>
 name|helper_expr_const_range
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|helper_expr_const_range
 name|source_exprs
 argument_list|()
@@ -8727,9 +8854,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|helper_expr_range
 name|source_exprs
 parameter_list|()
@@ -8751,9 +8875,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|helper_expr_const_range
 name|destination_exprs
 argument_list|()
@@ -8776,9 +8897,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|helper_expr_range
 name|destination_exprs
 parameter_list|()
@@ -8800,9 +8918,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|helper_expr_const_range
 name|assignment_ops
 argument_list|()
@@ -8825,9 +8940,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|helper_expr_range
 name|assignment_ops
 parameter_list|()
@@ -8849,9 +8961,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|child_range
 name|children
 parameter_list|()
@@ -8883,9 +8992,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -8905,10 +9011,14 @@ operator|==
 name|OMPC_copyprivate
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief This represents implicit clause 'flush' for the '#pragma omp flush'
 end_comment
 
@@ -8963,13 +9073,31 @@ end_comment
 begin_decl_stmt
 name|class
 name|OMPFlushClause
+name|final
 range|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPFlushClause
 operator|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPFlushClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
 block|{
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -8987,20 +9115,20 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|unsigned N
 argument_list|)
-operator|:
+block|:
 name|OMPVarListClause
 operator|<
 name|OMPFlushClause
 operator|>
 operator|(
 name|OMPC_flush
-expr|,
+operator|,
 name|StartLoc
-expr|,
+operator|,
 name|LParenLoc
-expr|,
+operator|,
 name|EndLoc
-expr|,
+operator|,
 name|N
 operator|)
 block|{}
@@ -9020,16 +9148,16 @@ name|OMPFlushClause
 operator|>
 operator|(
 name|OMPC_flush
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|N
 operator|)
 block|{}
@@ -9058,7 +9186,7 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Creates an empty clause with \a N variables.
 comment|///
 comment|/// \param C AST context.
@@ -9066,17 +9194,21 @@ comment|/// \param N The number of variables.
 comment|///
 specifier|static
 name|OMPFlushClause
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -9108,9 +9240,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -9121,42 +9256,93 @@ operator|==
 name|OMPC_flush
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents implicit clause 'depend' for the '#pragma omp task'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp task depend(in:a,b)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp task' with clause 'depend' with the
+end_comment
+
+begin_comment
 comment|/// variables 'a' and 'b' with dependency 'in'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPDependClause
-operator|:
+name|final
+range|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPDependClause
 operator|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPDependClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
 block|{
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Dependency type (one of in, out, inout).
 name|OpenMPDependClauseKind
 name|DepKind
-block|;
+decl_stmt|;
 comment|/// \brief Dependency type location.
 name|SourceLocation
 name|DepLoc
-block|;
+decl_stmt|;
 comment|/// \brief Colon location.
 name|SourceLocation
 name|ColonLoc
-block|;
+decl_stmt|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -9174,23 +9360,23 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|unsigned N
 argument_list|)
-operator|:
+block|:
 name|OMPVarListClause
 operator|<
 name|OMPDependClause
 operator|>
 operator|(
 name|OMPC_depend
-expr|,
+operator|,
 name|StartLoc
-expr|,
+operator|,
 name|LParenLoc
-expr|,
+operator|,
 name|EndLoc
-expr|,
+operator|,
 name|N
 operator|)
-block|,
+operator|,
 name|DepKind
 argument_list|(
 argument|OMPC_DEPEND_unknown
@@ -9212,19 +9398,19 @@ name|OMPDependClause
 operator|>
 operator|(
 name|OMPC_depend
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|SourceLocation
 argument_list|()
-expr|,
+operator|,
 name|N
 operator|)
-block|,
+operator|,
 name|DepKind
 argument_list|(
 argument|OMPC_DEPEND_unknown
@@ -9297,7 +9483,7 @@ argument|SourceLocation ColonLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Creates an empty clause with \a N variables.
 comment|///
 comment|/// \param C AST context.
@@ -9305,14 +9491,18 @@ comment|/// \param N The number of variables.
 comment|///
 specifier|static
 name|OMPDependClause
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
 comment|/// \brief Get dependency type.
 name|OpenMPDependClauseKind
 name|getDependencyKind
@@ -9345,7 +9535,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -9377,9 +9567,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -9390,20 +9583,53 @@ operator|==
 name|OMPC_depend
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'device' clause in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp target device(a)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp target' has clause 'device'
+end_comment
+
+begin_comment
 comment|/// with single expression 'a'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPDeviceClause
-operator|:
+range|:
 name|public
 name|OMPClause
 block|{
@@ -9766,13 +9992,31 @@ comment|/// with the variables 'a' and 'b'.
 comment|///
 name|class
 name|OMPMapClause
+name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPMapClause
 operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPMapClause
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
 name|friend
 name|class
 name|OMPClauseReader

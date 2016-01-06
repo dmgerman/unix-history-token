@@ -428,12 +428,13 @@ name|OperatorIndex
 init|=
 literal|0
 decl_stmt|;
-comment|/// \brief Is this the last operator (or "."/"->") in a sequence of operators
-comment|/// with the same precedence?
-name|bool
-name|LastOperator
+comment|/// \brief If this is an operator (or "."/"->") in a sequence of operators
+comment|/// with the same precedence, points to the next operator.
+name|FormatToken
+modifier|*
+name|NextOperator
 init|=
-name|false
+name|nullptr
 decl_stmt|;
 comment|/// \brief Is this token part of a \c DeclStmt defining multiple variables?
 comment|///

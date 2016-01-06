@@ -412,6 +412,9 @@ comment|///
 comment|///   TDK_SubstitutionFailure: this argument is the template
 comment|///   argument we were instantiating when we encountered an error.
 comment|///
+comment|///   TDK_DeducedMismatch: this is the parameter type, after substituting
+comment|///   deduced arguments.
+comment|///
 comment|///   TDK_NonDeducedMismatch: this is the component of the 'parameter'
 comment|///   of the deduction, directly provided in the source code.
 name|TemplateArgument
@@ -420,6 +423,11 @@ decl_stmt|;
 comment|/// \brief The second template argument to which the template
 comment|/// argument deduction failure refers.
 comment|///
+comment|///   TDK_Inconsistent: this argument is the second value deduced
+comment|///   for the corresponding template parameter.
+comment|///
+comment|///   TDK_DeducedMismatch: this is the (adjusted) call argument type.
+comment|///
 comment|///   TDK_NonDeducedMismatch: this is the mismatching component of the
 comment|///   'argument' of the deduction, from which we are deducing arguments.
 comment|///
@@ -427,6 +435,8 @@ comment|/// FIXME: Finish documenting this.
 name|TemplateArgument
 name|SecondArg
 decl_stmt|;
+union|union
+block|{
 comment|/// \brief The expression which caused a deduction failure.
 comment|///
 comment|///   TDK_FailedOverloadResolution: this argument is the reference to
@@ -436,6 +446,16 @@ name|Expr
 modifier|*
 name|Expression
 decl_stmt|;
+comment|/// \brief The index of the function argument that caused a deduction
+comment|/// failure.
+comment|///
+comment|///   TDK_DeducedMismatch: this is the index of the argument that had a
+comment|///   different argument type from its substituted parameter type.
+name|unsigned
+name|CallArgIndex
+decl_stmt|;
+block|}
+union|;
 comment|/// \brief Information on packs that we're currently expanding.
 comment|///
 comment|/// FIXME: This should be kept internal to SemaTemplateDeduction.
@@ -536,6 +556,17 @@ modifier|*
 name|getExpr
 parameter_list|()
 function_decl|;
+comment|/// \brief Return the index of the call argument that this deduction
+comment|/// failure refers to, if any.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getCallArgIndex
+argument_list|()
+expr_stmt|;
 comment|/// \brief Free any memory associated with this deduction failure.
 name|void
 name|Destroy

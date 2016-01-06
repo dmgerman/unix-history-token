@@ -12016,6 +12016,11 @@ specifier|const
 name|OMPLoopDirective
 modifier|&
 name|D
+parameter_list|,
+name|bool
+name|IsMonotonic
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12062,6 +12067,9 @@ name|EmitOMPForOuterLoop
 argument_list|(
 name|OpenMPScheduleClauseKind
 name|ScheduleKind
+argument_list|,
+name|bool
+name|IsMonotonic
 argument_list|,
 specifier|const
 name|OMPLoopDirective
