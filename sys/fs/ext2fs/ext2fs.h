@@ -606,6 +606,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT2F_INCOMPAT_RECOVER
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_INCOMPAT_META_BG
 value|0x0010
 end_define
@@ -639,7 +646,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/*  * Features supported in this implementation  *  * We support the following REV1 features:  * - EXT2F_ROCOMPAT_SPARSESUPER  * - EXT2F_ROCOMPAT_LARGEFILE  * - EXT2F_ROCOMPAT_EXTRA_ISIZE  * - EXT2F_INCOMPAT_FTYPE  *  * We partially support (read-only) the following EXT4 features:  * - EXT2F_ROCOMPAT_HUGE_FILE  * - EXT2F_INCOMPAT_EXTENTS  *  * We do not support these EXT4 features but they are irrelevant  * for read-only support:  * - EXT2F_INCOMPAT_FLEX_BG  * - EXT2F_INCOMPAT_META_BG  */
+comment|/*  * Features supported in this implementation  *  * We support the following REV1 features:  * - EXT2F_ROCOMPAT_SPARSESUPER  * - EXT2F_ROCOMPAT_LARGEFILE  * - EXT2F_ROCOMPAT_EXTRA_ISIZE  * - EXT2F_INCOMPAT_FTYPE  *  * We partially support (read-only) the following EXT4 features:  * - EXT2F_ROCOMPAT_HUGE_FILE  * - EXT2F_INCOMPAT_EXTENTS  *  * We do not support these EXT4 features but they are irrelevant  * for read-only support:  * - EXT2F_INCOMPAT_RECOVER  * - EXT2F_INCOMPAT_FLEX_BG  * - EXT2F_INCOMPAT_META_BG  */
 end_comment
 
 begin_define
@@ -660,7 +667,7 @@ begin_define
 define|#
 directive|define
 name|EXT4F_RO_INCOMPAT_SUPP
-value|(EXT2F_INCOMPAT_EXTENTS | \ 					 EXT2F_INCOMPAT_FLEX_BG | \ 					 EXT2F_INCOMPAT_META_BG )
+value|(EXT2F_INCOMPAT_EXTENTS | \ 					 EXT2F_INCOMPAT_RECOVER | \ 					 EXT2F_INCOMPAT_FLEX_BG | \ 					 EXT2F_INCOMPAT_META_BG )
 end_define
 
 begin_comment
