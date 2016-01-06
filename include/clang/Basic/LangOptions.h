@@ -346,6 +346,36 @@ comment|/// \brief Options for parsing comments.
 name|CommentOptions
 name|CommentOpts
 decl_stmt|;
+comment|/// \brief A list of all -fno-builtin-* function names (e.g., memset).
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|NoBuiltinFuncs
+expr_stmt|;
+comment|/// \brief Triples of the OpenMP targets that the host code codegen should
+comment|/// take into account in order to generate accurate offloading descriptors.
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Triple
+operator|>
+name|OMPTargetTriples
+expr_stmt|;
+comment|/// \brief Name of the IR file that contains the result of the OpenMP target
+comment|/// host code generation.
+name|std
+operator|::
+name|string
+name|OMPHostIRFile
+expr_stmt|;
 name|LangOptions
 argument_list|()
 expr_stmt|;
@@ -430,6 +460,18 @@ name|void
 name|resetNonModularOptions
 parameter_list|()
 function_decl|;
+comment|/// \brief Is this a libc/libm function that is no longer recognized as a
+comment|/// builtin because a -fno-builtin-* option has been specified?
+name|bool
+name|isNoBuiltinFunc
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

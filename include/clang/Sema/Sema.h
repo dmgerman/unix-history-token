@@ -16233,10 +16233,6 @@ argument_list|,
 name|StringRef
 name|Member
 argument_list|,
-name|unsigned
-operator|&
-name|Offset
-argument_list|,
 name|llvm
 operator|::
 name|InlineAsmIdentifierInfo
@@ -30120,6 +30116,10 @@ block|,
 comment|/// \brief Substitution of the deduced template argument values
 comment|/// resulted in an error.
 name|TDK_SubstitutionFailure
+block|,
+comment|/// \brief After substituting deduced template arguments, a dependent
+comment|/// parameter type did not match the corresponding argument.
+name|TDK_DeducedMismatch
 block|,
 comment|/// \brief A non-depnedent component of the parameter did not match the
 comment|/// corresponding component of the argument.

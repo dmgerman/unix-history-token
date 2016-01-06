@@ -4004,9 +4004,21 @@ comment|/// corresponding parameter's default argument, when the call did not
 comment|/// explicitly supply arguments for all of the parameters.
 name|class
 name|CXXDefaultArgExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|CXXDefaultArgExpr
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
 comment|/// \brief The parameter whose default is being used.
 comment|///
@@ -4153,16 +4165,12 @@ argument|Loc
 argument_list|)
 block|{
 operator|*
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 operator|=
 name|SubExpr
@@ -4270,18 +4278,12 @@ argument_list|()
 condition|)
 return|return
 operator|*
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
-specifier|const
-operator|*
-specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 return|return
@@ -4306,16 +4308,12 @@ argument_list|()
 condition|)
 return|return
 operator|*
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 return|return
@@ -4403,6 +4401,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|friend
+name|TrailingObjects
+block|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -6012,9 +6013,26 @@ comment|/// includes an initializing expression (rather than capturing a variabl
 comment|/// and which can never occur implicitly.
 name|class
 name|LambdaExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|LambdaExpr
+block|,
+name|Stmt
+operator|*
+block|,
+name|unsigned
+block|,
+name|VarDecl
+operator|*
+operator|>
 block|{
 comment|/// \brief The source range that covers the lambda introducer ([...]).
 name|SourceRange
@@ -6068,13 +6086,36 @@ comment|/// module file just to determine the source range.
 name|SourceLocation
 name|ClosingBrace
 block|;
-comment|// Note: The capture initializers are stored directly after the lambda
-comment|// expression, along with the index variables used to initialize by-copy
-comment|// array captures.
-typedef|typedef
-name|LambdaCapture
-name|Capture
-typedef|;
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<Stmt *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NumCaptures
+operator|+
+literal|1
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<unsigned>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|HasArrayIndexVars
+operator|?
+name|NumCaptures
+operator|+
+literal|1
+operator|:
+literal|0
+return|;
+block|}
 comment|/// \brief Construct a lambda expression.
 name|LambdaExpr
 argument_list|(
@@ -6086,7 +6127,7 @@ argument|LambdaCaptureDefault CaptureDefault
 argument_list|,
 argument|SourceLocation CaptureDefaultLoc
 argument_list|,
-argument|ArrayRef<Capture> Captures
+argument|ArrayRef<LambdaCapture> Captures
 argument_list|,
 argument|bool ExplicitParams
 argument_list|,
@@ -6160,16 +6201,12 @@ name|getStoredStmts
 argument_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -6182,17 +6219,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-specifier|const
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -6204,18 +6236,11 @@ name|getArrayIndexStarts
 argument_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|unsigned
-operator|*
 operator|>
 operator|(
-name|getStoredStmts
-argument_list|()
-operator|+
-name|NumCaptures
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -6227,19 +6252,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|unsigned
-operator|*
 operator|>
 operator|(
-name|getStoredStmts
-argument_list|()
-operator|+
-name|NumCaptures
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -6250,54 +6267,13 @@ operator|*
 name|getArrayIndexVars
 argument_list|()
 block|{
-name|unsigned
-name|ArrayIndexSize
-operator|=
-name|llvm
-operator|::
-name|RoundUpToAlignment
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-operator|(
-name|NumCaptures
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|)
-block|;
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|VarDecl
 operator|*
-operator|*
 operator|>
 operator|(
-name|reinterpret_cast
-operator|<
-name|char
-operator|*
-operator|>
-operator|(
-name|getArrayIndexStarts
-argument_list|()
-operator|)
-operator|+
-name|ArrayIndexSize
 operator|)
 return|;
 block|}
@@ -6309,56 +6285,13 @@ name|getArrayIndexVars
 argument_list|()
 specifier|const
 block|{
-name|unsigned
-name|ArrayIndexSize
-operator|=
-name|llvm
-operator|::
-name|RoundUpToAlignment
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-operator|(
-name|NumCaptures
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|)
-block|;
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|VarDecl
 operator|*
-specifier|const
-operator|*
 operator|>
 operator|(
-name|reinterpret_cast
-operator|<
-specifier|const
-name|char
-operator|*
-operator|>
-operator|(
-name|getArrayIndexStarts
-argument_list|()
-operator|)
-operator|+
-name|ArrayIndexSize
 operator|)
 return|;
 block|}
@@ -6380,7 +6313,7 @@ argument|LambdaCaptureDefault CaptureDefault
 argument_list|,
 argument|SourceLocation CaptureDefaultLoc
 argument_list|,
-argument|ArrayRef<Capture> Captures
+argument|ArrayRef<LambdaCapture> Captures
 argument_list|,
 argument|bool ExplicitParams
 argument_list|,
@@ -6449,7 +6382,7 @@ comment|/// \brief An iterator that walks over the captures of the lambda,
 comment|/// both implicit and explicit.
 typedef|typedef
 specifier|const
-name|Capture
+name|LambdaCapture
 modifier|*
 name|capture_iterator
 typedef|;
@@ -6468,20 +6401,20 @@ name|capture_range
 name|captures
 argument_list|()
 specifier|const
-decl_stmt|;
+block|;
 comment|/// \brief Retrieve an iterator pointing to the first lambda capture.
 name|capture_iterator
 name|capture_begin
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve an iterator pointing past the end of the
 comment|/// sequence of lambda captures.
 name|capture_iterator
 name|capture_end
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine the number of captures in this lambda.
 name|unsigned
 name|capture_size
@@ -6497,41 +6430,41 @@ name|capture_range
 name|explicit_captures
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve an iterator pointing to the first explicit
 comment|/// lambda capture.
 name|capture_iterator
 name|explicit_capture_begin
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve an iterator pointing past the end of the sequence of
 comment|/// explicit lambda captures.
 name|capture_iterator
 name|explicit_capture_end
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve this lambda's implicit captures.
 name|capture_range
 name|implicit_captures
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve an iterator pointing to the first implicit
 comment|/// lambda capture.
 name|capture_iterator
 name|implicit_capture_begin
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve an iterator pointing past the end of the sequence of
 comment|/// implicit lambda captures.
 name|capture_iterator
 name|implicit_capture_end
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Iterator that walks over the capture initialization
 comment|/// arguments.
 typedef|typedef
@@ -6810,6 +6743,7 @@ name|child_range
 name|children
 parameter_list|()
 block|{
+comment|// Includes initialization exprs plus body stmt
 return|return
 name|child_range
 argument_list|(
@@ -6825,6 +6759,9 @@ literal|1
 argument_list|)
 return|;
 block|}
+name|friend
+name|TrailingObjects
+decl_stmt|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -8782,9 +8719,21 @@ comment|///   __is_trivially_constructible(vector<int>, int*, int*)
 comment|/// \endcode
 name|class
 name|TypeTraitExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|TypeTraitExpr
+block|,
+name|TypeSourceInfo
+operator|*
+operator|>
 block|{
 comment|/// \brief The location of the type trait keyword.
 name|SourceLocation
@@ -8823,49 +8772,16 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-comment|/// \brief Retrieve the argument types.
-name|TypeSourceInfo
-operator|*
-operator|*
-name|getTypeSourceInfos
-argument_list|()
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|TypeSourceInfo
-operator|*
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-comment|/// \brief Retrieve the argument types.
-name|TypeSourceInfo
-operator|*
-specifier|const
-operator|*
-name|getTypeSourceInfos
-argument_list|()
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<TypeSourceInfo *>
+argument_list|)
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|TypeSourceInfo
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
+name|getNumArgs
+argument_list|()
 return|;
 block|}
 name|public
@@ -8991,70 +8907,17 @@ name|llvm
 operator|::
 name|makeArrayRef
 argument_list|(
-name|getTypeSourceInfos
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|TypeSourceInfo
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|,
 name|getNumArgs
 argument_list|()
 argument_list|)
-return|;
-block|}
-typedef|typedef
-name|TypeSourceInfo
-modifier|*
-modifier|*
-name|arg_iterator
-typedef|;
-name|arg_iterator
-name|arg_begin
-argument_list|()
-block|{
-return|return
-name|getTypeSourceInfos
-argument_list|()
-return|;
-block|}
-name|arg_iterator
-name|arg_end
-argument_list|()
-block|{
-return|return
-name|getTypeSourceInfos
-argument_list|()
-operator|+
-name|getNumArgs
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|TypeSourceInfo
-specifier|const
-modifier|*
-specifier|const
-modifier|*
-name|arg_const_iterator
-typedef|;
-name|arg_const_iterator
-name|arg_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypeSourceInfos
-argument_list|()
-return|;
-block|}
-name|arg_const_iterator
-name|arg_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypeSourceInfos
-argument_list|()
-operator|+
-name|getNumArgs
-argument_list|()
 return|;
 block|}
 name|SourceLocation
@@ -9110,55 +8973,28 @@ argument_list|)
 return|;
 block|}
 name|friend
+name|TrailingObjects
+block|;
+name|friend
 name|class
 name|ASTStmtReader
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|friend
 name|class
 name|ASTStmtWriter
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+block|;
 comment|/// \brief An Embarcadero array type trait, as used in the implementation of
-end_comment
-
-begin_comment
 comment|/// __array_rank and __array_extent.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Example:
-end_comment
-
-begin_comment
 comment|/// \code
-end_comment
-
-begin_comment
 comment|///   __array_rank(int[10][20]) == 2
-end_comment
-
-begin_comment
 comment|///   __array_extent(int, 1)    == 20
-end_comment
-
-begin_comment
 comment|/// \endcode
-end_comment
-
-begin_decl_stmt
 name|class
 name|ArrayTypeTraitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -9442,41 +9278,17 @@ name|friend
 name|class
 name|ASTStmtReader
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// \brief An expression trait intrinsic.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Example:
-end_comment
-
-begin_comment
 comment|/// \code
-end_comment
-
-begin_comment
 comment|///   __is_lvalue_expr(std::cout) == true
-end_comment
-
-begin_comment
 comment|///   __is_lvalue_expr(1) == false
-end_comment
-
-begin_comment
 comment|/// \endcode
-end_comment
-
-begin_decl_stmt
 name|class
 name|ExpressionTraitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -9693,21 +9505,12 @@ name|friend
 name|class
 name|ASTStmtReader
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// \brief A reference to an overloaded function set, either an
-end_comment
-
-begin_comment
 comment|/// \c UnresolvedLookupExpr or an \c UnresolvedMemberExpr.
-end_comment
-
-begin_decl_stmt
 name|class
 name|OverloadExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -10158,19 +9961,16 @@ return|return
 name|SourceLocation
 argument_list|()
 return|;
-end_decl_stmt
-
-begin_return
 return|return
 name|getTrailingASTTemplateKWAndArgsInfo
 argument_list|()
 operator|->
 name|TemplateKWLoc
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// \brief Retrieve the location of the left angle bracket starting the
 end_comment
 
@@ -10178,13 +9978,10 @@ begin_comment
 comment|/// explicit template argument list following the name, if any.
 end_comment
 
-begin_macro
-unit|SourceLocation
+begin_expr_stmt
+name|SourceLocation
 name|getLAngleLoc
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -11546,12 +11343,24 @@ end_comment
 begin_decl_stmt
 name|class
 name|ExprWithCleanups
+name|final
 range|:
 name|public
 name|Expr
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|ExprWithCleanups
+decl_stmt|,
+name|BlockDecl
+modifier|*
+decl|>
 block|{
 name|public
-operator|:
+label|:
 comment|/// The type of objects that are kept in the cleanup.
 comment|/// It's useful to remember the set of blocks;  we could also
 comment|/// remember the set of temporaries, but there's currently
@@ -11562,27 +11371,18 @@ modifier|*
 name|CleanupObject
 typedef|;
 name|private
-operator|:
+label|:
 name|Stmt
-operator|*
+modifier|*
 name|SubExpr
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
 name|ExprWithCleanups
 argument_list|(
 argument|EmptyShell
 argument_list|,
 argument|unsigned NumObjects
 argument_list|)
-end_macro
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|ExprWithCleanups
 argument_list|(
 name|Expr
@@ -11596,66 +11396,15 @@ operator|>
 name|Objects
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
-name|CleanupObject
-modifier|*
-name|getObjectsBuffer
-parameter_list|()
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|CleanupObject
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|const
-name|CleanupObject
-operator|*
-name|getObjectsBuffer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-specifier|const
-name|CleanupObject
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
 name|friend
 name|class
 name|ASTStmtReader
 decl_stmt|;
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_function_decl
 specifier|static
 name|ExprWithCleanups
 modifier|*
@@ -11673,9 +11422,6 @@ name|unsigned
 name|numObjects
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 specifier|static
 name|ExprWithCleanups
 modifier|*
@@ -11697,9 +11443,6 @@ operator|>
 name|objects
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|CleanupObject
@@ -11713,17 +11456,18 @@ name|llvm
 operator|::
 name|makeArrayRef
 argument_list|(
-name|getObjectsBuffer
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|CleanupObject
+operator|>
+operator|(
+operator|)
 argument_list|,
 name|getNumObjects
 argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getNumObjects
 argument_list|()
@@ -11735,9 +11479,6 @@ operator|.
 name|NumObjects
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|CleanupObject
 name|getObject
 argument_list|(
@@ -11764,9 +11505,6 @@ name|i
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|Expr
 modifier|*
 name|getSubExpr
@@ -11782,9 +11520,6 @@ name|SubExpr
 operator|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|Expr
 operator|*
@@ -11802,17 +11537,8 @@ name|SubExpr
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// As with any mutator of the AST, be very careful
-end_comment
-
-begin_comment
 comment|/// when modifying an existing AST to preserve its invariants.
-end_comment
-
-begin_function
 name|void
 name|setSubExpr
 parameter_list|(
@@ -11826,9 +11552,6 @@ operator|=
 name|E
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -11842,9 +11565,6 @@ name|getLocStart
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -11858,13 +11578,7 @@ name|getLocEnd
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Implement isa/cast/dyncast/etc.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -11884,13 +11598,7 @@ operator|==
 name|ExprWithCleanupsClass
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function
 name|child_range
 name|children
 parameter_list|()
@@ -11908,10 +11616,14 @@ literal|1
 argument_list|)
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Describes an explicit type conversion that uses functional
 end_comment
 
@@ -11998,27 +11710,39 @@ end_comment
 begin_decl_stmt
 name|class
 name|CXXUnresolvedConstructExpr
+name|final
 range|:
 name|public
 name|Expr
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|CXXUnresolvedConstructExpr
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
 block|{
 comment|/// \brief The type being constructed.
 name|TypeSourceInfo
-operator|*
+modifier|*
 name|Type
-block|;
+decl_stmt|;
 comment|/// \brief The location of the left parentheses ('(').
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief The location of the right parentheses (')').
 name|SourceLocation
 name|RParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief The number of arguments used to construct the type.
 name|unsigned
 name|NumArgs
-block|;
+decl_stmt|;
 name|CXXUnresolvedConstructExpr
 argument_list|(
 argument|TypeSourceInfo *Type
@@ -12029,61 +11753,80 @@ argument|ArrayRef<Expr*> Args
 argument_list|,
 argument|SourceLocation RParenLoc
 argument_list|)
-block|;
+empty_stmt|;
 name|CXXUnresolvedConstructExpr
 argument_list|(
 argument|EmptyShell Empty
 argument_list|,
 argument|unsigned NumArgs
 argument_list|)
-operator|:
+block|:
 name|Expr
 argument_list|(
 name|CXXUnresolvedConstructExprClass
 argument_list|,
 name|Empty
 argument_list|)
-block|,
+operator|,
 name|Type
 argument_list|()
-block|,
+operator|,
 name|NumArgs
 argument_list|(
 argument|NumArgs
 argument_list|)
 block|{ }
 name|friend
+name|TrailingObjects
+expr_stmt|;
+name|friend
 name|class
 name|ASTStmtReader
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 specifier|static
 name|CXXUnresolvedConstructExpr
-operator|*
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&C
+specifier|const
+name|ASTContext
+operator|&
+name|C
 argument_list|,
-argument|TypeSourceInfo *Type
+name|TypeSourceInfo
+operator|*
+name|Type
 argument_list|,
-argument|SourceLocation LParenLoc
+name|SourceLocation
+name|LParenLoc
 argument_list|,
-argument|ArrayRef<Expr*> Args
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|SourceLocation RParenLoc
+name|SourceLocation
+name|RParenLoc
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|CXXUnresolvedConstructExpr
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned NumArgs
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|)
+function_decl|;
 comment|/// \brief Retrieve the type that is being constructed, as specified
 comment|/// in the source code.
 name|QualType
@@ -12123,14 +11866,16 @@ return|;
 block|}
 name|void
 name|setLParenLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|LParenLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the location of the right parentheses (')') that
 comment|/// follows the argument list.
 name|SourceLocation
@@ -12144,14 +11889,16 @@ return|;
 block|}
 name|void
 name|setRParenLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|RParenLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the number of arguments.
 name|unsigned
 name|arg_size
@@ -12170,25 +11917,21 @@ name|arg_iterator
 typedef|;
 name|arg_iterator
 name|arg_begin
-argument_list|()
+parameter_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
 name|arg_iterator
 name|arg_end
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|arg_begin
@@ -12197,9 +11940,6 @@ operator|+
 name|NumArgs
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 specifier|const
 name|Expr
@@ -12208,33 +11948,21 @@ specifier|const
 modifier|*
 name|const_arg_iterator
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|const_arg_iterator
 name|arg_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|Expr
-operator|*
-specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_arg_iterator
 name|arg_end
 argument_list|()
@@ -12247,9 +11975,6 @@ operator|+
 name|NumArgs
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|Expr
 modifier|*
 name|getArg
@@ -12277,9 +12002,6 @@ name|I
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|const
 name|Expr
 modifier|*
@@ -12309,9 +12031,6 @@ name|I
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setArg
 parameter_list|(
@@ -12343,18 +12062,12 @@ operator|=
 name|E
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -12384,16 +12097,14 @@ operator|->
 name|getLocEnd
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|RParenLoc
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_function
-unit|}    static
+specifier|static
 name|bool
 name|classof
 parameter_list|(
@@ -12435,9 +12146,8 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
+name|arg_begin
+argument_list|()
 operator|)
 decl_stmt|;
 return|return
@@ -14414,9 +14124,20 @@ comment|/// };
 comment|/// \endcode
 name|class
 name|SizeOfPackExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|SizeOfPackExpr
+block|,
+name|TemplateArgument
+operator|>
 block|{
 comment|/// \brief The location of the \c sizeof keyword.
 name|SourceLocation
@@ -14447,6 +14168,9 @@ comment|/// \brief The parameter pack.
 name|NamedDecl
 operator|*
 name|Pack
+block|;
+name|friend
+name|TrailingObjects
 block|;
 name|friend
 name|class
@@ -14552,15 +14276,11 @@ name|TemplateArgument
 operator|*
 name|Args
 operator|=
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|TemplateArgument
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 block|;
 name|std
@@ -14735,16 +14455,11 @@ name|TemplateArgument
 operator|*
 name|Args
 operator|=
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|TemplateArgument
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 block|;
 return|return
@@ -15179,9 +14894,21 @@ comment|/// template struct S<int, int>;
 comment|/// \endcode
 name|class
 name|FunctionParmPackExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|FunctionParmPackExpr
+block|,
+name|ParmVarDecl
+operator|*
+operator|>
 block|{
 comment|/// \brief The function parameter pack which was referenced.
 name|ParmVarDecl
@@ -15208,6 +14935,9 @@ argument|unsigned NumParams
 argument_list|,
 argument|ParmVarDecl *const *Params
 argument_list|)
+block|;
+name|friend
+name|TrailingObjects
 block|;
 name|friend
 name|class
@@ -15281,14 +15011,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-name|iterator
+name|ParmVarDecl
+operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}

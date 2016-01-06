@@ -534,6 +534,17 @@ comment|/// Set of sanitizer checks that trap rather than diagnose.
 name|SanitizerSet
 name|SanitizeTrap
 block|;
+comment|/// \brief A list of all -fno-builtin-* function names (e.g., memset).
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|NoBuiltinFuncs
+block|;
 name|public
 operator|:
 comment|// Define accessors/mutators for code generation options of enumeration type.
@@ -566,9 +577,36 @@ directive|include
 file|"clang/Frontend/CodeGenOptions.def"
 name|CodeGenOptions
 argument_list|()
-block|; }
-decl_stmt|;
+block|;
+comment|/// \brief Is this a libc/libm function that is no longer recognized as a
+comment|/// builtin because a -fno-builtin-* option has been specified?
+name|bool
+name|isNoBuiltinFunc
+argument_list|(
+argument|const char *Name
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|getNoBuiltinFuncs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoBuiltinFuncs
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

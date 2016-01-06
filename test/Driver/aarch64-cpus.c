@@ -248,6 +248,54 @@ comment|// ARM64-CA72: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "corte
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
+end_comment
+
+begin_comment
+comment|// M1: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "exynos-m1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M1 %s
+end_comment
+
+begin_comment
+comment|// ARM64-M1: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "exynos-m1"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64_be -### -c %s 2>&1 | FileCheck -check-prefix=GENERIC-BE %s
 end_comment
 
@@ -373,6 +421,34 @@ end_comment
 
 begin_comment
 comment|// CA72-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "cortex-a72"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
+end_comment
+
+begin_comment
+comment|// M1-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exynos-m1"
 end_comment
 
 begin_comment

@@ -427,5 +427,69 @@ begin_comment
 comment|// CHECK-WATCHOS-ARMV7: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_watchos.a"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-pc-win32 -fprofile-instr-generate \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-WINDOWS-I386 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-WINDOWS-I386: "{{.*}}link{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-WINDOWS-I386: "{{.*}}clang_rt.profile-i386.lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-pc-win32 -fprofile-instr-generate \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-WINDOWS-X86-64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-WINDOWS-X86-64: "{{.*}}link{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-WINDOWS-X86-64: "{{.*}}clang_rt.profile-x86_64.lib"
+end_comment
+
 end_unit
 

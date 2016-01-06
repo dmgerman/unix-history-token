@@ -45,5 +45,45 @@ begin_comment
 comment|// CHECK: cindex-test-inclusions.c:3:10
 end_comment
 
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-inclusion-stack-source %s 2>&1 | FileCheck -check-prefix=REPARSE %s
+end_comment
+
+begin_comment
+comment|// REPARSE: include_test_2.h
+end_comment
+
+begin_comment
+comment|// REPARSE: included by:
+end_comment
+
+begin_comment
+comment|// REPARSE: include_test.h:1:10
+end_comment
+
+begin_comment
+comment|// REPARSE: cindex-test-inclusions.c:3:10
+end_comment
+
+begin_comment
+comment|// REPARSE: include_test.h
+end_comment
+
+begin_comment
+comment|// REPARSE: included by:
+end_comment
+
+begin_comment
+comment|// REPARSE: cindex-test-inclusions.c:3:10
+end_comment
+
+begin_comment
+comment|// REPARSE: cindex-test-inclusions.c
+end_comment
+
+begin_comment
+comment|// REPARSE: included by:
+end_comment
+
 end_unit
 

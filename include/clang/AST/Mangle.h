@@ -1155,19 +1155,6 @@ literal|0
 block|;
 name|virtual
 name|void
-name|mangleCXXCatchHandlerType
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|uint32_t Flags
-argument_list|,
-argument|raw_ostream&Out
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
 name|mangleCXXRTTIBaseClassDescriptor
 argument_list|(
 argument|const CXXRecordDecl *Derived

@@ -4261,6 +4261,10 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param Name - The function name.
+end_comment
+
+begin_comment
 comment|/// \param Info - The function type information.
 end_comment
 
@@ -4288,6 +4292,9 @@ begin_function_decl
 name|void
 name|ConstructAttributeList
 parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
 specifier|const
 name|CGFunctionInfo
 modifier|&

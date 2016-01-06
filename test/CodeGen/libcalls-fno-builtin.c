@@ -4,6 +4,34 @@ comment|// RUN: %clang_cc1 -S -O3 -fno-builtin -o - %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -S -O3 -fno-builtin-ceil -fno-builtin-copysign -fno-builtin-cos \
+end_comment
+
+begin_comment
+comment|// RUN:  -fno-builtin-fabs -fno-builtin-floor -fno-builtin-strcat -fno-builtin-strncat \
+end_comment
+
+begin_comment
+comment|// RUN:  -fno-builtin-strchr -fno-builtin-strrchr -fno-builtin-strcmp -fno-builtin-strncmp \
+end_comment
+
+begin_comment
+comment|// RUN:  -fno-builtin-strcpy -fno-builtin-stpcpy -fno-builtin-strncpy -fno-builtin-strlen \
+end_comment
+
+begin_comment
+comment|// RUN:  -fno-builtin-strpbrk -fno-builtin-strspn -fno-builtin-strtod -fno-builtin-strtof \
+end_comment
+
+begin_comment
+comment|// RUN:  -fno-builtin-strtold -fno-builtin-strtol -fno-builtin-strtoll -fno-builtin-strtoul \
+end_comment
+
+begin_comment
+comment|// RUN:  -fno-builtin-strtoull -o - %s | FileCheck %s
+end_comment
+
+begin_comment
 comment|// rdar://10551066
 end_comment
 

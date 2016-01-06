@@ -4,6 +4,14 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -ffreestanding %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fno-builtin %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fno-builtin-malloc %s
+end_comment
+
+begin_comment
 comment|// expected-no-diagnostics
 end_comment
 

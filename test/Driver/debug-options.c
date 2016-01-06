@@ -663,5 +663,21 @@ begin_comment
 comment|// GEXTREFS: "-dwarf-ext-refs" "-fmodule-format=obj" "-debug-info-kind={{standalone|limited}}"
 end_comment
 
+begin_comment
+comment|// RUN: not %clang -cc1 -debug-info-kind=watkind 2>&1 | FileCheck -check-prefix=BADSTRING1 %s
+end_comment
+
+begin_comment
+comment|// BADSTRING1: error: invalid value 'watkind' in '-debug-info-kind=watkind'
+end_comment
+
+begin_comment
+comment|// RUN: not %clang -cc1 -debugger-tuning=gmodal 2>&1 | FileCheck -check-prefix=BADSTRING2 %s
+end_comment
+
+begin_comment
+comment|// BADSTRING2: error: invalid value 'gmodal' in '-debugger-tuning=gmodal'
+end_comment
+
 end_unit
 

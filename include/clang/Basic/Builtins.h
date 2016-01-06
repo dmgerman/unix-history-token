@@ -757,6 +757,18 @@ name|size
 argument_list|()
 return|;
 block|}
+comment|/// Returns true if this is a libc/libm function without the '__builtin_'
+comment|/// prefix.
+specifier|static
+name|bool
+name|isBuiltinFunc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
 name|private
 label|:
 specifier|const

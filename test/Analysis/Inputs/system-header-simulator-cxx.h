@@ -865,7 +865,72 @@ block|;     }
 end_expr_stmt
 
 begin_expr_stmt
-unit|}; }  void
+unit|};
+name|template
+operator|<
+name|class
+name|_Engine
+operator|,
+name|class
+name|_UIntType
+operator|>
+name|class
+name|__independent_bits_engine
+block|{
+name|public
+operator|:
+comment|// constructors and seeding functions
+name|__independent_bits_engine
+argument_list|(
+argument|_Engine& __e
+argument_list|,
+argument|size_t __w
+argument_list|)
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_Engine
+operator|,
+name|class
+name|_UIntType
+operator|>
+name|__independent_bits_engine
+operator|<
+name|_Engine
+operator|,
+name|_UIntType
+operator|>
+operator|::
+name|__independent_bits_engine
+argument_list|(
+argument|_Engine& __e
+argument_list|,
+argument|size_t __w
+argument_list|)
+block|{
+comment|// Fake error trigger.
+comment|// No warning is expected as we are suppressing warning coming
+comment|// out of std::basic_string.
+name|int
+name|z
+operator|=
+literal|0
+block|;
+name|z
+operator|=
+literal|5
+operator|/
+name|z
+block|; }
+end_expr_stmt
+
+begin_expr_stmt
+unit|}  void
 operator|*
 name|operator
 name|new

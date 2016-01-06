@@ -21,7 +21,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: @foo() #0 !prof [[FOO:![0-9]+]]
+comment|// CHECK: @foo() #{{[0-9]}} !prof [[FOO:![0-9]+]]
 end_comment
 
 begin_function
@@ -34,7 +34,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @main() #1 !prof [[MAIN:![0-9]+]]
+comment|// CHECK: @main() #{{[0-9]}} !prof [[MAIN:![0-9]+]]
 end_comment
 
 begin_function

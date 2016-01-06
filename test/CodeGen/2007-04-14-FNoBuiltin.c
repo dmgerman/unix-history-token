@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -emit-llvm %s -O2 -fno-builtin -o - | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm %s -O2 -fno-builtin-printf -o - | FileCheck %s
+end_comment
+
+begin_comment
 comment|// Check that -fno-builtin is honored.
 end_comment
 
