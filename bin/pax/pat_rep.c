@@ -2958,11 +2958,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf1
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|inpt
