@@ -55,6 +55,24 @@ parameter_list|)
 value|((void *)(uintptr_t)(ptr))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|snprintf
+value|_snprintf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Return 1 if there is an error, otherwise return  0.  */
 end_comment

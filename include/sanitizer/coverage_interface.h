@@ -124,6 +124,20 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
+comment|// Set *data to the growing buffer with covered PCs and return the size
+comment|// of the buffer. The entries are never zero.
+comment|// When only unique pcs are collected, the size is equal to
+comment|// __sanitizer_get_total_unique_coverage.
+comment|// WARNING: EXPERIMENTAL API.
+name|uintptr_t
+name|__sanitizer_get_coverage_pc_buffer
+parameter_list|(
+name|uintptr_t
+modifier|*
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
 comment|// The coverage instrumentation may optionally provide imprecise counters.
 comment|// Rather than exposing the counter values to the user we instead map
 comment|// the counters to a bitset.
