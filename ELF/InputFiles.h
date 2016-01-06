@@ -594,8 +594,6 @@ name|getSymbols
 argument_list|()
 block|{
 return|return
-name|this
-operator|->
 name|SymbolBodies
 return|;
 block|}
@@ -616,7 +614,7 @@ operator|<
 name|StringRef
 operator|>
 operator|&
-name|Comdats
+name|ComdatGroups
 argument_list|)
 decl_stmt|;
 name|ArrayRef
@@ -674,8 +672,6 @@ return|return
 name|nullptr
 return|;
 return|return
-name|this
-operator|->
 name|SymbolBodies
 index|[
 name|SymbolIndex
@@ -731,7 +727,7 @@ operator|<
 name|StringRef
 operator|>
 operator|&
-name|Comdats
+name|ComdatGroups
 argument_list|)
 decl_stmt|;
 name|void
@@ -898,15 +894,6 @@ return|return
 name|LazySymbols
 return|;
 block|}
-name|std
-operator|::
-name|vector
-operator|<
-name|MemoryBufferRef
-operator|>
-name|getMembers
-argument_list|()
-block|;
 name|private
 operator|:
 name|std
@@ -1171,7 +1158,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|parse
+name|parseRest
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1213,22 +1200,27 @@ end_expr_stmt
 
 begin_expr_stmt
 unit|};
-name|template
-operator|<
-name|template
-operator|<
-name|class
-operator|>
-name|class
-name|T
-operator|>
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|InputFile
 operator|>
-name|createELFFile
+name|createObjectFile
+argument_list|(
+argument|MemoryBufferRef MB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|InputFile
+operator|>
+name|createSharedFile
 argument_list|(
 argument|MemoryBufferRef MB
 argument_list|)

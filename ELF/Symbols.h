@@ -770,7 +770,7 @@ block|}
 comment|// The output offset of this common symbol in the output bss. Computed by the
 comment|// writer.
 name|uint64_t
-name|OffsetInBSS
+name|OffsetInBss
 block|;
 comment|// The maximum alignment we have seen for this symbol.
 name|uint64_t
@@ -1224,7 +1224,7 @@ comment|// True if the linker has to generate a copy relocation for this shared
 end_comment
 
 begin_comment
-comment|// symbol. OffsetInBSS is significant only when NeedsCopy is true.
+comment|// symbol. OffsetInBss is significant only when NeedsCopy is true.
 end_comment
 
 begin_decl_stmt
@@ -1237,7 +1237,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uintX_t
-name|OffsetInBSS
+name|OffsetInBss
 init|=
 literal|0
 decl_stmt|;

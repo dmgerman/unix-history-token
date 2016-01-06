@@ -465,6 +465,10 @@ operator|::
 name|Regular
 argument_list|)
 expr_stmt|;
+comment|// Usually sections are copied to the output as atomic chunks of data,
+comment|// but some special types of sections are split into small pieces of data
+comment|// and each piece is copied to a different place in the output.
+comment|// This class represents such special sections.
 name|template
 operator|<
 name|class
@@ -518,6 +522,8 @@ argument_list|,
 argument|typename InputSectionBase<ELFT>::Kind SectionKind
 argument_list|)
 empty_stmt|;
+comment|// For each piece of data, we maintain the offsets in the input section and
+comment|// in the output section. The latter may be -1 if it is not assigned yet.
 name|std
 operator|::
 name|vector

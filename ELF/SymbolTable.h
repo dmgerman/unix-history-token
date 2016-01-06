@@ -216,12 +216,6 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|;
-name|bool
-name|isUndefined
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
 name|void
 name|scanShlibUndefined
 argument_list|()
@@ -231,6 +225,18 @@ operator|*
 name|find
 argument_list|(
 argument|StringRef Name
+argument_list|)
+block|;
+name|ELFFileBase
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|findFile
+argument_list|(
+name|SymbolBody
+operator|*
+name|B
 argument_list|)
 block|;
 name|private
@@ -327,7 +333,7 @@ name|DenseSet
 operator|<
 name|StringRef
 operator|>
-name|Comdats
+name|ComdatGroups
 block|;
 comment|// The writer needs to infer the machine type from the object files.
 name|std
@@ -366,36 +372,6 @@ name|StringRef
 operator|>
 name|IncludedSoNames
 block|; }
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|ELFFileBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|findFile
-argument_list|(
-name|ArrayRef
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|ObjectFile
-operator|<
-name|ELFT
-operator|>>>
-name|ObjectFiles
-argument_list|,
-specifier|const
-name|SymbolBody
-operator|*
-name|B
-argument_list|)
 expr_stmt|;
 block|}
 comment|// namespace elf2

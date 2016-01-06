@@ -94,6 +94,10 @@ block|,
 name|ELF64BEKind
 block|}
 enum|;
+comment|// This struct contains the global configuration for the linker.
+comment|// Most fields are direct mapping from the command line options
+comment|// and such fields have the same name as the corresponding options.
+comment|// Most fields are initialized by the driver.
 struct|struct
 name|Configuration
 block|{
@@ -307,6 +311,7 @@ literal|0
 decl_stmt|;
 block|}
 struct|;
+comment|// The only instance of Configuration struct.
 specifier|extern
 name|Configuration
 modifier|*
