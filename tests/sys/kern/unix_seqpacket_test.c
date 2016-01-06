@@ -1901,7 +1901,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ATF_CHECK
+name|ATF_REQUIRE
 argument_list|(
 name|s
 operator|>=
