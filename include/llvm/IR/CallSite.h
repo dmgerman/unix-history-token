@@ -1371,6 +1371,22 @@ name|A
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// \brief Return true if this function has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|StringRef A
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|hasFnAttr
+argument_list|(
+name|A
+argument_list|)
+argument_list|)
+block|;   }
 comment|/// \brief Return true if the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr

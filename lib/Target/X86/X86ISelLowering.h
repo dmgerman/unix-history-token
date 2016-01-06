@@ -1173,6 +1173,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Return true if the MachineFunction contains a COPY which would imply
+comment|/// HasOpaqueSPAdjustment.
+name|bool
+name|hasCopyImplyingStackAdjustment
+argument_list|(
+argument|MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter

@@ -92,9 +92,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Constant
-decl_stmt|;
-name|class
 name|MVT
 decl_stmt|;
 enum|enum
@@ -366,23 +363,6 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// \brief Decode a PSHUFB mask from an IR-level vector constant.
-name|void
-name|DecodePSHUFBMask
-argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|C
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|&
-name|ShuffleMask
-argument_list|)
-decl_stmt|;
 comment|/// \brief Decode a PSHUFB mask from a raw array of constants such as from
 comment|/// BUILD_VECTOR.
 name|void
@@ -463,26 +443,6 @@ name|DecodeVPERMMask
 argument_list|(
 name|unsigned
 name|Imm
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|&
-name|ShuffleMask
-argument_list|)
-decl_stmt|;
-comment|/// \brief Decode a VPERMILP variable mask from an IR-level vector constant.
-name|void
-name|DecodeVPERMILPMask
-argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|C
-argument_list|,
-name|unsigned
-name|ElSize
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -579,26 +539,6 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// \brief Decode a VPERM W/D/Q/PS/PD mask from an IR-level vector constant.
-name|void
-name|DecodeVPERMVMask
-argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|C
-argument_list|,
-name|MVT
-name|VT
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|&
-name|ShuffleMask
-argument_list|)
-decl_stmt|;
 comment|/// \brief Decode a VPERM W/D/Q/PS/PD mask from a raw array of constants.
 name|void
 name|DecodeVPERMVMask
@@ -608,26 +548,6 @@ operator|<
 name|uint64_t
 operator|>
 name|RawMask
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|&
-name|ShuffleMask
-argument_list|)
-decl_stmt|;
-comment|/// \brief Decode a VPERMT2 W/D/Q/PS/PD mask from an IR-level vector constant.
-name|void
-name|DecodeVPERMV3Mask
-argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|C
-argument_list|,
-name|MVT
-name|VT
 argument_list|,
 name|SmallVectorImpl
 operator|<

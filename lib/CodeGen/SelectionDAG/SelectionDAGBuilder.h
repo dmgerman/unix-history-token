@@ -3617,7 +3617,7 @@ name|void
 name|visitGCRelocate
 parameter_list|(
 specifier|const
-name|CallInst
+name|GCRelocateInst
 modifier|&
 name|I
 parameter_list|)

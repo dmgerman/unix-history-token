@@ -532,6 +532,11 @@ name|OutputCSV
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|PrintNewCovPcs
+init|=
+name|false
+decl_stmt|;
 block|}
 struct|;
 name|Fuzzer
@@ -989,6 +994,11 @@ literal|0
 decl_stmt|;
 name|size_t
 name|LastRecordedCallerCalleeCoverage
+init|=
+literal|0
+decl_stmt|;
+name|size_t
+name|LastCoveragePcBufferLen
 init|=
 literal|0
 decl_stmt|;

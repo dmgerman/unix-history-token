@@ -583,7 +583,7 @@ comment|/// register.
 name|bool
 name|FullyDefined
 decl_stmt|;
-comment|/// Reg or ont of its aliases is read. The register may only be read
+comment|/// Reg or one of its aliases is read. The register may only be read
 comment|/// partially.
 name|bool
 name|Read

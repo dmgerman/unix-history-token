@@ -1071,7 +1071,7 @@ name|iterator
 operator|<
 name|std
 operator|::
-name|forward_iterator_tag
+name|input_iterator_tag
 block|,
 name|ValueT
 operator|>
@@ -1173,9 +1173,16 @@ operator|->
 name|CurrentEntry
 return|;
 block|}
+comment|/// Note on EqualityComparable:
+comment|///
+comment|/// The iterator is not re-entrant,
+comment|/// it is meant to be used for parsing YAML on-demand
+comment|/// Once iteration started - it can point only to one entry at a time
+comment|/// hence Base.CurrentEntry and Other.Base.CurrentEntry are equal
+comment|/// iff Base and Other.Base are equal.
 name|bool
 name|operator
-operator|!=
+operator|==
 operator|(
 specifier|const
 name|basic_collection_iterator
@@ -1187,32 +1194,62 @@ block|{
 if|if
 condition|(
 name|Base
-operator|!=
-name|Other
-operator|.
-name|Base
-condition|)
-return|return
-name|true
-return|;
-return|return
+operator|&&
 operator|(
 name|Base
-operator|&&
+operator|==
 name|Other
 operator|.
 name|Base
 operator|)
-operator|&&
+condition|)
+block|{
+name|assert
+argument_list|(
+operator|(
 name|Base
 operator|->
 name|CurrentEntry
-operator|!=
+operator|==
 name|Other
 operator|.
 name|Base
 operator|->
 name|CurrentEntry
+operator|)
+operator|&&
+literal|"Equal Bases expected to point to equal Entries"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|Base
+operator|==
+name|Other
+operator|.
+name|Base
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|basic_collection_iterator
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|Base
+operator|==
+name|Other
+operator|.
+name|Base
+operator|)
 return|;
 block|}
 name|basic_collection_iterator
@@ -1258,17 +1295,8 @@ modifier|*
 name|Base
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|// The following two templates are used for both MappingNode and Sequence Node.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1315,9 +1343,6 @@ return|return
 name|ret
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1384,37 +1409,13 @@ name|skip
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Represents a YAML map created from either a block map for a flow map.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This parses the YAML stream as increment() is called.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Example:
-end_comment
-
-begin_comment
 comment|///   Name: _main
-end_comment
-
-begin_comment
 comment|///   Scope: Global
-end_comment
-
-begin_decl_stmt
 name|class
 name|MappingNode
 name|final
@@ -1518,9 +1519,6 @@ name|T
 operator|&
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1536,9 +1534,6 @@ name|T
 operator|&
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -1553,9 +1548,6 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -1565,9 +1557,6 @@ name|iterator
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|skip
 parameter_list|()
@@ -1582,9 +1571,6 @@ name|this
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1605,47 +1591,33 @@ operator|==
 name|NK_Mapping
 return|;
 block|}
-end_function
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_decl_stmt
 name|MappingType
 name|Type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|IsAtBeginning
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|IsAtEnd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|KeyValueNode
 modifier|*
 name|CurrentEntry
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|void
 name|increment
 parameter_list|()
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Represents a YAML sequence created from either a block sequence for a
 end_comment
 
