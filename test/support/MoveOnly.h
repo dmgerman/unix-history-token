@@ -65,6 +65,10 @@ begin_decl_stmt
 name|class
 name|MoveOnly
 block|{
+name|friend
+name|class
+name|MoveOnly2
+decl_stmt|;
 name|MoveOnly
 argument_list|(
 specifier|const
