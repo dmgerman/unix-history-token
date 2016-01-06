@@ -58,11 +58,11 @@ begin_comment
 comment|// No ANSI C 1999/2000 stdint.h integer width declarations
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_MSC_EXTENSIONS
-end_if
+end_ifdef
 
 begin_comment
 comment|// Use Microsoft C compiler integer width declarations
@@ -673,11 +673,11 @@ begin_comment
 comment|// Forces EFI calling conventions reguardless of compiler options
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_MSC_EXTENSIONS
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -1038,11 +1038,11 @@ begin_comment
 comment|/* __FreeBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_MSC_EXTENSIONS
-end_if
+end_ifdef
 
 begin_pragma
 pragma|#
