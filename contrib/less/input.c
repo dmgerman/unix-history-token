@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -167,6 +167,7 @@ argument_list|()
 operator|||
 name|status_col
 condition|)
+block|{
 comment|/* 		 * If we are ignoring EOI (command F), only prepare 		 * one line ahead, to avoid getting stuck waiting for 		 * slow data without displaying the data we already have. 		 * If we're not ignoring EOI, we *could* do the same, but 		 * for efficiency we prepare several lines ahead at once. 		 */
 name|prep_hilite
 argument_list|(
@@ -186,6 +187,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|curr_pos
+operator|=
+name|next_unfiltered
+argument_list|(
+name|curr_pos
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -1270,24 +1279,31 @@ name|c
 operator|==
 name|EOI
 condition|)
-return|return;
+break|break;
 if|if
 condition|(
 name|c
-operator|!=
+operator|==
 literal|'\n'
-operator|&&
+operator|||
 name|c
-operator|!=
+operator|==
 literal|'\r'
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|ch_back_get
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 name|pos
 operator|++
 expr_stmt|;
 block|}
-block|}
-name|start_attnpos
+name|end_attnpos
 operator|=
 name|pos
 expr_stmt|;
@@ -1299,11 +1315,8 @@ control|)
 block|{
 name|c
 operator|=
-name|ch_forw_get
+name|ch_back_get
 argument_list|()
-expr_stmt|;
-name|pos
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -1320,8 +1333,12 @@ operator|==
 literal|'\r'
 condition|)
 break|break;
+name|pos
+operator|--
+expr_stmt|;
 block|}
-name|end_attnpos
+block|}
+name|start_attnpos
 operator|=
 name|pos
 expr_stmt|;

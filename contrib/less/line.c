@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -203,7 +203,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+name|LWCHAR
 name|pendc
 decl_stmt|;
 end_decl_stmt
@@ -466,7 +466,7 @@ literal|'\0'
 condition|)
 name|mid_ansi_chars
 operator|=
-literal|"0123456789;[?!\"'#%()*+ "
+literal|"0123456789:;[?!\"'#%()*+ "
 expr_stmt|;
 name|linebuf
 operator|=
@@ -912,6 +912,9 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -1988,9 +1991,14 @@ condition|)
 block|{
 name|curr
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|linebuf
+argument_list|)
 expr_stmt|;
 name|prev_ch
 operator|=
@@ -2433,9 +2441,14 @@ condition|)
 do|;
 name|curr
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|linebuf
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -2830,7 +2843,7 @@ name|c
 parameter_list|,
 name|pos
 parameter_list|)
-name|char
+name|LWCHAR
 name|c
 decl_stmt|;
 name|POSITION
@@ -2975,6 +2988,7 @@ name|c
 parameter_list|,
 name|pos
 parameter_list|)
+name|unsigned
 name|char
 name|c
 decl_stmt|;
@@ -2990,6 +3004,21 @@ condition|(
 name|pendc
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'\r'
+operator|&&
+name|pendc
+operator|==
+literal|'\r'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|do_append
@@ -3084,9 +3113,6 @@ name|r
 operator|=
 name|do_append
 argument_list|(
-operator|(
-name|LWCHAR
-operator|)
 name|c
 argument_list|,
 name|NULL
@@ -3127,9 +3153,6 @@ name|r
 operator|=
 name|do_append
 argument_list|(
-operator|(
-name|LWCHAR
-operator|)
 name|c
 argument_list|,
 name|NULL
@@ -3206,6 +3229,8 @@ condition|(
 name|is_utf8_well_formed
 argument_list|(
 name|mbc_buf
+argument_list|,
+name|mbc_buf_index
 argument_list|)
 condition|)
 name|r
@@ -3457,6 +3482,11 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|utf_mode
+condition|)
+block|{
 comment|/* To be correct, this must be a base character.  */
 name|prev_ch
 operator|=
@@ -3467,6 +3497,21 @@ operator|+
 name|curr
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|prev_ch
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
+name|linebuf
+index|[
+name|curr
+index|]
+expr_stmt|;
+block|}
 name|a
 operator|=
 name|attr

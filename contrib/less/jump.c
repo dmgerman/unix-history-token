@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -158,6 +158,63 @@ name|repaint
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Jump to the last buffered line in the file.  */
+end_comment
+
+begin_function
+name|public
+name|void
+name|jump_forw_buffered
+parameter_list|()
+block|{
+name|POSITION
+name|end
+decl_stmt|;
+if|if
+condition|(
+name|ch_end_buffer_seek
+argument_list|()
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Cannot seek to end of buffers"
+argument_list|,
+name|NULL_PARG
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|end
+operator|=
+name|ch_tell
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|end
+operator|!=
+name|NULL_POSITION
+operator|&&
+name|end
+operator|>
+literal|0
+condition|)
+name|jump_line_loc
+argument_list|(
+name|end
+operator|-
+literal|1
+argument_list|,
+name|sc_height
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -798,6 +855,18 @@ block|{
 comment|/* 				 * Ran into end of file. 				 * This shouldn't normally happen,  				 * but may if there is some kind of read error. 				 */
 break|break;
 block|}
+if|#
+directive|if
+name|HILITE_SEARCH
+name|pos
+operator|=
+name|next_unfiltered
+argument_list|(
+name|pos
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pos

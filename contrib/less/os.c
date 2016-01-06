@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -70,36 +70,6 @@ include|#
 directive|include
 file|<values.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|HAVE_TIME_T
-end_if
-
-begin_define
-define|#
-directive|define
-name|time_type
-value|time_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|time_type
-value|long
-end_define
 
 begin_endif
 endif|#
@@ -569,7 +539,7 @@ end_if
 
 begin_function
 name|public
-name|long
+name|time_type
 name|get_time
 parameter_list|()
 block|{
@@ -738,6 +708,10 @@ endif|#
 directive|endif
 name|len
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|filename
@@ -749,6 +723,7 @@ name|p
 argument_list|)
 operator|+
 literal|3
+argument_list|)
 expr_stmt|;
 name|m
 operator|=

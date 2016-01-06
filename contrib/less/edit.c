@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -273,6 +273,9 @@ decl_stmt|;
 name|int
 name|esclen
 init|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|esc
@@ -1416,11 +1419,18 @@ name|every_first_cmd
 operator|!=
 name|NULL
 condition|)
+block|{
+name|ungetcc
+argument_list|(
+name|CHAR_END_COMMAND
+argument_list|)
+expr_stmt|;
 name|ungetsc
 argument_list|(
 name|every_first_cmd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
@@ -1460,11 +1470,29 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+name|FAKE_HELPFILE
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+name|FAKE_EMPTYFILE
+argument_list|)
+condition|)
 name|cmd_addhist
 argument_list|(
 name|ml_examine
 argument_list|,
 name|filename
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2363,6 +2391,12 @@ argument_list|,
 name|OPEN_READ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|exists
+operator|>=
+literal|0
+condition|)
 name|close
 argument_list|(
 name|exists

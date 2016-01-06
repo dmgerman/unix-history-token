@@ -3096,6 +3096,8 @@ name|buf
 argument_list|,
 literal|1
 argument_list|,
+name|IB_ACCESS_LOCAL_WRITE
+operator||
 name|IB_ACCESS_REMOTE_READ
 operator||
 name|IB_ACCESS_REMOTE_WRITE
@@ -3298,10 +3300,14 @@ name|cb
 operator|->
 name|bw
 condition|)
+block|{
 name|flags
 operator||=
+name|IB_ACCESS_LOCAL_WRITE
+operator||
 name|IB_ACCESS_REMOTE_WRITE
 expr_stmt|;
+block|}
 name|buf
 operator|.
 name|addr

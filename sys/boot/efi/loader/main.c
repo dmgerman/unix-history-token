@@ -987,7 +987,9 @@ literal|"Can't determine memory map size\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CMD_ERROR
+operator|)
 return|;
 block|}
 name|map
@@ -1032,7 +1034,9 @@ literal|"Can't read memory map\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CMD_ERROR
+operator|)
 return|;
 block|}
 name|ndesc
@@ -1218,7 +1222,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CMD_OK
+operator|)
 return|;
 block|}
 end_function
@@ -1626,7 +1632,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CMD_OK
+operator|)
 return|;
 block|}
 end_function
@@ -1687,6 +1695,13 @@ decl_stmt|;
 name|SIMPLE_TEXT_OUTPUT_INTERFACE
 modifier|*
 name|conout
+decl_stmt|;
+specifier|extern
+name|void
+name|HO
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 name|conout
 operator|=
@@ -1828,6 +1843,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|HO
+argument_list|()
+expr_stmt|;
+comment|/* set cursor */
 return|return
 operator|(
 name|CMD_OK

@@ -3120,11 +3120,7 @@ operator|!
 name|issetugid
 argument_list|()
 expr_stmt|;
-name|md_abi_variant_hook
-argument_list|(
-name|aux_info
-argument_list|)
-expr_stmt|;
+comment|/*  md_abi_variant_hook(aux_info); */
 name|ld_bind_now
 operator|=
 name|getenv
@@ -6702,12 +6698,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 comment|/* 	 * Don't process DT_DEBUG on MIPS as the dynamic section 	 * is mapped read-only. DT_MIPS_RLD_MAP is used instead. 	 */
-ifndef|#
-directive|ifndef
-name|__mips__
 case|case
 name|DT_DEBUG
 case|:
+if|if
+condition|(
+operator|!
+name|obj
+operator|->
+name|writable_dynamic
+condition|)
+break|break;
 if|if
 condition|(
 operator|!
@@ -6737,8 +6738,6 @@ operator|&
 name|r_debug
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|DT_FLAGS
 case|:
@@ -7724,6 +7723,20 @@ break|break;
 case|case
 name|PT_DYNAMIC
 case|:
+if|if
+condition|(
+name|ph
+operator|->
+name|p_flags
+operator|&
+name|PROT_WRITE
+condition|)
+name|obj
+operator|->
+name|writable_dynamic
+operator|=
+name|true
+expr_stmt|;
 name|obj
 operator|->
 name|dynamic

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -350,6 +350,9 @@ name|len
 decl_stmt|;
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|s
@@ -367,6 +370,10 @@ name|PROMPT_SIZE
 condition|)
 name|len
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|message
 operator|+
 name|PROMPT_SIZE
@@ -374,6 +381,7 @@ operator|-
 name|mp
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(

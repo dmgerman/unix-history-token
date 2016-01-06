@@ -1786,10 +1786,10 @@ name|printf
 argument_list|(
 literal|"LoadImage failed with error %lu\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|status
@@ -1825,10 +1825,10 @@ name|printf
 argument_list|(
 literal|"HandleProtocol failed with error %lu\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|loaded_image
@@ -1863,10 +1863,10 @@ name|printf
 argument_list|(
 literal|"StartImage failed with error %lu\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

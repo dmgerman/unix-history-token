@@ -93,6 +93,11 @@ return|return
 operator|(
 name|LZ4_uncompress_unknownOutputSize
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|s_start
 operator|+
 literal|4

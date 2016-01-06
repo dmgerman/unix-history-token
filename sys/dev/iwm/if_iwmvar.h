@@ -164,12 +164,10 @@ struct|struct
 name|iwm_fw_info
 block|{
 specifier|const
-name|void
+name|struct
+name|firmware
 modifier|*
-name|fw_rawdata
-decl_stmt|;
-name|size_t
-name|fw_rawsize
+name|fw_fp
 decl_stmt|;
 name|int
 name|fw_status
