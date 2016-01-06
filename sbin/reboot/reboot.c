@@ -216,6 +216,8 @@ decl_stmt|,
 name|qflag
 decl_stmt|,
 name|sverrno
+decl_stmt|,
+name|Nflag
 decl_stmt|;
 name|u_int
 name|pageins
@@ -263,6 +265,8 @@ name|nflag
 operator|=
 name|qflag
 operator|=
+name|Nflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -276,7 +280,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dk:lnpq"
+literal|"dk:lNnpq"
 argument_list|)
 operator|)
 operator|!=
@@ -322,6 +326,18 @@ expr_stmt|;
 name|howto
 operator||=
 name|RB_NOSYNC
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|nflag
+operator|=
+literal|1
+expr_stmt|;
+name|Nflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -379,6 +395,25 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"cannot dump (-d) when halting; must reboot instead"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Nflag
+operator|&&
+operator|(
+name|howto
+operator|&
+name|RB_NOSYNC
+operator|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-N cannot be used with -n"
 argument_list|)
 expr_stmt|;
 if|if
