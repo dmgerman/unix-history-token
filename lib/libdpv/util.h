@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|CMDBUFMAX
-value|4096
+value|65536
 end_define
 
 begin_function_decl
