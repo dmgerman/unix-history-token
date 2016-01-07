@@ -611,7 +611,7 @@ name|nic_i
 index|]
 decl_stmt|;
 name|struct
-name|em_buffer
+name|em_txbuffer
 modifier|*
 name|txbuf
 init|=
@@ -1090,8 +1090,8 @@ operator|++
 control|)
 block|{
 comment|// XXX no need to count
-name|struct
-name|e1000_rx_desc
+name|union
+name|e1000_rx_desc_extended
 modifier|*
 name|curr
 init|=
@@ -1110,7 +1110,11 @@ name|le32toh
 argument_list|(
 name|curr
 operator|->
-name|status
+name|wb
+operator|.
+name|upper
+operator|.
+name|status_error
 argument_list|)
 decl_stmt|;
 if|if
@@ -1137,6 +1141,10 @@ name|le16toh
 argument_list|(
 name|curr
 operator|->
+name|wb
+operator|.
+name|upper
+operator|.
 name|length
 argument_list|)
 expr_stmt|;
@@ -1290,8 +1298,8 @@ operator|&
 name|paddr
 argument_list|)
 decl_stmt|;
-name|struct
-name|e1000_rx_desc
+name|union
+name|e1000_rx_desc_extended
 modifier|*
 name|curr
 init|=
@@ -1304,7 +1312,7 @@ name|nic_i
 index|]
 decl_stmt|;
 name|struct
-name|em_buffer
+name|em_rxbuffer
 modifier|*
 name|rxbuf
 init|=
@@ -1341,6 +1349,8 @@ block|{
 comment|/* buffer has changed, reload map */
 name|curr
 operator|->
+name|read
+operator|.
 name|buffer_addr
 operator|=
 name|htole64
@@ -1373,7 +1383,11 @@ expr_stmt|;
 block|}
 name|curr
 operator|->
-name|status
+name|wb
+operator|.
+name|upper
+operator|.
+name|status_error
 operator|=
 literal|0
 expr_stmt|;
