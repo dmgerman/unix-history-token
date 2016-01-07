@@ -155,13 +155,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|UINTN
-name|efi_mapkey
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|efi_copy_finish
