@@ -23,6 +23,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -38,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -51,6 +51,21 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -70,6 +85,12 @@ include|#
 directive|include
 file|<geom/eli/g_eli.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_expr_stmt
 name|MALLOC_DECLARE
@@ -177,53 +198,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|G_ELI_KEY_MAGIC
-value|0xe11341c
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_struct
-struct|struct
-name|g_eli_key
-block|{
-comment|/* Key value, must be first in the structure. */
-name|uint8_t
-name|gek_key
-index|[
-name|G_ELI_DATAKEYLEN
-index|]
-decl_stmt|;
-comment|/* Magic. */
-name|int
-name|gek_magic
-decl_stmt|;
-comment|/* Key number. */
-name|uint64_t
-name|gek_keyno
-decl_stmt|;
-comment|/* Reference counter. */
-name|int
-name|gek_count
-decl_stmt|;
-comment|/* Keeps keys sorted by most recent use. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|g_eli_key
-argument_list|)
-name|gek_next
-expr_stmt|;
-comment|/* Keeps keys sorted by number. */
-name|RB_ENTRY
-argument_list|(
-argument|g_eli_key
-argument_list|)
-name|gek_link
-expr_stmt|;
-block|}
-struct|;
-end_struct
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_function
 specifier|static
@@ -283,36 +265,7 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|RB_PROTOTYPE
-argument_list|(
-name|g_eli_key_tree
-argument_list|,
-name|g_eli_key
-argument_list|,
-name|gek_link
-argument_list|,
-name|g_eli_key_cmp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|RB_GENERATE
-argument_list|(
-name|g_eli_key_tree
-argument_list|,
-name|g_eli_key
-argument_list|,
-name|gek_link
-argument_list|,
-name|g_eli_key_cmp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
-specifier|static
 name|void
 name|g_eli_key_fill
 parameter_list|(
@@ -443,6 +396,40 @@ name|G_ELI_KEY_MAGIC
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|RB_PROTOTYPE
+argument_list|(
+name|g_eli_key_tree
+argument_list|,
+name|g_eli_key
+argument_list|,
+name|gek_link
+argument_list|,
+name|g_eli_key_cmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RB_GENERATE
+argument_list|(
+name|g_eli_key_tree
+argument_list|,
+name|g_eli_key
+argument_list|,
+name|gek_link
+argument_list|,
+name|g_eli_key_cmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1752,6 +1739,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 end_unit
 
