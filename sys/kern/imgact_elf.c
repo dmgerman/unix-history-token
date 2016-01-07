@@ -3903,6 +3903,26 @@ goto|goto
 name|ret
 goto|;
 block|}
+if|if
+condition|(
+name|interp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"Multiple PT_INTERP headers\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|ret
+goto|;
+block|}
 name|interp_name_len
 operator|=
 name|phdr
