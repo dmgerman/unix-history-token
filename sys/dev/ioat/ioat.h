@@ -209,7 +209,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Acquire must be called before issuing an operation to perform. Release is  * called after. Multiple operations can be issued within the context of one  * acquire and release  */
+comment|/*  * Acquire must be called before issuing an operation to perform. Release is  * called after.  Multiple operations can be issued within the context of one  * acquire and release  */
 end_comment
 
 begin_function_decl
@@ -228,6 +228,26 @@ name|ioat_release
 parameter_list|(
 name|bus_dmaengine_t
 name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Acquire_reserve can be called to ensure there is room for N descriptors.  If  * it succeeds, the next N valid operations will successfully enqueue.  *  * It may fail with:  *   - ENXIO if the channel is in an errored state, or the driver is being  *     unloaded  *   - EAGAIN if mflags included M_NOWAIT  *  * On failure, the caller does not hold the dmaengine.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ioat_acquire_reserve
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|,
+name|unsigned
+name|n
+parameter_list|,
+name|int
+name|mflags
 parameter_list|)
 function_decl|;
 end_function_decl
