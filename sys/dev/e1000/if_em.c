@@ -18068,7 +18068,17 @@ argument_list|,
 name|th_sum
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Setting up new checksum offload context for every frames  		 * takes a lot of processing time for hardware. This also  		 * reduces performance a lot for small sized frames so avoid  		 * it if driver can use previously configured checksum  		 * offload context.  		 */
+comment|/* 		 * The 82574L can only remember the *last* context used 		 * regardless of queue that it was use for.  We cannot reuse 		 * contexts on this hardware platform and must generate a new 		 * context every time.  82574L hardware spec, section 7.2.6, 		 * second note. 		 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|<
+literal|2
+condition|)
+block|{
+comment|/*  		 	* Setting up new checksum offload context for every 			* frames takes a lot of processing time for hardware. 			* This also reduces performance a lot for small sized 			* frames so avoid it if driver can use previously 			* configured checksum offload context.  		 	*/
 if|if
 condition|(
 name|txr
@@ -18150,6 +18160,7 @@ name|last_hw_tucso
 operator|=
 name|tucso
 expr_stmt|;
+block|}
 comment|/*  		 * Start offset for payload checksum calculation.  		 * End offset for payload checksum calculation.  		 * Offset of place to put the checksum.  		 */
 name|TXD
 operator|=
@@ -18246,7 +18257,17 @@ argument_list|,
 name|uh_sum
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Setting up new checksum offload context for every frames  		 * takes a lot of processing time for hardware. This also  		 * reduces performance a lot for small sized frames so avoid  		 * it if driver can use previously configured checksum  		 * offload context.  		 */
+comment|/* 		 * The 82574L can only remember the *last* context used 		 * regardless of queue that it was use for.  We cannot reuse 		 * contexts on this hardware platform and must generate a new 		 * context every time.  82574L hardware spec, section 7.2.6, 		 * second note. 		 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|<
+literal|2
+condition|)
+block|{
+comment|/*  		 	* Setting up new checksum offload context for every 			* frames takes a lot of processing time for hardware. 			* This also reduces performance a lot for small sized 			* frames so avoid it if driver can use previously 			* configured checksum offload context.  		 	*/
 if|if
 condition|(
 name|txr
@@ -18328,6 +18349,7 @@ name|last_hw_tucso
 operator|=
 name|tucso
 expr_stmt|;
+block|}
 comment|/*  		 * Start offset for header checksum calculation.  		 * End offset for header checksum calculation.  		 * Offset of place to put the checksum.  		 */
 name|TXD
 operator|=
