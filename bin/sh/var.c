@@ -3422,7 +3422,7 @@ operator|=
 name|ckmalloc
 argument_list|(
 sizeof|sizeof
-name|optlist
+name|optval
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -3431,10 +3431,10 @@ name|lvp
 operator|->
 name|text
 argument_list|,
-name|optlist
+name|optval
 argument_list|,
 sizeof|sizeof
-name|optlist
+name|optval
 argument_list|)
 expr_stmt|;
 name|vp
@@ -3641,14 +3641,14 @@ block|{
 comment|/* $- saved */
 name|memcpy
 argument_list|(
-name|optlist
+name|optval
 argument_list|,
 name|lvp
 operator|->
 name|text
 argument_list|,
 sizeof|sizeof
-name|optlist
+name|optval
 argument_list|)
 expr_stmt|;
 name|ckfree
