@@ -741,7 +741,24 @@ name|pcpu
 modifier|*
 name|pc
 parameter_list|)
-block|{ }
+block|{
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+name|db_printf
+argument_list|(
+literal|"curpmap      = %p\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_curpmap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_function
 
 begin_function
