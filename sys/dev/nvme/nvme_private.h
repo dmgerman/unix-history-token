@@ -775,9 +775,6 @@ decl_stmt|;
 name|uint32_t
 name|num_io_queues
 decl_stmt|;
-name|boolean_t
-name|per_cpu_io_queues
-decl_stmt|;
 comment|/* Fields for tracking progress during controller initialization. */
 name|struct
 name|intr_config_hook
