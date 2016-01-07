@@ -3304,7 +3304,7 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-comment|/* Print neighbor discovery specific informations */
+comment|/* Print neighbor discovery specific information */
 name|nbi
 operator|=
 name|getnbrinfo

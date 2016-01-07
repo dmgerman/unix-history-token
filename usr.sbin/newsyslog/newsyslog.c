@@ -8933,7 +8933,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Compute the pause between consecutive signals.  Use a longer 	 * sleep time if we will be sending two signals to the same 	 * deamon or process-group. 	 */
+comment|/* 	 * Compute the pause between consecutive signals.  Use a longer 	 * sleep time if we will be sending two signals to the same 	 * daemon or process-group. 	 */
 name|secs
 operator|=
 literal|0

@@ -1938,7 +1938,7 @@ argument_list|,
 literal|"another ypbind is already running. Aborting"
 argument_list|)
 expr_stmt|;
-comment|/* XXX domainname will be overriden if we use restricted mode */
+comment|/* XXX domainname will be overridden if we use restricted mode */
 name|yp_get_default_domain
 argument_list|(
 operator|&

@@ -146,7 +146,7 @@ comment|/* rest of probe timer */
 name|int
 name|mediareqok
 decl_stmt|;
-comment|/* wheter the IF supports SIOCGIFMEDIA */
+comment|/* whether the IF supports SIOCGIFMEDIA */
 name|int
 name|otherconfig
 decl_stmt|;

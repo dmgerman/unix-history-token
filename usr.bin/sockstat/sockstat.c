@@ -1852,7 +1852,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"adress family %d not supported"
+literal|"address family %d not supported"
 argument_list|,
 name|xladdr
 operator|->
@@ -2482,7 +2482,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"adress family %d not supported"
+literal|"address family %d not supported"
 argument_list|,
 name|xladdr
 operator|->
@@ -2730,7 +2730,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"adress family %d not supported"
+literal|"address family %d not supported"
 argument_list|,
 name|xraddr
 operator|->

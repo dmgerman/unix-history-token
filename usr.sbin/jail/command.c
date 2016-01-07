@@ -5029,7 +5029,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* File the jail in the sleep queue acording to its timeout. */
+comment|/* File the jail in the sleep queue according to its timeout. */
 name|TAILQ_REMOVE
 argument_list|(
 name|j
