@@ -2590,12 +2590,10 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* (b) Process name. */
-name|struct
-name|pgrp
+name|void
 modifier|*
-name|p_pgrp
+name|p_pad0
 decl_stmt|;
-comment|/* (c + e) Pointer to process group. */
 name|struct
 name|sysentvec
 modifier|*
@@ -2773,6 +2771,12 @@ name|pid_t
 name|p_reapsubtree
 decl_stmt|;
 comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
+name|struct
+name|pgrp
+modifier|*
+name|p_pgrp
+decl_stmt|;
+comment|/* (c + e) Pointer to process group. */
 block|}
 struct|;
 end_struct
