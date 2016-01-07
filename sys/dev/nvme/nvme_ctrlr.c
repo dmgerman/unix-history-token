@@ -4298,7 +4298,6 @@ goto|goto
 name|intx
 goto|;
 block|}
-elseif|else
 if|if
 condition|(
 name|pci_msix_count
@@ -4354,7 +4353,6 @@ goto|goto
 name|intx
 goto|;
 block|}
-elseif|else
 if|if
 condition|(
 name|num_vectors_allocated
@@ -4384,8 +4382,6 @@ goto|goto
 name|intx
 goto|;
 block|}
-else|else
-block|{
 name|ctrlr
 operator|->
 name|per_cpu_io_queues
@@ -4398,7 +4394,7 @@ name|num_io_queues
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * Release whatever vectors were allocated, and just 			 *  reallocate the two needed for the admin and single 			 *  I/O qpair. 			 */
+comment|/* 		 * Release whatever vectors were allocated, and just 		 *  reallocate the two needed for the admin and single 		 *  I/O qpair. 		 */
 name|num_vectors_allocated
 operator|=
 literal|2
@@ -4436,7 +4432,6 @@ argument_list|(
 literal|"could not reallocate 2 vectors\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * On earlier FreeBSD releases, there are reports that 	 *  pci_alloc_msix() can return successfully with all vectors 	 *  requested, but a subsequent bus_alloc_resource_any() 	 *  for one of those vectors fails.  This issue occurs more 	 *  readily with multiple devices using per-CPU vectors. 	 * To workaround this issue, try to allocate the resources now, 	 *  and fall back to INTx if we cannot allocate all of them. 	 *  This issue cannot be reproduced on more recent versions of 	 *  FreeBSD which have increased the maximum number of MSI-X 	 *  vectors, but adding the workaround makes it easier for 	 *  vendors wishing to import this driver into kernels based on 	 *  older versions of FreeBSD. 	 */
 for|for
