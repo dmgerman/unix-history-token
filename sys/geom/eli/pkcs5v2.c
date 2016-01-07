@@ -376,6 +376,12 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STAND
+end_ifndef
+
 begin_comment
 comment|/*  * Return the number of microseconds needed for 'interations' iterations.  */
 end_comment
@@ -555,6 +561,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_STAND */
+end_comment
 
 begin_endif
 endif|#

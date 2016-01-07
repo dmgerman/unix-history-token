@@ -598,7 +598,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  *	- Delayed acks are enabled or this is a half-synchronized T/TCP  *	  connection.  */
+comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  */
 end_comment
 
 begin_define
@@ -611,7 +611,7 @@ parameter_list|,
 name|tlen
 parameter_list|)
 define|\
-value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxopd)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxseg)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_comment
