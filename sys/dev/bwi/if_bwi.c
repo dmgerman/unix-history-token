@@ -2342,13 +2342,21 @@ name|bwi_phy
 modifier|*
 name|phy
 decl_stmt|;
+name|uint8_t
+name|bands
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|error
-decl_stmt|;
-name|uint8_t
-name|bands
 decl_stmt|;
 name|BWI_LOCK_INIT
 argument_list|(
@@ -2746,9 +2754,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup ratesets, phytype, channels and get MAC address 	 */
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2767,7 +2783,6 @@ condition|)
 block|{
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -2799,7 +2814,6 @@ name|IEEE80211_T_OFDM
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -2877,7 +2891,6 @@ block|{
 comment|/* TODO:11A */
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11A
@@ -2940,7 +2953,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;

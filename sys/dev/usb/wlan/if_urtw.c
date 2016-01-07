@@ -6971,7 +6971,16 @@ name|sc_ic
 decl_stmt|;
 name|uint8_t
 name|bands
-decl_stmt|,
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
+decl_stmt|;
+name|uint8_t
 name|iface_index
 init|=
 name|URTW_IFACE_INDEX
@@ -7417,13 +7426,20 @@ comment|/* capable of bg scanning */
 name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* 802.11i */
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -7431,7 +7447,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -7443,7 +7458,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;

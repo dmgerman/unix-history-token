@@ -3391,11 +3391,19 @@ name|in
 decl_stmt|,
 name|out
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|uint8_t
 name|bands
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* Not locked */
 name|error
@@ -3904,9 +3912,17 @@ block|otus_get_chanlist(sc);
 else|#
 directive|else
 comment|/* Set supported .11b and .11g rates. */
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3923,7 +3939,6 @@ condition|)
 block|{
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -3931,7 +3946,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -3953,7 +3967,6 @@ condition|)
 block|{
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11A
@@ -3963,7 +3976,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (sc->sc_ht) 		setbit(&bands, IEEE80211_MODE_11NG);
+block|if (sc->sc_ht) 		setbit(bands, IEEE80211_MODE_11NG);
 endif|#
 directive|endif
 name|ieee80211_init_channels
@@ -3972,7 +3985,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;
