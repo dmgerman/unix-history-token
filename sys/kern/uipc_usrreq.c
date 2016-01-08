@@ -4442,7 +4442,7 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-name|sbappendstream_locked
+name|sbappend_locked
 argument_list|(
 operator|&
 name|so2
@@ -4450,8 +4450,6 @@ operator|->
 name|so_rcv
 argument_list|,
 name|m
-argument_list|,
-name|flags
 argument_list|)
 expr_stmt|;
 break|break;
