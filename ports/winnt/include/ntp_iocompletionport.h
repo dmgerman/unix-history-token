@@ -122,7 +122,7 @@ specifier|extern
 name|int
 name|io_completion_port_sendto
 parameter_list|(
-name|int
+name|SOCKET
 parameter_list|,
 name|void
 modifier|*

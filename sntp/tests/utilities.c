@@ -455,6 +455,8 @@ name|in6_addr
 name|address
 init|=
 block|{
+block|{
+block|{
 literal|0x20
 block|,
 literal|0x01
@@ -486,6 +488,8 @@ block|,
 literal|0x73
 block|,
 literal|0x34
+block|}
+block|}
 block|}
 decl_stmt|;
 specifier|const

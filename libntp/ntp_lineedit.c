@@ -162,6 +162,12 @@ directive|include
 file|"ntp_lineedit.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"safecast.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -769,11 +775,15 @@ block|{
 operator|*
 name|pcount
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+comment|/* cannot overflow here */
 name|line
 operator|=
 name|estrdup

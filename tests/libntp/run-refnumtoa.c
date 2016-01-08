@@ -174,14 +174,14 @@ name|RUN_TEST
 argument_list|(
 name|test_LocalClock
 argument_list|,
-literal|12
+literal|13
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_UnknownId
 argument_list|,
-literal|13
+literal|14
 argument_list|)
 expr_stmt|;
 return|return

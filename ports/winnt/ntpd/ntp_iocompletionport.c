@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntpd.h"
 end_include
 
@@ -4850,7 +4856,7 @@ begin_function
 name|int
 name|io_completion_port_sendto
 parameter_list|(
-name|int
+name|SOCKET
 name|fd
 parameter_list|,
 name|void
@@ -4884,6 +4890,16 @@ decl_stmt|;
 name|int
 name|AddrLen
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|INT_MAX
+condition|)
+name|len
+operator|=
+name|INT_MAX
+expr_stmt|;
 name|wsabuf
 operator|.
 name|buf
@@ -4898,6 +4914,9 @@ name|wsabuf
 operator|.
 name|len
 operator|=
+operator|(
+name|DWORD
+operator|)
 name|len
 expr_stmt|;
 name|AddrLen
@@ -5015,11 +5034,11 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|DWORD
+operator|)
 name|len
 operator|!=
-operator|(
-name|int
-operator|)
 name|octets_sent
 condition|)
 block|{
@@ -5066,6 +5085,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|int
+operator|)
 name|len
 return|;
 block|}
@@ -5241,6 +5263,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/*defined(HAVE_IO_COMPLETION_PORT) */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -5252,6 +5278,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*!defined(HAVE_IO_COMPLETION_PORT) */
+end_comment
 
 end_unit
 

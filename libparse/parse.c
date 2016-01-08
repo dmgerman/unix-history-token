@@ -938,11 +938,11 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"parse_ioread(0x%lx, char=0x%x, ..., ...)\n"
+literal|"parse_ioread(0x%p, char=0x%x, ..., ...)\n"
 operator|,
 operator|(
-name|unsigned
-name|long
+name|void
+operator|*
 operator|)
 name|parseio
 operator|,

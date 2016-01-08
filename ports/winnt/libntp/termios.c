@@ -115,6 +115,7 @@ begin_function
 name|HANDLE
 name|common_serial_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dev
@@ -141,6 +142,7 @@ decl_stmt|;
 name|size_t
 name|opens
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pch
@@ -940,6 +942,7 @@ begin_function
 name|int
 name|tty_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dev
@@ -1019,7 +1022,7 @@ operator|)
 name|_open_osfhandle
 argument_list|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|Handle
 argument_list|,
@@ -1037,6 +1040,7 @@ begin_function
 name|int
 name|refclock_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dev
@@ -1553,7 +1557,7 @@ operator|=
 name|_open_osfhandle
 argument_list|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|h
 argument_list|,

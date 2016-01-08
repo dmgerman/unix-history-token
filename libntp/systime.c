@@ -116,6 +116,30 @@ begin_comment
 comment|/* HAVE_UTMPX_H */
 end_comment
 
+begin_decl_stmt
+name|int
+name|allow_panic
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* allow panic correction (-g) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|enable_panic_check
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Can we check allow_panic's state? */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -998,9 +1022,32 @@ literal|0.
 operator|==
 name|now
 condition|)
+block|{
+if|if
+condition|(
+name|enable_panic_check
+operator|&&
+name|allow_panic
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"adj_systime: allow_panic is TRUE!"
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+operator|!
+name|allow_panic
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|TRUE
 return|;
+block|}
 comment|/* 	 * Most Unix adjtime() implementations adjust the system clock 	 * in microsecond quanta, but some adjust in 10-ms quanta. We 	 * carefully round the adjustment to the nearest quantum, then 	 * adjust in quanta and keep the residue for later. 	 */
 name|dtemp
 operator|=
@@ -1161,10 +1208,40 @@ argument_list|,
 literal|"adj_systime: %m"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|enable_panic_check
+operator|&&
+name|allow_panic
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"adj_systime: allow_panic is TRUE!"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|FALSE
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|enable_panic_check
+operator|&&
+name|allow_panic
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"adj_systime: allow_panic is TRUE!"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|TRUE
@@ -1393,6 +1470,21 @@ argument_list|,
 literal|"step-systime: %m"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|enable_panic_check
+operator|&&
+name|allow_panic
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"step_systime: allow_panic is TRUE!"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|FALSE
 return|;
@@ -1429,7 +1521,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * FreeBSD, for example, has: 	 * struct utmp { 	 *	   char    ut_line[UT_LINESIZE]; 	 *	   char    ut_name[UT_NAMESIZE]; 	 *	   char    ut_host[UT_HOSTSIZE]; 	 *	   long    ut_time; 	 * }; 	 * and appends line="|", name="date", host="", time for the OLD 	 * and appends line="{", name="date", host="", time for the NEW 	 * to _PATH_WTMP . 	 * 	 * Some OSes have utmp, some have utmpx. 	 */
+comment|/* 	 * FreeBSD, for example, has: 	 * struct utmp { 	 *	   char    ut_line[UT_LINESIZE]; 	 *	   char    ut_name[UT_NAMESIZE]; 	 *	   char    ut_host[UT_HOSTSIZE]; 	 *	   long    ut_time; 	 * }; 	 * and appends line="|", name="date", host="", time for the OLD 	 * and appends line="{", name="date", host="", time for the NEW // } 	 * to _PATH_WTMP . 	 * 	 * Some OSes have utmp, some have utmpx. 	 */
 comment|/* 	 * Write old and new time entries in utmp and wtmp if step 	 * adjustment is greater than one second. 	 * 	 * This might become even Uglier... 	 */
 name|tvdiff
 operator|=
@@ -1920,6 +2012,27 @@ comment|/* not HAVE_PUTUTXLINE */
 endif|#
 directive|endif
 comment|/* UPDATE_WTMPX */
+block|}
+if|if
+condition|(
+name|enable_panic_check
+operator|&&
+name|allow_panic
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"step_systime: allow_panic is TRUE!"
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+operator|!
+name|allow_panic
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|TRUE

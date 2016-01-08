@@ -3926,6 +3926,10 @@ expr_stmt|;
 operator|*
 name|charptr
 operator|=
+operator|(
+name|signed
+name|char
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -3944,6 +3948,10 @@ expr_stmt|;
 operator|*
 name|shortptr
 operator|=
+operator|(
+name|short
+name|int
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -3962,6 +3970,10 @@ expr_stmt|;
 operator|*
 name|longptr
 operator|=
+operator|(
+name|long
+name|int
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -3981,6 +3993,9 @@ expr_stmt|;
 operator|*
 name|llongptr
 operator|=
+operator|(
+name|LLONG
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -4001,6 +4016,9 @@ expr_stmt|;
 operator|*
 name|sizeptr
 operator|=
+operator|(
+name|SSIZE_T
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -4020,6 +4038,9 @@ expr_stmt|;
 operator|*
 name|intmaxptr
 operator|=
+operator|(
+name|INTMAX_T
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -4039,6 +4060,9 @@ expr_stmt|;
 operator|*
 name|ptrdiffptr
 operator|=
+operator|(
+name|PTRDIFF_T
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -4056,6 +4080,9 @@ expr_stmt|;
 operator|*
 name|intptr
 operator|=
+operator|(
+name|int
+operator|)
 name|len
 expr_stmt|;
 break|break;
@@ -5327,6 +5354,9 @@ block|}
 comment|/* 	 * Factor of ten with the number of digits needed for the fractional 	 * part.  For example, if the precision is 3, the mask will be 1000. 	 */
 name|mask
 operator|=
+operator|(
+name|UINTMAX_T
+operator|)
 name|mypow10
 argument_list|(
 name|precision
@@ -6360,6 +6390,9 @@ name|UINTMAX_MAX
 return|;
 name|result
 operator|=
+operator|(
+name|UINTMAX_T
+operator|)
 name|value
 expr_stmt|;
 comment|/* 	 * At least on NetBSD/sparc64 3.0.2 and 4.99.30, casting long double to 	 * an integer type converts e.g. 1.9 to 2 instead of 1 (which violates 	 * the standard).  Sigh. 	 */

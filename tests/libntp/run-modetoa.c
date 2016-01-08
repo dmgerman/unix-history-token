@@ -168,14 +168,14 @@ name|RUN_TEST
 argument_list|(
 name|test_KnownMode
 argument_list|,
-literal|7
+literal|8
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_UnknownMode
 argument_list|,
-literal|8
+literal|9
 argument_list|)
 expr_stmt|;
 return|return

@@ -411,6 +411,7 @@ specifier|extern
 name|int
 name|tty_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

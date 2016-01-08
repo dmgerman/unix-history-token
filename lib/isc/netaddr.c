@@ -776,11 +776,16 @@ operator|)
 return|;
 name|alen
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|abuf
 argument_list|)
 expr_stmt|;
+comment|/* no overflow possible */
 name|INSIST
 argument_list|(
 name|alen

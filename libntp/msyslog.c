@@ -1263,7 +1263,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|size_t
+name|int
 name|rc
 decl_stmt|;
 name|va_start

@@ -306,7 +306,7 @@ name|char
 modifier|*
 name|value
 decl_stmt|;
-name|int
+name|size_t
 name|idatalen
 decl_stmt|;
 name|value
@@ -410,7 +410,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -741,7 +741,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -864,9 +864,6 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
-name|i_dsize
-decl_stmt|;
 name|size_t
 name|dsize
 decl_stmt|;
@@ -891,7 +888,7 @@ operator|&
 name|rstatus
 argument_list|,
 operator|&
-name|i_dsize
+name|dsize
 argument_list|,
 operator|&
 name|datap
@@ -908,7 +905,7 @@ literal|0
 return|;
 if|if
 condition|(
-name|i_dsize
+name|dsize
 operator|==
 literal|0
 condition|)
@@ -941,15 +938,6 @@ return|;
 block|}
 else|else
 block|{
-name|dsize
-operator|=
-name|max
-argument_list|(
-literal|0
-argument_list|,
-name|i_dsize
-argument_list|)
-expr_stmt|;
 name|dsize
 operator|=
 name|min
@@ -1158,7 +1146,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short

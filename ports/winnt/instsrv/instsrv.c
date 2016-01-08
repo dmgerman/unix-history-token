@@ -845,12 +845,17 @@ operator|)
 name|pszMsgDLL
 argument_list|,
 comment|/* address of value data */
+call|(
+name|DWORD
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|pszMsgDLL
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* length of value data  */

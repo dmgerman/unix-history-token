@@ -1994,17 +1994,9 @@ argument_list|(
 operator|&
 name|tmscl
 argument_list|,
-operator|(
-operator|(
-name|TIME_SCALE
-operator|*
-operator|)
-operator|(
 name|it1
 operator|->
 name|payloads
-operator|)
-operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
