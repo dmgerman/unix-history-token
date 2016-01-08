@@ -4032,7 +4032,7 @@ operator|<
 name|TCPS_SYN_SENT
 condition|)
 block|{
-comment|/* 			 * Do implied connect if not yet connected, 			 * initialize window to default value, and 			 * initialize maxseg/maxopd using peer's cached 			 * MSS. 			 */
+comment|/* 			 * Do implied connect if not yet connected, 			 * initialize window to default value, and 			 * initialize maxseg using peer's cached MSS. 			 */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -4266,7 +4266,7 @@ operator|<
 name|TCPS_SYN_SENT
 condition|)
 block|{
-comment|/* 			 * Do implied connect if not yet connected, 			 * initialize window to default value, and 			 * initialize maxseg/maxopd using peer's cached 			 * MSS. 			 */
+comment|/* 			 * Do implied connect if not yet connected, 			 * initialize window to default value, and 			 * initialize maxseg using peer's cached MSS. 			 */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -9919,11 +9919,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_maxopd: %u   t_rcvtime: %u   t_startime: %u\n"
-argument_list|,
-name|tp
-operator|->
-name|t_maxopd
+literal|"t_rcvtime: %u   t_startime: %u\n"
 argument_list|,
 name|tp
 operator|->

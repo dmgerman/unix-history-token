@@ -2293,9 +2293,18 @@ name|int
 name|error
 decl_stmt|;
 name|uint8_t
-name|iface_index
-decl_stmt|,
 name|bands
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
+decl_stmt|;
+name|uint8_t
+name|iface_index
 decl_stmt|;
 name|struct
 name|usb_interface
@@ -2892,13 +2901,20 @@ name|sc_nrxstream
 expr_stmt|;
 block|}
 comment|/* Set supported .11b and .11g rates. */
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -2906,7 +2922,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -2920,7 +2935,6 @@ name|sc_ht
 condition|)
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11NG
@@ -2932,7 +2946,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;

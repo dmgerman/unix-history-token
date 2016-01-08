@@ -794,9 +794,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|SOCKET
 name|s
-decl_stmt|,
+decl_stmt|;
+name|int
 name|on
 decl_stmt|;
 name|char

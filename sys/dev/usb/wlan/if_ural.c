@@ -2801,9 +2801,18 @@ operator|->
 name|sc_ic
 decl_stmt|;
 name|uint8_t
-name|iface_index
-decl_stmt|,
 name|bands
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
+decl_stmt|;
+name|uint8_t
+name|iface_index
 decl_stmt|;
 name|int
 name|error
@@ -3007,13 +3016,20 @@ operator||
 name|IEEE80211_C_WPA
 comment|/* 802.11i */
 expr_stmt|;
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -3021,7 +3037,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -3037,7 +3052,6 @@ name|RAL_RF_5222
 condition|)
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11A
@@ -3049,7 +3063,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;

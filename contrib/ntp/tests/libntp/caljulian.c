@@ -152,6 +152,11 @@ index|]
 init|=
 literal|""
 decl_stmt|;
+operator|*
+name|str
+operator|=
+literal|'\0'
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buffer
@@ -443,19 +448,44 @@ return|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"expected: %s but was %s"
-argument_list|,
+name|char
+modifier|*
+name|p_exp
+decl_stmt|,
+modifier|*
+name|p_act
+decl_stmt|;
+name|p_exp
+operator|=
 name|CalendarToString
 argument_list|(
 name|expected
 argument_list|)
-argument_list|,
+expr_stmt|;
+name|p_act
+operator|=
 name|CalendarToString
 argument_list|(
 name|actual
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"expected: %s but was %s"
+argument_list|,
+name|p_exp
+argument_list|,
+name|p_act
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p_exp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p_act
 argument_list|)
 expr_stmt|;
 return|return
@@ -490,6 +520,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -503,6 +537,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -561,6 +596,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -619,6 +655,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -630,7 +667,7 @@ name|void
 parameter_list|)
 block|{
 name|u_long
-name|time
+name|enc_time
 init|=
 literal|4294967295UL
 decl_stmt|;
@@ -661,7 +698,7 @@ name|actual
 decl_stmt|;
 name|caljulian
 argument_list|(
-name|time
+name|enc_time
 argument_list|,
 operator|&
 name|actual
@@ -677,6 +714,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -688,7 +726,7 @@ name|void
 parameter_list|)
 block|{
 name|u_long
-name|time
+name|enc_time
 init|=
 literal|0
 decl_stmt|;
@@ -718,7 +756,7 @@ name|actual
 decl_stmt|;
 name|caljulian
 argument_list|(
-name|time
+name|enc_time
 argument_list|,
 operator|&
 name|actual
@@ -734,6 +772,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

@@ -935,7 +935,7 @@ name|u32
 name|next_to_clean
 decl_stmt|;
 name|struct
-name|em_buffer
+name|em_txbuffer
 modifier|*
 name|tx_buffers
 decl_stmt|;
@@ -1043,8 +1043,8 @@ name|taskqueue
 modifier|*
 name|tq
 decl_stmt|;
-name|struct
-name|e1000_rx_desc
+name|union
+name|e1000_rx_desc_extended
 modifier|*
 name|rx_base
 decl_stmt|;
@@ -1059,7 +1059,7 @@ name|u32
 name|next_to_check
 decl_stmt|;
 name|struct
-name|em_buffer
+name|em_rxbuffer
 modifier|*
 name|rx_buffers
 decl_stmt|;
@@ -1392,7 +1392,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|em_buffer
+name|em_txbuffer
 block|{
 name|int
 name|next_eop
@@ -1407,6 +1407,30 @@ name|bus_dmamap_t
 name|map
 decl_stmt|;
 comment|/* bus_dma map for packet */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|em_rxbuffer
+block|{
+name|int
+name|next_eop
+decl_stmt|;
+comment|/* Index of the desc to watch */
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+name|bus_addr_t
+name|paddr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1649,6 +1673,25 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->rx_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_RSSRK_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_RSSRK_VAL
+parameter_list|(
+name|key
+parameter_list|,
+name|i
+parameter_list|)
+value|(key[(i) * EM_RSSRK_SIZE] | \ 					 key[(i) * EM_RSSRK_SIZE + 1]<< 8 | \ 					 key[(i) * EM_RSSRK_SIZE + 2]<< 16 | \ 					 key[(i) * EM_RSSRK_SIZE + 3]<< 24)
 end_define
 
 begin_endif

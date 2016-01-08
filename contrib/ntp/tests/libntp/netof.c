@@ -31,6 +31,15 @@ end_include
 
 begin_function_decl
 name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|test_ClassBAddress
 parameter_list|(
 name|void
@@ -64,6 +73,20 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_function
 name|void
@@ -120,6 +143,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -178,6 +202,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -237,6 +262,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -253,6 +279,8 @@ name|struct
 name|in6_addr
 name|input_address
 init|=
+block|{
+block|{
 block|{
 literal|0x20
 block|,
@@ -286,6 +314,8 @@ literal|0x73
 block|,
 literal|0x34
 block|}
+block|}
+block|}
 decl_stmt|;
 comment|// 2001:0db8:85a3:08d3:1319:8a2e:0370:7334
 specifier|const
@@ -293,6 +323,8 @@ name|struct
 name|in6_addr
 name|expected_address
 init|=
+block|{
+block|{
 block|{
 literal|0x20
 block|,
@@ -325,6 +357,8 @@ block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
+block|}
 block|}
 decl_stmt|;
 comment|// 2001:0db8:85a3:08d3:0000:0000:0000:0000
@@ -410,6 +444,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

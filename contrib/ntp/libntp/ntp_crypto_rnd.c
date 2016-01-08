@@ -50,6 +50,12 @@ directive|include
 file|<ntp_random.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"safecast.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -218,7 +224,10 @@ name|RAND_bytes
 argument_list|(
 name|buf
 argument_list|,
+name|size2int_chk
+argument_list|(
 name|nbytes
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -3324,9 +3324,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|int
-name|optlen
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3384,23 +3381,13 @@ operator||=
 name|TF2_PLPMTU_BLACKHOLE
 expr_stmt|;
 comment|/* Keep track of previous MSS. */
-name|optlen
-operator|=
 name|tp
 operator|->
-name|t_maxopd
-operator|-
+name|t_pmtud_saved_maxseg
+operator|=
 name|tp
 operator|->
 name|t_maxseg
-expr_stmt|;
-name|tp
-operator|->
-name|t_pmtud_saved_maxopd
-operator|=
-name|tp
-operator|->
-name|t_maxopd
 expr_stmt|;
 comment|/*  			 * Reduce the MSS to blackhole value or to the default 			 * in an attempt to retransmit. 			 */
 ifdef|#
@@ -3428,7 +3415,7 @@ name|isipv6
 operator|&&
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|>
 name|V_tcp_v6pmtud_blackhole_mss
 condition|)
@@ -3436,7 +3423,7 @@ block|{
 comment|/* Use the sysctl tuneable blackhole MSS. */
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|=
 name|V_tcp_v6pmtud_blackhole_mss
 expr_stmt|;
@@ -3453,7 +3440,7 @@ block|{
 comment|/* Use the default MSS. */
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|=
 name|V_tcp_v6mssdflt
 expr_stmt|;
@@ -3492,7 +3479,7 @@ if|if
 condition|(
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|>
 name|V_tcp_pmtud_blackhole_mss
 condition|)
@@ -3500,7 +3487,7 @@ block|{
 comment|/* Use the sysctl tuneable blackhole MSS. */
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|=
 name|V_tcp_pmtud_blackhole_mss
 expr_stmt|;
@@ -3513,7 +3500,7 @@ block|{
 comment|/* Use the default MSS. */
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|=
 name|V_tcp_mssdflt
 expr_stmt|;
@@ -3531,16 +3518,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|tp
-operator|->
-name|t_maxseg
-operator|=
-name|tp
-operator|->
-name|t_maxopd
-operator|-
-name|optlen
-expr_stmt|;
 comment|/* 			 * Reset the slow-start flight size 			 * as it may depend on the new MSS. 			 */
 if|if
 condition|(
@@ -3601,33 +3578,13 @@ operator|&=
 operator|~
 name|TF2_PLPMTU_BLACKHOLE
 expr_stmt|;
-name|optlen
-operator|=
-name|tp
-operator|->
-name|t_maxopd
-operator|-
-name|tp
-operator|->
-name|t_maxseg
-expr_stmt|;
-name|tp
-operator|->
-name|t_maxopd
-operator|=
-name|tp
-operator|->
-name|t_pmtud_saved_maxopd
-expr_stmt|;
 name|tp
 operator|->
 name|t_maxseg
 operator|=
 name|tp
 operator|->
-name|t_maxopd
-operator|-
-name|optlen
+name|t_pmtud_saved_maxseg
 expr_stmt|;
 name|V_tcp_pmtud_blackhole_failed
 operator|++

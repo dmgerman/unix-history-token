@@ -3118,7 +3118,7 @@ name|ipsec_optlen
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Adjust data length if insertion of options will 	 * bump the packet length beyond the t_maxopd length. 	 * Clear the FIN bit because we cut off the tail of 	 * the segment. 	 */
+comment|/* 	 * Adjust data length if insertion of options will 	 * bump the packet length beyond the t_maxseg length. 	 * Clear the FIN bit because we cut off the tail of 	 * the segment. 	 */
 if|if
 condition|(
 name|len
@@ -3129,7 +3129,7 @@ name|ipoptlen
 operator|>
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 condition|)
 block|{
 name|flags
@@ -3404,7 +3404,7 @@ operator|=
 operator|(
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|-
 name|optlen
 operator|)
@@ -3490,7 +3490,7 @@ name|len
 operator|=
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|-
 name|optlen
 operator|-
@@ -4907,7 +4907,7 @@ name|len
 operator|>
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|-
 name|optlen
 argument_list|,
@@ -4934,7 +4934,7 @@ name|tso_segsz
 operator|=
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|-
 name|optlen
 expr_stmt|;
@@ -5211,7 +5211,7 @@ name|V_path_mtu_discovery
 operator|&&
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|>
 name|V_tcp_minmss
 condition|)
@@ -5438,7 +5438,7 @@ name|V_path_mtu_discovery
 operator|&&
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 operator|>
 name|V_tcp_minmss
 condition|)

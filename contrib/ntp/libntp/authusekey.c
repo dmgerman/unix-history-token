@@ -59,7 +59,7 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len

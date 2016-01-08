@@ -1460,6 +1460,12 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|beroot
+operator|!=
+name|NULL
+condition|)
 name|beroot
 index|[
 literal|0
