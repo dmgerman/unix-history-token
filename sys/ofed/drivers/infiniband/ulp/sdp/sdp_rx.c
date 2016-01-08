@@ -1093,6 +1093,8 @@ operator|->
 name|so_rcv
 argument_list|,
 name|mb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sorwakeup_locked
