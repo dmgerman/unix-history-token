@@ -67,7 +67,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|_kthread_fn
+name|linux_kthread_fn
 parameter_list|(
 name|void
 modifier|*
@@ -152,7 +152,7 @@ specifier|inline
 name|struct
 name|task_struct
 modifier|*
-name|_kthread_create
+name|linux_kthread_create
 parameter_list|(
 name|int
 function_decl|(
@@ -208,50 +208,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|struct
-name|task_struct
-modifier|*
-name|kthread_create
-parameter_list|(
-name|int
-function_decl|(
-modifier|*
-name|threadfn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|,
-specifier|const
-name|char
-name|namefmt
-index|[]
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
 begin_define
 define|#
 directive|define
@@ -266,7 +222,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|({									\ 	struct task_struct *_task;					\ 									\ 	_task = _kthread_create((fn), (data));				\ 	if (kthread_add(_kthread_fn, _task, NULL,&_task->task_thread,	\ 	    0, 0, fmt, ## __VA_ARGS__)) {				\ 		kfree(_task);						\ 		_task = NULL;						\ 	} else								\ 		task_struct_set(_task->task_thread, _task);		\ 	_task;								\ })
+value|({									\ 	struct task_struct *_task;					\ 									\ 	_task = linux_kthread_create((fn), (data));			\ 	if (kthread_add(linux_kthread_fn, _task, NULL,&_task->task_thread,	\ 	    0, 0, fmt, ## __VA_ARGS__)) {				\ 		kfree(_task);						\ 		_task = NULL;						\ 	} else								\ 		task_struct_set(_task->task_thread, _task);		\ 	_task;								\ })
 end_define
 
 begin_define
