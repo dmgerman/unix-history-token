@@ -2638,9 +2638,6 @@ name|ifnet
 modifier|*
 name|oldifp
 decl_stmt|;
-name|uint32_t
-name|gif_options
-decl_stmt|;
 name|int
 name|isr
 decl_stmt|,
@@ -2668,12 +2665,6 @@ operator|=
 name|ifp
 operator|->
 name|if_softc
-expr_stmt|;
-name|gif_options
-operator|=
-name|sc
-operator|->
-name|gif_options
 expr_stmt|;
 name|m
 operator|->
