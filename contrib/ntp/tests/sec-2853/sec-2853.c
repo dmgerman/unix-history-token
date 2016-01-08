@@ -84,17 +84,8 @@ begin_comment
 comment|// if not 0, also print results if test passed
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|exit_on_err
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|// if not 0, exit if test failed
+comment|// static int exit_on_err = 0;    // if not 0, exit if test failed
 end_comment
 
 begin_function
@@ -172,10 +163,6 @@ name|char
 modifier|*
 name|EOstring
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -214,10 +201,15 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"remoteconfig_cmdlength(\"%s\") returned %d, expected %d: %s\n"
+literal|"remoteconfig_cmdlength(\"%s\") returned %llu, expected %u: %s\n"
 argument_list|,
 name|string
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|len
 argument_list|,
 literal|4
@@ -259,10 +251,6 @@ name|char
 modifier|*
 name|EOstring
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -301,10 +289,15 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"remoteconfig_cmdlength(\"%s\") returned %d, expected %d: %s\n"
+literal|"remoteconfig_cmdlength(\"%s\") returned %llu, expected %u: %s\n"
 argument_list|,
 name|string
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|len
 argument_list|,
 literal|3
@@ -346,10 +339,6 @@ name|char
 modifier|*
 name|EOstring
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -388,10 +377,15 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"remoteconfig_cmdlength(\"%s\") returned %d, expected %d: %s\n"
+literal|"remoteconfig_cmdlength(\"%s\") returned %llu, expected %u: %s\n"
 argument_list|,
 name|string
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|len
 argument_list|,
 literal|14

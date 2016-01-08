@@ -310,7 +310,7 @@ value|64
 end_define
 
 begin_comment
-comment|//#define	HASHMASK	((HASHSIZE)-1)
+comment|/*#define	HASHMASK	((HASHSIZE)-1)*/
 end_comment
 
 begin_define
@@ -1925,6 +1925,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Note: There are two locations below where 'strncpy()' is used. While  * this function is a hazard by itself, it's essential that it is used  * here. Bug 1243 involved that the secret was filled with NUL bytes  * after the first NUL encountered, and 'strlcpy()' simply does NOT have  * this behaviour. So disabling the fix and reverting to the buggy  * behaviour due to compatibility issues MUST also fill with NUL and  * this needs 'strncpy'. Also, the secret is managed as a byte blob of a  * given size, and eventually truncating it and replacing the last byte  * with a NUL would be a bug.  * perlinger@ntp.org 2015-10-10  */
+end_comment
+
 begin_function
 name|void
 name|MD5auth_setkey
@@ -2093,7 +2097,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|strlcpy
+comment|/*>MUST< use 'strncpy()' here! See above! */
+name|strncpy
 argument_list|(
 operator|(
 name|char
@@ -2160,7 +2165,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|strlcpy
+comment|/*>MUST< use 'strncpy()' here! See above! */
+name|strncpy
 argument_list|(
 operator|(
 name|char
@@ -2473,7 +2479,7 @@ comment|/*  * authencrypt - generate message authenticator  *  * Returns length 
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|authencrypt
 parameter_list|(
 name|keyid_t
@@ -2483,10 +2489,10 @@ name|u_int32
 modifier|*
 name|pkt
 parameter_list|,
-name|int
+name|size_t
 name|length
 parameter_list|)
-block|{\
+block|{
 comment|/* 	 * A zero key identifier means the sender has not verified 	 * the last message was correctly authenticated. The MAC 	 * consists of a single word with value zero. 	 */
 name|authencryptions
 operator|++
@@ -2557,10 +2563,10 @@ name|u_int32
 modifier|*
 name|pkt
 parameter_list|,
-name|int
+name|size_t
 name|length
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|)
 block|{

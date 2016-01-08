@@ -218,8 +218,7 @@ operator|<
 literal|3
 condition|)
 block|{
-specifier|register
-name|int
+name|size_t
 name|i
 init|=
 literal|3

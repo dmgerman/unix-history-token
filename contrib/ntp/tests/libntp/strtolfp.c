@@ -35,6 +35,15 @@ end_comment
 
 begin_function_decl
 name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|test_PositiveInteger
 parameter_list|(
 name|void
@@ -95,6 +104,20 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_function
 name|void

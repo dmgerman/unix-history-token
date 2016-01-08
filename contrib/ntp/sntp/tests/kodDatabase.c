@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_workimpl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_types.h"
 end_include
 
@@ -114,6 +120,9 @@ literal|"/dev/null"
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|init_lib
+argument_list|()
 expr_stmt|;
 block|}
 end_function

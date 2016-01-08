@@ -1348,10 +1348,11 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"mbg_input(0x%lx, 0x%x, ...)\n"
+literal|"mbg_input(0x%p, 0x%x, ...)\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|parseio
 operator|,
@@ -2086,10 +2087,11 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"gps_input(0x%lx, 0x%x, ...)\n"
+literal|"gps_input(0x%p, 0x%x, ...)\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|parseio
 operator|,

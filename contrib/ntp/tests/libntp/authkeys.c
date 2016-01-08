@@ -218,6 +218,7 @@ name|cache_secretsize
 operator|=
 literal|0
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -227,7 +228,9 @@ name|tearDown
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
+block|{
+return|return;
+block|}
 end_function
 
 begin_decl_stmt
@@ -267,6 +270,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -285,6 +289,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -333,6 +338,7 @@ name|KEYNO2
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -362,6 +368,7 @@ name|KEYNO
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -399,6 +406,7 @@ name|KEYNO
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -431,6 +439,7 @@ name|KEYNO
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -463,6 +472,7 @@ argument_list|,
 name|KEYTYPE
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -470,6 +480,7 @@ name|KEY
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -502,6 +513,7 @@ argument_list|,
 name|KEYTYPE
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -509,6 +521,7 @@ name|KEY
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

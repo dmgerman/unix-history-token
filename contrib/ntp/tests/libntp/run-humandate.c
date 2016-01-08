@@ -174,14 +174,14 @@ name|RUN_TEST
 argument_list|(
 name|test_RegularTime
 argument_list|,
-literal|8
+literal|9
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_CurrentTime
 argument_list|,
-literal|9
+literal|10
 argument_list|)
 expr_stmt|;
 return|return

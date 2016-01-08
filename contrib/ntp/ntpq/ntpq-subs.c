@@ -150,7 +150,7 @@ name|struct
 name|varlist
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
 name|char
@@ -177,7 +177,7 @@ parameter_list|,
 name|u_short
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
 specifier|const
@@ -604,7 +604,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 specifier|const
 name|char
@@ -2777,7 +2777,8 @@ comment|/*  * other local function prototypes  */
 end_comment
 
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|mrulist_ctrl_c_hook
 parameter_list|(
 name|void
@@ -3236,7 +3237,7 @@ name|varlist
 modifier|*
 name|vl
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -3384,7 +3385,7 @@ name|varlist
 modifier|*
 name|vl
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -3659,7 +3660,7 @@ name|varlist
 modifier|*
 name|vlist
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|datalen
 parameter_list|,
@@ -3683,13 +3684,13 @@ modifier|*
 name|cpend
 decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|namelen
 decl_stmt|,
 name|valuelen
 decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|totallen
 decl_stmt|;
 name|cp
@@ -3862,9 +3863,14 @@ block|}
 operator|*
 name|datalen
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|cp
 operator|-
 name|data
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3896,7 +3902,7 @@ name|u_short
 modifier|*
 name|rstatus
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|dsize
 parameter_list|,
@@ -3913,7 +3919,7 @@ index|[
 name|CTL_MAX_DATA_LEN
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|datalen
 decl_stmt|;
 name|datalen
@@ -4250,7 +4256,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -4557,7 +4563,7 @@ decl_stmt|;
 name|associd_t
 name|associd
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -4750,10 +4756,10 @@ block|{
 name|associd_t
 name|associd
 decl_stmt|;
-name|u_int
+name|size_t
 name|tmpcount
 decl_stmt|;
-name|u_int
+name|size_t
 name|u
 decl_stmt|;
 name|int
@@ -4930,7 +4936,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -5896,7 +5902,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -5998,7 +6004,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"***Server returned %d octets, should be multiple of 4\n"
+literal|"***Server returned %zu octets, should be multiple of 4\n"
 argument_list|,
 name|dsize
 argument_list|)
@@ -6928,7 +6934,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -7011,11 +7017,15 @@ name|fp
 argument_list|,
 literal|"%.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dsize
 argument_list|,
 name|datap
 argument_list|)
 expr_stmt|;
+comment|/* cast is wobbly */
 block|}
 end_function
 
@@ -7899,7 +7909,7 @@ parameter_list|,
 name|int
 name|rstatus
 parameter_list|,
-name|int
+name|size_t
 name|datalen
 parameter_list|,
 specifier|const
@@ -7928,7 +7938,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -9440,7 +9450,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -10688,7 +10698,7 @@ decl_stmt|;
 name|u_short
 name|rstatus
 decl_stmt|;
-name|int
+name|size_t
 name|rsize
 decl_stmt|;
 specifier|const
@@ -10941,7 +10951,7 @@ block|{
 name|u_short
 name|rstatus
 decl_stmt|;
-name|int
+name|size_t
 name|rsize
 decl_stmt|;
 specifier|const
@@ -11216,10 +11226,14 @@ literal|"Line No: %d %.*s: %s"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rsize
 argument_list|,
 name|rdata
 argument_list|,
+comment|/* cast is wobbly */
 name|config_cmd
 argument_list|)
 expr_stmt|;
@@ -11263,7 +11277,7 @@ decl_stmt|;
 name|u_short
 name|rstatus
 decl_stmt|;
-name|int
+name|size_t
 name|rsize
 decl_stmt|;
 specifier|const
@@ -11271,7 +11285,7 @@ name|char
 modifier|*
 name|rdata
 decl_stmt|;
-name|int
+name|size_t
 name|chars
 decl_stmt|;
 comment|/* 	 * Retrieve a nonce specific to this client to demonstrate to 	 * ntpd that we're capable of receiving responses to our source 	 * IP address, and thereby unlikely to be forging the source. 	 */
@@ -11350,11 +11364,15 @@ name|stderr
 argument_list|,
 literal|"unexpected nonce response format: %.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rsize
 argument_list|,
 name|rdata
 argument_list|)
 expr_stmt|;
+comment|/* cast is wobbly */
 return|return
 name|FALSE
 return|;
@@ -11785,7 +11803,7 @@ value|do {					\ 		got |= (bit);			\ 		if (MRU_GOT_ALL == got) {	\ 			got = 0;		
 end_define
 
 begin_function
-name|void
+name|int
 name|mrulist_ctrl_c_hook
 parameter_list|(
 name|void
@@ -11795,6 +11813,9 @@ name|mrulist_interrupted
 operator|=
 name|TRUE
 expr_stmt|;
+return|return
+name|TRUE
+return|;
 block|}
 end_function
 
@@ -11880,7 +11901,7 @@ name|char
 modifier|*
 name|req_end
 decl_stmt|;
-name|int
+name|size_t
 name|chars
 decl_stmt|;
 name|int
@@ -11889,7 +11910,7 @@ decl_stmt|;
 name|u_short
 name|rstatus
 decl_stmt|;
-name|int
+name|size_t
 name|rsize
 decl_stmt|;
 specifier|const
@@ -12067,28 +12088,6 @@ expr_stmt|;
 name|ZERO
 argument_list|(
 name|last_older
-argument_list|)
-expr_stmt|;
-name|mrulist_interrupted
-operator|=
-name|FALSE
-expr_stmt|;
-name|set_ctrl_c_hook
-argument_list|(
-operator|&
-name|mrulist_ctrl_c_hook
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Ctrl-C will stop MRU retrieval and display partial results.\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 name|next_report
@@ -13738,10 +13737,8 @@ expr_stmt|;
 if|if
 condition|(
 name|REQ_ROOM
-operator|-
+operator|<=
 name|chars
-operator|<
-literal|1
 condition|)
 break|break;
 name|memcpy
@@ -13761,11 +13758,6 @@ name|chars
 expr_stmt|;
 block|}
 block|}
-name|set_ctrl_c_hook
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 name|c_mru_l_rc
 operator|=
 name|TRUE
@@ -14471,6 +14463,28 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
+name|mrulist_interrupted
+operator|=
+name|FALSE
+expr_stmt|;
+name|push_ctrl_c_handler
+argument_list|(
+operator|&
+name|mrulist_ctrl_c_hook
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Ctrl-C will stop MRU retrieval and display partial results.\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|order
 operator|=
 name|MRUSORT_DEF
@@ -15283,6 +15297,12 @@ argument_list|,
 name|mlink
 argument_list|)
 expr_stmt|;
+name|pop_ctrl_c_handler
+argument_list|(
+operator|&
+name|mrulist_ctrl_c_hook
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -15659,7 +15679,7 @@ decl_stmt|;
 name|int
 name|qres
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -16658,7 +16678,7 @@ decl_stmt|;
 name|int
 name|qres
 decl_stmt|;
-name|int
+name|size_t
 name|dsize
 decl_stmt|;
 name|u_short
@@ -17109,7 +17129,7 @@ decl_stmt|;
 name|u_short
 name|rstatus
 decl_stmt|;
-name|int
+name|size_t
 name|rsize
 decl_stmt|;
 specifier|const
