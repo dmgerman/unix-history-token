@@ -1338,7 +1338,7 @@ operator|::
 name|Function
 operator|*
 operator|)
-name|nullptr
+literal|1
 operator|)
 operator|->
 name|viewCFGOnly
@@ -1356,7 +1356,7 @@ operator|::
 name|RegionPass
 operator|*
 operator|)
-name|nullptr
+literal|1
 operator|)
 operator|->
 name|runOnRegion
