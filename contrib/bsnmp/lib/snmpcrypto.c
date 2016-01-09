@@ -2031,7 +2031,8 @@ block|}
 end_function
 
 begin_function
-name|int
+name|enum
+name|snmp_code
 name|snmp_passwd_to_keys
 parameter_list|(
 name|struct
@@ -2077,7 +2078,8 @@ block|}
 end_function
 
 begin_function
-name|int
+name|enum
+name|snmp_code
 name|snmp_get_local_keys
 parameter_list|(
 name|struct
