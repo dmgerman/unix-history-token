@@ -458,7 +458,7 @@ value|CAPRIGHT(0, 0x0000000000100000ULL)
 end_define
 
 begin_comment
-comment|/* Allows for futimes(2). */
+comment|/* Allows for futimens(2) and futimes(2). */
 end_comment
 
 begin_define
@@ -469,7 +469,7 @@ value|CAPRIGHT(0, 0x0000000000200000ULL)
 end_define
 
 begin_comment
-comment|/* Allows for futimes(2) and futimesat(2). */
+comment|/* Allows for futimens(2), futimes(2), futimesat(2) and utimensat(2). */
 end_comment
 
 begin_define
