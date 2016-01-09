@@ -214,6 +214,28 @@ begin_comment
 comment|/* filename of program */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINUX_AT_SYSINFO
+value|32
+end_define
+
+begin_comment
+comment|/* vsyscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_SYSINFO_EHDR
+value|33
+end_define
+
+begin_comment
+comment|/* vdso header */
+end_comment
+
 begin_comment
 comment|/* Linux sets the i387 to extended precision. */
 end_comment
