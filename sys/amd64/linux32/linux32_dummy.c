@@ -678,14 +678,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|syncfs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|setns
 argument_list|)
 expr_stmt|;
