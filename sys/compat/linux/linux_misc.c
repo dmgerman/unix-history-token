@@ -9902,6 +9902,20 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * According to man in case the invalid pid specified 	 * EINVAL should be returned. 	 */
+if|if
+condition|(
+name|uap
+operator|->
+name|pid
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|tdt
 operator|=
 name|linux_tdfind
