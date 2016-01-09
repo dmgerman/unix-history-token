@@ -3640,10 +3640,6 @@ name|sa_len
 expr_stmt|;
 if|if
 condition|(
-name|src
-operator|!=
-name|NULL
-operator|&&
 name|dst
 operator|!=
 name|NULL
