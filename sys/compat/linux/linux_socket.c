@@ -4767,15 +4767,6 @@ argument_list|,
 name|MT_CONTROL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|control
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|bad
-goto|;
 do|do
 block|{
 name|error
@@ -5042,6 +5033,11 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
+name|m_freem
+argument_list|(
+name|control
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|iov
