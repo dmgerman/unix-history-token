@@ -539,6 +539,17 @@ name|thread
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sv_thread_detach
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

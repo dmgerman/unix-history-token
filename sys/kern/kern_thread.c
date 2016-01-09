@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/turnstile.h>
 end_include
 
@@ -3458,6 +3464,31 @@ name|p
 argument_list|)
 expr_stmt|;
 name|tidhash_remove
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Allow Linux emulation layer to do some work 			 * before thread suicide. 			 */
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_thread_detach
+operator|!=
+name|NULL
+argument_list|)
+condition|)
+call|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_thread_detach
+call|)
 argument_list|(
 name|td
 argument_list|)
