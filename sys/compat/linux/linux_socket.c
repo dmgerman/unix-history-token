@@ -6713,6 +6713,27 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
+
 begin_comment
 comment|/* Argument list sizes for linux_socketcall */
 end_comment
@@ -6859,27 +6880,6 @@ directive|define
 name|LINUX_AL_SIZE
 value|sizeof(lxs_args) / sizeof(lxs_args[0]) - 1
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|COMPAT_LINUX32
-argument_list|)
-operator|)
-end_if
 
 begin_function
 name|int

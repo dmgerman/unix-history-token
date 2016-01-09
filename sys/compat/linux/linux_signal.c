@@ -184,6 +184,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
+
 begin_function
 name|void
 name|linux_to_bsd_sigset
@@ -413,6 +434,15 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_function
 specifier|static
@@ -883,6 +913,27 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
+
 begin_function
 name|int
 name|linux_signal
@@ -1007,6 +1058,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_function
 name|int
@@ -1349,6 +1409,27 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
+
 begin_function
 name|int
 name|linux_sigprocmask
@@ -1526,6 +1607,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_function
 name|int
@@ -1715,6 +1805,27 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
 
 begin_function
 name|int
@@ -1954,10 +2065,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|linux_sigpending
@@ -2085,6 +2192,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_comment
 comment|/*  * MPSAFE  */
