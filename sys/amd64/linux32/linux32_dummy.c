@@ -527,14 +527,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|epoll_pwait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* linux 2.6.22: */
 end_comment
