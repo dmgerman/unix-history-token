@@ -995,37 +995,6 @@ name|rndfsize
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Translate the signal if appropriate (Linux emu ?) 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-operator|&&
-name|sig
-operator|<=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigsize
-condition|)
-name|sig
-operator|=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-index|[
-name|_SIG_IDX
-argument_list|(
-name|sig
-argument_list|)
-index|]
-expr_stmt|;
 comment|/* 	 * Save the floating-point state, if necessary, then copy it. 	 */
 comment|/* XXX */
 comment|/* 	 * Set up the registers to return to sigcode. 	 * 	 *   r1/sp - sigframe ptr 	 *   lr    - sig function, dispatched to by blrl in trampoline 	 *   r3    - sig number 	 *   r4    - SIGINFO ?&siginfo : exception code 	 *   r5    - user context 	 *   srr0  - trampoline function addr 	 */

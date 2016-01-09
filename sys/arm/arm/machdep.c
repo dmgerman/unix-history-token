@@ -1241,37 +1241,6 @@ name|SIGILL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Translate the signal if appropriate. */
-if|if
-condition|(
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-operator|&&
-name|sig
-operator|<=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigsize
-condition|)
-name|sig
-operator|=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-index|[
-name|_SIG_IDX
-argument_list|(
-name|sig
-argument_list|)
-index|]
-expr_stmt|;
 comment|/* 	 * Build context to run handler in.  We invoke the handler 	 * directly, only returning via the trampoline.  Note the 	 * trampoline version numbers are coordinated with machine- 	 * dependent code in libc. 	 */
 name|tf
 operator|->
