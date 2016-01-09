@@ -62,7 +62,7 @@ name|nm
 parameter_list|,
 name|fmt
 parameter_list|)
-value|"linux(%ld): "#nm"("fmt")\n", (long)td->td_proc->p_pid
+value|"linux(%ld/%ld): "#nm"("fmt")\n",			\ 			(long)td->td_proc->p_pid, (long)td->td_tid
 end_define
 
 begin_define
@@ -72,7 +72,7 @@ name|LMSG
 parameter_list|(
 name|fmt
 parameter_list|)
-value|"linux(%ld): "fmt"\n", (long)td->td_proc->p_pid
+value|"linux(%ld/%ld): "fmt"\n",				\ 			(long)td->td_proc->p_pid, (long)td->td_tid
 end_define
 
 begin_define
