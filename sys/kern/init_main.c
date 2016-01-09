@@ -2764,7 +2764,7 @@ operator|->
 name|p_start
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2778,7 +2778,7 @@ name|ru
 argument_list|)
 expr_stmt|;
 comment|/* Clears thread stats */
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
