@@ -504,6 +504,20 @@ name|LINUX_CLOCK_MONOTONIC_HR
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_UTIME_NOW
+value|0x3FFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_UTIME_OMIT
+value|0x3FFFFFFE
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
