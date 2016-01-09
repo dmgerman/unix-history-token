@@ -140,6 +140,18 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
+name|M_EPOLL
+argument_list|,
+literal|"lepoll"
+argument_list|,
+literal|"Linux events structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
 name|M_FUTEX
 argument_list|,
 literal|"futex"

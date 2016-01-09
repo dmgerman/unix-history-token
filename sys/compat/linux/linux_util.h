@@ -80,6 +80,14 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
+name|M_EPOLL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
 name|M_FUTEX
 argument_list|)
 expr_stmt|;
