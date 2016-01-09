@@ -2511,13 +2511,19 @@ argument_list|(
 name|LMSG
 argument_list|(
 literal|"linux_rt_sigtimedwait: "
-literal|"incoming timeout (%d/%d)\n"
+literal|"incoming timeout (%jd/%jd)\n"
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ltv
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ltv
 operator|.
 name|tv_usec
