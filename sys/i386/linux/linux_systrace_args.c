@@ -43,13 +43,13 @@ define|#
 directive|define
 name|nosys
 value|linux_nosys
-comment|/* sys_exit */
+comment|/* linux_exit */
 case|case
 literal|1
 case|:
 block|{
 name|struct
-name|sys_exit_args
+name|linux_exit_args
 modifier|*
 name|p
 init|=
@@ -11213,7 +11213,7 @@ define|#
 directive|define
 name|nosys
 value|linux_nosys
-comment|/* sys_exit */
+comment|/* linux_exit */
 case|case
 literal|1
 case|:
@@ -18899,7 +18899,7 @@ define|#
 directive|define
 name|nosys
 value|linux_nosys
-comment|/* sys_exit */
+comment|/* linux_exit */
 case|case
 literal|1
 case|:
