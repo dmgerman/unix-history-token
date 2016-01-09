@@ -349,26 +349,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|FEATURE
-argument_list|(
-name|linuxulator_v4l
-argument_list|,
-literal|"V4L ioctl wrapper support in the linuxulator"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|FEATURE
-argument_list|(
-name|linuxulator_v4l2
-argument_list|,
-literal|"V4L2 ioctl wrapper support in the linuxulator"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|linux_ioctl_function_t
