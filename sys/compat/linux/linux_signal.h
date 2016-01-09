@@ -206,6 +206,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|lsiginfo_to_ksiginfo
+parameter_list|(
+specifier|const
+name|l_siginfo_t
+modifier|*
+name|lsi
+parameter_list|,
+name|ksiginfo_t
+modifier|*
+name|ksi
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
