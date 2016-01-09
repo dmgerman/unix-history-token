@@ -3899,7 +3899,7 @@ name|p
 operator|->
 name|rusage
 expr_stmt|;
-comment|/* struct l_rusage * */
+comment|/* void * */
 operator|*
 name|n_args
 operator|=
@@ -13924,7 +13924,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct l_rusage *"
+literal|"void *"
 expr_stmt|;
 break|break;
 default|default:
