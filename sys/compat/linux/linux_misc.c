@@ -4209,7 +4209,7 @@ operator|&
 literal|0xffffff80
 operator|)
 operator||
-name|BSD_TO_LINUX_SIGNAL
+name|bsd_to_linux_signal
 argument_list|(
 name|WTERMSIG
 argument_list|(
@@ -4234,7 +4234,7 @@ literal|0xffff00ff
 operator|)
 operator||
 operator|(
-name|BSD_TO_LINUX_SIGNAL
+name|bsd_to_linux_signal
 argument_list|(
 name|WSTOPSIG
 argument_list|(
@@ -4875,7 +4875,7 @@ else|else
 block|{
 name|sig
 operator|=
-name|BSD_TO_LINUX_SIGNAL
+name|bsd_to_linux_signal
 argument_list|(
 name|siginfo
 operator|.
