@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_KSUBLEVEL
-value|18
+value|32
 end_define
 
 begin_define
