@@ -5108,13 +5108,13 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* sched_setparam */
+comment|/* linux_sched_setparam */
 case|case
 literal|154
 case|:
 block|{
 name|struct
-name|sched_setparam_args
+name|linux_sched_setparam_args
 modifier|*
 name|p
 init|=
@@ -5129,7 +5129,7 @@ name|p
 operator|->
 name|pid
 expr_stmt|;
-comment|/* pid_t */
+comment|/* l_pid_t */
 name|uarg
 index|[
 literal|1
@@ -5142,7 +5142,7 @@ name|p
 operator|->
 name|param
 expr_stmt|;
-comment|/* const struct sched_param * */
+comment|/* struct l_sched_param * */
 operator|*
 name|n_args
 operator|=
@@ -5150,13 +5150,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* sched_getparam */
+comment|/* linux_sched_getparam */
 case|case
 literal|155
 case|:
 block|{
 name|struct
-name|sched_getparam_args
+name|linux_sched_getparam_args
 modifier|*
 name|p
 init|=
@@ -5171,7 +5171,7 @@ name|p
 operator|->
 name|pid
 expr_stmt|;
-comment|/* pid_t */
+comment|/* l_pid_t */
 name|uarg
 index|[
 literal|1
@@ -5184,7 +5184,7 @@ name|p
 operator|->
 name|param
 expr_stmt|;
-comment|/* struct sched_param * */
+comment|/* struct l_sched_param * */
 operator|*
 name|n_args
 operator|=
@@ -14272,7 +14272,7 @@ case|case
 literal|153
 case|:
 break|break;
-comment|/* sched_setparam */
+comment|/* linux_sched_setparam */
 case|case
 literal|154
 case|:
@@ -14286,7 +14286,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"pid_t"
+literal|"l_pid_t"
 expr_stmt|;
 break|break;
 case|case
@@ -14294,7 +14294,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sched_param *"
+literal|"struct l_sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -14302,7 +14302,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* sched_getparam */
+comment|/* linux_sched_getparam */
 case|case
 literal|155
 case|:
@@ -14316,7 +14316,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"pid_t"
+literal|"l_pid_t"
 expr_stmt|;
 break|break;
 case|case
@@ -14324,7 +14324,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sched_param *"
+literal|"struct l_sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20247,7 +20247,7 @@ comment|/* munlockall */
 case|case
 literal|153
 case|:
-comment|/* sched_setparam */
+comment|/* linux_sched_setparam */
 case|case
 literal|154
 case|:
@@ -20266,7 +20266,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* sched_getparam */
+comment|/* linux_sched_getparam */
 case|case
 literal|155
 case|:
