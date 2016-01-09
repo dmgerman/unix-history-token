@@ -4235,6 +4235,7 @@ name|p_sysent
 operator|->
 name|sv_size
 condition|)
+comment|/* nosys */
 name|sa
 operator|->
 name|callp
@@ -4246,7 +4247,7 @@ name|p_sysent
 operator|->
 name|sv_table
 index|[
-literal|0
+name|LINUX_SYS_MAXSYSCALL
 index|]
 expr_stmt|;
 else|else
