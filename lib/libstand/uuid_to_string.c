@@ -71,7 +71,7 @@ operator|>=
 literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 name|walker
