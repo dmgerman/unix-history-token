@@ -4388,6 +4388,26 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+name|l32_map_str
+index|[]
+init|=
+literal|"%08lx-%08lx %s%s%s%s %08lx %02x:%02x %lu%s%s\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|l64_map_str
+index|[]
+init|=
+literal|"%016lx-%016lx %s%s%s%s %08lx %02x:%02x %lu%s%s\n"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Filler function for proc/pid/maps  */
 end_comment
@@ -4447,6 +4467,11 @@ modifier|*
 name|freename
 init|=
 name|NULL
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|l_map_str
 decl_stmt|;
 name|ino_t
 name|ino
@@ -4801,13 +4826,29 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * format: 		 *  start, end, access, offset, major, minor, inode, name. 		 */
+if|if
+condition|(
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_LP64
+argument_list|)
+condition|)
+name|l_map_str
+operator|=
+name|l64_map_str
+expr_stmt|;
+else|else
+name|l_map_str
+operator|=
+name|l32_map_str
+expr_stmt|;
 name|error
 operator|=
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%08lx-%08lx %s%s%s%s %08lx %02x:%02x %lu%s%s\n"
+name|l_map_str
 argument_list|,
 operator|(
 name|u_long
