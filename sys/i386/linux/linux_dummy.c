@@ -536,18 +536,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* linux 2.6.23: */
-end_comment
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|fallocate
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* linux 2.6.25: */
 end_comment
 
