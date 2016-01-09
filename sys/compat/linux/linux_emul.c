@@ -1210,9 +1210,9 @@ name|cup
 operator|.
 name|val
 operator|=
-literal|0x7fffffff
+literal|1
 expr_stmt|;
-comment|/* Awake everyone */
+comment|/* wake one */
 name|cup
 operator|.
 name|timeout
