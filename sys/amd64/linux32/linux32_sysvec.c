@@ -4769,7 +4769,7 @@ name|linux32_ps_strings
 modifier|*
 name|arginfo
 decl_stmt|;
-comment|/* 	 * Calculate string base and vector table pointers. 	 * Also deal with signal trampoline code for this exec type. 	 */
+comment|/* 	 * Calculate string base and vector table pointers. 	 */
 name|arginfo
 operator|=
 operator|(
