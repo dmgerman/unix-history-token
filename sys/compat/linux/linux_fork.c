@@ -1148,7 +1148,7 @@ endif|#
 directive|endif
 name|LINUX_CTR4
 argument_list|(
-name|clone
+name|clone_thread
 argument_list|,
 literal|"thread(%d) flags %x ptid %p ctid %p"
 argument_list|,
@@ -1542,7 +1542,7 @@ endif|#
 directive|endif
 name|LINUX_CTR2
 argument_list|(
-name|clone
+name|clone_thread
 argument_list|,
 literal|"thread(%d) successful clone to %d"
 argument_list|,
@@ -1902,9 +1902,9 @@ argument_list|)
 expr_stmt|;
 name|LINUX_CTR1
 argument_list|(
-name|exit
+name|thread_detach
 argument_list|,
-literal|"thread detach(%d)"
+literal|"thread(%d)"
 argument_list|,
 name|em
 operator|->
@@ -1933,9 +1933,9 @@ condition|)
 block|{
 name|LINUX_CTR2
 argument_list|(
-name|exit
+name|thread_detach
 argument_list|,
-literal|"thread detach(%d) %p"
+literal|"thread(%d) %p"
 argument_list|,
 name|em
 operator|->
