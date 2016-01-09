@@ -1581,7 +1581,9 @@ operator|)
 name|base
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6178,11 +6180,15 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
