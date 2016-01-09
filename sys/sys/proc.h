@@ -1022,6 +1022,11 @@ name|u_int
 name|td_dbg_sc_narg
 decl_stmt|;
 comment|/* (c) Syscall arg count to debugger.*/
+name|void
+modifier|*
+name|td_emuldata
+decl_stmt|;
+comment|/* Emulator state data */
 block|}
 struct|;
 end_struct
