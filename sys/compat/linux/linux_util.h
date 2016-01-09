@@ -408,7 +408,7 @@ name|p5
 parameter_list|,
 name|p6
 parameter_list|)
-value|do {			\ 	if (ldebug(f))							\ 		CTR6(KTR_LINUX, LINUX_CTRFMT(f, m),			\ 		    p1, p2, p3, p4, p5, p6);				\ } while (0)
+value|do {			\ 		CTR6(KTR_LINUX, LINUX_CTRFMT(f, m),			\ 		    p1, p2, p3, p4, p5, p6);				\ } while (0)
 end_define
 
 begin_define
