@@ -4566,6 +4566,21 @@ value|0xffdd
 end_define
 
 begin_comment
+comment|/*  * Linux btrfs clone operation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_BTRFS_IOC_CLONE
+value|0x9409
+end_define
+
+begin_comment
+comment|/* 0x40049409 */
+end_comment
+
+begin_comment
 comment|/*  * Pluggable ioctl handlers  */
 end_comment
 
