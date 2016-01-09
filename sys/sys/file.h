@@ -249,6 +249,17 @@ begin_comment
 comment|/* process descriptor */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_LINUXEFD
+value|13
+end_define
+
+begin_comment
+comment|/* emulation eventfd type */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -155,6 +155,13 @@ name|LINUX_EPOLL_CTL_MOD
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_EFD_SEMAPHORE
+value|(1<< 0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
