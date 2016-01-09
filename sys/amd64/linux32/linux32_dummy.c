@@ -748,18 +748,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* linux 2.6.36: */
-end_comment
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|prlimit64
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* later: */
 end_comment
 

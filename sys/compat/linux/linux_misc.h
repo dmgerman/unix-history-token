@@ -538,6 +538,13 @@ name|LINUX_P_PGID
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_RLIM_INFINITY
+value|(~0UL)
+end_define
+
 begin_function_decl
 name|int
 name|linux_common_wait
