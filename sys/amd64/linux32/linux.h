@@ -3170,6 +3170,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|linux_copyout_rusage
+parameter_list|(
+name|struct
+name|rusage
+modifier|*
+name|ru
+parameter_list|,
+name|void
+modifier|*
+name|uaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* robust futexes */
 end_comment

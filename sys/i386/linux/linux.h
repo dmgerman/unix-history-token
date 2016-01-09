@@ -3024,6 +3024,18 @@ define|\
 value|(((desc)->b>> LINUX_ENTRY_B_USEABLE)& 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|linux_copyout_rusage
+parameter_list|(
+name|r
+parameter_list|,
+name|u
+parameter_list|)
+value|copyout(r, u, sizeof(*r))
+end_define
+
 begin_comment
 comment|/* robust futexes */
 end_comment
