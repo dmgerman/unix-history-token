@@ -332,14 +332,6 @@ name|LINUX_CLONE_CHILD_SETTID
 value|0x01000000
 end_define
 
-begin_define
-define|#
-directive|define
-name|LINUX_THREADING_FLAGS
-define|\
-value|(LINUX_CLONE_VM | LINUX_CLONE_FS | LINUX_CLONE_FILES |	\ 	LINUX_CLONE_SIGHAND | LINUX_CLONE_THREAD)
-end_define
-
 begin_comment
 comment|/* Scheduling policies */
 end_comment
