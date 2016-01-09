@@ -2917,6 +2917,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_thr_alloc
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|int
+name|pages
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_thr_exit
 parameter_list|(
 name|struct
