@@ -3195,32 +3195,6 @@ value|0x64ff
 end_define
 
 begin_comment
-comment|/*  * This doesn't really belong here, but I can't think of a better  * place to put it.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|ifnet
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|int
-name|linux_ifname
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * video  */
 end_comment
 

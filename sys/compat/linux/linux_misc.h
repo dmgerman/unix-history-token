@@ -15,6 +15,12 @@ directive|define
 name|_LINUX_MISC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_comment
 comment|/*  * Miscellaneous  */
 end_comment
@@ -652,6 +658,15 @@ parameter_list|,
 name|lwpid_t
 parameter_list|,
 name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|linux_sysctl_debug
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
