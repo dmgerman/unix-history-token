@@ -375,7 +375,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_AT_COUNT
-value|17
+value|19
 end_define
 
 begin_comment
