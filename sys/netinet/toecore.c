@@ -255,13 +255,6 @@ name|lle_event_eh
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|eventhandler_tag
-name|route_redirect_eh
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -1778,40 +1771,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX: implement.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|toe_route_redirect_event
-parameter_list|(
-name|void
-modifier|*
-name|arg
-name|__unused
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt0
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt1
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|sa
-parameter_list|)
-block|{
-return|return;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Returns 0 or EWOULDBLOCK on success (any other value is an error).  0 means  * lladdr and vtag are valid on return, EWOULDBLOCK means the TOE driver's  * tod_l2_update will be called later, when the entry is resolved or times out.  */
 end_comment
 
@@ -2177,19 +2136,6 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-name|route_redirect_eh
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|route_redirect_event
-argument_list|,
-name|toe_route_redirect_event
-argument_list|,
-name|NULL
-argument_list|,
-name|EVENTHANDLER_PRI_ANY
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2253,13 +2199,6 @@ argument_list|(
 name|lle_event
 argument_list|,
 name|lle_event_eh
-argument_list|)
-expr_stmt|;
-name|EVENTHANDLER_DEREGISTER
-argument_list|(
-name|route_redirect_event
-argument_list|,
-name|route_redirect_eh
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
