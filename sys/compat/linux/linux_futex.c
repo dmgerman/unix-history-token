@@ -3841,9 +3841,9 @@ decl_stmt|,
 name|ret
 decl_stmt|;
 name|struct
-name|linux_emuldata
+name|linux_pemuldata
 modifier|*
-name|em
+name|pem
 decl_stmt|;
 name|struct
 name|waiting_proc
@@ -5479,17 +5479,19 @@ case|case
 name|LINUX_FUTEX_REQUEUE
 case|:
 comment|/* 		 * Glibc does not use this operation since version 2.3.3, 		 * as it is racy and replaced by FUTEX_CMP_REQUEUE operation. 		 * Glibc versions prior to 2.3.3 fall back to FUTEX_WAKE when 		 * FUTEX_REQUEUE returned EINVAL. 		 */
-name|em
+name|pem
 operator|=
-name|em_find
+name|pem_find
 argument_list|(
 name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|em
+name|pem
 operator|->
 name|flags
 operator|&
@@ -5507,7 +5509,7 @@ literal|"linux_sys_futex: "
 literal|"unsupported futex_requeue op\n"
 argument_list|)
 expr_stmt|;
-name|em
+name|pem
 operator|->
 name|flags
 operator||=

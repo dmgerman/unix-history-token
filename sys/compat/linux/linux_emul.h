@@ -40,7 +40,7 @@ comment|/* parent death signal */
 name|int
 name|flags
 decl_stmt|;
-comment|/* different emuldata flags */
+comment|/* thread emuldata flags */
 name|int
 name|em_tid
 decl_stmt|;
@@ -66,21 +66,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* emuldata flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_XDEPR_REQUEUEOP
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* uses deprecated 						   futex REQUEUE op*/
-end_comment
 
 begin_function_decl
 name|void
@@ -179,6 +164,91 @@ modifier|*
 parameter_list|,
 name|struct
 name|image_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* process emuldata flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_XDEPR_REQUEUEOP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* uses deprecated 						   futex REQUEUE op*/
+end_comment
+
+begin_struct
+struct|struct
+name|linux_pemuldata
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* process emuldata flags */
+name|struct
+name|sx
+name|pem_sx
+decl_stmt|;
+comment|/* lock for this struct */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|LINUX_PEM_XLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|sx_xlock(&(p)->pem_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_PEM_XUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|sx_xunlock(&(p)->pem_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_PEM_SLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|sx_slock(&(p)->pem_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_PEM_SUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|sx_sunlock(&(p)->pem_sx)
+end_define
+
+begin_function_decl
+name|struct
+name|linux_pemuldata
+modifier|*
+name|pem_find
+parameter_list|(
+name|struct
+name|proc
 modifier|*
 parameter_list|)
 function_decl|;

@@ -160,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -314,6 +320,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_dtrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_file.h>
 end_include
 
@@ -352,6 +364,18 @@ include|#
 directive|include
 file|<compat/linux/linux_misc.h>
 end_include
+
+begin_comment
+comment|/**  * Special DTrace provider for the linuxulator.  *  * In this file we define the provider for the entire linuxulator. All  * modules (= files of the linuxulator) use it.  *  * We define a different name depending on the emulated bitsize, see  * ../../<ARCH>/linux{,32}/linux.h, e.g.:  *      native bitsize          = linuxulator  *      amd64, 32bit emulation  = linuxulator32  */
+end_comment
+
+begin_expr_stmt
+name|LIN_SDT_PROVIDER_DEFINE
+argument_list|(
+name|LINUX_DTRACE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
