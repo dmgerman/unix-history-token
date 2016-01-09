@@ -3176,6 +3176,12 @@ name|namelen
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|bsd_args
+operator|.
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|linux_set_socket_flags
