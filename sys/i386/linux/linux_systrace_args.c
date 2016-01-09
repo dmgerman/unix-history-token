@@ -5533,13 +5533,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* sched_rr_get_interval */
+comment|/* linux_sched_rr_get_interval */
 case|case
 literal|161
 case|:
 block|{
 name|struct
-name|sched_rr_get_interval_args
+name|linux_sched_rr_get_interval_args
 modifier|*
 name|p
 init|=
@@ -15080,7 +15080,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* sched_rr_get_interval */
+comment|/* linux_sched_rr_get_interval */
 case|case
 literal|161
 case|:
@@ -21325,7 +21325,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* sched_rr_get_interval */
+comment|/* linux_sched_rr_get_interval */
 case|case
 literal|161
 case|:
