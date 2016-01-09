@@ -195,6 +195,17 @@ begin_comment
 comment|/* unsupported epoll events */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINUX_XUNSUP_FUTEXPIOP
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* uses unsupported pi futex */
+end_comment
+
 begin_struct
 struct|struct
 name|linux_pemuldata
