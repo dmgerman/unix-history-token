@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Roman Divacky  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2006 Roman Divacky  * Copyright (c) 2013 Dmitry Chagin  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -15,41 +15,6 @@ directive|define
 name|_LINUX_EMUL_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|EMUL_SHARED_HASXSTAT
-value|0x01
-end_define
-
-begin_struct
-struct|struct
-name|linux_emuldata_shared
-block|{
-name|int
-name|refs
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|xstat
-decl_stmt|;
-name|pid_t
-name|group_pid
-decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|linux_emuldata
-argument_list|)
-name|threads
-expr_stmt|;
-comment|/* head of list of linux threads */
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * modeled after similar structure in NetBSD  * this will be extended as we need more functionality  */
 end_comment
@@ -58,9 +23,6 @@ begin_struct
 struct|struct
 name|linux_emuldata
 block|{
-name|pid_t
-name|pid
-decl_stmt|;
 name|int
 modifier|*
 name|child_set_tid
@@ -71,11 +33,6 @@ modifier|*
 name|child_clear_tid
 decl_stmt|;
 comment|/* in clone(): Child's TID to clear on exit */
-name|struct
-name|linux_emuldata_shared
-modifier|*
-name|shared
-decl_stmt|;
 name|int
 name|pdeath_signal
 decl_stmt|;
@@ -84,18 +41,15 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* different emuldata flags */
+name|int
+name|em_tid
+decl_stmt|;
+comment|/* thread id */
 name|struct
 name|linux_robust_list_head
 modifier|*
 name|robust_futexes
 decl_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|linux_emuldata
-argument_list|)
-name|threads
-expr_stmt|;
-comment|/* list of linux threads */
 block|}
 struct|;
 end_struct
@@ -107,96 +61,11 @@ modifier|*
 name|em_find
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-parameter_list|,
-name|int
-name|locked
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * DTrace probes for locks should be fired after locking and before releasing  * to prevent races (to provide data/function stability in dtrace, see the  * output of "dtrace -v ..." and the corresponding dtrace docs).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EMUL_LOCK
-parameter_list|(
-name|l
-parameter_list|)
-value|do { \ 				    mtx_lock(l); \ 				    LIN_SDT_PROBE1(locks, emul_lock, \ 					locked, l); \ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EMUL_UNLOCK
-parameter_list|(
-name|l
-parameter_list|)
-value|do { \ 				    LIN_SDT_PROBE1(locks, emul_lock, \ 					unlock, l); \ 				    mtx_unlock(l); \ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EMUL_SHARED_RLOCK
-parameter_list|(
-name|l
-parameter_list|)
-value|do { \ 				    sx_slock(l); \ 				    LIN_SDT_PROBE1(locks, emul_shared_rlock, \ 					locked, l); \ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EMUL_SHARED_RUNLOCK
-parameter_list|(
-name|l
-parameter_list|)
-value|do { \ 				    LIN_SDT_PROBE1(locks, emul_shared_rlock, \ 					unlock, l); \ 				    sx_sunlock(l); \ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EMUL_SHARED_WLOCK
-parameter_list|(
-name|l
-parameter_list|)
-value|do { \ 				    sx_xlock(l); \ 				    LIN_SDT_PROBE1(locks, emul_shared_wlock, \ 					locked, l); \ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EMUL_SHARED_WUNLOCK
-parameter_list|(
-name|l
-parameter_list|)
-value|do { \ 				    LIN_SDT_PROBE1(locks, emul_shared_wlock, \ 					unlock, l); \ 				    sx_xunlock(l); \ 				} while (0)
-end_define
-
-begin_comment
-comment|/* for em_find use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EMUL_DOLOCK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|EMUL_DONTLOCK
-value|0
-end_define
 
 begin_comment
 comment|/* emuldata flags */
@@ -214,14 +83,16 @@ comment|/* uses deprecated 						   futex REQUEUE op*/
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|linux_proc_init
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|pid_t
+name|struct
+name|thread
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -273,32 +144,45 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|linux_kill_threads
+name|linux_thread_dtor
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|linux_thread_detach
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|linux_common_execve
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|image_args
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|emul_shared_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|emul_lock
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

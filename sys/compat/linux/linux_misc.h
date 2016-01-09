@@ -523,6 +523,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|thread
+modifier|*
+name|linux_tdfind
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|lwpid_t
+parameter_list|,
+name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
