@@ -513,6 +513,31 @@ name|__WCLONE
 value|0x80000000
 end_define
 
+begin_comment
+comment|/* Linux waitid idtype  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_P_ALL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_P_PID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_P_PGID
+value|2
+end_define
+
 begin_function_decl
 name|int
 name|linux_common_wait

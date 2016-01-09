@@ -407,14 +407,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|waitid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* linux 2.6.11: */
 end_comment
