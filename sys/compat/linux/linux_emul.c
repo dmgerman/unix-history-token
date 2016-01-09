@@ -292,7 +292,7 @@ operator|*
 name|pem
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|,
 name|M_WAITOK
 operator||
@@ -454,7 +454,7 @@ name|free
 argument_list|(
 name|pem
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 block|}
@@ -642,7 +642,7 @@ name|free
 argument_list|(
 name|pem
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 block|}

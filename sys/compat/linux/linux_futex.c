@@ -1383,32 +1383,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_FUTEX
-argument_list|,
-literal|"futex"
-argument_list|,
-literal|"Linux futexes"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_FUTEX_WP
-argument_list|,
-literal|"futex wp"
-argument_list|,
-literal|"Linux futexes wp"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|futex

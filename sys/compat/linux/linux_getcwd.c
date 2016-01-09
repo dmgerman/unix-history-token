@@ -595,7 +595,7 @@ name|malloc
 argument_list|(
 name|dirbuflen
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -931,7 +931,7 @@ name|free
 argument_list|(
 name|dirbuf
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 return|return

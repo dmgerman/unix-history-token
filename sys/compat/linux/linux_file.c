@@ -1695,7 +1695,7 @@ name|malloc
 argument_list|(
 name|buflen
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1706,7 +1706,7 @@ name|malloc
 argument_list|(
 name|LINUX_MAXRECLEN
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|,
 name|M_WAITOK
 operator||
@@ -2444,14 +2444,14 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lbuf
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 return|return
