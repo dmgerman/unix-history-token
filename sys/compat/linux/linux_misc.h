@@ -22,6 +22,17 @@ file|<sys/sysctl.h>
 end_include
 
 begin_comment
+comment|/* bits per mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_NFDBITS
+value|sizeof(l_fd_mask) * 8
+end_define
+
+begin_comment
 comment|/*  * Miscellaneous  */
 end_comment
 

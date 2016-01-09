@@ -2357,12 +2357,7 @@ name|exceptfds
 argument_list|,
 name|tvp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|l_int
-argument_list|)
-operator|*
-literal|8
+name|LINUX_NFDBITS
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -10623,12 +10618,7 @@ name|tvp
 argument_list|,
 name|ssp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|l_int
-argument_list|)
-operator|*
-literal|8
+name|LINUX_NFDBITS
 argument_list|)
 expr_stmt|;
 if|if
