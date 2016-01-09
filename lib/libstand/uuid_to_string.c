@@ -381,7 +381,7 @@ expr_stmt|;
 operator|*
 name|w
 operator|++
-operator|-
+operator|=
 literal|'\0'
 expr_stmt|;
 block|}
