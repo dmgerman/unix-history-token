@@ -131,6 +131,10 @@ name|RT_L2_ME
 value|(1<< RT_L2_ME_BIT)
 end_define
 
+begin_comment
+comment|/* 0x0004 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -138,12 +142,53 @@ name|RT_MAY_LOOP
 value|(1<< RT_MAY_LOOP_BIT)
 end_define
 
+begin_comment
+comment|/* 0x0008 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RT_HAS_HEADER
 value|(1<< RT_HAS_HEADER_BIT)
 end_define
+
+begin_comment
+comment|/* 0x0010 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_REJECT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Destination is reject */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_BLACKHOLE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Destination is blackhole */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_HAS_GW
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Destination has GW  */
+end_comment
 
 begin_struct
 struct|struct
@@ -944,6 +989,89 @@ operator|(
 name|res
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* rte<>ro_flags translation */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|rt_update_ro_flags
+parameter_list|(
+name|struct
+name|route
+modifier|*
+name|ro
+parameter_list|)
+block|{
+name|int
+name|rt_flags
+init|=
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+decl_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator|&=
+operator|~
+operator|(
+name|RT_REJECT
+operator||
+name|RT_BLACKHOLE
+operator||
+name|RT_HAS_GW
+operator|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator|=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_REJECT
+operator|)
+condition|?
+name|RT_REJECT
+else|:
+literal|0
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_BLACKHOLE
+operator|)
+condition|?
+name|RT_BLACKHOLE
+else|:
+literal|0
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_GATEWAY
+operator|)
+condition|?
+name|RT_HAS_GW
+else|:
+literal|0
+expr_stmt|;
 block|}
 end_function
 
