@@ -3447,7 +3447,7 @@ name|utsname
 operator|.
 name|machine
 argument_list|,
-name|linux_platform
+name|linux_kplatform
 argument_list|,
 name|LINUX_MAX_UTSNAME
 argument_list|)

@@ -388,16 +388,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|linux_platform
-init|=
-literal|"i686"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|linux_szplatform
+name|linux_kplatform
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,6 +1223,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LINUX_VDSO_SYM_CHAR
+argument_list|(
+name|linux_platform
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * If FreeBSD& Linux have a difference of opinion about what a trap  * means, deal with it here.  *  * MPSAFE  */
 end_comment
@@ -1312,9 +1311,6 @@ decl_stmt|;
 name|Elf32_Addr
 modifier|*
 name|pos
-decl_stmt|,
-modifier|*
-name|uplatform
 decl_stmt|;
 name|struct
 name|linux32_ps_strings
@@ -1329,21 +1325,6 @@ name|linux32_ps_strings
 operator|*
 operator|)
 name|LINUX32_PS_STRINGS
-expr_stmt|;
-name|uplatform
-operator|=
-operator|(
-name|Elf32_Addr
-operator|*
-operator|)
-operator|(
-operator|(
-name|caddr_t
-operator|)
-name|arginfo
-operator|-
-name|linux_szplatform
-operator|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -1605,7 +1586,7 @@ name|LINUX_AT_PLATFORM
 argument_list|,
 name|PTROUT
 argument_list|(
-name|uplatform
+name|linux_platform
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4807,8 +4788,6 @@ name|arginfo
 operator|-
 name|SPARE_USRSPACE
 operator|-
-name|linux_szplatform
-operator|-
 name|roundup
 argument_list|(
 operator|(
@@ -4826,23 +4805,6 @@ argument_list|(
 name|char
 operator|*
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Install LINUX_PLATFORM 	 */
-name|copyout
-argument_list|(
-name|linux_platform
-argument_list|,
-operator|(
-operator|(
-name|caddr_t
-operator|)
-name|arginfo
-operator|-
-name|linux_szplatform
-operator|)
-argument_list|,
-name|linux_szplatform
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we have a valid auxargs ptr, prepare some room 	 * on the stack. 	 */
@@ -5681,6 +5643,19 @@ name|sv_shared_page_obj
 operator|=
 name|linux_shared_page_obj
 expr_stmt|;
+name|linux_kplatform
+operator|=
+name|linux_shared_page_mapping
+operator|+
+operator|(
+name|linux_platform
+operator|-
+operator|(
+name|caddr_t
+operator|)
+name|LINUX32_SHAREDPAGE
+operator|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6217,24 +6192,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
-argument_list|)
-expr_stmt|;
-name|linux_szplatform
-operator|=
-name|roundup
-argument_list|(
-name|strlen
-argument_list|(
-name|linux_platform
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|linux_osd_jail_register
