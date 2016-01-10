@@ -3687,6 +3687,17 @@ literal|3
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|devname
+argument_list|,
+literal|"vmnet"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|pci_vtnet_tap_setup
 argument_list|(
