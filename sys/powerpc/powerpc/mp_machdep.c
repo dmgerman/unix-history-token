@@ -248,17 +248,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|longfault
-parameter_list|(
-name|faultbuf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|machdep_ap_bootstrap

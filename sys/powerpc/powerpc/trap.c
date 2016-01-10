@@ -233,11 +233,15 @@ directive|include
 file|<machine/sr.h>
 end_include
 
+begin_comment
+comment|/* Below matches setjmp.S */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FAULTBUF_LR
-value|0
+value|21
 end_define
 
 begin_define
@@ -258,14 +262,14 @@ begin_define
 define|#
 directive|define
 name|FAULTBUF_CR
-value|3
+value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|FAULTBUF_R13
-value|4
+name|FAULTBUF_R14
+value|3
 end_define
 
 begin_function_decl
@@ -2028,7 +2032,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|faultbuf
+name|jmp_buf
 modifier|*
 name|fb
 decl_stmt|;
@@ -2059,6 +2063,8 @@ operator|(
 operator|*
 name|fb
 operator|)
+operator|->
+name|_jb
 index|[
 name|FAULTBUF_LR
 index|]
@@ -2074,6 +2080,8 @@ operator|(
 operator|*
 name|fb
 operator|)
+operator|->
+name|_jb
 index|[
 name|FAULTBUF_R1
 index|]
@@ -2089,6 +2097,8 @@ operator|(
 operator|*
 name|fb
 operator|)
+operator|->
+name|_jb
 index|[
 name|FAULTBUF_R2
 index|]
@@ -2110,6 +2120,8 @@ operator|(
 operator|*
 name|fb
 operator|)
+operator|->
+name|_jb
 index|[
 name|FAULTBUF_CR
 index|]
@@ -2121,8 +2133,10 @@ operator|(
 operator|*
 name|fb
 operator|)
+operator|->
+name|_jb
 index|[
-name|FAULTBUF_R13
+name|FAULTBUF_R14
 index|]
 argument_list|,
 operator|&
@@ -2130,10 +2144,10 @@ name|frame
 operator|->
 name|fixreg
 index|[
-literal|13
+literal|14
 index|]
 argument_list|,
-literal|19
+literal|18
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2141,6 +2155,15 @@ name|register_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Returns twice, not thrice */
 return|return
 operator|(
 literal|1
