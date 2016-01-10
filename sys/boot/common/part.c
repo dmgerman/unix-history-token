@@ -1763,6 +1763,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"GPT detected"
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 name|MIN
@@ -3716,6 +3721,32 @@ argument_list|(
 literal|"magic sequence not found"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_GPT_SUPPORT
+argument_list|)
+comment|/* There is no PMBR, check that we have backup GPT */
+name|table
+operator|->
+name|type
+operator|=
+name|PTABLE_GPT
+expr_stmt|;
+name|table
+operator|=
+name|ptable_gptread
+argument_list|(
+name|table
+argument_list|,
+name|dev
+argument_list|,
+name|dread
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|out
 goto|;
