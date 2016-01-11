@@ -89,22 +89,6 @@ directive|include
 file|"nvme_private.h"
 end_include
 
-begin_comment
-comment|/*  * Used for calculating number of CPUs to assign to each core and number of I/O  *  queues to allocate per controller.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NVME_CEILING
-parameter_list|(
-name|num
-parameter_list|,
-name|div
-parameter_list|)
-value|((((num) - 1) / (div)) + 1)
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -486,7 +470,7 @@ name|ctrlr
 operator|->
 name|num_cpus_per_ioq
 operator|=
-name|NVME_CEILING
+name|howmany
 argument_list|(
 name|mp_ncpus
 argument_list|,
@@ -4283,7 +4267,7 @@ name|max
 argument_list|(
 name|min_cpus_per_ioq
 argument_list|,
-name|NVME_CEILING
+name|howmany
 argument_list|(
 name|mp_ncpus
 argument_list|,
@@ -4297,7 +4281,7 @@ name|ctrlr
 operator|->
 name|num_io_queues
 operator|=
-name|NVME_CEILING
+name|howmany
 argument_list|(
 name|mp_ncpus
 argument_list|,
