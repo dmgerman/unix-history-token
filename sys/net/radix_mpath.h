@@ -151,6 +151,21 @@ end_define
 
 begin_function_decl
 name|struct
+name|rtentry
+modifier|*
+name|rt_mpath_select
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
 name|radix_node
 modifier|*
 name|rn_mpath_lookup
