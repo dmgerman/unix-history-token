@@ -1958,7 +1958,7 @@ name|uint64_t
 modifier|*
 name|pool_guid
 decl_stmt|;
-name|uint16_t
+name|u_int
 name|secsz
 decl_stmt|;
 block|}
