@@ -1039,7 +1039,7 @@ expr_stmt|;
 name|ro
 operator|->
 name|ro_flags
-operator|=
+operator||=
 operator|(
 name|rt_flags
 operator|&
