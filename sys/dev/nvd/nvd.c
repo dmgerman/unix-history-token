@@ -871,6 +871,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 ifdef|#
 directive|ifdef
