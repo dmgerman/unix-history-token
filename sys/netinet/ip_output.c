@@ -1795,6 +1795,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|rt_update_ro_flags
+argument_list|(
+name|ro
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rte

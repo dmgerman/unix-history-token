@@ -2960,11 +2960,34 @@ name|SF_MNOWAIT
 value|0x00000002
 end_define
 
+begin_comment
+comment|/* obsolete */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SF_SYNC
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SF_NOCACHE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SF_FLAGS
+parameter_list|(
+name|rh
+parameter_list|,
+name|flags
+parameter_list|)
+value|(((rh)<< 16) | (flags))
 end_define
 
 begin_ifdef
@@ -2978,6 +3001,16 @@ define|#
 directive|define
 name|SFK_COMPAT
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SF_READAHEAD
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)>> 16)
 end_define
 
 begin_endif

@@ -8345,7 +8345,7 @@ argument_list|)
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|sf_buf_mext
+name|sf_mext_free
 argument_list|,
 operator|(
 name|void
@@ -8732,7 +8732,7 @@ index|[
 name|i
 index|]
 condition|)
-name|sf_buf_mext
+name|sf_mext_free
 argument_list|(
 operator|(
 name|void

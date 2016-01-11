@@ -71,7 +71,7 @@ operator|>=
 literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 name|walker
@@ -381,7 +381,7 @@ expr_stmt|;
 operator|*
 name|w
 operator|++
-operator|-
+operator|=
 literal|'\0'
 expr_stmt|;
 block|}
