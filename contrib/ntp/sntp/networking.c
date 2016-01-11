@@ -473,7 +473,7 @@ comment|/* Note: pkt_len must be a multiple of 4 at this point! */
 name|packet_end
 operator|=
 operator|(
-name|u_int32
+name|void
 operator|*
 operator|)
 operator|(

@@ -54,6 +54,12 @@ directive|include
 file|"ntp_fp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -158,7 +164,7 @@ name|RUN_TEST
 argument_list|(
 name|test_ConstantDateTime
 argument_list|,
-literal|9
+literal|10
 argument_list|)
 expr_stmt|;
 return|return

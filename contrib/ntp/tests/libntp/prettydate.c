@@ -31,12 +31,35 @@ end_include
 
 begin_function_decl
 name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|test_ConstantDate
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_function
 name|void
@@ -52,7 +75,7 @@ init|=
 literal|2147483648UL
 decl_stmt|;
 name|l_fp
-name|time
+name|e_time
 init|=
 block|{
 block|{
@@ -70,10 +93,11 @@ argument_list|,
 name|gmprettydate
 argument_list|(
 operator|&
-name|time
+name|e_time
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

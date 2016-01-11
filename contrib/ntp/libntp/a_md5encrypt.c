@@ -59,13 +59,14 @@ comment|/*  * MD5authencrypt - generate message digest  *  * Returns length of M
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|MD5authencrypt
 parameter_list|(
 name|int
 name|type
 parameter_list|,
 comment|/* hash algorithm */
+specifier|const
 name|u_char
 modifier|*
 name|key
@@ -76,7 +77,7 @@ modifier|*
 name|pkt
 parameter_list|,
 comment|/* packet pointer */
-name|int
+name|size_t
 name|length
 comment|/* packet length */
 parameter_list|)
@@ -171,9 +172,6 @@ operator|*
 operator|)
 name|pkt
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|length
 argument_list|)
 expr_stmt|;
@@ -227,6 +225,7 @@ name|int
 name|type
 parameter_list|,
 comment|/* hash algorithm */
+specifier|const
 name|u_char
 modifier|*
 name|key
@@ -237,11 +236,11 @@ modifier|*
 name|pkt
 parameter_list|,
 comment|/* packet pointer */
-name|int
+name|size_t
 name|length
 parameter_list|,
 comment|/* packet length */
-name|int
+name|size_t
 name|size
 comment|/* MAC size */
 parameter_list|)
@@ -336,9 +335,6 @@ operator|*
 operator|)
 name|pkt
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|length
 argument_list|)
 expr_stmt|;
@@ -355,11 +351,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
 name|size
 operator|!=
+operator|(
+name|size_t
+operator|)
 name|len
 operator|+
 literal|4
@@ -385,6 +381,7 @@ argument_list|(
 name|digest
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

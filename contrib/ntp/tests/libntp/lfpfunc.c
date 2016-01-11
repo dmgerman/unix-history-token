@@ -36,7 +36,7 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|/* replaced TEST_ASSERT_EQUAL_MEMORY(&a,&b, sizeof(a)) with TEST_ASSERT_EQUAL_l_fp(a, b).    It's safer this way, because structs can be compared even if they aren't initiated    with memset (due to padding bytes). */
+comment|/*    replaced:	TEST_ASSERT_EQUAL_MEMORY(&a,&b, sizeof(a))    with:	TEST_ASSERT_EQUAL_l_fp(a, b).    It's safer this way, because structs can be compared even if they    aren't initiated with memset (due to padding bytes). */
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \     TEST_ASSERT_EQUAL_MESSAGE(a.l_i, b.l_i, "Field l_i"); \     TEST_ASSERT_EQUAL_UINT_MESSAGE(a.l_uf, b.l_uf, "Field l_uf");	\ }
+value|{					\ 	TEST_ASSERT_EQUAL_MESSAGE(a.l_i, b.l_i, "Field l_i");		\ 	TEST_ASSERT_EQUAL_UINT_MESSAGE(a.l_uf, b.l_uf, "Field l_uf");	\ }
 end_define
 
 begin_typedef
@@ -1049,6 +1049,7 @@ name|first
 operator|=
 name|temp
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1634,7 +1635,7 @@ name|l
 argument_list|)
 decl_stmt|;
 name|l_fp
-name|exp
+name|e_res
 init|=
 name|l_fp_init
 argument_list|(
@@ -1671,12 +1672,13 @@ argument_list|)
 decl_stmt|;
 name|TEST_ASSERT_EQUAL_l_fp
 argument_list|(
-name|exp
+name|e_res
 argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1759,7 +1761,7 @@ name|l
 argument_list|)
 decl_stmt|;
 name|l_fp
-name|exp
+name|e_res
 init|=
 name|l_fp_init
 argument_list|(
@@ -1796,12 +1798,13 @@ argument_list|)
 decl_stmt|;
 name|TEST_ASSERT_EQUAL_l_fp
 argument_list|(
-name|exp
+name|e_res
 argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1870,7 +1873,7 @@ name|l
 argument_list|)
 decl_stmt|;
 name|l_fp
-name|exp
+name|e_res
 init|=
 name|l_fp_init
 argument_list|(
@@ -1933,12 +1936,13 @@ argument_list|)
 decl_stmt|;
 name|TEST_ASSERT_EQUAL_l_fp
 argument_list|(
-name|exp
+name|e_res
 argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1969,7 +1973,7 @@ name|idx
 control|)
 block|{
 name|l_fp
-name|exp
+name|e_res
 init|=
 name|l_fp_init
 argument_list|(
@@ -2058,12 +2062,13 @@ argument_list|)
 decl_stmt|;
 name|TEST_ASSERT_EQUAL_l_fp
 argument_list|(
-name|exp
+name|e_res
 argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2167,6 +2172,7 @@ name|sum
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2337,6 +2343,7 @@ argument_list|,
 name|minAbs
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2359,17 +2366,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|size_t
+name|idx
+init|=
+literal|0
+decl_stmt|;
 comment|// since a l_fp has 64 bits in it's mantissa and a double has
 comment|// only 54 bits available (including the hidden '1') we have to
 comment|// make a few concessions on the roundtrip precision. The 'eps()'
 comment|// function makes an educated guess about the avilable precision
 comment|// and checks the difference in the two 'l_fp' values against
 comment|// that limit.
-name|size_t
-name|idx
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|idx
@@ -2460,6 +2467,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2736,6 +2744,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return;
 block|}
 end_function
 
@@ -2948,6 +2957,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return;
 block|}
 end_function
 

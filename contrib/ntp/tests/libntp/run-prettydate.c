@@ -170,7 +170,7 @@ name|RUN_TEST
 argument_list|(
 name|test_ConstantDate
 argument_list|,
-literal|9
+literal|10
 argument_list|)
 expr_stmt|;
 return|return

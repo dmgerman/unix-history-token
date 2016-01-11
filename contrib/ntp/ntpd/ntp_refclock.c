@@ -2400,6 +2400,7 @@ begin_function
 name|int
 name|refclock_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dev

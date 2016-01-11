@@ -1103,6 +1103,10 @@ expr_stmt|;
 operator|*
 name|offsetp
 operator|=
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 specifier|const
 name|char
@@ -1117,6 +1121,7 @@ operator|)
 name|found
 operator|->
 name|addr
+argument_list|)
 expr_stmt|;
 block|}
 return|return

@@ -2231,11 +2231,14 @@ operator||=
 name|CRYPTO_ERROR
 expr_stmt|;
 block|}
-comment|/* Check if the declared size fits into the remaining 		 * buffer. 		 */
+comment|/* Check if the declared size fits into the remaining 		 * buffer. We *know* 'macbytes'> 0 here! 		 */
 if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|u_int
+operator|)
 name|macbytes
 condition|)
 block|{
