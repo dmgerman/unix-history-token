@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -848,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExecModuleCode  *  * PARAMETERS:  MethodObj           - Object container for the module-level code  *              Info                - Info block for method evaluation  *  * RETURN:      None. Exceptions during method execution are ignored, since  *              we cannot abort a table load.  *  * DESCRIPTION: Execute a control method containing a block of module-level  *              executable AML code. The control method is temporarily  *              installed to a local copy of the root node, then evaluated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExecModuleCode  *  * PARAMETERS:  MethodObj           - Object container for the module-level code  *              Info                - Info block for method evaluation  *  * RETURN:      None. Exceptions during method execution are ignored, since  *              we cannot abort a table load.  *  * DESCRIPTION: Execute a control method containing a block of module-level  *              executable AML code. The control method is temporarily  *              installed to the root node, then evaluated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -865,16 +865,19 @@ modifier|*
 name|Info
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
+name|ACPI_OPERAND_OBJECT
 modifier|*
-name|TempNode
+name|ParentObj
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ParentNode
+decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|Type
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -895,45 +898,44 @@ operator|.
 name|NextObject
 argument_list|)
 expr_stmt|;
-comment|/* Take a copy of the parent node to act as parent of this method */
-name|TempNode
+name|Type
 operator|=
-name|ACPI_ALLOCATE
+name|AcpiNsGetType
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_NAMESPACE_NODE
-argument_list|)
+name|ParentNode
 argument_list|)
 expr_stmt|;
+comment|/*      * Get the region handler and save it in the method object. We may need      * this if an operation region declaration causes a _REG method to be run.      *      * We can't do this in AcpiPsLinkModuleCode because      * AcpiGbl_RootNode->Object is NULL at PASS1.      */
 if|if
 condition|(
-operator|!
-name|TempNode
-condition|)
-block|{
-name|return_VOID
-expr_stmt|;
-block|}
-name|memcpy
-argument_list|(
-name|TempNode
-argument_list|,
+operator|(
+name|Type
+operator|==
+name|ACPI_TYPE_DEVICE
+operator|)
+operator|&&
 name|ParentNode
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_NAMESPACE_NODE
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|TempNode
 operator|->
 name|Object
+condition|)
+block|{
+name|MethodObj
+operator|->
+name|Method
+operator|.
+name|Dispatch
+operator|.
+name|Handler
 operator|=
-name|NULL
+name|ParentNode
+operator|->
+name|Object
+operator|->
+name|Device
+operator|.
+name|Handler
 expr_stmt|;
-comment|/* Clear the subobject */
+block|}
 comment|/* Must clear NextObject (AcpiNsAttachObject needs the field) */
 name|MethodObj
 operator|->
@@ -960,14 +962,33 @@ name|Info
 operator|->
 name|PrefixNode
 operator|=
-name|TempNode
+name|ParentNode
 expr_stmt|;
+comment|/*      * Get the currently attached parent object. Add a reference,      * because the ref count will be decreased when the method object      * is installed to the parent node.      */
+name|ParentObj
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|ParentNode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ParentObj
+condition|)
+block|{
+name|AcpiUtAddReference
+argument_list|(
+name|ParentObj
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Install the method (module-level code) in the parent node */
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-name|TempNode
+name|ParentNode
 argument_list|,
 name|MethodObj
 argument_list|,
@@ -983,7 +1004,7 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|Cleanup
+name|Exit
 goto|;
 block|}
 comment|/* Execute the parent node as a control method */
@@ -1025,13 +1046,55 @@ name|ReturnObject
 argument_list|)
 expr_stmt|;
 block|}
-name|Cleanup
-label|:
-name|ACPI_FREE
+comment|/* Detach the temporary method object */
+name|AcpiNsDetachObject
 argument_list|(
-name|TempNode
+name|ParentNode
 argument_list|)
 expr_stmt|;
+comment|/* Restore the original parent object */
+if|if
+condition|(
+name|ParentObj
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiNsAttachObject
+argument_list|(
+name|ParentNode
+argument_list|,
+name|ParentObj
+argument_list|,
+name|Type
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ParentNode
+operator|->
+name|Type
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|Type
+expr_stmt|;
+block|}
+name|Exit
+label|:
+if|if
+condition|(
+name|ParentObj
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|ParentObj
+argument_list|)
+expr_stmt|;
+block|}
 name|return_VOID
 expr_stmt|;
 block|}
