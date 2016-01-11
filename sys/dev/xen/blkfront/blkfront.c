@@ -706,6 +706,45 @@ operator|<
 name|last_block_sg
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|segs
+operator|->
+name|ds_addr
+operator|%
+operator|(
+literal|1
+operator|<<
+name|XBD_SECTOR_SHFT
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"XEN disk driver I/O must be sector aligned"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|segs
+operator|->
+name|ds_len
+operator|%
+operator|(
+literal|1
+operator|<<
+name|XBD_SECTOR_SHFT
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"XEN disk driver I/Os must be a multiple of "
+literal|"the sector length"
+operator|)
+argument_list|)
+expr_stmt|;
 name|buffer_ma
 operator|=
 name|segs
