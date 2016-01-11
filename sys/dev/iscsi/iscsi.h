@@ -296,7 +296,10 @@ name|int
 name|sc_last_session_id
 decl_stmt|;
 name|eventhandler_tag
-name|sc_shutdown_eh
+name|sc_shutdown_pre_eh
+decl_stmt|;
+name|eventhandler_tag
+name|sc_shutdown_post_eh
 decl_stmt|;
 block|}
 struct|;
