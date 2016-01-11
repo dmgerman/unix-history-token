@@ -10502,7 +10502,7 @@ name|trust
 parameter_list|)
 block|{
 specifier|register
-name|u_long
+name|uint32_t
 modifier|*
 name|kp
 decl_stmt|;
@@ -10522,7 +10522,7 @@ expr_stmt|;
 name|kp
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 operator|&

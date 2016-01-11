@@ -106,6 +106,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|test_main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|//=======Test Reset Option=====
 end_comment
@@ -170,6 +180,13 @@ expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"bug-2803.c"
+argument_list|)
+expr_stmt|;
+name|RUN_TEST
+argument_list|(
+name|test_main
+argument_list|,
+literal|18
 argument_list|)
 expr_stmt|;
 name|RUN_TEST

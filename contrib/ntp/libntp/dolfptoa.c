@@ -115,9 +115,14 @@ for|for
 control|(
 name|dec
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|cp
 operator|-
 name|cbuf
+argument_list|)
 init|;
 name|dec
 operator|>
@@ -217,6 +222,10 @@ operator|)
 condition|)
 name|dec
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|cbuf
@@ -227,6 +236,7 @@ name|cpend
 operator|-
 name|cbuf
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If there's a fraction to deal with, do so. 	 */
 for|for
@@ -347,9 +357,14 @@ for|for
 control|(
 name|dec
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|-
 name|cbuf
+argument_list|)
 init|;
 name|carry
 operator|&&

@@ -111,35 +111,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_char
-name|VT_INITIALISED
-init|=
-literal|0x01
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const u_char VT_INITIALISED      = 0x01; */
+end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_char
-name|VT_SYNCHRONISED
-init|=
-literal|0x02
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const u_char VT_SYNCHRONISED     = 0x02; */
+end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_char
-name|VT_ALARM_STATE
-init|=
-literal|0x04
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const u_char VT_ALARM_STATE      = 0x04; */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -151,25 +133,13 @@ literal|0x08
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_char
-name|VT_SEASON_CHANGE
-init|=
-literal|0x10
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const u_char VT_SEASON_CHANGE    = 0x10; */
+end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_char
-name|VT_LAST_TELEGRAM_OK
-init|=
-literal|0x20
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static const u_char VT_LAST_TELEGRAM_OK = 0x20; */
+end_comment
 
 begin_comment
 comment|/*  * The Varitext receiver sends a datagram in the following format every minute  *  * Timestamp	T:YY:MM:MD:WD:HH:MM:SSCRLFSTXXX  * Pos          0123456789012345678901 2 3 4567  *              0000000000111111111122 2 2 2222  * Parse        T:  :  :  :  :  :  :  \r\n  *  * T	Startcharacter "T" specifies start of the timestamp  * YY	Year MM	Month 1-12  * MD	Day of the month  * WD	Day of week  * HH	Hour  * MM	Minute  * SS	Second  * CR	Carriage return  * LF	Linefeed  * ST	Status character  *	Bit 0 - Set= Initialised; Reset=Time Invalid (DO NOT USE)  *	Bit 1 - Set= Synchronised; Reset= Unsynchronised  *	Bit 2 - Set= Alarm state; Reset= No alarm  *	Bit 3 - Set= BST; Reset= GMT  *	Bit 4 - Set= Seasonal change in approx hour; Reset= No seasonal change expected  *	Bit 5 - Set= Last MSF telegram was OK; Reset= Last telegram was in error;  *	Bit 6 - Always set  *	Bit 7 - Unused  * XXX	Checksum calculated using Fletcher's method (ignored for now).  */
@@ -685,10 +655,11 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"inp_varitext(0x%lx, 0x%x, ...)\n"
+literal|"inp_varitext(0x%p, 0x%x, ...)\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|parseio
 operator|,

@@ -29,6 +29,15 @@ end_include
 
 begin_function_decl
 name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|testChangePrognameInMysyslog
 parameter_list|(
 name|void
@@ -44,6 +53,28 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|testWriteInCustomLogfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|//in var/log/syslog (may differ depending on your OS), logged name of the program will be "TEST_PROGNAME".
@@ -68,7 +99,7 @@ argument_list|,
 literal|"TESTING sntp_init_logging()"
 argument_list|)
 expr_stmt|;
-comment|//%m will print the last errno?
+return|return;
 block|}
 end_function
 
@@ -105,6 +136,7 @@ literal|"abcXX"
 argument_list|)
 expr_stmt|;
 comment|//cleanup_log(); //unnecessary  after log.c fix!
+return|return;
 block|}
 end_function
 
@@ -135,6 +167,9 @@ index|]
 init|=
 literal|"TEST_PROGNAME3"
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|remove
 argument_list|(
 literal|"testLogfile2.log"
@@ -156,6 +191,8 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|testString
 argument_list|)
 expr_stmt|;
@@ -176,6 +213,13 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|TEST_ASSERT_TRUE
+argument_list|(
+name|f
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|//should be only 1 line
 while|while
 condition|(
@@ -243,6 +287,7 @@ expr_stmt|;
 comment|//using this will also cause segfault, because at the end, log.c will  call (using atexit(func) function) cleanup_log(void)-> fclose(syslog_file);
 comment|//After the 1st fclose, syslog_file = NULL, and is never reset -> hopefully fixed by editing log.c
 comment|//TEST_ASSERT_EQUAL_STRING(testString,line); //doesn't work, line is dynamic because the process name is random.
+return|return;
 block|}
 end_function
 

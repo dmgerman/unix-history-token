@@ -144,6 +144,14 @@ decl_stmt|;
 name|int
 name|a_info
 decl_stmt|;
+name|int
+name|saved_errno
+decl_stmt|;
+name|saved_errno
+operator|=
+name|socket_errno
+argument_list|()
+expr_stmt|;
 comment|/* reverse the address to purported DNS name */
 name|LIB_GETBUF
 argument_list|(
@@ -181,6 +189,11 @@ argument_list|,
 name|gni_flags
 argument_list|)
 condition|)
+block|{
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 return|return
 name|stoa
 argument_list|(
@@ -188,6 +201,7 @@ name|sock
 argument_list|)
 return|;
 comment|/* use address */
+block|}
 name|TRACE
 argument_list|(
 literal|1
@@ -428,10 +442,16 @@ name|ai
 operator|!=
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 return|return
 name|pbuf
 return|;
 comment|/* forward check passed */
+block|}
 name|forward_fail
 label|:
 name|TRACE
@@ -470,6 +490,10 @@ argument_list|)
 argument_list|,
 name|pbuf
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 return|return
 name|pliar

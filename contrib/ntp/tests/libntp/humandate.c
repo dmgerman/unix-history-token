@@ -25,6 +25,15 @@ end_include
 
 begin_function_decl
 name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|test_RegularTime
 parameter_list|(
 name|void
@@ -40,6 +49,20 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_function
 name|void
@@ -74,7 +97,7 @@ argument_list|)
 expr_stmt|;
 name|TEST_ASSERT_TRUE
 argument_list|(
-name|time
+name|tm
 operator|!=
 name|NULL
 argument_list|)
@@ -110,6 +133,7 @@ name|sample
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -150,7 +174,7 @@ argument_list|)
 expr_stmt|;
 name|TEST_ASSERT_TRUE
 argument_list|(
-name|time
+name|tm
 operator|!=
 name|NULL
 argument_list|)
@@ -186,6 +210,7 @@ name|sample
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

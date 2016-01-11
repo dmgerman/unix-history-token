@@ -5325,85 +5325,71 @@ literal|968
 block|,
 literal|970
 block|,
-literal|972
-block|,
-literal|974
-block|,
 literal|979
 block|,
-literal|980
-block|,
-literal|984
-block|,
-literal|985
+literal|981
 block|,
 literal|986
 block|,
 literal|987
 block|,
-literal|995
+literal|991
 block|,
-literal|1000
+literal|992
 block|,
-literal|1005
+literal|993
 block|,
-literal|1013
+literal|994
 block|,
-literal|1018
+literal|1002
 block|,
-literal|1019
+literal|1007
+block|,
+literal|1012
 block|,
 literal|1020
 block|,
-literal|1029
+literal|1025
 block|,
-literal|1031
+literal|1026
+block|,
+literal|1027
 block|,
 literal|1036
 block|,
-literal|1041
+literal|1038
 block|,
-literal|1049
+literal|1043
 block|,
-literal|1051
+literal|1048
 block|,
-literal|1068
+literal|1056
 block|,
-literal|1069
+literal|1058
 block|,
-literal|1070
+literal|1075
 block|,
-literal|1071
-block|,
-literal|1072
-block|,
-literal|1073
+literal|1076
 block|,
 literal|1077
 block|,
 literal|1078
 block|,
-literal|1086
+literal|1079
 block|,
-literal|1091
+literal|1080
 block|,
-literal|1096
+literal|1084
 block|,
-literal|1104
+literal|1085
 block|,
-literal|1109
+literal|1093
 block|,
-literal|1110
+literal|1098
+block|,
+literal|1103
 block|,
 literal|1111
-block|,
-literal|1112
-block|,
-literal|1113
-block|,
-literal|1114
-block|,
-literal|1115
 block|,
 literal|1116
 block|,
@@ -5411,11 +5397,23 @@ literal|1117
 block|,
 literal|1118
 block|,
-literal|1127
+literal|1119
 block|,
-literal|1128
+literal|1120
 block|,
-literal|1129
+literal|1121
+block|,
+literal|1122
+block|,
+literal|1123
+block|,
+literal|1124
+block|,
+literal|1125
+block|,
+literal|1134
+block|,
+literal|1135
 block|,
 literal|1136
 block|,
@@ -5423,79 +5421,73 @@ literal|1143
 block|,
 literal|1150
 block|,
-literal|1166
+literal|1157
 block|,
-literal|1185
+literal|1173
 block|,
-literal|1187
+literal|1192
 block|,
-literal|1189
+literal|1194
 block|,
-literal|1191
+literal|1196
 block|,
-literal|1193
+literal|1198
 block|,
-literal|1195
+literal|1200
 block|,
 literal|1202
 block|,
-literal|1207
-block|,
-literal|1208
-block|,
 literal|1209
 block|,
-literal|1213
+literal|1214
 block|,
-literal|1217
+literal|1215
 block|,
-literal|1226
+literal|1216
 block|,
-literal|1227
+literal|1220
 block|,
-literal|1231
-block|,
-literal|1232
+literal|1224
 block|,
 literal|1233
 block|,
-literal|1237
+literal|1234
 block|,
-literal|1248
+literal|1238
 block|,
-literal|1262
+literal|1239
 block|,
-literal|1274
+literal|1240
 block|,
-literal|1279
+literal|1244
+block|,
+literal|1255
+block|,
+literal|1269
 block|,
 literal|1281
 block|,
 literal|1286
 block|,
-literal|1287
+literal|1288
 block|,
-literal|1295
+literal|1293
 block|,
-literal|1297
+literal|1294
 block|,
-literal|1305
+literal|1302
 block|,
-literal|1310
+literal|1304
 block|,
-literal|1318
+literal|1312
 block|,
-literal|1343
+literal|1317
+block|,
+literal|1325
 block|,
 literal|1350
 block|,
-literal|1360
-block|,
-literal|1361
-block|,
-literal|1365
-block|,
-literal|1366
+literal|1357
 block|,
 literal|1367
 block|,
@@ -5507,103 +5499,111 @@ literal|1373
 block|,
 literal|1374
 block|,
-literal|1378
+literal|1375
 block|,
-literal|1383
+literal|1379
 block|,
-literal|1388
+literal|1380
 block|,
-literal|1396
+literal|1381
 block|,
-literal|1397
+literal|1385
 block|,
-literal|1398
+literal|1390
 block|,
-literal|1399
+literal|1395
 block|,
-literal|1400
+literal|1403
 block|,
-literal|1401
+literal|1404
 block|,
-literal|1402
+literal|1405
 block|,
-literal|1412
+literal|1406
 block|,
-literal|1417
+literal|1407
 block|,
-literal|1425
+literal|1408
 block|,
-literal|1430
+literal|1409
 block|,
-literal|1438
+literal|1419
 block|,
-literal|1440
+literal|1424
 block|,
-literal|1444
+literal|1432
 block|,
-literal|1449
+literal|1437
 block|,
-literal|1454
+literal|1445
 block|,
-literal|1462
+literal|1447
 block|,
-literal|1467
+literal|1451
 block|,
-literal|1475
+literal|1456
 block|,
-literal|1484
+literal|1461
 block|,
-literal|1485
+literal|1469
 block|,
-literal|1489
+literal|1474
 block|,
-literal|1490
+literal|1482
 block|,
-literal|1499
+literal|1491
 block|,
-literal|1517
+literal|1492
 block|,
-literal|1521
+literal|1496
 block|,
-literal|1526
+literal|1497
 block|,
-literal|1534
+literal|1506
 block|,
-literal|1539
+literal|1524
 block|,
-literal|1540
+literal|1528
 block|,
-literal|1544
+literal|1533
 block|,
-literal|1549
+literal|1541
 block|,
-literal|1557
+literal|1546
 block|,
-literal|1562
+literal|1547
 block|,
-literal|1567
+literal|1551
 block|,
-literal|1572
+literal|1556
 block|,
-literal|1577
+literal|1564
 block|,
-literal|1585
+literal|1569
 block|,
-literal|1590
+literal|1574
 block|,
-literal|1595
+literal|1579
 block|,
-literal|1603
+literal|1584
 block|,
-literal|1608
+literal|1592
 block|,
-literal|1609
+literal|1597
+block|,
+literal|1602
 block|,
 literal|1610
 block|,
-literal|1611
+literal|1615
 block|,
-literal|1612
+literal|1616
+block|,
+literal|1617
+block|,
+literal|1618
+block|,
+literal|1619
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -19527,6 +19527,31 @@ number|971
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
+if|if
+condition|(
+operator|(
+name|yyvsp
+index|[
+literal|0
+index|]
+operator|.
+name|Integer
+operator|)
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|yyvsp
+index|[
+literal|0
+index|]
+operator|.
+name|Integer
+operator|)
+operator|<=
+literal|16
+condition|)
+block|{
 operator|(
 name|yyval
 operator|.
@@ -19556,9 +19581,26 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+operator|(
+name|yyval
+operator|.
+name|Attr_val
+operator|)
+operator|=
+name|NULL
+expr_stmt|;
+name|yyerror
+argument_list|(
+literal|"fudge factor: stratum value not in [0..16], ignored"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 line|#
 directive|line
-number|2689
+number|2696
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19567,7 +19609,7 @@ literal|174
 case|:
 line|#
 directive|line
-number|973
+number|980
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19602,7 +19644,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2695
+number|2702
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19611,7 +19653,7 @@ literal|175
 case|:
 line|#
 directive|line
-number|975
+number|982
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19646,7 +19688,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2701
+number|2708
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19655,7 +19697,7 @@ literal|182
 case|:
 line|#
 directive|line
-number|996
+number|1003
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19678,7 +19720,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2707
+number|2714
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19687,7 +19729,7 @@ literal|183
 case|:
 line|#
 directive|line
-number|1001
+number|1008
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19728,7 +19770,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2716
+number|2723
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19737,7 +19779,7 @@ literal|184
 case|:
 line|#
 directive|line
-number|1006
+number|1013
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19770,7 +19812,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2725
+number|2732
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19779,7 +19821,7 @@ literal|185
 case|:
 line|#
 directive|line
-number|1014
+number|1021
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19814,7 +19856,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2731
+number|2738
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19823,7 +19865,7 @@ literal|189
 case|:
 line|#
 directive|line
-number|1030
+number|1037
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19846,7 +19888,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2737
+number|2744
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19855,7 +19897,7 @@ literal|190
 case|:
 line|#
 directive|line
-number|1032
+number|1039
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19878,7 +19920,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2743
+number|2750
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19887,7 +19929,7 @@ literal|191
 case|:
 line|#
 directive|line
-number|1037
+number|1044
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19928,7 +19970,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2752
+number|2759
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19937,7 +19979,7 @@ literal|192
 case|:
 line|#
 directive|line
-number|1042
+number|1049
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -19970,7 +20012,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2761
+number|2768
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -19979,7 +20021,7 @@ literal|193
 case|:
 line|#
 directive|line
-number|1050
+number|1057
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20006,7 +20048,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2767
+number|2774
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20015,7 +20057,7 @@ literal|194
 case|:
 line|#
 directive|line
-number|1052
+number|1059
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20095,7 +20137,7 @@ block|}
 block|}
 line|#
 directive|line
-number|2785
+number|2792
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20104,7 +20146,7 @@ literal|203
 case|:
 line|#
 directive|line
-number|1087
+number|1094
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20127,7 +20169,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2791
+number|2798
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20136,7 +20178,7 @@ literal|204
 case|:
 line|#
 directive|line
-number|1092
+number|1099
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20177,7 +20219,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2800
+number|2807
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20186,7 +20228,7 @@ literal|205
 case|:
 line|#
 directive|line
-number|1097
+number|1104
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20219,7 +20261,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2809
+number|2816
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20228,7 +20270,7 @@ literal|206
 case|:
 line|#
 directive|line
-number|1105
+number|1112
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20263,7 +20305,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2815
+number|2822
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20272,7 +20314,7 @@ literal|219
 case|:
 line|#
 directive|line
-number|1130
+number|1137
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20316,7 +20358,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2826
+number|2833
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20325,7 +20367,7 @@ literal|220
 case|:
 line|#
 directive|line
-number|1137
+number|1144
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20369,7 +20411,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2837
+number|2844
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20378,7 +20420,7 @@ literal|221
 case|:
 line|#
 directive|line
-number|1144
+number|1151
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20422,7 +20464,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2848
+number|2855
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20431,7 +20473,7 @@ literal|222
 case|:
 line|#
 directive|line
-number|1151
+number|1158
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20533,7 +20575,7 @@ block|}
 block|}
 line|#
 directive|line
-number|2868
+number|2875
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20542,7 +20584,7 @@ literal|223
 case|:
 line|#
 directive|line
-number|1167
+number|1174
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20666,7 +20708,7 @@ comment|/* avoid leak */
 block|}
 line|#
 directive|line
-number|2891
+number|2898
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20675,7 +20717,7 @@ literal|224
 case|:
 line|#
 directive|line
-number|1186
+number|1193
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20685,7 +20727,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2897
+number|2904
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20694,7 +20736,7 @@ literal|225
 case|:
 line|#
 directive|line
-number|1188
+number|1195
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20702,7 +20744,7 @@ comment|/* see drift_parm below for actions */
 block|}
 line|#
 directive|line
-number|2903
+number|2910
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20711,7 +20753,7 @@ literal|226
 case|:
 line|#
 directive|line
-number|1190
+number|1197
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20734,7 +20776,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2909
+number|2916
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20743,7 +20785,7 @@ literal|227
 case|:
 line|#
 directive|line
-number|1192
+number|1199
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20766,7 +20808,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2915
+number|2922
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20775,7 +20817,7 @@ literal|228
 case|:
 line|#
 directive|line
-number|1194
+number|1201
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20798,7 +20840,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2921
+number|2928
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20807,7 +20849,7 @@ literal|229
 case|:
 line|#
 directive|line
-number|1196
+number|1203
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20851,7 +20893,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2932
+number|2939
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20860,7 +20902,7 @@ literal|230
 case|:
 line|#
 directive|line
-number|1203
+number|1210
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20883,7 +20925,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|2938
+number|2945
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20892,7 +20934,7 @@ literal|235
 case|:
 line|#
 directive|line
-number|1218
+number|1225
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20909,7 +20951,7 @@ directive|endif
 block|}
 line|#
 directive|line
-number|2948
+number|2955
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20918,7 +20960,7 @@ literal|241
 case|:
 line|#
 directive|line
-number|1238
+number|1245
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -20981,7 +21023,7 @@ block|}
 block|}
 line|#
 directive|line
-number|2963
+number|2970
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -20990,7 +21032,7 @@ literal|242
 case|:
 line|#
 directive|line
-number|1249
+number|1256
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21080,7 +21122,7 @@ block|}
 block|}
 line|#
 directive|line
-number|2980
+number|2987
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21089,7 +21131,7 @@ literal|243
 case|:
 line|#
 directive|line
-number|1262
+number|1269
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21136,7 +21178,7 @@ block|}
 block|}
 line|#
 directive|line
-number|2994
+number|3001
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21145,7 +21187,7 @@ literal|244
 case|:
 line|#
 directive|line
-number|1275
+number|1282
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21190,7 +21232,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3000
+number|3007
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21199,7 +21241,7 @@ literal|246
 case|:
 line|#
 directive|line
-number|1281
+number|1288
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21214,7 +21256,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3006
+number|3013
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21223,7 +21265,7 @@ literal|247
 case|:
 line|#
 directive|line
-number|1286
+number|1293
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21238,7 +21280,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3012
+number|3019
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21247,7 +21289,7 @@ literal|248
 case|:
 line|#
 directive|line
-number|1288
+number|1295
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21288,7 +21330,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3021
+number|3028
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21297,7 +21339,7 @@ literal|249
 case|:
 line|#
 directive|line
-number|1296
+number|1303
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21332,7 +21374,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3027
+number|3034
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21341,7 +21383,7 @@ literal|250
 case|:
 line|#
 directive|line
-number|1298
+number|1305
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21393,7 +21435,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3036
+number|3043
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21402,7 +21444,7 @@ literal|251
 case|:
 line|#
 directive|line
-number|1306
+number|1313
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21443,7 +21485,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3045
+number|3052
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21452,7 +21494,7 @@ literal|252
 case|:
 line|#
 directive|line
-number|1311
+number|1318
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21485,7 +21527,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3054
+number|3061
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21494,7 +21536,7 @@ literal|253
 case|:
 line|#
 directive|line
-number|1319
+number|1326
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21605,7 +21647,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3080
+number|3087
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21614,7 +21656,7 @@ literal|254
 case|:
 line|#
 directive|line
-number|1344
+number|1351
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21660,7 +21702,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3091
+number|3098
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21669,7 +21711,7 @@ literal|255
 case|:
 line|#
 directive|line
-number|1351
+number|1358
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21715,7 +21757,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3102
+number|3109
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21724,7 +21766,7 @@ literal|265
 case|:
 line|#
 directive|line
-number|1379
+number|1386
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21747,7 +21789,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3108
+number|3115
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21756,7 +21798,7 @@ literal|266
 case|:
 line|#
 directive|line
-number|1384
+number|1391
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21800,7 +21842,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3117
+number|3124
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21809,7 +21851,7 @@ literal|267
 case|:
 line|#
 directive|line
-number|1389
+number|1396
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21845,7 +21887,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3126
+number|3133
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21854,7 +21896,7 @@ literal|275
 case|:
 line|#
 directive|line
-number|1413
+number|1420
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21898,7 +21940,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3135
+number|3142
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21907,7 +21949,7 @@ literal|276
 case|:
 line|#
 directive|line
-number|1418
+number|1425
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21943,7 +21985,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3144
+number|3151
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -21952,7 +21994,7 @@ literal|277
 case|:
 line|#
 directive|line
-number|1426
+number|1433
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -21993,7 +22035,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3153
+number|3160
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22002,7 +22044,7 @@ literal|278
 case|:
 line|#
 directive|line
-number|1431
+number|1438
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22035,7 +22077,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3162
+number|3169
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22044,7 +22086,7 @@ literal|279
 case|:
 line|#
 directive|line
-number|1439
+number|1446
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22071,7 +22113,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3168
+number|3175
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22080,7 +22122,7 @@ literal|281
 case|:
 line|#
 directive|line
-number|1445
+number|1452
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22118,7 +22160,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3174
+number|3181
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22127,7 +22169,7 @@ literal|282
 case|:
 line|#
 directive|line
-number|1450
+number|1457
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22171,7 +22213,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3183
+number|3190
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22180,7 +22222,7 @@ literal|283
 case|:
 line|#
 directive|line
-number|1455
+number|1462
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22216,7 +22258,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3192
+number|3199
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22225,7 +22267,7 @@ literal|284
 case|:
 line|#
 directive|line
-number|1463
+number|1470
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22266,7 +22308,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3201
+number|3208
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22275,7 +22317,7 @@ literal|285
 case|:
 line|#
 directive|line
-number|1468
+number|1475
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22308,7 +22350,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3210
+number|3217
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22317,7 +22359,7 @@ literal|286
 case|:
 line|#
 directive|line
-number|1476
+number|1483
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22381,7 +22423,7 @@ block|}
 block|}
 line|#
 directive|line
-number|3223
+number|3230
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22390,7 +22432,7 @@ literal|287
 case|:
 line|#
 directive|line
-number|1484
+number|1491
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22405,7 +22447,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3229
+number|3236
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22414,7 +22456,7 @@ literal|288
 case|:
 line|#
 directive|line
-number|1485
+number|1492
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22429,7 +22471,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3235
+number|3242
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22438,7 +22480,7 @@ literal|289
 case|:
 line|#
 directive|line
-number|1489
+number|1496
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22463,7 +22505,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3241
+number|3248
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22472,7 +22514,7 @@ literal|291
 case|:
 line|#
 directive|line
-number|1500
+number|1507
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22522,7 +22564,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3255
+number|3262
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22531,7 +22573,7 @@ literal|292
 case|:
 line|#
 directive|line
-number|1517
+number|1524
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22542,7 +22584,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3261
+number|3268
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22551,7 +22593,7 @@ literal|293
 case|:
 line|#
 directive|line
-number|1522
+number|1529
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22593,7 +22635,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3270
+number|3277
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22602,7 +22644,7 @@ literal|294
 case|:
 line|#
 directive|line
-number|1527
+number|1534
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22636,7 +22678,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3279
+number|3286
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22645,7 +22687,7 @@ literal|295
 case|:
 line|#
 directive|line
-number|1535
+number|1542
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22680,7 +22722,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3285
+number|3292
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22689,7 +22731,7 @@ literal|298
 case|:
 line|#
 directive|line
-number|1545
+number|1552
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22730,7 +22772,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3294
+number|3301
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22739,7 +22781,7 @@ literal|299
 case|:
 line|#
 directive|line
-number|1550
+number|1557
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22772,7 +22814,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3303
+number|3310
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22781,7 +22823,7 @@ literal|300
 case|:
 line|#
 directive|line
-number|1558
+number|1565
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22830,7 +22872,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3309
+number|3316
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22839,7 +22881,7 @@ literal|301
 case|:
 line|#
 directive|line
-number|1563
+number|1570
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22862,7 +22904,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3315
+number|3322
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22871,7 +22913,7 @@ literal|302
 case|:
 line|#
 directive|line
-number|1568
+number|1575
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22893,7 +22935,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3321
+number|3328
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22902,7 +22944,7 @@ literal|303
 case|:
 line|#
 directive|line
-number|1573
+number|1580
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22943,7 +22985,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3330
+number|3337
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22952,7 +22994,7 @@ literal|304
 case|:
 line|#
 directive|line
-number|1578
+number|1585
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -22985,7 +23027,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3339
+number|3346
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -22994,7 +23036,7 @@ literal|305
 case|:
 line|#
 directive|line
-number|1586
+number|1593
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -23033,7 +23075,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3345
+number|3352
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -23042,7 +23084,7 @@ literal|306
 case|:
 line|#
 directive|line
-number|1591
+number|1598
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -23084,7 +23126,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3354
+number|3361
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -23093,7 +23135,7 @@ literal|307
 case|:
 line|#
 directive|line
-number|1596
+number|1603
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -23127,7 +23169,7 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3363
+number|3370
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
@@ -23136,7 +23178,7 @@ literal|308
 case|:
 line|#
 directive|line
-number|1604
+number|1611
 file|"../../ntpd/ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
@@ -23171,13 +23213,13 @@ expr_stmt|;
 block|}
 line|#
 directive|line
-number|3369
+number|3376
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 break|break;
 line|#
 directive|line
-number|3373
+number|3380
 file|"../../ntpd/ntp_parser.c"
 comment|/* yacc.c:1646  */
 default|default:
@@ -23810,7 +23852,7 @@ end_function
 begin_line
 line|#
 directive|line
-number|1615
+number|1622
 file|"../../ntpd/ntp_parser.y"
 end_line
 
