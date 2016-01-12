@@ -408,21 +408,6 @@ value|((hiwat)>= HN_LRO_HIWAT_MTULIM((sc)->hn_ifp) ||	\      (hiwat)<= HN_LRO_HI
 end_define
 
 begin_comment
-comment|/*  * Data types  */
-end_comment
-
-begin_struct
-struct|struct
-name|hv_netvsc_driver_context
-block|{
-name|uint32_t
-name|drv_inited
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Be aware that this sleepable mutex will exhibit WITNESS errors when  * certain TCP and ARP code paths are taken.  This appears to be a  * well-known condition, as all other drivers checked use a sleeping  * mutex to protect their transmit paths.  * Also Be aware that mutexes do not play well with semaphores, and there  * is a conflicting semaphore in a certain channel code path.  */
 end_comment
 
@@ -494,18 +479,6 @@ end_decl_stmt
 begin_comment
 comment|/* normal mode by default */
 end_comment
-
-begin_comment
-comment|/* The one and only one */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|hv_netvsc_driver_context
-name|g_netvsc_drv
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Trust tcp segements verification on host side. */
@@ -1044,91 +1017,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NetVsc driver initialization  * Note:  Filter init is no longer required  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|netvsc_drv_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * NetVsc global initialization entry point  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|netvsc_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Netvsc initializing... "
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXXKYS: cleanup initialization 	 */
-if|if
-condition|(
-operator|!
-name|cold
-operator|&&
-operator|!
-name|g_netvsc_drv
-operator|.
-name|drv_inited
-condition|)
-block|{
-name|g_netvsc_drv
-operator|.
-name|drv_inited
-operator|=
-literal|1
-expr_stmt|;
-name|netvsc_drv_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"done!\n"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Already initialized!\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* {F8615163-DF3E-46c5-913F-F2D2F965ED0E} */
 end_comment
 
@@ -1309,9 +1197,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|netvsc_init
-argument_list|()
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -6397,24 +6282,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|netvsc_initx
-argument_list|,
-name|SI_SUB_KTHREAD_IDLE
-argument_list|,
-name|SI_ORDER_MIDDLE
-operator|+
-literal|1
-argument_list|,
-name|netvsc_init
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
