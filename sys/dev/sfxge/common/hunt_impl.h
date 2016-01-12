@@ -2171,7 +2171,7 @@ name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_init
+name|ef10_vpd_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2182,7 +2182,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_size
+name|ef10_vpd_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2198,7 +2198,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_read
+name|ef10_vpd_read
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2220,7 +2220,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_verify
+name|ef10_vpd_verify
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2242,7 +2242,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_reinit
+name|ef10_vpd_reinit
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2264,7 +2264,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_get
+name|ef10_vpd_get
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2291,7 +2291,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_set
+name|ef10_vpd_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2318,7 +2318,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_next
+name|ef10_vpd_next
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2351,7 +2351,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_write
+name|ef10_vpd_write
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2372,7 +2372,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_vpd_fini
+name|ef10_vpd_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
