@@ -615,7 +615,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_init
+name|ef10_tx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -637,7 +637,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_fini
+name|ef10_tx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -655,7 +655,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qcreate
+name|ef10_tx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -797,7 +797,7 @@ operator|&
 name|desc
 argument_list|)
 expr_stmt|;
-name|hunt_tx_qpush
+name|ef10_tx_qpush
 argument_list|(
 name|etp
 argument_list|,
@@ -833,7 +833,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qdestroy
+name|ef10_tx_qdestroy
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -853,7 +853,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_enable
+name|ef10_tx_qpio_enable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1048,7 +1048,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qpio_disable
+name|ef10_tx_qpio_disable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1116,7 +1116,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_write
+name|ef10_tx_qpio_write
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1301,7 +1301,7 @@ end_decl_stmt
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_post
+name|ef10_tx_qpio_post
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1511,7 +1511,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpost
+name|ef10_tx_qpost
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1805,7 +1805,7 @@ end_comment
 
 begin_function
 name|void
-name|hunt_tx_qpush
+name|ef10_tx_qpush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1953,7 +1953,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qdesc_post
+name|ef10_tx_qdesc_post
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -2144,7 +2144,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_tx_qdesc_dma_create
+name|ef10_tx_qdesc_dma_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2342,7 +2342,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qdesc_vlantci_create
+name|ef10_tx_qdesc_vlantci_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2405,7 +2405,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpace
+name|ef10_tx_qpace
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2467,7 +2467,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qflush
+name|ef10_tx_qflush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2532,7 +2532,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qenable
+name|ef10_tx_qenable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2557,7 +2557,7 @@ end_if
 
 begin_decl_stmt
 name|void
-name|hunt_tx_qstats_update
+name|ef10_tx_qstats_update
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -2573,7 +2573,6 @@ operator|*
 name|stat
 argument_list|)
 block|{
-comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 * essentially identical. 	 */
 name|unsigned
 name|int
 name|id

@@ -3379,6 +3379,11 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+name|hv_rf_receive_rollup
+argument_list|(
+name|net_dev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

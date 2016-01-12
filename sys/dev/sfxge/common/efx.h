@@ -88,6 +88,8 @@ name|EFX_FAMILY_SIENA
 block|,
 name|EFX_FAMILY_HUNTINGTON
 block|,
+name|EFX_FAMILY_MEDFORD
+block|,
 name|EFX_FAMILY_NTYPES
 block|}
 name|efx_family_t
@@ -174,6 +176,20 @@ directive|define
 name|EFX_PCI_DEVID_GREENPORT_VF
 value|0x1923
 comment|/* SFC9140 VF */
+define|#
+directive|define
+name|EFX_PCI_DEVID_MEDFORD_PF_UNINIT
+value|0x0913
+define|#
+directive|define
+name|EFX_PCI_DEVID_MEDFORD
+value|0x0A03
+comment|/* SFC9240 PF */
+define|#
+directive|define
+name|EFX_PCI_DEVID_MEDFORD_VF
+value|0x1A03
+comment|/* SFC9240 VF */
 define|#
 directive|define
 name|EFX_MEM_BAR
@@ -405,7 +421,9 @@ name|EFSYS_OPT_MCDI
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
-comment|/* Huntington requires MCDIv2 commands */
+operator|||
+name|EFSYS_OPT_MEDFORD
+comment|/* Huntington and Medford require MCDIv2 commands */
 define|#
 directive|define
 name|WITH_MCDI_V2
@@ -1246,46 +1264,6 @@ value|(1<< 8)
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|efx_pktfilter_init
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|efx_pktfilter_fini
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|)
-function_decl|;
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|efx_pktfilter_set
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|,
-name|__in
-name|boolean_t
-name|unicst
-parameter_list|,
-name|__in
-name|boolean_t
-name|brdcst
-parameter_list|)
-function_decl|;
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
 name|efx_mac_hash_set
 argument_list|(
 name|__in
@@ -1304,44 +1282,6 @@ operator|*
 name|bucket
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|EFSYS_OPT_MCAST_FILTER_LIST
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|efx_pktfilter_mcast_list_set
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|,
-name|__in
-name|uint8_t
-specifier|const
-modifier|*
-name|addrs
-parameter_list|,
-name|__in
-name|int
-name|count
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MCAST_FILTER_LIST */
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|efx_pktfilter_mcast_all
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|)
-function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_MAC_STATS
@@ -1465,6 +1405,8 @@ name|EFX_MON_SFC90X0
 block|,
 name|EFX_MON_SFC91X0
 block|,
+name|EFX_MON_SFC92X0
+block|,
 name|EFX_MON_NTYPES
 block|}
 name|efx_mon_type_t
@@ -1509,7 +1451,7 @@ define|#
 directive|define
 name|EFX_MON_MASK_ELEMENT_SIZE
 value|32
-comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock c79c86b62a144846 */
+comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock c09b13f732431f23 */
 typedef|typedef
 enum|enum
 name|efx_mon_stat_e
@@ -1651,6 +1593,18 @@ block|,
 name|EFX_MON_STAT_CONTROLLER_SLAVE_VPTAT_EXT_ADC
 block|,
 name|EFX_MON_STAT_CONTROLLER_SLAVE_INTERNAL_TEMP_EXT_ADC
+block|,
+name|EFX_MON_STAT_SODIMM_VOUT
+block|,
+name|EFX_MON_STAT_SODIMM_0_TEMP
+block|,
+name|EFX_MON_STAT_SODIMM_1_TEMP
+block|,
+name|EFX_MON_STAT_PHY0_VCC
+block|,
+name|EFX_MON_STAT_PHY1_VCC
+block|,
+name|EFX_MON_STAT_CONTROLLER_TDIODE_TEMP
 block|,
 name|EFX_MON_NSTATS
 block|}
@@ -2816,6 +2770,9 @@ name|uint32_t
 name|enc_piobuf_size
 decl_stmt|;
 name|uint32_t
+name|enc_piobuf_min_alloc_size
+decl_stmt|;
+name|uint32_t
 name|enc_evq_timer_quantum_ns
 decl_stmt|;
 name|uint32_t
@@ -2906,6 +2863,8 @@ operator|(
 name|EFSYS_OPT_SIENA
 operator|||
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 if|#
 directive|if
@@ -2922,7 +2881,7 @@ directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
 endif|#
 directive|endif
-comment|/* (EFSYS_OPT_SIENA | EFSYS_OPT_HUNTINGTON) */
+comment|/* (EFSYS_OPT_SIENA || EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD) */
 if|#
 directive|if
 name|EFSYS_OPT_BIST
@@ -2935,6 +2894,8 @@ comment|/* EFSYS_OPT_BIST */
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 name|uint32_t
 name|enc_pf
 decl_stmt|;
@@ -2946,7 +2907,7 @@ name|enc_privilege_mask
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 name|boolean_t
 name|enc_bug26807_workaround
 decl_stmt|;

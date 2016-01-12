@@ -114,7 +114,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_rx
+name|ef10_ev_rx
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -144,7 +144,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_tx
+name|ef10_ev_tx
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -174,7 +174,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_driver
+name|ef10_ev_driver
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -204,7 +204,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_drv_gen
+name|ef10_ev_drv_gen
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -234,7 +234,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_mcdi
+name|ef10_ev_mcdi
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -831,7 +831,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_init
+name|ef10_ev_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -853,7 +853,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_ev_fini
+name|ef10_ev_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -871,7 +871,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qcreate
+name|ef10_ev_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -991,31 +991,31 @@ name|eep
 operator|->
 name|ee_rx
 operator|=
-name|hunt_ev_rx
+name|ef10_ev_rx
 expr_stmt|;
 name|eep
 operator|->
 name|ee_tx
 operator|=
-name|hunt_ev_tx
+name|ef10_ev_tx
 expr_stmt|;
 name|eep
 operator|->
 name|ee_driver
 operator|=
-name|hunt_ev_driver
+name|ef10_ev_driver
 expr_stmt|;
 name|eep
 operator|->
 name|ee_drv_gen
 operator|=
-name|hunt_ev_drv_gen
+name|ef10_ev_drv_gen
 expr_stmt|;
 name|eep
 operator|->
 name|ee_mcdi
 operator|=
-name|hunt_ev_mcdi
+name|ef10_ev_mcdi
 expr_stmt|;
 comment|/* 	 * Set up the event queue 	 * NOTE: ignore the returned IRQ param as firmware does not set it. 	 */
 name|irq
@@ -1089,7 +1089,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_ev_qdestroy
+name|ef10_ev_qdestroy
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -1112,6 +1112,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1134,7 +1140,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qprime
+name|ef10_ev_qprime
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -1468,7 +1474,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_ev_qpost
+name|ef10_ev_qpost
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -1531,7 +1537,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qmoderate
+name|ef10_ev_qmoderate
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -1741,7 +1747,7 @@ end_if
 
 begin_decl_stmt
 name|void
-name|hunt_ev_qstats_update
+name|ef10_ev_qstats_update
 argument_list|(
 name|__in
 name|efx_evq_t
@@ -1757,7 +1763,6 @@ operator|*
 name|stat
 argument_list|)
 block|{
-comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 * essentially identical. 	 */
 name|unsigned
 name|int
 name|id
@@ -1824,7 +1829,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_rx
+name|ef10_ev_rx
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2506,7 +2511,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_tx
+name|ef10_ev_tx
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2660,7 +2665,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_driver
+name|ef10_ev_driver
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2849,7 +2854,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_drv_gen
+name|ef10_ev_drv_gen
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2972,7 +2977,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|hunt_ev_mcdi
+name|ef10_ev_mcdi
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -3612,7 +3617,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_ev_rxlabel_init
+name|ef10_ev_rxlabel_init
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -3688,7 +3693,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_ev_rxlabel_fini
+name|ef10_ev_rxlabel_fini
 parameter_list|(
 name|__in
 name|efx_evq_t

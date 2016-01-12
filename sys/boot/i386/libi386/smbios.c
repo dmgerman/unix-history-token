@@ -1324,7 +1324,7 @@ block|{
 name|caddr_t
 name|dmi
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -1716,7 +1716,7 @@ decl_stmt|;
 name|caddr_t
 name|dmi
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|smbios_probe

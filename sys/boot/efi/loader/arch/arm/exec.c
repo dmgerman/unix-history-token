@@ -91,7 +91,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|bi_load
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|vm_offset_t
+modifier|*
+parameter_list|,
+name|vm_offset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|int
 name|__elfN
 function|(
@@ -149,6 +167,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|__elfN
 function|(
@@ -188,9 +207,6 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|EFI_STATUS
-name|status
-decl_stmt|;
 if|if
 condition|(
 operator|(

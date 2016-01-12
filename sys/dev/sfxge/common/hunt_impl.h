@@ -51,9 +51,10 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/*  * FIXME: This is just a power of 2 which fits in an MCDI v1 message, and could  * possibly be increased, or the write size reported by newer firmware used  * instead.  */
 define|#
 directive|define
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 value|0x80
 comment|/* Alignment requirement for value written to RX WPTR:  *  the WPTR must be aligned to an 8 descriptor boundary  */
 define|#
@@ -63,12 +64,12 @@ value|8
 comment|/* Invalid RSS context handle */
 define|#
 directive|define
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 value|(0xffffffff)
 comment|/* EV */
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_init
+name|ef10_ev_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -77,7 +78,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_fini
+name|ef10_ev_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -87,7 +88,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qcreate
+name|ef10_ev_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -119,7 +120,7 @@ name|eep
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_qdestroy
+name|ef10_ev_qdestroy
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -129,7 +130,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qprime
+name|ef10_ev_qprime
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -143,7 +144,7 @@ name|count
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_qpost
+name|ef10_ev_qpost
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -157,7 +158,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qmoderate
+name|ef10_ev_qmoderate
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -174,7 +175,7 @@ if|#
 directive|if
 name|EFSYS_OPT_QSTATS
 name|void
-name|hunt_ev_qstats_update
+name|ef10_ev_qstats_update
 argument_list|(
 name|__in
 name|efx_evq_t
@@ -194,7 +195,7 @@ endif|#
 directive|endif
 comment|/* EFSYS_OPT_QSTATS */
 name|void
-name|hunt_ev_rxlabel_init
+name|ef10_ev_rxlabel_init
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -213,7 +214,7 @@ name|label
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_rxlabel_fini
+name|ef10_ev_rxlabel_fini
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -229,7 +230,7 @@ function_decl|;
 comment|/* INTR */
 name|__checkReturn
 name|efx_rc_t
-name|hunt_intr_init
+name|ef10_intr_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -247,7 +248,7 @@ name|esmp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_enable
+name|ef10_intr_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -256,7 +257,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_disable
+name|ef10_intr_disable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -265,7 +266,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_disable_unlocked
+name|ef10_intr_disable_unlocked
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -275,7 +276,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_intr_trigger
+name|ef10_intr_trigger
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -289,7 +290,7 @@ name|level
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_fini
+name|ef10_intr_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -588,7 +589,7 @@ name|EFSYS_OPT_MCDI
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mcdi_init
+name|ef10_mcdi_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -604,7 +605,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_fini
+name|ef10_mcdi_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -614,7 +615,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_request_copyin
+name|ef10_mcdi_request_copyin
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -643,7 +644,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|boolean_t
-name|hunt_mcdi_poll_response
+name|ef10_mcdi_poll_response
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -653,7 +654,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -676,7 +677,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_request_copyout
+name|ef10_mcdi_request_copyout
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -691,7 +692,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|efx_rc_t
-name|hunt_mcdi_poll_reboot
+name|ef10_mcdi_poll_reboot
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -702,7 +703,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mcdi_feature_supported
+name|ef10_mcdi_feature_supported
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -731,7 +732,7 @@ name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_read_tlv
+name|ef10_nvram_buf_read_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -770,7 +771,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_write_tlv
+name|ef10_nvram_buf_write_tlv
 argument_list|(
 name|__inout_bcount
 argument_list|(
@@ -807,7 +808,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_read_tlv
+name|ef10_nvram_partn_read_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -839,7 +840,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write_tlv
+name|ef10_nvram_partn_write_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -869,7 +870,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write_segment_tlv
+name|ef10_nvram_partn_write_segment_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -903,7 +904,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -924,7 +925,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_lock
+name|ef10_nvram_partn_lock
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -940,7 +941,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_read
+name|ef10_nvram_partn_read
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -972,7 +973,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_erase
+name|ef10_nvram_partn_erase
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -997,7 +998,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write
+name|ef10_nvram_partn_write
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1028,7 +1029,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_nvram_partn_unlock
+name|ef10_nvram_partn_unlock
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1053,7 +1054,7 @@ name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_test
+name|ef10_nvram_test
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1067,7 +1068,7 @@ comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_size
+name|ef10_nvram_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1087,7 +1088,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_get_version
+name|ef10_nvram_get_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1117,7 +1118,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_rw_start
+name|ef10_nvram_rw_start
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1137,7 +1138,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_read_chunk
+name|ef10_nvram_read_chunk
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1168,7 +1169,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_erase
+name|ef10_nvram_erase
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1183,7 +1184,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_write_chunk
+name|ef10_nvram_write_chunk
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1213,7 +1214,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_nvram_rw_finish
+name|ef10_nvram_rw_finish
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1228,7 +1229,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_set_version
+name|ef10_nvram_partn_set_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1254,7 +1255,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_set_version
+name|ef10_nvram_set_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1609,7 +1610,7 @@ name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_sram_test
+name|ef10_sram_test
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1628,7 +1629,7 @@ comment|/* TX */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_init
+name|ef10_tx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1638,7 +1639,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_tx_fini
+name|ef10_tx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1649,7 +1650,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qcreate
+name|ef10_tx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1702,7 +1703,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_tx_qdestroy
+name|ef10_tx_qdestroy
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1713,7 +1714,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpost
+name|ef10_tx_qpost
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1747,7 +1748,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_tx_qpush
+name|ef10_tx_qpush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1768,7 +1769,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpace
+name|ef10_tx_qpace
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1784,7 +1785,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qflush
+name|ef10_tx_qflush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1794,7 +1795,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_tx_qenable
+name|ef10_tx_qenable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1805,7 +1806,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_enable
+name|ef10_tx_qpio_enable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1815,7 +1816,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_tx_qpio_disable
+name|ef10_tx_qpio_disable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1826,7 +1827,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_write
+name|ef10_tx_qpio_write
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1853,7 +1854,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_post
+name|ef10_tx_qpio_post
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1879,7 +1880,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qdesc_post
+name|ef10_tx_qdesc_post
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1913,7 +1914,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_tx_qdesc_dma_create
+name|ef10_tx_qdesc_dma_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1967,7 +1968,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_tx_qdesc_vlantci_create
+name|ef10_tx_qdesc_vlantci_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1989,7 +1990,7 @@ directive|if
 name|EFSYS_OPT_QSTATS
 specifier|extern
 name|void
-name|hunt_tx_qstats_update
+name|ef10_tx_qstats_update
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -2171,7 +2172,7 @@ name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_init
+name|ef10_vpd_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2182,7 +2183,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_size
+name|ef10_vpd_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2198,7 +2199,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_read
+name|ef10_vpd_read
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2220,7 +2221,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_verify
+name|ef10_vpd_verify
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2242,7 +2243,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_reinit
+name|ef10_vpd_reinit
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2264,7 +2265,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_get
+name|ef10_vpd_get
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2291,7 +2292,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_set
+name|ef10_vpd_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2318,7 +2319,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_next
+name|ef10_vpd_next
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2351,7 +2352,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_write
+name|ef10_vpd_write
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2372,7 +2373,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_vpd_fini
+name|ef10_vpd_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2387,7 +2388,7 @@ comment|/* RX */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_init
+name|ef10_rx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2401,7 +2402,7 @@ name|EFSYS_OPT_RX_HDR_SPLIT
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_hdr_split_enable
+name|ef10_rx_hdr_split_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2428,7 +2429,7 @@ name|EFSYS_OPT_RX_SCATTER
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scatter_enable
+name|ef10_rx_scatter_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2450,7 +2451,7 @@ name|EFSYS_OPT_RX_SCALE
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_mode_set
+name|ef10_rx_scale_mode_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2473,7 +2474,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_key_set
+name|ef10_rx_scale_key_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2496,7 +2497,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_tbl_set
+name|ef10_rx_scale_tbl_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2522,7 +2523,7 @@ directive|endif
 comment|/* EFSYS_OPT_RX_SCALE */
 specifier|extern
 name|void
-name|hunt_rx_qpost
+name|ef10_rx_qpost
 argument_list|(
 name|__in
 name|efx_rxq_t
@@ -2559,7 +2560,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_rx_qpush
+name|ef10_rx_qpush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2581,7 +2582,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_qflush
+name|ef10_rx_qflush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2591,7 +2592,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_rx_qenable
+name|ef10_rx_qenable
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2602,7 +2603,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_qcreate
+name|ef10_rx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2649,7 +2650,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_rx_qdestroy
+name|ef10_rx_qdestroy
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2659,7 +2660,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_rx_fini
+name|ef10_rx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2941,63 +2942,6 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_FILTER */
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|hunt_pktfilter_set
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|,
-name|__in
-name|boolean_t
-name|unicst
-parameter_list|,
-name|__in
-name|boolean_t
-name|brdcst
-parameter_list|)
-function_decl|;
-if|#
-directive|if
-name|EFSYS_OPT_MCAST_FILTER_LIST
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|hunt_pktfilter_mcast_set
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|,
-name|__in
-name|uint8_t
-specifier|const
-modifier|*
-name|addrs
-parameter_list|,
-name|__in
-name|int
-name|count
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MCAST_FILTER_LIST */
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|hunt_pktfilter_mcast_all
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|)
-function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t

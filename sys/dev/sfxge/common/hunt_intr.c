@@ -44,7 +44,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_intr_init
+name|ef10_intr_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -75,7 +75,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_intr_enable
+name|ef10_intr_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -92,7 +92,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_intr_disable
+name|ef10_intr_disable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -109,7 +109,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_intr_disable_unlocked
+name|ef10_intr_disable_unlocked
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -165,6 +165,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 if|if
@@ -301,7 +307,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_intr_trigger
+name|ef10_intr_trigger
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -335,7 +341,7 @@ operator|->
 name|enc_bug41750_workaround
 condition|)
 block|{
-comment|/* bug 41750: Test interrupts don't work on Greenport */
+comment|/* 		 * bug 41750: Test interrupts don't work on Greenport 		 * bug 50084: Test interrupts don't work on VFs 		 */
 name|rc
 operator|=
 name|ENOTSUP
@@ -395,7 +401,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_intr_fini
+name|ef10_intr_fini
 parameter_list|(
 name|__in
 name|efx_nic_t

@@ -65,6 +65,12 @@ directive|include
 file|<machine/metadata.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"framebuffer.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|EFI_GUID
@@ -1297,8 +1303,6 @@ name|offset
 decl_stmt|;
 name|uint64_t
 name|fbaddr
-decl_stmt|,
-name|fbsize
 decl_stmt|;
 name|uint32_t
 name|horiz

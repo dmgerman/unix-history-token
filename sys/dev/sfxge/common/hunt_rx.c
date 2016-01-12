@@ -701,7 +701,7 @@ if|if
 condition|(
 name|rss_context
 operator|==
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 condition|)
 block|{
 name|rc
@@ -806,7 +806,7 @@ if|if
 condition|(
 name|rss_context
 operator|==
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 condition|)
 block|{
 name|rc
@@ -984,7 +984,7 @@ if|if
 condition|(
 name|rss_context
 operator|==
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 condition|)
 block|{
 name|rc
@@ -1241,7 +1241,7 @@ if|if
 condition|(
 name|rss_context
 operator|==
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 condition|)
 block|{
 name|rc
@@ -1481,7 +1481,7 @@ if|if
 condition|(
 name|rss_context
 operator|==
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 condition|)
 block|{
 name|rc
@@ -1665,7 +1665,7 @@ end_comment
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_init
+name|ef10_rx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1741,7 +1741,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_hdr_split_enable
+name|ef10_rx_hdr_split_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1823,7 +1823,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scatter_enable
+name|ef10_rx_scatter_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1866,7 +1866,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_mode_set
+name|ef10_rx_scale_mode_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2025,7 +2025,7 @@ end_if
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_key_set
+name|ef10_rx_scale_key_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2138,7 +2138,7 @@ end_if
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_tbl_set
+name|ef10_rx_scale_tbl_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2245,7 +2245,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|hunt_rx_qpost
+name|ef10_rx_qpost
 argument_list|(
 name|__in
 name|efx_rxq_t
@@ -2444,7 +2444,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_rx_qpush
+name|ef10_rx_qpush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2569,7 +2569,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_qflush
+name|ef10_rx_qflush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2634,7 +2634,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_rx_qenable
+name|ef10_rx_qenable
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2654,7 +2654,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_qcreate
+name|ef10_rx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2888,7 +2888,7 @@ name|er_label
 operator|=
 name|label
 expr_stmt|;
-name|hunt_ev_rxlabel_init
+name|ef10_ev_rxlabel_init
 argument_list|(
 name|eep
 argument_list|,
@@ -2937,7 +2937,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_rx_qdestroy
+name|ef10_rx_qdestroy
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2969,7 +2969,7 @@ name|erp
 operator|->
 name|er_label
 decl_stmt|;
-name|hunt_ev_rxlabel_fini
+name|ef10_ev_rxlabel_fini
 argument_list|(
 name|eep
 argument_list|,
@@ -3009,7 +3009,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_rx_fini
+name|ef10_rx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
