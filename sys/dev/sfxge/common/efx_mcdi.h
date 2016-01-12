@@ -486,6 +486,8 @@ name|EFSYS_OPT_BIST
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
@@ -499,7 +501,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t

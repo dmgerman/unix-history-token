@@ -39,6 +39,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_if
@@ -56,7 +58,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-literal|"WITH_MCDI_V2 required for Huntington MCDIv2 commands."
+literal|"WITH_MCDI_V2 required for EF10 MCDIv2 commands."
 end_error
 
 begin_endif
@@ -104,7 +106,7 @@ end_comment
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mcdi_init
+name|ef10_mcdi_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -139,6 +141,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT
@@ -150,7 +158,7 @@ operator|&
 name|EFX_FEATURE_MCDI_DMA
 argument_list|)
 expr_stmt|;
-comment|/* A host DMA buffer is required for Huntington MCDI */
+comment|/* A host DMA buffer is required for EF10 MCDI */
 if|if
 condition|(
 name|esmp
@@ -214,7 +222,7 @@ comment|/* Save initial MC reboot status */
 operator|(
 name|void
 operator|)
-name|hunt_mcdi_poll_reboot
+name|ef10_mcdi_poll_reboot
 argument_list|(
 name|enp
 argument_list|)
@@ -258,7 +266,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_mcdi_fini
+name|ef10_mcdi_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -290,7 +298,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_mcdi_request_copyin
+name|ef10_mcdi_request_copyin
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -358,15 +366,19 @@ decl_stmt|;
 name|size_t
 name|offset
 decl_stmt|;
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 name|xflags
@@ -783,7 +795,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_mcdi_request_copyout
+name|ef10_mcdi_request_copyout
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -846,7 +858,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 argument_list|(
 name|enp
 argument_list|,
@@ -877,7 +889,7 @@ name|MC_CMD_V2_EXTN
 condition|)
 block|{
 comment|/* 		 * Read the actual payload length. The length given in the event 		 * is only correct for responses with the V1 format. 		 */
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 argument_list|(
 name|enp
 argument_list|,
@@ -937,7 +949,7 @@ operator|->
 name|emr_out_length
 argument_list|)
 expr_stmt|;
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 argument_list|(
 name|enp
 argument_list|,
@@ -994,7 +1006,7 @@ end_function
 begin_function
 name|__checkReturn
 name|boolean_t
-name|hunt_mcdi_poll_response
+name|ef10_mcdi_poll_response
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1053,7 +1065,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1162,7 +1174,7 @@ end_function
 
 begin_function
 name|efx_rc_t
-name|hunt_mcdi_poll_reboot
+name|ef10_mcdi_poll_reboot
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1239,7 +1251,7 @@ name|emi_mc_reboot_status
 operator|=
 name|new_status
 expr_stmt|;
-comment|/* 		 * FIXME: Ignore detected MC REBOOT for now. 		 * 		 * The Siena support for checking for MC reboot from status 		 * flags is broken - see comments in siena_mcdi_poll_reboot(). 		 * As the generic MCDI code is shared the Huntington reboot 		 * detection suffers similar problems. 		 * 		 * Do not report an error when the boot status changes until 		 * this can be handled by common code drivers (and reworked to 		 * support Siena too). 		 */
+comment|/* 		 * FIXME: Ignore detected MC REBOOT for now. 		 * 		 * The Siena support for checking for MC reboot from status 		 * flags is broken - see comments in siena_mcdi_poll_reboot(). 		 * As the generic MCDI code is shared the EF10 reboot 		 * detection suffers similar problems. 		 * 		 * Do not report an error when the boot status changes until 		 * this can be handled by common code drivers (and reworked to 		 * support Siena too). 		 */
 if|if
 condition|(
 name|B_FALSE
@@ -1281,7 +1293,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mcdi_feature_supported
+name|ef10_mcdi_feature_supported
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1319,15 +1331,19 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use privilege mask state at MCDI attach. 	 */
@@ -1480,7 +1496,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 end_unit
