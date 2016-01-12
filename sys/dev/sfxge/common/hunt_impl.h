@@ -68,7 +68,7 @@ value|(0xffffffff)
 comment|/* EV */
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_init
+name|ef10_ev_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -77,7 +77,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_fini
+name|ef10_ev_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -87,7 +87,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qcreate
+name|ef10_ev_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -119,7 +119,7 @@ name|eep
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_qdestroy
+name|ef10_ev_qdestroy
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -129,7 +129,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qprime
+name|ef10_ev_qprime
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -143,7 +143,7 @@ name|count
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_qpost
+name|ef10_ev_qpost
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -157,7 +157,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_ev_qmoderate
+name|ef10_ev_qmoderate
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -174,7 +174,7 @@ if|#
 directive|if
 name|EFSYS_OPT_QSTATS
 name|void
-name|hunt_ev_qstats_update
+name|ef10_ev_qstats_update
 argument_list|(
 name|__in
 name|efx_evq_t
@@ -194,7 +194,7 @@ endif|#
 directive|endif
 comment|/* EFSYS_OPT_QSTATS */
 name|void
-name|hunt_ev_rxlabel_init
+name|ef10_ev_rxlabel_init
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -213,7 +213,7 @@ name|label
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_ev_rxlabel_fini
+name|ef10_ev_rxlabel_fini
 parameter_list|(
 name|__in
 name|efx_evq_t
