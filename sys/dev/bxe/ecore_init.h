@@ -2971,22 +2971,41 @@ operator|.
 name|addr
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (enable) 			reg_val |= MISC_AEU_ENABLE_MCP_PRTY_BITS;
+comment|/* Linux is using mcp_attn_ctl_regs[i].bits */
+block|else 			reg_val&= ~MISC_AEU_ENABLE_MCP_PRTY_BITS;
+comment|/* Linux is using mcp_attn_ctl_regs[i].bits */
+else|#
+directive|else
 if|if
 condition|(
 name|enable
 condition|)
 name|reg_val
 operator||=
-name|MISC_AEU_ENABLE_MCP_PRTY_BITS
+name|mcp_attn_ctl_regs
+index|[
+name|i
+index|]
+operator|.
+name|bits
 expr_stmt|;
-comment|/* Linux is using mcp_attn_ctl_regs[i].bits */
 else|else
 name|reg_val
 operator|&=
 operator|~
-name|MISC_AEU_ENABLE_MCP_PRTY_BITS
+name|mcp_attn_ctl_regs
+index|[
+name|i
+index|]
+operator|.
+name|bits
 expr_stmt|;
-comment|/* Linux is using mcp_attn_ctl_regs[i].bits */
+endif|#
+directive|endif
 name|REG_WR
 argument_list|(
 name|sc
