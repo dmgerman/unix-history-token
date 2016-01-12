@@ -1939,6 +1939,9 @@ decl_stmt|;
 name|u_long
 name|hn_lro_tried
 decl_stmt|;
+name|u_long
+name|hn_small_pkts
+decl_stmt|;
 block|}
 name|hn_softc_t
 typedef|;
