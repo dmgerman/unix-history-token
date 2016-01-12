@@ -4263,9 +4263,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl (set metric)"
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFMETRIC (set metric)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4337,9 +4339,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl (set mtu)"
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFMTU (set mtu)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4386,14 +4390,13 @@ name|newname
 operator|==
 name|NULL
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"no memory to set ifname"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|ifr
 operator|.
 name|ifr_data
@@ -4418,17 +4421,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
-argument_list|(
-literal|"ioctl (set name)"
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|newname
 argument_list|)
 expr_stmt|;
-return|return;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFNAME (set name)"
+argument_list|)
+expr_stmt|;
 block|}
 name|strlcpy
 argument_list|(
@@ -4574,9 +4578,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl (set descr)"
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFDESCR (set descr)"
 argument_list|)
 expr_stmt|;
 name|free
