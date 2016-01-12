@@ -2153,13 +2153,15 @@ comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
-name|hunt_filter_table_t
+operator|||
+name|EFSYS_OPT_MEDFORD
+name|ef10_filter_table_t
 modifier|*
-name|ef_hunt_filter_table
+name|ef_ef10_filter_table
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 block|}
 name|efx_filter_t
 typedef|;
