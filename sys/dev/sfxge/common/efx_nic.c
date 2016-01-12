@@ -909,7 +909,7 @@ comment|/* eno_get_bar_region */
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|hunt_sram_test
+name|ef10_sram_test
 block|,
 comment|/* eno_sram_test */
 name|hunt_nic_register_test
