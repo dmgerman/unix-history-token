@@ -394,9 +394,6 @@ decl_stmt|;
 name|int
 name|revision
 decl_stmt|;
-name|EFI_STATUS
-name|status
-decl_stmt|;
 name|rsdp
 operator|=
 name|efi_get_table

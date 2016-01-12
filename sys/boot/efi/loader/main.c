@@ -249,6 +249,9 @@ name|j
 decl_stmt|,
 name|vargood
 decl_stmt|;
+name|UINTN
+name|k
+decl_stmt|;
 comment|/* 	 * XXX Chicken-and-egg problem; we want to have console output 	 * early, but some console attributes may depend on reading from 	 * eg. the boot device, which we can't do yet.  We can use 	 * printf() etc. once this is done. 	 */
 name|cons_probe
 argument_list|()
@@ -650,17 +653,17 @@ name|efi_readin
 expr_stmt|;
 for|for
 control|(
-name|i
+name|k
 operator|=
 literal|0
 init|;
-name|i
+name|k
 operator|<
 name|ST
 operator|->
 name|NumberOfTableEntries
 condition|;
-name|i
+name|k
 operator|++
 control|)
 block|{
@@ -671,7 +674,7 @@ name|ST
 operator|->
 name|ConfigurationTable
 index|[
-name|i
+name|k
 index|]
 operator|.
 name|VendorGuid
@@ -699,7 +702,7 @@ name|ST
 operator|->
 name|ConfigurationTable
 index|[
-name|i
+name|k
 index|]
 operator|.
 name|VendorTable
@@ -1089,7 +1092,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%23s %012lx %012lx %08lx "
+literal|"%23s %012jx %012jx %08jx "
 argument_list|,
 name|types
 index|[
@@ -1098,14 +1101,23 @@ operator|->
 name|Type
 index|]
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|PhysicalStart
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|VirtualStart
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|NumberOfPages
@@ -1359,13 +1371,17 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|int
+name|UINTN
 name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"NumberOfTableEntries=%ld\n"
+literal|"NumberOfTableEntries=%lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ST
 operator|->
 name|NumberOfTableEntries
@@ -2018,13 +2034,12 @@ name|UINTN
 name|varsz
 decl_stmt|,
 name|datasz
+decl_stmt|,
+name|i
 decl_stmt|;
 name|SIMPLE_TEXT_OUTPUT_INTERFACE
 modifier|*
 name|conout
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|conout
 operator|=

@@ -514,15 +514,6 @@ name|MAX_ADDRESS
 value|0xFFFFFFFFFFFFFFFF
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|intrinsic
-name|(
-name|__break
-name|)
-end_pragma
-
 begin_define
 define|#
 directive|define
@@ -782,15 +773,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_pragma
-pragma|#
-directive|pragma
-name|intrinsic
-name|(
-name|__mfa
-name|)
-end_pragma
 
 begin_define
 define|#
