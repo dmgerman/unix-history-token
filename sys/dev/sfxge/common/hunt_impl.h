@@ -51,9 +51,10 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/*  * FIXME: This is just a power of 2 which fits in an MCDI v1 message, and could  * possibly be increased, or the write size reported by newer firmware used  * instead.  */
 define|#
 directive|define
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 value|0x80
 comment|/* Alignment requirement for value written to RX WPTR:  *  the WPTR must be aligned to an 8 descriptor boundary  */
 define|#
@@ -731,7 +732,7 @@ name|EFSYS_OPT_VPD
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_read_tlv
+name|ef10_nvram_buf_read_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -770,7 +771,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_write_tlv
+name|ef10_nvram_buf_write_tlv
 argument_list|(
 name|__inout_bcount
 argument_list|(
@@ -807,7 +808,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_read_tlv
+name|ef10_nvram_partn_read_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -839,7 +840,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write_tlv
+name|ef10_nvram_partn_write_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -869,7 +870,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write_segment_tlv
+name|ef10_nvram_partn_write_segment_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -903,7 +904,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -924,7 +925,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_lock
+name|ef10_nvram_partn_lock
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -940,7 +941,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_read
+name|ef10_nvram_partn_read
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -972,7 +973,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_erase
+name|ef10_nvram_partn_erase
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -997,7 +998,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write
+name|ef10_nvram_partn_write
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1028,7 +1029,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_nvram_partn_unlock
+name|ef10_nvram_partn_unlock
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1053,7 +1054,7 @@ name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_test
+name|ef10_nvram_test
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1067,7 +1068,7 @@ comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_size
+name|ef10_nvram_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1087,7 +1088,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_get_version
+name|ef10_nvram_get_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1117,7 +1118,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_rw_start
+name|ef10_nvram_rw_start
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1137,7 +1138,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_read_chunk
+name|ef10_nvram_read_chunk
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1168,7 +1169,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_erase
+name|ef10_nvram_erase
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1183,7 +1184,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_write_chunk
+name|ef10_nvram_write_chunk
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1213,7 +1214,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_nvram_rw_finish
+name|ef10_nvram_rw_finish
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1228,7 +1229,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_set_version
+name|ef10_nvram_partn_set_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1254,7 +1255,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_set_version
+name|ef10_nvram_set_version
 argument_list|(
 name|__in
 name|efx_nic_t

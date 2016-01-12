@@ -173,45 +173,47 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_nvram_ops_t
-name|__efx_nvram_hunt_ops
+name|__efx_nvram_ef10_ops
 init|=
 block|{
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|hunt_nvram_test
+name|ef10_nvram_test
 block|,
 comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|hunt_nvram_size
+name|ef10_nvram_size
 block|,
 comment|/* envo_size */
-name|hunt_nvram_get_version
+name|ef10_nvram_get_version
 block|,
 comment|/* envo_get_version */
-name|hunt_nvram_rw_start
+name|ef10_nvram_rw_start
 block|,
 comment|/* envo_rw_start */
-name|hunt_nvram_read_chunk
+name|ef10_nvram_read_chunk
 block|,
 comment|/* envo_read_chunk */
-name|hunt_nvram_erase
+name|ef10_nvram_erase
 block|,
 comment|/* envo_erase */
-name|hunt_nvram_write_chunk
+name|ef10_nvram_write_chunk
 block|,
 comment|/* envo_write_chunk */
-name|hunt_nvram_rw_finish
+name|ef10_nvram_rw_finish
 block|,
 comment|/* envo_rw_finish */
-name|hunt_nvram_set_version
+name|ef10_nvram_set_version
 block|,
 comment|/* envo_set_version */
 block|}
@@ -224,7 +226,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -337,12 +339,31 @@ name|efx_nvram_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_nvram_hunt_ops
+name|__efx_nvram_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|envop
+operator|=
+operator|(
+name|efx_nvram_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_nvram_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(

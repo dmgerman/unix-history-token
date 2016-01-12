@@ -1800,7 +1800,7 @@ operator|*
 name|header
 argument_list|)
 operator|<=
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2161,7 +2161,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_read_tlv_segment
+name|ef10_nvram_read_tlv_segment
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2221,7 +2221,7 @@ operator|*
 name|header
 argument_list|)
 operator|<=
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2253,7 +2253,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_read
+name|ef10_nvram_partn_read
 argument_list|(
 name|enp
 argument_list|,
@@ -2263,7 +2263,7 @@ name|seg_offset
 argument_list|,
 name|seg_data
 argument_list|,
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|)
 operator|)
 operator|!=
@@ -2368,7 +2368,7 @@ if|if
 condition|(
 name|total_length
 operator|>
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 condition|)
 block|{
 if|if
@@ -2376,7 +2376,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_read
+name|ef10_nvram_partn_read
 argument_list|(
 name|enp
 argument_list|,
@@ -2384,15 +2384,15 @@ name|partn
 argument_list|,
 name|seg_offset
 operator|+
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|,
 name|seg_data
 operator|+
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|,
 name|total_length
 operator|-
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|)
 operator|)
 operator|!=
@@ -2662,7 +2662,7 @@ end_comment
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_read_tlv
+name|ef10_nvram_buf_read_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2923,7 +2923,7 @@ end_comment
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_read_tlv
+name|ef10_nvram_partn_read_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2980,7 +2980,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 argument_list|(
 name|enp
 argument_list|,
@@ -3046,7 +3046,7 @@ do|do
 block|{
 name|rc
 operator|=
-name|hunt_nvram_read_tlv_segment
+name|ef10_nvram_read_tlv_segment
 argument_list|(
 name|enp
 argument_list|,
@@ -3093,7 +3093,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_buf_read_tlv
+name|ef10_nvram_buf_read_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -3208,7 +3208,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_segment_size
+name|ef10_nvram_buf_segment_size
 parameter_list|(
 name|__in
 name|caddr_t
@@ -3706,7 +3706,7 @@ end_comment
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_buf_write_tlv
+name|ef10_nvram_buf_write_tlv
 argument_list|(
 name|__inout_bcount
 argument_list|(
@@ -4173,7 +4173,7 @@ end_comment
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write_tlv
+name|ef10_nvram_partn_write_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -4201,7 +4201,7 @@ name|size
 argument_list|)
 block|{
 return|return
-name|hunt_nvram_partn_write_segment_tlv
+name|ef10_nvram_partn_write_segment_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -4227,7 +4227,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_segment_write_tlv
+name|ef10_nvram_segment_write_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -4293,7 +4293,7 @@ decl_stmt|;
 comment|/* 	 * Read the segment from NVRAM into the segment_data buffer and validate 	 * it, returning if it does not validate. This is not a failure unless 	 * this is the first segment in a partition. In this case the caller 	 * must propogate the error. 	 */
 name|status
 operator|=
-name|hunt_nvram_read_tlv_segment
+name|ef10_nvram_read_tlv_segment
 argument_list|(
 name|enp
 argument_list|,
@@ -4322,7 +4322,7 @@ operator|)
 return|;
 name|status
 operator|=
-name|hunt_nvram_buf_segment_size
+name|ef10_nvram_buf_segment_size
 argument_list|(
 operator|*
 name|seg_datap
@@ -4356,7 +4356,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_buf_write_tlv
+name|ef10_nvram_buf_write_tlv
 argument_list|(
 operator|*
 name|seg_datap
@@ -4446,7 +4446,7 @@ end_comment
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write_segment_tlv
+name|ef10_nvram_partn_write_segment_tlv
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -4522,7 +4522,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 argument_list|(
 name|enp
 argument_list|,
@@ -4582,7 +4582,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_lock
+name|ef10_nvram_partn_lock
 argument_list|(
 name|enp
 argument_list|,
@@ -4609,7 +4609,7 @@ literal|0
 decl_stmt|;
 name|rc
 operator|=
-name|hunt_nvram_segment_write_tlv
+name|ef10_nvram_segment_write_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -4671,7 +4671,7 @@ name|segment_data
 operator|-
 name|partn_data
 expr_stmt|;
-comment|/* 	 * We've run out of space.  This should actually be dealt with by 	 * hunt_nvram_buf_write_tlv returning ENOSPC. 	 */
+comment|/* 	 * We've run out of space.  This should actually be dealt with by 	 * ef10_nvram_buf_write_tlv returning ENOSPC. 	 */
 if|if
 condition|(
 name|total_length
@@ -4693,7 +4693,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_erase
+name|ef10_nvram_partn_erase
 argument_list|(
 name|enp
 argument_list|,
@@ -4716,7 +4716,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_write
+name|ef10_nvram_partn_write
 argument_list|(
 name|enp
 argument_list|,
@@ -4736,7 +4736,7 @@ goto|goto
 name|fail7
 goto|;
 comment|/* Unlock the partition */
-name|hunt_nvram_partn_unlock
+name|ef10_nvram_partn_unlock
 argument_list|(
 name|enp
 argument_list|,
@@ -4787,7 +4787,7 @@ argument_list|(
 name|fail4
 argument_list|)
 expr_stmt|;
-name|hunt_nvram_partn_unlock
+name|ef10_nvram_partn_unlock
 argument_list|(
 name|enp
 argument_list|,
@@ -4845,7 +4845,7 @@ end_comment
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4919,7 +4919,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_lock
+name|ef10_nvram_partn_lock
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4980,7 +4980,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_read
+name|ef10_nvram_partn_read
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -5028,7 +5028,7 @@ name|MIN
 argument_list|(
 name|size
 argument_list|,
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 argument_list|)
 expr_stmt|;
 if|if
@@ -5097,7 +5097,7 @@ end_decl_stmt
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_erase
+name|ef10_nvram_partn_erase
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5288,7 +5288,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_write
+name|ef10_nvram_partn_write
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -5383,7 +5383,7 @@ else|else
 block|{
 name|write_size
 operator|=
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 expr_stmt|;
 block|}
 while|while
@@ -5481,7 +5481,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_nvram_partn_unlock
+name|ef10_nvram_partn_unlock
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5542,7 +5542,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_partn_set_version
+name|ef10_nvram_partn_set_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -5646,7 +5646,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_write_segment_tlv
+name|ef10_nvram_partn_write_segment_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -5715,10 +5715,14 @@ directive|if
 name|EFSYS_OPT_NVRAM
 end_if
 
+begin_comment
+comment|/* FIXME: Update partition table for Medford */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
-name|hunt_parttbl_entry_s
+name|ef10_parttbl_entry_s
 block|{
 name|unsigned
 name|int
@@ -5732,7 +5736,7 @@ name|efx_nvram_type_t
 name|nvtype
 decl_stmt|;
 block|}
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 typedef|;
 end_typedef
 
@@ -5742,8 +5746,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|hunt_parttbl_entry_t
-name|hunt_parttbl
+name|ef10_parttbl_entry_t
+name|ef10_parttbl
 index|[]
 init|=
 block|{
@@ -5977,9 +5981,9 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6004,7 +6008,7 @@ operator|.
 name|em_emip
 operator|)
 decl_stmt|;
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6030,7 +6034,7 @@ name|i
 operator|<
 name|EFX_ARRAY_SIZE
 argument_list|(
-name|hunt_parttbl
+name|ef10_parttbl
 argument_list|)
 condition|;
 name|i
@@ -6040,7 +6044,7 @@ block|{
 name|entry
 operator|=
 operator|&
-name|hunt_parttbl
+name|ef10_parttbl
 index|[
 name|i
 index|]
@@ -6084,7 +6088,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_test
+name|ef10_nvram_test
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6105,7 +6109,7 @@ operator|.
 name|em_emip
 operator|)
 decl_stmt|;
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6209,7 +6213,7 @@ name|i
 operator|<
 name|EFX_ARRAY_SIZE
 argument_list|(
-name|hunt_parttbl
+name|ef10_parttbl
 argument_list|)
 condition|;
 name|i
@@ -6219,7 +6223,7 @@ block|{
 name|entry
 operator|=
 operator|&
-name|hunt_parttbl
+name|ef10_parttbl
 index|[
 name|i
 index|]
@@ -6356,7 +6360,7 @@ end_comment
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_size
+name|ef10_nvram_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6373,7 +6377,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6388,7 +6392,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -6418,7 +6422,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 argument_list|(
 name|enp
 argument_list|,
@@ -6472,7 +6476,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_get_version
+name|ef10_nvram_get_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -6499,7 +6503,7 @@ literal|4
 index|]
 argument_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6514,7 +6518,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -6601,7 +6605,7 @@ end_decl_stmt
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_rw_start
+name|ef10_nvram_rw_start
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6618,7 +6622,7 @@ modifier|*
 name|chunk_sizep
 parameter_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6633,7 +6637,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -6663,7 +6667,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_lock
+name|ef10_nvram_partn_lock
 argument_list|(
 name|enp
 argument_list|,
@@ -6685,7 +6689,7 @@ condition|)
 operator|*
 name|chunk_sizep
 operator|=
-name|HUNTINGTON_NVRAM_CHUNK
+name|EF10_NVRAM_CHUNK
 expr_stmt|;
 return|return
 operator|(
@@ -6721,7 +6725,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_read_chunk
+name|ef10_nvram_read_chunk
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -6749,7 +6753,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6761,7 +6765,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -6785,7 +6789,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_read
+name|ef10_nvram_partn_read
 argument_list|(
 name|enp
 argument_list|,
@@ -6840,7 +6844,7 @@ end_decl_stmt
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_erase
+name|ef10_nvram_erase
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6852,7 +6856,7 @@ name|efx_nvram_type_t
 name|type
 parameter_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -6867,7 +6871,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -6891,7 +6895,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_size
+name|ef10_nvram_partn_size
 argument_list|(
 name|enp
 argument_list|,
@@ -6914,7 +6918,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_erase
+name|ef10_nvram_partn_erase
 argument_list|(
 name|enp
 argument_list|,
@@ -6974,7 +6978,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_write_chunk
+name|ef10_nvram_write_chunk
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -7002,7 +7006,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -7014,7 +7018,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -7038,7 +7042,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_write
+name|ef10_nvram_partn_write
 argument_list|(
 name|enp
 argument_list|,
@@ -7092,7 +7096,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_nvram_rw_finish
+name|ef10_nvram_rw_finish
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -7104,7 +7108,7 @@ name|efx_nvram_type_t
 name|type
 parameter_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -7113,7 +7117,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -7123,7 +7127,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|hunt_nvram_partn_unlock
+name|ef10_nvram_partn_unlock
 argument_list|(
 name|enp
 argument_list|,
@@ -7138,7 +7142,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nvram_set_version
+name|ef10_nvram_set_version
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -7160,7 +7164,7 @@ literal|4
 index|]
 argument_list|)
 block|{
-name|hunt_parttbl_entry_t
+name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
@@ -7176,7 +7180,7 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|hunt_parttbl_entry
+name|ef10_parttbl_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -7206,7 +7210,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_set_version
+name|ef10_nvram_partn_set_version
 argument_list|(
 name|enp
 argument_list|,
