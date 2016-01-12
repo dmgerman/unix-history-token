@@ -64,6 +64,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
@@ -1867,6 +1879,10 @@ name|struct
 name|ifnet
 modifier|*
 name|hn_ifp
+decl_stmt|;
+name|struct
+name|ifmedia
+name|hn_media
 decl_stmt|;
 name|device_t
 name|hn_dev
