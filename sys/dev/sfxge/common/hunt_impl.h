@@ -63,7 +63,7 @@ value|8
 comment|/* Invalid RSS context handle */
 define|#
 directive|define
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 value|(0xffffffff)
 comment|/* EV */
 name|__checkReturn
@@ -2387,7 +2387,7 @@ comment|/* RX */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_init
+name|ef10_rx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2401,7 +2401,7 @@ name|EFSYS_OPT_RX_HDR_SPLIT
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_hdr_split_enable
+name|ef10_rx_hdr_split_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2428,7 +2428,7 @@ name|EFSYS_OPT_RX_SCATTER
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scatter_enable
+name|ef10_rx_scatter_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2450,7 +2450,7 @@ name|EFSYS_OPT_RX_SCALE
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_mode_set
+name|ef10_rx_scale_mode_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2473,7 +2473,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_key_set
+name|ef10_rx_scale_key_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2496,7 +2496,7 @@ decl_stmt|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_scale_tbl_set
+name|ef10_rx_scale_tbl_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2522,7 +2522,7 @@ directive|endif
 comment|/* EFSYS_OPT_RX_SCALE */
 specifier|extern
 name|void
-name|hunt_rx_qpost
+name|ef10_rx_qpost
 argument_list|(
 name|__in
 name|efx_rxq_t
@@ -2559,7 +2559,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_rx_qpush
+name|ef10_rx_qpush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2581,7 +2581,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_qflush
+name|ef10_rx_qflush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2591,7 +2591,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_rx_qenable
+name|ef10_rx_qenable
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2602,7 +2602,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_rx_qcreate
+name|ef10_rx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2649,7 +2649,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_rx_qdestroy
+name|ef10_rx_qdestroy
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2659,7 +2659,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_rx_fini
+name|ef10_rx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t

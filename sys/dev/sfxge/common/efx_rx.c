@@ -575,24 +575,26 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_rx_ops_t
-name|__efx_rx_hunt_ops
+name|__efx_rx_ef10_ops
 init|=
 block|{
-name|hunt_rx_init
+name|ef10_rx_init
 block|,
 comment|/* erxo_init */
-name|hunt_rx_fini
+name|ef10_rx_fini
 block|,
 comment|/* erxo_fini */
 if|#
 directive|if
 name|EFSYS_OPT_RX_HDR_SPLIT
-name|hunt_rx_hdr_split_enable
+name|ef10_rx_hdr_split_enable
 block|,
 comment|/* erxo_hdr_split_enable */
 endif|#
@@ -600,7 +602,7 @@ directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCATTER
-name|hunt_rx_scatter_enable
+name|ef10_rx_scatter_enable
 block|,
 comment|/* erxo_scatter_enable */
 endif|#
@@ -608,33 +610,33 @@ directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCALE
-name|hunt_rx_scale_mode_set
+name|ef10_rx_scale_mode_set
 block|,
 comment|/* erxo_scale_mode_set */
-name|hunt_rx_scale_key_set
+name|ef10_rx_scale_key_set
 block|,
 comment|/* erxo_scale_key_set */
-name|hunt_rx_scale_tbl_set
+name|ef10_rx_scale_tbl_set
 block|,
 comment|/* erxo_scale_tbl_set */
 endif|#
 directive|endif
-name|hunt_rx_qpost
+name|ef10_rx_qpost
 block|,
 comment|/* erxo_qpost */
-name|hunt_rx_qpush
+name|ef10_rx_qpush
 block|,
 comment|/* erxo_qpush */
-name|hunt_rx_qflush
+name|ef10_rx_qflush
 block|,
 comment|/* erxo_qflush */
-name|hunt_rx_qenable
+name|ef10_rx_qenable
 block|,
 comment|/* erxo_qenable */
-name|hunt_rx_qcreate
+name|ef10_rx_qcreate
 block|,
 comment|/* erxo_qcreate */
-name|hunt_rx_qdestroy
+name|ef10_rx_qdestroy
 block|,
 comment|/* erxo_qdestroy */
 block|}
@@ -647,7 +649,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -785,12 +787,31 @@ name|efx_rx_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_rx_hunt_ops
+name|__efx_rx_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|erxop
+operator|=
+operator|(
+name|efx_rx_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_rx_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -2313,7 +2334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Psuedo-header info for Siena/Falcon.  *  * The psuedo-header is a byte array of one of the forms:  *  *  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15  * XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.TT.TT.TT.TT  * XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.LL.LL  *  * where:  *  * TT.TT.TT.TT is a 32-bit Toeplitz hash  * LL.LL is a 16-bit LFSR hash  *  * Hash values are in network (big-endian) byte order.  *  *  * On Huntington the pseudo-header is laid out as:  * (See also SF-109306-TC section 9)  *  * Toeplitz hash (32 bits, little-endian)  * Out-of-band outer VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an outer VLAN tag)  * Out-of-band inner VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an inner VLAN tag)  * Packet length (16 bits, little-endian, may be 0)  * MAC timestamp (32 bits, little-endian, may be 0)  * VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an outer VLAN tag)  * VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an inner VLAN tag)  */
+comment|/*  * Psuedo-header info for Siena/Falcon.  *  * The psuedo-header is a byte array of one of the forms:  *  *  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15  * XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.TT.TT.TT.TT  * XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.XX.LL.LL  *  * where:  *  * TT.TT.TT.TT is a 32-bit Toeplitz hash  * LL.LL is a 16-bit LFSR hash  *  * Hash values are in network (big-endian) byte order.  *  *  * On EF10 the pseudo-header is laid out as:  * (See also SF-109306-TC section 9)  *  * Toeplitz hash (32 bits, little-endian)  * Out-of-band outer VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an outer VLAN tag)  * Out-of-band inner VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an inner VLAN tag)  * Packet length (16 bits, little-endian, may be 0)  * MAC timestamp (32 bits, little-endian, may be 0)  * VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an outer VLAN tag)  * VLAN tag  *     (16 bits, big-endian, 0 if the packet did not have an inner VLAN tag)  */
 end_comment
 
 begin_function
@@ -2344,6 +2365,12 @@ operator|->
 name|en_family
 operator|!=
 name|EFX_FAMILY_HUNTINGTON
+operator|&&
+name|enp
+operator|->
+name|en_family
+operator|!=
+name|EFX_FAMILY_MEDFORD
 condition|)
 block|{
 name|EFSYS_ASSERT
@@ -2464,6 +2491,9 @@ operator|)
 return|;
 case|case
 name|EFX_FAMILY_HUNTINGTON
+case|:
+case|case
+name|EFX_FAMILY_MEDFORD
 case|:
 return|return
 operator|(
