@@ -229,7 +229,7 @@ function_decl|;
 comment|/* INTR */
 name|__checkReturn
 name|efx_rc_t
-name|hunt_intr_init
+name|ef10_intr_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -247,7 +247,7 @@ name|esmp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_enable
+name|ef10_intr_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -256,7 +256,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_disable
+name|ef10_intr_disable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -265,7 +265,7 @@ name|enp
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_disable_unlocked
+name|ef10_intr_disable_unlocked
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -275,7 +275,7 @@ parameter_list|)
 function_decl|;
 name|__checkReturn
 name|efx_rc_t
-name|hunt_intr_trigger
+name|ef10_intr_trigger
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -289,7 +289,7 @@ name|level
 parameter_list|)
 function_decl|;
 name|void
-name|hunt_intr_fini
+name|ef10_intr_fini
 parameter_list|(
 name|__in
 name|efx_nic_t

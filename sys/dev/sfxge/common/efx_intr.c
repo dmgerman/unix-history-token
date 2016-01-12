@@ -275,30 +275,32 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_intr_ops_t
-name|__efx_intr_hunt_ops
+name|__efx_intr_ef10_ops
 init|=
 block|{
-name|hunt_intr_init
+name|ef10_intr_init
 block|,
 comment|/* eio_init */
-name|hunt_intr_enable
+name|ef10_intr_enable
 block|,
 comment|/* eio_enable */
-name|hunt_intr_disable
+name|ef10_intr_disable
 block|,
 comment|/* eio_disable */
-name|hunt_intr_disable_unlocked
+name|ef10_intr_disable_unlocked
 block|,
 comment|/* eio_disable_unlocked */
-name|hunt_intr_trigger
+name|ef10_intr_trigger
 block|,
 comment|/* eio_trigger */
-name|hunt_intr_fini
+name|ef10_intr_fini
 block|,
 comment|/* eio_fini */
 block|}
@@ -311,7 +313,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -473,12 +475,31 @@ name|efx_intr_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_intr_hunt_ops
+name|__efx_intr_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|eiop
+operator|=
+operator|(
+name|efx_intr_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_intr_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
