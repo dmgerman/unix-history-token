@@ -2315,7 +2315,7 @@ name|CLK_FLAG1
 operator|)
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

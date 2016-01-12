@@ -65,6 +65,10 @@ argument_list|(
 name|RECV_INIT
 argument_list|)
 expr_stmt|;
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -159,12 +163,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|initial
-init|=
-name|free_recvbuffs
-argument_list|()
-decl_stmt|;
+comment|// int initial = free_recvbuffs();
 name|recvbuf_t
 modifier|*
 name|buf

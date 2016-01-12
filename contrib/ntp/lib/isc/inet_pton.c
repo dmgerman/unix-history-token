@@ -321,8 +321,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|newv
 init|=
 operator|*
@@ -848,7 +847,7 @@ condition|)
 block|{
 comment|/* 		 * Since some memmove()'s erroneously fail to handle 		 * overlapping regions, we'll do the shift by hand. 		 */
 specifier|const
-name|int
+name|size_t
 name|n
 init|=
 name|tp
@@ -875,6 +874,9 @@ name|i
 operator|=
 literal|1
 init|;
+operator|(
+name|size_t
+operator|)
 name|i
 operator|<=
 name|n

@@ -615,6 +615,10 @@ define|#
 directive|define
 name|EFSYS_OPT_HUNTINGTON
 value|1
+define|#
+directive|define
+name|EFSYS_OPT_MEDFORD
+value|0
 ifdef|#
 directive|ifdef
 name|DEBUG

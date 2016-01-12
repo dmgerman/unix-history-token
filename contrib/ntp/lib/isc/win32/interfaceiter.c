@@ -176,7 +176,7 @@ name|ipuaCur
 decl_stmt|;
 comment|/* enumeration subposition */
 comment|/* fields used for the older address enumeration ioctls */
-name|int
+name|SOCKET
 name|socket
 decl_stmt|;
 name|INTERFACE_INFO

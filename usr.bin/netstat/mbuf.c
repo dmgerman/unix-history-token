@@ -1251,6 +1251,109 @@ name|out
 goto|;
 name|xo_emit
 argument_list|(
+literal|"{:sendfile-syscalls/%ju} {N:sendfile syscalls}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_syscalls
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-no-io/%ju} "
+literal|"{N:sendfile syscalls completed without I\\/O request}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_noiocnt
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-io-count/%ju} "
+literal|"{N:requests for I\\/O initiated by sendfile}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_iocnt
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-pages-sent/%ju} "
+literal|"{N:pages read by sendfile as part of a request}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_pages_read
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-pages-valid/%ju} "
+literal|"{N:pages were valid at time of a sendfile request}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_pages_valid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-requested-readahead/%ju} "
+literal|"{N:pages were requested for read ahead by applications}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_rhpages_requested
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-readahead/%ju} "
+literal|"{N:pages were read ahead by sendfile}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_rhpages_read
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:sendfile-busy-encounters/%ju} "
+literal|"{N:times sendfile encountered an already busy page}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_busy
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
 literal|"{:sfbufs-alloc-failed/%ju} {N:requests for sfbufs denied}\n"
 argument_list|,
 operator|(
@@ -1271,19 +1374,6 @@ operator|)
 name|sfstat
 operator|.
 name|sf_allocwait
-argument_list|)
-expr_stmt|;
-name|xo_emit
-argument_list|(
-literal|"{:sfbufs-io-count/%ju} "
-literal|"{N:requests for I\\/O initiated by sendfile}\n"
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|sfstat
-operator|.
-name|sf_iocnt
 argument_list|)
 expr_stmt|;
 name|out

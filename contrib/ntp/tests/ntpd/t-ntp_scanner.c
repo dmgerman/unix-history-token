@@ -117,6 +117,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|temp
@@ -144,13 +145,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|temp
 init|=
 name|keyword
 argument_list|(
-literal|401
+name|T_Server
 argument_list|)
 decl_stmt|;
 comment|//printf("%s",temp); //143 or 401 ?
@@ -577,7 +579,7 @@ name|temp
 operator|=
 name|is_EOC
 argument_list|(
-literal|"A"
+literal|'A'
 argument_list|)
 expr_stmt|;
 name|TEST_ASSERT_FALSE

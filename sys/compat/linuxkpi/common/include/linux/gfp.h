@@ -200,7 +200,7 @@ specifier|static
 specifier|inline
 name|unsigned
 name|long
-name|_get_page
+name|linux_get_page
 parameter_list|(
 name|gfp_t
 name|mask
@@ -226,7 +226,7 @@ name|get_zeroed_page
 parameter_list|(
 name|mask
 parameter_list|)
-value|_get_page((mask) | M_ZERO)
+value|linux_get_page((mask) | M_ZERO)
 end_define
 
 begin_define
@@ -236,7 +236,7 @@ name|alloc_page
 parameter_list|(
 name|mask
 parameter_list|)
-value|virt_to_page(_get_page((mask)))
+value|virt_to_page(linux_get_page((mask)))
 end_define
 
 begin_define
@@ -246,7 +246,7 @@ name|__get_free_page
 parameter_list|(
 name|mask
 parameter_list|)
-value|_get_page((mask))
+value|linux_get_page((mask))
 end_define
 
 begin_function

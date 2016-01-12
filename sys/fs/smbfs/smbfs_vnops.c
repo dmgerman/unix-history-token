@@ -1700,6 +1700,9 @@ name|smbfs_smb_setfsize
 argument_list|(
 name|np
 argument_list|,
+operator|(
+name|int64_t
+operator|)
 name|vap
 operator|->
 name|va_size

@@ -798,11 +798,15 @@ name|len
 parameter_list|)
 block|{
 return|return
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|file
 argument_list|)
 return|;
+comment|/* assume no overflow possible */
 block|}
 end_function
 
@@ -8299,10 +8303,8 @@ operator|*
 operator|)
 name|name
 argument_list|,
-name|strlen
-argument_list|(
-name|name
-argument_list|)
+operator|-
+literal|1
 argument_list|,
 operator|-
 literal|1
@@ -8331,10 +8333,8 @@ operator|*
 operator|)
 name|name
 argument_list|,
-name|strlen
-argument_list|(
-name|name
-argument_list|)
+operator|-
+literal|1
 argument_list|,
 operator|-
 literal|1

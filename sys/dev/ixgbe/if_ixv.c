@@ -7080,11 +7080,7 @@ expr_stmt|;
 name|rxdctl
 operator|&=
 operator|~
-operator|(
 name|IXGBE_RXDCTL_ENABLE
-operator||
-name|IXGBE_RXDCTL_VME
-operator|)
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -7277,20 +7273,10 @@ argument_list|)
 expr_stmt|;
 comment|/* Do the queue enabling last */
 name|rxdctl
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_VFRXDCTL
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|rxdctl
 operator||=
 name|IXGBE_RXDCTL_ENABLE
+operator||
+name|IXGBE_RXDCTL_VME
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(

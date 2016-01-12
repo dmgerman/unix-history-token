@@ -17,6 +17,12 @@ directive|include
 file|<ntp_fp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ntp_assert.h>
+end_include
+
 begin_comment
 comment|/*  * we want to test a refid format of:  * 254.x.y.x  *  * where x.y.z are 24 bits containing 2 (signed) integer bits  * and 22 fractional bits.  *  * we want functions to convert to/from this format, with unit tests.  *  * Interesting test cases include:  * 254.0.0.0  * 254.0.0.1  * 254.127.255.255  * 254.128.0.0  * 254.255.255.255  */
 end_comment
@@ -396,6 +402,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
@@ -405,6 +412,9 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+name|init_lib
+argument_list|()
+expr_stmt|;
 name|rtol
 argument_list|(
 literal|0xfe800000
@@ -573,6 +583,13 @@ literal|"-.932087"
 argument_list|,
 operator|&
 name|l
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+literal|1
+operator|==
+name|rc
 argument_list|)
 expr_stmt|;
 name|ltor

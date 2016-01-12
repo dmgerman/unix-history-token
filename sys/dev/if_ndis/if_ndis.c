@@ -3898,11 +3898,25 @@ decl_stmt|,
 name|r
 decl_stmt|,
 name|len
+decl_stmt|,
+name|nonettypes
+init|=
+literal|1
 decl_stmt|;
 name|uint8_t
 name|bands
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 name|callout_init
 argument_list|(
@@ -4073,6 +4087,10 @@ condition|(
 name|mode
 condition|)
 block|{
+name|nonettypes
+operator|=
+literal|0
+expr_stmt|;
 name|setbit
 argument_list|(
 name|ic
@@ -4084,7 +4102,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|mode
@@ -4121,9 +4138,7 @@ label|:
 comment|/* Default to 11b channels if the card did not supply any */
 if|if
 condition|(
-name|bands
-operator|==
-literal|0
+name|nonettypes
 condition|)
 block|{
 name|setbit
@@ -4137,7 +4152,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -4595,7 +4609,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;

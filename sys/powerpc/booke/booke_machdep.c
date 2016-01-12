@@ -442,15 +442,6 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|char
-name|kernel_text
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
 name|_etext
 index|[]
 decl_stmt|;
@@ -1194,7 +1185,7 @@ operator|>
 operator|(
 name|uintptr_t
 operator|)
-name|kernel_text
+name|btext
 condition|)
 comment|/* FreeBSD loader */
 name|mdp

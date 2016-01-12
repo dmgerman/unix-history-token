@@ -545,7 +545,11 @@ name|blocking_children_alloc
 operator|=
 name|new_alloc
 expr_stmt|;
+comment|/* assume we'll never have enough workers to overflow u_int */
 return|return
+operator|(
+name|u_int
+operator|)
 name|prev_alloc
 return|;
 block|}

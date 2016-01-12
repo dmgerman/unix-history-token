@@ -911,11 +911,20 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|_VA_LIST_DECLARED
-end_ifdef
+argument_list|)
+end_if
 
 begin_function_decl
 name|void

@@ -122,7 +122,7 @@ file|"ntpd-opts.h"
 end_include
 
 begin_comment
-comment|/* there's a short treatise below what the thread stuff is for */
+comment|/* there's a short treatise below what the thread stuff is for.  * [Bug 2954] enable the threading warm-up only for Linux.  */
 end_comment
 
 begin_if
@@ -159,11 +159,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|NEED_PTHREAD_WARMUP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1342,7 +1356,7 @@ comment|/* !SIM */
 end_comment
 
 begin_comment
-comment|/* Bug2332 unearthed a problem in the interaction of reduced user  * privileges, the limits on memory usage and some versions of the  * pthread library on Linux systems. The 'pthread_cancel()' function and  * likely some others need to track the stack of the thread involved,  * and uses a function that comes from GCC (--> libgcc_s.so) to do  * this. Unfortunately the developers of glibc decided to load the  * library on demand, which speeds up program start but can cause  * trouble here: Due to all the things NTPD does to limit its resource  * usage, this deferred load of libgcc_s does not always work once the  * restrictions are in effect.  *  * One way out of this was attempting a forced link against libgcc_s  * when possible because it makes the library available immediately  * without deferred load. (The symbol resolution would still be dynamic  * and on demand, but the code would already be in the process image.)  *  * This is a tricky thing to do, since it's not necessary everywhere,  * not possible everywhere, has shown to break the build of other  * programs in the NTP suite and is now generally frowned upon.  *  * So we take a different approach here: We creat a worker thread that does  * actually nothing except waiting for cancellation and cancel it. If  * this is done before all the limitations are put in place, the  * machinery is pre-heated and all the runtime stuff should be in place  * and useable when needed.  *  * This uses only the standard pthread API and should work with all  * implementations of pthreads. It is not necessary everywhere, but it's  * cheap enough to go on nearly unnoticed.  */
+comment|/* Bug2332 unearthed a problem in the interaction of reduced user  * privileges, the limits on memory usage and some versions of the  * pthread library on Linux systems. The 'pthread_cancel()' function and  * likely some others need to track the stack of the thread involved,  * and uses a function that comes from GCC (--> libgcc_s.so) to do  * this. Unfortunately the developers of glibc decided to load the  * library on demand, which speeds up program start but can cause  * trouble here: Due to all the things NTPD does to limit its resource  * usage, this deferred load of libgcc_s does not always work once the  * restrictions are in effect.  *  * One way out of this was attempting a forced link against libgcc_s  * when possible because it makes the library available immediately  * without deferred load. (The symbol resolution would still be dynamic  * and on demand, but the code would already be in the process image.)  *  * This is a tricky thing to do, since it's not necessary everywhere,  * not possible everywhere, has shown to break the build of other  * programs in the NTP suite and is now generally frowned upon.  *  * So we take a different approach here: We creat a worker thread that does  * actually nothing except waiting for cancellation and cancel it. If  * this is done before all the limitations are put in place, the  * machinery is pre-heated and all the runtime stuff should be in place  * and useable when needed.  *  * This uses only the standard pthread API and should work with all  * implementations of pthreads. It is not necessary everywhere, but it's  * cheap enough to go on nearly unnoticed.  *  * Addendum: Bug 2954 showed that the assumption that this should work  * with all OS is wrong -- at least FreeBSD bombs heavily.  */
 end_comment
 
 begin_ifdef
@@ -2744,6 +2758,23 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
+comment|/* make sure the FDs are initialised */
+name|pipe_fds
+index|[
+literal|0
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|pipe_fds
+index|[
+literal|1
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 do|do
 block|{
 comment|/* 'loop' once */
