@@ -586,61 +586,61 @@ name|efx_tx_ops_t
 name|__efx_tx_hunt_ops
 init|=
 block|{
-name|hunt_tx_init
+name|ef10_tx_init
 block|,
 comment|/* etxo_init */
-name|hunt_tx_fini
+name|ef10_tx_fini
 block|,
 comment|/* etxo_fini */
-name|hunt_tx_qcreate
+name|ef10_tx_qcreate
 block|,
 comment|/* etxo_qcreate */
-name|hunt_tx_qdestroy
+name|ef10_tx_qdestroy
 block|,
 comment|/* etxo_qdestroy */
-name|hunt_tx_qpost
+name|ef10_tx_qpost
 block|,
 comment|/* etxo_qpost */
-name|hunt_tx_qpush
+name|ef10_tx_qpush
 block|,
 comment|/* etxo_qpush */
-name|hunt_tx_qpace
+name|ef10_tx_qpace
 block|,
 comment|/* etxo_qpace */
-name|hunt_tx_qflush
+name|ef10_tx_qflush
 block|,
 comment|/* etxo_qflush */
-name|hunt_tx_qenable
+name|ef10_tx_qenable
 block|,
 comment|/* etxo_qenable */
-name|hunt_tx_qpio_enable
+name|ef10_tx_qpio_enable
 block|,
 comment|/* etxo_qpio_enable */
-name|hunt_tx_qpio_disable
+name|ef10_tx_qpio_disable
 block|,
 comment|/* etxo_qpio_disable */
-name|hunt_tx_qpio_write
+name|ef10_tx_qpio_write
 block|,
 comment|/* etxo_qpio_write */
-name|hunt_tx_qpio_post
+name|ef10_tx_qpio_post
 block|,
 comment|/* etxo_qpio_post */
-name|hunt_tx_qdesc_post
+name|ef10_tx_qdesc_post
 block|,
 comment|/* etxo_qdesc_post */
-name|hunt_tx_qdesc_dma_create
+name|ef10_tx_qdesc_dma_create
 block|,
 comment|/* etxo_qdesc_dma_create */
 name|hunt_tx_qdesc_tso_create
 block|,
 comment|/* etxo_qdesc_tso_create */
-name|hunt_tx_qdesc_vlantci_create
+name|ef10_tx_qdesc_vlantci_create
 block|,
 comment|/* etxo_qdesc_vlantci_create */
 if|#
 directive|if
 name|EFSYS_OPT_QSTATS
-name|hunt_tx_qstats_update
+name|ef10_tx_qstats_update
 block|,
 comment|/* etxo_qstats_update */
 endif|#
@@ -656,6 +656,90 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_HUNTINGTON */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+end_if
+
+begin_decl_stmt
+specifier|static
+name|efx_tx_ops_t
+name|__efx_tx_medford_ops
+init|=
+block|{
+name|ef10_tx_init
+block|,
+comment|/* etxo_init */
+name|ef10_tx_fini
+block|,
+comment|/* etxo_fini */
+name|ef10_tx_qcreate
+block|,
+comment|/* etxo_qcreate */
+name|ef10_tx_qdestroy
+block|,
+comment|/* etxo_qdestroy */
+name|ef10_tx_qpost
+block|,
+comment|/* etxo_qpost */
+name|ef10_tx_qpush
+block|,
+comment|/* etxo_qpush */
+name|ef10_tx_qpace
+block|,
+comment|/* etxo_qpace */
+name|ef10_tx_qflush
+block|,
+comment|/* etxo_qflush */
+name|ef10_tx_qenable
+block|,
+comment|/* etxo_qenable */
+name|ef10_tx_qpio_enable
+block|,
+comment|/* etxo_qpio_enable */
+name|ef10_tx_qpio_disable
+block|,
+comment|/* etxo_qpio_disable */
+name|ef10_tx_qpio_write
+block|,
+comment|/* etxo_qpio_write */
+name|ef10_tx_qpio_post
+block|,
+comment|/* etxo_qpio_post */
+name|ef10_tx_qdesc_post
+block|,
+comment|/* etxo_qdesc_post */
+name|ef10_tx_qdesc_dma_create
+block|,
+comment|/* etxo_qdesc_dma_create */
+name|NULL
+block|,
+comment|/* etxo_qdesc_tso_create */
+name|ef10_tx_qdesc_vlantci_create
+block|,
+comment|/* etxo_qdesc_vlantci_create */
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
+name|ef10_tx_qstats_update
+block|,
+comment|/* etxo_qstats_update */
+endif|#
+directive|endif
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -799,6 +883,25 @@ break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|etxop
+operator|=
+operator|(
+name|efx_tx_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_tx_medford_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
