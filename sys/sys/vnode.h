@@ -1678,6 +1678,19 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mount
+modifier|*
+name|rootdevmp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "/dev" mount */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|async_io_version
 decl_stmt|;
