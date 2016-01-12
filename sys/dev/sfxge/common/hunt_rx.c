@@ -2919,7 +2919,6 @@ operator|=
 name|B_FALSE
 expr_stmt|;
 block|}
-comment|/* 	 * Note: EFX_RXQ_TYPE_SPLIT_HEADER and EFX_RXQ_TYPE_SPLIT_PAYLOAD are 	 * not supported here. 	 */
 if|if
 condition|(
 operator|(
