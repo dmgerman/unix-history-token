@@ -2848,6 +2848,9 @@ name|uint32_t
 name|enc_piobuf_size
 decl_stmt|;
 name|uint32_t
+name|enc_piobuf_min_alloc_size
+decl_stmt|;
+name|uint32_t
 name|enc_evq_timer_quantum_ns
 decl_stmt|;
 name|uint32_t
