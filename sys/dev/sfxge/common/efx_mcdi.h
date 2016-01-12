@@ -111,6 +111,10 @@ name|emi_port
 decl_stmt|;
 name|unsigned
 name|int
+name|emi_max_version
+decl_stmt|;
+name|unsigned
+name|int
 name|emi_seq
 decl_stmt|;
 name|efx_mcdi_req_t
