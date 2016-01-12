@@ -1529,7 +1529,7 @@ define|#
 directive|define
 name|EFX_MON_MASK_ELEMENT_SIZE
 value|32
-comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock c79c86b62a144846 */
+comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock c09b13f732431f23 */
 typedef|typedef
 enum|enum
 name|efx_mon_stat_e
@@ -1671,6 +1671,18 @@ block|,
 name|EFX_MON_STAT_CONTROLLER_SLAVE_VPTAT_EXT_ADC
 block|,
 name|EFX_MON_STAT_CONTROLLER_SLAVE_INTERNAL_TEMP_EXT_ADC
+block|,
+name|EFX_MON_STAT_SODIMM_VOUT
+block|,
+name|EFX_MON_STAT_SODIMM_0_TEMP
+block|,
+name|EFX_MON_STAT_SODIMM_1_TEMP
+block|,
+name|EFX_MON_STAT_PHY0_VCC
+block|,
+name|EFX_MON_STAT_PHY1_VCC
+block|,
+name|EFX_MON_STAT_CONTROLLER_TDIODE_TEMP
 block|,
 name|EFX_MON_NSTATS
 block|}
