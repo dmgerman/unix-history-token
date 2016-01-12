@@ -3003,6 +3003,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3037,6 +3042,11 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3074,6 +3084,11 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 name|free
@@ -3150,6 +3165,7 @@ name|char
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -3238,6 +3254,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -3267,11 +3288,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -3505,6 +3521,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+name|bufsize
+operator|=
+literal|0
+expr_stmt|;
 name|name
 index|[
 literal|0
@@ -3618,15 +3642,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Pacify GCC. 	 */
-name|buf
-operator|=
-name|NULL
-expr_stmt|;
-name|bufsize
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Copy the init binary into tmpfs, so that we can unmount 	 * the old rootfs without committing suicide. 	 */
 name|error
 operator|=
@@ -3715,6 +3730,11 @@ label|:
 name|emergency
 argument_list|(
 literal|"reroot failed; going to single user mode"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
