@@ -227,6 +227,13 @@ name|SEHFramePtrSaveIndex
 operator|=
 literal|0
 block|;
+comment|/// True if this function has a subset of CSRs that is handled explicitly via
+comment|/// copies.
+name|bool
+name|IsSplitCSR
+operator|=
+name|false
+block|;
 name|private
 operator|:
 comment|/// ForwardedMustTailRegParms - A list of virtual and physical registers
@@ -613,6 +620,25 @@ return|return
 name|ForwardedMustTailRegParms
 return|;
 block|}
+name|bool
+name|isSplitCSR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSplitCSR
+return|;
+block|}
+name|void
+name|setIsSplitCSR
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|IsSplitCSR
+operator|=
+name|s
+block|; }
 expr|}
 block|;  }
 end_decl_stmt

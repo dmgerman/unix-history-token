@@ -498,6 +498,85 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// List of registers defined and used by a machine instruction.
+name|class
+name|RegisterOperands
+block|{
+name|public
+label|:
+comment|/// List of virtual regiserts and register units read by the instruction.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|8
+operator|>
+name|Uses
+expr_stmt|;
+comment|/// \brief List of virtual registers and register units defined by the
+comment|/// instruction which are not dead.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|8
+operator|>
+name|Defs
+expr_stmt|;
+comment|/// \brief List of virtual registers and register units defined by the
+comment|/// instruction but dead.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|8
+operator|>
+name|DeadDefs
+expr_stmt|;
+comment|/// Analyze the given instruction \p MI and fill in the Uses, Defs and
+comment|/// DeadDefs list based on the MachineOperand flags.
+name|void
+name|collect
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+name|bool
+name|IgnoreDead
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Use liveness information to find dead defs not marked with a dead flag
+comment|/// and move them to the DeadDefs vector.
+name|void
+name|detectDeadDefs
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+specifier|const
+name|LiveIntervals
+modifier|&
+name|LIS
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// Array of PressureDiffs.
 name|class
 name|PressureDiffs
@@ -608,6 +687,25 @@ name|Idx
 operator|)
 return|;
 block|}
+comment|/// \brief Record pressure difference induced by the given operand list to
+comment|/// node with index \p Idx.
+name|void
+name|addInstruction
+parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|,
+specifier|const
+name|RegisterOperands
+modifier|&
+name|RegOpers
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// Store the effects of a change in pressure on things that MI scheduler cares
@@ -1209,14 +1307,35 @@ operator|*
 name|LiveUses
 operator|=
 name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// Recede across the previous instruction.
+comment|/// This "low-level" variant assumes that recedeSkipDebugValues() was
+comment|/// called previously and takes precomputed RegisterOperands for the
+comment|/// instruction.
+name|void
+name|recede
+argument_list|(
+specifier|const
+name|RegisterOperands
+operator|&
+name|RegOpers
 argument_list|,
-name|PressureDiff
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
 operator|*
-name|PDiff
+name|LiveUses
 operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
+comment|/// Recede until we find an instruction which is not a DebugValue.
+name|void
+name|recedeSkipDebugValues
+parameter_list|()
+function_decl|;
 comment|/// Advance across the current instruction.
 name|void
 name|advance

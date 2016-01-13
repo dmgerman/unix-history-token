@@ -242,6 +242,11 @@ name|unsigned
 operator|>
 name|CoalescedWeights
 block|;
+comment|/// True if this function has a subset of CSRs that is handled explicitly via
+comment|/// copies.
+name|bool
+name|IsSplitCSR
+block|;
 name|public
 operator|:
 name|ARMFunctionInfo
@@ -338,6 +343,11 @@ literal|0
 argument_list|)
 block|,
 name|HasITBlocks
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsSplitCSR
 argument_list|(
 argument|false
 argument_list|)
@@ -751,6 +761,25 @@ block|{
 name|HasITBlocks
 operator|=
 name|h
+block|; }
+name|bool
+name|isSplitCSR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSplitCSR
+return|;
+block|}
+name|void
+name|setIsSplitCSR
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|IsSplitCSR
+operator|=
+name|s
 block|; }
 name|void
 name|recordCPEClone

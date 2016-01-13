@@ -3513,15 +3513,15 @@ argument_list|(
 argument|lis
 argument_list|)
 block|{}
-comment|/// Classify - Classify the values in LI into connected components.
-comment|/// Return the number of connected components.
+comment|/// Classify the values in \p LR into connected components.
+comment|/// Returns the number of connected components.
 name|unsigned
 name|Classify
 argument_list|(
 specifier|const
-name|LiveInterval
-operator|*
-name|LI
+name|LiveRange
+operator|&
+name|LR
 argument_list|)
 expr_stmt|;
 comment|/// getEqClass - Classify creates equivalence classes numbered 0..N. Return

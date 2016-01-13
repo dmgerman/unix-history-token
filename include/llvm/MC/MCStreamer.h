@@ -512,6 +512,13 @@ name|finish
 argument_list|()
 name|override
 block|;
+comment|/// Reset any state between object emissions, i.e. the equivalent of
+comment|/// MCStreamer's reset method.
+name|virtual
+name|void
+name|reset
+argument_list|()
+block|;
 comment|/// Callback used to implement the ldr= pseudo.
 comment|/// Add a new entry to the constant pool for the current section and return an
 comment|/// MCExpr that can be used to refer to the constant pool location.

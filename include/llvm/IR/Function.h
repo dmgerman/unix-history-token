@@ -236,7 +236,7 @@ name|FunctionType
 modifier|*
 name|Ty
 decl_stmt|;
-comment|/*    * Value::SubclassData    *    * bit 0      : HasLazyArguments    * bit 1      : HasPrefixData    * bit 2      : HasPrologueData    * bit 3      : HasPersonalityFn    * bits 4-13  : CallingConvention    * bits 14-15 : [reserved]    */
+comment|/*    * Value::SubclassData    *    * bit 0      : HasLazyArguments    * bit 1      : HasPrefixData    * bit 2      : HasPrologueData    * bit 3      : HasPersonalityFn    * bits 4-13  : CallingConvention    * bits 14    : HasGC    * bits 15 : [reserved]    */
 comment|/// Bits from GlobalObject::GlobalObjectSubclassData.
 enum|enum
 block|{
@@ -857,23 +857,37 @@ name|bool
 name|hasGC
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|14
+operator|)
+return|;
+block|}
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|&
 name|getGC
 argument_list|()
 specifier|const
 expr_stmt|;
 name|void
 name|setGC
-parameter_list|(
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
 name|Str
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|clearGC
 parameter_list|()

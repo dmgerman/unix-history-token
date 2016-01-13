@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstddef>
 end_include
 
@@ -336,9 +342,24 @@ name|size_t
 name|MaxSize
 parameter_list|)
 function_decl|;
-comment|/// Mutates data by adding a word from the dictionary.
+comment|/// Mutates data by adding a word from the manual dictionary.
 name|size_t
-name|Mutate_AddWordFromDictionary
+name|Mutate_AddWordFromManualDictionary
+parameter_list|(
+name|uint8_t
+modifier|*
+name|Data
+parameter_list|,
+name|size_t
+name|Size
+parameter_list|,
+name|size_t
+name|MaxSize
+parameter_list|)
+function_decl|;
+comment|/// Mutates data by adding a word from the automatic dictionary.
+name|size_t
+name|Mutate_AddWordFromAutoDictionary
 parameter_list|(
 name|uint8_t
 modifier|*
@@ -426,16 +447,29 @@ name|MaxOutSize
 parameter_list|)
 function_decl|;
 name|void
-name|AddWordToDictionary
+name|AddWordToManualDictionary
 parameter_list|(
 specifier|const
-name|uint8_t
-modifier|*
+name|Unit
+modifier|&
+name|Word
+parameter_list|)
+function_decl|;
+name|void
+name|AddWordToAutoDictionary
+parameter_list|(
+specifier|const
+name|Unit
+modifier|&
 name|Word
 parameter_list|,
 name|size_t
-name|Size
+name|PositionHint
 parameter_list|)
+function_decl|;
+name|void
+name|ClearAutoDictionary
+parameter_list|()
 function_decl|;
 name|void
 name|SetCorpus

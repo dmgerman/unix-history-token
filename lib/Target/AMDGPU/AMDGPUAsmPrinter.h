@@ -360,6 +360,13 @@ argument|const GlobalVariable *GV
 argument_list|)
 name|override
 block|;
+name|void
+name|EmitStartOfAsmFile
+argument_list|(
+argument|Module&M
+argument_list|)
+name|override
+block|;
 name|bool
 name|PrintAsmOperand
 argument_list|(

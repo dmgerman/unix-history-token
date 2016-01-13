@@ -240,6 +240,25 @@ name|void
 name|PrintASCII
 parameter_list|(
 specifier|const
+name|uint8_t
+modifier|*
+name|Data
+parameter_list|,
+name|size_t
+name|Size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|PrintAfter
+init|=
+literal|""
+parameter_list|)
+function_decl|;
+name|void
+name|PrintASCII
+parameter_list|(
+specifier|const
 name|Unit
 modifier|&
 name|U
@@ -483,16 +502,6 @@ name|bool
 name|OnlyASCII
 init|=
 name|false
-decl_stmt|;
-name|int
-name|TBMDepth
-init|=
-literal|10
-decl_stmt|;
-name|int
-name|TBMWidth
-init|=
-literal|10
 decl_stmt|;
 name|std
 operator|::
@@ -847,22 +856,10 @@ name|void
 name|StartTraceRecording
 parameter_list|()
 function_decl|;
-comment|// Stop tracing and return the number of proposed mutations.
-name|size_t
+comment|// Stop tracing.
+name|void
 name|StopTraceRecording
 parameter_list|()
-function_decl|;
-comment|// Apply Idx-th trace-based mutation to U.
-name|void
-name|ApplyTraceBasedMutation
-parameter_list|(
-name|size_t
-name|Idx
-parameter_list|,
-name|Unit
-modifier|*
-name|U
-parameter_list|)
 function_decl|;
 name|void
 name|SetDeathCallback

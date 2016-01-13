@@ -1500,15 +1500,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerSELECT_CC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|lowerSETCC
 argument_list|(
 argument|SDValue Op

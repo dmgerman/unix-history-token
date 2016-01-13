@@ -4144,11 +4144,15 @@ comment|/// Once all forward declarations have been resolved, force cycles to be
 end_comment
 
 begin_comment
-comment|/// resolved. If \p AllowTemps is true, then any temporary metadata
+comment|/// resolved. This interface is used when there are no more temporaries,
 end_comment
 
 begin_comment
-comment|/// is ignored, otherwise it asserts when encountering temporary metadata.
+comment|/// and thus unresolved nodes are part of cycles and no longer need RAUW
+end_comment
+
+begin_comment
+comment|/// support.
 end_comment
 
 begin_comment
@@ -4159,17 +4163,53 @@ begin_comment
 comment|/// \pre No operands (or operands' operands, etc.) have \a isTemporary().
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|resolveCycles
-parameter_list|(
-name|bool
-name|AllowTemps
-init|=
+parameter_list|()
+block|{
+name|resolveRecursivelyImpl
+argument_list|(
+comment|/* AllowTemps */
 name|false
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Resolve cycles while ignoring temporaries.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This drops RAUW support for any temporaries, which can no longer
+end_comment
+
+begin_comment
+comment|/// be uniqued.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function
+name|void
+name|resolveNonTemporaries
+parameter_list|()
+block|{
+name|resolveRecursivelyImpl
+argument_list|(
+comment|/* AllowTemps */
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Replace a temporary node with a permanent one.
@@ -4547,6 +4587,28 @@ begin_function_decl
 name|unsigned
 name|countUnresolvedOperands
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Resolve cycles recursively. If \p AllowTemps is true, then any temporary
+end_comment
+
+begin_comment
+comment|/// metadata is ignored, otherwise it asserts when encountering temporary
+end_comment
+
+begin_comment
+comment|/// metadata.
+end_comment
+
+begin_function_decl
+name|void
+name|resolveRecursivelyImpl
+parameter_list|(
+name|bool
+name|AllowTemps
+parameter_list|)
 function_decl|;
 end_function_decl
 

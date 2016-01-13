@@ -305,6 +305,45 @@ name|Tag
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Define the GC for a function
+name|void
+name|setGC
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|,
+name|std
+operator|::
+name|string
+name|GCName
+argument_list|)
+decl_stmt|;
+comment|/// Return the GC for a function
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getGC
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|)
+expr_stmt|;
+comment|/// Remove the GC for a function
+name|void
+name|deleteGC
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|Fn
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|void
 function_decl|(

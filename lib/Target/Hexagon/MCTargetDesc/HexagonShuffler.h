@@ -87,6 +87,12 @@ directive|include
 file|"llvm/MC/MCInstrInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSubtargetInfo.h"
+end_include
+
 begin_decl_stmt
 name|using
 name|namespace
@@ -252,6 +258,8 @@ range|:
 name|public
 name|HexagonResource
 block|{
+name|public
+operator|:
 typedef|typedef
 name|std
 operator|::
@@ -274,6 +282,8 @@ name|UnitsAndLanes
 operator|>
 name|TypeUnitsAndLanes
 expr_stmt|;
+name|private
+label|:
 comment|// Available HVX slots.
 enum|enum
 block|{
@@ -306,16 +316,6 @@ operator|<<
 literal|3
 block|}
 enum|;
-specifier|static
-name|bool
-name|SetUp
-decl_stmt|;
-specifier|static
-name|bool
-name|setup
-parameter_list|()
-function_decl|;
-specifier|static
 name|TypeUnitsAndLanes
 modifier|*
 name|TUL
@@ -381,6 +381,8 @@ name|public
 label|:
 name|HexagonCVIResource
 argument_list|(
+argument|TypeUnitsAndLanes *TUL
+argument_list|,
 argument|MCInstrInfo const&MCII
 argument_list|,
 argument|unsigned s
@@ -388,6 +390,18 @@ argument_list|,
 argument|MCInst const *id
 argument_list|)
 empty_stmt|;
+specifier|static
+name|void
+name|SetupTUL
+parameter_list|(
+name|TypeUnitsAndLanes
+modifier|*
+name|TUL
+parameter_list|,
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
 name|bool
 name|isValid
 argument_list|()
@@ -478,6 +492,8 @@ name|public
 label|:
 name|HexagonInstr
 argument_list|(
+argument|HexagonCVIResource::TypeUnitsAndLanes *T
+argument_list|,
 argument|MCInstrInfo const&MCII
 argument_list|,
 argument|MCInst const *id
@@ -506,6 +522,8 @@ argument_list|)
 operator|,
 name|CVI
 argument_list|(
+name|T
+argument_list|,
 name|MCII
 argument_list|,
 name|s
@@ -684,6 +702,11 @@ comment|// Shuffling error code.
 name|unsigned
 name|Error
 decl_stmt|;
+name|HexagonCVIResource
+operator|::
+name|TypeUnitsAndLanes
+name|TUL
+expr_stmt|;
 name|protected
 label|:
 name|int64_t

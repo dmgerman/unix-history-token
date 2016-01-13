@@ -157,6 +157,9 @@ decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
+name|class
+name|LazyValueInfo
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -1132,6 +1135,12 @@ parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|,
+name|LazyValueInfo
+modifier|*
+name|LVI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Combine the metadata of two instructions so that K can replace J

@@ -161,6 +161,13 @@ block|;
 name|unsigned
 name|PrivateSegmentWaveByteOffsetSystemSGPR
 block|;
+comment|// Graphics info.
+name|unsigned
+name|PSInputAddr
+block|;
+name|bool
+name|ReturnsVoid
+block|;
 name|public
 operator|:
 comment|// FIXME: Make private
@@ -168,7 +175,7 @@ name|unsigned
 name|LDSWaveSpillSize
 block|;
 name|unsigned
-name|PSInputAddr
+name|PSInputEna
 block|;
 name|std
 operator|::
@@ -835,6 +842,63 @@ block|{
 name|HasSpilledVGPRs
 operator|=
 name|Spill
+block|;   }
+name|unsigned
+name|getPSInputAddr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PSInputAddr
+return|;
+block|}
+name|bool
+name|isPSInputAllocated
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|{
+return|return
+name|PSInputAddr
+operator|&
+operator|(
+literal|1
+operator|<<
+name|Index
+operator|)
+return|;
+block|}
+name|void
+name|markPSInputAllocated
+argument_list|(
+argument|unsigned Index
+argument_list|)
+block|{
+name|PSInputAddr
+operator||=
+literal|1
+operator|<<
+name|Index
+block|;   }
+name|bool
+name|returnsVoid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnsVoid
+return|;
+block|}
+name|void
+name|setIfReturnsVoid
+argument_list|(
+argument|bool Value
+argument_list|)
+block|{
+name|ReturnsVoid
+operator|=
+name|Value
 block|;   }
 name|unsigned
 name|getMaximumWorkGroupSize

@@ -478,6 +478,26 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter

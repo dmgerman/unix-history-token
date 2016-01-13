@@ -153,6 +153,10 @@ block|;
 name|DwarfRangesSection
 operator|=
 name|nullptr
+block|;
+name|DwarfMacinfoSection
+operator|=
+name|nullptr
 block|;   }
 name|virtual
 operator|~
@@ -433,6 +437,21 @@ argument_list|()
 argument_list|)
 block|;
 name|DwarfRangesSection
+operator|=
+name|new
+name|NVPTXSection
+argument_list|(
+name|MCSection
+operator|::
+name|SV_ELF
+argument_list|,
+name|SectionKind
+operator|::
+name|getMetadata
+argument_list|()
+argument_list|)
+block|;
+name|DwarfMacinfoSection
 operator|=
 name|new
 name|NVPTXSection

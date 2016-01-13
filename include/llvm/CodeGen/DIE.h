@@ -120,6 +120,180 @@ decl_stmt|;
 name|class
 name|DwarfTypeUnit
 decl_stmt|;
+comment|// AsmStreamerBase - A base abstract interface class defines methods that
+comment|// can be implemented to stream objects or can be implemented to
+comment|// calculate the size of the streamed objects.
+comment|// The derived classes will use an AsmPrinter to implement the methods.
+comment|//
+comment|// TODO: complete this interface and use it to merge EmitValue and SizeOf
+comment|//       methods in the DIE classes below.
+name|class
+name|AsmStreamerBase
+block|{
+name|protected
+label|:
+specifier|const
+name|AsmPrinter
+modifier|*
+name|AP
+decl_stmt|;
+name|AsmStreamerBase
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|)
+operator|:
+name|AP
+argument_list|(
+argument|AP
+argument_list|)
+block|{}
+name|public
+operator|:
+name|virtual
+operator|~
+name|AsmStreamerBase
+argument_list|()
+block|{}
+name|virtual
+name|unsigned
+name|emitULEB128
+argument_list|(
+argument|uint64_t Value
+argument_list|,
+argument|const char *Desc = nullptr
+argument_list|,
+argument|unsigned PadTo =
+literal|0
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|unsigned
+name|emitInt8
+parameter_list|(
+name|unsigned
+name|char
+name|Value
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|unsigned
+name|emitBytes
+parameter_list|(
+name|StringRef
+name|Data
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// EmittingAsmStreamer - Implements AbstractAsmStreamer to stream objects.
+comment|/// Notice that the return value is not the actual size of the streamed object.
+comment|/// For size calculation use SizeReporterAsmStreamer.
+name|class
+name|EmittingAsmStreamer
+range|:
+name|public
+name|AsmStreamerBase
+block|{
+name|public
+operator|:
+name|EmittingAsmStreamer
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|)
+operator|:
+name|AsmStreamerBase
+argument_list|(
+argument|AP
+argument_list|)
+block|{}
+name|unsigned
+name|emitULEB128
+argument_list|(
+argument|uint64_t Value
+argument_list|,
+argument|const char *Desc = nullptr
+argument_list|,
+argument|unsigned PadTo =
+literal|0
+argument_list|)
+name|override
+block|;
+name|unsigned
+name|emitInt8
+argument_list|(
+argument|unsigned char Value
+argument_list|)
+name|override
+block|;
+name|unsigned
+name|emitBytes
+argument_list|(
+argument|StringRef Data
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
+comment|/// SizeReporterAsmStreamer - Only reports the size of the streamed objects.
+name|class
+name|SizeReporterAsmStreamer
+range|:
+name|public
+name|AsmStreamerBase
+block|{
+name|public
+operator|:
+name|SizeReporterAsmStreamer
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|)
+operator|:
+name|AsmStreamerBase
+argument_list|(
+argument|AP
+argument_list|)
+block|{}
+name|unsigned
+name|emitULEB128
+argument_list|(
+argument|uint64_t Value
+argument_list|,
+argument|const char *Desc = nullptr
+argument_list|,
+argument|unsigned PadTo =
+literal|0
+argument_list|)
+name|override
+block|;
+name|unsigned
+name|emitInt8
+argument_list|(
+argument|unsigned char Value
+argument_list|)
+name|override
+block|;
+name|unsigned
+name|emitBytes
+argument_list|(
+argument|StringRef Data
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEAbbrevData - Dwarf abbreviation data, describes one attribute of a
 comment|/// Dwarf abbreviation.

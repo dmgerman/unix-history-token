@@ -98,8 +98,11 @@ decl_stmt|;
 name|bool
 name|PrintPretty
 decl_stmt|;
+name|int
+name|PrintSourceContext
+decl_stmt|;
 name|void
-name|printName
+name|print
 parameter_list|(
 specifier|const
 name|DILineInfo
@@ -110,6 +113,18 @@ name|bool
 name|Inlined
 parameter_list|)
 function_decl|;
+name|void
+name|printContext
+argument_list|(
+name|std
+operator|::
+name|string
+name|FileName
+argument_list|,
+name|int64_t
+name|Line
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 name|DIPrinter
@@ -119,6 +134,9 @@ argument_list|,
 argument|bool PrintFunctionNames = true
 argument_list|,
 argument|bool PrintPretty = false
+argument_list|,
+argument|int PrintSourceContext =
+literal|0
 argument_list|)
 block|:
 name|OS
@@ -133,7 +151,12 @@ argument_list|)
 operator|,
 name|PrintPretty
 argument_list|(
-argument|PrintPretty
+name|PrintPretty
+argument_list|)
+operator|,
+name|PrintSourceContext
+argument_list|(
+argument|PrintSourceContext
 argument_list|)
 block|{}
 name|DIPrinter

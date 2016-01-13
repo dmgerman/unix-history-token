@@ -4099,6 +4099,116 @@ name|Z
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// \brief Multiply two unsigned integers, X and Y, and add the unsigned
+end_comment
+
+begin_comment
+comment|/// integer, A to the product. Clamp the result to the maximum representable
+end_comment
+
+begin_comment
+comment|/// value of T on overflow. ResultOverflowed indicates if the result is larger
+end_comment
+
+begin_comment
+comment|/// than the maximum representable value of type T.
+end_comment
+
+begin_comment
+comment|/// Note that this is purely a convenience function as there is no distinction
+end_comment
+
+begin_comment
+comment|/// where overflow occurred in a 'fused' multiply-add for unsigned numbers.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_unsigned
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|,
+name|T
+operator|>
+operator|::
+name|type
+name|SaturatingMultiplyAdd
+argument_list|(
+argument|T X
+argument_list|,
+argument|T Y
+argument_list|,
+argument|T A
+argument_list|,
+argument|bool *ResultOverflowed = nullptr
+argument_list|)
+block|{
+name|bool
+name|Dummy
+block|;
+name|bool
+operator|&
+name|Overflowed
+operator|=
+name|ResultOverflowed
+condition|?
+operator|*
+name|ResultOverflowed
+else|:
+name|Dummy
+block|;
+name|T
+name|Product
+operator|=
+name|SaturatingMultiply
+argument_list|(
+name|X
+argument_list|,
+name|Y
+argument_list|,
+operator|&
+name|Overflowed
+argument_list|)
+block|;
+if|if
+condition|(
+name|Overflowed
+condition|)
+return|return
+name|Product
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|SaturatingAdd
+argument_list|(
+name|A
+argument_list|,
+name|Product
+argument_list|,
+operator|&
+name|Overflowed
+argument_list|)
+return|;
+end_return
+
 begin_decl_stmt
 unit|}  extern
 specifier|const

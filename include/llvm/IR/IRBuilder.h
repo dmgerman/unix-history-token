@@ -710,7 +710,7 @@ expr_stmt|;
 block|}
 comment|/// \brief Set the floating point math metadata to be used.
 name|void
-name|SetDefaultFPMathTag
+name|setDefaultFPMathTag
 parameter_list|(
 name|MDNode
 modifier|*
@@ -724,7 +724,7 @@ expr_stmt|;
 block|}
 comment|/// \brief Set the fast-math flags to be used with generated fp-math operators
 name|void
-name|SetFastMathFlags
+name|setFastMathFlags
 parameter_list|(
 name|FastMathFlags
 name|NewFMF

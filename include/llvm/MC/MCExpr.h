@@ -863,6 +863,9 @@ name|VK_Hexagon_IE
 block|,
 name|VK_Hexagon_IE_GOT
 block|,
+name|VK_WebAssembly_FUNCTION
+block|,
+comment|// Function table index, rather than virtual addr
 name|VK_TPREL
 block|,
 name|VK_DTPREL

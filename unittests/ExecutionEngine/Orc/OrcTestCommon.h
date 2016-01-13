@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/ExecutionEngine.h"
 end_include
 
@@ -328,11 +334,6 @@ operator|<
 name|Module
 operator|>
 name|M
-expr_stmt|;
-name|IRBuilder
-operator|<
-operator|>
-name|Builder
 expr_stmt|;
 block|}
 empty_stmt|;

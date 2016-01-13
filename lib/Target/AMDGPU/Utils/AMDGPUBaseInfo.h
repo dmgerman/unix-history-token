@@ -182,6 +182,15 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+name|unsigned
+name|getInitialPSInputAddr
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
 name|bool
 name|isSI
 parameter_list|(

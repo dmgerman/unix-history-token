@@ -608,7 +608,14 @@ argument_list|(
 name|S
 argument_list|)
 argument_list|,
-name|nullptr
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|SectionMemoryManager
+operator|>
+operator|(
+operator|)
 argument_list|,
 name|std
 operator|::

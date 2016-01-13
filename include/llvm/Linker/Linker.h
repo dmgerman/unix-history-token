@@ -238,30 +238,21 @@ argument_list|)
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// Create a new module with exported local functions renamed and promoted
-comment|/// for ThinLTO.
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>
+comment|/// Perform in-place global value handling on the given Module for
+comment|/// exported local functions renamed and promoted for ThinLTO.
+name|bool
 name|renameModuleForThinLTO
-argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
+parameter_list|(
 name|Module
-operator|>
+modifier|&
 name|M
-argument_list|,
+parameter_list|,
 specifier|const
 name|FunctionInfoIndex
-operator|*
+modifier|*
 name|Index
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
