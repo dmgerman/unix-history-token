@@ -999,6 +999,40 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* Check if there is llvm/runtime version mismatch.  */
+if|if
+condition|(
+name|GET_VERSION
+argument_list|(
+name|__llvm_profile_get_version
+argument_list|()
+argument_list|)
+operator|!=
+name|INSTR_PROF_RAW_VERSION
+condition|)
+block|{
+name|PROF_ERR
+argument_list|(
+literal|"LLVM Profile: runtime and instrumentation version mismatch : "
+literal|"expected %d, but get %d\n"
+argument_list|,
+name|INSTR_PROF_RAW_VERSION
+argument_list|,
+operator|(
+name|int
+operator|)
+name|GET_VERSION
+argument_list|(
+name|__llvm_profile_get_version
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* Write the file. */
 name|rc
 operator|=

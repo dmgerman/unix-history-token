@@ -167,10 +167,20 @@ begin_comment
 comment|// extern "C"
 end_comment
 
+begin_function_decl
+specifier|static
+name|BlockingMutex
+name|crashreporter_info_mutex
+parameter_list|(
+name|LINKER_INITIALIZED
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|INLINE
 name|void
-name|CRSetCrashLogMessage
+name|CRAppendCrashLogMessage
 parameter_list|(
 specifier|const
 name|char
@@ -178,7 +188,14 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-name|internal_strlcpy
+name|BlockingMutexLock
+name|l
+argument_list|(
+operator|&
+name|crashreporter_info_mutex
+argument_list|)
+decl_stmt|;
+name|internal_strlcat
 argument_list|(
 name|__crashreporter_info_buff__
 argument_list|,

@@ -32,15 +32,7 @@ comment|// RUN: llvm-profdata show --all-functions -ic-targets  %t.profdata | Fi
 end_comment
 
 begin_comment
-comment|// value profile merging current do sorting based on target values -- this will destroy the order of the target
-end_comment
-
-begin_comment
-comment|// in the list leading to comparison problem. For now just check a small subset of output.
-end_comment
-
-begin_comment
-comment|// RUN: llvm-profdata show --all-functions -ic-targets  %t-merged.profdata | FileCheck  %s -check-prefix=MERGE
+comment|// RUN: llvm-profdata show --all-functions -ic-targets  %t-merged.profdata | FileCheck  %s
 end_comment
 
 begin_comment
@@ -799,114 +791,6 @@ comment|// NO-VALUE-NEXT: Indirect Target Results:
 end_comment
 
 begin_comment
-comment|// MERGE-LABEL: caller_1_1_1_1_2_2_1:
-end_comment
-
-begin_comment
-comment|// MERGE: Indirect Call Site Count: 6
-end_comment
-
-begin_comment
-comment|// MERGE: Indirect Target Results:
-end_comment
-
-begin_comment
-comment|// MERGE: [ 1, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 2, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 2, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 3, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 3, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 3, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 4, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 4, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 4, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 4, callee_1_2_2, 4 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 5, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 5, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 5, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 5, callee_1_2_2, 4 ]
-end_comment
-
-begin_comment
-comment|// MERGE: [ 5, callee_2_1_1, 5 ]
-end_comment
-
-begin_comment
-comment|// MERGE-LABEL: caller_2_2_2_2_2_2_2:
-end_comment
-
-begin_comment
-comment|// MERGE: Indirect Call Site Count: 127
-end_comment
-
-begin_comment
-comment|// MERGE-NEXT: Indirect Target Results:
-end_comment
-
-begin_comment
-comment|// MERGE-NEXT:  [ 1, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE:  [ 2, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE:  [ 2, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// MERGE:  [ 3, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// MERGE:  [ 3, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// MERGE:  [ 3, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
 comment|// CHECK-LABEL: caller_1_1_1_1_2_2_1:
 end_comment
 
@@ -923,19 +807,11 @@ comment|// CHECK-NEXT: [ 1, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 2, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
 comment|// CHECK-NEXT: [ 2, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 3, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: [ 3, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT: [ 2, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -943,15 +819,11 @@ comment|// CHECK-NEXT: [ 3, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 4, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT: [ 3, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 4, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: [ 4, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT: [ 3, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -959,15 +831,19 @@ comment|// CHECK-NEXT: [ 4, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 5, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT: [ 4, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 5, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT: [ 4, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 5, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT: [ 4, callee_1_1_1, 1 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [ 5, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
@@ -975,7 +851,15 @@ comment|// CHECK-NEXT: [ 5, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [ 5, callee_2_1_1, 5 ]
+comment|// CHECK-NEXT: [ 5, callee_1_2_1, 3 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [ 5, callee_1_1_2, 2 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: [ 5, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -995,19 +879,11 @@ comment|// CHECK-NEXT:  [ 1, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 2, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
 comment|// CHECK-NEXT:  [ 2, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 3, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 3, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 2, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1015,15 +891,11 @@ comment|// CHECK-NEXT:  [ 3, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 4, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 3, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 4, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 4, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 3, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1031,19 +903,15 @@ comment|// CHECK-NEXT:  [ 4, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 5, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 4, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 5, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 4, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 5, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 5, callee_1_2_2, 4 ]
+comment|// CHECK-NEXT:  [ 4, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1051,23 +919,19 @@ comment|// CHECK-NEXT:  [ 5, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 6, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 5, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 6, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 5, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 6, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 5, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 6, callee_1_2_2, 4 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 6, callee_2_1_1, 5 ]
+comment|// CHECK-NEXT:  [ 5, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1075,27 +939,23 @@ comment|// CHECK-NEXT:  [ 6, callee_2_1_2, 6 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 7, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 6, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 7, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 6, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 7, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 6, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 7, callee_1_2_2, 4 ]
+comment|// CHECK-NEXT:  [ 6, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 7, callee_2_1_1, 5 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 7, callee_2_1_2, 6 ]
+comment|// CHECK-NEXT:  [ 6, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1103,11 +963,31 @@ comment|// CHECK-NEXT:  [ 7, callee_2_2_1, 7 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 9, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 7, callee_2_1_2, 6 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 10, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 7, callee_2_1_1, 5 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 7, callee_1_2_2, 4 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 7, callee_1_2_1, 3 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 7, callee_1_1_2, 2 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 7, callee_1_1_1, 1 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 9, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1115,11 +995,7 @@ comment|// CHECK-NEXT:  [ 10, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 11, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 11, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 10, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1127,15 +1003,11 @@ comment|// CHECK-NEXT:  [ 11, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 12, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 11, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 12, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 12, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 11, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1143,19 +1015,15 @@ comment|// CHECK-NEXT:  [ 12, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 13, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 12, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 13, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 12, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 13, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 13, callee_1_2_2, 4 ]
+comment|// CHECK-NEXT:  [ 12, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1163,23 +1031,19 @@ comment|// CHECK-NEXT:  [ 13, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 14, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 13, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 14, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 13, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 14, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 13, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 14, callee_1_2_2, 4 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 14, callee_2_1_1, 5 ]
+comment|// CHECK-NEXT:  [ 13, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1187,27 +1051,23 @@ comment|// CHECK-NEXT:  [ 14, callee_2_1_2, 6 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 15, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 14, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 15, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 14, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 15, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 14, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 15, callee_1_2_2, 4 ]
+comment|// CHECK-NEXT:  [ 14, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 15, callee_2_1_1, 5 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 15, callee_2_1_2, 6 ]
+comment|// CHECK-NEXT:  [ 14, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1215,11 +1075,31 @@ comment|// CHECK-NEXT:  [ 15, callee_2_2_1, 7 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 17, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 15, callee_2_1_2, 6 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 18, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 15, callee_2_1_1, 5 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 15, callee_1_2_2, 4 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 15, callee_1_2_1, 3 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 15, callee_1_1_2, 2 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 15, callee_1_1_1, 1 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 17, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1227,11 +1107,7 @@ comment|// CHECK-NEXT:  [ 18, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 19, callee_1_1_1, 1 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 19, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 18, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1239,15 +1115,11 @@ comment|// CHECK-NEXT:  [ 19, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 20, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 19, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 20, callee_1_1_2, 2 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 20, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 19, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1255,19 +1127,15 @@ comment|// CHECK-NEXT:  [ 20, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 21, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 20, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 21, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 20, callee_1_1_2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 21, callee_1_2_1, 3 ]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:  [ 21, callee_1_2_2, 4 ]
+comment|// CHECK-NEXT:  [ 20, callee_1_1_1, 1 ]
 end_comment
 
 begin_comment
@@ -1275,15 +1143,27 @@ comment|// CHECK-NEXT:  [ 21, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 22, callee_1_1_1, 1 ]
+comment|// CHECK-NEXT:  [ 21, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 22, callee_1_1_2, 2 ]
+comment|// CHECK-NEXT:  [ 21, callee_1_2_1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 22, callee_1_2_1, 3 ]
+comment|// CHECK-NEXT:  [ 21, callee_1_1_2, 2 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 21, callee_1_1_1, 1 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 22, callee_2_1_2, 6 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 22, callee_2_1_1, 5 ]
 end_comment
 
 begin_comment
@@ -1291,7 +1171,15 @@ comment|// CHECK-NEXT:  [ 22, callee_1_2_2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [ 22, callee_2_1_1, 5 ]
+comment|// CHECK-NEXT:  [ 22, callee_1_2_1, 3 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 22, callee_1_1_2, 2 ]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:  [ 22, callee_1_1_1, 1 ]
 end_comment
 
 end_unit

@@ -68,6 +68,15 @@ literal|0
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|COMPILER_RT_WEAK
+name|uint64_t
+name|__llvm_profile_raw_version
+init|=
+name|INSTR_PROF_RAW_VERSION
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|COMPILER_RT_VISIBILITY
 name|uint64_t
@@ -141,7 +150,7 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|INSTR_PROF_RAW_VERSION
+name|__llvm_profile_raw_version
 return|;
 block|}
 end_function

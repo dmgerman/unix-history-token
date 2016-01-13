@@ -459,7 +459,7 @@ if|if
 condition|(
 name|VDataCount
 operator|>=
-name|UCHAR_MAX
+name|INSTR_PROF_MAX_NUM_VAL_PER_SITE
 condition|)
 return|return;
 name|CurrentVNode

@@ -3563,6 +3563,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|LogMessageOnPrintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -3577,6 +3589,19 @@ specifier|const
 name|char
 modifier|*
 name|s
+parameter_list|)
+block|{}
+end_function
+
+begin_function
+name|INLINE
+name|void
+name|LogMessageOnPrintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
 parameter_list|)
 block|{}
 end_function
@@ -3603,13 +3628,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|bool
-name|ShouldLogAfterPrintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else
@@ -3621,18 +3639,6 @@ name|void
 name|AndroidLogInit
 parameter_list|()
 block|{}
-end_function
-
-begin_function
-name|INLINE
-name|bool
-name|ShouldLogAfterPrintf
-parameter_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
 end_function
 
 begin_endif

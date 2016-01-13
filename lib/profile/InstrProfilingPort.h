@@ -138,6 +138,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !defined(_WIN64) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -163,6 +167,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !defined(_MSC_VER) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -187,6 +195,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* COMPILER_RT_HAS_ATOMICS != 1 */
+end_comment
 
 begin_define
 define|#
