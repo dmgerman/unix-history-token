@@ -694,6 +694,10 @@ operator|->
 name|su_srcaddr
 argument_list|)
 expr_stmt|;
+name|allocated_uaddr
+operator|=
+name|c_uaddr
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -724,6 +728,11 @@ name|xprt
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|allocated_uaddr
+operator|=
+name|c_uaddr
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|c_uaddr
@@ -749,11 +758,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-name|allocated_uaddr
-operator|=
-name|c_uaddr
-expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
