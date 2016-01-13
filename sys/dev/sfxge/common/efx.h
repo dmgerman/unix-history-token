@@ -5079,6 +5079,7 @@ name|n
 argument_list|)
 decl_stmt|;
 specifier|extern
+name|__checkReturn
 name|uint32_t
 name|efx_psuedo_hdr_hash_get
 parameter_list|(
