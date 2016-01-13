@@ -59,7 +59,7 @@ value|0x80
 comment|/* Alignment requirement for value written to RX WPTR:  *  the WPTR must be aligned to an 8 descriptor boundary  */
 define|#
 directive|define
-name|HUNTINGTON_RX_WPTR_ALIGN
+name|EF10_RX_WPTR_ALIGN
 value|8
 comment|/* Invalid RSS context handle */
 define|#
@@ -349,7 +349,7 @@ comment|/* NIC */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_probe
+name|ef10_nic_probe
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -360,7 +360,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_set_drv_limits
+name|ef10_nic_set_drv_limits
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -376,7 +376,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_get_vi_pool
+name|ef10_nic_get_vi_pool
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -392,7 +392,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_get_bar_region
+name|ef10_nic_get_bar_region
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -417,7 +417,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_reset
+name|ef10_nic_reset
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -428,7 +428,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_init
+name|ef10_nic_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -442,7 +442,7 @@ name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_register_test
+name|ef10_nic_register_test
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -455,7 +455,7 @@ directive|endif
 comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|void
-name|hunt_nic_fini
+name|ef10_nic_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -465,7 +465,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_nic_unprobe
+name|ef10_nic_unprobe
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2119,7 +2119,7 @@ value|((efx_piobuf_handle_t) -1)
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_alloc
+name|ef10_nic_pio_alloc
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -2155,7 +2155,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_free
+name|ef10_nic_pio_free
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -2174,7 +2174,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_link
+name|ef10_nic_pio_link
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -2193,7 +2193,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_unlink
+name|ef10_nic_pio_unlink
 parameter_list|(
 name|__inout
 name|efx_nic_t

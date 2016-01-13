@@ -888,22 +888,22 @@ name|efx_nic_ops_t
 name|__efx_nic_hunt_ops
 init|=
 block|{
-name|hunt_nic_probe
+name|ef10_nic_probe
 block|,
 comment|/* eno_probe */
-name|hunt_nic_set_drv_limits
+name|ef10_nic_set_drv_limits
 block|,
 comment|/* eno_set_drv_limits */
-name|hunt_nic_reset
+name|ef10_nic_reset
 block|,
 comment|/* eno_reset */
-name|hunt_nic_init
+name|ef10_nic_init
 block|,
 comment|/* eno_init */
-name|hunt_nic_get_vi_pool
+name|ef10_nic_get_vi_pool
 block|,
 comment|/* eno_get_vi_pool */
-name|hunt_nic_get_bar_region
+name|ef10_nic_get_bar_region
 block|,
 comment|/* eno_get_bar_region */
 if|#
@@ -912,16 +912,16 @@ name|EFSYS_OPT_DIAG
 name|ef10_sram_test
 block|,
 comment|/* eno_sram_test */
-name|hunt_nic_register_test
+name|ef10_nic_register_test
 block|,
 comment|/* eno_register_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|hunt_nic_fini
+name|ef10_nic_fini
 block|,
 comment|/* eno_fini */
-name|hunt_nic_unprobe
+name|ef10_nic_unprobe
 block|,
 comment|/* eno_unprobe */
 block|}

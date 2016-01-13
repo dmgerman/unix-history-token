@@ -94,6 +94,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -267,6 +273,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -752,6 +764,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -977,6 +995,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1206,6 +1230,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2719,7 +2749,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hunt_nic_alloc_piobufs
+name|ef10_nic_alloc_piobufs
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2906,7 +2936,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hunt_nic_free_piobufs
+name|ef10_nic_free_piobufs
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2990,7 +3020,7 @@ end_comment
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_alloc
+name|ef10_nic_pio_alloc
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -3052,15 +3082,19 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT
@@ -3326,7 +3360,7 @@ end_comment
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_free
+name|ef10_nic_pio_free
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -3468,7 +3502,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_link
+name|ef10_nic_pio_link
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -3502,7 +3536,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_pio_unlink
+name|ef10_nic_pio_unlink
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -3531,7 +3565,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|hunt_get_datapath_caps
+name|ef10_get_datapath_caps
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3826,7 +3860,7 @@ name|uint32_t
 name|stride
 decl_stmt|;
 block|}
-name|__hunt_external_port_mappings
+name|__ef10_external_port_mappings
 index|[]
 init|=
 block|{
@@ -3894,7 +3928,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|hunt_external_port_mapping
+name|ef10_external_port_mapping
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3962,7 +3996,7 @@ name|i
 operator|<
 name|EFX_ARRAY_SIZE
 argument_list|(
-name|__hunt_external_port_mappings
+name|__ef10_external_port_mappings
 argument_list|)
 condition|;
 operator|++
@@ -3971,7 +4005,7 @@ control|)
 block|{
 if|if
 condition|(
-name|__hunt_external_port_mappings
+name|__ef10_external_port_mappings
 index|[
 name|i
 index|]
@@ -3986,7 +4020,7 @@ continue|continue;
 name|matches
 operator|=
 operator|(
-name|__hunt_external_port_mappings
+name|__ef10_external_port_mappings
 index|[
 name|i
 index|]
@@ -4005,7 +4039,7 @@ condition|)
 block|{
 name|stride
 operator|=
-name|__hunt_external_port_mappings
+name|__ef10_external_port_mappings
 index|[
 name|i
 index|]
@@ -4196,7 +4230,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_external_port_mapping
+name|ef10_external_port_mapping
 argument_list|(
 name|enp
 argument_list|,
@@ -4758,7 +4792,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_get_datapath_caps
+name|ef10_get_datapath_caps
 argument_list|(
 name|enp
 argument_list|)
@@ -4788,7 +4822,7 @@ name|encp
 operator|->
 name|enc_rx_push_align
 operator|=
-name|HUNTINGTON_RX_WPTR_ALIGN
+name|EF10_RX_WPTR_ALIGN
 expr_stmt|;
 comment|/* 	 * Set resource limits for MC_CMD_ALLOC_VIS. Note that we cannot use 	 * MC_CMD_GET_RESOURCE_LIMITS here as that reports the available 	 * resources (allocated to this PCIe function), which is zero until 	 * after we have allocated VIs. 	 */
 name|encp
@@ -5074,7 +5108,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_probe
+name|ef10_nic_probe
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5107,15 +5141,19 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* Read and clear any assertion state */
@@ -5401,7 +5439,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_set_drv_limits
+name|ef10_nic_set_drv_limits
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -5758,7 +5796,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_reset
+name|ef10_nic_reset
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5783,7 +5821,7 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* hunt_nic_reset() is called to recover from BADASSERT failures. */
+comment|/* ef10_nic_reset() is called to recover from BADASSERT failures. */
 if|if
 condition|(
 operator|(
@@ -5952,7 +5990,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_init
+name|ef10_nic_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5993,15 +6031,19 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* Enable reporting of some events (e.g. link change) */
@@ -6022,7 +6064,7 @@ goto|goto
 name|fail1
 goto|;
 comment|/* Allocate (optional) on-chip PIO buffers */
-name|hunt_nic_alloc_piobufs
+name|ef10_nic_alloc_piobufs
 argument_list|(
 name|enp
 argument_list|,
@@ -6164,7 +6206,7 @@ name|ena_piobuf_count
 condition|)
 block|{
 comment|/* Not enough extra VIs to map piobufs */
-name|hunt_nic_free_piobufs
+name|ef10_nic_free_piobufs
 argument_list|(
 name|enp
 argument_list|)
@@ -6518,7 +6560,7 @@ argument_list|(
 name|fail2
 argument_list|)
 expr_stmt|;
-name|hunt_nic_free_piobufs
+name|ef10_nic_free_piobufs
 argument_list|(
 name|enp
 argument_list|)
@@ -6545,7 +6587,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_get_vi_pool
+name|ef10_nic_get_vi_pool
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6558,15 +6600,19 @@ modifier|*
 name|vi_countp
 parameter_list|)
 block|{
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Report VIs that the client driver can use. 	 * Do not include VIs used for PIO buffer writes. 	 */
@@ -6592,7 +6638,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_get_bar_region
+name|ef10_nic_get_bar_region
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6617,15 +6663,19 @@ block|{
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|EFSYS_ASSERT3U
+name|EFSYS_ASSERT
 argument_list|(
 name|enp
 operator|->
 name|en_family
-argument_list|,
 operator|==
-argument_list|,
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * TODO: Specify host memory mapping alignment and granularity 	 * in efx_drv_limits_t so that they can be taken into account 	 * when allocating extra VIs for PIO writes. 	 */
@@ -6723,7 +6773,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_nic_fini
+name|ef10_nic_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6815,7 +6865,7 @@ condition|)
 break|break;
 block|}
 block|}
-name|hunt_nic_free_piobufs
+name|ef10_nic_free_piobufs
 argument_list|(
 name|enp
 argument_list|)
@@ -6843,7 +6893,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_nic_unprobe
+name|ef10_nic_unprobe
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -6884,7 +6934,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_nic_register_test
+name|ef10_nic_register_test
 parameter_list|(
 name|__in
 name|efx_nic_t
