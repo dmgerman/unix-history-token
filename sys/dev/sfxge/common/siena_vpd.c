@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -71,8 +53,7 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 argument_list|,
 name|__deref_out_bcount_opt
@@ -767,8 +748,7 @@ operator|.
 name|em_emip
 operator|)
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 decl_stmt|;
 name|efx_rc_t

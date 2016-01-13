@@ -95,6 +95,12 @@ directive|define
 name|ACPI_SYSTEM_XFACE
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_INTTYPES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -230,12 +236,6 @@ decl_stmt|;
 name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
-decl_stmt|;
-name|EFI_STATUS
-name|status
-decl_stmt|;
-name|EFI_PHYSICAL_ADDRESS
-name|addr
 decl_stmt|;
 name|Elf_Ehdr
 modifier|*
@@ -532,6 +532,9 @@ return|;
 comment|/* Clean D-cache under kernel area and invalidate whole I-cache */
 name|clean_addr
 operator|=
+operator|(
+name|vm_offset_t
+operator|)
 name|efi_translate
 argument_list|(
 name|fp
@@ -541,6 +544,9 @@ argument_list|)
 expr_stmt|;
 name|clean_size
 operator|=
+operator|(
+name|vm_offset_t
+operator|)
 name|efi_translate
 argument_list|(
 name|kernendp

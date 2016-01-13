@@ -780,15 +780,7 @@ name|EFSYS_OPT_FILTER
 value|1
 define|#
 directive|define
-name|EFSYS_OPT_MCAST_FILTER_LIST
-value|1
-define|#
-directive|define
 name|EFSYS_OPT_RX_SCATTER
-value|0
-define|#
-directive|define
-name|EFSYS_OPT_RX_HDR_SPLIT
 value|0
 define|#
 directive|define

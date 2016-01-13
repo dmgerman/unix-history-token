@@ -416,7 +416,7 @@ name|partition_type
 name|type
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -1099,7 +1099,7 @@ name|gpt_ent
 modifier|*
 name|ent
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|,
 name|cnt
@@ -1298,11 +1298,11 @@ name|int
 name|pri
 decl_stmt|,
 name|sec
-decl_stmt|,
-name|i
 decl_stmt|;
 name|size_t
 name|size
+decl_stmt|,
+name|i
 decl_stmt|;
 name|buf
 operator|=
@@ -2069,6 +2069,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ptable
 modifier|*
@@ -2540,6 +2541,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ptable
 modifier|*

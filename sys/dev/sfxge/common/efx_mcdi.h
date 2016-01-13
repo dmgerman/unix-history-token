@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"efx_regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx_regs_mcdi.h"
 end_include
 
@@ -69,7 +63,7 @@ name|size_t
 name|emr_in_length
 decl_stmt|;
 comment|/* Outputs: retcode, buffer, length, and length used*/
-name|int
+name|efx_rc_t
 name|emr_rc
 decl_stmt|;
 name|uint8_t
@@ -108,6 +102,10 @@ block|{
 name|unsigned
 name|int
 name|emi_port
+decl_stmt|;
+name|unsigned
+name|int
+name|emi_max_version
 decl_stmt|;
 name|unsigned
 name|int
@@ -486,6 +484,8 @@ name|EFSYS_OPT_BIST
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
@@ -499,7 +499,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t

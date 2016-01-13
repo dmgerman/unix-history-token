@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"loader_efi.h"
+end_include
+
 begin_function
 name|int
 name|efi_autoload

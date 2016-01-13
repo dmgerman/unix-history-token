@@ -122,14 +122,15 @@ expr_stmt|;
 comment|/* Calculate end address to clean */
 name|end
 operator|=
-call|(
+operator|(
 name|vm_offset_t
-call|)
-argument_list|(
+operator|)
 name|ptr
 operator|+
+operator|(
+name|vm_offset_t
+operator|)
 name|len
-argument_list|)
 expr_stmt|;
 comment|/* Align start address to cache line */
 name|addr

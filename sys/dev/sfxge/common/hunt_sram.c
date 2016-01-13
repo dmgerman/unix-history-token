@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
 end_include
 
@@ -50,7 +44,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_sram_test
+name|ef10_sram_test
 parameter_list|(
 name|__in
 name|efx_nic_t

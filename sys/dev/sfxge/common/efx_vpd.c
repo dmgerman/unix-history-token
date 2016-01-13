@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -265,42 +247,44 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_vpd_ops_t
-name|__efx_vpd_hunt_ops
+name|__efx_vpd_ef10_ops
 init|=
 block|{
-name|hunt_vpd_init
+name|ef10_vpd_init
 block|,
 comment|/* evpdo_init */
-name|hunt_vpd_size
+name|ef10_vpd_size
 block|,
 comment|/* evpdo_size */
-name|hunt_vpd_read
+name|ef10_vpd_read
 block|,
 comment|/* evpdo_read */
-name|hunt_vpd_verify
+name|ef10_vpd_verify
 block|,
 comment|/* evpdo_verify */
-name|hunt_vpd_reinit
+name|ef10_vpd_reinit
 block|,
 comment|/* evpdo_reinit */
-name|hunt_vpd_get
+name|ef10_vpd_get
 block|,
 comment|/* evpdo_get */
-name|hunt_vpd_set
+name|ef10_vpd_set
 block|,
 comment|/* evpdo_set */
-name|hunt_vpd_next
+name|ef10_vpd_next
 block|,
 comment|/* evpdo_next */
-name|hunt_vpd_write
+name|ef10_vpd_write
 block|,
 comment|/* evpdo_write */
-name|hunt_vpd_fini
+name|ef10_vpd_fini
 block|,
 comment|/* evpdo_fini */
 block|}
@@ -313,7 +297,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -426,12 +410,31 @@ name|efx_vpd_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_vpd_hunt_ops
+name|__efx_vpd_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|evpdop
+operator|=
+operator|(
+name|efx_vpd_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_vpd_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(

@@ -8128,11 +8128,9 @@ parameter_list|)
 block|{
 name|u32
 name|value
-decl_stmt|;
-name|value
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -34374,9 +34372,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

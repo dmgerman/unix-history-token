@@ -1786,22 +1786,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|devfs_fpdrop
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX This is not public KPI */
-end_comment
-
-begin_function_decl
 name|ino_t
 name|devfs_alloc_cdp_inode
 parameter_list|(

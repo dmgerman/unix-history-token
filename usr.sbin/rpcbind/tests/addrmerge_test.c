@@ -2166,6 +2166,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2217,6 +2222,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"192.0.2.2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2274,6 +2284,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"192.0.2.2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2339,6 +2354,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2394,6 +2414,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"192.0.2.130.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2456,6 +2481,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"192.0.2.130.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2523,6 +2553,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2584,6 +2619,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"192.0.2.3.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2650,6 +2690,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2706,6 +2751,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"192.0.2.2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2767,6 +2817,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2818,6 +2873,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"2001:db8::2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2875,6 +2935,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"2001:db8::2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -2940,6 +3005,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2995,6 +3065,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"2001:db8:1::2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -3060,6 +3135,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -3117,6 +3197,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"2001:db8::3.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -3184,6 +3269,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -3246,6 +3336,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -3301,6 +3396,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"fe80::2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;
@@ -3363,6 +3463,11 @@ argument_list|,
 name|maddr
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|maddr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -3419,6 +3524,11 @@ name|ATF_CHECK_STREQ
 argument_list|(
 literal|"2001:db8::2.3.46"
 argument_list|,
+name|maddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|maddr
 argument_list|)
 expr_stmt|;

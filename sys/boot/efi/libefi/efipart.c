@@ -249,10 +249,6 @@ decl_stmt|;
 name|UINTN
 name|sz
 decl_stmt|;
-name|CHAR16
-modifier|*
-name|path
-decl_stmt|;
 name|u_int
 name|n
 decl_stmt|,

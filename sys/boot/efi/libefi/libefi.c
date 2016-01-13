@@ -756,6 +756,10 @@ name|argc
 operator|++
 index|]
 operator|=
+operator|(
+name|CHAR16
+operator|*
+operator|)
 literal|L"loader.efi"
 expr_stmt|;
 name|argp
