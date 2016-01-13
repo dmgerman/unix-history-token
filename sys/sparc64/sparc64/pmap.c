@@ -1541,13 +1541,16 @@ operator|*
 name|mra
 argument_list|)
 expr_stmt|;
-name|CTR0
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|OF_printf
 argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"pmap_bootstrap: physical memory"
+literal|"pmap_bootstrap: physical memory\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|qsort
 argument_list|(
 name|mra
@@ -1604,11 +1607,12 @@ operator|+=
 literal|2
 control|)
 block|{
-name|CTR2
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|OF_printf
 argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"start=%#lx size=%#lx"
+literal|"start=%#lx size=%#lx\n"
 argument_list|,
 name|mra
 index|[
@@ -1625,6 +1629,8 @@ operator|.
 name|mr_size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|physmem
@@ -2755,13 +2761,16 @@ name|translations_size
 operator|=
 name|sz
 expr_stmt|;
-name|CTR0
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|OF_printf
 argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"pmap_bootstrap: translations"
+literal|"pmap_bootstrap: translations\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|qsort
 argument_list|(
 name|translations
@@ -2791,11 +2800,12 @@ name|i
 operator|++
 control|)
 block|{
-name|CTR3
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|OF_printf
 argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"translation: start=%#lx size=%#lx tte=%#lx"
+literal|"translation: start=%#lx size=%#lx tte=%#lx\n"
 argument_list|,
 name|translations
 index|[
@@ -2819,6 +2829,8 @@ operator|.
 name|om_tte
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

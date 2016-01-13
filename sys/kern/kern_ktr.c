@@ -144,23 +144,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__sparc64__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/ktr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DDB
 end_ifdef
 
