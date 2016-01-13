@@ -1992,9 +1992,6 @@ name|struct
 name|mtx
 name|inbound_lock
 decl_stmt|;
-name|hv_vmbus_handle
-name|control_work_queue
-decl_stmt|;
 name|hv_vmbus_pfn_channel_callback
 name|on_channel_callback
 decl_stmt|;
