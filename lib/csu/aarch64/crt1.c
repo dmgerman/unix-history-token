@@ -139,14 +139,7 @@ begin_expr_stmt
 literal|"	.align	0		\n"
 literal|"	.globl	_start		\n"
 literal|"	_start:			\n"
-comment|/* TODO: Remove this when the kernel correctly aligns the stack */
-literal|"	cbnz	x0, 1f		\n"
-comment|/* Are we using a new kernel? */
-literal|"	mov	x0, sp		\n"
-comment|/* No, load the args from sp */
-literal|"	and	sp, x0, #~0xf	\n"
-comment|/* And align the stack */
-literal|"1:	mov	x3, x2		\n"
+literal|"	mov	x3, x2		\n"
 comment|/* cleanup */
 literal|"	add	x1, x0, #8	\n"
 comment|/* load argv */
