@@ -6370,6 +6370,16 @@ argument_list|)
 expr_stmt|;
 name|UPDATE_ESTAT_QSTAT
 argument_list|(
+name|rx_erroneous_jumbo_sge_pkts
+argument_list|)
+expr_stmt|;
+name|UPDATE_ESTAT_QSTAT
+argument_list|(
+name|rx_bxe_service_rxsgl
+argument_list|)
+expr_stmt|;
+name|UPDATE_ESTAT_QSTAT
+argument_list|(
 name|rx_jumbo_sge_pkts
 argument_list|)
 expr_stmt|;
