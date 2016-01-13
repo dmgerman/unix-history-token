@@ -760,7 +760,7 @@ operator|(
 name|CHAR16
 operator|*
 operator|)
-literal|"loader.efi"
+literal|L"loader.efi"
 expr_stmt|;
 name|argp
 operator|=
