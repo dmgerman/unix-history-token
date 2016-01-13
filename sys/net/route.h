@@ -32,7 +32,7 @@ comment|/*  * Kernel resident routing tables.  *  * The routing tables are initi
 end_comment
 
 begin_comment
-comment|/*  * A route consists of a destination address, a reference  * to a routing entry, and a reference to an llentry.    * These are often held by protocols in their control  * blocks, e.g. inpcb.  */
+comment|/*  * Struct route consiste of a destination address,  * a route entry pointer, link-layer prepend data pointer along  * with its length.  */
 end_comment
 
 begin_struct
@@ -53,6 +53,13 @@ name|ro_plen
 decl_stmt|;
 name|uint16_t
 name|ro_flags
+decl_stmt|;
+name|uint16_t
+name|ro_mtu
+decl_stmt|;
+comment|/* saved ro_rt mtu */
+name|uint16_t
+name|spare
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -124,6 +131,10 @@ name|RT_L2_ME
 value|(1<< RT_L2_ME_BIT)
 end_define
 
+begin_comment
+comment|/* 0x0004 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -131,12 +142,53 @@ name|RT_MAY_LOOP
 value|(1<< RT_MAY_LOOP_BIT)
 end_define
 
+begin_comment
+comment|/* 0x0008 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RT_HAS_HEADER
 value|(1<< RT_HAS_HEADER_BIT)
 end_define
+
+begin_comment
+comment|/* 0x0010 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_REJECT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Destination is reject */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_BLACKHOLE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Destination is blackhole */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_HAS_GW
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Destination has GW  */
+end_comment
 
 begin_struct
 struct|struct
@@ -837,6 +889,21 @@ comment|/* For future use */
 end_comment
 
 begin_comment
+comment|/* Control plane route request flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NHR_COPY
+value|0x100
+end_define
+
+begin_comment
+comment|/* Copy rte data */
+end_comment
+
+begin_comment
 comment|/* rte<>nhop translation */
 end_comment
 
@@ -924,6 +991,100 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* rte<>ro_flags translation */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|rt_update_ro_flags
+parameter_list|(
+name|struct
+name|route
+modifier|*
+name|ro
+parameter_list|)
+block|{
+name|int
+name|rt_flags
+init|=
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+decl_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator|&=
+operator|~
+operator|(
+name|RT_REJECT
+operator||
+name|RT_BLACKHOLE
+operator||
+name|RT_HAS_GW
+operator|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_REJECT
+operator|)
+condition|?
+name|RT_REJECT
+else|:
+literal|0
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_BLACKHOLE
+operator|)
+condition|?
+name|RT_BLACKHOLE
+else|:
+literal|0
+expr_stmt|;
+name|ro
+operator|->
+name|ro_flags
+operator||=
+operator|(
+name|rt_flags
+operator|&
+name|RTF_GATEWAY
+operator|)
+condition|?
+name|RT_HAS_GW
+else|:
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Routing statistics.  */
@@ -2450,47 +2611,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|rtevent_redirect_fn
-function_decl|)
+begin_function_decl
+name|int
+name|rib_lookup_info
 parameter_list|(
-name|void
-modifier|*
+name|uint32_t
 parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|rt_addrinfo
+modifier|*
 parameter_list|)
 function_decl|;
-end_typedef
+end_function_decl
 
-begin_expr_stmt
-name|EVENTHANDLER_DECLARE
-argument_list|(
-name|route_redirect_event
-argument_list|,
-name|rtevent_redirect_fn
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_function_decl
+name|void
+name|rib_free_info
+parameter_list|(
+name|struct
+name|rt_addrinfo
+modifier|*
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

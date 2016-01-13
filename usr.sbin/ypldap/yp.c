@@ -395,8 +395,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|getdtablesize
-argument_list|()
+name|FD_SETSIZE
 condition|;
 name|i
 operator|++

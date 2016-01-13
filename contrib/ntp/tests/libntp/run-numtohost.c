@@ -164,7 +164,7 @@ name|RUN_TEST
 argument_list|(
 name|test_LoopbackNetNonResolve
 argument_list|,
-literal|8
+literal|9
 argument_list|)
 expr_stmt|;
 return|return

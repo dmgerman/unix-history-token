@@ -200,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|_LIBUNWIND_BUILD_ZERO_COST_APIS
-value|(defined(__i386__) || \                                            defined(__x86_64__) || \                                            defined(__arm64__))
+value|(defined(__i386__) || \                                            defined(__x86_64__) || \                                            defined(__arm64__) || \                                            defined(__mips__))
 end_define
 
 begin_define

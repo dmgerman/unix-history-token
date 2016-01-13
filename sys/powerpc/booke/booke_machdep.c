@@ -442,15 +442,6 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|char
-name|kernel_text
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
 name|_etext
 index|[]
 decl_stmt|;
@@ -541,9 +532,9 @@ begin_function_decl
 name|uintptr_t
 name|booke_init
 parameter_list|(
-name|uint32_t
+name|u_long
 parameter_list|,
-name|uint32_t
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -767,6 +758,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|cpu_features
+operator||=
+name|PPC_FEATURE_BOOKE
+expr_stmt|;
 name|pmap_mmu_install
 argument_list|(
 name|MMU_TYPE_BOOKE
@@ -1035,10 +1030,10 @@ begin_function
 name|uintptr_t
 name|booke_init
 parameter_list|(
-name|uint32_t
+name|u_long
 name|arg1
 parameter_list|,
-name|uint32_t
+name|u_long
 name|arg2
 parameter_list|)
 block|{
@@ -1190,7 +1185,7 @@ operator|>
 operator|(
 name|uintptr_t
 operator|)
-name|kernel_text
+name|btext
 condition|)
 comment|/* FreeBSD loader */
 name|mdp
@@ -1206,19 +1201,6 @@ comment|/* U-Boot */
 name|mdp
 operator|=
 name|NULL
-expr_stmt|;
-name|ret
-operator|=
-name|powerpc_init
-argument_list|(
-name|dtbp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|mdp
-argument_list|)
 expr_stmt|;
 comment|/* Default to 32 byte cache line size. */
 switch|switch
@@ -1246,6 +1228,19 @@ literal|64
 expr_stmt|;
 break|break;
 block|}
+name|ret
+operator|=
+name|powerpc_init
+argument_list|(
+name|dtbp
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|mdp
+argument_list|)
+expr_stmt|;
 comment|/* Enable caches */
 name|booke_enable_l1_cache
 argument_list|()

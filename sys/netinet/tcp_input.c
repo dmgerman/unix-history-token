@@ -1525,9 +1525,10 @@ name|bytes_this_ack
 argument_list|,
 name|V_tcp_abc_l_var
 operator|*
+name|tcp_maxseg
+argument_list|(
 name|tp
-operator|->
-name|t_maxseg
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1642,6 +1643,9 @@ name|tp
 operator|->
 name|t_inpcb
 decl_stmt|;
+name|u_int
+name|maxseg
+decl_stmt|;
 name|int
 name|rtt
 decl_stmt|;
@@ -1661,6 +1665,13 @@ name|inp_inc
 argument_list|,
 operator|&
 name|metrics
+argument_list|)
+expr_stmt|;
+name|maxseg
+operator|=
+name|tcp_maxseg
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1784,9 +1795,7 @@ name|max
 argument_list|(
 literal|2
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 argument_list|,
 name|metrics
 operator|.
@@ -1812,9 +1821,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 comment|/* SYN(-ACK) lost */
 elseif|else
@@ -1830,17 +1837,13 @@ name|min
 argument_list|(
 name|V_tcp_initcwnd_segments
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 argument_list|,
 name|max
 argument_list|(
 literal|2
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 argument_list|,
 name|V_tcp_initcwnd_segments
 operator|*
@@ -1861,17 +1864,13 @@ name|min
 argument_list|(
 literal|4
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 argument_list|,
 name|max
 argument_list|(
 literal|2
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 argument_list|,
 literal|4380
 argument_list|)
@@ -1882,9 +1881,7 @@ block|{
 comment|/* Per RFC5681 Section 3.1 */
 if|if
 condition|(
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 operator|>
 literal|2190
 condition|)
@@ -1894,16 +1891,12 @@ name|snd_cwnd
 operator|=
 literal|2
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 operator|>
 literal|1095
 condition|)
@@ -1913,9 +1906,7 @@ name|snd_cwnd
 operator|=
 literal|3
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 else|else
 name|tp
@@ -1924,9 +1915,7 @@ name|snd_cwnd
 operator|=
 literal|4
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 block|}
 if|if
@@ -1974,6 +1963,9 @@ name|uint32_t
 name|type
 parameter_list|)
 block|{
+name|u_int
+name|maxseg
+decl_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
@@ -2070,6 +2062,13 @@ break|break;
 case|case
 name|CC_RTO
 case|:
+name|maxseg
+operator|=
+name|tcp_maxseg
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_dupacks
@@ -2110,22 +2109,16 @@ argument_list|)
 operator|/
 literal|2
 operator|/
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 argument_list|)
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 break|break;
 case|case
@@ -2415,7 +2408,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  *	- Delayed acks are enabled or this is a half-synchronized T/TCP  *	  connection.  */
+comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  */
 end_comment
 
 begin_define
@@ -2428,7 +2421,7 @@ parameter_list|,
 name|tlen
 parameter_list|)
 define|\
-value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxopd)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxseg)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_function
@@ -10510,6 +10503,16 @@ name|snd_una
 argument_list|)
 condition|)
 block|{
+name|u_int
+name|maxseg
+decl_stmt|;
+name|maxseg
+operator|=
+name|tcp_maxseg
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tlen
@@ -10702,9 +10705,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|+=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 if|if
 condition|(
@@ -10731,9 +10732,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|+=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 operator|(
 name|void
@@ -10882,9 +10881,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 operator|(
 name|void
@@ -10914,9 +10911,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 operator|(
 name|void
@@ -10953,9 +10948,7 @@ name|tp
 operator|->
 name|snd_ssthresh
 operator|+
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 operator|*
 operator|(
 name|tp
@@ -11083,9 +11076,7 @@ operator|->
 name|snd_limited
 operator|)
 operator|*
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 comment|/* 					 * Only call tcp_output when there 					 * is new data available to be sent. 					 * Otherwise we would send pure ACKs. 					 */
 name|SOCKBUF_LOCK
@@ -11154,9 +11145,7 @@ if|if
 condition|(
 name|sent
 operator|>
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 condition|)
 block|{
 name|KASSERT
@@ -11178,9 +11167,7 @@ operator|||
 operator|(
 name|sent
 operator|==
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 operator|+
 literal|1
 operator|&&
@@ -14513,7 +14500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing interface  * without forcing IP to fragment.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  *  * Also take into account the space needed for options that we  * send regularly.  Make maxseg shorter by that amount to assure  * that we can send maxseg amount of data even when the options  * are present.  Store the upper limit of the length of options plus  * data in maxopd.  *  * NOTE that this routine is only called when we process an incoming  * segment, or an ICMP need fragmentation datagram. Outgoing SYN/ACK MSS  * settings are handled in tcp_mssopt().  */
+comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing interface  * without forcing IP to fragment.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  *  * NOTE that resulting t_maxseg doesn't include space for TCP options or  * IP options, e.g. IPSEC data, since length of this data may vary, and  * thus it is calculated for every segment separately in tcp_output().  *  * NOTE that this routine is only called when we process an incoming  * segment, or an ICMP need fragmentation datagram. Outgoing SYN/ACK MSS  * settings are handled in tcp_mssopt().  */
 end_comment
 
 begin_function
@@ -14564,9 +14551,6 @@ decl_stmt|;
 name|struct
 name|hc_metrics_lite
 name|metrics
-decl_stmt|;
-name|int
-name|origoffer
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -14663,10 +14647,6 @@ operator|-
 name|min_protoh
 expr_stmt|;
 block|}
-name|origoffer
-operator|=
-name|offer
-expr_stmt|;
 comment|/* Initialize. */
 ifdef|#
 directive|ifdef
@@ -14688,10 +14668,6 @@ argument_list|,
 name|cap
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_maxopd
-operator|=
 name|tp
 operator|->
 name|t_maxseg
@@ -14731,10 +14707,6 @@ argument_list|,
 name|cap
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_maxopd
-operator|=
 name|tp
 operator|->
 name|t_maxseg
@@ -14781,12 +14753,12 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 			 * Offer == 0 means that there was no MSS on the SYN 			 * segment, in this case we use tcp_mssdflt as 			 * already assigned to t_maxopd above. 			 */
+comment|/* 			 * Offer == 0 means that there was no MSS on the SYN 			 * segment, in this case we use tcp_mssdflt as 			 * already assigned to t_maxseg above. 			 */
 name|offer
 operator|=
 name|tp
 operator|->
-name|t_maxopd
+name|t_maxseg
 expr_stmt|;
 break|break;
 case|case
@@ -14961,7 +14933,7 @@ argument_list|,
 name|offer
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sanity check: make sure that maxopd will be large 	 * enough to allow some data on segments even if the 	 * all the option space is used (40bytes).  Otherwise 	 * funny things may happen in tcp_output. 	 */
+comment|/* 	 * Sanity check: make sure that maxseg will be large 	 * enough to allow some data on segments even if the 	 * all the option space is used (40bytes).  Otherwise 	 * funny things may happen in tcp_output. 	 * 	 * XXXGL: shouldn't we reserve space for IP/IPv6 options? 	 */
 name|mss
 operator|=
 name|max
@@ -14970,51 +14942,6 @@ name|mss
 argument_list|,
 literal|64
 argument_list|)
-expr_stmt|;
-comment|/* 	 * maxopd stores the maximum length of data AND options 	 * in a segment; maxseg is the amount of data in a normal 	 * segment.  We need to store this value (maxopd) apart 	 * from maxseg, because now every segment carries options 	 * and thus we normally have somewhat less data in segments. 	 */
-name|tp
-operator|->
-name|t_maxopd
-operator|=
-name|mss
-expr_stmt|;
-comment|/* 	 * origoffer==-1 indicates that no segments were received yet. 	 * In this case we just guess. 	 */
-if|if
-condition|(
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-operator|(
-name|TF_REQ_TSTMP
-operator||
-name|TF_NOOPT
-operator|)
-operator|)
-operator|==
-name|TF_REQ_TSTMP
-operator|&&
-operator|(
-name|origoffer
-operator|==
-operator|-
-literal|1
-operator|||
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_RCVD_TSTMP
-operator|)
-operator|==
-name|TF_RCVD_TSTMP
-operator|)
-condition|)
-name|mss
-operator|-=
-name|TCPOLEN_TSTAMP_APPA
 expr_stmt|;
 name|tp
 operator|->
@@ -15602,6 +15529,14 @@ name|tp
 operator|->
 name|snd_cwnd
 decl_stmt|;
+name|u_int
+name|maxseg
+init|=
+name|tcp_maxseg
+argument_list|(
+name|tp
+argument_list|)
+decl_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
@@ -15637,9 +15572,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 operator|+
 name|BYTES_THIS_ACK
 argument_list|(
@@ -15725,9 +15658,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|+=
-name|tp
-operator|->
-name|t_maxseg
+name|maxseg
 expr_stmt|;
 block|}
 end_function

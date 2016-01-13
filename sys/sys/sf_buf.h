@@ -21,9 +21,37 @@ name|sfstat
 block|{
 comment|/* sendfile statistics */
 name|uint64_t
+name|sf_syscalls
+decl_stmt|;
+comment|/* times sendfile was called */
+name|uint64_t
+name|sf_noiocnt
+decl_stmt|;
+comment|/* times sendfile didn't require I/O */
+name|uint64_t
 name|sf_iocnt
 decl_stmt|;
 comment|/* times sendfile had to do disk I/O */
+name|uint64_t
+name|sf_pages_read
+decl_stmt|;
+comment|/* pages read as part of a request */
+name|uint64_t
+name|sf_pages_valid
+decl_stmt|;
+comment|/* pages were valid for a request */
+name|uint64_t
+name|sf_rhpages_requested
+decl_stmt|;
+comment|/* readahead pages requested */
+name|uint64_t
+name|sf_rhpages_read
+decl_stmt|;
+comment|/* readahead pages read */
+name|uint64_t
+name|sf_busy
+decl_stmt|;
+comment|/* times aborted on a busy page */
 name|uint64_t
 name|sf_allocfail
 decl_stmt|;

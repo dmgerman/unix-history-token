@@ -2975,6 +2975,83 @@ value|16
 end_define
 
 begin_comment
+comment|/* Bits for R92C_HWSEQ_CTRL / R92C_TXPAUSE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_VO
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_VI
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_BE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_BK
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_MGT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_HIGH
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_BCN
+value|0x40
+end_define
+
+begin_comment
+comment|/* Shortcuts. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_AC
+define|\
+value|(R92C_TX_QUEUE_VO | R92C_TX_QUEUE_VI |	\ 	 R92C_TX_QUEUE_BE | R92C_TX_QUEUE_BK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_TX_QUEUE_ALL
+define|\
+value|(R92C_TX_QUEUE_AC | R92C_TX_QUEUE_MGT |	\ 	 R92C_TX_QUEUE_HIGH | R92C_TX_QUEUE_BCN | 0x80)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_comment
 comment|/* Bits for R92C_BCN_CTRL. */
 end_comment
 

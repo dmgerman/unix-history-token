@@ -1036,6 +1036,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `atomic_thread_fence' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ATOMIC_THREAD_FENCE */
+end_comment
+
+begin_comment
 comment|/* Do we have audio support? */
 end_comment
 
@@ -1201,6 +1209,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ERRNO_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_do_all_sorted' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_DO_ALL_SORTED
 value|1
 end_define
 
@@ -1931,6 +1950,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<net/if_var.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NET_IF_VAR_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<net/route.h> header file. */
 end_comment
 
@@ -2641,6 +2671,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDARG_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<stdatomic.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDATOMIC_H
 value|1
 end_define
 
@@ -3649,9 +3690,12 @@ begin_comment
 comment|/* Define to 1 if the system has the type `unsigned long long int'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UNSIGNED_LONG_LONG_INT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_UNSIGNED_LONG_LONG_INT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `updwtmp' function. */
@@ -4231,6 +4275,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* leap smear mechanism */
+end_comment
+
+begin_comment
+comment|/* #undef LEAP_SMEAR */
+end_comment
+
+begin_comment
 comment|/* Define to any value to include libseccomp sandboxing. */
 end_comment
 
@@ -4274,6 +4326,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MIN_REC_TICKADJ */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if the compiler does not support C99's structure    initialization. */
+end_comment
+
+begin_comment
+comment|/* #undef MISSING_C99_STRUCT_INIT */
 end_comment
 
 begin_comment
@@ -4552,7 +4612,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ntp 4.2.8p4"
+value|"ntp 4.2.8p5"
 end_define
 
 begin_comment
@@ -4585,7 +4645,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2.8p4"
+value|"4.2.8p5"
 end_define
 
 begin_comment
@@ -4607,7 +4667,7 @@ begin_define
 define|#
 directive|define
 name|POSIX_SHELL
-value|"/bin/bash"
+value|"/bin/sh"
 end_define
 
 begin_comment
@@ -5318,7 +5378,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2.8p4"
+value|"4.2.8p5"
 end_define
 
 begin_comment
@@ -5977,14 +6037,14 @@ begin_define
 define|#
 directive|define
 name|MKREPRO_DATE
-value|"Oct 22 2015"
+value|"Jan 8 2016"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MKREPRO_TIME
-value|"17:58:31"
+value|"12:37:48"
 end_define
 
 end_unit

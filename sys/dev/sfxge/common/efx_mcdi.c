@@ -20,31 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs_mcdi.h"
 end_include
 
 begin_include
@@ -112,36 +88,38 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_mcdi_ops_t
-name|__efx_mcdi_hunt_ops
+name|__efx_mcdi_ef10_ops
 init|=
 block|{
-name|hunt_mcdi_init
+name|ef10_mcdi_init
 block|,
 comment|/* emco_init */
-name|hunt_mcdi_request_copyin
+name|ef10_mcdi_request_copyin
 block|,
 comment|/* emco_request_copyin */
-name|hunt_mcdi_request_copyout
+name|ef10_mcdi_request_copyout
 block|,
 comment|/* emco_request_copyout */
-name|hunt_mcdi_poll_reboot
+name|ef10_mcdi_poll_reboot
 block|,
 comment|/* emco_poll_reboot */
-name|hunt_mcdi_poll_response
+name|ef10_mcdi_poll_response
 block|,
 comment|/* emco_poll_response */
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 block|,
 comment|/* emco_read_response */
-name|hunt_mcdi_fini
+name|ef10_mcdi_fini
 block|,
 comment|/* emco_fini */
-name|hunt_mcdi_feature_supported
+name|ef10_mcdi_feature_supported
 block|,
 comment|/* emco_feature_supported */
 block|}
@@ -154,7 +132,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -260,12 +238,31 @@ name|efx_mcdi_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_mcdi_hunt_ops
+name|__efx_mcdi_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|emcop
+operator|=
+operator|(
+name|efx_mcdi_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_mcdi_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -2527,15 +2524,6 @@ name|en_mcdi
 operator|.
 name|em_emcop
 decl_stmt|;
-name|efx_nic_cfg_t
-modifier|*
-name|encp
-init|=
-operator|&
-name|enp
-operator|->
-name|en_nic_cfg
-decl_stmt|;
 name|efx_mcdi_req_t
 modifier|*
 name|emrp
@@ -2664,11 +2652,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|encp
+name|emip
 operator|->
-name|enc_mcdi_max_payload_length
-operator|>
-name|MCDI_CTL_SDU_LEN_MAX_V1
+name|emi_max_version
+operator|>=
+literal|2
 condition|)
 block|{
 comment|/* MCDIv2 response details do not fit into an event. */
@@ -6098,6 +6086,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_comment
@@ -6222,7 +6212,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -7214,6 +7204,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_comment
@@ -7596,7 +7588,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function

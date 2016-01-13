@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -273,33 +255,35 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_filter_ops_t
-name|__efx_filter_hunt_ops
+name|__efx_filter_ef10_ops
 init|=
 block|{
-name|hunt_filter_init
+name|ef10_filter_init
 block|,
 comment|/* efo_init */
-name|hunt_filter_fini
+name|ef10_filter_fini
 block|,
 comment|/* efo_fini */
-name|hunt_filter_restore
+name|ef10_filter_restore
 block|,
 comment|/* efo_restore */
-name|hunt_filter_add
+name|ef10_filter_add
 block|,
 comment|/* efo_add */
-name|hunt_filter_delete
+name|ef10_filter_delete
 block|,
 comment|/* efo_delete */
-name|hunt_filter_supported_filters
+name|ef10_filter_supported_filters
 block|,
 comment|/* efo_supported_filters */
-name|hunt_filter_reconfigure
+name|ef10_filter_reconfigure
 block|,
 comment|/* efo_reconfigure */
 block|}
@@ -312,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -660,12 +644,31 @@ name|efx_filter_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_filter_hunt_ops
+name|__efx_filter_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|efop
+operator|=
+operator|(
+name|efx_filter_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_filter_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(

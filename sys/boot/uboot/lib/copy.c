@@ -136,7 +136,7 @@ name|sys_info
 modifier|*
 name|si
 decl_stmt|;
-name|uintptr_t
+name|uint64_t
 name|sblock
 decl_stmt|,
 name|eblock
@@ -145,12 +145,12 @@ name|subldr
 decl_stmt|,
 name|eubldr
 decl_stmt|;
-name|uintptr_t
+name|uint64_t
 name|biggest_block
 decl_stmt|,
 name|this_block
 decl_stmt|;
-name|size_t
+name|uint64_t
 name|biggest_size
 decl_stmt|,
 name|this_size
@@ -236,6 +236,9 @@ name|eubldr
 operator|=
 name|roundup2
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|uboot_heap_end
 argument_list|,
 name|KERN_ALIGN
@@ -275,6 +278,9 @@ name|sblock
 operator|=
 name|roundup2
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|si
 operator|->
 name|mr
@@ -291,6 +297,9 @@ name|eblock
 operator|=
 name|rounddown2
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|si
 operator|->
 name|mr
@@ -443,7 +452,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("Loading kernel into region 0x%08x-0x%08x (%u MiB)\n", 		    biggest_block, biggest_block + biggest_size - 1,  		    biggest_size / 1024 / 1024);
+block|printf("Loading kernel into region 0x%08jx-0x%08jx (%ju MiB)\n", 		    (uintmax_t)biggest_block,  		    (uintmax_t)biggest_block + biggest_size - 1, 		    (uintmax_t)biggest_size / 1024 / 1024);
 endif|#
 directive|endif
 return|return

@@ -198,6 +198,9 @@ name|int
 name|features
 decl_stmt|;
 comment|/* Do not include PPC_FEATURE_32 or 					 * PPC_FEATURE_HAS_MMU */
+name|int
+name|features2
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -268,6 +271,8 @@ name|PPC_FEATURE_HAS_FPU
 operator||
 name|PPC_FEATURE_UNIFIED_CACHE
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -279,6 +284,8 @@ block|,
 name|REVFMT_DEC
 block|,
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -292,6 +299,8 @@ name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -303,6 +312,8 @@ block|,
 name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -316,6 +327,8 @@ name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -328,6 +341,8 @@ name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -339,6 +354,8 @@ block|,
 name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -354,6 +371,8 @@ name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|NULL
 block|}
 block|,
@@ -366,6 +385,8 @@ name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -377,6 +398,8 @@ block|,
 name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -394,6 +417,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_970_setup
 block|}
 block|,
@@ -409,6 +434,8 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_970_setup
 block|}
@@ -426,6 +453,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_970_setup
 block|}
 block|,
@@ -442,6 +471,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_970_setup
 block|}
 block|,
@@ -455,6 +486,8 @@ block|,
 name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -470,6 +503,8 @@ name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|NULL
 block|}
 block|,
@@ -483,6 +518,10 @@ block|,
 name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_SMT
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -497,6 +536,10 @@ block|,
 name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_SMT
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -513,6 +556,12 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_SMT
+operator||
+name|PPC_FEATURE_ARCH_2_05
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -530,7 +579,15 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 operator||
+name|PPC_FEATURE_SMT
+operator||
+name|PPC_FEATURE_ARCH_2_05
+operator||
+name|PPC_FEATURE_ARCH_2_06
+operator||
 name|PPC_FEATURE_HAS_VSX
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -548,7 +605,15 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 operator||
+name|PPC_FEATURE_SMT
+operator||
+name|PPC_FEATURE_ARCH_2_05
+operator||
+name|PPC_FEATURE_ARCH_2_06
+operator||
 name|PPC_FEATURE_HAS_VSX
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -566,7 +631,19 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 operator||
+name|PPC_FEATURE_SMT
+operator||
+name|PPC_FEATURE_ARCH_2_05
+operator||
+name|PPC_FEATURE_ARCH_2_06
+operator||
 name|PPC_FEATURE_HAS_VSX
+block|,
+name|PPC_FEATURE2_ARCH_2_07
+operator||
+name|PPC_FEATURE2_HAS_HTM
+operator||
+name|PPC_FEATURE2_HAS_VCRYPTO
 block|,
 name|NULL
 block|}
@@ -584,7 +661,19 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 operator||
+name|PPC_FEATURE_SMT
+operator||
+name|PPC_FEATURE_ARCH_2_05
+operator||
+name|PPC_FEATURE_ARCH_2_06
+operator||
 name|PPC_FEATURE_HAS_VSX
+block|,
+name|PPC_FEATURE2_ARCH_2_07
+operator||
+name|PPC_FEATURE2_HAS_HTM
+operator||
+name|PPC_FEATURE2_HAS_VCRYPTO
 block|,
 name|NULL
 block|}
@@ -600,6 +689,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -613,6 +704,8 @@ block|,
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -628,6 +721,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -641,6 +736,8 @@ block|,
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -656,6 +753,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -669,6 +768,8 @@ block|,
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -684,6 +785,8 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -695,6 +798,8 @@ block|,
 name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_6xx_setup
 block|}
@@ -708,6 +813,8 @@ name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_HAS_FPU
 block|,
+literal|0
+block|,
 name|cpu_6xx_setup
 block|}
 block|,
@@ -717,6 +824,8 @@ block|,
 name|FSL_E500v1
 block|,
 name|REVFMT_MAJMIN
+block|,
+name|PPC_FEATURE_BOOKE
 block|,
 literal|0
 block|,
@@ -730,6 +839,8 @@ name|FSL_E500v2
 block|,
 name|REVFMT_MAJMIN
 block|,
+name|PPC_FEATURE_BOOKE
+block|,
 literal|0
 block|,
 name|cpu_booke_setup
@@ -742,7 +853,11 @@ name|FSL_E500mc
 block|,
 name|REVFMT_MAJMIN
 block|,
+name|PPC_FEATURE_BOOKE
+operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_booke_setup
 block|}
@@ -754,9 +869,13 @@ name|FSL_E5500
 block|,
 name|REVFMT_MAJMIN
 block|,
+name|PPC_FEATURE_BOOKE
+operator||
 name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_booke_setup
 block|}
@@ -768,11 +887,15 @@ name|FSL_E6500
 block|,
 name|REVFMT_MAJMIN
 block|,
+name|PPC_FEATURE_BOOKE
+operator||
 name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+block|,
+literal|0
 block|,
 name|cpu_booke_setup
 block|}
@@ -789,6 +912,10 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_SMT
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -799,6 +926,8 @@ block|,
 literal|0
 block|,
 name|REVFMT_HEX
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -870,6 +999,14 @@ name|PPC_FEATURE_HAS_MMU
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|cpu_features2
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_OPAQUE
 argument_list|(
@@ -892,6 +1029,32 @@ argument_list|,
 literal|"IX"
 argument_list|,
 literal|"PowerPC CPU features"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_OPAQUE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cpu_features2
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cpu_features2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpu_features2
+argument_list|)
+argument_list|,
+literal|"IX"
+argument_list|,
+literal|"PowerPC CPU features 2"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1249,6 +1412,12 @@ name|cp
 operator|->
 name|features
 expr_stmt|;
+name|cpu_features2
+operator||=
+name|cp
+operator|->
+name|features2
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"cpu%d: Features %b\n"
@@ -1258,6 +1427,23 @@ argument_list|,
 name|cpu_features
 argument_list|,
 name|PPC_FEATURE_BITMASK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpu_features2
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"cpu%d: Features2 %b\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|cpu_features2
+argument_list|,
+name|PPC_FEATURE2_BITMASK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure CPU 	 */
@@ -2700,22 +2886,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|cpu_idle_wakeup
-parameter_list|(
-name|int
-name|cpu
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|cpu_idle_60x
@@ -2823,34 +2993,21 @@ name|sbintime_t
 name|sbt
 parameter_list|)
 block|{
-name|register_t
-name|msr
-decl_stmt|;
-name|msr
-operator|=
-name|mfmsr
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|E500
-comment|/* Freescale E500 core RM section 6.4.1. */
-asm|__asm __volatile("msync; mtmsr %0; isync" ::
-literal|"r"
-operator|(
-name|msr
-operator||
-name|PSL_WE
-operator|)
-block|)
-function|;
-end_function
-
-begin_endif
+name|platform_cpu_idle
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
-unit|}
 end_unit
 

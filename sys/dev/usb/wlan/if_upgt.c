@@ -1537,7 +1537,16 @@ argument_list|)
 decl_stmt|;
 name|uint8_t
 name|bands
-decl_stmt|,
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
+decl_stmt|;
+name|uint8_t
 name|iface_index
 init|=
 name|UPGT_IFACE_INDEX
@@ -1958,13 +1967,20 @@ operator||
 name|IEEE80211_C_WPA
 comment|/* 802.11i */
 expr_stmt|;
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -1972,7 +1988,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -1984,7 +1999,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;

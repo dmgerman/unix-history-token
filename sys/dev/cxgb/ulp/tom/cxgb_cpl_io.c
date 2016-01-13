@@ -7806,10 +7806,6 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-name|tp
-operator|->
-name|t_maxopd
-operator|=
 name|sc
 operator|->
 name|params
@@ -7858,12 +7854,6 @@ name|ts_recent_age
 operator|=
 name|tcp_ts_getticks
 argument_list|()
-expr_stmt|;
-name|tp
-operator|->
-name|t_maxseg
-operator|-=
-name|TCPOLEN_TSTAMP_APPA
 expr_stmt|;
 block|}
 if|if

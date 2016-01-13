@@ -908,6 +908,9 @@ name|fs
 operator|.
 name|fs_bsize
 operator|>=
+operator|(
+name|int32_t
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -927,11 +930,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Not ufs\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -1087,6 +1085,10 @@ expr|struct
 name|ufs1_dinode
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|blkbuf
 operator|+
 name|n
@@ -1107,6 +1109,10 @@ argument_list|,
 operator|(
 expr|struct
 name|ufs2_dinode
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|blkbuf
@@ -1459,6 +1465,9 @@ argument_list|(
 operator|&
 name|fs
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|size
 argument_list|,
 name|lbn

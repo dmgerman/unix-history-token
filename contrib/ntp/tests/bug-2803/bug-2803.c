@@ -77,9 +77,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//void test_main(void);
-end_comment
+begin_function_decl
+name|void
+name|test_main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static

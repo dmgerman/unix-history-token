@@ -4332,6 +4332,8 @@ operator|->
 name|so_snd
 argument_list|,
 name|m
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|m
@@ -10016,6 +10018,8 @@ operator|->
 name|so_rcv
 argument_list|,
 name|m0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|m0

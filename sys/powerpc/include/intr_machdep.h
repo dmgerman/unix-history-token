@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PICS
-value|5
+value|16
 end_define
 
 begin_define

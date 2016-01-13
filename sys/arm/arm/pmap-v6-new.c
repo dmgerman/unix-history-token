@@ -3649,7 +3649,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|do {		\ 	v = (c)pmap_preboot_reserve_pages(1);	\ 	p = pt2map_entry((vm_offset_t)v);	\ 	} while (0)
+value|do {		\ 	v = (c)pmap_preboot_reserve_pages(n);	\ 	p = pt2map_entry((vm_offset_t)v);	\ 	} while (0)
 comment|/* 	 * Local CMAP1/CMAP2 are used for zeroing and copying pages. 	 * Local CMAP3 is used for data cache cleaning. 	 * Global CMAP3 is used for the idle process page zeroing. 	 */
 for|for
 control|(

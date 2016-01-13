@@ -173,6 +173,12 @@ directive|include
 file|"ntpdc-opts.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"safecast.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -391,17 +397,18 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -417,10 +424,11 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2934,7 +2942,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 else|#
 directive|else
 if|if
@@ -2955,10 +2962,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 endif|#
 directive|endif
 comment|/* SYS_VXWORKS */
+block|{
 name|error
 argument_list|(
 literal|"connect"
@@ -2992,8 +2999,17 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* XXX ELIMINATE sendpkt similar in ntpq.c, ntpdc.c, ntp_io.c, ntptrace.c */
+end_comment
+
+begin_comment
 comment|/*  * sendpkt - send a packet to the remote host  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|sendpkt
@@ -3039,7 +3055,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * growpktdata - grow the packet data area  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|growpktdata
@@ -3076,7 +3098,13 @@ name|priorsz
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * getresponse - get a (series of) response packet(s) and return the data  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|getresponse
@@ -3087,20 +3115,21 @@ parameter_list|,
 name|int
 name|reqcode
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|ritems
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|rsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|rdata
 parameter_list|,
-name|int
+name|size_t
 name|esize
 parameter_list|)
 block|{
@@ -3112,16 +3141,16 @@ name|struct
 name|sock_timeval
 name|tvo
 decl_stmt|;
-name|int
+name|size_t
 name|items
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
-name|int
+name|size_t
 name|size
 decl_stmt|;
-name|int
+name|size_t
 name|datasize
 decl_stmt|;
 name|char
@@ -3158,7 +3187,7 @@ decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|;
-name|int
+name|size_t
 name|pad
 decl_stmt|;
 comment|/* 	 * This is pretty tricky.  We may get between 1 and many packets 	 * back in response to the request.  We peel the data out of 	 * each packet and collect it in one long block.  When the last 	 * packet in the sequence is received we'll know how many we 	 * should have had.  Note we use one long time out, should reconsider. 	 */
@@ -3237,17 +3266,9 @@ argument_list|,
 operator|&
 name|fds
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|tvo
@@ -3737,7 +3758,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Received items %d, size %d (total %d), data in packet is %zu\n"
+literal|"Received items %zu, size %zu (total %zu), data in packet is %zu\n"
 argument_list|,
 name|items
 argument_list|,
@@ -3772,7 +3793,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Received itemsize %d, previous %d\n"
+literal|"Received itemsize %zu, previous %zu\n"
 argument_list|,
 name|size
 argument_list|,
@@ -3879,7 +3900,7 @@ name|pktdatasize
 operator|)
 condition|)
 block|{
-name|int
+name|size_t
 name|offset
 init|=
 name|datap
@@ -3996,7 +4017,13 @@ return|return
 name|INFO_OKAY
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * sendrequest - format and send a request packet  *  * Historically, ntpdc has used a fixed-size request packet regardless  * of the actual payload size.  When authenticating, the timestamp, key  * ID, and digest have been placed just before the end of the packet.  * With the introduction in late 2009 of support for authenticated  * ntpdc requests using larger 20-octet digests (vs. 16 for MD5), we  * come up four bytes short.  *  * To maintain interop while allowing for larger digests, the behavior  * is unchanged when using 16-octet digests.  For larger digests, the  * timestamp, key ID, and digest are placed immediately following the  * request payload, with the overall packet size variable.  ntpd can  * distinguish 16-octet digests by the overall request size being  * REQ_LEN_NOMAC + 4 + 16 with the auth bit enabled.  When using a  * longer digest, that request size should be avoided.  *  * With the form used with 20-octet and larger digests, the timestamp,  * key ID, and digest are located by ntpd relative to the start of the  * packet, and the size of the digest is then implied by the packet  * size.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|sendrequest
@@ -4010,12 +4037,13 @@ parameter_list|,
 name|int
 name|auth
 parameter_list|,
-name|u_int
+name|size_t
 name|qitems
 parameter_list|,
 name|size_t
 name|qsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|qdata
@@ -4041,7 +4069,7 @@ name|l_fp
 modifier|*
 name|ptstamp
 decl_stmt|;
-name|int
+name|size_t
 name|maclen
 decl_stmt|;
 name|char
@@ -4400,7 +4428,10 @@ operator|)
 operator|&
 name|qpkt
 argument_list|,
+name|size2int_chk
+argument_list|(
 name|reqsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4442,7 +4473,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d octet MAC, %zu expected with %zu octet digest\n"
+literal|"%zu octet MAC, %zu expected with %zu octet digest\n"
 argument_list|,
 name|maclen
 argument_list|,
@@ -4474,7 +4505,13 @@ name|maclen
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * doquery - send a request and process the response  */
+end_comment
+
+begin_function
 name|int
 name|doquery
 parameter_list|(
@@ -4487,24 +4524,26 @@ parameter_list|,
 name|int
 name|auth
 parameter_list|,
-name|int
+name|size_t
 name|qitems
 parameter_list|,
-name|int
+name|size_t
 name|qsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|qdata
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|ritems
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|rsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -4595,17 +4634,9 @@ argument_list|,
 operator|&
 name|fds
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|tvzero
@@ -4933,7 +4964,13 @@ return|return
 name|res
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * getcmds - read commands from the standard input and execute them  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|getcmds
@@ -4993,11 +5030,23 @@ name|ntp_readline_uninit
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
+end_ifndef
+
+begin_comment
 comment|/* Under NT cannot handle SIGINT, WIN32 spawns a handler */
+end_comment
+
+begin_comment
 comment|/*  * abortcmd - catch interrupts and abort the current command  */
+end_comment
+
+begin_function
 specifier|static
 name|RETSIGTYPE
 name|abortcmd
@@ -5047,10 +5096,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* SYS_WINNT */
+end_comment
+
+begin_comment
 comment|/*  * docmd - decode the command line and execute a command  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|docmd
@@ -5629,7 +5690,13 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * tokenize - turn a command line into tokens  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|tokenize
@@ -5758,7 +5825,13 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * findcmd - find a command in a command description table  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|findcmd
@@ -5791,8 +5864,7 @@ name|xcmd
 modifier|*
 name|cl
 decl_stmt|;
-specifier|register
-name|int
+name|size_t
 name|clen
 decl_stmt|;
 name|int
@@ -5973,7 +6045,13 @@ return|return
 name|nmatch
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * getarg - interpret an argument token  *  * string is always set.  * type is set to the decoded type.  *  * return:	 0 - failure  *		 1 - success  *		-1 - skip to next token  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|getarg
@@ -6194,11 +6272,14 @@ name|argp
 operator|->
 name|uval
 operator|+=
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|cp
 operator|-
 name|digits
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 do|while
@@ -6314,7 +6395,13 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * getnetnum - given a host name, return its net number  *	       and (optional) full name  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|getnetnum
@@ -6524,7 +6611,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * nntohost - convert network number to host name.  This routine enforces  *	       the showhostnames setting.  */
+end_comment
+
+begin_function
 specifier|const
 name|char
 modifier|*
@@ -6573,8 +6666,17 @@ name|netnum
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Finally, the built in command handlers  */
+end_comment
+
+begin_comment
 comment|/*  * help - tell about commands, or details of a particular command  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|help
@@ -6930,7 +7032,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * helpsort - do hostname qsort comparisons  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|helpsort
@@ -6975,7 +7083,13 @@ name|name2
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * printusage - print usage information for a command  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|printusage
@@ -7130,7 +7244,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * timeout - set time out time  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|timeout
@@ -7228,7 +7348,13 @@ literal|1000
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * my_delay - set delay for auth requests  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|my_delay
@@ -7377,7 +7503,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * host - set the host we are dealing with.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|host
@@ -7584,7 +7716,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * keyid - get a keyid to use for authenticating requests  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|keyid
@@ -7682,7 +7820,13 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * keytype - get type of key to use for authenticating requests  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|keytype
@@ -7787,18 +7931,24 @@ endif|#
 directive|endif
 return|return;
 block|}
+end_function
+
+begin_expr_stmt
 name|info_auth_keytype
 operator|=
 name|key_type
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|info_auth_hashlen
 operator|=
 name|digest_len
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * passwd - get an authentication key  */
 end_comment
 
@@ -7807,7 +7957,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|void
 name|passwd
 parameter_list|(

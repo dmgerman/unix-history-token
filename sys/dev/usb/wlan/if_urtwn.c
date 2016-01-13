@@ -3095,6 +3095,14 @@ name|sc_ic
 decl_stmt|;
 name|uint8_t
 name|bands
+index|[
+name|howmany
+argument_list|(
+name|IEEE80211_MODE_MAX
+argument_list|,
+literal|8
+argument_list|)
+index|]
 decl_stmt|;
 name|int
 name|error
@@ -3507,13 +3515,20 @@ name|IEEE80211_CRYPTO_TKIP
 operator||
 name|IEEE80211_CRYPTO_AES_CCM
 expr_stmt|;
+name|memset
+argument_list|(
 name|bands
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bands
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11B
@@ -3521,7 +3536,6 @@ argument_list|)
 expr_stmt|;
 name|setbit
 argument_list|(
-operator|&
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
@@ -3533,7 +3547,6 @@ name|ic
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
 name|bands
 argument_list|)
 expr_stmt|;
@@ -12644,7 +12657,7 @@ argument_list|,
 name|R92C_TXPAUSE
 argument_list|)
 operator||
-literal|0x0f
+name|R92C_TX_QUEUE_AC
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24341,7 +24354,7 @@ name|sc
 argument_list|,
 name|R92C_TXPAUSE
 argument_list|,
-literal|0xff
+name|R92C_TX_QUEUE_ALL
 argument_list|)
 expr_stmt|;
 block|}
@@ -25377,7 +25390,7 @@ name|sc
 argument_list|,
 name|R92C_HWSEQ_CTRL
 argument_list|,
-literal|0xff
+name|R92C_TX_QUEUE_ALL
 argument_list|)
 expr_stmt|;
 comment|/* Enable per-packet TX report. */

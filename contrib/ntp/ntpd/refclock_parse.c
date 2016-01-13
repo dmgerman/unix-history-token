@@ -6151,7 +6151,7 @@ name|char
 modifier|*
 name|buffer
 parameter_list|,
-name|long
+name|size_t
 name|blen
 parameter_list|,
 specifier|const
@@ -6159,7 +6159,7 @@ name|char
 modifier|*
 name|src
 parameter_list|,
-name|u_long
+name|size_t
 name|srclen
 parameter_list|,
 name|int

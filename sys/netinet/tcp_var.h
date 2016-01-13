@@ -604,10 +604,6 @@ name|snd_recover
 decl_stmt|;
 comment|/* for use in NewReno Fast Recovery */
 name|u_int
-name|t_maxopd
-decl_stmt|;
-comment|/* mss plus options */
-name|u_int
 name|t_rcvtime
 decl_stmt|;
 comment|/* inactivity time */
@@ -639,6 +635,10 @@ name|u_int
 name|t_maxseg
 decl_stmt|;
 comment|/* maximum segment size */
+name|u_int
+name|t_pmtud_saved_maxseg
+decl_stmt|;
+comment|/* pre-blackhole MSS */
 name|int
 name|t_srtt
 decl_stmt|;
@@ -853,10 +853,6 @@ name|u_int
 name|t_tsomaxsegsize
 decl_stmt|;
 comment|/* TSO maximum segment size in bytes */
-name|u_int
-name|t_pmtud_saved_maxopd
-decl_stmt|;
-comment|/* pre-blackhole MSS */
 name|u_int
 name|t_flags2
 decl_stmt|;
@@ -3719,6 +3715,18 @@ modifier|*
 parameter_list|,
 name|struct
 name|tcp_ifcap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|tcp_maxseg
+parameter_list|(
+specifier|const
+name|struct
+name|tcpcb
 modifier|*
 parameter_list|)
 function_decl|;

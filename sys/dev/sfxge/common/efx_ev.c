@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -47,11 +29,22 @@ directive|include
 file|"efx_impl.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_MON_MCDI
+end_if
+
 begin_include
 include|#
 directive|include
 file|"mcdi_mon.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -427,39 +420,41 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_ev_ops_t
-name|__efx_ev_hunt_ops
+name|__efx_ev_ef10_ops
 init|=
 block|{
-name|hunt_ev_init
+name|ef10_ev_init
 block|,
 comment|/* eevo_init */
-name|hunt_ev_fini
+name|ef10_ev_fini
 block|,
 comment|/* eevo_fini */
-name|hunt_ev_qcreate
+name|ef10_ev_qcreate
 block|,
 comment|/* eevo_qcreate */
-name|hunt_ev_qdestroy
+name|ef10_ev_qdestroy
 block|,
 comment|/* eevo_qdestroy */
-name|hunt_ev_qprime
+name|ef10_ev_qprime
 block|,
 comment|/* eevo_qprime */
-name|hunt_ev_qpost
+name|ef10_ev_qpost
 block|,
 comment|/* eevo_qpost */
-name|hunt_ev_qmoderate
+name|ef10_ev_qmoderate
 block|,
 comment|/* eevo_qmoderate */
 if|#
 directive|if
 name|EFSYS_OPT_QSTATS
-name|hunt_ev_qstats_update
+name|ef10_ev_qstats_update
 block|,
 comment|/* eevo_qstats_update */
 endif|#
@@ -474,7 +469,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -592,12 +587,31 @@ name|efx_ev_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_ev_hunt_ops
+name|__efx_ev_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|eevop
+operator|=
+operator|(
+name|efx_ev_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_ev_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -1900,11 +1914,7 @@ name|EFX_DISCARD
 expr_stmt|;
 if|#
 directive|if
-operator|(
-name|EFSYS_OPT_RX_HDR_SPLIT
-operator|||
 name|EFSYS_OPT_RX_SCATTER
-operator|)
 comment|/* 		 * Lookout for payload queue ran dry errors and ignore them. 		 * 		 * Sadly for the header/data split cases, the descriptor 		 * pointer in this event refers to the header queue and 		 * therefore cannot be easily detected as duplicate. 		 * So we drop these and rely on the receive processing seeing 		 * a subsequent packet with FSF_AZ_RX_EV_SOP set to discard 		 * the partially received packet. 		 */
 if|if
 condition|(
@@ -1950,7 +1960,7 @@ name|B_TRUE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_HDR_SPLIT || EFSYS_OPT_RX_SCATTER */
+comment|/* EFSYS_OPT_RX_SCATTER */
 block|}
 if|if
 condition|(
@@ -2229,11 +2239,7 @@ name|ok
 decl_stmt|;
 if|#
 directive|if
-operator|(
-name|EFSYS_OPT_RX_HDR_SPLIT
-operator|||
 name|EFSYS_OPT_RX_SCATTER
-operator|)
 name|boolean_t
 name|sop
 decl_stmt|;
@@ -2242,7 +2248,7 @@ name|jumbo_cont
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_HDR_SPLIT || EFSYS_OPT_RX_SCATTER */
+comment|/* EFSYS_OPT_RX_SCATTER */
 name|uint32_t
 name|hdr_type
 decl_stmt|;
@@ -2312,11 +2318,7 @@ operator|)
 expr_stmt|;
 if|#
 directive|if
-operator|(
-name|EFSYS_OPT_RX_HDR_SPLIT
-operator|||
 name|EFSYS_OPT_RX_SCATTER
-operator|)
 name|sop
 operator|=
 operator|(
@@ -2347,7 +2349,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_HDR_SPLIT || EFSYS_OPT_RX_SCATTER */
+comment|/* EFSYS_OPT_RX_SCATTER */
 name|hdr_type
 operator|=
 name|EFX_QWORD_FIELD
@@ -2537,8 +2539,6 @@ block|}
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCATTER
-operator|||
-name|EFSYS_OPT_RX_HDR_SPLIT
 comment|/* Report scatter and header/lookahead split buffer flags */
 if|if
 condition|(
@@ -2558,7 +2558,7 @@ name|EFX_PKT_CONT
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_SCATTER || EFSYS_OPT_RX_HDR_SPLIT */
+comment|/* EFSYS_OPT_RX_SCATTER */
 comment|/* Detect errors included in the FSF_AZ_RX_EV_PKT_OK indication */
 if|if
 condition|(

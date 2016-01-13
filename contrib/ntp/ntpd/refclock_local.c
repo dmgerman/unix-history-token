@@ -553,6 +553,12 @@ directive|else
 comment|/* KERNEL_PLL LOCKCLOCK */
 name|pp
 operator|->
+name|leap
+operator|=
+name|LEAP_NOWARNING
+expr_stmt|;
+name|pp
+operator|->
 name|disp
 operator|=
 name|DISPERSION

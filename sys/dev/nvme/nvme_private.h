@@ -775,8 +775,8 @@ decl_stmt|;
 name|uint32_t
 name|num_io_queues
 decl_stmt|;
-name|boolean_t
-name|per_cpu_io_queues
+name|uint32_t
+name|num_cpus_per_ioq
 decl_stmt|;
 comment|/* Fields for tracking progress during controller initialization. */
 name|struct
@@ -801,16 +801,6 @@ name|struct
 name|taskqueue
 modifier|*
 name|taskqueue
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|msi_res
-index|[
-name|MAXCPU
-operator|+
-literal|1
-index|]
 decl_stmt|;
 comment|/* For shared legacy interrupt. */
 name|int

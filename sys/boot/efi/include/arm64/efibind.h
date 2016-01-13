@@ -58,11 +58,11 @@ begin_comment
 comment|// No ANSI C 1999/2000 stdint.h integer width declarations
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_MSC_EXTENSIONS
-end_if
+end_ifdef
 
 begin_comment
 comment|// Use Microsoft C compiler integer width declarations
@@ -514,15 +514,6 @@ name|MAX_ADDRESS
 value|0xFFFFFFFFFFFFFFFF
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|intrinsic
-name|(
-name|__break
-name|)
-end_pragma
-
 begin_define
 define|#
 directive|define
@@ -669,11 +660,11 @@ begin_comment
 comment|// Forces EFI calling conventions reguardless of compiler options
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_MSC_EXTENSIONS
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -782,15 +773,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_pragma
-pragma|#
-directive|pragma
-name|intrinsic
-name|(
-name|__mfa
-name|)
-end_pragma
 
 begin_define
 define|#

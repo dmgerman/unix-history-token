@@ -1054,11 +1054,6 @@ name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
-name|struct
-name|rtentry
-modifier|*
-name|rt
-decl_stmt|;
 name|uint32_t
 name|lleflags
 init|=
@@ -1387,32 +1382,18 @@ operator|==
 name|EHOSTDOWN
 condition|)
 block|{
-name|rt
-operator|=
-operator|(
-name|ro
-operator|!=
-name|NULL
-operator|)
-condition|?
-name|ro
-operator|->
-name|ro_rt
-else|:
-name|NULL
-expr_stmt|;
 if|if
 condition|(
-name|rt
+name|ro
 operator|!=
 name|NULL
 operator|&&
 operator|(
-name|rt
+name|ro
 operator|->
-name|rt_flags
+name|ro_flags
 operator|&
-name|RTF_GATEWAY
+name|RT_HAS_GW
 operator|)
 operator|!=
 literal|0
@@ -1717,7 +1698,7 @@ name|pflags
 operator|&
 name|RT_MAY_LOOP
 expr_stmt|;
-comment|/* 	 * Add local net header.  If no space in first mbuf, 	 * allocate another. 	 */
+comment|/* 	 * Add local net header.  If no space in first mbuf, 	 * allocate another. 	 * 	 * Note that we do prepend regardless of RT_HAS_HEADER flag. 	 * This is done because BPF code shifts m_data pointer 	 * to the end of ethernet header prior to calling if_output(). 	 */
 name|M_PREPEND
 argument_list|(
 name|m

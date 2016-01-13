@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_comment
@@ -389,6 +389,10 @@ block|{
 name|int
 name|len
 init|=
+call|(
+name|int
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|shell
@@ -400,6 +404,7 @@ name|esccmd
 argument_list|)
 operator|+
 literal|5
+argument_list|)
 decl_stmt|;
 name|p
 operator|=

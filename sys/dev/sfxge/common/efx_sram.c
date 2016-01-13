@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -124,6 +106,8 @@ expr_stmt|;
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 if|if
 condition|(
 name|enp
@@ -131,9 +115,15 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 condition|)
 block|{
-comment|/* 		 * FIXME: the efx_sram_buf_tbl_*() functionality needs to be 		 * pulled inside the Falcon/Siena queue create/destroy code, 		 * and then the original functions can be removed (see bug30834 		 * comment #1).  But, for now, we just ensure that they are 		 * no-ops for Huntington, to allow bringing up existing drivers 		 * without modification. 		 */
+comment|/* 		 * FIXME: the efx_sram_buf_tbl_*() functionality needs to be 		 * pulled inside the Falcon/Siena queue create/destroy code, 		 * and then the original functions can be removed (see bug30834 		 * comment #1).  But, for now, we just ensure that they are 		 * no-ops for EF10, to allow bringing up existing drivers 		 * without modification. 		 */
 return|return
 operator|(
 literal|0
@@ -142,7 +132,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 if|if
 condition|(
 name|stop
@@ -608,6 +598,8 @@ expr_stmt|;
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 if|if
 condition|(
 name|enp
@@ -615,14 +607,20 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 condition|)
 block|{
-comment|/* 		 * FIXME: the efx_sram_buf_tbl_*() functionality needs to be 		 * pulled inside the Falcon/Siena queue create/destroy code, 		 * and then the original functions can be removed (see bug30834 		 * comment #1).  But, for now, we just ensure that they are 		 * no-ops for Huntington, to allow bringing up existing drivers 		 * without modification. 		 */
+comment|/* 		 * FIXME: the efx_sram_buf_tbl_*() functionality needs to be 		 * pulled inside the Falcon/Siena queue create/destroy code, 		 * and then the original functions can be removed (see bug30834 		 * comment #1).  But, for now, we just ensure that they are 		 * no-ops for EF10, to allow bringing up existing drivers 		 * without modification. 		 */
 return|return;
 block|}
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 name|EFSYS_ASSERT3U
 argument_list|(
 name|stop

@@ -585,6 +585,11 @@ index|]
 init|=
 literal|""
 decl_stmt|;
+operator|*
+name|ss
+operator|=
+literal|'\0'
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buffer
@@ -862,19 +867,41 @@ return|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"expected: %s but was %s"
-argument_list|,
+name|char
+modifier|*
+name|p_exp
+init|=
 name|CalendarToString
 argument_list|(
 name|expected
 argument_list|)
-argument_list|,
+decl_stmt|;
+name|char
+modifier|*
+name|p_act
+init|=
 name|CalendarToString
 argument_list|(
 name|actual
 argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"expected: %s but was %s"
+argument_list|,
+name|p_exp
+argument_list|,
+name|p_act
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p_exp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p_act
 argument_list|)
 expr_stmt|;
 return|return
@@ -918,6 +945,7 @@ expr_stmt|;
 name|leapsec_ut_pristine
 argument_list|()
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -933,6 +961,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -984,6 +1013,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1023,6 +1053,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1062,6 +1093,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1101,6 +1133,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1140,6 +1173,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1179,6 +1213,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1380,6 +1415,7 @@ argument_list|,
 name|pt3
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1477,6 +1513,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1631,6 +1668,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1704,6 +1742,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1795,6 +1834,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1886,6 +1926,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1975,6 +2016,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2064,6 +2106,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2151,6 +2194,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2234,6 +2278,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2333,6 +2378,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2555,6 +2601,7 @@ name|rc
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2668,6 +2715,7 @@ name|rc
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2752,15 +2800,6 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-name|leap_table_t
-modifier|*
-name|pt
-init|=
-name|leapsec_get_table
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
@@ -2835,7 +2874,9 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+comment|//leap_table_t  * pt = leapsec_get_table(0);
 comment|//leapsec_dump(pt, (leapsec_dumper)fprintf, stdout);
+return|return;
 block|}
 end_function
 
@@ -2898,7 +2939,7 @@ comment|// sentinel
 end_comment
 
 begin_comment
-unit|};  	rc = setup_load_table(leap2, FALSE); 	TEST_ASSERT_EQUAL(1, rc); 	int idx; 	leap_table_t * pt = leapsec_get_table(0);
+unit|};  	rc = setup_load_table(leap2, FALSE); 	TEST_ASSERT_EQUAL(1, rc);  	int idx;
 comment|// try to get in BAD time stamps...
 end_comment
 
@@ -2914,11 +2955,15 @@ end_comment
 
 begin_comment
 unit|rc = leapsec_add_fix( 	    insns[0].of, 	    insns[0].tt, 	    insns[0].tt + SECSPERDAY, 	    NULL); 	TEST_ASSERT_EQUAL(FALSE, rc);
+comment|//leap_table_t * pt = leapsec_get_table(0);
+end_comment
+
+begin_comment
 comment|//leapsec_dump(pt, (leapsec_dumper)fprintf, stdout);
 end_comment
 
 begin_endif
-unit|}
+unit|return; }
 endif|#
 directive|endif
 end_endif
@@ -2957,7 +3002,7 @@ comment|// sentinel
 end_comment
 
 begin_comment
-unit|};  	rc = setup_load_table(leap2, FALSE); 	TEST_ASSERT_EQUAL(1, rc);  	leap_table_t * pt = leapsec_get_table(FALSE); 	for (last=idx=0; insns[idx].tt; ++idx) { 		last = idx; 		rc = leapsec_add_fix( 		    insns[idx].of, 		    insns[idx].tt, 		    insns[idx].tt + SECSPERDAY, 		    NULL); 		TEST_ASSERT_EQUAL(TRUE, rc); 	}
+unit|};  	rc = setup_load_table(leap2, FALSE); 	TEST_ASSERT_EQUAL(1, rc);  	for (last=idx=0; insns[idx].tt; ++idx) { 		last = idx; 		rc = leapsec_add_fix( 		    insns[idx].of, 		    insns[idx].tt, 		    insns[idx].tt + SECSPERDAY, 		    NULL); 		TEST_ASSERT_EQUAL(TRUE, rc); 	}
 comment|// try to extend the expiration of the last entry
 end_comment
 
@@ -2968,11 +3013,15 @@ end_comment
 
 begin_comment
 unit|rc = leapsec_add_fix( 	    insns[last].of+1, 	    insns[last].tt, 	    insns[last].tt + 129*SECSPERDAY, 	    NULL); 	TEST_ASSERT_EQUAL(FALSE, rc);
+comment|//leap_table_t * pt = leapsec_get_table(FALSE);
+end_comment
+
+begin_comment
 comment|//leapsec_dump(pt, (leapsec_dumper)fprintf, stdout);
 end_comment
 
 begin_endif
-unit|}
+unit|return; }
 endif|#
 directive|endif
 end_endif
@@ -3019,12 +3068,16 @@ comment|// sentinel
 end_comment
 
 begin_comment
-unit|};  	leap_table_t * pt = leapsec_get_table(0); 	for (last=idx=0; insns[idx].tt; ++idx) { 		last = idx; 		rc = leapsec_add_fix( 		    insns[idx].of, 		    insns[idx].tt, 		    insns[idx].tt + 128*SECSPERDAY, 		    NULL); 		TEST_ASSERT_EQUAL(TRUE, rc); 	} 	 	rc = leapsec_query(&qr, insns[0].tt - 86400, NULL); 	TEST_ASSERT_EQUAL(28, qr.tai_offs);  	rc = leapsec_query(&qr, insns[0].tt + 86400, NULL); 	TEST_ASSERT_EQUAL(29, qr.tai_offs);  	rc = leapsec_query(&qr, insns[1].tt - 86400, NULL); 	TEST_ASSERT_EQUAL(29, qr.tai_offs);  	rc = leapsec_query(&qr, insns[1].tt + 86400, NULL); 	TEST_ASSERT_EQUAL(30, qr.tai_offs);
+unit|};  	for (last=idx=0; insns[idx].tt; ++idx) { 		last = idx; 		rc = leapsec_add_fix( 		    insns[idx].of, 		    insns[idx].tt, 		    insns[idx].tt + 128*SECSPERDAY, 		    NULL); 		TEST_ASSERT_EQUAL(TRUE, rc); 	}  	rc = leapsec_query(&qr, insns[0].tt - 86400, NULL); 	TEST_ASSERT_EQUAL(28, qr.tai_offs);  	rc = leapsec_query(&qr, insns[0].tt + 86400, NULL); 	TEST_ASSERT_EQUAL(29, qr.tai_offs);  	rc = leapsec_query(&qr, insns[1].tt - 86400, NULL); 	TEST_ASSERT_EQUAL(29, qr.tai_offs);  	rc = leapsec_query(&qr, insns[1].tt + 86400, NULL); 	TEST_ASSERT_EQUAL(30, qr.tai_offs);
+comment|//leap_table_t * pt = leapsec_get_table(0);
+end_comment
+
+begin_comment
 comment|//leapsec_dump(pt, (leapsec_dumper)fprintf, stdout);
 end_comment
 
 begin_endif
-unit|}
+unit|return; }
 endif|#
 directive|endif
 end_endif
@@ -3162,6 +3215,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -3336,6 +3390,7 @@ operator|.
 name|taiof
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -3419,6 +3474,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -3722,6 +3778,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4048,6 +4105,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4339,6 +4397,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4627,6 +4686,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4918,6 +4978,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -5246,6 +5307,7 @@ operator|.
 name|proximity
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -5363,6 +5425,7 @@ name|proximity
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -5484,6 +5547,7 @@ name|proximity
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 

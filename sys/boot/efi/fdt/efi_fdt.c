@@ -74,9 +74,6 @@ name|fdt_header
 modifier|*
 name|hdr
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|hdr
 operator|=
 name|efi_get_table
@@ -118,7 +115,7 @@ block|}
 block|}
 return|return
 operator|(
-name|err
+literal|1
 operator|)
 return|;
 block|}

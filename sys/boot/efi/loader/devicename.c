@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bootstrap.h"
+file|<bootstrap.h>
 end_include
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<efilib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loader_efi.h"
 end_include
 
 begin_function_decl

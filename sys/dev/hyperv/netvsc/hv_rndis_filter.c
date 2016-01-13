@@ -3745,5 +3745,44 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * RNDIS filter when "all" reception is done  */
+end_comment
+
+begin_function
+name|void
+name|hv_rf_receive_rollup
+parameter_list|(
+name|netvsc_dev
+modifier|*
+name|net_dev
+parameter_list|)
+block|{
+name|rndis_device
+modifier|*
+name|rndis_dev
+decl_stmt|;
+name|rndis_dev
+operator|=
+operator|(
+name|rndis_device
+operator|*
+operator|)
+name|net_dev
+operator|->
+name|extension
+expr_stmt|;
+name|netvsc_recv_rollup
+argument_list|(
+name|rndis_dev
+operator|->
+name|net_dev
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

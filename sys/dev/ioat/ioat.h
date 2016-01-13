@@ -167,6 +167,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|size_t
+name|ioat_get_max_io_size
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Set interrupt coalescing on a DMA channel.  *  * The argument is in microseconds.  A zero value disables coalescing.  Any  * other value delays interrupt generation for N microseconds to provide  * opportunity to coalesce multiple operations into a single interrupt.  *  * Returns an error status, or zero on success.  *  * - ERANGE if the given value exceeds the delay supported by the hardware.  *   (All current hardware supports a maximum of 0x3fff microseconds delay.)  * - ENODEV if the hardware does not support interrupt coalescing.  */
 end_comment
@@ -199,7 +209,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Acquire must be called before issuing an operation to perform. Release is  * called after. Multiple operations can be issued within the context of one  * acquire and release  */
+comment|/*  * Acquire must be called before issuing an operation to perform. Release is  * called after.  Multiple operations can be issued within the context of one  * acquire and release  */
 end_comment
 
 begin_function_decl
@@ -218,6 +228,26 @@ name|ioat_release
 parameter_list|(
 name|bus_dmaengine_t
 name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Acquire_reserve can be called to ensure there is room for N descriptors.  If  * it succeeds, the next N valid operations will successfully enqueue.  *  * It may fail with:  *   - ENXIO if the channel is in an errored state, or the driver is being  *     unloaded  *   - EAGAIN if mflags included M_NOWAIT  *  * On failure, the caller does not hold the dmaengine.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ioat_acquire_reserve
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|,
+name|unsigned
+name|n
+parameter_list|,
+name|int
+name|mflags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1750,7 +1750,7 @@ name|smbnode
 modifier|*
 name|np
 parameter_list|,
-name|int
+name|int64_t
 name|newsize
 parameter_list|,
 name|struct
@@ -1790,9 +1790,6 @@ name|smbfs_smb_seteof
 argument_list|(
 name|np
 argument_list|,
-operator|(
-name|int64_t
-operator|)
 name|newsize
 argument_list|,
 name|scred
@@ -1811,6 +1808,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* XXX: We should use SMB_COM_WRITE_ANDX to support large offsets */
 name|error
 operator|=
 name|smb_rq_alloc
@@ -1878,6 +1876,9 @@ name|mb_put_uint32le
 argument_list|(
 name|mbp
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|newsize
 argument_list|)
 expr_stmt|;

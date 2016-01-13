@@ -207,19 +207,6 @@ name|rtasmsr
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|setfault
-parameter_list|(
-name|faultbuf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* defined in locore.S */
-end_comment
-
 begin_comment
 comment|/*  * After the VM is up, allocate RTAS memory and instantiate it  */
 end_comment
@@ -769,7 +756,7 @@ block|{
 name|vm_offset_t
 name|argsptr
 decl_stmt|;
-name|faultbuf
+name|jmp_buf
 name|env
 decl_stmt|,
 modifier|*
@@ -906,10 +893,19 @@ name|td_pcb
 operator|->
 name|pcb_onfault
 expr_stmt|;
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+operator|=
+operator|&
+name|env
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|setfault
+name|setjmp
 argument_list|(
 name|env
 argument_list|)

@@ -2181,11 +2181,9 @@ name|nconf
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|xprt
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 if|if
 condition|(
 operator|(

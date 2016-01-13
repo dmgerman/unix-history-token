@@ -65,6 +65,12 @@ directive|include
 file|<machine/metadata.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"framebuffer.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|EFI_GUID
@@ -812,10 +818,10 @@ name|printf
 argument_list|(
 literal|" -- error %lu\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -1297,8 +1303,6 @@ name|offset
 decl_stmt|;
 name|uint64_t
 name|fbaddr
-decl_stmt|,
-name|fbsize
 decl_stmt|;
 name|uint32_t
 name|horiz
@@ -2227,10 +2231,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2346,10 +2350,10 @@ index|]
 argument_list|,
 name|mode
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2637,10 +2641,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

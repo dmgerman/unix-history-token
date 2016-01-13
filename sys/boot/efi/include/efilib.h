@@ -183,5 +183,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|delay
+parameter_list|(
+name|int
+name|usecs
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

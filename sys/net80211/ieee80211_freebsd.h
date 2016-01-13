@@ -1033,6 +1033,10 @@ define|\
 value|(((_ifp)->if_flags& IFF_UP)&& \ 	 ((_ifp)->if_drv_flags& IFF_DRV_RUNNING))
 end_define
 
+begin_comment
+comment|/* XXX TODO: cap these at 1, as hz may not be 1000 */
+end_comment
+
 begin_define
 define|#
 directive|define

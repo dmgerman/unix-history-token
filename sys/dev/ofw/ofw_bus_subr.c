@@ -1674,10 +1674,10 @@ name|parent
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_EPAPR
-comment|/* 		 * Find if we need to read the parent address data. Sparc64 		 * uses a different encoding that doesn't include this data. 		 */
+ifndef|#
+directive|ifndef
+name|OFW_IMAP_NO_IPARENT_ADDR_CELLS
+comment|/* 		 * Find if we need to read the parent address data. 		 * CHRP-derived OF bindings, including ePAPR-compliant FDTs, 		 * use this as an optional part of the specifier. 		 */
 if|if
 condition|(
 name|OF_getencprop

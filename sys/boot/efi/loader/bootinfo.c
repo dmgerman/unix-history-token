@@ -147,6 +147,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|bi_load
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|modulep
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|kernendp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|EFI_SYSTEM_TABLE
@@ -464,6 +483,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|archsw
 operator|.
 name|arch_copyin
@@ -523,6 +545,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|archsw
 operator|.
 name|arch_copyin
@@ -1185,15 +1210,9 @@ literal|"%s: AllocatePages error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-call|(
-name|unsigned
-name|long
-call|)
+name|EFI_ERROR_CODE
 argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1274,15 +1293,9 @@ literal|"%s: GetMemoryMap error %lu\n"
 argument_list|,
 name|__func__
 argument_list|,
-call|(
-name|unsigned
-name|long
-call|)
+name|EFI_ERROR_CODE
 argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1364,15 +1377,9 @@ name|printf
 argument_list|(
 literal|"ExitBootServices error %lu\n"
 argument_list|,
-call|(
-name|unsigned
-name|long
-call|)
+name|EFI_ERROR_CODE
 argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1465,7 +1472,7 @@ argument_list|)
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 comment|/* 	 * These metadata addreses must be converted for kernel after 	 * relocation. 	 */

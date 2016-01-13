@@ -1396,12 +1396,10 @@ name|iwm_node
 modifier|*
 name|in
 init|=
-operator|(
-expr|struct
-name|iwm_node
-operator|*
-operator|)
+name|IWM_NODE
+argument_list|(
 name|ni
+argument_list|)
 decl_stmt|;
 name|struct
 name|iwm_mac_ctx_cmd

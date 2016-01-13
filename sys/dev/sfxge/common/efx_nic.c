@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -96,6 +78,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA
@@ -131,6 +114,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* EFSYS_OPT_SIENA */
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
@@ -182,6 +166,53 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_PCI_DEVID_MEDFORD_PF_UNINIT
+case|:
+comment|/* 			 * Hardware default for PF0 of uninitialised Medford. 			 * manftest must be able to cope with this device id. 			 */
+operator|*
+name|efp
+operator|=
+name|EFX_FAMILY_MEDFORD
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|EFX_PCI_DEVID_MEDFORD
+case|:
+operator|*
+name|efp
+operator|=
+name|EFX_FAMILY_MEDFORD
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|EFX_PCI_DEVID_MEDFORD_VF
+case|:
+operator|*
+name|efp
+operator|=
+name|EFX_FAMILY_MEDFORD
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 break|break;
 block|}
@@ -253,14 +284,41 @@ argument_list|,
 name|FRF_CZ_CS_PORT_NUM
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
+operator|(
 name|portnum
+operator|==
+literal|1
+operator|)
+operator|||
+operator|(
+name|portnum
+operator|==
+literal|2
+operator|)
 condition|)
 block|{
-case|case
+if|#
+directive|if
+name|EFSYS_OPT_SIENA
+name|family
+operator|=
+name|EFX_FAMILY_SIENA
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+endif|#
+directive|endif
+block|}
+elseif|else
+if|if
+condition|(
+name|portnum
+operator|==
 literal|0
-case|:
+condition|)
 block|{
 name|efx_dword_t
 name|dword
@@ -299,11 +357,16 @@ block|{
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
+comment|/* 			 * BIU_HW_REV_ID is the same for Huntington and Medford. 			 * Assume Huntington, as Medford is very similar. 			 */
 name|family
 operator|=
 name|EFX_FAMILY_HUNTINGTON
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 block|}
@@ -316,9 +379,12 @@ name|family
 operator|=
 name|EFX_FAMILY_FALCON
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
+block|}
 block|}
 name|rc
 operator|=
@@ -327,32 +393,8 @@ expr_stmt|;
 goto|goto
 name|fail1
 goto|;
-block|}
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
-name|family
-operator|=
-name|EFX_FAMILY_SIENA
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-default|default:
-name|rc
-operator|=
-name|ENOTSUP
-expr_stmt|;
-goto|goto
-name|fail1
-goto|;
-block|}
+name|out
+label|:
 if|if
 condition|(
 name|efp
@@ -828,40 +870,40 @@ name|efx_nic_ops_t
 name|__efx_nic_hunt_ops
 init|=
 block|{
-name|hunt_nic_probe
+name|ef10_nic_probe
 block|,
 comment|/* eno_probe */
-name|hunt_nic_set_drv_limits
+name|ef10_nic_set_drv_limits
 block|,
 comment|/* eno_set_drv_limits */
-name|hunt_nic_reset
+name|ef10_nic_reset
 block|,
 comment|/* eno_reset */
-name|hunt_nic_init
+name|ef10_nic_init
 block|,
 comment|/* eno_init */
-name|hunt_nic_get_vi_pool
+name|ef10_nic_get_vi_pool
 block|,
 comment|/* eno_get_vi_pool */
-name|hunt_nic_get_bar_region
+name|ef10_nic_get_bar_region
 block|,
 comment|/* eno_get_bar_region */
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|hunt_sram_test
+name|ef10_sram_test
 block|,
 comment|/* eno_sram_test */
-name|hunt_nic_register_test
+name|ef10_nic_register_test
 block|,
 comment|/* eno_register_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|hunt_nic_fini
+name|ef10_nic_fini
 block|,
 comment|/* eno_fini */
-name|hunt_nic_unprobe
+name|ef10_nic_unprobe
 block|,
 comment|/* eno_unprobe */
 block|}

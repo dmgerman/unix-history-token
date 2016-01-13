@@ -1256,7 +1256,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* sendfile(2)'s sf_bufs */
+comment|/* sendfile(2)'s sf_buf */
 end_comment
 
 begin_define
@@ -1312,6 +1312,17 @@ end_define
 
 begin_comment
 comment|/* external mbuf reference (M_IOVEC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_SFBUF_NOCACHE
+value|8
+end_define
+
+begin_comment
+comment|/* sendfile(2)'s sf_buf not to be cached */
 end_comment
 
 begin_define
@@ -1603,6 +1614,19 @@ end_function_decl
 begin_function_decl
 name|void
 name|sf_ext_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sf_ext_free_nocache
 parameter_list|(
 name|void
 modifier|*

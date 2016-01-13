@@ -81,14 +81,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"CHECK_REG requires FALCON or SIENA or HUNTINGTON"
+literal|"CHECK_REG requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -125,23 +128,6 @@ operator|||
 name|EFSYS_OPT_SIENA
 operator|)
 end_if
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_HUNTINGTON
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"INTR_FATAL not supported on HUNTINGTON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_error
 error|#
@@ -182,14 +168,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"DIAG requires FALCON or SIENA or HUNTINGTON"
+literal|"DIAG requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -225,14 +214,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"EV_PREFETCH requires FALCON or SIENA or HUNTINGTON"
+literal|"EV_PREFETCH requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -305,14 +297,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"FILTER requires FALCON or SIENA or HUNTINGTON"
+literal|"FILTER requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -332,7 +327,11 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
+operator|)
 end_if
 
 begin_if
@@ -345,7 +344,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"HUNTINGTON requires FILTER"
+literal|"HUNTINGTON or MEDFORD requires FILTER"
 end_error
 
 begin_endif
@@ -381,14 +380,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"LOOPBACK requires FALCON or SIENA or HUNTINGTON"
+literal|"LOOPBACK requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -498,14 +500,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"MAC_STATS requires FALCON or SIENA or HUNTINGTON"
+literal|"MAC_STATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -540,30 +545,15 @@ operator|(
 name|EFSYS_OPT_SIENA
 operator|||
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
 begin_error
 error|#
 directive|error
-literal|"MCDI not supported on FALCON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_error
-error|#
-directive|error
-literal|"MCDI requires SIENA or HUNTINGTON"
+literal|"MCDI requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -583,8 +573,18 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|EFSYS_OPT_SIENA
-operator|&&
+operator|||
+name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
+operator|)
+end_if
+
+begin_if
+if|#
+directive|if
 operator|!
 name|EFSYS_OPT_MCDI
 end_if
@@ -592,28 +592,13 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"SIENA requires MCDI"
+literal|"SIENA or HUNTINGTON or MEDFORD requires MCDI"
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_HUNTINGTON
-operator|&&
-operator|!
-name|EFSYS_OPT_MCDI
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"HUNTINGTON requires MCDI"
-end_error
 
 begin_endif
 endif|#
@@ -806,7 +791,7 @@ comment|/* EFSYS_OPT_MON_NULL */
 end_comment
 
 begin_comment
-comment|/* Support Siena monitor */
+comment|/* Obsolete option */
 end_comment
 
 begin_ifdef
@@ -818,7 +803,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"MON_SIENA is obsolete use MON_MCDI"
+literal|"MON_SIENA is obsolete (replaced by MON_MCDI)."
 end_error
 
 begin_endif
@@ -831,7 +816,7 @@ comment|/* EFSYS_OPT_MON_SIENA*/
 end_comment
 
 begin_comment
-comment|/* Support Huntington monitor */
+comment|/* Obsolete option */
 end_comment
 
 begin_ifdef
@@ -843,7 +828,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"MON_HUNTINGTON is obsolete use MON_MCDI"
+literal|"MON_HUNTINGTON is obsolete (replaced by MON_MCDI)."
 end_error
 
 begin_endif
@@ -874,14 +859,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"MON_STATS requires FALCON or SIENA or HUNTINGTON"
+literal|"MON_STATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -916,13 +904,15 @@ operator|(
 name|EFSYS_OPT_SIENA
 operator|||
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"MON_MCDI requires SIENA or HUNTINGTON"
+literal|"MON_MCDI requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1011,14 +1001,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"NVRAM requires FALCON or SIENA or HUNTINGTON"
+literal|"NVRAM requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1242,7 +1235,7 @@ comment|/* EFSYS_OPT_PCIE_TUNE */
 end_comment
 
 begin_comment
-comment|/* Support PHY BIST diagnostics */
+comment|/* Obsolete option */
 end_comment
 
 begin_if
@@ -1254,7 +1247,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"PHY_BIST is obsolete. It has been replaced by the BIST option."
+literal|"PHY_BIST is obsolete (replaced by BIST)."
 end_error
 
 begin_endif
@@ -1692,14 +1685,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"QSTATS requires FALCON or SIENA or HUNTINGTON"
+literal|"QSTATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1717,38 +1713,20 @@ comment|/* EFSYS_OPT_QSTATS */
 end_comment
 
 begin_comment
-comment|/* Support receive header split */
+comment|/* Obsolete option */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_RX_HDR_SPLIT
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
-name|EFSYS_OPT_SIENA
-operator|||
-name|EFSYS_OPT_HUNTINGTON
-operator|)
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"RX_HDR_SPLIT requires FALCON or SIENA or HUNTINGTON"
+literal|"RX_HDR_SPLIT is obsolete and is not supported"
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1778,14 +1756,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"RX_SCALE requires FALCON or SIENA or HUNTINGTON"
+literal|"RX_SCALE requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1821,14 +1802,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"RX_SCATTER requires FALCON or SIENA or HUNTINGTON"
+literal|"RX_SCATTER requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1858,7 +1842,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"EFSYS_OPT_STAT_NAME is obsolete (replaced by EFSYS_OPT_NAMES)."
+literal|"STAT_NAME is obsolete (replaced by NAMES)."
 end_error
 
 begin_endif
@@ -1885,14 +1869,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"VPD requires FALCON or SIENA or HUNTINGTON"
+literal|"VPD requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1947,38 +1934,20 @@ comment|/* EFSYS_OPT_WOL */
 end_comment
 
 begin_comment
-comment|/* Support calculating multicast pktfilter in common code */
+comment|/* Obsolete option */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MCAST_FILTER_LIST
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
-name|EFSYS_OPT_SIENA
-operator|||
-name|EFSYS_OPT_HUNTINGTON
-operator|)
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MCAST_FILTER_LIST requires FALCON or SIENA or HUNTINGTON"
+literal|"MCAST_FILTER_LIST is obsolete and is not supported"
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2008,14 +1977,17 @@ name|EFSYS_OPT_FALCON
 operator|||
 name|EFSYS_OPT_SIENA
 operator|||
+expr|\
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"BIST requires FALCON or SIENA or HUNTINGTON"
+literal|"BIST requires FALCON or SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif

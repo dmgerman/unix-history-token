@@ -15,15 +15,11 @@ directive|define
 name|_MACHINE_PCB_H_
 end_define
 
-begin_typedef
-typedef|typedef
-name|register_t
-name|faultbuf
-index|[
-literal|25
-index|]
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<machine/setjmp.h>
+end_include
 
 begin_struct
 struct|struct
@@ -58,7 +54,7 @@ modifier|*
 name|pcb_pm
 decl_stmt|;
 comment|/* pmap of our vmspace */
-name|faultbuf
+name|jmp_buf
 modifier|*
 name|pcb_onfault
 decl_stmt|;

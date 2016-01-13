@@ -301,7 +301,7 @@ name|addr
 parameter_list|,
 name|is_read
 parameter_list|)
-value|((addr) | (is_read))
+value|((addr<< 1) | (is_read))
 end_define
 
 begin_comment

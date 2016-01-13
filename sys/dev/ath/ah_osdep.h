@@ -298,27 +298,66 @@ value|do { } while (0)
 end_define
 
 begin_comment
-comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  */
+comment|/*  * Read and write barriers.  Some platforms require more strongly ordered  * operations and unfortunately most of the HAL is written assuming everything  * is either an x86 or the bus layer will do the barriers for you.  *  * Read barriers should occur before each read, and write barriers  * occur after each write.  *  * Later on for SDIO/USB parts we will methodize this and make them no-ops;  * register accesses will go via USB commands.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AH_DEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AH_REGOPS_FUNC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AH_DEBUG_ALQ
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|OS_BUS_BARRIER_READ
+value|BUS_SPACE_BARRIER_READ
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_BUS_BARRIER_WRITE
+value|BUS_SPACE_BARRIER_WRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_BUS_BARRIER_RW
+define|\
+value|(BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_BUS_BARRIER
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_start
+parameter_list|,
+name|_len
+parameter_list|,
+name|_t
+parameter_list|)
+define|\
+value|bus_space_barrier((bus_space_tag_t)(_ah)->ah_st,	\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_start), (_len), (_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_BUS_BARRIER_REG
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_reg
+parameter_list|,
+name|_t
+parameter_list|)
+define|\
+value|OS_BUS_BARRIER((_ah), (_reg), 4, (_t))
+end_define
+
+begin_comment
+comment|/*  * Register read/write operations are handled through  * platform-dependent routines.  */
+end_comment
 
 begin_define
 define|#
@@ -380,44 +419,6 @@ name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|OS_REG_WRITE
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_reg
-parameter_list|,
-name|_val
-parameter_list|)
-define|\
-value|bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,		\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|OS_REG_READ
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_reg
-parameter_list|)
-define|\
-value|bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,			\ 	    (bus_space_handle_t)(_ah)->ah_sh, (_reg))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

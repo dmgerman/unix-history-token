@@ -4725,7 +4725,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|int
+name|size_t
 name|cplen
 decl_stmt|;
 name|path

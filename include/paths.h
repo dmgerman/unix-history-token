@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_DEFPATH
-value|"/usr/bin:/bin"
+value|"/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
 end_define
 
 begin_comment
@@ -481,7 +481,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_DEFPATH
-value|"/rescue:/usr/bin:/bin"
+value|"/rescue:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
 end_define
 
 begin_undef

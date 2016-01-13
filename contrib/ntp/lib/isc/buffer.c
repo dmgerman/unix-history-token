@@ -1580,8 +1580,7 @@ modifier|*
 name|source
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|l
 decl_stmt|;
 name|unsigned
@@ -1642,8 +1641,12 @@ name|b
 operator|->
 name|used
 operator|+=
+operator|(
+name|u_int
+operator|)
 name|l
 expr_stmt|;
+comment|/* checked above - no overflow here */
 block|}
 end_function
 

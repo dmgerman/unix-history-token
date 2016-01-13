@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
 end_include
 
@@ -615,7 +609,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_init
+name|ef10_tx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -637,7 +631,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_fini
+name|ef10_tx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -655,7 +649,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qcreate
+name|ef10_tx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -797,7 +791,7 @@ operator|&
 name|desc
 argument_list|)
 expr_stmt|;
-name|hunt_tx_qpush
+name|ef10_tx_qpush
 argument_list|(
 name|etp
 argument_list|,
@@ -833,7 +827,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qdestroy
+name|ef10_tx_qdestroy
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -853,7 +847,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_enable
+name|ef10_tx_qpio_enable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -898,7 +892,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nic_pio_alloc
+name|ef10_nic_pio_alloc
 argument_list|(
 name|enp
 argument_list|,
@@ -951,7 +945,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nic_pio_link
+name|ef10_nic_pio_link
 argument_list|(
 name|enp
 argument_list|,
@@ -1001,7 +995,7 @@ argument_list|(
 name|fail3
 argument_list|)
 expr_stmt|;
-name|hunt_nic_pio_free
+name|ef10_nic_pio_free
 argument_list|(
 name|enp
 argument_list|,
@@ -1048,7 +1042,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qpio_disable
+name|ef10_tx_qpio_disable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1074,7 +1068,7 @@ literal|0
 condition|)
 block|{
 comment|/* Unlink the piobuf from this TXQ */
-name|hunt_nic_pio_unlink
+name|ef10_nic_pio_unlink
 argument_list|(
 name|enp
 argument_list|,
@@ -1084,7 +1078,7 @@ name|et_index
 argument_list|)
 expr_stmt|;
 comment|/* Free the sub-allocated PIO block */
-name|hunt_nic_pio_free
+name|ef10_nic_pio_free
 argument_list|(
 name|enp
 argument_list|,
@@ -1116,7 +1110,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_write
+name|ef10_tx_qpio_write
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1301,7 +1295,7 @@ end_decl_stmt
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpio_post
+name|ef10_tx_qpio_post
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1511,7 +1505,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpost
+name|ef10_tx_qpost
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -1805,7 +1799,7 @@ end_comment
 
 begin_function
 name|void
-name|hunt_tx_qpush
+name|ef10_tx_qpush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -1953,7 +1947,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qdesc_post
+name|ef10_tx_qdesc_post
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -2144,7 +2138,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_tx_qdesc_dma_create
+name|ef10_tx_qdesc_dma_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2342,7 +2336,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qdesc_vlantci_create
+name|ef10_tx_qdesc_vlantci_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2405,7 +2399,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qpace
+name|ef10_tx_qpace
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2467,7 +2461,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_tx_qflush
+name|ef10_tx_qflush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2532,7 +2526,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qenable
+name|ef10_tx_qenable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2557,7 +2551,7 @@ end_if
 
 begin_decl_stmt
 name|void
-name|hunt_tx_qstats_update
+name|ef10_tx_qstats_update
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -2573,7 +2567,6 @@ operator|*
 name|stat
 argument_list|)
 block|{
-comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 * essentially identical. 	 */
 name|unsigned
 name|int
 name|id

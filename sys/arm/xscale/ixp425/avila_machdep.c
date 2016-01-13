@@ -825,15 +825,12 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|envmode
-operator|==
-literal|1
-condition|)
-name|kern_envp
-operator|=
-name|static_env
+name|init_static_kenv
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param1
@@ -1548,17 +1545,6 @@ argument_list|)
 expr_stmt|;
 name|kdb_init
 argument_list|()
-expr_stmt|;
-comment|/* use static kernel environment if so configured */
-if|if
-condition|(
-name|envmode
-operator|==
-literal|1
-condition|)
-name|kern_envp
-operator|=
-name|static_env
 expr_stmt|;
 return|return
 operator|(

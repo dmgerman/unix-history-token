@@ -644,7 +644,7 @@ parameter_list|,
 name|u_short
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
 specifier|const

@@ -83,7 +83,7 @@ name|u_short
 modifier|*
 name|rstatus
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|dsize
 parameter_list|,
