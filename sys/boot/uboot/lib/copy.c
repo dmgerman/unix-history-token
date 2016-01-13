@@ -225,7 +225,7 @@ operator|=
 name|rounddown2
 argument_list|(
 operator|(
-name|uintfptr_t
+name|uintptr_t
 operator|)
 name|_start
 argument_list|,
