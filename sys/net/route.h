@@ -762,7 +762,7 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* radix node head is locked */
+comment|/* unused */
 end_comment
 
 begin_define
