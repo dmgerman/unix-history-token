@@ -63,7 +63,7 @@ name|size_t
 name|emr_in_length
 decl_stmt|;
 comment|/* Outputs: retcode, buffer, length, and length used*/
-name|int
+name|efx_rc_t
 name|emr_rc
 decl_stmt|;
 name|uint8_t
