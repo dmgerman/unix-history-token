@@ -70064,6 +70064,9 @@ operator|==
 literal|1
 condition|)
 block|{
+name|uint32_t
+name|temp
+decl_stmt|;
 name|sc
 operator|=
 operator|(
@@ -70080,7 +70083,28 @@ argument_list|,
 literal|"... dumping driver state ...\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+name|temp
+operator|=
+name|SHMEM2_RD
+argument_list|(
+name|sc
+argument_list|,
+name|temperature_in_half_celsius
+argument_list|)
+expr_stmt|;
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"\t Device Temperature = %d Celsius\n"
+argument_list|,
+operator|(
+name|temp
+operator|/
+literal|2
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
