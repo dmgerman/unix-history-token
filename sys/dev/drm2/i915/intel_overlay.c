@@ -7358,9 +7358,7 @@ name|regs
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|error
-operator|)
 return|;
 name|err
 label|:
@@ -7372,9 +7370,7 @@ name|DRM_I915_GEM
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function
