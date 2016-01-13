@@ -171,6 +171,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
 begin_define
 define|#
 directive|define
@@ -218,8 +226,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHARCLASS_NAME_MAX
+value|14
+end_define
+
+begin_comment
+comment|/* max character class name size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|COLL_WEIGHTS_MAX
-value|0
+value|10
 end_define
 
 begin_comment
@@ -290,6 +309,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_POSIX2_CHARCLASS_NAME_MAX
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_COLL_WEIGHTS_MAX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|_POSIX2_EQUIV_CLASS_MAX
 value|2
 end_define
@@ -314,6 +347,11 @@ directive|define
 name|_POSIX2_RE_DUP_MAX
 value|255
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -520,20 +558,6 @@ define|#
 directive|define
 name|_POSIX_TTY_NAME_MAX
 value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX2_CHARCLASS_NAME_MAX
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX2_COLL_WEIGHTS_MAX
-value|2
 end_define
 
 begin_define
