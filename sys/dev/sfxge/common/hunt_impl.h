@@ -1317,6 +1317,26 @@ literal|4
 index|]
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|__checkReturn
+name|efx_rc_t
+name|ef10_nvram_type_to_partn
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__in
+name|efx_nvram_type_t
+name|type
+parameter_list|,
+name|__out
+name|uint32_t
+modifier|*
+name|partnp
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_NVRAM */
