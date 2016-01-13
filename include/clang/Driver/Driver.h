@@ -98,23 +98,19 @@ file|"llvm/Support/Path.h"
 end_include
 
 begin_comment
-comment|// FIXME: Kill when CompilationInfo
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<memory>
-end_include
-
-begin_comment
-comment|// lands.
+comment|// FIXME: Kill when CompilationInfo lands.
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -1111,27 +1107,42 @@ function_decl|;
 comment|/// ConstructAction - Construct the appropriate action to do for
 comment|/// \p Phase on the \p Input, taking in to account arguments
 comment|/// like -fsyntax-only or --analyze.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|Action
-operator|>
+modifier|*
 name|ConstructPhaseAction
 argument_list|(
-argument|const ToolChain&TC
+name|Compilation
+operator|&
+name|C
 argument_list|,
-argument|const llvm::opt::ArgList&Args
-argument_list|,
-argument|phases::ID Phase
-argument_list|,
-argument|std::unique_ptr<Action> Input
-argument_list|)
 specifier|const
-expr_stmt|;
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|phases
+operator|::
+name|ID
+name|Phase
+argument_list|,
+name|Action
+operator|*
+name|Input
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// BuildJobsForAction - Construct the jobs to perform for the
-comment|/// action \p A.
-name|void
+comment|/// action \p A and return an InputInfo for the result of running \p A.
+name|InputInfo
 name|BuildJobsForAction
 argument_list|(
 name|Compilation
@@ -1163,10 +1174,6 @@ specifier|const
 name|char
 operator|*
 name|LinkingOutput
-argument_list|,
-name|InputInfo
-operator|&
-name|Result
 argument_list|)
 decl|const
 decl_stmt|;

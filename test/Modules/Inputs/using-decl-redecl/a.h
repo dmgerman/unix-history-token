@@ -7,6 +7,15 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|const
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|namespace
 name|N
 block|{
@@ -14,6 +23,10 @@ typedef|typedef
 operator|::
 name|string
 name|clstring
+expr_stmt|;
+name|using
+operator|::
+name|n
 expr_stmt|;
 block|}
 end_decl_stmt

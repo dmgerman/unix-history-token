@@ -580,7 +580,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Provide the default architecture name (as expected by -arch) for
-comment|/// this toolchain. Note t
+comment|/// this toolchain.
 name|StringRef
 name|getDefaultUniversalArchName
 argument_list|()

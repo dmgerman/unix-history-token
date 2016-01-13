@@ -145,12 +145,12 @@ enum|enum
 name|BaseKind
 block|{
 comment|// The enumerators must be representable using 2 bits.
-name|UndefinedKind
+name|UndefinedValKind
 init|=
 literal|0
 block|,
 comment|// for subclass UndefinedVal (an uninitialized value)
-name|UnknownKind
+name|UnknownValKind
 init|=
 literal|1
 block|,
@@ -479,7 +479,7 @@ return|return
 name|getRawKind
 argument_list|()
 operator|==
-name|UnknownKind
+name|UnknownValKind
 return|;
 block|}
 specifier|inline
@@ -492,7 +492,7 @@ return|return
 name|getRawKind
 argument_list|()
 operator|==
-name|UndefinedKind
+name|UndefinedValKind
 return|;
 block|}
 specifier|inline
@@ -505,7 +505,7 @@ return|return
 name|getRawKind
 argument_list|()
 operator|<=
-name|UnknownKind
+name|UnknownValKind
 return|;
 block|}
 specifier|inline
@@ -518,7 +518,7 @@ return|return
 name|getRawKind
 argument_list|()
 operator|>
-name|UnknownKind
+name|UnknownValKind
 return|;
 block|}
 name|bool
@@ -692,7 +692,7 @@ argument_list|()
 operator|:
 name|SVal
 argument_list|(
-argument|UndefinedKind
+argument|UndefinedValKind
 argument_list|)
 block|{}
 name|private
@@ -714,7 +714,7 @@ operator|.
 name|getBaseKind
 argument_list|()
 operator|==
-name|UndefinedKind
+name|UndefinedValKind
 return|;
 block|}
 expr|}
@@ -819,7 +819,7 @@ argument_list|()
 operator|:
 name|DefinedOrUnknownSVal
 argument_list|(
-argument|UnknownKind
+argument|UnknownValKind
 argument_list|)
 block|{}
 name|private
@@ -841,7 +841,7 @@ operator|.
 name|getBaseKind
 argument_list|()
 operator|==
-name|UnknownKind
+name|UnknownValKind
 return|;
 block|}
 expr|}
@@ -1869,7 +1869,7 @@ name|Kind
 block|{
 name|GotoLabelKind
 block|,
-name|MemRegionKind
+name|MemRegionValKind
 block|,
 name|ConcreteIntKind
 block|}
@@ -1985,7 +1985,7 @@ argument_list|)
 operator|:
 name|Loc
 argument_list|(
-argument|MemRegionKind
+argument|MemRegionValKind
 argument_list|,
 argument|r
 argument_list|)
@@ -2116,7 +2116,7 @@ operator|.
 name|getSubKind
 argument_list|()
 operator|==
-name|MemRegionKind
+name|MemRegionValKind
 return|;
 block|}
 specifier|static
@@ -2132,7 +2132,7 @@ operator|.
 name|getSubKind
 argument_list|()
 operator|==
-name|MemRegionKind
+name|MemRegionValKind
 return|;
 block|}
 expr|}

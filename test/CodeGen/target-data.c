@@ -248,7 +248,7 @@ comment|// RUN: FileCheck %s -check-prefix=WEBASSEMBLY32
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32: target datalayout = "e-p:32:32-i64:64-n32:64-S128"
+comment|// WEBASSEMBLY32: target datalayout = "e-m:e-p:32:32-i64:64-n32:64-S128"
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ comment|// RUN: FileCheck %s -check-prefix=WEBASSEMBLY64
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY64: target datalayout = "e-p:64:64-i64:64-n32:64-S128"
+comment|// WEBASSEMBLY64: target datalayout = "e-m:e-p:64:64-i64:64-n32:64-S128"
 end_comment
 
 begin_comment

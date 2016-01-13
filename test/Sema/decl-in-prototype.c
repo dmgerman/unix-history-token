@@ -229,5 +229,34 @@ begin_comment
 comment|//expected-note{{forward declaration of 'enum e19018'}}
 end_comment
 
+begin_comment
+comment|// Only warn once, even if we create two declarations.
+end_comment
+
+begin_decl_stmt
+name|void
+name|f
+argument_list|(
+expr|struct
+name|q
+operator|*
+argument_list|,
+expr|struct
+name|__attribute__
+argument_list|(
+argument|(aligned(
+literal|4
+argument|))
+argument_list|)
+name|q
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{will not be visible outside}}
+end_comment
+
 end_unit
 

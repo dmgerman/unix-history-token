@@ -1750,6 +1750,9 @@ block|,
 comment|/// This candidate function was not viable because an enable_if
 comment|/// attribute disabled it.
 name|ovl_fail_enable_if
+block|,
+comment|/// This candidate was not viable because its address could not be taken.
+name|ovl_fail_addr_not_available
 block|}
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).

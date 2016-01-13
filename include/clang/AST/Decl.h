@@ -9519,6 +9519,8 @@ name|ChainingSize
 decl_stmt|;
 name|IndirectFieldDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -9531,52 +9533,41 @@ argument|NamedDecl **CH
 argument_list|,
 argument|unsigned CHS
 argument_list|)
-block|:
-name|ValueDecl
-argument_list|(
-name|IndirectField
-argument_list|,
-name|DC
-argument_list|,
-name|L
-argument_list|,
-name|N
-argument_list|,
-name|T
-argument_list|)
-operator|,
-name|Chaining
-argument_list|(
-name|CH
-argument_list|)
-operator|,
-name|ChainingSize
-argument_list|(
-argument|CHS
-argument_list|)
-block|{}
+empty_stmt|;
 name|public
-operator|:
+label|:
 specifier|static
 name|IndirectFieldDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|NamedDecl **CH
-argument_list|,
-argument|unsigned CHS
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|QualType
+name|T
+parameter_list|,
+name|NamedDecl
+modifier|*
+modifier|*
+name|CH
+parameter_list|,
+name|unsigned
+name|CHS
+parameter_list|)
+function_decl|;
 specifier|static
 name|IndirectFieldDecl
 modifier|*

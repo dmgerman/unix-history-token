@@ -326,6 +326,8 @@ argument_list|,
 argument|bool ContinuesPPDirective
 argument_list|,
 argument|bool IsStartOfDeclName
+argument_list|,
+argument|bool IsInsideToken
 argument_list|)
 empty_stmt|;
 name|bool
@@ -380,6 +382,11 @@ comment|// of the lines in a block comment. This is used when aligning trailing
 comment|// comments. Uncompensated negative offset is truncated to 0.
 name|int
 name|Spaces
+decl_stmt|;
+comment|// If this change is inside of a token but not at the start of the token or
+comment|// directly after a newline.
+name|bool
+name|IsInsideToken
 decl_stmt|;
 comment|// \c IsTrailingComment, \c TokenLength, \c PreviousEndOfTokenColumn and
 comment|// \c EscapedNewlineColumn will be calculated in

@@ -4107,6 +4107,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|QualType
+name|BuildPipeType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|TypeSourceInfo
 modifier|*
 name|GetTypeForDeclarator
@@ -11685,6 +11698,11 @@ name|bool
 name|AllowTypoCorrection
 init|=
 name|true
+parameter_list|,
+name|bool
+name|CalleesAddressIsTaken
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -35564,6 +35582,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Called on #pragma clang __debug dump II
+end_comment
+
+begin_function_decl
+name|void
+name|ActOnPragmaDump
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ActOnPragmaDetectMismatch - Call on well-formed \#pragma detect_mismatch
 end_comment
 
@@ -40658,6 +40698,28 @@ parameter_list|,
 name|CastKind
 modifier|&
 name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Prepare `SplattedExpr` for a vector splat operation, adding
+end_comment
+
+begin_comment
+comment|/// implicit casts if necessary.
+end_comment
+
+begin_function_decl
+name|ExprResult
+name|prepareVectorSplat
+parameter_list|(
+name|QualType
+name|VectorTy
+parameter_list|,
+name|Expr
+modifier|*
+name|SplattedExpr
 parameter_list|)
 function_decl|;
 end_function_decl

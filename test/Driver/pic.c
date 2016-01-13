@@ -876,6 +876,14 @@ comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
 end_comment
 
 begin_comment
+comment|// RUN: %clang -c %s -target armv7-apple-unknown-macho -static -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-PIC
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

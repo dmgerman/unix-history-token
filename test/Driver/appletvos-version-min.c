@@ -15,6 +15,10 @@ begin_comment
 comment|// RUN: %clang -target armv7s-apple-darwin10 -mappletvos-version-min=9.0 -arch arm64 -S -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: env TVOS_DEPLOYMENT_TARGET=9.0 %clang -isysroot SDKs/MacOSX10.9.sdk -target i386-apple-darwin10  -arch x86_64 -S -o - %s | FileCheck %s
+end_comment
+
 begin_function
 name|int
 name|main

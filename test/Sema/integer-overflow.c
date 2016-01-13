@@ -962,5 +962,39 @@ return|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|s
+block|{
+name|unsigned
+name|x
+decl_stmt|;
+name|unsigned
+name|y
+decl_stmt|;
+block|}
+name|s
+init|=
+block|{
+operator|.
+name|y
+operator|=
+literal|5
+block|,
+operator|.
+name|x
+operator|=
+literal|4
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|*
+literal|1024
+comment|// expected-warning {{overflow in expression; result is 0 with type 'int'}}
+block|}
+struct|;
+end_struct
+
 end_unit
 

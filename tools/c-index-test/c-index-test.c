@@ -7689,6 +7689,79 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Type declaration testing                                                   */
+end_comment
+
+begin_comment
+comment|/******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|enum
+name|CXChildVisitResult
+name|PrintTypeDeclaration
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|,
+name|CXCursor
+name|p
+parameter_list|,
+name|CXClientData
+name|d
+parameter_list|)
+block|{
+name|CXCursor
+name|typeDeclaration
+init|=
+name|clang_getTypeDeclaration
+argument_list|(
+name|clang_getCursorType
+argument_list|(
+name|cursor
+argument_list|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|clang_isDeclaration
+argument_list|(
+name|typeDeclaration
+operator|.
+name|kind
+argument_list|)
+condition|)
+block|{
+name|PrintCursor
+argument_list|(
+name|cursor
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|PrintTypeAndTypeKind
+argument_list|(
+name|clang_getCursorType
+argument_list|(
+name|typeDeclaration
+argument_list|)
+argument_list|,
+literal|" [typedeclaration=%s] [typekind=%s]\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|CXChildVisit_Recurse
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Loading ASTs/source.                                                       */
 end_comment
 
@@ -21194,6 +21267,7 @@ literal|"       c-index-test -test-print-visibility {<args>}*\n"
 literal|"       c-index-test -test-print-type {<args>}*\n"
 literal|"       c-index-test -test-print-type-size {<args>}*\n"
 literal|"       c-index-test -test-print-bitwidth {<args>}*\n"
+literal|"       c-index-test -test-print-type-declaration {<args>}*\n"
 literal|"       c-index-test -print-usr [<CursorKind> {<args>}]*\n"
 literal|"       c-index-test -print-usr-file<file>\n"
 literal|"       c-index-test -write-pch<file><compiler arguments>\n"
@@ -22080,6 +22154,43 @@ argument_list|,
 literal|"all"
 argument_list|,
 name|PrintTypeSize
+argument_list|,
+literal|0
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|>
+literal|2
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-test-print-type-declaration"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|perform_test_load_source
+argument_list|(
+name|argc
+operator|-
+literal|2
+argument_list|,
+name|argv
+operator|+
+literal|2
+argument_list|,
+literal|"all"
+argument_list|,
+name|PrintTypeDeclaration
 argument_list|,
 literal|0
 argument_list|)

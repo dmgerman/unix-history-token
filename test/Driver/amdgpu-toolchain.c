@@ -8,7 +8,7 @@ comment|// AS_LINK: clang{{.*}} "-cc1as"
 end_comment
 
 begin_comment
-comment|// AS_LINK: lld{{.*}} "-flavor" "old-gnu" "-target" "amdgcn--amdhsa"
+comment|// AS_LINK: ld.lld{{.*}}
 end_comment
 
 end_unit

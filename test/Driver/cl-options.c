@@ -40,15 +40,35 @@ comment|// C_P: "-C"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Dfoo=bar -### -- %s 2>&1 | FileCheck -check-prefix=D %s
+comment|// RUN: %clang_cl /Dfoo=bar /D bar=baz /DMYDEF#value /DMYDEF2=foo#bar /DMYDEF3#a=b /DMYDEF4# \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /D foo=bar -### -- %s 2>&1 | FileCheck -check-prefix=D %s
+comment|// RUN:    -### -- %s 2>&1 | FileCheck -check-prefix=D %s
 end_comment
 
 begin_comment
 comment|// D: "-D" "foo=bar"
+end_comment
+
+begin_comment
+comment|// D: "-D" "bar=baz"
+end_comment
+
+begin_comment
+comment|// D: "-D" "MYDEF=value"
+end_comment
+
+begin_comment
+comment|// D: "-D" "MYDEF2=foo#bar"
+end_comment
+
+begin_comment
+comment|// D: "-D" "MYDEF3=a=b"
+end_comment
+
+begin_comment
+comment|// D: "-D" "MYDEF4="
 end_comment
 
 begin_comment

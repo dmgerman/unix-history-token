@@ -28,7 +28,7 @@ comment|// RUN:   -Xclang foo-bar \
 end_comment
 
 begin_comment
-comment|// RUN:   -march=x86_64 \
+comment|// RUN:   -march=x86-64 \
 end_comment
 
 begin_comment
@@ -44,7 +44,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// clang-cc1
+comment|// clang -cc1
+end_comment
+
+begin_comment
+comment|// CHECK: clang
 end_comment
 
 begin_comment
@@ -60,7 +64,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// gcc-ld
+comment|// gcc as ld.
 end_comment
 
 begin_comment
@@ -113,6 +117,26 @@ end_comment
 
 begin_comment
 comment|// CHECK: "-o" "a.out"
+end_comment
+
+begin_comment
+comment|// Check that we're not forwarding -g options to the assembler
+end_comment
+
+begin_comment
+comment|// RUN: %clang -g -target x86_64-unknown-linux-gnu -no-integrated-as -c %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASM %s
+end_comment
+
+begin_comment
+comment|// CHECK-ASM: as
+end_comment
+
+begin_comment
+comment|// CHECK-ASM-NOT: "-g"
 end_comment
 
 end_unit

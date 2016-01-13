@@ -3319,6 +3319,15 @@ argument|{ TRY_TO(TraverseType(T->getValueType())); }
 argument_list|)
 end_macro
 
+begin_macro
+name|DEF_TRAVERSE_TYPE
+argument_list|(
+argument|PipeType
+argument_list|,
+argument|{ TRY_TO(TraverseType(T->getElementType())); }
+argument_list|)
+end_macro
+
 begin_undef
 undef|#
 directive|undef
@@ -3875,6 +3884,15 @@ begin_macro
 name|DEF_TRAVERSE_TYPELOC
 argument_list|(
 argument|AtomicType
+argument_list|,
+argument|{ TRY_TO(TraverseTypeLoc(TL.getValueLoc())); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_TYPELOC
+argument_list|(
+argument|PipeType
 argument_list|,
 argument|{ TRY_TO(TraverseTypeLoc(TL.getValueLoc())); }
 argument_list|)

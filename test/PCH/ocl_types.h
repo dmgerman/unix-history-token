@@ -165,6 +165,16 @@ name|img2darr_dep_t
 typedef|;
 end_typedef
 
+begin_pragma
+pragma|#
+directive|pragma
+name|OPENCL
+name|EXTENSION
+name|cl_khr_gl_msaa_sharing
+name|:
+name|enable
+end_pragma
+
 begin_comment
 comment|// image2d_msaa_t
 end_comment
@@ -208,6 +218,48 @@ name|image2d_array_msaa_depth_t
 name|img2darrmsaadep_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|// pipe specifier
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_person
+block|{
+name|int
+name|id
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+name|Person
+typedef|;
+end_typedef
+
+begin_function_decl
+name|void
+name|int_pipe_function
+parameter_list|(
+name|pipe
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|person_pipe_function
+parameter_list|(
+name|pipe
+name|Person
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

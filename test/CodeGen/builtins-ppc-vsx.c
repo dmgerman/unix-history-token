@@ -2223,6 +2223,110 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<2 x i64>
 comment|// CHECK-LE: xor<2 x i64>
+name|res_vsll
+operator|=
+name|vec_cts
+argument_list|(
+name|vd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK: fptosi<2 x double> %{{.*}} to<2 x i64>
+comment|// CHECK-LE: fmul<2 x double>
+comment|// CHECK-LE: fptosi<2 x double> %{{.*}} to<2 x i64>
+name|res_vsll
+operator|=
+name|vec_cts
+argument_list|(
+name|vd
+argument_list|,
+literal|31
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK: fptosi<2 x double> %{{.*}} to<2 x i64>
+comment|// CHECK-LE: fmul<2 x double>
+comment|// CHECK-LE: fptosi<2 x double> %{{.*}} to<2 x i64>
+name|res_vsll
+operator|=
+name|vec_ctu
+argument_list|(
+name|vd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK: fptoui<2 x double> %{{.*}} to<2 x i64>
+comment|// CHECK-LE: fmul<2 x double>
+comment|// CHECK-LE: fptoui<2 x double> %{{.*}} to<2 x i64>
+name|res_vsll
+operator|=
+name|vec_ctu
+argument_list|(
+name|vd
+argument_list|,
+literal|31
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK: fptoui<2 x double> %{{.*}} to<2 x i64>
+comment|// CHECK-LE: fmul<2 x double>
+comment|// CHECK-LE: fptoui<2 x double> %{{.*}} to<2 x i64>
+name|res_vd
+operator|=
+name|vec_ctf
+argument_list|(
+name|vsll
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK-LE: sitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK-LE: fmul<2 x double>
+name|res_vd
+operator|=
+name|vec_ctf
+argument_list|(
+name|vsll
+argument_list|,
+literal|31
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK-LE: sitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK-LE: fmul<2 x double>
+name|res_vd
+operator|=
+name|vec_ctf
+argument_list|(
+name|vull
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: uitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK-LE: uitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK-LE: fmul<2 x double>
+name|res_vd
+operator|=
+name|vec_ctf
+argument_list|(
+name|vull
+argument_list|,
+literal|31
+argument_list|)
+expr_stmt|;
+comment|// CHECK: uitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK: fmul<2 x double>
+comment|// CHECK-LE: uitofp<2 x i64> %{{.*}} to<2 x double>
+comment|// CHECK-LE: fmul<2 x double>
 block|}
 end_function
 

@@ -335,6 +335,15 @@ argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
+block|;
+name|void
+name|AddWebAssemblyTargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
 block|;    enum
 name|RewriteKind
 block|{
@@ -1037,7 +1046,7 @@ name|GnuTool
 argument_list|(
 literal|"amdgpu::Linker"
 argument_list|,
-literal|"lld"
+literal|"ld.lld"
 argument_list|,
 argument|TC
 argument_list|)

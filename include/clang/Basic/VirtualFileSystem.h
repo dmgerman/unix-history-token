@@ -1463,24 +1463,15 @@ argument_list|(
 argument|const Twine&Path
 argument_list|)
 name|override
-block|{
-name|WorkingDirectory
-operator|=
-name|Path
-operator|.
-name|str
-argument_list|()
-block|;
-return|return
-name|std
-operator|::
-name|error_code
-argument_list|()
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Get a globally unique ID for a virtual file or directory.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|sys
@@ -1490,9 +1481,18 @@ operator|::
 name|UniqueID
 name|getNextVirtualUniqueID
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Gets a \p FileSystem for a virtual file system described in YAML
+end_comment
+
+begin_comment
 comment|/// format.
+end_comment
+
+begin_expr_stmt
 name|IntrusiveRefCntPtr
 operator|<
 name|FileSystem
@@ -1507,14 +1507,18 @@ argument|void *DiagContext = nullptr
 argument_list|,
 argument|IntrusiveRefCntPtr<FileSystem> ExternalFS = getRealFileSystem()
 argument_list|)
-block|;  struct
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
 name|YAMLVFSEntry
 block|{
 name|template
 operator|<
 name|typename
 name|T1
-block|,
+operator|,
 name|typename
 name|T2
 operator|>
@@ -1541,7 +1545,7 @@ operator|(
 name|VPath
 operator|)
 argument_list|)
-block|,
+operator|,
 name|RPath
 argument_list|(
 argument|std::forward<T2>(RPath)
@@ -1551,13 +1555,17 @@ name|std
 operator|::
 name|string
 name|VPath
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|string
 name|RPath
-block|; }
-block|;
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
 name|class
 name|YAMLVFSWriter
 block|{
@@ -1568,36 +1576,40 @@ operator|<
 name|YAMLVFSEntry
 operator|>
 name|Mappings
-block|;
+expr_stmt|;
 name|Optional
 operator|<
 name|bool
 operator|>
 name|IsCaseSensitive
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|YAMLVFSWriter
 argument_list|()
 block|{}
 name|void
 name|addFileMapping
-argument_list|(
-argument|StringRef VirtualPath
-argument_list|,
-argument|StringRef RealPath
-argument_list|)
-block|;
+parameter_list|(
+name|StringRef
+name|VirtualPath
+parameter_list|,
+name|StringRef
+name|RealPath
+parameter_list|)
+function_decl|;
 name|void
 name|setCaseSensitivity
-argument_list|(
-argument|bool CaseSensitive
-argument_list|)
+parameter_list|(
+name|bool
+name|CaseSensitive
+parameter_list|)
 block|{
 name|IsCaseSensitive
 operator|=
 name|CaseSensitive
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|write
 argument_list|(
@@ -1607,11 +1619,16 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|)
-block|; }
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace vfs
 end_comment
 

@@ -9,6 +9,16 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_comment
+comment|// Make this file work with nvcc, for testing compatibility.
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NVCC__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -128,6 +138,15 @@ literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !__NVCC__
+end_comment
 
 end_unit
 

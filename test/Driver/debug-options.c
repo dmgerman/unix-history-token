@@ -124,7 +124,7 @@ comment|// RUN: %clang -### -c -g %s -target x86_64-pc-freebsd10.0 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_LLDB %s
+comment|// RUN:             | FileCheck -check-prefix=G_GDB %s
 end_comment
 
 begin_comment

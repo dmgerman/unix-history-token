@@ -41,7 +41,7 @@ init|=
 literal|'2'
 block|}
 enum|;
-comment|// Templates (instatiations).
+comment|// Templates (instantiations).
 name|template
 operator|<
 name|typename
@@ -171,6 +171,38 @@ parameter_list|)
 block|{}
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// Virtual class with a forward declaration.
+end_comment
+
+begin_decl_stmt
+name|class
+name|FwdVirtual
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|FwdVirtual
+block|{
+name|virtual
+operator|~
+name|FwdVirtual
+argument_list|()
+block|{}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|PureForwardDecl
+struct_decl|;
+end_struct_decl
 
 end_unit
 

@@ -4008,34 +4008,10 @@ name|final
 operator|:
 name|public
 name|Expr
-block|,
-name|private
-name|llvm
-operator|::
-name|TrailingObjects
-operator|<
-name|CXXDefaultArgExpr
-block|,
-name|Expr
-operator|*
-operator|>
 block|{
 comment|/// \brief The parameter whose default is being used.
-comment|///
-comment|/// When the bit is set, the subexpression is stored after the
-comment|/// CXXDefaultArgExpr itself. When the bit is clear, the parameter's
-comment|/// actual default expression is the subexpression.
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
 name|ParmVarDecl
 operator|*
-block|,
-literal|1
-block|,
-name|bool
-operator|>
 name|Param
 block|;
 comment|/// \brief The location where the default argument expression was used.
@@ -4104,8 +4080,6 @@ block|,
 name|Param
 argument_list|(
 name|param
-argument_list|,
-name|false
 argument_list|)
 block|,
 name|Loc
@@ -4113,68 +4087,6 @@ argument_list|(
 argument|Loc
 argument_list|)
 block|{ }
-name|CXXDefaultArgExpr
-argument_list|(
-argument|StmtClass SC
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|ParmVarDecl *param
-argument_list|,
-argument|Expr *SubExpr
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|SC
-argument_list|,
-name|SubExpr
-operator|->
-name|getType
-argument_list|()
-argument_list|,
-name|SubExpr
-operator|->
-name|getValueKind
-argument_list|()
-argument_list|,
-name|SubExpr
-operator|->
-name|getObjectKind
-argument_list|()
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|Param
-argument_list|(
-name|param
-argument_list|,
-name|true
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-argument|Loc
-argument_list|)
-block|{
-operator|*
-name|getTrailingObjects
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-operator|)
-operator|=
-name|SubExpr
-block|;   }
 name|public
 operator|:
 name|CXXDefaultArgExpr
@@ -4218,22 +4130,6 @@ name|Param
 argument_list|)
 return|;
 block|}
-comment|// \p Param is the parameter whose default argument is used by this
-comment|// expression, and \p SubExpr is the expression that will actually be used.
-specifier|static
-name|CXXDefaultArgExpr
-operator|*
-name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|ParmVarDecl *Param
-argument_list|,
-argument|Expr *SubExpr
-argument_list|)
-block|;
 comment|// Retrieve the parameter that the argument was created from.
 specifier|const
 name|ParmVarDecl
@@ -4244,9 +4140,6 @@ specifier|const
 block|{
 return|return
 name|Param
-operator|.
-name|getPointer
-argument_list|()
 return|;
 block|}
 name|ParmVarDecl
@@ -4256,9 +4149,6 @@ argument_list|()
 block|{
 return|return
 name|Param
-operator|.
-name|getPointer
-argument_list|()
 return|;
 block|}
 comment|// Retrieve the actual argument to the function call.
@@ -4269,23 +4159,6 @@ name|getExpr
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|Param
-operator|.
-name|getInt
-argument_list|()
-condition|)
-return|return
-operator|*
-name|getTrailingObjects
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
 return|return
 name|getParam
 argument_list|()
@@ -4299,23 +4172,6 @@ operator|*
 name|getExpr
 argument_list|()
 block|{
-if|if
-condition|(
-name|Param
-operator|.
-name|getInt
-argument_list|()
-condition|)
-return|return
-operator|*
-name|getTrailingObjects
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
 return|return
 name|getParam
 argument_list|()
@@ -4401,9 +4257,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|friend
-name|TrailingObjects
-block|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -6533,7 +6386,7 @@ comment|/// \brief Retrieve the first initialization argument for this
 comment|/// lambda expression (which initializes the first capture field).
 name|capture_init_iterator
 name|capture_init_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|reinterpret_cast
@@ -6573,7 +6426,7 @@ comment|/// \brief Retrieve the iterator pointing one past the last
 comment|/// initialization argument for this lambda expression.
 name|capture_init_iterator
 name|capture_init_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|capture_init_begin
@@ -6611,7 +6464,7 @@ argument_list|(
 argument|const_capture_init_iterator Iter
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve the source range covering the lambda introducer,
 comment|/// which contains the explicit capture list surrounded by square
 comment|/// brackets ([...]).
@@ -6634,7 +6487,7 @@ operator|*
 name|getLambdaClass
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieve the function call operator associated with this
 comment|/// lambda expression.
 name|CXXMethodDecl
@@ -6642,7 +6495,7 @@ operator|*
 name|getCallOperator
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief If this is a generic lambda expression, retrieve the template
 comment|/// parameter list associated with it, or else return null.
 name|TemplateParameterList
@@ -6650,7 +6503,7 @@ operator|*
 name|getTemplateParameterList
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Whether this is a generic lambda.
 name|bool
 name|isGenericLambda
@@ -6668,14 +6521,14 @@ operator|*
 name|getBody
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether the lambda is mutable, meaning that any
 comment|/// captures values can be modified.
 name|bool
 name|isMutable
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether this lambda has an explicit parameter
 comment|/// list vs. an implicit (empty) parameter list.
 name|bool
@@ -6700,12 +6553,9 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -6741,7 +6591,7 @@ return|;
 block|}
 name|child_range
 name|children
-parameter_list|()
+argument_list|()
 block|{
 comment|// Includes initialization exprs plus body stmt
 return|return
@@ -6761,31 +6611,18 @@ return|;
 block|}
 name|friend
 name|TrailingObjects
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTStmtReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTStmtWriter
+block|; }
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// An expression "T()" which creates a value-initialized rvalue of type
-end_comment
-
-begin_comment
 comment|/// T, which is a non-class type.  See (C++98 [5.2.3p2]).
-end_comment
-
-begin_decl_stmt
 name|class
 name|CXXScalarValueInitExpr
 range|:
@@ -7493,16 +7330,10 @@ typedef|typedef
 name|ExprIterator
 name|arg_iterator
 typedef|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|ConstExprIterator
 name|const_arg_iterator
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|iterator_range
@@ -7525,9 +7356,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|iterator_range
@@ -7551,9 +7379,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|arg_iterator
 name|placement_arg_begin
 parameter_list|()
@@ -7567,9 +7392,6 @@ name|hasInitializer
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|arg_iterator
 name|placement_arg_end
 parameter_list|()
@@ -7586,9 +7408,6 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_arg_iterator
 name|placement_arg_begin
 argument_list|()
@@ -7603,9 +7422,6 @@ name|hasInitializer
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_arg_iterator
 name|placement_arg_end
 argument_list|()
@@ -7623,18 +7439,12 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|Stmt
 modifier|*
 modifier|*
 name|raw_arg_iterator
 typedef|;
-end_typedef
-
-begin_function
 name|raw_arg_iterator
 name|raw_arg_begin
 parameter_list|()
@@ -7643,9 +7453,6 @@ return|return
 name|SubExprs
 return|;
 block|}
-end_function
-
-begin_function
 name|raw_arg_iterator
 name|raw_arg_end
 parameter_list|()
@@ -7662,9 +7469,6 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_arg_iterator
 name|raw_arg_begin
 argument_list|()
@@ -7674,9 +7478,6 @@ return|return
 name|SubExprs
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_arg_iterator
 name|raw_arg_end
 argument_list|()
@@ -7694,9 +7495,6 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getStartLoc
 argument_list|()
@@ -7709,9 +7507,6 @@ name|getBegin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getEndLoc
 argument_list|()
@@ -7724,9 +7519,6 @@ name|getEnd
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceRange
 name|getDirectInitRange
 argument_list|()
@@ -7736,9 +7528,6 @@ return|return
 name|DirectInitRange
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -7749,9 +7538,6 @@ return|return
 name|Range
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -7763,9 +7549,6 @@ name|getStartLoc
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -7777,9 +7560,6 @@ name|getEndLoc
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -7799,13 +7579,7 @@ operator|==
 name|CXXNewExprClass
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function
 name|child_range
 name|children
 parameter_list|()
@@ -7821,10 +7595,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Represents a \c delete expression for memory deallocation and
 end_comment
 

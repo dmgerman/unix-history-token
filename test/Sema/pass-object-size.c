@@ -513,6 +513,10 @@ name|overloaded
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// char* inestead of void* is intentional
+end_comment
+
 begin_function
 name|void
 name|FunctionPtrs
@@ -623,6 +627,29 @@ name|NotOverloaded
 argument_list|)
 expr_stmt|;
 comment|//expected-error{{cannot take address of function 'NotOverloaded' because parameter 1 has pass_object_size attribute}}
+name|int
+name|P
+decl_stmt|;
+call|(
+modifier|&
+name|NotOverloaded
+call|)
+argument_list|(
+operator|&
+name|P
+argument_list|)
+expr_stmt|;
+comment|//expected-error{{cannot take address of function 'NotOverloaded' because parameter 1 has pass_object_size attribute}}
+call|(
+modifier|&
+name|IsOverloaded
+call|)
+argument_list|(
+operator|&
+name|P
+argument_list|)
+expr_stmt|;
+comment|//expected-error{{no matching function}} expected-note@35{{candidate address cannot be taken because parameter 1 has pass_object_size attribute}} expected-note@36{{candidate function not viable: no known conversion from 'int *' to 'char *' for 1st argument}}
 block|}
 end_function
 
