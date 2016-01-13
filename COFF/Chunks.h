@@ -1372,9 +1372,30 @@ block|;
 name|uint8_t
 name|Type
 block|; }
-block|;  }
-comment|// namespace coff
+block|;
+specifier|inline
+name|uint64_t
+name|align
+argument_list|(
+argument|uint64_t Value
+argument_list|,
+argument|uint64_t Align
+argument_list|)
+block|{
+return|return
+name|llvm
+operator|::
+name|RoundUpToAlignment
+argument_list|(
+name|Value
+argument_list|,
+name|Align
+argument_list|)
+return|;
 block|}
+expr|}
+comment|// namespace coff
+expr|}
 end_decl_stmt
 
 begin_comment

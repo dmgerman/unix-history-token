@@ -112,6 +112,9 @@ name|class
 name|DefinedRelative
 decl_stmt|;
 name|class
+name|StringChunk
+decl_stmt|;
+name|class
 name|Undefined
 decl_stmt|;
 comment|// Short aliases.
@@ -185,6 +188,18 @@ name|bool
 name|Private
 init|=
 name|false
+decl_stmt|;
+comment|// If an export is a form of /export:foo=dllname.bar, that means
+comment|// that foo should be exported as an alias to bar in the DLL.
+comment|// ForwardTo is set to "dllname.bar" part. Usually empty.
+name|StringRef
+name|ForwardTo
+decl_stmt|;
+name|StringChunk
+modifier|*
+name|ForwardChunk
+init|=
+name|nullptr
 decl_stmt|;
 comment|// True if this /export option was in .drectves section.
 name|bool

@@ -259,15 +259,6 @@ return|;
 block|}
 name|virtual
 name|unsigned
-name|getPltRefReloc
-argument_list|(
-name|unsigned
-name|Type
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|unsigned
 name|getTlsGotReloc
 argument_list|(
 name|unsigned
@@ -362,6 +353,11 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|// Returns true if a relocation is relative to the place being relocated,
+comment|// such as relocations used for PC-relative instructions. Such relocations
+comment|// need not be fixed up if an image is loaded to a different address than
+comment|// the link-time address. So we don't have to emit a relocation for the
+comment|// dynamic linker if isRelRelative returns true.
 name|virtual
 name|bool
 name|isRelRelative
@@ -373,15 +369,10 @@ decl|const
 decl_stmt|;
 name|virtual
 name|bool
-name|isSizeDynReloc
+name|isSizeReloc
 argument_list|(
 name|uint32_t
 name|Type
-argument_list|,
-specifier|const
-name|SymbolBody
-operator|&
-name|S
 argument_list|)
 decl|const
 decl_stmt|;

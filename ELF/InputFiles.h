@@ -522,6 +522,7 @@ operator|::
 name|uintX_t
 name|uintX_t
 expr_stmt|;
+comment|// uint32 in ELFT's byte order
 typedef|typedef
 name|llvm
 operator|::
@@ -539,7 +540,7 @@ name|TargetEndianness
 operator|,
 literal|2
 operator|>
-name|GroupEntryType
+name|uint32_X
 expr_stmt|;
 name|StringRef
 name|getShtGroupSignature
@@ -552,7 +553,7 @@ parameter_list|)
 function_decl|;
 name|ArrayRef
 operator|<
-name|GroupEntryType
+name|uint32_X
 operator|>
 name|getShtGroupEntries
 argument_list|(

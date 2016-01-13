@@ -472,6 +472,15 @@ else|:
 name|this
 return|;
 block|}
+name|Symbol
+modifier|*
+name|getSymbol
+parameter_list|()
+block|{
+return|return
+name|Backref
+return|;
+block|}
 comment|// Decides which symbol should "win" in the symbol table, this or
 comment|// the Other. Returns 1 if this wins, -1 if the Other wins, or 0 if
 comment|// they are duplicate (conflicting) symbols.
@@ -1408,12 +1417,21 @@ name|Elf_Sym
 name|Elf_Sym
 expr_stmt|;
 comment|// Used to represent an undefined symbol which we don't want
-comment|// to add to the output file's symbol table.
+comment|// to add to the output file's symbol table. The `IgnoredWeak`
+comment|// has weak binding and can be substituted. The `Ignore` has
+comment|// global binding and gets priority over symbols from shared libs.
 specifier|static
 name|Elf_Sym
-name|IgnoreUndef
+name|IgnoredWeak
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|Elf_Sym
+name|Ignored
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// The content for _end and end symbols.
@@ -1478,7 +1496,29 @@ operator|<
 name|ELFT
 operator|>
 operator|::
-name|IgnoreUndef
+name|IgnoredWeak
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|typename
+name|ElfSym
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|Elf_Sym
+name|ElfSym
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|Ignored
 expr_stmt|;
 end_expr_stmt
 

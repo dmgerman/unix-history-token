@@ -1122,6 +1122,10 @@ argument_list|,
 name|SectionAttr
 operator|&
 name|sectionAttrs
+argument_list|,
+name|bool
+operator|&
+name|relocsToDefinedCanBeImplicit
 argument_list|)
 decl_stmt|;
 block|}
