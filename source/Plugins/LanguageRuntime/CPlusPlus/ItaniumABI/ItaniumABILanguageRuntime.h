@@ -228,15 +228,6 @@ name|CreateExceptionSearchFilter
 argument_list|()
 name|override
 block|;
-name|size_t
-name|GetAlternateManglings
-argument_list|(
-argument|const ConstString&mangled
-argument_list|,
-argument|std::vector<ConstString>&alternates
-argument_list|)
-name|override
-block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------

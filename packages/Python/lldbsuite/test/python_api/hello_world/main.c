@@ -5,26 +5,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/prctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|main
@@ -39,56 +19,9 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-comment|// Immediately enable any ptracer so that we can allow the stub attach
-comment|// operation to succeed.  Some Linux kernels are locked down so that
-comment|// only an ancestor process can be a ptracer of a process.  This disables that
-comment|// restriction.  Without it, attach-related stub tests will fail.
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PR_SET_PTRACER
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PR_SET_PTRACER_ANY
-argument_list|)
-name|int
-name|prctl_result
-decl_stmt|;
-comment|// For now we execute on best effort basis.  If this fails for
-comment|// some reason, so be it.
-name|prctl_result
-operator|=
-name|prctl
-argument_list|(
-name|PR_SET_PTRACER
-argument_list|,
-name|PR_SET_PTRACER_ANY
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
+name|lldb_enable_attach
+argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|prctl_result
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"Hello world.\n"

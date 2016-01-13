@@ -452,6 +452,31 @@ name|LLDB_INVALID_ADDRESS
 return|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue kind for the queue at a thread's dispatch_qaddr.
+comment|///
+comment|/// Retrieve the Queue kind - either eQueueKindSerial or
+comment|/// eQueueKindConcurrent, indicating that this queue processes work
+comment|/// items serially or concurrently.
+comment|///
+comment|/// @return
+comment|///     The Queue kind, if it could be read, else eQueueKindUnknown.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|QueueKind
+name|GetQueueKind
+argument_list|(
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+name|lldb
+operator|::
+name|eQueueKindUnknown
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|/// Get the pending work items for a libdispatch Queue
 comment|///
 comment|/// If this system/process is using libdispatch and the runtime can do so,

@@ -38,11 +38,17 @@ name|defined
 argument_list|(
 name|__arm__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
 end_if
-
-begin_comment
-comment|// arm register context only needed on arm devices
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -240,6 +246,19 @@ block|;
 name|protected
 operator|:
 name|Error
+name|DoReadRegisterValue
+argument_list|(
+argument|uint32_t offset
+argument_list|,
+argument|const char* reg_name
+argument_list|,
+argument|uint32_t size
+argument_list|,
+argument|RegisterValue&value
+argument_list|)
+name|override
+block|;
+name|Error
 name|DoWriteRegisterValue
 argument_list|(
 argument|uint32_t offset
@@ -247,6 +266,24 @@ argument_list|,
 argument|const char* reg_name
 argument_list|,
 argument|const RegisterValue&value
+argument_list|)
+name|override
+block|;
+name|Error
+name|DoReadGPR
+argument_list|(
+argument|void *buf
+argument_list|,
+argument|size_t buf_size
+argument_list|)
+name|override
+block|;
+name|Error
+name|DoWriteGPR
+argument_list|(
+argument|void *buf
+argument_list|,
+argument|size_t buf_size
 argument_list|)
 name|override
 block|;
@@ -488,7 +525,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// defined(__arm__)
+comment|// defined(__arm__) || defined(__arm64__) || defined(__aarch64__)
 end_comment
 
 end_unit

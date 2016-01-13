@@ -155,6 +155,11 @@ operator|::
 name|addr_t
 operator|&
 name|returned_func
+argument_list|,
+name|bool
+name|trap_exceptions
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 block|}

@@ -2220,6 +2220,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|ConstString
+name|DeclContextGetScopeQualifiedName
+argument_list|(
+name|void
+operator|*
+name|opaque_decl_ctx
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|DeclContextIsClassMethod
 argument_list|(

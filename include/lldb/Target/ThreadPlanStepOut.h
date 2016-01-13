@@ -109,6 +109,8 @@ argument_list|,
 argument|uint32_t frame_idx
 argument_list|,
 argument|LazyBool step_out_avoids_code_without_debug_info
+argument_list|,
+argument|bool continue_to_next_branch = false
 argument_list|)
 empty_stmt|;
 operator|~

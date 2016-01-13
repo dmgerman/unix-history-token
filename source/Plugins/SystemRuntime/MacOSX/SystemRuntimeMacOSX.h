@@ -347,7 +347,6 @@ argument|lldb::addr_t item_ref
 argument_list|)
 name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|QueueKind
@@ -355,6 +354,7 @@ name|GetQueueKind
 argument_list|(
 argument|lldb::addr_t dispatch_queue_addr
 argument_list|)
+name|override
 block|;
 name|void
 name|AddThreadExtendedInfoPacketHints

@@ -292,6 +292,11 @@ name|GetName
 argument_list|()
 specifier|const
 expr_stmt|;
+name|ConstString
+name|GetScopeQualifiedName
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|IsStructUnionOrClass
 argument_list|()

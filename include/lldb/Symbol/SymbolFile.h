@@ -608,6 +608,27 @@ argument_list|,
 argument|TypeMap& types
 argument_list|)
 block|;
+name|virtual
+name|void
+name|GetMangledNamesForFunction
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|scope_qualified_name
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|mangled_names
+argument_list|)
+block|;
 comment|//  virtual uint32_t        FindTypes (const SymbolContext& sc, const RegularExpression& regex, bool append, uint32_t max_matches, TypeList& types) = 0;
 name|virtual
 name|TypeList

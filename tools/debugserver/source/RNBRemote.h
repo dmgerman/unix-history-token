@@ -1966,6 +1966,10 @@ argument_list|,
 name|nub_addr_t
 name|dispatch_qaddr
 argument_list|,
+name|nub_addr_t
+operator|&
+name|dispatch_queue_t
+argument_list|,
 name|std
 operator|::
 name|string

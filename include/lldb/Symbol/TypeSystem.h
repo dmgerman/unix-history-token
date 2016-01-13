@@ -403,6 +403,17 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|ConstString
+name|DeclContextGetScopeQualifiedName
+argument_list|(
+name|void
+operator|*
+name|opaque_decl_ctx
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
 name|bool
 name|DeclContextIsClassMethod
 argument_list|(
