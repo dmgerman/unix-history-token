@@ -1774,6 +1774,20 @@ name|uint64_t
 name|getScratchRsrcWords23
 argument_list|()
 specifier|const
+block|;
+name|bool
+name|isLowLatencyInstruction
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isHighLatencyInstruction
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 name|namespace

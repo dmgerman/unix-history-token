@@ -706,6 +706,15 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
+name|PipeType
+operator|>
+name|PipeTypes
+block|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
 name|QualifiedTemplateName
 operator|>
 name|QualifiedTemplateNames
@@ -4830,6 +4839,21 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Return pipe type for the specified type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getPipeType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Gets the struct used to keep track of the extended descriptor for
@@ -10875,15 +10899,14 @@ argument|QualType Type
 argument_list|)
 specifier|const
 block|{
+comment|// If Type is a signed integer type larger than 64 bits, we need to be sure
+comment|// to sign extend Res appropriately.
 name|llvm
 operator|::
 name|APSInt
 name|Res
 argument_list|(
-name|getIntWidth
-argument_list|(
-name|Type
-argument_list|)
+literal|64
 argument_list|,
 operator|!
 name|Type
@@ -10896,23 +10919,50 @@ name|Res
 operator|=
 name|Value
 block|;
+name|unsigned
+name|Width
+operator|=
+name|getIntWidth
+argument_list|(
+name|Type
+argument_list|)
+block|;
+if|if
+condition|(
+name|Width
+operator|!=
+name|Res
+operator|.
+name|getBitWidth
+argument_list|()
+condition|)
+return|return
+name|Res
+operator|.
+name|extOrTrunc
+argument_list|(
+name|Width
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|Res
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_function_decl
-name|bool
+begin_expr_stmt
+unit|}    bool
 name|isSentinelNullExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|Expr
-modifier|*
+operator|*
 name|E
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Get the implementation of the ObjCInterfaceDecl \p D, or NULL if

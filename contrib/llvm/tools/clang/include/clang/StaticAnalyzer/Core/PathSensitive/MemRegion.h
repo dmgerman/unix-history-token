@@ -285,7 +285,7 @@ expr|enum
 name|Kind
 block|{
 comment|// Memory spaces.
-name|GenericMemSpaceRegionKind
+name|CodeSpaceRegionKind
 block|,
 name|StackLocalsSpaceRegionKind
 block|,
@@ -303,7 +303,7 @@ name|GlobalSystemSpaceRegionKind
 block|,
 name|GlobalImmutableSpaceRegionKind
 block|,
-name|BEG_NON_STATIC_GLOBAL_MEMSPACES
+name|BEGIN_NON_STATIC_GLOBAL_MEMSPACES
 operator|=
 name|GlobalInternalSpaceRegionKind
 block|,
@@ -311,7 +311,7 @@ name|END_NON_STATIC_GLOBAL_MEMSPACES
 operator|=
 name|GlobalImmutableSpaceRegionKind
 block|,
-name|BEG_GLOBAL_MEMSPACES
+name|BEGIN_GLOBAL_MEMSPACES
 operator|=
 name|StaticGlobalSpaceRegionKind
 block|,
@@ -319,9 +319,9 @@ name|END_GLOBAL_MEMSPACES
 operator|=
 name|GlobalImmutableSpaceRegionKind
 block|,
-name|BEG_MEMSPACES
+name|BEGIN_MEMSPACES
 operator|=
-name|GenericMemSpaceRegionKind
+name|CodeSpaceRegionKind
 block|,
 name|END_MEMSPACES
 operator|=
@@ -333,21 +333,21 @@ block|,
 name|AllocaRegionKind
 block|,
 comment|// Typed regions.
-name|BEG_TYPED_REGIONS
+name|BEGIN_TYPED_REGIONS
 block|,
-name|FunctionTextRegionKind
+name|FunctionCodeRegionKind
 operator|=
-name|BEG_TYPED_REGIONS
+name|BEGIN_TYPED_REGIONS
 block|,
-name|BlockTextRegionKind
+name|BlockCodeRegionKind
 block|,
 name|BlockDataRegionKind
 block|,
-name|BEG_TYPED_VALUE_REGIONS
+name|BEGIN_TYPED_VALUE_REGIONS
 block|,
 name|CompoundLiteralRegionKind
 operator|=
-name|BEG_TYPED_VALUE_REGIONS
+name|BEGIN_TYPED_VALUE_REGIONS
 block|,
 name|CXXThisRegionKind
 block|,
@@ -358,11 +358,11 @@ block|,
 name|ElementRegionKind
 block|,
 comment|// Decl Regions.
-name|BEG_DECL_REGIONS
+name|BEGIN_DECL_REGIONS
 block|,
 name|VarRegionKind
 operator|=
-name|BEG_DECL_REGIONS
+name|BEGIN_DECL_REGIONS
 block|,
 name|FieldRegionKind
 block|,
@@ -602,10 +602,6 @@ name|MemRegion
 block|{
 name|protected
 operator|:
-name|friend
-name|class
-name|MemRegionManager
-block|;
 name|MemRegionManager
 operator|*
 name|Mgr
@@ -614,7 +610,7 @@ name|MemSpaceRegion
 argument_list|(
 argument|MemRegionManager *mgr
 argument_list|,
-argument|Kind k = GenericMemSpaceRegionKind
+argument|Kind k
 argument_list|)
 operator|:
 name|MemRegion
@@ -684,11 +680,65 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_MEMSPACES
+name|BEGIN_MEMSPACES
 operator|&&
 name|k
 operator|<=
 name|END_MEMSPACES
+return|;
+block|}
+expr|}
+block|;
+comment|/// CodeSpaceRegion - The memory space that holds the executable code of
+comment|/// functions and blocks.
+name|class
+name|CodeSpaceRegion
+operator|:
+name|public
+name|MemSpaceRegion
+block|{
+name|friend
+name|class
+name|MemRegionManager
+block|;
+name|CodeSpaceRegion
+argument_list|(
+name|MemRegionManager
+operator|*
+name|mgr
+argument_list|)
+operator|:
+name|MemSpaceRegion
+argument_list|(
+argument|mgr
+argument_list|,
+argument|CodeSpaceRegionKind
+argument_list|)
+block|{}
+name|public
+operator|:
+name|void
+name|dumpToStream
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MemRegion *R
+argument_list|)
+block|{
+return|return
+name|R
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|CodeSpaceRegionKind
 return|;
 block|}
 expr|}
@@ -740,7 +790,7 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_GLOBAL_MEMSPACES
+name|BEGIN_GLOBAL_MEMSPACES
 operator|&&
 name|k
 operator|<=
@@ -852,10 +902,6 @@ operator|:
 name|public
 name|GlobalsSpaceRegion
 block|{
-name|friend
-name|class
-name|MemRegionManager
-block|;
 name|protected
 operator|:
 name|NonStaticGlobalSpaceRegion
@@ -892,7 +938,7 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_NON_STATIC_GLOBAL_MEMSPACES
+name|BEGIN_NON_STATIC_GLOBAL_MEMSPACES
 operator|&&
 name|k
 operator|<=
@@ -1718,7 +1764,7 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_TYPED_REGIONS
+name|BEGIN_TYPED_REGIONS
 operator|&&
 name|k
 operator|<=
@@ -1871,7 +1917,7 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_TYPED_VALUE_REGIONS
+name|BEGIN_TYPED_VALUE_REGIONS
 operator|&&
 name|k
 operator|<=
@@ -1939,18 +1985,18 @@ block|;
 return|return
 name|k
 operator|>=
-name|FunctionTextRegionKind
+name|FunctionCodeRegionKind
 operator|&&
 name|k
 operator|<=
-name|BlockTextRegionKind
+name|BlockCodeRegionKind
 return|;
 block|}
 expr|}
 block|;
-comment|/// FunctionTextRegion - A region that represents code texts of function.
+comment|/// FunctionCodeRegion - A region that represents code texts of function.
 name|class
-name|FunctionTextRegion
+name|FunctionCodeRegion
 operator|:
 name|public
 name|CodeTextRegion
@@ -1962,7 +2008,7 @@ name|FD
 block|;
 name|public
 operator|:
-name|FunctionTextRegion
+name|FunctionCodeRegion
 argument_list|(
 specifier|const
 name|NamedDecl
@@ -1979,7 +2025,7 @@ name|CodeTextRegion
 argument_list|(
 name|sreg
 argument_list|,
-name|FunctionTextRegionKind
+name|FunctionCodeRegionKind
 argument_list|)
 block|,
 name|FD
@@ -2133,19 +2179,19 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|FunctionTextRegionKind
+name|FunctionCodeRegionKind
 return|;
 block|}
 expr|}
 block|;
-comment|/// BlockTextRegion - A region that represents code texts of blocks (closures).
-comment|///  Blocks are represented with two kinds of regions.  BlockTextRegions
+comment|/// BlockCodeRegion - A region that represents code texts of blocks (closures).
+comment|///  Blocks are represented with two kinds of regions.  BlockCodeRegions
 comment|///  represent the "code", while BlockDataRegions represent instances of blocks,
 comment|///  which correspond to "code+data".  The distinction is important, because
 comment|///  like a closure a block captures the values of externally referenced
 comment|///  variables.
 name|class
-name|BlockTextRegion
+name|BlockCodeRegion
 operator|:
 name|public
 name|CodeTextRegion
@@ -2166,7 +2212,7 @@ block|;
 name|CanQualType
 name|locTy
 block|;
-name|BlockTextRegion
+name|BlockCodeRegion
 argument_list|(
 argument|const BlockDecl *bd
 argument_list|,
@@ -2181,7 +2227,7 @@ name|CodeTextRegion
 argument_list|(
 name|sreg
 argument_list|,
-name|BlockTextRegionKind
+name|BlockCodeRegionKind
 argument_list|)
 block|,
 name|BD
@@ -2287,13 +2333,13 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|BlockTextRegionKind
+name|BlockCodeRegionKind
 return|;
 block|}
 expr|}
 block|;
 comment|/// BlockDataRegion - A region that represents a block instance.
-comment|///  Blocks are represented with two kinds of regions.  BlockTextRegions
+comment|///  Blocks are represented with two kinds of regions.  BlockCodeRegions
 comment|///  represent the "code", while BlockDataRegions represent instances of blocks,
 comment|///  which correspond to "code+data".  The distinction is important, because
 comment|///  like a closure a block captures the values of externally referenced
@@ -2309,7 +2355,7 @@ name|class
 name|MemRegionManager
 block|;
 specifier|const
-name|BlockTextRegion
+name|BlockCodeRegion
 operator|*
 name|BC
 block|;
@@ -2332,7 +2378,7 @@ name|OriginalVars
 block|;
 name|BlockDataRegion
 argument_list|(
-argument|const BlockTextRegion *bc
+argument|const BlockCodeRegion *bc
 argument_list|,
 argument|const LocationContext *lc
 argument_list|,
@@ -2376,7 +2422,7 @@ block|{}
 name|public
 operator|:
 specifier|const
-name|BlockTextRegion
+name|BlockCodeRegion
 operator|*
 name|getCodeRegion
 argument_list|()
@@ -2635,7 +2681,7 @@ name|FoldingSetNodeID
 operator|&
 argument_list|,
 specifier|const
-name|BlockTextRegion
+name|BlockCodeRegion
 operator|*
 argument_list|,
 specifier|const
@@ -3322,7 +3368,7 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_DECL_REGIONS
+name|BEGIN_DECL_REGIONS
 operator|&&
 name|k
 operator|<=
@@ -4464,7 +4510,7 @@ name|UnknownSpaceRegion
 operator|*
 name|unknown
 block|;
-name|MemSpaceRegion
+name|CodeSpaceRegion
 operator|*
 name|code
 block|;
@@ -4596,13 +4642,13 @@ block|;
 comment|/// getUnknownRegion - Retrieve the memory region associated with unknown
 comment|/// memory space.
 specifier|const
-name|MemSpaceRegion
+name|UnknownSpaceRegion
 operator|*
 name|getUnknownRegion
 argument_list|()
 block|;
 specifier|const
-name|MemSpaceRegion
+name|CodeSpaceRegion
 operator|*
 name|getCodeRegion
 argument_list|()
@@ -4898,9 +4944,9 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|FunctionTextRegion
+name|FunctionCodeRegion
 operator|*
-name|getFunctionTextRegion
+name|getFunctionCodeRegion
 argument_list|(
 specifier|const
 name|NamedDecl
@@ -4909,9 +4955,9 @@ name|FD
 argument_list|)
 block|;
 specifier|const
-name|BlockTextRegion
+name|BlockCodeRegion
 operator|*
-name|getBlockTextRegion
+name|getBlockCodeRegion
 argument_list|(
 argument|const BlockDecl *BD
 argument_list|,
@@ -4929,7 +4975,7 @@ name|BlockDataRegion
 operator|*
 name|getBlockDataRegion
 argument_list|(
-argument|const BlockTextRegion *bc
+argument|const BlockCodeRegion *bc
 argument_list|,
 argument|const LocationContext *lc
 argument_list|,

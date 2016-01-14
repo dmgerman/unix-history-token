@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCInstrDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -73,9 +79,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|formatted_raw_ostream
-decl_stmt|;
 name|class
 name|MCAsmBackend
 decl_stmt|;
@@ -89,31 +92,16 @@ name|class
 name|MCInstrInfo
 decl_stmt|;
 name|class
-name|MCRegisterInfo
-decl_stmt|;
-name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
-name|MCStreamer
-decl_stmt|;
-name|class
 name|MCSubtargetInfo
-decl_stmt|;
-name|class
-name|MCTargetStreamer
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|class
 name|Target
 decl_stmt|;
 name|class
 name|Triple
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 name|class
 name|raw_pwrite_stream
@@ -135,11 +123,6 @@ name|MCInstrInfo
 modifier|&
 name|MCII
 parameter_list|,
-specifier|const
-name|MCRegisterInfo
-modifier|&
-name|MRI
-parameter_list|,
 name|MCContext
 modifier|&
 name|Ctx
@@ -150,22 +133,9 @@ modifier|*
 name|createWebAssemblyAsmBackend
 parameter_list|(
 specifier|const
-name|Target
-modifier|&
-name|T
-parameter_list|,
-specifier|const
-name|MCRegisterInfo
-modifier|&
-name|MRI
-parameter_list|,
-specifier|const
 name|Triple
 modifier|&
 name|TT
-parameter_list|,
-name|StringRef
-name|CPU
 parameter_list|)
 function_decl|;
 name|MCObjectWriter
@@ -183,6 +153,88 @@ name|uint8_t
 name|OSABI
 parameter_list|)
 function_decl|;
+name|namespace
+name|WebAssembly
+block|{
+enum|enum
+name|OperandType
+block|{
+comment|/// Basic block label in a branch construct.
+name|OPERAND_BASIC_BLOCK
+init|=
+name|MCOI
+operator|::
+name|OPERAND_FIRST_TARGET
+block|,
+comment|/// Floating-point immediate.
+name|OPERAND_FPIMM
+block|}
+enum|;
+comment|/// WebAssembly-specific directive identifiers.
+enum|enum
+name|Directive
+block|{
+comment|// FIXME: This is not the real binary encoding.
+name|DotParam
+init|=
+name|UINT64_MAX
+operator|-
+literal|0
+block|,
+comment|///< .param
+name|DotResult
+init|=
+name|UINT64_MAX
+operator|-
+literal|1
+block|,
+comment|///< .result
+name|DotLocal
+init|=
+name|UINT64_MAX
+operator|-
+literal|2
+block|,
+comment|///< .local
+name|DotEndFunc
+init|=
+name|UINT64_MAX
+operator|-
+literal|3
+block|,
+comment|///< .endfunc
+block|}
+enum|;
+block|}
+comment|// end namespace WebAssembly
+name|namespace
+name|WebAssemblyII
+block|{
+enum|enum
+block|{
+comment|// For variadic instructions, this flag indicates whether an operand
+comment|// in the variable_ops range is an immediate value.
+name|VariableOpIsImmediate
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|// For immediate values in the variable_ops range, this flag indicates
+comment|// whether the value represents a control-flow label.
+name|VariableOpImmediateIsLabel
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|, }
+enum|;
+block|}
+comment|// end namespace WebAssemblyII
 block|}
 end_decl_stmt
 

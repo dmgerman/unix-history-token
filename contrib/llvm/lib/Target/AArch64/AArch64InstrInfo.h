@@ -619,6 +619,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Return true when Inst is associative and commutative so that it can be
+comment|/// reassociated.
+name|bool
+name|isAssociativeAndCommutative
+argument_list|(
+argument|const MachineInstr&Inst
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// When getMachineCombinerPatterns() finds patterns, this function generates
 comment|/// the instructions that could replace the original code sequence
 name|void

@@ -3241,6 +3241,16 @@ argument_list|)
 name|override
 decl_stmt|;
 name|void
+name|DefaultArgumentInstantiated
+argument_list|(
+specifier|const
+name|ParmVarDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
 name|FunctionDefinitionInstantiated
 argument_list|(
 specifier|const

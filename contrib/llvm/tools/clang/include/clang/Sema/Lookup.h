@@ -1547,6 +1547,13 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|dump
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|print
 parameter_list|(
 name|raw_ostream

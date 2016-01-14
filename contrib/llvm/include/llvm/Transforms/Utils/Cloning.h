@@ -448,79 +448,6 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// A helper class used with CloneAndPruneIntoFromInst to change the default
-comment|/// behavior while instructions are being cloned.
-name|class
-name|CloningDirector
-block|{
-name|public
-label|:
-comment|/// This enumeration describes the way CloneAndPruneIntoFromInst should
-comment|/// proceed after the CloningDirector has examined an instruction.
-enum|enum
-name|CloningAction
-block|{
-comment|///< Continue cloning the instruction (default behavior).
-name|CloneInstruction
-block|,
-comment|///< Skip this instruction but continue cloning the current basic block.
-name|SkipInstruction
-block|,
-comment|///< Skip this instruction and stop cloning the current basic block.
-name|StopCloningBB
-block|,
-comment|///< Don't clone the terminator but clone the current block's successors.
-name|CloneSuccessors
-block|}
-enum|;
-name|virtual
-operator|~
-name|CloningDirector
-argument_list|()
-block|{}
-comment|/// Subclasses must override this function to customize cloning behavior.
-name|virtual
-name|CloningAction
-name|handleInstruction
-argument_list|(
-name|ValueToValueMapTy
-operator|&
-name|VMap
-argument_list|,
-specifier|const
-name|Instruction
-operator|*
-name|Inst
-argument_list|,
-name|BasicBlock
-operator|*
-name|NewBB
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|ValueMapTypeRemapper
-modifier|*
-name|getTypeRemapper
-parameter_list|()
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-name|virtual
-name|ValueMaterializer
-modifier|*
-name|getValueMaterializer
-parameter_list|()
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-block|}
-empty_stmt|;
 name|void
 name|CloneAndPruneIntoFromInst
 argument_list|(
@@ -563,12 +490,6 @@ argument_list|,
 name|ClonedCodeInfo
 operator|*
 name|CodeInfo
-operator|=
-name|nullptr
-argument_list|,
-name|CloningDirector
-operator|*
-name|Director
 operator|=
 name|nullptr
 argument_list|)

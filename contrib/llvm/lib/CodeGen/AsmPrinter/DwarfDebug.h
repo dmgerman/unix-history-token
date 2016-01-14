@@ -1766,7 +1766,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug loc section.
+comment|/// Emit variable locations into a debug loc section.
 end_comment
 
 begin_function_decl
@@ -1777,7 +1777,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug loc dwo section.
+comment|/// Emit variable locations into a debug loc dwo section.
 end_comment
 
 begin_function_decl
@@ -1788,7 +1788,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug aranges section.
+comment|/// Emit address ranges into a debug aranges section.
 end_comment
 
 begin_function_decl
@@ -1799,13 +1799,76 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug ranges section.
+comment|/// Emit address ranges into a debug ranges section.
 end_comment
 
 begin_function_decl
 name|void
 name|emitDebugRanges
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit macros into a debug macinfo section.
+end_comment
+
+begin_function_decl
+name|void
+name|emitDebugMacinfo
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|emitMacro
+parameter_list|(
+name|AsmStreamerBase
+modifier|*
+name|AS
+parameter_list|,
+name|DIMacro
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|emitMacroFile
+parameter_list|(
+name|AsmStreamerBase
+modifier|*
+name|AS
+parameter_list|,
+name|DIMacroFile
+modifier|&
+name|F
+parameter_list|,
+name|DwarfCompileUnit
+modifier|&
+name|U
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|handleMacroNodes
+parameter_list|(
+name|AsmStreamerBase
+modifier|*
+name|AS
+parameter_list|,
+name|DIMacroNodeArray
+name|Nodes
+parameter_list|,
+name|DwarfCompileUnit
+modifier|&
+name|U
+parameter_list|)
 function_decl|;
 end_function_decl
 

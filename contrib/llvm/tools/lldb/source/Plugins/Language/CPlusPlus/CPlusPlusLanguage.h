@@ -259,6 +259,15 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|std
+operator|::
+name|string
+name|GetScopeQualifiedName
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|StringRef

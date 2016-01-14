@@ -331,6 +331,9 @@ block|,
 comment|/// Tags, declared with 'struct foo;' and referenced with
 comment|/// 'struct foo'.  All tags are also types.  This is what
 comment|/// elaborated-type-specifiers look for in C.
+comment|/// This also contains names that conflict with tags in the
+comment|/// same scope but that are otherwise ordinary names (non-type
+comment|/// template parameters and indirect field declarations).
 name|IDNS_Tag
 init|=
 literal|0x0002
@@ -357,7 +360,7 @@ init|=
 literal|0x0010
 block|,
 comment|/// Ordinary names.  In C, everything that's not a label, tag,
-comment|/// or member ends up here.
+comment|/// member, or function-local extern ends up here.
 name|IDNS_Ordinary
 init|=
 literal|0x0020
@@ -398,7 +401,9 @@ literal|0x0400
 block|,
 comment|/// This declaration is a function-local extern declaration of a
 comment|/// variable or function. This may also be IDNS_Ordinary if it
-comment|/// has been declared outside any function.
+comment|/// has been declared outside any function. These act mostly like
+comment|/// invisible friend declarations, but are also visible to unqualified
+comment|/// lookup within the scope of the declaring function.
 name|IDNS_LocalExtern
 init|=
 literal|0x0800

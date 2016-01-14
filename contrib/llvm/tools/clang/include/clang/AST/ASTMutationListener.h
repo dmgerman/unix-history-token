@@ -109,6 +109,9 @@ name|class
 name|ObjCPropertyDecl
 decl_stmt|;
 name|class
+name|ParmVarDecl
+decl_stmt|;
+name|class
 name|QualType
 decl_stmt|;
 name|class
@@ -304,6 +307,17 @@ name|FunctionDefinitionInstantiated
 parameter_list|(
 specifier|const
 name|FunctionDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A default argument was instantiated.
+name|virtual
+name|void
+name|DefaultArgumentInstantiated
+parameter_list|(
+specifier|const
+name|ParmVarDecl
 modifier|*
 name|D
 parameter_list|)

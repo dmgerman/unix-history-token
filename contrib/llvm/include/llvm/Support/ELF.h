@@ -1389,7 +1389,16 @@ comment|// CSR Kalimba architecture family
 name|EM_AMDGPU
 init|=
 literal|224
+block|,
 comment|// AMD GPU architecture
+comment|// A request has been made to the maintainer of the official registry for
+comment|// such numbers for an official value for WebAssembly. As soon as one is
+comment|// allocated, this enum will be updated to use it.
+name|EM_WEBASSEMBLY
+init|=
+literal|0x4157
+block|,
+comment|// WebAssembly architecture
 block|}
 enum|;
 comment|// Object file classes.
@@ -2334,6 +2343,14 @@ block|{
 include|#
 directive|include
 file|"ELFRelocs/Sparc.def"
+block|}
+enum|;
+comment|// ELF Relocation types for WebAssembly
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/WebAssembly.def"
 block|}
 enum|;
 undef|#
@@ -3910,6 +3927,15 @@ block|,
 name|PT_AMDGPU_HSA_LOAD_CODE_AGENT
 init|=
 literal|0x60000003
+block|,
+comment|// WebAssembly program header types.
+name|PT_WEBASSEMBLY_FUNCTIONS
+init|=
+name|PT_LOPROC
+operator|+
+literal|0
+block|,
+comment|// Function definitions.
 block|}
 enum|;
 comment|// Segment flag bits.

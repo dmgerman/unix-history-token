@@ -502,7 +502,7 @@ expr_stmt|;
 name|unsigned
 name|Kind
 range|:
-literal|2
+literal|3
 decl_stmt|;
 block|}
 empty_stmt|;

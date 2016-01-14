@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Process.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sstream>
 end_include
 
@@ -725,9 +731,12 @@ name|Memory
 operator|::
 name|allocateMappedMemory
 argument_list|(
-name|TargetT
+name|sys
 operator|::
-name|PageSize
+name|Process
+operator|::
+name|getPageSize
+argument_list|()
 argument_list|,
 name|nullptr
 argument_list|,
@@ -759,9 +768,12 @@ name|unsigned
 name|NumTrampolines
 operator|=
 operator|(
-name|TargetT
+name|sys
 operator|::
-name|PageSize
+name|Process
+operator|::
+name|getPageSize
+argument_list|()
 operator|-
 name|TargetT
 operator|::
@@ -1030,11 +1042,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// @brief IndirectStubsManager implementation for a concrete target, e.g.
+comment|/// @brief IndirectStubsManager implementation for the host architecture, e.g.
 end_comment
 
 begin_comment
-comment|///        OrcX86_64. (See OrcTargetSupport.h).
+comment|///        OrcX86_64. (See OrcArchitectureSupport.h).
 end_comment
 
 begin_expr_stmt

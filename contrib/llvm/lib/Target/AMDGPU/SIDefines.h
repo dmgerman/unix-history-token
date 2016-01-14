@@ -724,6 +724,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R_0286D0_SPI_PS_INPUT_ADDR
+value|0x0286D0
+end_define
+
+begin_define
+define|#
+directive|define
 name|R_00B848_COMPUTE_PGM_RSRC1
 value|0x00B848
 end_define

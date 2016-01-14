@@ -152,7 +152,22 @@ name|DerivedArgList
 operator|*
 name|TranslatedArgs
 expr_stmt|;
-comment|/// The list of actions.
+comment|/// The list of actions we've created via MakeAction.  This is not accessible
+comment|/// to consumers; it's here just to manage ownership.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Action
+operator|>>
+name|AllActions
+expr_stmt|;
+comment|/// The list of actions.  This is maintained and modified by consumers, via
+comment|/// getActions().
 name|ActionList
 name|Actions
 decl_stmt|;
@@ -387,6 +402,63 @@ specifier|const
 block|{
 return|return
 name|Actions
+return|;
+block|}
+comment|/// Creates a new Action owned by this Compilation.
+comment|///
+comment|/// The new Action is *not* added to the list returned by getActions().
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+operator|...
+name|Args
+operator|>
+name|T
+operator|*
+name|MakeAction
+argument_list|(
+argument|Args&&... Arg
+argument_list|)
+block|{
+name|T
+operator|*
+name|RawPtr
+operator|=
+name|new
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|Args
+operator|>
+operator|(
+name|Arg
+operator|)
+operator|...
+argument_list|)
+block|;
+name|AllActions
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Action
+operator|>
+operator|(
+name|RawPtr
+operator|)
+argument_list|)
+block|;
+return|return
+name|RawPtr
 return|;
 block|}
 name|JobList

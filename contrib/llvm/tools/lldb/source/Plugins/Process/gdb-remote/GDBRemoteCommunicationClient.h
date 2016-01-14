@@ -1420,6 +1420,14 @@ name|m_supports_qSymbol
 operator|:
 literal|1
 block|,
+name|m_qSymbol_requests_done
+operator|:
+literal|1
+block|,
+name|m_supports_qModuleInfo
+operator|:
+literal|1
+block|,
 name|m_supports_jThreadsInfo
 operator|:
 literal|1

@@ -1953,20 +1953,14 @@ argument_list|(
 name|_MSC_VER
 argument_list|)
 operator|&&
-operator|(
-name|_MSC_VER
-operator|<
-literal|1900
-operator|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
 name|__clang__
 argument_list|)
-comment|// For old versions of MSVC, we use a weird nonstandard __if_exists
-comment|// statement, since before MSVC2015, it was not standards-conformant
-comment|// enough to compile the usual code below.
+comment|// For MSVC, we use a weird nonstandard __if_exists statement, as it
+comment|// is not standards-conformant enough to properly compile the standard
+comment|// code below. (At least up through MSVC 2015 require this workaround)
 name|template
 operator|<
 name|typename

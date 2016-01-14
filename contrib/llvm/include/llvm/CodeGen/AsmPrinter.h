@@ -778,6 +778,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Lower the specified LLVM Constant to an MCExpr.
+name|virtual
 specifier|const
 name|MCExpr
 modifier|*

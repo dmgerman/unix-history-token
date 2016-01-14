@@ -258,9 +258,15 @@ name|updateInt
 argument_list|(
 name|Value
 argument_list|,
+name|static_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
 name|IntVal
+operator|)
 argument_list|)
-block|; }
+block|;   }
 name|void
 name|initWithPointer
 argument_list|(
@@ -301,7 +307,13 @@ argument_list|,
 name|PtrVal
 argument_list|)
 argument_list|,
+name|static_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
 name|IntVal
+operator|)
 argument_list|)
 block|;   }
 name|PointerTy

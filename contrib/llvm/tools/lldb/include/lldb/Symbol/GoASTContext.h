@@ -304,6 +304,18 @@ name|ConstString
 argument_list|()
 return|;
 block|}
+name|ConstString
+name|DeclContextGetScopeQualifiedName
+argument_list|(
+argument|void *opaque_decl_ctx
+argument_list|)
+name|override
+block|{
+return|return
+name|ConstString
+argument_list|()
+return|;
+block|}
 name|bool
 name|DeclContextIsClassMethod
 argument_list|(

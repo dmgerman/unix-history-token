@@ -145,13 +145,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_define
-define|#
-directive|define
-name|INSTR_PROF_INDEX_VERSION
-value|3
-end_define
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -245,9 +238,10 @@ block|{
 return|return
 name|AddSegment
 condition|?
-literal|"__DATA,__llvm_covmap"
+literal|"__DATA,"
+name|INSTR_PROF_COVMAP_SECT_NAME_STR
 else|:
-literal|"__llvm_covmap"
+name|INSTR_PROF_COVMAP_SECT_NAME_STR
 return|;
 block|}
 comment|/// Return the name prefix of variables containing instrumented function names.
@@ -301,6 +295,19 @@ parameter_list|()
 block|{
 return|return
 literal|"__llvm_coverage_mapping"
+return|;
+block|}
+comment|/// Return the name of the internal variable recording the array
+comment|/// of PGO name vars referenced by the coverage mapping, The owning
+comment|/// functions of those names are not emitted by FE (e.g, unused inline
+comment|/// functions.)
+specifier|inline
+name|StringRef
+name|getCoverageNamesVarName
+parameter_list|()
+block|{
+return|return
+literal|"__llvm_coverage_names"
 return|;
 block|}
 comment|/// Return the name of function that registers all the per-function control
@@ -1292,6 +1299,18 @@ end_empty_stmt
 
 begin_comment
 unit|}
+comment|/// Sort ValueData Descending by Count
+end_comment
+
+begin_function_decl
+unit|inline
+name|void
+name|sortByCount
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Merge data from another InstrProfValueSiteRecord
 end_comment
 
@@ -1299,20 +1318,35 @@ begin_comment
 comment|/// Optionally scale merged counts by \p Weight.
 end_comment
 
-begin_macro
-unit|instrprof_error
-name|mergeValueData
-argument_list|(
-argument|InstrProfValueSiteRecord&Input
-argument_list|,
-argument|uint64_t Weight =
+begin_function_decl
+name|instrprof_error
+name|merge
+parameter_list|(
+name|InstrProfValueSiteRecord
+modifier|&
+name|Input
+parameter_list|,
+name|uint64_t
+name|Weight
+init|=
 literal|1
-argument_list|)
-end_macro
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|/// Scale up value profile data counts.
+end_comment
+
+begin_function_decl
+name|instrprof_error
+name|scale
+parameter_list|(
+name|uint64_t
+name|Weight
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};
@@ -1519,6 +1553,64 @@ init|=
 literal|1
 parameter_list|)
 function_decl|;
+comment|/// Scale up profile counts (including value profile data) by
+comment|/// \p Weight.
+name|instrprof_error
+name|scale
+parameter_list|(
+name|uint64_t
+name|Weight
+parameter_list|)
+function_decl|;
+comment|/// Sort value profile data (per site) by count.
+name|void
+name|sortValueData
+parameter_list|()
+block|{
+for|for
+control|(
+name|uint32_t
+name|Kind
+init|=
+name|IPVK_First
+init|;
+name|Kind
+operator|<=
+name|IPVK_Last
+condition|;
+operator|++
+name|Kind
+control|)
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|InstrProfValueSiteRecord
+operator|>
+operator|&
+name|SiteRecords
+operator|=
+name|getValueSitesForKind
+argument_list|(
+name|Kind
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|auto
+operator|&
+name|SR
+operator|:
+name|SiteRecords
+control|)
+name|SR
+operator|.
+name|sortByCount
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 comment|/// Clear value data entries
 name|void
 name|clearValueData
@@ -1670,6 +1762,23 @@ parameter_list|,
 name|InstrProfRecord
 modifier|&
 name|Src
+parameter_list|,
+name|uint64_t
+name|Weight
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Scale up value profile data count.
+end_comment
+
+begin_function_decl
+name|instrprof_error
+name|scaleValueProfData
+parameter_list|(
+name|uint32_t
+name|ValueKind
 parameter_list|,
 name|uint64_t
 name|Weight
@@ -2068,30 +2177,103 @@ directive|include
 file|"llvm/ProfileData/InstrProfData.inc"
 end_include
 
+begin_expr_stmt
+name|void
+name|InstrProfValueSiteRecord
+operator|::
+name|sortByCount
+argument_list|()
+block|{
+name|ValueData
+operator|.
+name|sort
+argument_list|(
+index|[]
+operator|(
+specifier|const
+name|InstrProfValueData
+operator|&
+name|left
+operator|,
+specifier|const
+name|InstrProfValueData
+operator|&
+name|right
+operator|)
+block|{
+return|return
+name|left
+operator|.
+name|Count
+operator|>
+name|right
+operator|.
+name|Count
+return|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-comment|/*  * Initialize the record for runtime value profile data.  * Return 0 if the initialization is successful, otherwise  * return 1.  */
+comment|// Now truncate
 end_comment
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|size_t
+name|max_s
+init|=
+name|INSTR_PROF_MAX_NUM_VAL_PER_SITE
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|ValueData
+operator|.
+name|size
+argument_list|()
+operator|>
+name|max_s
+condition|)
+name|ValueData
+operator|.
+name|resize
+argument_list|(
+name|max_s
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_comment
+unit|}
+comment|/* * Initialize the record for runtime value profile data. * Return 0 if the initialization is successful, otherwise * return 1. */
+end_comment
+
+begin_expr_stmt
+unit|int
 name|initializeValueProfRuntimeRecord
-parameter_list|(
+argument_list|(
 name|ValueProfRuntimeRecord
-modifier|*
+operator|*
 name|RuntimeRecord
-parameter_list|,
+argument_list|,
 specifier|const
 name|uint16_t
-modifier|*
+operator|*
 name|NumValueSites
-parameter_list|,
+argument_list|,
 name|ValueProfNode
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|Nodes
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Release memory allocated for the runtime record.  */
@@ -2438,72 +2620,6 @@ end_decl_stmt
 begin_comment
 comment|// end namespace RawInstrProf
 end_comment
-
-begin_decl_stmt
-name|namespace
-name|coverage
-block|{
-comment|// Profile coverage map has the following layout:
-comment|// [CoverageMapFileHeader]
-comment|// [ArrayStart]
-comment|//  [CovMapFunctionRecord]
-comment|//  [CovMapFunctionRecord]
-comment|//  ...
-comment|// [ArrayEnd]
-comment|// [Encoded Region Mapping Data]
-name|LLVM_PACKED_START
-name|template
-operator|<
-name|class
-name|IntPtrT
-operator|>
-expr|struct
-name|CovMapFunctionRecord
-block|{
-define|#
-directive|define
-name|COVMAP_FUNC_RECORD
-parameter_list|(
-name|Type
-parameter_list|,
-name|LLVMType
-parameter_list|,
-name|Name
-parameter_list|,
-name|Init
-parameter_list|)
-value|Type Name;
-include|#
-directive|include
-file|"llvm/ProfileData/InstrProfData.inc"
-block|}
-expr_stmt|;
-comment|// Per module coverage mapping data header, i.e. CoverageMapFileHeader
-comment|// documented above.
-struct|struct
-name|CovMapHeader
-block|{
-define|#
-directive|define
-name|COVMAP_HEADER
-parameter_list|(
-name|Type
-parameter_list|,
-name|LLVMType
-parameter_list|,
-name|Name
-parameter_list|,
-name|Init
-parameter_list|)
-value|Type Name;
-include|#
-directive|include
-file|"llvm/ProfileData/InstrProfData.inc"
-block|}
-struct|;
-name|LLVM_PACKED_END
-block|}
-end_decl_stmt
 
 begin_comment
 unit|}

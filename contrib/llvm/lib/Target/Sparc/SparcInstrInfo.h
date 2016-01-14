@@ -247,6 +247,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|ReverseBranchCondition
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|copyPhysReg
 argument_list|(

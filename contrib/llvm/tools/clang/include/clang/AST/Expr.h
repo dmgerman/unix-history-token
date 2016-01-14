@@ -4504,6 +4504,8 @@ name|Ascii
 block|,
 name|Wide
 block|,
+name|UTF8
+block|,
 name|UTF16
 block|,
 name|UTF32

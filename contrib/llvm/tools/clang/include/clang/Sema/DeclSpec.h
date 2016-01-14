@@ -1264,6 +1264,11 @@ name|TypeSpecOwned
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|TypeSpecPipe
+range|:
+literal|1
+decl_stmt|;
 comment|// type-qualifiers
 name|unsigned
 name|TypeQualifiers
@@ -1398,6 +1403,9 @@ decl_stmt|,
 name|ConstexprLoc
 decl_stmt|,
 name|ConceptLoc
+decl_stmt|;
+name|SourceLocation
+name|TQ_pipeLoc
 decl_stmt|;
 name|WrittenBuiltinSpecs
 name|writtenBS
@@ -1570,6 +1578,11 @@ name|false
 argument_list|)
 operator|,
 name|TypeSpecOwned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|TypeSpecPipe
 argument_list|(
 name|false
 argument_list|)
@@ -1845,6 +1858,15 @@ name|TST
 operator|)
 name|TypeSpecType
 argument_list|)
+return|;
+block|}
+name|bool
+name|isTypeSpecPipe
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeSpecPipe
 return|;
 block|}
 name|ParsedType
@@ -2224,6 +2246,15 @@ return|return
 name|TQ_atomicLoc
 return|;
 block|}
+name|SourceLocation
+name|getPipeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TQ_pipeLoc
+return|;
+block|}
 comment|/// \brief Clear out all of the type qualifiers.
 name|void
 name|ClearTypeQualifiers
@@ -2249,6 +2280,11 @@ name|SourceLocation
 argument_list|()
 expr_stmt|;
 name|TQ_atomicLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|TQ_pipeLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -2831,6 +2867,31 @@ name|SetTypeAltiVecBool
 parameter_list|(
 name|bool
 name|isAltiVecBool
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
+parameter_list|)
+function_decl|;
+name|bool
+name|SetTypePipe
+parameter_list|(
+name|bool
+name|isPipe
 parameter_list|,
 name|SourceLocation
 name|Loc
@@ -4334,6 +4395,8 @@ block|,
 name|MemberPointer
 block|,
 name|Paren
+block|,
+name|Pipe
 block|}
 name|Kind
 enum|;
@@ -5156,6 +5219,22 @@ name|CXXScopeSpec
 argument_list|()
 block|;     }
 expr|}
+block|;    struct
+name|PipeTypeInfo
+operator|:
+name|TypeInfoCommon
+block|{
+comment|/// The access writes.
+name|unsigned
+name|AccessWrites
+operator|:
+literal|3
+block|;
+name|void
+name|destroy
+argument_list|()
+block|{}
+block|}
 block|;
 expr|union
 block|{
@@ -5179,6 +5258,9 @@ name|Cls
 block|;
 name|MemberPointerTypeInfo
 name|Mem
+block|;
+name|PipeTypeInfo
+name|PipeInfo
 block|;   }
 block|;
 name|void
@@ -5262,6 +5344,17 @@ operator|::
 name|Paren
 case|:
 return|return;
+case|case
+name|DeclaratorChunk
+operator|::
+name|Pipe
+case|:
+return|return
+name|PipeInfo
+operator|.
+name|destroy
+argument_list|()
+return|;
 block|}
 block|}
 comment|/// \brief If there are attributes applied to this declaratorchunk, return
@@ -5631,6 +5724,51 @@ operator|.
 name|AttrList
 operator|=
 name|nullptr
+block|;
+return|return
+name|I
+return|;
+block|}
+comment|/// \brief Return a DeclaratorChunk for a block.
+specifier|static
+name|DeclaratorChunk
+name|getPipe
+argument_list|(
+argument|unsigned TypeQuals
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|DeclaratorChunk
+name|I
+block|;
+name|I
+operator|.
+name|Kind
+operator|=
+name|Pipe
+block|;
+name|I
+operator|.
+name|Loc
+operator|=
+name|Loc
+block|;
+name|I
+operator|.
+name|Cls
+operator|.
+name|TypeQuals
+operator|=
+name|TypeQuals
+block|;
+name|I
+operator|.
+name|Cls
+operator|.
+name|AttrList
+operator|=
+literal|0
 block|;
 return|return
 name|I
@@ -7581,6 +7719,11 @@ case|case
 name|DeclaratorChunk
 operator|::
 name|MemberPointer
+case|:
+case|case
+name|DeclaratorChunk
+operator|::
+name|Pipe
 case|:
 return|return
 name|false

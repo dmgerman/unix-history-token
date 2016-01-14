@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/LoadedModuleInfoList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/ThreadSafeValue.h"
 end_include
 
@@ -3099,6 +3105,18 @@ name|virtual
 name|size_t
 name|LoadModules
 parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|size_t
+name|LoadModules
+parameter_list|(
+name|LoadedModuleInfoList
+modifier|&
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -6608,6 +6626,40 @@ name|ResetImageToken
 parameter_list|(
 name|size_t
 name|token
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Find the next branch instruction to set a breakpoint on
+comment|///
+comment|/// When instruction stepping through a source line, instead of
+comment|/// stepping through each instruction, we can put a breakpoint on
+comment|/// the next branch instruction (within the range of instructions
+comment|/// we are stepping through) and continue the process to there,
+comment|/// yielding significant performance benefits over instruction
+comment|/// stepping.
+comment|///
+comment|/// @param[in] default_stop_addr
+comment|///     The address of the instruction where lldb would put a
+comment|///     breakpoint normally.
+comment|///
+comment|/// @param[in] range_bounds
+comment|///     The range which the breakpoint must be contained within.
+comment|///     Typically a source line.
+comment|///
+comment|/// @return
+comment|///     The address of the next branch instruction, or the end of
+comment|///     the range provided in range_bounds.  If there are any
+comment|///     problems with the disassembly or getting the instructions,
+comment|///     the original default_stop_addr will be returned.
+comment|//------------------------------------------------------------------
+name|Address
+name|AdvanceAddressToNextBranchInstruction
+parameter_list|(
+name|Address
+name|default_stop_addr
+parameter_list|,
+name|AddressRange
+name|range_bounds
 parameter_list|)
 function_decl|;
 name|protected

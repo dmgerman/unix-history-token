@@ -113,6 +113,14 @@ block|,
 name|TSS_unsigned
 block|}
 enum|;
+enum|enum
+name|TypeSpecifiersPipe
+block|{
+name|TSP_unspecified
+block|,
+name|TSP_pipe
+block|}
+enum|;
 comment|/// \brief Specifies the kind of type.
 enum|enum
 name|TypeSpecifierType

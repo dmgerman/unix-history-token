@@ -134,7 +134,7 @@ modifier|*
 name|createX86PadShortFunctions
 parameter_list|()
 function_decl|;
-comment|/// Return a a pass that selectively replaces certain instructions (like add,
+comment|/// Return a pass that selectively replaces certain instructions (like add,
 comment|/// sub, inc, dec, some shifts, and some multiplies) by equivalent LEA
 comment|/// instructions, in order to eliminate execution delays in some processors.
 name|FunctionPass
@@ -142,7 +142,8 @@ modifier|*
 name|createX86FixupLEAs
 parameter_list|()
 function_decl|;
-comment|/// Return a pass that removes redundant address recalculations.
+comment|/// Return a pass that removes redundant LEA instructions and redundant address
+comment|/// recalculations.
 name|FunctionPass
 modifier|*
 name|createX86OptimizeLEAs

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OrcTargetSupport.h - Code to support specific targets  --*- C++ -*-===//
+comment|//===-- OrcArchitectureSupport.h - Architecture support code  ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Target specific code for Orc, e.g. callback assembly.
+comment|// Architecture specific code for Orc, e.g. callback assembly.
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Target classes should be part of the JIT *target* process, not the host
+comment|// Architecture classes should be part of the JIT *target* process, not the host
 end_comment
 
 begin_comment
@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_EXECUTIONENGINE_ORC_ORCTARGETSUPPORT_H
+name|LLVM_EXECUTIONENGINE_ORC_ORCARCHITECTURESUPPORT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_EXECUTIONENGINE_ORC_ORCTARGETSUPPORT_H
+name|LLVM_EXECUTIONENGINE_ORC_ORCARCHITECTURESUPPORT_H
 end_define
 
 begin_include
@@ -87,6 +87,12 @@ directive|include
 file|"llvm/Support/Memory.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Process.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -94,18 +100,183 @@ block|{
 name|namespace
 name|orc
 block|{
+comment|/// Generic ORC Architecture support.
+comment|///
+comment|/// This class can be substituted as the target architecure support class for
+comment|/// ORC templates that require one (e.g. IndirectStubsManagers). It does not
+comment|/// support lazy JITing however, and any attempt to use that functionality
+comment|/// will result in execution of an llvm_unreachable.
 name|class
-name|OrcX86_64
+name|OrcGenericArchitecture
 block|{
 name|public
 label|:
 specifier|static
 specifier|const
 name|unsigned
-name|PageSize
+name|PointerSize
 init|=
-literal|4096
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
 decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|TrampolineSize
+init|=
+literal|1
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|ResolverCodeSize
+init|=
+literal|1
+decl_stmt|;
+typedef|typedef
+name|TargetAddress
+function_decl|(
+modifier|*
+name|JITReentryFn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|CallbackMgr
+parameter_list|,
+name|void
+modifier|*
+name|TrampolineId
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|writeResolverCode
+parameter_list|(
+name|uint8_t
+modifier|*
+name|ResolveMem
+parameter_list|,
+name|JITReentryFn
+name|Reentry
+parameter_list|,
+name|void
+modifier|*
+name|CallbackMgr
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"writeResolverCode is not supported by the generic host "
+literal|"support class"
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|writeTrampolines
+parameter_list|(
+name|uint8_t
+modifier|*
+name|TrampolineMem
+parameter_list|,
+name|void
+modifier|*
+name|ResolverAddr
+parameter_list|,
+name|unsigned
+name|NumTrampolines
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"writeTrampolines is not supported by the generic host "
+literal|"support class"
+argument_list|)
+expr_stmt|;
+block|}
+name|class
+name|IndirectStubsInfo
+block|{
+name|public
+label|:
+specifier|const
+specifier|static
+name|unsigned
+name|StubSize
+init|=
+literal|1
+decl_stmt|;
+name|unsigned
+name|getNumStubs
+argument_list|()
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Not supported"
+argument_list|)
+block|; }
+name|void
+operator|*
+name|getStub
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Not supported"
+argument_list|)
+block|; }
+name|void
+operator|*
+operator|*
+name|getPtr
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Not supported"
+argument_list|)
+block|; }
+block|}
+empty_stmt|;
+specifier|static
+name|std
+operator|::
+name|error_code
+name|emitIndirectStubsBlock
+argument_list|(
+argument|IndirectStubsInfo&StubsInfo
+argument_list|,
+argument|unsigned MinStubs
+argument_list|,
+argument|void *InitialPtrVal
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"emitIndirectStubsBlock is not supported by the generic "
+literal|"host support class"
+argument_list|)
+block|;   }
+block|}
+empty_stmt|;
+comment|/// @brief X86_64 support.
+comment|///
+comment|/// X86_64 supports lazy JITing.
+name|class
+name|OrcX86_64
+block|{
+name|public
+label|:
 specifier|static
 specifier|const
 name|unsigned
@@ -195,13 +366,6 @@ specifier|const
 specifier|static
 name|unsigned
 name|StubSize
-init|=
-literal|8
-decl_stmt|;
-specifier|const
-specifier|static
-name|unsigned
-name|PtrSize
 init|=
 literal|8
 decl_stmt|;
@@ -407,7 +571,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_EXECUTIONENGINE_ORC_ORCTARGETSUPPORT_H
+comment|// LLVM_EXECUTIONENGINE_ORC_ORCARCHITECTURESUPPORT_H
 end_comment
 
 end_unit

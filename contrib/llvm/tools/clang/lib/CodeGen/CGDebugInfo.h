@@ -1057,6 +1057,24 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|CreateType
+argument_list|(
+specifier|const
+name|PipeType
+operator|*
+name|Ty
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+operator|*
+name|F
+argument_list|)
+expr_stmt|;
 comment|/// Get enumeration type.
 name|llvm
 operator|::

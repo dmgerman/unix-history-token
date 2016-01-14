@@ -1022,6 +1022,17 @@ specifier|extern
 name|bool
 name|TimePassesIsEnabled
 decl_stmt|;
+comment|/// isFunctionInPrintList - returns true if a function should be printed via
+comment|//  debugging options like -print-after-all/-print-before-all.
+comment|//  @brief Tells if the function IR should be printed by PrinterPass.
+specifier|extern
+name|bool
+name|isFunctionInPrintList
+parameter_list|(
+name|StringRef
+name|FunctionName
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

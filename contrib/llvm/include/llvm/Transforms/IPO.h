@@ -389,14 +389,25 @@ name|createStripDeadPrototypesPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// createFunctionAttrsPass - This pass discovers functions that do not access
-comment|/// memory, or only read memory, and gives them the readnone/readonly attribute.
-comment|/// It also discovers function arguments that are not captured by the function
-comment|/// and marks them with the nocapture attribute.
+comment|/// createPostOrderFunctionAttrsPass - This pass walks SCCs of the call graph
+comment|/// in post-order to deduce and propagate function attributes. It can discover
+comment|/// functions that do not access memory, or only read memory, and give them the
+comment|/// readnone/readonly attribute. It also discovers function arguments that are
+comment|/// not captured by the function and marks them with the nocapture attribute.
 comment|///
 name|Pass
 modifier|*
-name|createFunctionAttrsPass
+name|createPostOrderFunctionAttrsPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// createReversePostOrderFunctionAttrsPass - This pass walks SCCs of the call
+comment|/// graph in RPO to deduce and propagate function attributes. Currently it
+comment|/// only handles synthesizing norecurse attributes.
+comment|///
+name|Pass
+modifier|*
+name|createReversePostOrderFunctionAttrsPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

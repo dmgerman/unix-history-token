@@ -675,6 +675,8 @@ comment|/// \brief Kind of a given entry. Currently, only target regions are
 comment|/// supported.
 enum|enum
 name|OffloadingEntryInfoKinds
+enum|:
+name|unsigned
 block|{
 comment|// Entry is a target region.
 name|OFFLOAD_ENTRY_INFO_TARGET_REGION
@@ -2488,7 +2490,7 @@ decl_stmt|;
 comment|/// \brief Emit the target regions enclosed in \a GD function definition or
 comment|/// the function itself in case it is a valid device function. Returns true if
 comment|/// \a GD was dealt with successfully.
-comment|/// \param FD Function to scan.
+comment|/// \param GD Function to scan.
 name|virtual
 name|bool
 name|emitTargetFunctions

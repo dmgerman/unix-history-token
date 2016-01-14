@@ -855,6 +855,45 @@ name|name
 parameter_list|)
 block|{     }
 comment|//------------------------------------------------------------------
+comment|/// Whether this thread can be associated with a libdispatch queue
+comment|///
+comment|/// The Thread may know if it is associated with a libdispatch queue,
+comment|/// it may know definitively that it is NOT associated with a libdispatch
+comment|/// queue, or it may be unknown whether it is associated with a libdispatch
+comment|/// queue.
+comment|///
+comment|/// @return
+comment|///     eLazyBoolNo if this thread is definitely not associated with a
+comment|///     libdispatch queue (e.g. on a non-Darwin system where GCD aka
+comment|///     libdispatch is not available).
+comment|///
+comment|///     eLazyBoolYes this thread is associated with a libdispatch queue.
+comment|///
+comment|///     eLazyBoolCalculate this thread may be associated with a libdispatch
+comment|///     queue but the thread doesn't know one way or the other.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|LazyBool
+name|GetAssociatedWithLibdispatchQueue
+argument_list|()
+block|{
+return|return
+name|eLazyBoolNo
+return|;
+block|}
+name|virtual
+name|void
+name|SetAssociatedWithLibdispatchQueue
+argument_list|(
+name|lldb_private
+operator|::
+name|LazyBool
+name|associated_with_libdispatch_queue
+argument_list|)
+block|{     }
+comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue ID for the queue currently using this Thread
 comment|///
 comment|/// If this Thread is doing work on behalf of a libdispatch/GCD queue,
@@ -922,6 +961,41 @@ name|name
 parameter_list|)
 block|{     }
 comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue kind for the queue currently using this Thread
+comment|///
+comment|/// If this Thread is doing work on behalf of a libdispatch/GCD queue,
+comment|/// retrieve the Queue kind - either eQueueKindSerial or
+comment|/// eQueueKindConcurrent, indicating that this queue processes work
+comment|/// items serially or concurrently.
+comment|///
+comment|/// @return
+comment|///     The Queue kind, if the Thread subclass implements this, else
+comment|///     eQueueKindUnknown.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|QueueKind
+name|GetQueueKind
+argument_list|()
+block|{
+return|return
+name|lldb
+operator|::
+name|eQueueKindUnknown
+return|;
+block|}
+name|virtual
+name|void
+name|SetQueueKind
+argument_list|(
+name|lldb
+operator|::
+name|QueueKind
+name|kind
+argument_list|)
+block|{     }
+comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue for this thread, if any.
 comment|///
 comment|/// @return
@@ -970,6 +1044,39 @@ argument_list|()
 block|{
 return|return
 name|LLDB_INVALID_ADDRESS
+return|;
+block|}
+name|virtual
+name|void
+name|SetQueueLibdispatchQueueAddress
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|dispatch_queue_t
+argument_list|)
+block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Whether this Thread already has all the Queue information cached or not
+comment|///
+comment|/// A Thread may be associated with a libdispatch work Queue at a given
+comment|/// public stop event.  If so, the thread can satisify requests like
+comment|/// GetQueueLibdispatchQueueAddress, GetQueueKind, GetQueueName, and GetQueueID
+comment|/// either from information from the remote debug stub when it is initially
+comment|/// created, or it can query the SystemRuntime for that information.
+comment|///
+comment|/// This method allows the SystemRuntime to discover if a thread has this
+comment|/// information already, instead of calling the thread to get the information
+comment|/// and having the thread call the SystemRuntime again.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|ThreadHasQueueInformation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 name|virtual
@@ -1734,6 +1841,16 @@ comment|/// @param[in] stop_vote
 comment|/// @param[in] run_vote
 comment|///    See standard meanings for the stop& run votes in ThreadPlan.h.
 comment|///
+comment|/// @param[in] continue_to_next_branch
+comment|///    Normally this will enqueue a plan that will put a breakpoint on the return address and continue
+comment|///    to there.  If continue_to_next_branch is true, this is an operation not involving the user --
+comment|///    e.g. stepping "next" in a source line and we instruction stepped into another function --
+comment|///    so instead of putting a breakpoint on the return address, advance the breakpoint to the
+comment|///    end of the source line that is doing the call, or until the next flow control instruction.
+comment|///    If the return value from the function call is to be retrieved / displayed to the user, you must stop
+comment|///    on the return address.  The return value may be stored in volatile registers which are overwritten
+comment|///    before the next branch instruction.
+comment|///
 comment|/// @return
 comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
@@ -1758,6 +1875,8 @@ argument|Vote run_vote
 argument_list|,
 comment|// = eVoteNoOpinion);
 argument|uint32_t frame_idx
+argument_list|,
+argument|bool continue_to_next_branch = false
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------

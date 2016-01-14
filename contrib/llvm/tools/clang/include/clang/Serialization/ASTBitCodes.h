@@ -1830,6 +1830,11 @@ comment|/// \brief An AdjustedType record.
 name|TYPE_ADJUSTED
 init|=
 literal|42
+block|,
+comment|/// \brief A PipeType record.
+name|TYPE_PIPE
+init|=
+literal|43
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic

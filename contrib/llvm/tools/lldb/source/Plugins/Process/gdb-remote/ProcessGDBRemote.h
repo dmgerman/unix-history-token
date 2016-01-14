@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/LoadedModuleInfoList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
@@ -630,6 +636,13 @@ name|override
 block|;
 name|size_t
 name|LoadModules
+argument_list|(
+argument|LoadedModuleInfoList&module_list
+argument_list|)
+name|override
+block|;
+name|size_t
+name|LoadModules
 argument_list|()
 name|override
 block|;
@@ -675,9 +688,6 @@ block|;
 name|friend
 name|class
 name|GDBRemoteRegisterContext
-block|;
-name|class
-name|GDBLoadedModuleInfoList
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Broadcaster event bits definitions.
@@ -1214,6 +1224,10 @@ argument|lldb::addr_t thread_dispatch_qaddr
 argument_list|,
 argument|bool queue_vars_valid
 argument_list|,
+argument|lldb_private::LazyBool associated_with_libdispatch_queue
+argument_list|,
+argument|lldb::addr_t dispatch_queue_t
+argument_list|,
 argument|std::string&queue_name
 argument_list|,
 argument|lldb::QueueKind queue_kind
@@ -1282,7 +1296,7 @@ comment|// Query remote GDBServer for a detailed loaded library list
 name|Error
 name|GetLoadedModuleList
 parameter_list|(
-name|GDBLoadedModuleInfoList
+name|LoadedModuleInfoList
 modifier|&
 parameter_list|)
 function_decl|;

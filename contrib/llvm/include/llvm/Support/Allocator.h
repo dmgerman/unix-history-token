@@ -875,6 +875,7 @@ name|void
 name|Reset
 argument_list|()
 block|{
+comment|// Deallocate all but the first slab, and deallocate all custom-sized slabs.
 name|DeallocateCustomSizedSlabs
 argument_list|()
 block|;
@@ -913,7 +914,20 @@ name|CurPtr
 operator|+
 name|SlabSize
 block|;
-comment|// Deallocate all but the first slab, and deallocate all custom-sized slabs.
+name|__asan_poison_memory_region
+argument_list|(
+operator|*
+name|Slabs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|computeSlabSize
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+block|;
 name|DeallocateSlabs
 argument_list|(
 name|std

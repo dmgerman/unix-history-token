@@ -241,9 +241,15 @@ name|reserveAllocationSpace
 argument_list|(
 argument|uintptr_t CodeSize
 argument_list|,
-argument|uintptr_t DataSizeRO
+argument|uint32_t CodeAlign
 argument_list|,
-argument|uintptr_t DataSizeRW
+argument|uintptr_t RODataSize
+argument_list|,
+argument|uint32_t RODataAlign
+argument_list|,
+argument|uintptr_t RWDataSize
+argument_list|,
+argument|uint32_t RWDataAlign
 argument_list|)
 name|override
 block|{
@@ -254,9 +260,15 @@ name|reserveAllocationSpace
 argument_list|(
 name|CodeSize
 argument_list|,
-name|DataSizeRO
+name|CodeAlign
 argument_list|,
-name|DataSizeRW
+name|RODataSize
+argument_list|,
+name|RODataAlign
+argument_list|,
+name|RWDataSize
+argument_list|,
+name|RWDataAlign
 argument_list|)
 return|;
 block|}
@@ -317,6 +329,26 @@ argument_list|,
 name|LoadAddr
 argument_list|,
 name|Size
+argument_list|)
+return|;
+block|}
+name|void
+name|notifyObjectLoaded
+argument_list|(
+argument|RuntimeDyld&RTDyld
+argument_list|,
+argument|const object::ObjectFile&O
+argument_list|)
+name|override
+block|{
+return|return
+name|ClientMM
+operator|->
+name|notifyObjectLoaded
+argument_list|(
+name|RTDyld
+argument_list|,
+name|O
 argument_list|)
 return|;
 block|}

@@ -187,6 +187,19 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Disable shrink wrap as tBfar/BL will be used to adjust for long jumps.
+name|bool
+name|enableShrinkWrapping
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
 name|private
 operator|:
 comment|/// Check if the frame lowering of \p MF needs a special fixup

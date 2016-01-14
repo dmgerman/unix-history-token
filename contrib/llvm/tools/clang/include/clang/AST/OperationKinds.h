@@ -238,6 +238,10 @@ comment|/// CK_FloatingToBoolean - Floating point to boolean.
 comment|///    (bool) f
 name|CK_FloatingToBoolean
 block|,
+comment|// CK_BooleanToSignedIntegral - Convert a boolean to -1 or 0 for true and
+comment|// false, respectively.
+name|CK_BooleanToSignedIntegral
+block|,
 comment|/// CK_FloatingCast - Casting between floating types of different size.
 comment|///    (double) f
 comment|///    (float) ld

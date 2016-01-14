@@ -1741,6 +1741,12 @@ name|HandlePragmaAlign
 parameter_list|()
 function_decl|;
 comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma clang __debug dump...
+name|void
+name|HandlePragmaDump
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
 comment|/// #pragma weak id...
 name|void
 name|HandlePragmaWeak
@@ -5927,8 +5933,26 @@ modifier|*
 name|TrailingElseLoc
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|AllowOpenMPStandalone
+init|=
+name|false
 parameter_list|)
 function_decl|;
+enum|enum
+name|AllowedContsructsKind
+block|{
+comment|/// \brief Allow any declarations, statements, OpenMP directives.
+name|ACK_Any
+block|,
+comment|/// \brief Allow only statements and non-standalone OpenMP directives.
+name|ACK_StatementsOpenMPNonStandalone
+block|,
+comment|/// \brief Allow statements and all executable OpenMP directives
+name|ACK_StatementsOpenMPAnyExecutable
+block|}
+enum|;
 name|StmtResult
 name|ParseStatementOrDeclaration
 parameter_list|(
@@ -5936,8 +5960,8 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|bool
-name|OnlyStatement
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|,
 name|SourceLocation
 modifier|*
@@ -5953,8 +5977,8 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|bool
-name|OnlyStatement
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|,
 name|SourceLocation
 modifier|*
@@ -6121,8 +6145,8 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|bool
-name|OnlyStatement
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|,
 name|SourceLocation
 modifier|*
@@ -9229,14 +9253,16 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Parses declarative or executable directive.
 comment|///
-comment|/// \param StandAloneAllowed true if allowed stand-alone directives,
-comment|/// false - otherwise
+comment|/// \param Allowed ACK_Any, if any directives are allowed,
+comment|/// ACK_StatementsOpenMPAnyExecutable - if any executable directives are
+comment|/// allowed, ACK_StatementsOpenMPNonStandalone - if only non-standalone
+comment|/// executable directives are allowed.
 comment|///
 name|StmtResult
 name|ParseOpenMPDeclarativeOrExecutableDirective
 parameter_list|(
-name|bool
-name|StandAloneAllowed
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|)
 function_decl|;
 comment|/// \brief Parses clause of kind \a CKind for directive of a kind \a Kind.

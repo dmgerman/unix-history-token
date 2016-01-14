@@ -92,6 +92,7 @@ extern|extern cl::opt<bool> Disassemble;
 extern|extern cl::opt<bool> DisassembleAll;
 extern|extern cl::opt<bool> NoShowRawInsn;
 extern|extern cl::opt<bool> PrivateHeaders;
+extern|extern cl::opt<bool> FirstPrivateHeader;
 extern|extern cl::opt<bool> ExportsTrie;
 extern|extern cl::opt<bool> Rebase;
 extern|extern cl::opt<bool> Bind;
@@ -258,6 +259,17 @@ argument_list|)
 decl_stmt|;
 name|void
 name|printMachOFileHeader
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachOLoadCommands
 argument_list|(
 specifier|const
 name|object

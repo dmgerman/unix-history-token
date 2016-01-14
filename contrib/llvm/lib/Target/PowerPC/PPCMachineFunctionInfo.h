@@ -707,6 +707,24 @@ operator|*
 name|getPICOffsetSymbol
 argument_list|()
 specifier|const
+block|;
+name|MCSymbol
+operator|*
+name|getGlobalEPSymbol
+argument_list|()
+specifier|const
+block|;
+name|MCSymbol
+operator|*
+name|getLocalEPSymbol
+argument_list|()
+specifier|const
+block|;
+name|MCSymbol
+operator|*
+name|getTOCOffsetSymbol
+argument_list|()
+specifier|const
 block|; }
 decl_stmt|;
 block|}

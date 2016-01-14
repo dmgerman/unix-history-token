@@ -6584,11 +6584,29 @@ decl|const
 decl_stmt|;
 name|uint32_t
 name|getOperandBundleTagID
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Tag
-parameter_list|)
-function_decl|const;
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Maintain the GC name for each function.
+comment|///
+comment|/// This saves allocating an additional word in Function for programs which
+comment|/// do not use GC (i.e., most programs) at the cost of increased overhead for
+comment|/// clients which do use GC.
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+name|GCNames
+expr_stmt|;
 name|LLVMContextImpl
 argument_list|(
 name|LLVMContext
