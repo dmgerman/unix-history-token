@@ -416,6 +416,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|crextend
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cr
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cred_update_thread
 parameter_list|(
 name|struct

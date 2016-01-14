@@ -146,6 +146,9 @@ name|kod_db
 operator|=
 name|NULL
 expr_stmt|;
+name|init_lib
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

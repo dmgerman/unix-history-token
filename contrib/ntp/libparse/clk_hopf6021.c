@@ -732,10 +732,11 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"inp_hopf6021(0x%lx, 0x%x, ...)\n"
+literal|"inp_hopf6021(0x%p, 0x%x, ...)\n"
 operator|,
 operator|(
-name|long
+name|void
+operator|*
 operator|)
 name|parseio
 operator|,

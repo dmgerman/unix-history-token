@@ -1468,6 +1468,11 @@ argument_list|(
 name|e5_ptr
 argument_list|)
 expr_stmt|;
+name|free_node
+argument_list|(
+name|e6_ptr
+argument_list|)
+expr_stmt|;
 name|TEST_ASSERT_EQUAL
 argument_list|(
 literal|0

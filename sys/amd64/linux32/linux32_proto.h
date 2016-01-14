@@ -11481,11 +11481,13 @@ argument_list|(
 expr|struct
 name|linux_robust_list_head
 operator|*
+operator|*
 argument_list|)
 index|]
 decl_stmt|;
 name|struct
 name|linux_robust_list_head
+modifier|*
 modifier|*
 name|head
 decl_stmt|;
@@ -11496,6 +11498,7 @@ name|PADR_
 argument_list|(
 expr|struct
 name|linux_robust_list_head
+operator|*
 operator|*
 argument_list|)
 index|]

@@ -670,6 +670,10 @@ name|AF_UNIX
 case|:
 name|plen
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|sockaddr
@@ -753,6 +757,10 @@ return|;
 block|}
 name|plen
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|pbuf

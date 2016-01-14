@@ -5584,6 +5584,15 @@ operator|=
 name|crget
 argument_list|()
 expr_stmt|;
+name|crextend
+argument_list|(
+name|newcred
+argument_list|,
+name|ngrp
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|td
@@ -5597,11 +5606,15 @@ argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
-name|crcopysafe
-argument_list|(
 name|p
-argument_list|,
+operator|->
+name|p_ucred
+expr_stmt|;
+name|crcopy
+argument_list|(
 name|newcred
+argument_list|,
+name|oldcred
 argument_list|)
 expr_stmt|;
 comment|/* 	 * cr_groups[0] holds egid. Setting the whole set from 	 * the supplied set will cause egid to be changed too. 	 * Keep cr_groups[0] unchanged to prevent that. 	 */

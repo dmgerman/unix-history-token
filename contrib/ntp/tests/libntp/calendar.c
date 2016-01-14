@@ -45,6 +45,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|isGT
 parameter_list|(
@@ -333,6 +342,20 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_comment
 comment|/*  * ---------------------------------------------------------------------  * test support stuff  * ---------------------------------------------------------------------  */
@@ -685,19 +708,41 @@ return|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"expected: %s but was %s"
-argument_list|,
+name|char
+modifier|*
+name|p_exp
+init|=
 name|CalendarFromCalToString
 argument_list|(
 name|expected
 argument_list|)
-argument_list|,
+decl_stmt|;
+name|char
+modifier|*
+name|p_act
+init|=
 name|CalendarFromCalToString
 argument_list|(
 name|actual
 argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"expected: %s but was %s"
+argument_list|,
+name|p_exp
+argument_list|,
+name|p_act
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p_exp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p_act
 argument_list|)
 expr_stmt|;
 return|return
@@ -1403,6 +1448,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return;
 block|}
 end_function
 
@@ -1528,6 +1574,7 @@ literal|364
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1655,6 +1702,7 @@ literal|365
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1709,6 +1757,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1803,6 +1852,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1893,6 +1943,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2061,6 +2112,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+return|return;
 block|}
 end_function
 
@@ -2171,6 +2223,7 @@ name|truys
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2277,6 +2330,7 @@ name|trums
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2383,6 +2437,7 @@ name|truws
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2483,6 +2538,7 @@ name|truds
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2609,6 +2665,7 @@ name|wcal
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2679,6 +2736,7 @@ name|lo
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2759,6 +2817,7 @@ literal|52
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3055,6 +3114,7 @@ argument_list|,
 literal|"failed for 86400"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

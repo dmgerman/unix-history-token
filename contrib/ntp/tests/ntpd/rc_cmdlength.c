@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"rc_cmdlength.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"unity.h"
 end_include
 

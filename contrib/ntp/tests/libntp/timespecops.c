@@ -50,7 +50,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \     TEST_ASSERT_EQUAL_MESSAGE(a.tv_sec, b.tv_sec, "Field tv_sec"); \     TEST_ASSERT_EQUAL_MESSAGE(a.tv_nsec, b.tv_nsec, "Field tv_nsec");	\ }
+value|{				\     TEST_ASSERT_EQUAL_MESSAGE(a.tv_sec, b.tv_sec, "Field tv_sec");	\     TEST_ASSERT_EQUAL_MESSAGE(a.tv_nsec, b.tv_nsec, "Field tv_nsec");	\ }
 end_define
 
 begin_define
@@ -62,7 +62,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \     TEST_ASSERT_EQUAL_MESSAGE(a.l_i, b.l_i, "Field l_i"); \     TEST_ASSERT_EQUAL_UINT_MESSAGE(a.l_uf, b.l_uf, "Field l_uf");	\ }
+value|{					\     TEST_ASSERT_EQUAL_MESSAGE(a.l_i, b.l_i, "Field l_i");		\     TEST_ASSERT_EQUAL_UINT_MESSAGE(a.l_uf, b.l_uf, "Field l_uf");	\ }
 end_define
 
 begin_function_decl
@@ -104,6 +104,15 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -445,8 +454,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|//******************************************MY CUSTOM FUNCTIONS*******************************
+comment|//***************************MY CUSTOM FUNCTIONS***************************
 end_comment
+
+begin_function
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_function
 specifier|const
@@ -1154,6 +1177,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1222,6 +1246,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1305,6 +1330,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1376,6 +1402,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1488,6 +1515,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1588,6 +1616,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1688,6 +1717,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1802,6 +1832,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1904,6 +1935,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -1977,6 +2009,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2052,6 +2085,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2164,6 +2198,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2266,6 +2301,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2339,6 +2375,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2414,6 +2451,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2500,6 +2538,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2577,6 +2616,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2638,6 +2678,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2788,6 +2829,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+return|return;
 block|}
 end_function
 
@@ -2885,6 +2927,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -2964,6 +3007,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3045,6 +3089,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3126,6 +3171,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3238,6 +3284,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3334,6 +3381,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3432,6 +3480,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3521,6 +3570,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 
@@ -3705,6 +3755,7 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 end_function
 

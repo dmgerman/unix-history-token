@@ -430,7 +430,7 @@ name|restrict_u
 modifier|*
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|UNLINK_HEAD_SLIST
@@ -568,7 +568,7 @@ name|restrict_u
 modifier|*
 name|res
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|UNLINK_HEAD_SLIST
