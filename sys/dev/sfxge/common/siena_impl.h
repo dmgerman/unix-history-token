@@ -348,8 +348,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|,
 name|__out
@@ -369,8 +368,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|)
 function_decl|;
@@ -385,8 +383,7 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 argument_list|,
 name|__in
@@ -417,8 +414,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|,
 name|__in
@@ -442,8 +438,7 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 argument_list|,
 name|__in
@@ -473,8 +468,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|)
 function_decl|;
@@ -489,9 +483,8 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
-name|index
+name|uint32_t
+name|partn
 parameter_list|,
 name|__in
 name|boolean_t
@@ -563,8 +556,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|,
 name|__out

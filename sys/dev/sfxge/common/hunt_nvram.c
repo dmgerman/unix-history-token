@@ -4853,8 +4853,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|,
 name|__out
@@ -4927,8 +4926,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|)
 block|{
@@ -4988,8 +4986,7 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 argument_list|,
 name|__in
@@ -5105,8 +5102,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|,
 name|__in
@@ -5296,8 +5292,7 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 argument_list|,
 name|__in
@@ -5489,8 +5484,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 parameter_list|)
 block|{
@@ -5550,8 +5544,7 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 argument_list|,
 name|__in_ecount
@@ -7525,8 +7518,7 @@ name|ef10_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|partn
 decl_stmt|;
 name|efx_rc_t
