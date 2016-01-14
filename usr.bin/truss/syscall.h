@@ -111,6 +111,8 @@ name|Atfd
 block|,
 name|Atflags
 block|,
+name|Timespec2
+block|,
 name|Accessmode
 block|,
 name|Long
