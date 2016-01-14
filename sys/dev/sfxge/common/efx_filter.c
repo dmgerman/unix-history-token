@@ -5554,10 +5554,6 @@ name|falconsiena_filter_tbl_t
 modifier|*
 name|fsftp
 decl_stmt|;
-name|falconsiena_filter_spec_t
-modifier|*
-name|saved_spec
-decl_stmt|;
 name|efx_oword_t
 name|filter
 decl_stmt|;
@@ -5670,16 +5666,6 @@ condition|)
 goto|goto
 name|fail2
 goto|;
-name|saved_spec
-operator|=
-operator|&
-name|fsftp
-operator|->
-name|fsft_spec
-index|[
-name|filter_idx
-index|]
-expr_stmt|;
 name|falconsiena_filter_clear_entry
 argument_list|(
 name|enp
