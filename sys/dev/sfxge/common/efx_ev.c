@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -47,11 +29,22 @@ directive|include
 file|"efx_impl.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_MON_MCDI
+end_if
+
 begin_include
 include|#
 directive|include
 file|"mcdi_mon.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

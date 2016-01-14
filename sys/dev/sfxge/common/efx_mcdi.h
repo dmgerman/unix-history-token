@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"efx_regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx_regs_mcdi.h"
 end_include
 
