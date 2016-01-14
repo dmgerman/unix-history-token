@@ -779,7 +779,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"VMBUS: Portocal Version: %d.%d\n"
+literal|"VMBUS: Protocol Version: %d.%d\n"
 argument_list|,
 name|version
 operator|>>
