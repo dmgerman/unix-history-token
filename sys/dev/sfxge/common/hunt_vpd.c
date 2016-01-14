@@ -68,7 +68,7 @@ end_include
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_init
+name|ef10_vpd_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -106,6 +106,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 name|pci_pf
@@ -267,7 +273,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_size
+name|ef10_vpd_size
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -290,6 +296,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This function returns the total size the user should allocate 	 * for all VPD operations. We've already cached the static vpd, 	 * so we just need to return an upper bound on the dynamic vpd, 	 * which is the size of the DYNAMIC_CONFIG partition. 	 */
@@ -346,7 +358,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_read
+name|ef10_vpd_read
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -384,6 +396,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 name|pci_pf
@@ -517,7 +535,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_verify
+name|ef10_vpd_verify
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -566,9 +584,15 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Strictly you could take the view that dynamic vpd is optional. 	 * Instead, to conform more closely to the read/verify/reinit() 	 * paradigm, we require dynamic vpd. hunt_vpd_reinit() will 	 * reinitialize it as required. 	 */
+comment|/* 	 * Strictly you could take the view that dynamic vpd is optional. 	 * Instead, to conform more closely to the read/verify/reinit() 	 * paradigm, we require dynamic vpd. ef10_vpd_reinit() will 	 * reinitialize it as required. 	 */
 if|if
 condition|(
 operator|(
@@ -790,7 +814,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_reinit
+name|ef10_vpd_reinit
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -952,7 +976,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_get
+name|ef10_vpd_get
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -993,6 +1017,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* Attempt to satisfy the request from svpd first */
@@ -1179,7 +1209,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_set
+name|ef10_vpd_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1213,6 +1243,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 comment|/* If the provided (tag,keyword) exists in svpd, then it is readonly */
@@ -1341,7 +1377,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_next
+name|ef10_vpd_next
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1386,7 +1422,7 @@ end_decl_stmt
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_vpd_write
+name|ef10_vpd_write
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1421,6 +1457,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 name|pci_pf
@@ -1518,7 +1560,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_vpd_fini
+name|ef10_vpd_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1533,6 +1575,12 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
 if|if
