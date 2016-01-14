@@ -1671,11 +1671,11 @@ name|EFX_POPULATE_DWORD_2
 argument_list|(
 name|dword
 argument_list|,
-name|FRF_CZ_TC_TIMER_MODE
+name|ERF_DZ_TC_TIMER_MODE
 argument_list|,
 name|mode
 argument_list|,
-name|FRF_CZ_TC_TIMER_VAL
+name|ERF_DZ_TC_TIMER_VAL
 argument_list|,
 name|timer_val
 argument_list|)
@@ -1684,7 +1684,7 @@ name|EFX_BAR_TBL_WRITED
 argument_list|(
 name|enp
 argument_list|,
-name|FR_BZ_TIMER_COMMAND_REGP0
+name|ER_DZ_EVQ_TMR_REG
 argument_list|,
 name|eep
 operator|->
