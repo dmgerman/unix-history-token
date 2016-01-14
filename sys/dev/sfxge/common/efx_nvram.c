@@ -98,6 +98,9 @@ comment|/* envo_rw_finish */
 name|falcon_nvram_set_version
 block|,
 comment|/* envo_set_version */
+name|falcon_nvram_type_to_partn
+block|,
+comment|/* envo_type_to_partn */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -156,6 +159,9 @@ comment|/* envo_rw_finish */
 name|siena_nvram_set_version
 block|,
 comment|/* envo_set_version */
+name|siena_nvram_type_to_partn
+block|,
+comment|/* envo_type_to_partn */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -216,6 +222,9 @@ comment|/* envo_rw_finish */
 name|ef10_nvram_set_version
 block|,
 comment|/* envo_set_version */
+name|ef10_nvram_type_to_partn
+block|,
+comment|/* envo_type_to_partn */
 block|}
 decl_stmt|;
 end_decl_stmt
