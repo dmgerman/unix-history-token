@@ -269,22 +269,6 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|void
-name|crextend
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cr
-parameter_list|,
-name|int
-name|n
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|crsetgroups_locked
 parameter_list|(
 name|struct
@@ -8584,7 +8568,6 @@ comment|/*  * Extend the passed in credential to hold n items.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|crextend
 parameter_list|(
