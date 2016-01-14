@@ -72,6 +72,10 @@ name|__in
 name|efsys_mem_t
 modifier|*
 name|esmp
+parameter_list|,
+name|__in
+name|boolean_t
+name|disable_scatter
 parameter_list|)
 block|{
 name|efx_mcdi_req_t
@@ -208,7 +212,7 @@ argument_list|,
 name|instance
 argument_list|)
 expr_stmt|;
-name|MCDI_IN_POPULATE_DWORD_5
+name|MCDI_IN_POPULATE_DWORD_6
 argument_list|(
 name|req
 argument_list|,
@@ -233,6 +237,10 @@ argument_list|,
 name|INIT_RXQ_IN_FLAG_PREFIX
 argument_list|,
 literal|1
+argument_list|,
+name|INIT_RXQ_IN_FLAG_DISABLE_SCATTER
+argument_list|,
+name|disable_scatter
 argument_list|)
 expr_stmt|;
 name|MCDI_IN_SET_DWORD
@@ -2705,6 +2713,9 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
+name|boolean_t
+name|disable_scatter
+decl_stmt|;
 name|_NOTE
 argument_list|(
 argument|ARGUNUSED(erp)
@@ -2806,7 +2817,35 @@ goto|goto
 name|fail2
 goto|;
 block|}
-comment|/* 	 * FIXME: Siena code handles different queue types (default, header 	 * split, scatter); we'll need to do something more here later, but 	 * all that stuff is TBD for now. 	 */
+comment|/* Scatter can only be disabled if the firmware supports doing so */
+if|if
+condition|(
+operator|(
+name|type
+operator|!=
+name|EFX_RXQ_TYPE_SCATTER
+operator|)
+operator|&&
+name|enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_rx_disable_scatter_supported
+condition|)
+block|{
+name|disable_scatter
+operator|=
+name|B_TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|disable_scatter
+operator|=
+name|B_FALSE
+expr_stmt|;
+block|}
+comment|/* 	 * Note: EFX_RXQ_TYPE_SPLIT_HEADER and EFX_RXQ_TYPE_SPLIT_PAYLOAD are 	 * not supported here. 	 */
 if|if
 condition|(
 operator|(
@@ -2827,6 +2866,8 @@ argument_list|,
 name|index
 argument_list|,
 name|esmp
+argument_list|,
+name|disable_scatter
 argument_list|)
 operator|)
 operator|!=
