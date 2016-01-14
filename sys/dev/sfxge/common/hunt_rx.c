@@ -2888,7 +2888,7 @@ name|er_label
 operator|=
 name|label
 expr_stmt|;
-name|hunt_ev_rxlabel_init
+name|ef10_ev_rxlabel_init
 argument_list|(
 name|eep
 argument_list|,
@@ -2969,7 +2969,7 @@ name|erp
 operator|->
 name|er_label
 decl_stmt|;
-name|hunt_ev_rxlabel_fini
+name|ef10_ev_rxlabel_fini
 argument_list|(
 name|eep
 argument_list|,

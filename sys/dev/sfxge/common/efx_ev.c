@@ -427,39 +427,41 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_ev_ops_t
-name|__efx_ev_hunt_ops
+name|__efx_ev_ef10_ops
 init|=
 block|{
-name|hunt_ev_init
+name|ef10_ev_init
 block|,
 comment|/* eevo_init */
-name|hunt_ev_fini
+name|ef10_ev_fini
 block|,
 comment|/* eevo_fini */
-name|hunt_ev_qcreate
+name|ef10_ev_qcreate
 block|,
 comment|/* eevo_qcreate */
-name|hunt_ev_qdestroy
+name|ef10_ev_qdestroy
 block|,
 comment|/* eevo_qdestroy */
-name|hunt_ev_qprime
+name|ef10_ev_qprime
 block|,
 comment|/* eevo_qprime */
-name|hunt_ev_qpost
+name|ef10_ev_qpost
 block|,
 comment|/* eevo_qpost */
-name|hunt_ev_qmoderate
+name|ef10_ev_qmoderate
 block|,
 comment|/* eevo_qmoderate */
 if|#
 directive|if
 name|EFSYS_OPT_QSTATS
-name|hunt_ev_qstats_update
+name|ef10_ev_qstats_update
 block|,
 comment|/* eevo_qstats_update */
 endif|#
@@ -474,7 +476,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -592,12 +594,31 @@ name|efx_ev_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_ev_hunt_ops
+name|__efx_ev_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|eevop
+operator|=
+operator|(
+name|efx_ev_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_ev_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
