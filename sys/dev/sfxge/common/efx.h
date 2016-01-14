@@ -1483,6 +1483,8 @@ name|EFX_MON_SFC90X0
 block|,
 name|EFX_MON_SFC91X0
 block|,
+name|EFX_MON_SFC92X0
+block|,
 name|EFX_MON_NTYPES
 block|}
 name|efx_mon_type_t
@@ -2924,6 +2926,8 @@ operator|(
 name|EFSYS_OPT_SIENA
 operator|||
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 operator|)
 if|#
 directive|if
@@ -2940,7 +2944,7 @@ directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
 endif|#
 directive|endif
-comment|/* (EFSYS_OPT_SIENA | EFSYS_OPT_HUNTINGTON) */
+comment|/* (EFSYS_OPT_SIENA || EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD) */
 if|#
 directive|if
 name|EFSYS_OPT_BIST
