@@ -4666,8 +4666,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|unsigned
-name|int
+name|size_t
 name|basenamelen
 decl_stmt|;
 name|isc_dir_t

@@ -69,6 +69,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"rc_cmdlength.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"test-libntp.h"
 end_include
 
@@ -182,7 +188,7 @@ name|RUN_TEST
 argument_list|(
 name|test_EvaluateCommandLength
 argument_list|,
-literal|15
+literal|16
 argument_list|)
 expr_stmt|;
 return|return

@@ -292,6 +292,7 @@ operator|=
 name|n
 operator|+
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -520,10 +521,8 @@ operator|*
 name|len
 argument_list|)
 expr_stmt|;
-operator|(
 operator|*
 name|buf
-operator|)
 operator|=
 name|emalloc
 argument_list|(
@@ -553,6 +552,11 @@ argument_list|(
 operator|*
 name|buf
 argument_list|)
+expr_stmt|;
+operator|*
+name|buf
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|-

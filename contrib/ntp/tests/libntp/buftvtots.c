@@ -157,6 +157,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return;
 block|}
 end_function
 
@@ -276,6 +277,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return;
 block|}
 end_function
 
@@ -332,6 +334,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return;
 block|}
 end_function
 
@@ -369,6 +372,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return;
 block|}
 end_function
 

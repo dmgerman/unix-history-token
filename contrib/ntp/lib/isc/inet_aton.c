@@ -118,8 +118,6 @@ name|val
 decl_stmt|;
 name|int
 name|base
-decl_stmt|,
-name|n
 decl_stmt|;
 name|unsigned
 name|char
@@ -429,17 +427,13 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * Concoct the address according to 	 * the number of parts specified. 	 */
-name|n
-operator|=
+switch|switch
+condition|(
 name|pp
 operator|-
 name|parts
 operator|+
 literal|1
-expr_stmt|;
-switch|switch
-condition|(
-name|n
 condition|)
 block|{
 case|case

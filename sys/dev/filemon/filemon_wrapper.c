@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011, David E. O'Brien.  * Copyright (c) 2009-2011, Juniper Networks, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JUNIPER NETWORKS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL JUNIPER NETWORKS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2011, David E. O'Brien.  * Copyright (c) 2009-2011, Juniper Networks, Inc.  * Copyright (c) 2015, EMC Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JUNIPER NETWORKS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL JUNIPER NETWORKS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -300,6 +300,27 @@ name|filemon
 modifier|*
 name|filemon
 decl_stmt|;
+name|filemon_lock_read
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|filemons_inuse
+argument_list|)
+condition|)
+block|{
+name|filemon_unlock_read
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|sx_slock
 argument_list|(
 operator|&
@@ -339,6 +360,14 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+name|filemon_filemon_lock
+argument_list|(
+name|filemon
+argument_list|)
+expr_stmt|;
+name|filemon_unlock_read
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|filemon
@@ -359,6 +388,9 @@ argument_list|(
 operator|&
 name|proctree_lock
 argument_list|)
+expr_stmt|;
+name|filemon_unlock_read
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -392,10 +424,6 @@ argument_list|(
 operator|&
 name|now
 argument_list|)
-expr_stmt|;
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
 expr_stmt|;
 comment|/* Lock the found filemon structure. */
 name|filemon_filemon_lock
@@ -460,10 +488,6 @@ argument_list|(
 name|filemon
 argument_list|)
 expr_stmt|;
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -513,10 +537,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -531,12 +551,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -602,10 +616,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -684,10 +694,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -702,12 +708,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|snprintf
@@ -750,10 +750,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -851,10 +847,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -869,12 +861,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|snprintf
@@ -917,10 +903,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -978,10 +960,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -996,12 +974,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|snprintf
@@ -1052,10 +1024,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1111,10 +1079,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1129,12 +1093,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -1260,10 +1218,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1319,10 +1273,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1337,12 +1287,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -1542,10 +1486,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1601,10 +1541,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1619,12 +1555,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -1715,10 +1645,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1774,10 +1700,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1792,12 +1714,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -1888,10 +1804,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1947,10 +1859,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1965,12 +1873,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -2061,10 +1963,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2126,10 +2024,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2144,12 +2038,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -2240,10 +2128,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2304,10 +2188,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2322,12 +2202,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -2393,10 +2267,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2471,10 +2341,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2489,12 +2355,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -2560,10 +2420,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2613,10 +2469,6 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2631,12 +2483,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|snprintf
@@ -2744,10 +2590,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 name|sys_sys_exit
 argument_list|(
 name|td
@@ -2804,10 +2646,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2822,12 +2660,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|copyinstr
 argument_list|(
 name|uap
@@ -2893,10 +2725,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2949,10 +2777,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2967,12 +2791,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|snprintf
@@ -3023,10 +2841,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(

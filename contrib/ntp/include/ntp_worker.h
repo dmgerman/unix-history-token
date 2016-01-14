@@ -170,22 +170,30 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WORK_PIPE
+name|SYS_WINNT
 end_ifdef
 
 begin_typedef
 typedef|typedef
-name|pthread_t
-modifier|*
-name|thr_ref
+struct|struct
+block|{
+name|HANDLE
+name|thnd
+decl_stmt|;
+block|}
+name|thread_type
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|sem_t
-modifier|*
-name|sem_ref
+struct|struct
+block|{
+name|HANDLE
+name|shnd
+decl_stmt|;
+block|}
+name|sema_type
 typedef|;
 end_typedef
 
@@ -196,15 +204,15 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|HANDLE
-name|thr_ref
+name|pthread_t
+name|thread_type
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|HANDLE
-name|sem_ref
+name|sem_t
+name|sema_type
 typedef|;
 end_typedef
 
@@ -212,6 +220,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+name|thread_type
+modifier|*
+name|thr_ref
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|sema_type
+modifier|*
+name|sem_ref
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -222,11 +246,14 @@ begin_comment
 comment|/*  *  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WORK_FORK
-end_ifdef
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -279,19 +306,21 @@ typedef|typedef
 struct|struct
 name|blocking_child_tag
 block|{
-comment|/*  * blocking workitems and blocking_responses are dynamically-sized  * one-dimensional arrays of pointers to blocking worker requests and  * responses.  */
+comment|/*  * blocking workitems and blocking_responses are dynamically-sized  * one-dimensional arrays of pointers to blocking worker requests and  * responses.  *  * IMPORTANT: This structure is shared between threads, and all access  * that is not atomic (especially queue operations) must hold the  * 'accesslock' semaphore to avoid data races.  *  * The resource management (thread/semaphore creation/destruction)  * functions and functions just testing a handle are safe because these  * are only changed by the main thread when no worker is running on the  * same data structure.  */
 name|int
 name|reusable
 decl_stmt|;
+name|sem_ref
+name|accesslock
+decl_stmt|;
+comment|/* shared access lock */
 name|thr_ref
 name|thread_ref
 decl_stmt|;
-name|u_int
-name|thread_id
-decl_stmt|;
+comment|/* thread 'handle' */
+comment|/* the reuest queue */
 name|blocking_pipe_header
 modifier|*
-specifier|volatile
 modifier|*
 specifier|volatile
 name|workitems
@@ -301,16 +330,20 @@ name|size_t
 name|workitems_alloc
 decl_stmt|;
 name|size_t
-name|next_workitem
+name|head_workitem
 decl_stmt|;
 comment|/* parent */
 name|size_t
-name|next_workeritem
+name|tail_workitem
 decl_stmt|;
 comment|/* child */
+name|sem_ref
+name|workitems_pending
+decl_stmt|;
+comment|/* signalling */
+comment|/* the response queue */
 name|blocking_pipe_header
 modifier|*
-specifier|volatile
 modifier|*
 specifier|volatile
 name|responses
@@ -320,21 +353,18 @@ name|size_t
 name|responses_alloc
 decl_stmt|;
 name|size_t
-name|next_response
+name|head_response
 decl_stmt|;
 comment|/* child */
 name|size_t
-name|next_workresp
+name|tail_response
 decl_stmt|;
 comment|/* parent */
 comment|/* event handles / sem_t pointers */
-comment|/* sem_ref		child_is_blocking; */
-name|sem_ref
-name|blocking_req_ready
-decl_stmt|;
 name|sem_ref
 name|wake_scheduled_sleep
 decl_stmt|;
+comment|/* some systems use a pipe for notification, others a semaphore. 	 * Both employ the queue above for the actual data transfer. 	 */
 ifdef|#
 directive|ifdef
 name|WORK_PIPE
@@ -357,10 +387,23 @@ comment|/* child */
 else|#
 directive|else
 name|sem_ref
-name|blocking_response_ready
+name|responses_pending
 decl_stmt|;
+comment|/* signalling */
 endif|#
 directive|endif
+name|sema_type
+name|sem_table
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|thread_type
+name|thr_table
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 name|blocking_child
 typedef|;

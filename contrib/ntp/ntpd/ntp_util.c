@@ -1314,7 +1314,7 @@ name|char
 modifier|*
 name|value
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|double
@@ -1690,7 +1690,7 @@ block|{
 name|int
 name|add_dir_sep
 decl_stmt|;
-name|int
+name|size_t
 name|value_l
 decl_stmt|;
 comment|/* Add a DIR_SEP unless we already have one. */
@@ -3320,7 +3320,7 @@ modifier|*
 name|keyfile
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len

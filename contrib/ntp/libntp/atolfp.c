@@ -248,11 +248,14 @@ expr_stmt|;
 comment|/* multiply by 10 */
 name|dec_i
 operator|+=
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|ind
 operator|-
 name|digits
-operator|)
+argument_list|)
 expr_stmt|;
 name|cp
 operator|++
@@ -334,11 +337,14 @@ expr_stmt|;
 comment|/* *10 */
 name|dec_f
 operator|+=
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|ind
 operator|-
 name|digits
-operator|)
+argument_list|)
 expr_stmt|;
 name|cp
 operator|++
