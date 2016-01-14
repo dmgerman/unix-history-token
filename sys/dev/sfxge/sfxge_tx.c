@@ -6604,7 +6604,7 @@ name|SFXGE_TXQ_IP_CKSUM
 case|:
 name|flags
 operator|=
-name|EFX_CKSUM_IPV4
+name|EFX_TXQ_CKSUM_IPV4
 expr_stmt|;
 break|break;
 case|case
@@ -6612,9 +6612,9 @@ name|SFXGE_TXQ_IP_TCP_UDP_CKSUM
 case|:
 name|flags
 operator|=
-name|EFX_CKSUM_IPV4
+name|EFX_TXQ_CKSUM_IPV4
 operator||
-name|EFX_CKSUM_TCPUDP
+name|EFX_TXQ_CKSUM_TCPUDP
 expr_stmt|;
 break|break;
 default|default:

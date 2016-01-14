@@ -5507,6 +5507,14 @@ directive|define
 name|EFX_TXQ_MAX_BUFS
 value|8
 comment|/* Maximum independent of EFX_BUG35388_WORKAROUND. */
+define|#
+directive|define
+name|EFX_TXQ_CKSUM_IPV4
+value|0x0001
+define|#
+directive|define
+name|EFX_TXQ_CKSUM_TCPUDP
+value|0x0002
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
