@@ -1535,6 +1535,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|tcp_lro_init
 argument_list|(
 operator|&
@@ -1567,6 +1578,9 @@ name|hn_lro_hiwat
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* INET || INET6 */
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -1928,6 +1942,17 @@ operator|->
 name|hn_media
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -1936,6 +1961,8 @@ operator|->
 name|hn_lro
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -4379,6 +4406,17 @@ operator|&&
 name|do_lro
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|lro_ctrl
 modifier|*
@@ -4421,6 +4459,8 @@ literal|0
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* We're not holding the lock here, so don't release it */
 call|(
@@ -4453,6 +4493,17 @@ modifier|*
 name|device_ctx
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|hn_softc_t
 modifier|*
 name|sc
@@ -4514,6 +4565,8 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
