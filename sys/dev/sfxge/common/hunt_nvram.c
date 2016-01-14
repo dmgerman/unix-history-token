@@ -1837,6 +1837,10 @@ argument_list|(
 operator|&
 name|cursor
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|partn_data
 argument_list|,
 name|partn_size
@@ -2281,6 +2285,10 @@ argument_list|(
 operator|&
 name|cursor
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|seg_data
 argument_list|,
 name|max_seg_size
@@ -2739,6 +2747,10 @@ argument_list|(
 operator|&
 name|cursor
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|seg_data
 argument_list|,
 name|max_seg_size
@@ -2783,6 +2795,9 @@ goto|;
 block|}
 name|value
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|tlv_value
 argument_list|(
 operator|&
@@ -3244,6 +3259,10 @@ argument_list|(
 operator|&
 name|cursor
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|seg_data
 argument_list|,
 name|max_seg_size
@@ -3757,6 +3776,10 @@ argument_list|(
 operator|&
 name|cursor
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|seg_data
 argument_list|,
 name|max_seg_size
@@ -3837,6 +3860,10 @@ name|cursor
 argument_list|,
 name|tag
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|tag_data
 argument_list|,
 name|tag_size
@@ -3889,6 +3916,10 @@ name|cursor
 argument_list|,
 name|tag
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|tag_data
 argument_list|,
 name|tag_size
