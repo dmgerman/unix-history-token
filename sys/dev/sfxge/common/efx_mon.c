@@ -693,7 +693,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock b9328f15438c4d01 */
+comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 01ee3ea01f23a0c4 */
 end_comment
 
 begin_decl_stmt
@@ -842,6 +842,18 @@ block|,
 literal|"controller_slave_vptat_ext_adc"
 block|,
 literal|"controller_slave_internal_temp_ext_adc"
+block|,
+literal|"sodimm_vout"
+block|,
+literal|"sodimm_0_temp"
+block|,
+literal|"sodimm_1_temp"
+block|,
+literal|"phy0_vcc"
+block|,
+literal|"phy1_vcc"
+block|,
+literal|"controller_tdiode_temp"
 block|, }
 decl_stmt|;
 end_decl_stmt
