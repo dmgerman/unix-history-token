@@ -1609,7 +1609,7 @@ name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_sram_test
+name|ef10_sram_test
 parameter_list|(
 name|__in
 name|efx_nic_t
