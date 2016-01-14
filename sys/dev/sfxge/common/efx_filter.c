@@ -1101,7 +1101,7 @@ begin_function
 name|void
 name|efx_filter_spec_init_rx
 parameter_list|(
-name|__inout
+name|__out
 name|efx_filter_spec_t
 modifier|*
 name|spec
@@ -1205,7 +1205,7 @@ begin_function
 name|void
 name|efx_filter_spec_init_tx
 parameter_list|(
-name|__inout
+name|__out
 name|efx_filter_spec_t
 modifier|*
 name|spec

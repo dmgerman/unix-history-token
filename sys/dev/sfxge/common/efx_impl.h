@@ -3972,10 +3972,7 @@ name|efx_vpd_keyword_t
 operator|*
 name|keyword
 argument_list|,
-name|__out_bcount_opt
-argument_list|(
-argument|*paylenp
-argument_list|)
+name|__out_opt
 name|unsigned
 name|int
 operator|*

@@ -752,7 +752,7 @@ specifier|static
 name|efx_rc_t
 name|tlv_init_cursor
 parameter_list|(
-name|__in
+name|__out
 name|tlv_cursor_t
 modifier|*
 name|cursor
@@ -810,7 +810,7 @@ specifier|static
 name|efx_rc_t
 name|tlv_init_cursor_from_size
 parameter_list|(
-name|__in
+name|__out
 name|tlv_cursor_t
 modifier|*
 name|cursor
