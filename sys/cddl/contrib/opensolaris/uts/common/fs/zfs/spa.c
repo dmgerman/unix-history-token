@@ -26883,6 +26883,14 @@ operator|->
 name|vdev_top
 argument_list|)
 expr_stmt|;
+comment|/* Tell userspace that the vdev is gone. */
+name|zfs_post_remove
+argument_list|(
+name|spa
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
