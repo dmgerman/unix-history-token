@@ -2111,6 +2111,7 @@ literal|"\t -W\t\t (toggle) show counts per context switch\n"
 literal|"\t -a<file>\t print sampled PCs and callgraph to \"file\"\n"
 literal|"\t -c cpu-list\t set cpus for subsequent system-wide PMCs\n"
 literal|"\t -d\t\t (toggle) track descendants\n"
+literal|"\t -e\t\t use wide history counter for gprof(1) output\n"
 literal|"\t -f spec\t pass \"spec\" to as plugin option\n"
 literal|"\t -g\t\t produce gprof(1) compatible profiles\n"
 literal|"\t -k dir\t\t set the path to the kernel\n"
@@ -2620,7 +2621,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CD:EF:G:M:NO:P:R:S:TWa:c:df:gk:l:m:n:o:p:qr:s:t:vw:z:"
+literal|"CD:EF:G:M:NO:P:R:S:TWa:c:def:gk:l:m:n:o:p:qr:s:t:vw:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2796,6 +2797,17 @@ operator|.
 name|pa_required
 operator||=
 name|FLAG_HAS_PROCESS_PMCS
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* wide gprof metrics */
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_WIDE_GPROF_HC
 expr_stmt|;
 break|break;
 case|case
@@ -4364,6 +4376,33 @@ argument_list|(
 name|EX_USAGE
 argument_list|,
 literal|"ERROR: options -g/-G/-m/-T require sampling PMCs or -R to be specified."
+argument_list|)
+expr_stmt|;
+comment|/* check if -e was specified without -g */
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_WIDE_GPROF_HC
+operator|)
+operator|&&
+operator|!
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_GPROF
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: option -e requires gprof mode to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check if -O was spuriously specified */
@@ -6664,8 +6703,34 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some samples were dropped.\n"
+literal|"WARNING: sampling was paused at least %u time%s.\n"
 literal|"Please consider tuning the \"kern.hwpmc.nsamples\" tunable."
+argument_list|,
+name|ds_end
+operator|.
+name|pm_intr_bufferfull
+operator|-
+name|ds_start
+operator|.
+name|pm_intr_bufferfull
+argument_list|,
+operator|(
+operator|(
+name|ds_end
+operator|.
+name|pm_intr_bufferfull
+operator|-
+name|ds_start
+operator|.
+name|pm_intr_bufferfull
+operator|)
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -6686,8 +6751,34 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some events were discarded.\n"
+literal|"WARNING: at least %u event%s were discarded while running.\n"
 literal|"Please consider tuning the \"kern.hwpmc.nbuffers\" tunable."
+argument_list|,
+name|ds_end
+operator|.
+name|pm_buffer_requests_failed
+operator|-
+name|ds_start
+operator|.
+name|pm_buffer_requests_failed
+argument_list|,
+operator|(
+operator|(
+name|ds_end
+operator|.
+name|pm_buffer_requests_failed
+operator|-
+name|ds_start
+operator|.
+name|pm_buffer_requests_failed
+operator|)
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}

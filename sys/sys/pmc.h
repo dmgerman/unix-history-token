@@ -1125,38 +1125,46 @@ begin_struct
 struct|struct
 name|pmc_op_getdriverstats
 block|{
+name|unsigned
 name|int
 name|pm_intr_ignored
 decl_stmt|;
 comment|/* #interrupts ignored */
+name|unsigned
 name|int
 name|pm_intr_processed
 decl_stmt|;
 comment|/* #interrupts processed */
+name|unsigned
 name|int
 name|pm_intr_bufferfull
 decl_stmt|;
 comment|/* #interrupts with ENOSPC */
+name|unsigned
 name|int
 name|pm_syscalls
 decl_stmt|;
 comment|/* #syscalls */
+name|unsigned
 name|int
 name|pm_syscall_errors
 decl_stmt|;
 comment|/* #syscalls with errors */
+name|unsigned
 name|int
 name|pm_buffer_requests
 decl_stmt|;
 comment|/* #buffer requests */
+name|unsigned
 name|int
 name|pm_buffer_requests_failed
 decl_stmt|;
 comment|/* #failed buffer requests */
+name|unsigned
 name|int
 name|pm_log_sweeps
 decl_stmt|;
-comment|/* #sample buffer processing passes */
+comment|/* #sample buffer processing 						   passes */
 block|}
 struct|;
 end_struct
@@ -1272,6 +1280,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
 end_include
 
 begin_include
@@ -1461,10 +1475,16 @@ comment|/* counting PMC modes */
 block|}
 name|pm_sc
 union|;
-name|uint32_t
+specifier|volatile
+name|cpuset_t
 name|pm_stalled
 decl_stmt|;
 comment|/* marks stalled sampling PMCs */
+specifier|volatile
+name|cpuset_t
+name|pm_cpustate
+decl_stmt|;
+comment|/* CPUs where PMC should be active */
 name|uint32_t
 name|pm_caps
 decl_stmt|;
