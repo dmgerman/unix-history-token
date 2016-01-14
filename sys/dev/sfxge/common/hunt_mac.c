@@ -1124,9 +1124,13 @@ operator|)
 return|;
 name|fail1
 label|:
-name|EFSYS_PROBE
+name|EFSYS_PROBE1
 argument_list|(
-name|fail2
+name|fail1
+argument_list|,
+name|int
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|epp
