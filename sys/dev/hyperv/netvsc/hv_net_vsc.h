@@ -1465,6 +1465,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|NETVSC_RECEIVE_BUFFER_SIZE_LEGACY
+value|(1024*1024*15)
+end_define
+
+begin_comment
+comment|/* 15MB */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETVSC_RECEIVE_BUFFER_SIZE
 value|(1024*1024*16)
 end_define

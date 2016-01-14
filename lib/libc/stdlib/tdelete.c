@@ -70,7 +70,7 @@ define|#
 directive|define
 name|GO_RIGHT
 parameter_list|()
-value|do {							\ 	if ((*leaf)->balance == 0 ||					\ 	    ((*leaf)->balance> 0&& (*leaf)->llink->balance == 0)) {	\ 		base = leaf;						\ 		path_init(&path);					\ 	}								\ 	result =&(*leaf)->key;						\ 	path_taking_right(&path);					\ 	leaf =&(*leaf)->rlink;						\ } while (0)
+value|do {							\ 	if ((*leaf)->balance == 0 ||					\ 	    ((*leaf)->balance> 0&& (*leaf)->llink->balance == 0)) {	\ 		base = leaf;						\ 		path_init(&path);					\ 	}								\ 	path_taking_right(&path);					\ 	leaf =&(*leaf)->rlink;						\ } while (0)
 end_define
 
 begin_function

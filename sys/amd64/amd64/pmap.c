@@ -13368,6 +13368,9 @@ argument_list|,
 argument|pc_list
 argument_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__POPCNT__
 if|if
 condition|(
 operator|(
@@ -13417,6 +13420,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|free
 operator|=

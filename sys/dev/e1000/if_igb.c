@@ -8548,12 +8548,14 @@ name|FALSE
 expr_stmt|;
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|IGB_MAX_SCATTER
 argument_list|)
 expr_stmt|;
 if|if
@@ -27228,6 +27230,26 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"dropped"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|dropped_pkts
+argument_list|,
+literal|"Driver dropped packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"link_irq"
 argument_list|,
 name|CTLFLAG_RD
@@ -27248,16 +27270,16 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"dropped"
+literal|"mbuf_defrag_fail"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|adapter
 operator|->
-name|dropped_pkts
+name|mbuf_defrag_failed
 argument_list|,
-literal|"Driver dropped packets"
+literal|"Defragmenting mbuf chain failed"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_ULONG

@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/utsname.h>
 end_include
 
@@ -51,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_include
@@ -74,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -92,31 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdbool.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include

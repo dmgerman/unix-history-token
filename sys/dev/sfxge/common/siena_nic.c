@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
 end_include
 
@@ -591,6 +585,12 @@ expr_stmt|;
 name|encp
 operator|->
 name|enc_fw_assisted_tso_enabled
+operator|=
+name|B_FALSE
+expr_stmt|;
+name|encp
+operator|->
+name|enc_fw_assisted_tso_v2_enabled
 operator|=
 name|B_FALSE
 expr_stmt|;

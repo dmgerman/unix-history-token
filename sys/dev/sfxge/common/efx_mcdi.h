@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"efx_regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx_regs_mcdi.h"
 end_include
 
@@ -69,7 +63,7 @@ name|size_t
 name|emr_in_length
 decl_stmt|;
 comment|/* Outputs: retcode, buffer, length, and length used*/
-name|int
+name|efx_rc_t
 name|emr_rc
 decl_stmt|;
 name|uint8_t

@@ -20,25 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"efsys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"efx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"efx_regs.h"
 end_include
 
 begin_include
@@ -1119,7 +1101,7 @@ begin_function
 name|void
 name|efx_filter_spec_init_rx
 parameter_list|(
-name|__inout
+name|__out
 name|efx_filter_spec_t
 modifier|*
 name|spec
@@ -1223,7 +1205,7 @@ begin_function
 name|void
 name|efx_filter_spec_init_tx
 parameter_list|(
-name|__inout
+name|__out
 name|efx_filter_spec_t
 modifier|*
 name|spec

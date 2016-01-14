@@ -784,16 +784,16 @@ name|EFSYS_OPT_RX_SCATTER
 value|0
 define|#
 directive|define
-name|EFSYS_OPT_RX_HDR_SPLIT
-value|0
-define|#
-directive|define
 name|EFSYS_OPT_EV_PREFETCH
 value|0
 define|#
 directive|define
 name|EFSYS_OPT_DECODE_INTR_FATAL
 value|1
+define|#
+directive|define
+name|EFSYS_OPT_LICENSING
+value|0
 comment|/* ID */
 typedef|typedef
 name|struct

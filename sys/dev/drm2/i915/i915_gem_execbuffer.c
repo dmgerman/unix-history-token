@@ -1665,6 +1665,8 @@ name|obj
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|,
 name|pflags
 decl_stmt|;
@@ -1673,10 +1675,6 @@ name|i915_gem_retire_requests
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|0
 expr_stmt|;
 comment|/* This is the fast path and we cannot handle a pagefault whilst 	 * holding the device lock lest the user pass in the relocations 	 * contained within a mmaped bo. For in such a case we, the page 	 * fault handler would call i915_gem_fault() and we would try to 	 * acquire the device lock again. Obviously this is bad. 	 */
 name|pflags

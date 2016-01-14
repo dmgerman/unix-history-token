@@ -8404,6 +8404,9 @@ directive|endif
 name|int
 name|did_output
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
 name|tmr
 operator|=
 operator|(
@@ -8738,6 +8741,12 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|type
+operator|=
+name|tmr
+operator|->
+name|type
+expr_stmt|;
 name|tmr
 operator|->
 name|stopped_from
@@ -8750,8 +8759,6 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"Timer type %d goes off\n"
 argument_list|,
-name|tmr
-operator|->
 name|type
 argument_list|)
 expr_stmt|;
@@ -8834,8 +8841,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tmr
-operator|->
 name|type
 operator|!=
 name|SCTP_TIMER_TYPE_ASOCKILL
@@ -8891,8 +8896,6 @@ name|tmr
 operator|->
 name|stopped_from
 operator|=
-name|tmr
-operator|->
 name|type
 expr_stmt|;
 comment|/* mark as being serviced now */
@@ -8940,8 +8943,6 @@ expr_stmt|;
 comment|/* call the handler for the appropriate timer type */
 switch|switch
 condition|(
-name|tmr
-operator|->
 name|type
 condition|)
 block|{
@@ -10318,8 +10319,6 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"sctp_timeout_handler:unknown timer %d\n"
 argument_list|,
-name|tmr
-operator|->
 name|type
 argument_list|)
 expr_stmt|;
@@ -10335,8 +10334,6 @@ argument_list|,
 operator|(
 name|uint8_t
 operator|)
-name|tmr
-operator|->
 name|type
 argument_list|)
 expr_stmt|;
@@ -10408,10 +10405,8 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_TIMER1
 argument_list|,
-literal|"Timer now complete (type %d)\n"
+literal|"Timer now complete (type = %d)\n"
 argument_list|,
-name|tmr
-operator|->
 name|type
 argument_list|)
 expr_stmt|;

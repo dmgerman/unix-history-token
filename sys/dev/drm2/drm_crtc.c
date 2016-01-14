@@ -2494,7 +2494,7 @@ name|format_count
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3835,7 +3835,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -8245,7 +8245,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -10522,7 +10522,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -11513,7 +11513,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -11546,7 +11546,7 @@ name|num_values
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -12169,7 +12169,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -13261,7 +13261,7 @@ name|length
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -15013,7 +15013,7 @@ literal|3
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -16060,7 +16060,7 @@ name|e
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)

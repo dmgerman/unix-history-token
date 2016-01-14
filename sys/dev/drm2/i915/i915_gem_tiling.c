@@ -1377,7 +1377,7 @@ name|void
 name|i915_gem_swizzle_page
 parameter_list|(
 name|vm_page_t
-name|m
+name|page
 parameter_list|)
 block|{
 name|char
@@ -1386,14 +1386,14 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|vaddr
-decl_stmt|;
 name|struct
 name|sf_buf
 modifier|*
 name|sf
+decl_stmt|;
+name|char
+modifier|*
+name|vaddr
 decl_stmt|;
 name|int
 name|i
@@ -1403,7 +1403,7 @@ name|sf
 operator|=
 name|sf_buf_alloc
 argument_list|(
-name|m
+name|page
 argument_list|,
 name|SFB_DEFAULT
 argument_list|)
