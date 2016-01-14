@@ -133,7 +133,7 @@ literal|0
 expr_stmt|;
 name|rc
 operator|=
-name|hunt_nvram_partn_read_tlv
+name|ef10_nvram_partn_read_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -417,7 +417,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_read_tlv
+name|ef10_nvram_partn_read_tlv
 argument_list|(
 name|enp
 argument_list|,
@@ -1501,7 +1501,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nvram_partn_write_segment_tlv
+name|ef10_nvram_partn_write_segment_tlv
 argument_list|(
 name|enp
 argument_list|,
