@@ -2591,6 +2591,52 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* How many packets txeof tries to clean at a time */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igb_tx_process_limit
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.tx_process_limit"
+argument_list|,
+operator|&
+name|igb_tx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_igb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tx_process_limit
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|igb_tx_process_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of sent packets to process at a time, -1 means unlimited"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3065,7 +3111,7 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Sysctl for limiting the amount of work done in the taskqueue */
+comment|/* Sysctls for limiting the amount of work done in the taskqueues */
 name|igb_set_sysctl_value
 argument_list|(
 name|adapter
@@ -3080,6 +3126,22 @@ operator|->
 name|rx_process_limit
 argument_list|,
 name|igb_rx_process_limit
+argument_list|)
+expr_stmt|;
+name|igb_set_sysctl_value
+argument_list|(
+name|adapter
+argument_list|,
+literal|"tx_processing_limit"
+argument_list|,
+literal|"max number of tx packets to process"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|tx_process_limit
+argument_list|,
+name|igb_tx_process_limit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Validate number of transmit and receive descriptors. It 	 * must not exceed hardware maximum, and must be multiple 	 * of E1000_DBA_ALIGN. 	 */
@@ -18629,12 +18691,12 @@ name|processed
 init|=
 literal|0
 decl_stmt|;
-name|u16
+name|int
 name|limit
 init|=
-name|txr
+name|adapter
 operator|->
-name|process_limit
+name|tx_process_limit
 decl_stmt|;
 name|struct
 name|igb_tx_buf
