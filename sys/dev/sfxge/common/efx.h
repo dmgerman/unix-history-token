@@ -161,11 +161,6 @@ value|0x0903
 comment|/* SFC9120 PF */
 define|#
 directive|define
-name|EFX_PCI_DEVID_HUNTINGTON
-value|0x0913
-comment|/* SFL9122 PF */
-define|#
-directive|define
 name|EFX_PCI_DEVID_GREENPORT
 value|0x0923
 comment|/* SFC9140 PF */
@@ -174,11 +169,6 @@ directive|define
 name|EFX_PCI_DEVID_FARMINGDALE_VF
 value|0x1903
 comment|/* SFC9120 VF */
-define|#
-directive|define
-name|EFX_PCI_DEVID_HUNTINGTON_VF
-value|0x1913
-comment|/* SFL9122 VF */
 define|#
 directive|define
 name|EFX_PCI_DEVID_GREENPORT_VF
