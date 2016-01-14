@@ -104,7 +104,7 @@ end_typedef
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|tlv_validate_state
 parameter_list|(
 name|__in
@@ -356,7 +356,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|tlv_advance
 parameter_list|(
 name|__in
@@ -365,7 +365,7 @@ modifier|*
 name|cursor
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -461,7 +461,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -476,7 +476,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|tlv_rewind
 parameter_list|(
 name|__in
@@ -485,7 +485,7 @@ modifier|*
 name|cursor
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|cursor
@@ -523,7 +523,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -538,7 +538,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|tlv_find
 parameter_list|(
 name|__in
@@ -551,7 +551,7 @@ name|uint32_t
 name|tag
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|rc
@@ -597,7 +597,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|tlv_validate_state
 parameter_list|(
 name|__in
@@ -606,7 +606,7 @@ modifier|*
 name|cursor
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Check cursor position */
@@ -752,7 +752,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -767,7 +767,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|tlv_init_cursor
 parameter_list|(
 name|__in
@@ -825,7 +825,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|tlv_init_cursor_from_size
 parameter_list|(
 name|__in
@@ -885,7 +885,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|efx_rc_t
 name|tlv_require_end
 parameter_list|(
 name|__in
@@ -898,7 +898,7 @@ name|uint32_t
 modifier|*
 name|pos
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -960,7 +960,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -984,7 +984,7 @@ modifier|*
 name|cursor
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1051,7 +1051,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1188,7 +1188,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|tlv_insert
 parameter_list|(
 name|__in
@@ -1214,7 +1214,7 @@ name|unsigned
 name|int
 name|delta
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1376,7 +1376,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1392,7 +1392,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|tlv_modify
 parameter_list|(
 name|__in
@@ -1430,7 +1430,7 @@ name|unsigned
 name|int
 name|delta
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1724,7 +1724,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1743,7 +1743,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_tlv_validate
 argument_list|(
 name|__in
@@ -1789,7 +1789,7 @@ decl_stmt|;
 name|int
 name|pos
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFX_STATIC_ASSERT
@@ -2136,7 +2136,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2156,7 +2156,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_read_tlv_segment
 argument_list|(
 name|__in
@@ -2206,7 +2206,7 @@ decl_stmt|;
 name|int
 name|pos
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFX_STATIC_ASSERT
@@ -2634,7 +2634,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2653,7 +2653,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_buf_read_tlv
 argument_list|(
 name|__in
@@ -2702,7 +2702,7 @@ decl_stmt|;
 name|caddr_t
 name|value
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2888,7 +2888,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2907,7 +2907,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_read_tlv
 argument_list|(
 name|__in
@@ -2956,7 +2956,7 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Allocate sufficient memory for the entire partition */
@@ -3172,7 +3172,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3192,7 +3192,7 @@ end_comment
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_buf_segment_size
 parameter_list|(
 name|__in
@@ -3209,7 +3209,7 @@ modifier|*
 name|seg_sizep
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|tlv_cursor_t
@@ -3685,7 +3685,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3704,7 +3704,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_buf_write_tlv
 argument_list|(
 name|__inout_bcount
@@ -3761,7 +3761,7 @@ decl_stmt|;
 name|int
 name|pos
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* A PARTITION_HEADER tag must be the first item (at offset zero) */
@@ -4140,7 +4140,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4159,7 +4159,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_write_tlv
 argument_list|(
 name|__in
@@ -4213,7 +4213,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_segment_write_tlv
 argument_list|(
 name|__in
@@ -4265,7 +4265,7 @@ name|boolean_t
 name|write
 argument_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|int
@@ -4413,7 +4413,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4432,7 +4432,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_write_segment_tlv
 argument_list|(
 name|__in
@@ -4477,7 +4477,7 @@ name|total_length
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|size_t
@@ -4812,7 +4812,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4831,7 +4831,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_size
 parameter_list|(
 name|__in
@@ -4850,7 +4850,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4888,7 +4888,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4903,7 +4903,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_lock
 parameter_list|(
 name|__in
@@ -4917,7 +4917,7 @@ name|int
 name|partn
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -4949,7 +4949,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -4964,7 +4964,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_read
 argument_list|(
 name|__in
@@ -4997,7 +4997,7 @@ block|{
 name|size_t
 name|chunk
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 while|while
@@ -5066,7 +5066,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5081,7 +5081,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_erase
 parameter_list|(
 name|__in
@@ -5104,7 +5104,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -5140,7 +5140,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5155,7 +5155,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_write
 argument_list|(
 name|__in
@@ -5188,7 +5188,7 @@ block|{
 name|size_t
 name|chunk
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 while|while
@@ -5257,7 +5257,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5288,7 +5288,7 @@ block|{
 name|boolean_t
 name|reboot
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|reboot
@@ -5322,7 +5322,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5332,7 +5332,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_partn_set_version
 argument_list|(
 name|__in
@@ -5363,7 +5363,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Add or modify partition version TLV item */
@@ -5478,7 +5478,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -5810,7 +5810,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_test
 parameter_list|(
 name|__in
@@ -5858,7 +5858,7 @@ name|unsigned
 name|int
 name|j
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* Find supported partitions */
@@ -6058,7 +6058,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6082,7 +6082,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_size
 parameter_list|(
 name|__in
@@ -6107,7 +6107,7 @@ decl_stmt|;
 name|uint32_t
 name|partn
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6178,7 +6178,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6198,7 +6198,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_get_version
 argument_list|(
 name|__in
@@ -6233,7 +6233,7 @@ decl_stmt|;
 name|uint32_t
 name|partn
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6312,7 +6312,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6327,7 +6327,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_rw_start
 parameter_list|(
 name|__in
@@ -6352,7 +6352,7 @@ decl_stmt|;
 name|uint32_t
 name|partn
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6432,7 +6432,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6447,7 +6447,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_read_chunk
 argument_list|(
 name|__in
@@ -6480,7 +6480,7 @@ name|hunt_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6551,7 +6551,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6566,7 +6566,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_erase
 parameter_list|(
 name|__in
@@ -6586,7 +6586,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6685,7 +6685,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6700,7 +6700,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_write_chunk
 argument_list|(
 name|__in
@@ -6733,7 +6733,7 @@ name|hunt_parttbl_entry_t
 modifier|*
 name|entry
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6804,7 +6804,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -6864,7 +6864,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_nvram_set_version
 argument_list|(
 name|__in
@@ -6895,7 +6895,7 @@ name|unsigned
 name|int
 name|partn
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -6966,7 +6966,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

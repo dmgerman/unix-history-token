@@ -58,7 +58,7 @@ end_if
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_intr_init
 parameter_list|(
 name|__in
@@ -120,7 +120,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_intr_trigger
 parameter_list|(
 name|__in
@@ -316,7 +316,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_intr_init
 parameter_list|(
 name|__in
@@ -349,7 +349,7 @@ name|efx_intr_ops_t
 modifier|*
 name|eiop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -546,7 +546,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -823,7 +823,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_intr_trigger
 parameter_list|(
 name|__in
@@ -1229,7 +1229,7 @@ end_if
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_intr_init
 parameter_list|(
 name|__in
@@ -1579,7 +1579,7 @@ end_function
 begin_function
 specifier|static
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|falconsiena_intr_trigger
 parameter_list|(
 name|__in
@@ -1614,7 +1614,7 @@ decl_stmt|;
 name|uint32_t
 name|sel
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* bug16757: No event queues can be initialized */
@@ -1812,7 +1812,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

@@ -669,7 +669,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_power
 parameter_list|(
 name|__in
@@ -683,7 +683,7 @@ name|power
 parameter_list|)
 block|{
 comment|/* TBD: consider common Siena/Hunt function: essentially identical */
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -730,7 +730,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -745,7 +745,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_get_link
 parameter_list|(
 name|__in
@@ -774,7 +774,7 @@ name|MC_CMD_GET_LINK_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1107,7 +1107,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1122,7 +1122,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_reconfigure
 parameter_list|(
 name|__in
@@ -1179,7 +1179,7 @@ name|unsigned
 name|int
 name|speed
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -1672,7 +1672,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1687,7 +1687,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_verify
 parameter_list|(
 name|__in
@@ -1714,7 +1714,7 @@ decl_stmt|;
 name|uint32_t
 name|state
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1870,7 +1870,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1885,7 +1885,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_oui_get
 parameter_list|(
 name|__in
@@ -1919,7 +1919,7 @@ end_if
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_stats_update
 argument_list|(
 name|__in
@@ -2032,7 +2032,7 @@ end_comment
 begin_function
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_prop_get
 parameter_list|(
 name|__in
@@ -2070,7 +2070,7 @@ end_function
 begin_function
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_phy_prop_set
 parameter_list|(
 name|__in
@@ -2117,7 +2117,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_bist_enable_offline
 parameter_list|(
 name|__in
@@ -2126,7 +2126,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2156,7 +2156,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2171,7 +2171,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_bist_start
 parameter_list|(
 name|__in
@@ -2184,7 +2184,7 @@ name|efx_bist_type_t
 name|type
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2216,7 +2216,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2231,7 +2231,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_bist_poll
 argument_list|(
 name|__in
@@ -2314,7 +2314,7 @@ decl_stmt|;
 name|uint32_t
 name|result
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2727,7 +2727,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

@@ -45,6 +45,7 @@ name|EFX_STATIC_ASSERT
 parameter_list|(
 name|_cond
 parameter_list|)
+define|\
 value|((void)sizeof(char[(_cond) ? 1 : -1]))
 define|#
 directive|define
@@ -52,6 +53,7 @@ name|EFX_ARRAY_SIZE
 parameter_list|(
 name|_array
 parameter_list|)
+define|\
 value|(sizeof(_array) / sizeof((_array)[0]))
 define|#
 directive|define
@@ -61,7 +63,19 @@ name|_type
 parameter_list|,
 name|_field
 parameter_list|)
+define|\
 value|((size_t)&(((_type *)0)->_field))
+comment|/* Return codes */
+typedef|typedef
+name|__success
+argument_list|(
+argument|return ==
+literal|0
+argument_list|)
+name|int
+name|efx_rc_t
+typedef|;
+comment|/* Chip families */
 typedef|typedef
 enum|enum
 name|efx_family_e
@@ -80,7 +94,7 @@ name|efx_family_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_family
 parameter_list|(
 name|__in
@@ -99,7 +113,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_infer_family
 parameter_list|(
 name|__in
@@ -254,7 +268,7 @@ name|EFX_NIC_FUNC_TRUSTED
 value|0x00000004
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_create
 parameter_list|(
 name|__in
@@ -285,7 +299,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_probe
 parameter_list|(
 name|__in
@@ -299,7 +313,7 @@ directive|if
 name|EFSYS_OPT_PCIE_TUNE
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_pcie_tune
 parameter_list|(
 name|__in
@@ -314,7 +328,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_pcie_extended_sync
 parameter_list|(
 name|__in
@@ -328,7 +342,7 @@ directive|endif
 comment|/* EFSYS_OPT_PCIE_TUNE */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_init
 parameter_list|(
 name|__in
@@ -339,7 +353,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_reset
 parameter_list|(
 name|__in
@@ -353,7 +367,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_register_test
 parameter_list|(
 name|__in
@@ -475,7 +489,7 @@ name|efx_mcdi_transport_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_init
 parameter_list|(
 name|__in
@@ -492,7 +506,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_reboot
 parameter_list|(
 name|__in
@@ -595,7 +609,7 @@ name|EFX_INTR_SIZE
 value|(sizeof (efx_oword_t))
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_intr_init
 parameter_list|(
 name|__in
@@ -649,7 +663,7 @@ name|EFX_INTR_NEVQS
 value|32
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_intr_trigger
 parameter_list|(
 name|__in
@@ -977,7 +991,7 @@ name|EFX_MAC_PDU_MAX
 value|EFX_MAC_PDU(EFX_MAC_SDU_MAX)
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_pdu_set
 parameter_list|(
 name|__in
@@ -992,7 +1006,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_addr_set
 parameter_list|(
 name|__in
@@ -1008,7 +1022,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_filter_set
 parameter_list|(
 name|__in
@@ -1035,7 +1049,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_multicast_list_set
 argument_list|(
 name|__in
@@ -1060,7 +1074,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_filter_default_rxq_set
 parameter_list|(
 name|__in
@@ -1090,7 +1104,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_drain
 parameter_list|(
 name|__in
@@ -1105,7 +1119,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_up
 parameter_list|(
 name|__in
@@ -1129,7 +1143,7 @@ name|EFX_FCNTL_GENERATE
 value|0x00000002
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_fcntl_set
 parameter_list|(
 name|__in
@@ -1175,7 +1189,7 @@ name|EFX_MAC_HASH_BITS
 value|(1<< 8)
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_pktfilter_init
 parameter_list|(
 name|__in
@@ -1196,7 +1210,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_pktfilter_set
 parameter_list|(
 name|__in
@@ -1215,7 +1229,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_hash_set
 argument_list|(
 name|__in
@@ -1239,7 +1253,7 @@ directive|if
 name|EFSYS_OPT_MCAST_FILTER_LIST
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_pktfilter_mcast_list_set
 parameter_list|(
 name|__in
@@ -1263,7 +1277,7 @@ directive|endif
 comment|/* EFSYS_OPT_MCAST_FILTER_LIST */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_pktfilter_mcast_all
 parameter_list|(
 name|__in
@@ -1306,7 +1320,7 @@ value|0x400
 comment|/*  * Upload mac statistics supported by the hardware into the given buffer.  *  * The reference buffer must be at least %EFX_MAC_STATS_SIZE bytes,  * and page aligned.  *  * The hardware will only DMA statistics that it understands (of course).  * Drivers should not make any assumptions about which statistics are  * supported, especially when the statistics are generated by firmware.  *  * Thus, drivers should zero this buffer before use, so that not-understood  * statistics read back as zero.  */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_stats_upload
 parameter_list|(
 name|__in
@@ -1322,7 +1336,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_stats_periodic
 parameter_list|(
 name|__in
@@ -1346,7 +1360,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mac_stats_update
 argument_list|(
 name|__in
@@ -1419,7 +1433,7 @@ directive|endif
 comment|/* EFSYS_OPT_NAMES */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mon_init
 parameter_list|(
 name|__in
@@ -1650,7 +1664,7 @@ directive|endif
 comment|/* EFSYS_OPT_NAMES */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mon_stats_update
 argument_list|(
 name|__in
@@ -1716,7 +1730,7 @@ name|MAXMMD
 value|((1<< 5) - 1)
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_verify
 parameter_list|(
 name|__in
@@ -1748,7 +1762,7 @@ name|efx_phy_led_mode_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_led_set
 parameter_list|(
 name|__in
@@ -1766,7 +1780,7 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_LED_CONTROL */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_port_init
 parameter_list|(
 name|__in
@@ -1960,7 +1974,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_port_loopback_set
 parameter_list|(
 name|__in
@@ -2005,7 +2019,7 @@ directive|endif
 comment|/* EFSYS_OPT_LOOPBACK */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_port_poll
 parameter_list|(
 name|__in
@@ -2096,7 +2110,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_adv_cap_set
 parameter_list|(
 name|__in
@@ -2126,7 +2140,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_oui_get
 parameter_list|(
 name|__in
@@ -2315,7 +2329,7 @@ name|EFX_PHY_STATS_SIZE
 value|0x100
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_stats_update
 argument_list|(
 name|__in
@@ -2372,7 +2386,7 @@ name|EFX_PHY_PROP_DEFAULT
 value|0x00000001
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_prop_get
 parameter_list|(
 name|__in
@@ -2397,7 +2411,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_phy_prop_set
 parameter_list|(
 name|__in
@@ -2523,7 +2537,7 @@ name|efx_bist_value_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bist_enable_offline
 parameter_list|(
 name|__in
@@ -2534,7 +2548,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bist_start
 parameter_list|(
 name|__in
@@ -2549,7 +2563,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_bist_poll
 argument_list|(
 name|__in
@@ -2994,7 +3008,7 @@ name|efx_drv_limits_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_set_drv_limits
 parameter_list|(
 name|__inout
@@ -3023,7 +3037,7 @@ name|efx_nic_region_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_get_bar_region
 parameter_list|(
 name|__in
@@ -3048,7 +3062,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nic_get_vi_pool
 parameter_list|(
 name|__in
@@ -3134,7 +3148,7 @@ parameter_list|)
 value|((x) | ((y)<< 8))
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_init
 parameter_list|(
 name|__in
@@ -3145,7 +3159,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_size
 parameter_list|(
 name|__in
@@ -3161,7 +3175,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_read
 argument_list|(
 name|__in
@@ -3183,7 +3197,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_verify
 argument_list|(
 name|__in
@@ -3205,7 +3219,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_reinit
 argument_list|(
 name|__in
@@ -3227,7 +3241,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_get
 argument_list|(
 name|__in
@@ -3254,7 +3268,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_set
 argument_list|(
 name|__in
@@ -3281,7 +3295,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_next
 argument_list|(
 name|__in
@@ -3314,7 +3328,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_vpd_write
 argument_list|(
 name|__in
@@ -3387,7 +3401,7 @@ name|efx_nvram_type_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_init
 parameter_list|(
 name|__in
@@ -3401,7 +3415,7 @@ directive|if
 name|EFSYS_OPT_DIAG
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_test
 parameter_list|(
 name|__in
@@ -3415,7 +3429,7 @@ directive|endif
 comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_size
 parameter_list|(
 name|__in
@@ -3435,7 +3449,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_rw_start
 parameter_list|(
 name|__in
@@ -3469,7 +3483,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_get_version
 argument_list|(
 name|__in
@@ -3499,7 +3513,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_read_chunk
 argument_list|(
 name|__in
@@ -3530,7 +3544,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_set_version
 argument_list|(
 name|__in
@@ -3556,7 +3570,7 @@ decl_stmt|;
 comment|/* Validate contents of TLV formatted partition */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_tlv_validate
 argument_list|(
 name|__in
@@ -3582,7 +3596,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_erase
 parameter_list|(
 name|__in
@@ -3597,7 +3611,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_write_chunk
 argument_list|(
 name|__in
@@ -3643,7 +3657,7 @@ if|#
 directive|if
 name|EFSYS_OPT_BOOTCFG
 specifier|extern
-name|int
+name|efx_rc_t
 name|efx_bootcfg_read
 argument_list|(
 name|__in
@@ -3664,7 +3678,7 @@ name|size
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|int
+name|efx_rc_t
 name|efx_bootcfg_write
 argument_list|(
 name|__in
@@ -3812,7 +3826,7 @@ name|efx_lightsout_offload_param_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_wol_init
 parameter_list|(
 name|__in
@@ -3823,7 +3837,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_wol_filter_clear
 parameter_list|(
 name|__in
@@ -3834,7 +3848,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_wol_filter_add
 parameter_list|(
 name|__in
@@ -3859,7 +3873,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_wol_filter_remove
 parameter_list|(
 name|__in
@@ -3874,7 +3888,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_lightsout_offload_add
 parameter_list|(
 name|__in
@@ -3899,7 +3913,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_lightsout_offload_remove
 parameter_list|(
 name|__in
@@ -3977,7 +3991,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_sram_test
 parameter_list|(
 name|__in
@@ -3995,7 +4009,7 @@ directive|endif
 comment|/* EFSYS_OPT_DIAG */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_sram_buf_tbl_set
 parameter_list|(
 name|__in
@@ -4141,7 +4155,7 @@ directive|endif
 comment|/* EFSYS_OPT_QSTATS */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_ev_init
 parameter_list|(
 name|__in
@@ -4184,7 +4198,7 @@ parameter_list|)
 value|(EFX_EVQ_SIZE(_nevs) / EFX_BUF_SIZE)
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_ev_qcreate
 parameter_list|(
 name|__in
@@ -4754,7 +4768,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_ev_qmoderate
 parameter_list|(
 name|__in
@@ -4770,7 +4784,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_ev_qprime
 parameter_list|(
 name|__in
@@ -4844,7 +4858,7 @@ function_decl|;
 comment|/* RX */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_init
 parameter_list|(
 name|__inout
@@ -4867,7 +4881,7 @@ if|#
 directive|if
 name|EFSYS_OPT_RX_HDR_SPLIT
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_hdr_split_enable
 parameter_list|(
 name|__in
@@ -4893,7 +4907,7 @@ if|#
 directive|if
 name|EFSYS_OPT_RX_SCATTER
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scatter_enable
 parameter_list|(
 name|__in
@@ -4989,7 +5003,7 @@ name|efx_rx_scale_support_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_hash_support_get
 parameter_list|(
 name|__in
@@ -5005,7 +5019,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_support_get
 parameter_list|(
 name|__in
@@ -5021,7 +5035,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_mode_set
 parameter_list|(
 name|__in
@@ -5044,7 +5058,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_tbl_set
 argument_list|(
 name|__in
@@ -5068,7 +5082,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_scale_key_set
 argument_list|(
 name|__in
@@ -5113,7 +5127,7 @@ directive|endif
 comment|/* EFSYS_OPT_RX_SCALE */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_psuedo_hdr_pkt_length_get
 parameter_list|(
 name|__in
@@ -5186,7 +5200,7 @@ name|efx_rxq_type_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_qcreate
 parameter_list|(
 name|__in
@@ -5319,7 +5333,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_rx_qflush
 parameter_list|(
 name|__in
@@ -5376,7 +5390,7 @@ directive|endif
 comment|/* EFSYS_OPT_QSTATS */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_init
 parameter_list|(
 name|__in
@@ -5450,7 +5464,7 @@ value|8
 comment|/* Maximum independent of EFX_BUG35388_WORKAROUND. */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qcreate
 parameter_list|(
 name|__in
@@ -5505,7 +5519,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qpost
 argument_list|(
 name|__in
@@ -5540,7 +5554,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qpace
 parameter_list|(
 name|__in
@@ -5576,7 +5590,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qflush
 parameter_list|(
 name|__in
@@ -5597,7 +5611,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qpio_enable
 parameter_list|(
 name|__in
@@ -5618,7 +5632,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qpio_write
 argument_list|(
 name|__in
@@ -5645,7 +5659,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qpio_post
 parameter_list|(
 name|__in
@@ -5671,7 +5685,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_tx_qdesc_post
 argument_list|(
 name|__in
@@ -6051,7 +6065,7 @@ name|EFX_FILTER_SPEC_VID_UNSPEC
 value|0xffff
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_init
 parameter_list|(
 name|__in
@@ -6072,7 +6086,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_insert
 parameter_list|(
 name|__in
@@ -6088,7 +6102,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_remove
 parameter_list|(
 name|__in
@@ -6104,7 +6118,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_restore
 parameter_list|(
 name|__in
@@ -6115,7 +6129,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_supported_filters
 parameter_list|(
 name|__in
@@ -6174,7 +6188,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_ipv4_local
 parameter_list|(
 name|__inout
@@ -6197,7 +6211,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_ipv4_full
 parameter_list|(
 name|__inout
@@ -6228,7 +6242,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_eth_local
 parameter_list|(
 name|__inout
@@ -6249,7 +6263,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_uc_def
 parameter_list|(
 name|__inout
@@ -6260,7 +6274,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_filter_spec_set_mc_def
 parameter_list|(
 name|__inout

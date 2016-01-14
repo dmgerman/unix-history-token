@@ -229,7 +229,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_init
 parameter_list|(
 name|__in
@@ -242,7 +242,7 @@ name|efx_nvram_ops_t
 modifier|*
 name|envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -380,7 +380,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -401,7 +401,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_test
 parameter_list|(
 name|__in
@@ -418,7 +418,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -472,7 +472,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -496,7 +496,7 @@ end_comment
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_size
 parameter_list|(
 name|__in
@@ -522,7 +522,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -589,7 +589,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -604,7 +604,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_get_version
 argument_list|(
 name|__in
@@ -640,7 +640,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -720,7 +720,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -735,7 +735,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_rw_start
 parameter_list|(
 name|__in
@@ -761,7 +761,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -854,7 +854,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -869,7 +869,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_read_chunk
 argument_list|(
 name|__in
@@ -906,7 +906,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -997,7 +997,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1012,7 +1012,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_erase
 parameter_list|(
 name|__in
@@ -1033,7 +1033,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1118,7 +1118,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1133,7 +1133,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_write_chunk
 argument_list|(
 name|__in
@@ -1170,7 +1170,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1261,7 +1261,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1367,7 +1367,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_nvram_set_version
 argument_list|(
 name|__in
@@ -1398,7 +1398,7 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1488,7 +1488,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1594,7 +1594,7 @@ end_comment
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_partitions
 argument_list|(
 name|__in
@@ -1638,7 +1638,7 @@ name|unsigned
 name|int
 name|npartn
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -1832,7 +1832,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1847,7 +1847,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_metadata
 argument_list|(
 name|__in
@@ -1901,7 +1901,7 @@ name|MC_CMD_NVRAM_METADATA_OUT_LENMAX
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2245,7 +2245,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2260,7 +2260,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_info
 parameter_list|(
 name|__in
@@ -2302,7 +2302,7 @@ decl_stmt|;
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2463,7 +2463,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2478,7 +2478,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_update_start
 parameter_list|(
 name|__in
@@ -2505,7 +2505,7 @@ decl_stmt|;
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2600,7 +2600,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2615,7 +2615,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_read
 argument_list|(
 name|__in
@@ -2657,7 +2657,7 @@ name|MC_CMD_NVRAM_READ_OUT_LENMAX
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -2828,7 +2828,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -2843,7 +2843,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_erase
 parameter_list|(
 name|__in
@@ -2878,7 +2878,7 @@ name|MC_CMD_NVRAM_ERASE_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -2991,7 +2991,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3006,7 +3006,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_write
 argument_list|(
 name|__in
@@ -3048,7 +3048,7 @@ name|MC_CMD_NVRAM_WRITE_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 if|if
@@ -3202,7 +3202,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3217,7 +3217,7 @@ end_decl_stmt
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_update_finish
 parameter_list|(
 name|__in
@@ -3248,7 +3248,7 @@ name|MC_CMD_NVRAM_UPDATE_FINISH_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -3352,7 +3352,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -3373,7 +3373,7 @@ end_if
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_nvram_test
 parameter_list|(
 name|__in
@@ -3403,7 +3403,7 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 operator|(
@@ -3564,7 +3564,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)

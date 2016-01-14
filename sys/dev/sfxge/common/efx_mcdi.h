@@ -188,7 +188,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_request_errcode
 parameter_list|(
 name|__in
@@ -230,7 +230,7 @@ name|efx_mcdi_boot_t
 typedef|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_version
 argument_list|(
 name|__in
@@ -261,7 +261,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_read_assertion
 parameter_list|(
 name|__in
@@ -272,7 +272,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_exit_assertion_handler
 parameter_list|(
 name|__in
@@ -283,7 +283,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_drv_attach
 parameter_list|(
 name|__in
@@ -298,7 +298,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_board_cfg
 argument_list|(
 name|__in
@@ -329,7 +329,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_phy_cfg
 parameter_list|(
 name|__in
@@ -340,7 +340,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_firmware_update_supported
 parameter_list|(
 name|__in
@@ -356,7 +356,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_macaddr_change_supported
 parameter_list|(
 name|__in
@@ -378,7 +378,7 @@ directive|if
 name|EFSYS_OPT_HUNTINGTON
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_bist_enable_offline
 parameter_list|(
 name|__in
@@ -392,7 +392,7 @@ directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_bist_start
 parameter_list|(
 name|__in
@@ -410,7 +410,7 @@ directive|endif
 comment|/* EFSYS_OPT_BIST */
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_resource_limits
 parameter_list|(
 name|__in
@@ -436,7 +436,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_log_ctrl
 parameter_list|(
 name|__in
@@ -447,7 +447,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats_clear
 parameter_list|(
 name|__in
@@ -458,7 +458,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats_upload
 parameter_list|(
 name|__in
@@ -474,7 +474,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_mac_stats_periodic
 parameter_list|(
 name|__in
@@ -501,7 +501,7 @@ directive|if
 name|EFSYS_OPT_LOOPBACK
 specifier|extern
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|efx_mcdi_get_loopback_modes
 parameter_list|(
 name|__in

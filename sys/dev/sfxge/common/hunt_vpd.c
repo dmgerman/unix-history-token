@@ -67,7 +67,7 @@ end_include
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_init
 parameter_list|(
 name|__in
@@ -85,7 +85,7 @@ decl_stmt|;
 name|uint32_t
 name|pci_pf
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -251,7 +251,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -266,7 +266,7 @@ end_function
 
 begin_function
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_size
 parameter_list|(
 name|__in
@@ -280,7 +280,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -328,7 +328,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -343,7 +343,7 @@ end_function
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_read
 argument_list|(
 name|__in
@@ -372,7 +372,7 @@ decl_stmt|;
 name|uint32_t
 name|pci_pf
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -499,7 +499,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -514,7 +514,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_verify
 argument_list|(
 name|__in
@@ -554,7 +554,7 @@ name|unsigned
 name|int
 name|dcont
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -772,7 +772,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -787,7 +787,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_reinit
 argument_list|(
 name|__in
@@ -810,7 +810,7 @@ block|{
 name|boolean_t
 name|wantpid
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 comment|/* 	 * Only create an ID string if the dynamic cfg doesn't have one 	 */
@@ -934,7 +934,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -949,7 +949,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_get
 argument_list|(
 name|__in
@@ -981,7 +981,7 @@ decl_stmt|;
 name|uint8_t
 name|length
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1161,7 +1161,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1176,7 +1176,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_set
 argument_list|(
 name|__in
@@ -1201,7 +1201,7 @@ operator|*
 name|evvp
 argument_list|)
 block|{
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1323,7 +1323,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
@@ -1338,7 +1338,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_next
 argument_list|(
 name|__in
@@ -1383,7 +1383,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn
-name|int
+name|efx_rc_t
 name|hunt_vpd_write
 argument_list|(
 name|__in
@@ -1409,7 +1409,7 @@ decl_stmt|;
 name|uint32_t
 name|pci_pf
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|rc
 decl_stmt|;
 name|EFSYS_ASSERT
@@ -1501,7 +1501,7 @@ name|EFSYS_PROBE1
 argument_list|(
 name|fail1
 argument_list|,
-name|int
+name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
