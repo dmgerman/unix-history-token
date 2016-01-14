@@ -3023,6 +3023,15 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
+name|efx_nic_cfg_t
+modifier|*
+name|encp
+init|=
+operator|&
+name|enp
+operator|->
+name|en_nic_cfg
+decl_stmt|;
 name|efx_drv_cfg_t
 modifier|*
 name|edcp
@@ -3112,7 +3121,9 @@ goto|;
 block|}
 name|blk_per_buf
 operator|=
-name|HUNT_PIOBUF_SIZE
+name|encp
+operator|->
+name|enc_piobuf_size
 operator|/
 name|edcp
 operator|->
@@ -4816,6 +4827,12 @@ name|enc_piobuf_size
 operator|=
 name|HUNT_PIOBUF_SIZE
 expr_stmt|;
+name|encp
+operator|->
+name|enc_piobuf_min_alloc_size
+operator|=
+name|HUNT_MIN_PIO_ALLOC_SIZE
+expr_stmt|;
 comment|/* 	 * Get the current privilege mask. Note that this may be modified 	 * dynamically, so this value is informational only. DO NOT use 	 * the privilege mask to check for sufficient privileges, as that 	 * can result in time-of-check/time-of-use bugs. 	 */
 if|if
 condition|(
@@ -5632,7 +5649,9 @@ name|edlp
 operator|->
 name|edl_min_pio_alloc_size
 argument_list|,
-name|HUNT_MIN_PIO_ALLOC_SIZE
+name|encp
+operator|->
+name|enc_piobuf_min_alloc_size
 argument_list|)
 expr_stmt|;
 name|blks_per_piobuf
