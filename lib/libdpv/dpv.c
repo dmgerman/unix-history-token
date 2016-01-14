@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2168,6 +2174,30 @@ argument_list|)
 expr_stmt|;
 comment|/* Reads: label_size pbar_size pprompt aprompt dpv_nfiles */
 comment|/* Inits: dheight and dwidth */
+comment|/* Default localeconv(3) settings for dialog(3) status */
+name|setlocale
+argument_list|(
+name|LC_NUMERIC
+argument_list|,
+name|getenv
+argument_list|(
+literal|"LC_ALL"
+argument_list|)
+operator|==
+name|NULL
+operator|&&
+name|getenv
+argument_list|(
+literal|"LC_NUMERIC"
+argument_list|)
+operator|==
+name|NULL
+condition|?
+name|LC_NUMERIC_DEFAULT
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -58,6 +58,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* localeconv(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LC_NUMERIC_DEFAULT
+value|"en_US.ISO8859-1"
+end_define
+
+begin_comment
 comment|/* Data to process */
 end_comment
 
