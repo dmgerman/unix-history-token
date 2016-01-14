@@ -5189,10 +5189,6 @@ name|efx_rxq_type_e
 block|{
 name|EFX_RXQ_TYPE_DEFAULT
 block|,
-name|EFX_RXQ_TYPE_SPLIT_HEADER
-block|,
-name|EFX_RXQ_TYPE_SPLIT_PAYLOAD
-block|,
 name|EFX_RXQ_TYPE_SCATTER
 block|,
 name|EFX_RXQ_NTYPES

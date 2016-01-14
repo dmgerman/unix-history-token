@@ -4838,9 +4838,6 @@ name|uint32_t
 name|size
 decl_stmt|;
 name|boolean_t
-name|split
-decl_stmt|;
-name|boolean_t
 name|jumbo
 decl_stmt|;
 name|efx_rc_t
@@ -5013,10 +5010,6 @@ block|{
 case|case
 name|EFX_RXQ_TYPE_DEFAULT
 case|:
-name|split
-operator|=
-name|B_FALSE
-expr_stmt|;
 name|jumbo
 operator|=
 name|B_FALSE
@@ -5133,10 +5126,6 @@ goto|goto
 name|fail4
 goto|;
 block|}
-name|split
-operator|=
-name|B_FALSE
-expr_stmt|;
 name|jumbo
 operator|=
 name|B_TRUE
@@ -5155,21 +5144,9 @@ name|fail4
 goto|;
 block|}
 comment|/* Set up the new descriptor queue */
-name|EFX_POPULATE_OWORD_10
+name|EFX_POPULATE_OWORD_7
 argument_list|(
 name|oword
-argument_list|,
-name|FRF_CZ_RX_HDR_SPLIT
-argument_list|,
-name|split
-argument_list|,
-name|FRF_AZ_RX_ISCSI_DDIG_EN
-argument_list|,
-literal|0
-argument_list|,
-name|FRF_AZ_RX_ISCSI_HDIG_EN
-argument_list|,
-literal|0
 argument_list|,
 name|FRF_AZ_RX_DESCQ_BUF_BASE_ID
 argument_list|,
