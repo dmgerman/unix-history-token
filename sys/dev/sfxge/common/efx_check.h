@@ -621,6 +621,43 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Support MCDI logging */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_MCDI_LOGGING
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|EFSYS_OPT_MCDI
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"MCDI_LOGGING requires MCDI"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_MCDI_LOGGING */
+end_comment
+
+begin_comment
 comment|/* Support LM87 monitor */
 end_comment
 
