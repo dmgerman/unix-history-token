@@ -4263,7 +4263,7 @@ block|{
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|int
+name|efx_rc_t
 name|status
 decl_stmt|;
 name|size_t
