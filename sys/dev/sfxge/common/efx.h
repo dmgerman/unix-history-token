@@ -2964,6 +2964,9 @@ decl_stmt|;
 name|boolean_t
 name|enc_rx_disable_scatter_supported
 decl_stmt|;
+name|boolean_t
+name|enc_allow_set_mac_with_installed_filters
+decl_stmt|;
 comment|/* External port identifier */
 name|uint8_t
 name|enc_external_port
