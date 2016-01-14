@@ -27,6 +27,10 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+define|#
+directive|define
+name|MEDFORD_PIOBUF_NBUFS
+value|(16)
 ifdef|#
 directive|ifdef
 name|__cplusplus
