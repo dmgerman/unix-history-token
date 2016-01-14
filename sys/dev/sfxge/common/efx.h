@@ -421,7 +421,9 @@ name|EFSYS_OPT_MCDI
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
-comment|/* Huntington requires MCDIv2 commands */
+operator|||
+name|EFSYS_OPT_MEDFORD
+comment|/* Huntington and Medford require MCDIv2 commands */
 define|#
 directive|define
 name|WITH_MCDI_V2
