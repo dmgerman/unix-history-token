@@ -733,6 +733,58 @@ name|CONTROLLER_SLAVE_INTERNAL_TEMP_EXT_ADC
 argument_list|)
 block|,
 comment|/* 0x47 SLAVE_INTERNAL_TEMP_EXT_ADC */
+name|STAT_NO_SENSOR
+argument_list|()
+block|,
+comment|/* 0x48 (no sensor) */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|SODIMM_VOUT
+argument_list|)
+block|,
+comment|/* 0x49 SODIMM_VOUT */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|SODIMM_0_TEMP
+argument_list|)
+block|,
+comment|/* 0x4a SODIMM_0_TEMP */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|SODIMM_1_TEMP
+argument_list|)
+block|,
+comment|/* 0x4b SODIMM_1_TEMP */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|PHY0_VCC
+argument_list|)
+block|,
+comment|/* 0x4c PHY0_VCC */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|PHY1_VCC
+argument_list|)
+block|,
+comment|/* 0x4d PHY1_VCC */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|CONTROLLER_TDIODE_TEMP
+argument_list|)
+block|,
+comment|/* 0x4e CONTROLLER_TDIODE_TEMP */
 block|}
 struct|;
 end_struct
