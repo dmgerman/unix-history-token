@@ -120,6 +120,19 @@ modifier|*
 name|emtp
 parameter_list|)
 block|{
+name|efx_mcdi_iface_t
+modifier|*
+name|emip
+init|=
+operator|&
+operator|(
+name|enp
+operator|->
+name|en_mcdi
+operator|.
+name|em_emip
+operator|)
+decl_stmt|;
 name|efsys_mem_t
 modifier|*
 name|esmp
@@ -157,6 +170,13 @@ name|en_features
 operator|&
 name|EFX_FEATURE_MCDI_DMA
 argument_list|)
+expr_stmt|;
+comment|/* 	 * All EF10 firmware supports MCDIv2 and MCDIv1. 	 * Medford BootROM supports MCDIv2 and MCDIv1. 	 * Huntington BootROM supports MCDIv1 only. 	 */
+name|emip
+operator|->
+name|emi_max_version
+operator|=
+literal|2
 expr_stmt|;
 comment|/* A host DMA buffer is required for EF10 MCDI */
 if|if

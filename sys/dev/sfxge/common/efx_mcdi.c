@@ -2548,15 +2548,6 @@ name|en_mcdi
 operator|.
 name|em_emcop
 decl_stmt|;
-name|efx_nic_cfg_t
-modifier|*
-name|encp
-init|=
-operator|&
-name|enp
-operator|->
-name|en_nic_cfg
-decl_stmt|;
 name|efx_mcdi_req_t
 modifier|*
 name|emrp
@@ -2685,11 +2676,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|encp
+name|emip
 operator|->
-name|enc_mcdi_max_payload_length
-operator|>
-name|MCDI_CTL_SDU_LEN_MAX_V1
+name|emi_max_version
+operator|>=
+literal|2
 condition|)
 block|{
 comment|/* MCDIv2 response details do not fit into an event. */

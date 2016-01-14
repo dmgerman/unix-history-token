@@ -1024,6 +1024,13 @@ goto|goto
 name|fail1
 goto|;
 block|}
+comment|/* Siena BootROM and firmware only support MCDIv1 */
+name|emip
+operator|->
+name|emi_max_version
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Wipe the atomic reboot status so subsequent MCDI requests succeed. 	 * BOOT_STATUS is preserved so eno_nic_probe() can boot out of the 	 * assertion handler. 	 */
 operator|(
 name|void
