@@ -5259,7 +5259,7 @@ name|enp
 operator|->
 name|en_rss_context
 operator|!=
-name|HUNTINGTON_RSS_CONTEXT_INVALID
+name|EF10_RSS_CONTEXT_INVALID
 operator|)
 argument_list|)
 expr_stmt|;
