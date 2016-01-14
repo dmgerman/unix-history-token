@@ -2108,7 +2108,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TASKQUEUE_DEFINE_THREAD
 argument_list|(
-name|aiod_bio
+name|aiod_kick
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2840,7 +2840,7 @@ name|NULL
 expr_stmt|;
 name|taskqueue_free
 argument_list|(
-name|taskqueue_aiod_bio
+name|taskqueue_aiod_kick
 argument_list|)
 expr_stmt|;
 name|delete_unrhdr
@@ -4036,7 +4036,7 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_drain
 argument_list|(
-name|taskqueue_aiod_bio
+name|taskqueue_aiod_kick
 argument_list|,
 operator|&
 name|ki
@@ -9070,7 +9070,7 @@ condition|)
 block|{
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_aiod_bio
+name|taskqueue_aiod_kick
 argument_list|,
 operator|&
 name|ki
