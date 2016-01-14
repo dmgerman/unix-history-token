@@ -130,6 +130,52 @@ begin_comment
 comment|/* EFSYS_OPT_HUNTINGTON */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+end_if
+
+begin_include
+include|#
+directive|include
+file|"medford_impl.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_MEDFORD */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"ef10_impl.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
