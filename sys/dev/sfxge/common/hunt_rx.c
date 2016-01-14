@@ -2565,7 +2565,7 @@ name|P2ALIGN
 argument_list|(
 name|added
 argument_list|,
-name|HUNTINGTON_RX_WPTR_ALIGN
+name|EF10_RX_WPTR_ALIGN
 argument_list|)
 expr_stmt|;
 if|if

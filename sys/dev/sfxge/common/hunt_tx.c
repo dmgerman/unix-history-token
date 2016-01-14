@@ -898,7 +898,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nic_pio_alloc
+name|ef10_nic_pio_alloc
 argument_list|(
 name|enp
 argument_list|,
@@ -951,7 +951,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_nic_pio_link
+name|ef10_nic_pio_link
 argument_list|(
 name|enp
 argument_list|,
@@ -1001,7 +1001,7 @@ argument_list|(
 name|fail3
 argument_list|)
 expr_stmt|;
-name|hunt_nic_pio_free
+name|ef10_nic_pio_free
 argument_list|(
 name|enp
 argument_list|,
@@ -1074,7 +1074,7 @@ literal|0
 condition|)
 block|{
 comment|/* Unlink the piobuf from this TXQ */
-name|hunt_nic_pio_unlink
+name|ef10_nic_pio_unlink
 argument_list|(
 name|enp
 argument_list|,
@@ -1084,7 +1084,7 @@ name|et_index
 argument_list|)
 expr_stmt|;
 comment|/* Free the sub-allocated PIO block */
-name|hunt_nic_pio_free
+name|ef10_nic_pio_free
 argument_list|(
 name|enp
 argument_list|,
