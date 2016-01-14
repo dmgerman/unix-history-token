@@ -1179,7 +1179,7 @@ parameter_list|(
 name|_qword
 parameter_list|)
 define|\
-value|(((_qword).eq_u64[0]) == ~((uint32_t)0))
+value|(((_qword).eq_u64[0]) == ~((uint64_t)0))
 define|#
 directive|define
 name|EFX_QWORD_IS_SET32
