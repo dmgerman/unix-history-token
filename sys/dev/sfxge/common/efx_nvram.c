@@ -56,9 +56,6 @@ comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|falcon_nvram_size
-block|,
-comment|/* envo_size */
 name|falcon_nvram_get_version
 block|,
 comment|/* envo_get_version */
@@ -83,6 +80,9 @@ comment|/* envo_set_version */
 name|falcon_nvram_type_to_partn
 block|,
 comment|/* envo_type_to_partn */
+name|falcon_nvram_partn_size
+block|,
+comment|/* envo_partn_size */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -117,9 +117,6 @@ comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|siena_nvram_size
-block|,
-comment|/* envo_size */
 name|siena_nvram_get_version
 block|,
 comment|/* envo_get_version */
@@ -144,6 +141,9 @@ comment|/* envo_set_version */
 name|siena_nvram_type_to_partn
 block|,
 comment|/* envo_type_to_partn */
+name|siena_nvram_partn_size
+block|,
+comment|/* envo_partn_size */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -180,9 +180,6 @@ comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|ef10_nvram_size
-block|,
-comment|/* envo_size */
 name|ef10_nvram_get_version
 block|,
 comment|/* envo_get_version */
@@ -207,6 +204,9 @@ comment|/* envo_set_version */
 name|ef10_nvram_type_to_partn
 block|,
 comment|/* envo_type_to_partn */
+name|ef10_nvram_partn_size
+block|,
+comment|/* envo_partn_size */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -534,6 +534,9 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
+name|uint32_t
+name|partn
+decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
@@ -575,13 +578,14 @@ name|rc
 operator|=
 name|envop
 operator|->
-name|envo_size
+name|envo_type_to_partn
 argument_list|(
 name|enp
 argument_list|,
 name|type
 argument_list|,
-name|sizep
+operator|&
+name|partn
 argument_list|)
 operator|)
 operator|!=
@@ -590,11 +594,40 @@ condition|)
 goto|goto
 name|fail1
 goto|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|envop
+operator|->
+name|envo_partn_size
+argument_list|(
+name|enp
+argument_list|,
+name|partn
+argument_list|,
+name|sizep
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail2
+goto|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
 name|fail1
 label|:
 name|EFSYS_PROBE1
@@ -605,6 +638,11 @@ name|efx_rc_t
 argument_list|,
 name|rc
 argument_list|)
+expr_stmt|;
+operator|*
+name|sizep
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
