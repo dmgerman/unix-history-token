@@ -88,6 +88,8 @@ name|EFX_FAMILY_SIENA
 block|,
 name|EFX_FAMILY_HUNTINGTON
 block|,
+name|EFX_FAMILY_MEDFORD
+block|,
 name|EFX_FAMILY_NTYPES
 block|}
 name|efx_family_t
@@ -174,6 +176,20 @@ directive|define
 name|EFX_PCI_DEVID_GREENPORT_VF
 value|0x1923
 comment|/* SFC9140 VF */
+define|#
+directive|define
+name|EFX_PCI_DEVID_MEDFORD_PF_UNINIT
+value|0x0913
+define|#
+directive|define
+name|EFX_PCI_DEVID_MEDFORD
+value|0x0A03
+comment|/* SFC9240 PF */
+define|#
+directive|define
+name|EFX_PCI_DEVID_MEDFORD_VF
+value|0x1A03
+comment|/* SFC9240 VF */
 define|#
 directive|define
 name|EFX_MEM_BAR
@@ -2935,6 +2951,8 @@ comment|/* EFSYS_OPT_BIST */
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 name|uint32_t
 name|enc_pf
 decl_stmt|;
@@ -2946,7 +2964,7 @@ name|enc_privilege_mask
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 name|boolean_t
 name|enc_bug26807_workaround
 decl_stmt|;
