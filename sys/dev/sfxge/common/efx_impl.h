@@ -2750,6 +2750,11 @@ name|__out_opt
 name|uint32_t
 modifier|*
 name|erase_sizep
+parameter_list|,
+name|__out_opt
+name|uint32_t
+modifier|*
+name|write_sizep
 parameter_list|)
 function_decl|;
 name|__checkReturn
