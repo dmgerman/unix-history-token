@@ -2281,7 +2281,7 @@ name|efx_nic_t
 modifier|*
 name|enp
 parameter_list|,
-name|__out
+name|__in
 name|efx_piobuf_handle_t
 name|handle
 parameter_list|)
