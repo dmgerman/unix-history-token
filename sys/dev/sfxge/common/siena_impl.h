@@ -1378,7 +1378,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_MAC_NSTATS
 argument_list|)

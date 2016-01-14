@@ -783,7 +783,7 @@ name|uint32_t
 operator|*
 name|stat_maskp
 argument_list|,
-name|__out_ecount_opt
+name|__inout_ecount_opt
 argument_list|(
 argument|EFX_MON_NSTATS
 argument_list|)
@@ -1999,7 +1999,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount
+name|__inout_ecount
 argument_list|(
 argument|EFX_MON_NSTATS
 argument_list|)
