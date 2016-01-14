@@ -1921,11 +1921,7 @@ name|EFX_DISCARD
 expr_stmt|;
 if|#
 directive|if
-operator|(
-name|EFSYS_OPT_RX_HDR_SPLIT
-operator|||
 name|EFSYS_OPT_RX_SCATTER
-operator|)
 comment|/* 		 * Lookout for payload queue ran dry errors and ignore them. 		 * 		 * Sadly for the header/data split cases, the descriptor 		 * pointer in this event refers to the header queue and 		 * therefore cannot be easily detected as duplicate. 		 * So we drop these and rely on the receive processing seeing 		 * a subsequent packet with FSF_AZ_RX_EV_SOP set to discard 		 * the partially received packet. 		 */
 if|if
 condition|(
@@ -1971,7 +1967,7 @@ name|B_TRUE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_HDR_SPLIT || EFSYS_OPT_RX_SCATTER */
+comment|/* EFSYS_OPT_RX_SCATTER */
 block|}
 if|if
 condition|(
@@ -2250,11 +2246,7 @@ name|ok
 decl_stmt|;
 if|#
 directive|if
-operator|(
-name|EFSYS_OPT_RX_HDR_SPLIT
-operator|||
 name|EFSYS_OPT_RX_SCATTER
-operator|)
 name|boolean_t
 name|sop
 decl_stmt|;
@@ -2263,7 +2255,7 @@ name|jumbo_cont
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_HDR_SPLIT || EFSYS_OPT_RX_SCATTER */
+comment|/* EFSYS_OPT_RX_SCATTER */
 name|uint32_t
 name|hdr_type
 decl_stmt|;
@@ -2333,11 +2325,7 @@ operator|)
 expr_stmt|;
 if|#
 directive|if
-operator|(
-name|EFSYS_OPT_RX_HDR_SPLIT
-operator|||
 name|EFSYS_OPT_RX_SCATTER
-operator|)
 name|sop
 operator|=
 operator|(
@@ -2368,7 +2356,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_HDR_SPLIT || EFSYS_OPT_RX_SCATTER */
+comment|/* EFSYS_OPT_RX_SCATTER */
 name|hdr_type
 operator|=
 name|EFX_QWORD_FIELD
@@ -2558,8 +2546,6 @@ block|}
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCATTER
-operator|||
-name|EFSYS_OPT_RX_HDR_SPLIT
 comment|/* Report scatter and header/lookahead split buffer flags */
 if|if
 condition|(
@@ -2579,7 +2565,7 @@ name|EFX_PKT_CONT
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_RX_SCATTER || EFSYS_OPT_RX_HDR_SPLIT */
+comment|/* EFSYS_OPT_RX_SCATTER */
 comment|/* Detect errors included in the FSF_AZ_RX_EV_PKT_OK indication */
 if|if
 condition|(

@@ -1713,41 +1713,20 @@ comment|/* EFSYS_OPT_QSTATS */
 end_comment
 
 begin_comment
-comment|/* Support receive header split */
+comment|/* Obsolete option */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_RX_HDR_SPLIT
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
-name|EFSYS_OPT_SIENA
-operator|||
-expr|\
-name|EFSYS_OPT_HUNTINGTON
-operator|||
-name|EFSYS_OPT_MEDFORD
-operator|)
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"RX_HDR_SPLIT requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"RX_HDR_SPLIT is obsolete and is not supported"
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
