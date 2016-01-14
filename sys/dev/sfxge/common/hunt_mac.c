@@ -861,7 +861,7 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|hunt_filter_get_default_rxq
+name|ef10_filter_get_default_rxq
 argument_list|(
 name|enp
 argument_list|,
@@ -872,7 +872,7 @@ operator|&
 name|old_using_rss
 argument_list|)
 expr_stmt|;
-name|hunt_filter_default_rxq_set
+name|ef10_filter_default_rxq_set
 argument_list|(
 name|enp
 argument_list|,
@@ -941,7 +941,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-name|hunt_filter_default_rxq_set
+name|ef10_filter_default_rxq_set
 argument_list|(
 name|enp
 argument_list|,
@@ -979,7 +979,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
-name|hunt_filter_default_rxq_clear
+name|ef10_filter_default_rxq_clear
 argument_list|(
 name|enp
 argument_list|)
