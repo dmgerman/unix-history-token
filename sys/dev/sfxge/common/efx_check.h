@@ -129,27 +129,6 @@ name|EFSYS_OPT_SIENA
 operator|)
 end_if
 
-begin_if
-if|#
-directive|if
-operator|(
-name|EFSYS_OPT_HUNTINGTON
-operator|||
-name|EFSYS_OPT_MEDFORD
-operator|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"INTR_FATAL not supported on HUNTINGTON or MEDFORD"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_error
 error|#
 directive|error
@@ -571,23 +550,6 @@ name|EFSYS_OPT_MEDFORD
 operator|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"MCDI not supported on FALCON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_error
 error|#
 directive|error
@@ -829,7 +791,7 @@ comment|/* EFSYS_OPT_MON_NULL */
 end_comment
 
 begin_comment
-comment|/* Support Siena monitor */
+comment|/* Obsolete option */
 end_comment
 
 begin_ifdef
@@ -841,7 +803,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"MON_SIENA is obsolete use MON_MCDI"
+literal|"MON_SIENA is obsolete (replaced by MON_MCDI)."
 end_error
 
 begin_endif
@@ -854,7 +816,7 @@ comment|/* EFSYS_OPT_MON_SIENA*/
 end_comment
 
 begin_comment
-comment|/* Support Huntington monitor */
+comment|/* Obsolete option */
 end_comment
 
 begin_ifdef
@@ -866,7 +828,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"MON_HUNTINGTON is obsolete use MON_MCDI"
+literal|"MON_HUNTINGTON is obsolete (replaced by MON_MCDI)."
 end_error
 
 begin_endif
@@ -1273,7 +1235,7 @@ comment|/* EFSYS_OPT_PCIE_TUNE */
 end_comment
 
 begin_comment
-comment|/* Support PHY BIST diagnostics */
+comment|/* Obsolete option */
 end_comment
 
 begin_if
@@ -1285,7 +1247,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"PHY_BIST is obsolete. It has been replaced by the BIST option."
+literal|"PHY_BIST is obsolete (replaced by BIST)."
 end_error
 
 begin_endif
@@ -1901,7 +1863,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"EFSYS_OPT_STAT_NAME is obsolete (replaced by EFSYS_OPT_NAMES)."
+literal|"STAT_NAME is obsolete (replaced by NAMES)."
 end_error
 
 begin_endif
@@ -2005,7 +1967,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"MCAST_FILTER_LIST is obsolete and not supported"
+literal|"MCAST_FILTER_LIST is obsolete and is not supported"
 end_error
 
 begin_endif
