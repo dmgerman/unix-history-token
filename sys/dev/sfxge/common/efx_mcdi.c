@@ -2145,6 +2145,15 @@ name|en_mcdi
 operator|.
 name|em_emcop
 decl_stmt|;
+name|efx_nic_cfg_t
+modifier|*
+name|encp
+init|=
+operator|&
+name|enp
+operator|->
+name|en_nic_cfg
+decl_stmt|;
 name|efx_mcdi_req_t
 modifier|*
 name|emrp
@@ -2271,7 +2280,26 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fill out the remaining hdr fields, and copyout the payload 	 * if the user supplied an output buffer. 	 */
+if|if
+condition|(
+name|encp
+operator|->
+name|enc_mcdi_max_payload_length
+operator|>
+name|MCDI_CTL_SDU_LEN_MAX_V1
+condition|)
+block|{
+comment|/* MCDIv2 response details do not fit into an event. */
+name|efx_mcdi_read_response_header
+argument_list|(
+name|enp
+argument_list|,
+name|emrp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|errcode
@@ -2333,6 +2361,7 @@ name|emr_rc
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 name|emcop
 operator|->
