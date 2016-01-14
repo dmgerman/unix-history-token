@@ -590,6 +590,12 @@ name|B_FALSE
 expr_stmt|;
 name|encp
 operator|->
+name|enc_fw_assisted_tso_v2_enabled
+operator|=
+name|B_FALSE
+expr_stmt|;
+name|encp
+operator|->
 name|enc_allow_set_mac_with_installed_filters
 operator|=
 name|B_TRUE

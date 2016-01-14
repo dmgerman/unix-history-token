@@ -1194,6 +1194,8 @@ operator||
 name|EFX_FEATURE_PIO_BUFFERS
 operator||
 name|EFX_FEATURE_FW_ASSISTED_TSO
+operator||
+name|EFX_FEATURE_FW_ASSISTED_TSO_V2
 expr_stmt|;
 break|break;
 endif|#
