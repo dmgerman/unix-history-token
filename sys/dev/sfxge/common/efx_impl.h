@@ -3206,6 +3206,9 @@ decl_stmt|;
 name|int
 name|ena_vi_count
 decl_stmt|;
+name|int
+name|ena_vi_shift
+decl_stmt|;
 if|#
 directive|if
 name|EFSYS_OPT_VPD
