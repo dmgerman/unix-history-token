@@ -499,24 +499,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AIOD_TIMEOUT_DEFAULT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AIOD_TIMEOUT_DEFAULT
-value|(10 * hz)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|AIOD_LIFETIME_DEFAULT
 end_ifndef
 
@@ -774,34 +756,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|aiod_timeout
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_aio
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|aiod_timeout
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|aiod_timeout
-argument_list|,
-literal|0
-argument_list|,
-literal|"Timeout value for synchronous aio operations"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2674,10 +2628,6 @@ name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZONE_NOFREE
 argument_list|)
-expr_stmt|;
-name|aiod_timeout
-operator|=
-name|AIOD_TIMEOUT_DEFAULT
 expr_stmt|;
 name|aiod_lifetime
 operator|=
