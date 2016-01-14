@@ -2502,6 +2502,12 @@ name|tcpiphdr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute options for segment. 	 * We only have to care about SYN and established connection 	 * segments.  Options for SYN-ACK segments are handled in TCP 	 * syncache. 	 */
+name|to
+operator|.
+name|to_flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2515,12 +2521,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|to
-operator|.
-name|to_flags
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Maximum segment size. */
 if|if
 condition|(
@@ -4153,11 +4153,11 @@ directive|ifdef
 name|TCP_SIGNATURE
 if|if
 condition|(
-name|tp
-operator|->
-name|t_flags
+name|to
+operator|.
+name|to_flags
 operator|&
-name|TF_SIGNATURE
+name|TOF_SIGNATURE
 condition|)
 block|{
 name|int
@@ -6060,6 +6060,9 @@ name|to_tsecr
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
 case|case
 name|TOF_SIGNATURE
 case|:
@@ -6138,6 +6141,8 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 case|case
 name|TOF_SACK
 case|:

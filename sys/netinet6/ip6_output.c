@@ -617,7 +617,6 @@ value|0)
 end_define
 
 begin_function
-specifier|static
 name|void
 name|in6_delayed_cksum
 parameter_list|(

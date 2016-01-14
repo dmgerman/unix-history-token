@@ -1652,11 +1652,13 @@ name|shm_stat
 parameter_list|)
 comment|/* try to grab a sample from the specified SHM segment */
 block|{
-specifier|volatile
 name|struct
 name|shmTime
 name|shmcopy
-decl_stmt|,
+decl_stmt|;
+specifier|volatile
+name|struct
+name|shmTime
 modifier|*
 name|shm
 init|=
@@ -1757,16 +1759,15 @@ argument_list|()
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|shmcopy
 argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|shm
 argument_list|,

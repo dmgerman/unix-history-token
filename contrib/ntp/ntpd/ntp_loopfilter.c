@@ -716,18 +716,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|allow_panic
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* allow panic correction (-g) */
-end_comment
-
-begin_decl_stmt
-name|int
 name|force_step_once
 init|=
 name|FALSE
@@ -1898,22 +1886,25 @@ literal|80
 index|]
 decl_stmt|;
 comment|/* report buffer */
+operator|(
+name|void
+operator|)
+name|ntp_adj_ret
+expr_stmt|;
+comment|/* not always used below... */
 comment|/* 	 * If the loop is opened or the NIST LOCKCLOCK is in use, 	 * monitor and record the offsets anyway in order to determine 	 * the open-loop response and then go home. 	 */
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|LOCKCLOCK
-block|{
-else|#
-directive|else
 if|if
 condition|(
 operator|!
 name|ntp_enable
 condition|)
-block|{
 endif|#
 directive|endif
-comment|/* LOCKCLOCK */
+comment|/* not LOCKCLOCK */
+block|{
 name|record_loop_stats
 argument_list|(
 name|fp_offset
@@ -1986,6 +1977,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|allow_panic
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 	 * This section simulates ntpdate. If the offset exceeds the 	 * step threshold (128 ms), step the clock to that time and 	 * exit. Otherwise, slew the clock to that time and exit. Note 	 * that the slew will persist and eventually complete beyond the 	 * life of this program. Note that while ntpdate is active, the 	 * terminal does not detach, so the termination message prints 	 * directly to the terminal. 	 */
 if|if
 condition|(
@@ -2159,26 +2154,21 @@ name|fp_offset
 operator|+=
 name|dtemp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
+name|DPRINTF
 argument_list|(
+literal|1
+argument_list|,
+operator|(
 literal|"local_clock: size %d mindly %.6f huffpuff %.6f\n"
-argument_list|,
+operator|,
 name|sys_hufflen
-argument_list|,
+operator|,
 name|sys_mindly
-argument_list|,
+operator|,
 name|dtemp
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Clock state machine transition function which defines how the 	 * system reacts to large phase and frequency excursion. There 	 * are two main regimes: when the offset exceeds the step 	 * threshold (128 ms) and when it does not. Under certain 	 * conditions updates are suspended until the stepout theshold 	 * (900 s) is exceeded. See the documentation on how these 	 * thresholds interact with commands and command line options. 	 * 	 * Note the kernel is disabled if step is disabled or greater 	 * than 0.5 s or in ntpdate mode. 	 */
 name|osys_poll
@@ -2521,10 +2511,6 @@ expr_stmt|;
 comment|/* fall through */
 comment|/* 		 * We get here by default in FSET, SPIK and SYNC states. 		 * Here compute the frequency update due to PLL and FLL 		 * contributions. Note, we avoid frequency discipline at 		 * startup until the initial transient has subsided. 		 */
 default|default:
-name|allow_panic
-operator|=
-name|FALSE
-expr_stmt|;
 if|if
 condition|(
 name|freq_cnt
@@ -3309,35 +3295,29 @@ argument_list|,
 name|sys_poll
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
+name|DPRINTF
 argument_list|(
+literal|1
+argument_list|,
+operator|(
 literal|"local_clock: offset %.9f jit %.9f freq %.3f stab %.3f poll %d\n"
-argument_list|,
+operator|,
 name|clock_offset
-argument_list|,
+operator|,
 name|clock_jitter
-argument_list|,
+operator|,
 name|drift_comp
 operator|*
 literal|1e6
-argument_list|,
+operator|,
 name|clock_stability
 operator|*
 literal|1e6
-argument_list|,
+operator|,
 name|sys_poll
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 operator|(
 name|rval
@@ -3345,9 +3325,15 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* LOCKCLOCK */
+comment|/* not LOCKCLOCK */
 block|}
+end_function
+
+begin_comment
 comment|/*  * adj_host_clock - Called once every second to update the local clock.  *  * LOCKCLOCK: The only thing this routine does is increment the  * sys_rootdisp variable.  */
+end_comment
+
+begin_function
 name|void
 name|adj_host_clock
 parameter_list|(
@@ -3508,6 +3494,17 @@ operator|-=
 name|offset_adj
 expr_stmt|;
 comment|/* 	 * Windows port adj_systime() must be called each second, 	 * even if the argument is zero, to ease emulation of 	 * adjtime() using Windows' slew API which controls the rate 	 * but does not automatically stop slewing when an offset 	 * has decayed to zero. 	 */
+name|DEBUG_INSIST
+argument_list|(
+name|enable_panic_check
+operator|==
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|enable_panic_check
+operator|=
+name|FALSE
+expr_stmt|;
 name|adj_systime
 argument_list|(
 name|offset_adj
@@ -3515,11 +3512,21 @@ operator|+
 name|freq_adj
 argument_list|)
 expr_stmt|;
+name|enable_panic_check
+operator|=
+name|TRUE
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOCKCLOCK */
 block|}
+end_function
+
+begin_comment
 comment|/*  * Clock state machine. Enter new state and set state variables.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|rstclock
@@ -3533,32 +3540,25 @@ name|offset
 comment|/* new offset */
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>
-literal|1
-condition|)
-name|printf
+name|DPRINTF
 argument_list|(
-literal|"local_clock: mu %lu state %d poll %d count %d\n"
+literal|2
 argument_list|,
+operator|(
+literal|"rstclock: mu %lu state %d poll %d count %d\n"
+operator|,
 name|current_time
 operator|-
 name|clock_epoch
-argument_list|,
+operator|,
 name|trans
-argument_list|,
+operator|,
 name|sys_poll
-argument_list|,
+operator|,
 name|tc_counter
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|trans
@@ -3593,7 +3593,13 @@ operator|=
 name|current_time
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * calc_freq - calculate frequency directly  *  * This is very carefully done. When the offset is first computed at the  * first update, a residual frequency component results. Subsequently,  * updates are suppresed until the end of the measurement interval while  * the offset is amortized. At the end of the interval the frequency is  * calculated from the current offset, residual offset, length of the  * interval and residual frequency component. At the same time the  * frequenchy file is armed for update at the next hourly stats.  */
+end_comment
+
+begin_function
 specifier|static
 name|double
 name|direct_freq
@@ -3617,7 +3623,13 @@ return|return
 name|drift_comp
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * set_freq - set clock frequency correction  *  * Used to step the frequency correction at startup, possibly again once  * the frequency is measured (that is, transitioning from EVNT_NSET to  * EVNT_FSET), and finally to switch between daemon and kernel loop  * discipline at runtime.  *  * When the kernel loop discipline is available but the daemon loop is  * in use, the kernel frequency correction is disabled (set to 0) to  * ensure drift_comp is applied by only one of the loops.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|set_freq
@@ -3635,6 +3647,12 @@ decl_stmt|;
 name|int
 name|ntp_adj_ret
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ntp_adj_ret
+expr_stmt|;
+comment|/* not always used below... */
 name|drift_comp
 operator|=
 name|freq
@@ -3737,9 +3755,15 @@ literal|1e6
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL_PLL
+end_ifdef
+
+begin_function
 specifier|static
 name|void
 name|start_kern_loop
@@ -4011,12 +4035,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* KERNEL_PLL */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL_PLL
+end_ifdef
+
+begin_function
 specifier|static
 name|void
 name|stop_kern_loop
@@ -4040,10 +4076,22 @@ literal|"kernel time sync disabled"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* KERNEL_PLL */
+end_comment
+
+begin_comment
 comment|/*  * select_loop() - choose kernel or daemon loop discipline.  */
+end_comment
+
+begin_function
 name|void
 name|select_loop
 parameter_list|(
@@ -4109,7 +4157,13 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_comment
 comment|/*  * huff-n'-puff filter  */
+end_comment
+
+begin_function
 name|void
 name|huffpuff
 parameter_list|(
@@ -4179,7 +4233,13 @@ index|]
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * loop_config - configure the loop filter  *  * LOCKCLOCK: The LOOP_DRIFTINIT and LOOP_DRIFTCOMP cases are no-ops.  */
+end_comment
+
+begin_function
 name|void
 name|loop_config
 parameter_list|(
@@ -4196,26 +4256,19 @@ decl_stmt|;
 name|double
 name|ftemp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>
-literal|1
-condition|)
-name|printf
+name|DPRINTF
 argument_list|(
+literal|2
+argument_list|,
+operator|(
 literal|"loop_config: item %d freq %f\n"
-argument_list|,
+operator|,
 name|item
-argument_list|,
+operator|,
 name|freq
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|item
@@ -4593,6 +4646,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -4604,7 +4660,13 @@ name|defined
 argument_list|(
 name|SIGSYS
 argument_list|)
+end_if
+
+begin_comment
 comment|/*  * _trap - trap processor for undefined syscalls  *  * This nugget is called by the kernel when the SYS_ntp_adjtime()  * syscall bombs because the silly thing has not been implemented in  * the kernel. In this case the phase-lock loop is emulated by  * the stock adjtime() syscall and a lot of indelicate abuse.  */
+end_comment
+
+begin_function
 specifier|static
 name|RETSIGTYPE
 name|pll_trap

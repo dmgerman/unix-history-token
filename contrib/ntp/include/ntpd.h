@@ -995,7 +995,7 @@ begin_define
 define|#
 directive|define
 name|MON_HASH_SIZE
-value|(1U<< mon_hash_bits)
+value|((size_t)1U<< mon_hash_bits)
 end_define
 
 begin_define
@@ -3171,6 +3171,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* allow panic correction (-g) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|enable_panic_check
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Can we check allow_panic's state? */
 end_comment
 
 begin_decl_stmt

@@ -115,6 +115,7 @@ argument_list|,
 name|actual
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -153,6 +154,7 @@ argument_list|,
 name|actual
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -191,6 +193,7 @@ argument_list|,
 name|actual
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -229,6 +232,7 @@ argument_list|,
 name|actual
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -260,6 +264,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -291,6 +296,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -322,6 +328,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 

@@ -1411,7 +1411,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
@@ -5689,11 +5689,13 @@ expr_stmt|;
 name|manager
 operator|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
+operator|(
 operator|*
 name|managerp
+operator|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
@@ -5993,7 +5995,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
@@ -6038,7 +6040,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
@@ -6096,7 +6098,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
@@ -6176,7 +6178,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
@@ -6240,7 +6242,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
@@ -6308,7 +6310,7 @@ modifier|*
 name|manager
 init|=
 operator|(
-name|isc__taskmgr_t
+name|void
 operator|*
 operator|)
 name|manager0
