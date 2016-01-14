@@ -112,36 +112,38 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_mcdi_ops_t
-name|__efx_mcdi_hunt_ops
+name|__efx_mcdi_ef10_ops
 init|=
 block|{
-name|hunt_mcdi_init
+name|ef10_mcdi_init
 block|,
 comment|/* emco_init */
-name|hunt_mcdi_request_copyin
+name|ef10_mcdi_request_copyin
 block|,
 comment|/* emco_request_copyin */
-name|hunt_mcdi_request_copyout
+name|ef10_mcdi_request_copyout
 block|,
 comment|/* emco_request_copyout */
-name|hunt_mcdi_poll_reboot
+name|ef10_mcdi_poll_reboot
 block|,
 comment|/* emco_poll_reboot */
-name|hunt_mcdi_poll_response
+name|ef10_mcdi_poll_response
 block|,
 comment|/* emco_poll_response */
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 block|,
 comment|/* emco_read_response */
-name|hunt_mcdi_fini
+name|ef10_mcdi_fini
 block|,
 comment|/* emco_fini */
-name|hunt_mcdi_feature_supported
+name|ef10_mcdi_feature_supported
 block|,
 comment|/* emco_feature_supported */
 block|}
@@ -154,7 +156,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -260,12 +262,31 @@ name|efx_mcdi_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_mcdi_hunt_ops
+name|__efx_mcdi_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|emcop
+operator|=
+operator|(
+name|efx_mcdi_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_mcdi_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -6098,6 +6119,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_comment
@@ -6222,7 +6245,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -7214,6 +7237,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_comment
@@ -7596,7 +7621,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function

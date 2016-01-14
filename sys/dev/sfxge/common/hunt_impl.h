@@ -589,7 +589,7 @@ name|EFSYS_OPT_MCDI
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mcdi_init
+name|ef10_mcdi_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -605,7 +605,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_fini
+name|ef10_mcdi_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -615,7 +615,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_request_copyin
+name|ef10_mcdi_request_copyin
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -644,7 +644,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|boolean_t
-name|hunt_mcdi_poll_response
+name|ef10_mcdi_poll_response
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -654,7 +654,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_read_response
+name|ef10_mcdi_read_response
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -677,7 +677,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mcdi_request_copyout
+name|ef10_mcdi_request_copyout
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -692,7 +692,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|efx_rc_t
-name|hunt_mcdi_poll_reboot
+name|ef10_mcdi_poll_reboot
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -703,7 +703,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mcdi_feature_supported
+name|ef10_mcdi_feature_supported
 parameter_list|(
 name|__in
 name|efx_nic_t
