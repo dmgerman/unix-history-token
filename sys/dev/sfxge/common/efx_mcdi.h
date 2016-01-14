@@ -82,6 +82,15 @@ decl_stmt|;
 name|size_t
 name|emr_out_length_used
 decl_stmt|;
+comment|/* Internals: low level transport details */
+name|unsigned
+name|int
+name|emr_err_code
+decl_stmt|;
+name|unsigned
+name|int
+name|emr_err_arg
+decl_stmt|;
 block|}
 struct|;
 typedef|typedef
@@ -136,6 +145,21 @@ function_decl|;
 specifier|extern
 name|void
 name|efx_mcdi_execute_quiet
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__inout
+name|efx_mcdi_req_t
+modifier|*
+name|emrp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|efx_mcdi_read_response_header
 parameter_list|(
 name|__in
 name|efx_nic_t
