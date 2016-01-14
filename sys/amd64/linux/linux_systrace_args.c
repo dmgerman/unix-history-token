@@ -10115,7 +10115,7 @@ name|p
 operator|->
 name|head
 expr_stmt|;
-comment|/* struct linux_robust_list_head * */
+comment|/* struct linux_robust_list_head ** */
 name|uarg
 index|[
 literal|2
@@ -18237,7 +18237,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct linux_robust_list_head *"
+literal|"struct linux_robust_list_head **"
 expr_stmt|;
 break|break;
 case|case
