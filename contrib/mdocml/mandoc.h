@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.201 2015/02/23 13:31:04 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.209 2016/01/08 02:53:13 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
@@ -195,9 +195,6 @@ comment|/* nested displays are not portable: macro ... */
 name|MANDOCERR_BL_MOVE
 block|,
 comment|/* moving content out of list: macro */
-name|MANDOCERR_VT_CHILD
-block|,
-comment|/* .Vt block has child macro: macro */
 name|MANDOCERR_FI_SKIP
 block|,
 comment|/* fill mode already enabled, skipping: fi */
@@ -418,6 +415,9 @@ comment|/* escaped character not allowed in a name: name */
 name|MANDOCERR_BD_FILE
 block|,
 comment|/* NOT IMPLEMENTED: Bd -file */
+name|MANDOCERR_BD_NOARG
+block|,
+comment|/* skipping display without arguments: Bd */
 name|MANDOCERR_BL_NOTYPE
 block|,
 comment|/* missing list type, using -item: Bl */
@@ -1198,10 +1198,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
 begin_struct_decl
 struct_decl|struct
 name|mparse
@@ -1210,19 +1206,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mchars
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|mdoc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|man
+name|roff_man
 struct_decl|;
 end_struct_decl
 
@@ -1248,9 +1232,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mchars
-modifier|*
+name|void
 name|mchars_alloc
 parameter_list|(
 name|void
@@ -1262,9 +1244,7 @@ begin_function_decl
 name|void
 name|mchars_free
 parameter_list|(
-name|struct
-name|mchars
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1311,11 +1291,6 @@ name|int
 name|mchars_spec2cp
 parameter_list|(
 specifier|const
-name|struct
-name|mchars
-modifier|*
-parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1330,11 +1305,6 @@ name|char
 modifier|*
 name|mchars_spec2str
 parameter_list|(
-specifier|const
-name|struct
-name|mchars
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1359,11 +1329,6 @@ name|enum
 name|mandoclevel
 parameter_list|,
 name|mandocmsg
-parameter_list|,
-specifier|const
-name|struct
-name|mchars
-modifier|*
 parameter_list|,
 specifier|const
 name|char
@@ -1395,15 +1360,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|enum
-name|mandoclevel
+name|int
 name|mparse_open
 parameter_list|(
 name|struct
 name|mparse
-modifier|*
-parameter_list|,
-name|int
 modifier|*
 parameter_list|,
 specifier|const
@@ -1472,12 +1433,7 @@ name|mparse
 modifier|*
 parameter_list|,
 name|struct
-name|mdoc
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|man
+name|roff_man
 modifier|*
 modifier|*
 parameter_list|,
@@ -1525,22 +1481,6 @@ name|mandoclevel
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|enum
-name|mandoclevel
-name|mparse_wait
-parameter_list|(
-name|struct
-name|mparse
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 end_unit
 

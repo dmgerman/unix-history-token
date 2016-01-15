@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libroff.h,v 1.38 2015/01/30 04:11:50 schwarze Exp $ */
+comment|/*	$Id: libroff.h,v 1.39 2015/11/07 14:01:16 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -177,7 +177,6 @@ struct|;
 end_struct
 
 begin_function_decl
-name|__BEGIN_DECLS
 name|struct
 name|tbl_node
 modifier|*
@@ -418,10 +417,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 end_unit
 

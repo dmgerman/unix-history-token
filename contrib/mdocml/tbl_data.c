@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_data.c,v 1.39 2015/01/30 17:32:16 schwarze Exp $ */
+comment|/*	$Id: tbl_data.c,v 1.41 2015/10/06 18:32:20 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -659,6 +659,15 @@ expr_stmt|;
 name|pos
 operator|++
 expr_stmt|;
+while|while
+condition|(
+name|p
+index|[
+name|pos
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|getdata
 argument_list|(
 name|tbl
@@ -676,9 +685,7 @@ name|pos
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 elseif|else
@@ -699,9 +706,7 @@ operator|=
 name|TBL_PART_DATA
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 comment|/* Fallthrough: T} is part of a word. */
@@ -823,9 +828,7 @@ name|string
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -936,9 +939,7 @@ operator|=
 name|dp
 expr_stmt|;
 return|return
-operator|(
 name|dp
-operator|)
 return|;
 block|}
 end_function

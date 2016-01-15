@@ -19,7 +19,6 @@ name|void
 parameter_list|)
 block|{
 return|return
-operator|(
 name|strcmp
 argument_list|(
 name|sqlite3_errstr
@@ -29,7 +28,6 @@ argument_list|)
 argument_list|,
 literal|"not an error"
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
