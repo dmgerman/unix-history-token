@@ -2767,6 +2767,10 @@ name|struct
 name|nfsmount
 modifier|*
 parameter_list|,
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
 name|int
 modifier|*
 parameter_list|)

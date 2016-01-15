@@ -4992,6 +4992,10 @@ decl_stmt|,
 modifier|*
 name|tdsp
 decl_stmt|;
+name|struct
+name|in6_addr
+name|a6
+decl_stmt|;
 if|if
 condition|(
 name|nfsboottime
@@ -5385,6 +5389,9 @@ operator|=
 name|nfscl_getmyip
 argument_list|(
 name|nmp
+argument_list|,
+operator|&
+name|a6
 argument_list|,
 operator|&
 name|isinet6
