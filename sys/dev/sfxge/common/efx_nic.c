@@ -753,6 +753,9 @@ block|,
 comment|/* eno_probe */
 name|NULL
 block|,
+comment|/* eno_board_cfg */
+name|NULL
+block|,
 comment|/* eno_set_drv_limits */
 name|falcon_nic_reset
 block|,
@@ -814,6 +817,9 @@ block|,
 comment|/* eno_probe */
 name|NULL
 block|,
+comment|/* eno_board_cfg */
+name|NULL
+block|,
 comment|/* eno_set_drv_limits */
 name|siena_nic_reset
 block|,
@@ -873,6 +879,9 @@ block|{
 name|ef10_nic_probe
 block|,
 comment|/* eno_probe */
+name|hunt_board_cfg
+block|,
+comment|/* eno_board_cfg */
 name|ef10_nic_set_drv_limits
 block|,
 comment|/* eno_set_drv_limits */
@@ -917,6 +926,70 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_HUNTINGTON */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+end_if
+
+begin_decl_stmt
+specifier|static
+name|efx_nic_ops_t
+name|__efx_nic_medford_ops
+init|=
+block|{
+name|ef10_nic_probe
+block|,
+comment|/* eno_probe */
+name|medford_board_cfg
+block|,
+comment|/* eno_board_cfg */
+name|ef10_nic_set_drv_limits
+block|,
+comment|/* eno_set_drv_limits */
+name|ef10_nic_reset
+block|,
+comment|/* eno_reset */
+name|ef10_nic_init
+block|,
+comment|/* eno_init */
+name|ef10_nic_get_vi_pool
+block|,
+comment|/* eno_get_vi_pool */
+name|ef10_nic_get_bar_region
+block|,
+comment|/* eno_get_bar_region */
+if|#
+directive|if
+name|EFSYS_OPT_DIAG
+name|ef10_sram_test
+block|,
+comment|/* eno_sram_test */
+name|ef10_nic_register_test
+block|,
+comment|/* eno_register_test */
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_DIAG */
+name|ef10_nic_fini
+block|,
+comment|/* eno_fini */
+name|ef10_nic_unprobe
+block|,
+comment|/* eno_unprobe */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -1121,11 +1194,53 @@ operator||
 name|EFX_FEATURE_PIO_BUFFERS
 operator||
 name|EFX_FEATURE_FW_ASSISTED_TSO
+operator||
+name|EFX_FEATURE_FW_ASSISTED_TSO_V2
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|enp
+operator|->
+name|en_enop
+operator|=
+operator|(
+name|efx_nic_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_nic_medford_ops
+expr_stmt|;
+comment|/* 		 * FW_ASSISTED_TSO ommitted as Medford only supports firmware 		 * assisted TSO version 2, not the v1 scheme used on Huntington. 		 */
+name|enp
+operator|->
+name|en_features
+operator|=
+name|EFX_FEATURE_IPV6
+operator||
+name|EFX_FEATURE_LINK_EVENTS
+operator||
+name|EFX_FEATURE_PERIODIC_MAC_STATS
+operator||
+name|EFX_FEATURE_MCDI
+operator||
+name|EFX_FEATURE_MAC_HEADER_FILTERS
+operator||
+name|EFX_FEATURE_MCDI_DMA
+operator||
+name|EFX_FEATURE_PIO_BUFFERS
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|rc
 operator|=
@@ -2459,7 +2574,7 @@ operator|&
 name|EFX_MOD_PROBE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * All modules except the MCDI, PROBE, NVRAM, VPD, MON (which we 	 * do not reset here) must have been shut down or never initialized. 	 * 	 * A rule of thumb here is: If the controller or MC reboots, is *any* 	 * state lost. If it's lost and needs reapplying, then the module 	 * *must* not be initialised during the reset. 	 */
+comment|/* 	 * All modules except the MCDI, PROBE, NVRAM, VPD, MON, LIC 	 * (which we do not reset here) must have been shut down or never 	 * initialized. 	 * 	 * A rule of thumb here is: If the controller or MC reboots, is *any* 	 * state lost. If it's lost and needs reapplying, then the module 	 * *must* not be initialised during the reset. 	 */
 name|mod_flags
 operator|=
 name|enp
@@ -2479,6 +2594,8 @@ operator||
 name|EFX_MOD_VPD
 operator||
 name|EFX_MOD_MON
+operator||
+name|EFX_MOD_LIC
 operator|)
 expr_stmt|;
 name|EFSYS_ASSERT3U

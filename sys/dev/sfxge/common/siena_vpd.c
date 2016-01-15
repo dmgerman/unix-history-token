@@ -1200,6 +1200,23 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* 		 * Skip the RV keyword. It should be present in both the static 		 * and dynamic cfg sectors. 		 */
+if|if
+condition|(
+name|dtag
+operator|==
+name|EFX_VPD_RO
+operator|&&
+name|dkey
+operator|==
+name|EFX_VPD_KEYWORD
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'V'
+argument_list|)
+condition|)
+continue|continue;
 name|scont
 operator|=
 literal|0

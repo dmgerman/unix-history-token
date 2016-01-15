@@ -674,9 +674,9 @@ name|lock
 argument_list|,
 literal|"vchiq"
 argument_list|,
-name|MTX_DEF
-argument_list|,
 literal|0
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|bcm_vchiq_sc

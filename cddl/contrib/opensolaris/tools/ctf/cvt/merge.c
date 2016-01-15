@@ -858,12 +858,6 @@ name|ttdp
 operator|->
 name|t_members
 decl_stmt|;
-name|mlist_t
-modifier|*
-name|olm1
-init|=
-name|NULL
-decl_stmt|;
 while|while
 condition|(
 name|ml1
@@ -921,10 +915,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|olm1
-operator|=
-name|ml1
-expr_stmt|;
 name|ml1
 operator|=
 name|ml1

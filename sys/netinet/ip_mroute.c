@@ -2621,7 +2621,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/*      * Currently the only function calling this ioctl routine is rtioctl().      * Typically, only root can create the raw socket in order to execute      * this ioctl method, however the request might be coming from a prison      */
+comment|/*      * Currently the only function calling this ioctl routine is rtioctl_fib().      * Typically, only root can create the raw socket in order to execute      * this ioctl method, however the request might be coming from a prison      */
 name|error
 operator|=
 name|priv_check

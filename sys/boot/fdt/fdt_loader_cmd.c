@@ -2247,9 +2247,6 @@ modifier|*
 name|addr_cellsp
 decl_stmt|,
 modifier|*
-name|reg
-decl_stmt|,
-modifier|*
 name|size_cellsp
 decl_stmt|;
 name|int

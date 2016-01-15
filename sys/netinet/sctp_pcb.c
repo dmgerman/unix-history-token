@@ -9438,16 +9438,9 @@ name|find_tcp_pool
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Don't consider INIT chunks since that breaks 1-to-1 sockets: When 	 * a server closes the listener, incoming INIT chunks are not 	 * responsed by an INIT-ACK chunk. 	 */
 if|if
 condition|(
-operator|(
-name|ch
-operator|->
-name|chunk_type
-operator|!=
-name|SCTP_INITIATION
-operator|)
-operator|&&
 operator|(
 name|ch
 operator|->

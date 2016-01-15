@@ -790,6 +790,10 @@ define|#
 directive|define
 name|EFSYS_OPT_DECODE_INTR_FATAL
 value|1
+define|#
+directive|define
+name|EFSYS_OPT_LICENSING
+value|0
 comment|/* ID */
 typedef|typedef
 name|struct

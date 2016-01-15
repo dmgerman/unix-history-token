@@ -6401,6 +6401,7 @@ name|error
 operator|=
 name|copyout
 argument_list|(
+operator|&
 name|head
 argument_list|,
 name|args
@@ -6409,8 +6410,7 @@ name|head
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_robust_list_head
+name|head
 argument_list|)
 argument_list|)
 expr_stmt|;

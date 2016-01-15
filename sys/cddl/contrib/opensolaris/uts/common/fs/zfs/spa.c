@@ -2744,9 +2744,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|check
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -26881,6 +26878,14 @@ argument_list|(
 name|vd
 operator|->
 name|vdev_top
+argument_list|)
+expr_stmt|;
+comment|/* Tell userspace that the vdev is gone. */
+name|zfs_post_remove
+argument_list|(
+name|spa
+argument_list|,
+name|vd
 argument_list|)
 expr_stmt|;
 block|}

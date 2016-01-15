@@ -1000,7 +1000,7 @@ argument_list|(
 name|sc
 operator|->
 name|sc_npins
-operator|!=
+operator|>=
 literal|0
 argument_list|,
 operator|(

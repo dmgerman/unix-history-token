@@ -1774,7 +1774,6 @@ name|ip6cp
 condition|)
 block|{
 comment|/* 		 * XXX: We assume that when IPV6 is non NULL, M and OFF are 		 * valid. 		 */
-comment|/* check if we can safely examine src and dst ports */
 name|struct
 name|sctp_inpcb
 modifier|*
@@ -1807,6 +1806,27 @@ operator|->
 name|ip6c_m
 operator|==
 name|NULL
+condition|)
+return|return;
+comment|/* Check if we can safely examine the SCTP header. */
+if|if
+condition|(
+name|ip6cp
+operator|->
+name|ip6c_m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|ip6cp
+operator|->
+name|ip6c_off
+operator|+
+sizeof|sizeof
+argument_list|(
+name|sh
+argument_list|)
 condition|)
 return|return;
 name|bzero
