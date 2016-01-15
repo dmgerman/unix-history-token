@@ -214,6 +214,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFI_ZFS_BOOT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|boot_module_t
+name|zfs_module
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Functions available to modules. */
 end_comment

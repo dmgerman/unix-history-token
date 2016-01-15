@@ -77,6 +77,14 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
+name|EFI_ZFS_BOOT
+operator|&
+name|zfs_module
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|EFI_UFS_BOOT
 operator|&
 name|ufs_module
