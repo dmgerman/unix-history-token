@@ -23,7 +23,6 @@ name|dirent
 name|entry
 decl_stmt|;
 return|return
-operator|(
 sizeof|sizeof
 argument_list|(
 name|entry
@@ -32,7 +31,6 @@ name|d_namlen
 argument_list|)
 operator|==
 literal|0
-operator|)
 return|;
 block|}
 end_function

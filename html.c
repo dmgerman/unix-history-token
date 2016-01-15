@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.c,v 1.185 2015/01/21 20:33:25 schwarze Exp $ */
+comment|/*	$Id: html.c,v 1.192 2016/01/04 12:45:29 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008-2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"html.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"manconf.h"
 end_include
 
 begin_include
@@ -684,11 +690,7 @@ name|html_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-name|mchars
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 name|outopts
 parameter_list|)
@@ -698,53 +700,6 @@ name|html
 modifier|*
 name|h
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|toks
-index|[
-literal|5
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|v
-decl_stmt|;
-name|toks
-index|[
-literal|0
-index|]
-operator|=
-literal|"style"
-expr_stmt|;
-name|toks
-index|[
-literal|1
-index|]
-operator|=
-literal|"man"
-expr_stmt|;
-name|toks
-index|[
-literal|2
-index|]
-operator|=
-literal|"includes"
-expr_stmt|;
-name|toks
-index|[
-literal|3
-index|]
-operator|=
-literal|"fragment"
-expr_stmt|;
-name|toks
-index|[
-literal|4
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 name|h
 operator|=
 name|mandoc_calloc
@@ -768,81 +723,42 @@ name|NULL
 expr_stmt|;
 name|h
 operator|->
-name|symtab
-operator|=
-name|mchars
-expr_stmt|;
-while|while
-condition|(
-name|outopts
-operator|&&
-operator|*
-name|outopts
-condition|)
-switch|switch
-condition|(
-name|getsubopt
-argument_list|(
-operator|&
-name|outopts
-argument_list|,
-name|UNCONST
-argument_list|(
-name|toks
-argument_list|)
-argument_list|,
-operator|&
-name|v
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|h
-operator|->
 name|style
 operator|=
-name|v
+name|outopts
+operator|->
+name|style
 expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
 name|h
 operator|->
 name|base_man
 operator|=
-name|v
+name|outopts
+operator|->
+name|man
 expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
 name|h
 operator|->
 name|base_includes
 operator|=
-name|v
+name|outopts
+operator|->
+name|includes
 expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
+if|if
+condition|(
+name|outopts
+operator|->
+name|fragment
+condition|)
 name|h
 operator|->
 name|oflags
 operator||=
 name|HTML_FRAGMENT
 expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
 return|return
-operator|(
 name|h
-operator|)
 return|;
 block|}
 end_function
@@ -1155,7 +1071,6 @@ break|break;
 case|case
 name|ESCAPE_FONT
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_FONTROMAN
 case|:
@@ -1168,7 +1083,6 @@ default|default:
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
@@ -1382,22 +1296,17 @@ case|case
 name|ESCAPE_ERROR
 case|:
 return|return
-operator|(
 name|sz
-operator|)
 return|;
 case|case
 name|ESCAPE_UNICODE
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_NUMBERED
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_SPECIAL
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_OVERSTRIKE
 case|:
@@ -1427,9 +1336,7 @@ break|break;
 block|}
 block|}
 return|return
-operator|(
 name|sz
-operator|)
 return|;
 block|}
 end_function
@@ -1487,9 +1394,9 @@ break|break;
 case|case
 name|ASCII_NBRSP
 case|:
-name|putchar
+name|printf
 argument_list|(
-literal|'-'
+literal|"&nbsp;"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1501,22 +1408,18 @@ argument_list|(
 literal|'-'
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHROUGH */
+break|break;
 case|case
 name|ASCII_BREAK
 case|:
 break|break;
 default|default:
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1699,23 +1602,18 @@ block|{
 case|case
 name|ESCAPE_FONT
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_FONTPREV
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_FONTBOLD
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_FONTITALIC
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_FONTBI
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|ESCAPE_FONTROMAN
 case|:
@@ -1814,10 +1712,6 @@ name|c
 operator|=
 name|mchars_spec2cp
 argument_list|(
-name|h
-operator|->
-name|symtab
-argument_list|,
 name|seq
 argument_list|,
 name|len
@@ -1924,9 +1818,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|nospace
-operator|)
 return|;
 block|}
 end_function
@@ -2257,9 +2149,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|t
-operator|)
 return|;
 block|}
 end_function
@@ -3398,23 +3288,32 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-comment|/* Cf.<http://www.w3.org/TR/html4/types.html#h-6.2>. */
-while|while
-condition|(
+comment|/* Cf.<http://www.w3.org/TR/html5/dom.html#the-id-attribute>. */
+for|for
+control|(
+init|;
 literal|'\0'
 operator|!=
 operator|*
 name|src
-condition|)
-name|bufcat_fmt
+condition|;
+name|src
+operator|++
+control|)
+name|bufncat
 argument_list|(
 name|h
 argument_list|,
-literal|"%.2x"
-argument_list|,
 operator|*
 name|src
-operator|++
+operator|==
+literal|' '
+condition|?
+literal|"_"
+else|:
+name|src
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

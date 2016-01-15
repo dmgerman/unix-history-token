@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.h,v 1.20 2014/12/31 16:52:40 schwarze Exp $ */
+comment|/*	$Id: main.h,v 1.24 2015/11/07 14:01:16 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
@@ -17,25 +17,15 @@ parameter_list|)
 value|((void *)(uintptr_t)(const void *)(a))
 end_define
 
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
 begin_struct_decl
 struct_decl|struct
-name|mchars
+name|roff_man
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mdoc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|man
+name|manoutput
 struct_decl|;
 end_struct_decl
 
@@ -50,10 +40,7 @@ name|html_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -68,7 +55,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|mdoc
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -83,7 +70,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|man
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -108,7 +95,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|mdoc
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -123,7 +110,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|man
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -138,7 +125,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|mdoc
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -153,7 +140,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|man
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -166,10 +153,7 @@ name|locale_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -182,10 +166,7 @@ name|utf8_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -198,10 +179,7 @@ name|ascii_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -234,10 +212,7 @@ name|pdf_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -250,10 +225,7 @@ name|ps_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -278,7 +250,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|mdoc
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
@@ -293,15 +265,11 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|man
+name|roff_man
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 end_unit
 

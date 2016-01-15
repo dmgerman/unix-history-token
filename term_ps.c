@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ps.c,v 1.72 2015/01/21 19:40:54 schwarze Exp $ */
+comment|/*	$Id: term_ps.c,v 1.80 2015/12/23 20:50:13 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -24,6 +24,23 @@ include|#
 directive|include
 file|<assert.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_ERR
+end_if
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -77,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|"term.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"manconf.h"
 end_include
 
 begin_include
@@ -307,7 +330,7 @@ end_struct
 
 begin_function_decl
 specifier|static
-name|double
+name|int
 name|ps_hspan
 parameter_list|(
 specifier|const
@@ -550,7 +573,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|size_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -564,10 +587,7 @@ name|pspdf_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2156,11 +2176,7 @@ name|pdf_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-name|mchars
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 name|outopts
 parameter_list|)
@@ -2179,8 +2195,6 @@ name|p
 operator|=
 name|pspdf_alloc
 argument_list|(
-name|mchars
-argument_list|,
 name|outopts
 argument_list|)
 operator|)
@@ -2192,9 +2206,7 @@ operator|=
 name|TERMTYPE_PDF
 expr_stmt|;
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function
@@ -2206,11 +2218,7 @@ name|ps_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-name|mchars
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 name|outopts
 parameter_list|)
@@ -2229,8 +2237,6 @@ name|p
 operator|=
 name|pspdf_alloc
 argument_list|(
-name|mchars
-argument_list|,
 name|outopts
 argument_list|)
 operator|)
@@ -2242,9 +2248,7 @@ operator|=
 name|TERMTYPE_PS
 expr_stmt|;
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function
@@ -2258,11 +2262,7 @@ name|pspdf_alloc
 parameter_list|(
 specifier|const
 name|struct
-name|mchars
-modifier|*
-name|mchars
-parameter_list|,
-name|char
+name|manoutput
 modifier|*
 name|outopts
 parameter_list|)
@@ -2288,19 +2288,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|toks
-index|[
-literal|2
-index|]
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
 name|pp
-decl_stmt|;
-name|char
-modifier|*
-name|v
 decl_stmt|;
 name|p
 operator|=
@@ -2314,12 +2302,6 @@ expr|struct
 name|termp
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|symtab
-operator|=
-name|mchars
 expr_stmt|;
 name|p
 operator|->
@@ -2426,59 +2408,6 @@ name|width
 operator|=
 name|ps_width
 expr_stmt|;
-name|toks
-index|[
-literal|0
-index|]
-operator|=
-literal|"paper"
-expr_stmt|;
-name|toks
-index|[
-literal|1
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-name|pp
-operator|=
-name|NULL
-expr_stmt|;
-while|while
-condition|(
-name|outopts
-operator|&&
-operator|*
-name|outopts
-condition|)
-switch|switch
-condition|(
-name|getsubopt
-argument_list|(
-operator|&
-name|outopts
-argument_list|,
-name|UNCONST
-argument_list|(
-name|toks
-argument_list|)
-argument_list|,
-operator|&
-name|v
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|pp
-operator|=
-name|v
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
 comment|/* Default to US letter (millimetres). */
 name|pagex
 operator|=
@@ -2489,6 +2418,12 @@ operator|=
 literal|279
 expr_stmt|;
 comment|/* 	 * The ISO-269 paper sizes can be calculated automatically, but 	 * it would require bringing in -lm for pow() and I'd rather not 	 * do that.  So just do it the easy way for now.  Since this 	 * only happens once, I'm not terribly concerned. 	 */
+name|pp
+operator|=
+name|outopts
+operator|->
+name|paper
+expr_stmt|;
 if|if
 condition|(
 name|pp
@@ -2606,11 +2541,9 @@ operator|&
 name|pagey
 argument_list|)
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Unknown paper\n"
+literal|"%s: Unknown paper"
 argument_list|,
 name|pp
 argument_list|)
@@ -2821,9 +2754,7 @@ literal|2
 operator|)
 expr_stmt|;
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function
@@ -2841,7 +2772,7 @@ parameter_list|,
 name|int
 name|iop
 parameter_list|,
-name|size_t
+name|int
 name|width
 parameter_list|)
 block|{
@@ -2885,6 +2816,9 @@ name|width
 operator|=
 name|width
 condition|?
+operator|(
+name|size_t
+operator|)
 name|width
 else|:
 name|p
@@ -2902,6 +2836,9 @@ name|ps
 operator|->
 name|width
 operator|>
+operator|(
+name|size_t
+operator|)
 name|width
 condition|)
 name|p
@@ -2955,14 +2892,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|ps
-operator|->
-name|psmarg
-condition|)
 name|free
 argument_list|(
 name|p
@@ -2972,14 +2901,6 @@ operator|->
 name|psmarg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|ps
-operator|->
-name|pdfobjs
-condition|)
 name|free
 argument_list|(
 name|p
@@ -4859,11 +4780,9 @@ block|{
 case|case
 literal|'('
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|')'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'\\'
 case|:
@@ -5870,7 +5789,6 @@ literal|32
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|size_t
 operator|)
 name|fonts
@@ -5887,14 +5805,13 @@ name|c
 index|]
 operator|.
 name|wx
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|double
+name|int
 name|ps_hspan
 parameter_list|(
 specifier|const
@@ -6120,9 +6037,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-operator|(
 name|r
-operator|)
+operator|*
+literal|24.0
 return|;
 block|}
 end_function

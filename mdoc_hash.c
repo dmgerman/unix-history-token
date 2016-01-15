@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_hash.c,v 1.21 2014/08/10 23:54:41 schwarze Exp $ */
+comment|/*	$Id: mdoc_hash.c,v 1.26 2015/10/06 18:32:19 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"roff.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mdoc.h"
 end_include
 
@@ -80,10 +86,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX - this hash has global scope, so if intended for use as a library  * with multiple callers, it will need re-invocation protection.  */
-end_comment
-
 begin_function
 name|void
 name|mdoc_hash_init
@@ -103,6 +105,14 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|table
+operator|!=
+literal|'\0'
+condition|)
+return|return;
 name|memset
 argument_list|(
 name|table
@@ -232,8 +242,7 @@ block|}
 end_function
 
 begin_function
-name|enum
-name|mdoct
+name|int
 name|mdoc_hash_find
 parameter_list|(
 specifier|const
@@ -259,9 +268,7 @@ literal|0
 index|]
 condition|)
 return|return
-operator|(
-name|MDOC_MAX
-operator|)
+name|TOKEN_NONE
 return|;
 if|if
 condition|(
@@ -286,9 +293,7 @@ literal|0
 index|]
 condition|)
 return|return
-operator|(
-name|MDOC_MAX
-operator|)
+name|TOKEN_NONE
 return|;
 if|if
 condition|(
@@ -342,9 +347,7 @@ literal|26
 expr_stmt|;
 else|else
 return|return
-operator|(
-name|MDOC_MAX
-operator|)
+name|TOKEN_NONE
 return|;
 if|if
 condition|(
@@ -359,9 +362,7 @@ literal|3
 index|]
 condition|)
 return|return
-operator|(
-name|MDOC_MAX
-operator|)
+name|TOKEN_NONE
 return|;
 for|for
 control|(
@@ -408,19 +409,11 @@ index|]
 argument_list|)
 condition|)
 return|return
-operator|(
-operator|(
-expr|enum
-name|mdoct
-operator|)
 name|i
-operator|)
 return|;
 block|}
 return|return
-operator|(
-name|MDOC_MAX
-operator|)
+name|TOKEN_NONE
 return|;
 block|}
 end_function

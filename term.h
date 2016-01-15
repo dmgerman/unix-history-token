@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.111 2015/01/31 00:12:41 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.118 2015/11/07 14:01:16 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_enum
@@ -65,6 +65,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|roff_meta
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|termp
 struct_decl|;
 end_struct_decl
@@ -82,7 +88,8 @@ name|termp
 modifier|*
 parameter_list|,
 specifier|const
-name|void
+name|struct
+name|roff_meta
 modifier|*
 parameter_list|)
 function_decl|;
@@ -125,6 +132,10 @@ name|int
 name|mdocstyle
 decl_stmt|;
 comment|/* imitate mdoc(7) output */
+name|size_t
+name|line
+decl_stmt|;
+comment|/* Current output line number. */
 name|size_t
 name|defindent
 decl_stmt|;
@@ -183,38 +194,43 @@ decl_stmt|;
 define|#
 directive|define
 name|TERMP_SENTENCE
-value|(1<< 1)
+value|(1<< 0)
 comment|/* Space before a sentence. */
 define|#
 directive|define
 name|TERMP_NOSPACE
-value|(1<< 2)
+value|(1<< 1)
 comment|/* No space before words. */
 define|#
 directive|define
 name|TERMP_NONOSPACE
-value|(1<< 3)
+value|(1<< 2)
 comment|/* No space (no autounset). */
 define|#
 directive|define
 name|TERMP_NBRWORD
-value|(1<< 4)
+value|(1<< 3)
 comment|/* Make next word nonbreaking. */
 define|#
 directive|define
 name|TERMP_KEEP
-value|(1<< 5)
+value|(1<< 4)
 comment|/* Keep words together. */
 define|#
 directive|define
 name|TERMP_PREKEEP
-value|(1<< 6)
+value|(1<< 5)
 comment|/* ...starting with the next one. */
 define|#
 directive|define
-name|TERMP_SKIPCHAR
+name|TERMP_BACKAFTER
+value|(1<< 6)
+comment|/* Back up after next character. */
+define|#
+directive|define
+name|TERMP_BACKBEFORE
 value|(1<< 7)
-comment|/* Skip the next character. */
+comment|/* Back up before next character. */
 define|#
 directive|define
 name|TERMP_NOBREAK
@@ -222,33 +238,38 @@ value|(1<< 8)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_BRIND
+name|TERMP_BRTRSP
 value|(1<< 9)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_DANGLE
+name|TERMP_BRIND
 value|(1<< 10)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_HANG
+name|TERMP_DANGLE
 value|(1<< 11)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_NOSPLIT
+name|TERMP_HANG
 value|(1<< 12)
+comment|/* See term_flushln(). */
+define|#
+directive|define
+name|TERMP_NOSPLIT
+value|(1<< 13)
 comment|/* Do not break line before .An. */
 define|#
 directive|define
 name|TERMP_SPLIT
-value|(1<< 13)
+value|(1<< 14)
 comment|/* Break line before .An. */
 define|#
 directive|define
 name|TERMP_NONEWLINE
-value|(1<< 14)
+value|(1<< 15)
 comment|/* No line break in nofill mode. */
 name|int
 modifier|*
@@ -260,13 +281,6 @@ name|termenc
 name|enc
 decl_stmt|;
 comment|/* Type of encoding. */
-specifier|const
-name|struct
-name|mchars
-modifier|*
-name|symtab
-decl_stmt|;
-comment|/* Character table. */
 name|enum
 name|termfont
 name|fontl
@@ -365,7 +379,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|size_t
+name|int
 parameter_list|)
 function_decl|;
 name|size_t
@@ -382,7 +396,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|double
+name|int
 function_decl|(
 modifier|*
 name|hspan
@@ -413,10 +427,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_macro
-name|__BEGIN_DECLS
-end_macro
 
 begin_struct_decl
 struct_decl|struct
@@ -545,7 +555,8 @@ parameter_list|,
 name|term_margin
 parameter_list|,
 specifier|const
-name|void
+name|struct
+name|roff_meta
 modifier|*
 parameter_list|)
 function_decl|;
@@ -703,10 +714,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 end_unit
 

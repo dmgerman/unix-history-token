@@ -25,9 +25,6 @@ name|void
 parameter_list|)
 block|{
 return|return
-operator|(
-name|MAP_FAILED
-operator|!=
 name|mmap
 argument_list|(
 name|NULL
@@ -43,7 +40,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+operator|!=
+name|MAP_FAILED
 return|;
 block|}
 end_function

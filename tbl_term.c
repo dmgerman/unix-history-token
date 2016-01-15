@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_term.c,v 1.40 2015/03/06 15:48:53 schwarze Exp $ */
+comment|/*	$Id: tbl_term.c,v 1.43 2015/10/12 00:08:16 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -233,7 +233,6 @@ name|arg
 parameter_list|)
 block|{
 return|return
-operator|(
 name|term_strlen
 argument_list|(
 operator|(
@@ -246,7 +245,6 @@ name|arg
 argument_list|,
 name|p
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -265,7 +263,6 @@ name|arg
 parameter_list|)
 block|{
 return|return
-operator|(
 name|term_len
 argument_list|(
 operator|(
@@ -278,7 +275,6 @@ name|arg
 argument_list|,
 name|sz
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -1388,7 +1384,6 @@ return|return;
 case|case
 name|TBL_DATA_HORIZ
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_DATA_NHORIZ
 case|:
@@ -1407,7 +1402,6 @@ return|return;
 case|case
 name|TBL_DATA_NDHORIZ
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_DATA_DHORIZ
 case|:
@@ -1468,15 +1462,12 @@ break|break;
 case|case
 name|TBL_CELL_LONG
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_CENTRE
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_LEFT
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_RIGHT
 case|:
@@ -1524,7 +1515,6 @@ default|default:
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 block|}
 end_function
