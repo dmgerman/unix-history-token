@@ -314,6 +314,39 @@ name|IXGBE_VT_MSGINFO_MASK
 value|(0xFF<< IXGBE_VT_MSGINFO_SHIFT)
 end_define
 
+begin_comment
+comment|/* definitions to support mailbox API version negotiation */
+end_comment
+
+begin_comment
+comment|/*  * each element denotes a version of the API; existing numbers may not  * change; any additions must go at the end  */
+end_comment
+
+begin_enum
+enum|enum
+name|ixgbe_pfvf_api_rev
+block|{
+name|ixgbe_mbox_api_10
+block|,
+comment|/* API version 1.0, linux/freebsd VF driver */
+name|ixgbe_mbox_api_20
+block|,
+comment|/* API version 2.0, solaris Phase1 VF driver */
+name|ixgbe_mbox_api_11
+block|,
+comment|/* API version 1.1, linux/freebsd VF driver */
+comment|/* This value should always be last */
+name|ixgbe_mbox_api_unknown
+block|,
+comment|/* indicates that API version is not known */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* mailbox API, legacy requests */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -489,6 +522,113 @@ end_define
 
 begin_comment
 comment|/* PF control message */
+end_comment
+
+begin_comment
+comment|/* mailbox API, version 2.0 VF requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_API_NEGOTIATE
+value|0x08
+end_define
+
+begin_comment
+comment|/* negotiate API version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_GET_QUEUES
+value|0x09
+end_define
+
+begin_comment
+comment|/* get queue configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_ENABLE_MACADDR
+value|0x0A
+end_define
+
+begin_comment
+comment|/* enable MAC address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_DISABLE_MACADDR
+value|0x0B
+end_define
+
+begin_comment
+comment|/* disable MAC address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_GET_MACADDRS
+value|0x0C
+end_define
+
+begin_comment
+comment|/* get all configured MAC addrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_SET_MCAST_PROMISC
+value|0x0D
+end_define
+
+begin_comment
+comment|/* enable multicast promiscuous */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_GET_MTU
+value|0x0E
+end_define
+
+begin_comment
+comment|/* get bounds on MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_SET_MTU
+value|0x0F
+end_define
+
+begin_comment
+comment|/* set a specific MTU */
+end_comment
+
+begin_comment
+comment|/* mailbox API, version 2.0 PF requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PF_TRANSPARENT_VLAN
+value|0x0101
+end_define
+
+begin_comment
+comment|/* enable transparent vlan */
 end_comment
 
 begin_define
