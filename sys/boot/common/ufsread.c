@@ -779,13 +779,22 @@ name|dmadat
 operator|->
 name|indbuf
 expr_stmt|;
+comment|/* 	 * Force probe if inode is zero to ensure we have a valid fs, otherwise 	 * when probing multiple paritions, reads from subsequent parititions 	 * will incorrectly succeed. 	 */
 if|if
 condition|(
 operator|!
 name|dsk_meta
+operator|||
+name|inode
+operator|==
+literal|0
 condition|)
 block|{
 name|inomap
+operator|=
+literal|0
+expr_stmt|;
+name|dsk_meta
 operator|=
 literal|0
 expr_stmt|;
