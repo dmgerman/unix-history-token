@@ -2744,9 +2744,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|check
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
