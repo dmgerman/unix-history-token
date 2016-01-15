@@ -641,6 +641,13 @@ name|enc_tx_tso_tcp_header_offset_limit
 operator|=
 name|EF10_TCP_HEADER_OFFSET_LIMIT
 expr_stmt|;
+comment|/* 	 * Medford stores a single global copy of VPD, not per-PF as on 	 * Huntington. 	 */
+name|encp
+operator|->
+name|enc_vpd_is_global
+operator|=
+name|B_TRUE
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -2937,6 +2937,10 @@ decl_stmt|;
 name|uint32_t
 name|enc_mcdi_max_payload_length
 decl_stmt|;
+comment|/* VPD may be per-PF or global */
+name|boolean_t
+name|enc_vpd_is_global
+decl_stmt|;
 block|}
 name|efx_nic_cfg_t
 typedef|;
