@@ -383,6 +383,10 @@ name|enum
 name|sfxge_flush_state
 name|flush_state
 decl_stmt|;
+name|unsigned
+name|int
+name|tso_fw_assisted
+decl_stmt|;
 name|enum
 name|sfxge_txq_type
 name|type
