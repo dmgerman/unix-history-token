@@ -280,6 +280,8 @@ name|EFX_MAC_SIENA
 block|,
 name|EFX_MAC_HUNTINGTON
 block|,
+name|EFX_MAC_MEDFORD
+block|,
 name|EFX_MAC_NTYPES
 block|}
 name|efx_mac_type_t
