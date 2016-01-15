@@ -1627,7 +1627,7 @@ literal|0001
 expr_stmt|;
 name|info
 argument_list|(
-literal|"d %s\n"
+literal|"   creating: %s/\n"
 argument_list|,
 name|path
 argument_list|)
@@ -1884,7 +1884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detect binary files by a combination of character white list and  * black list. NUL bytes and other control codes without use in text files  * result directly in switching the file to binary mode. Otherwise, at least  * one white-listed byte has to be found.  *  * Black-listed: 0..6, 14..25, 28..31  * White-listed: 9..10, 13,>= 32  *  * See the proginfo/txtvsbin.txt in the zip sources for a detailed discussion.  */
+comment|/*  * Detect binary files by a combination of character white list and  * black list. NUL bytes and other control codes without use in text files  * result directly in switching the file to binary mode. Otherwise, at least  * one white-listed byte has to be found.  *  * Black-listed: 0..6, 14..25, 28..31  * 0xf3ffc07f = 11110011111111111100000001111111b  * White-listed: 9..10, 13,>= 32  * 0x00002600 = 00000000000000000010011000000000b  *  * See the proginfo/txtvsbin.txt in the zip sources for a detailed discussion.  */
 end_comment
 
 begin_define
@@ -3976,7 +3976,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: unzip [-aCcfjLlnopqtuvyZ1] [-d dir] [-x pattern] zipfile\n"
+literal|"Usage: unzip [-aCcfjLlnopqtuvyZ1] [-d dir] [-x pattern] "
+literal|"zipfile\n"
 argument_list|)
 expr_stmt|;
 name|exit
