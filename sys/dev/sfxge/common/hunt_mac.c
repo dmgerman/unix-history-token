@@ -74,7 +74,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_phy_get_link
+name|ef10_phy_get_link
 argument_list|(
 name|enp
 argument_list|,
@@ -169,7 +169,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_phy_get_link
+name|ef10_phy_get_link
 argument_list|(
 name|enp
 argument_list|,

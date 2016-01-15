@@ -3065,7 +3065,7 @@ block|{
 name|efx_link_mode_t
 name|link_mode
 decl_stmt|;
-name|hunt_phy_link_ev
+name|ef10_phy_link_ev
 argument_list|(
 name|enp
 argument_list|,
