@@ -375,7 +375,9 @@ end_function
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|s_sock1
@@ -488,6 +490,11 @@ argument_list|(
 name|c_sock
 argument_list|,
 name|uds_name2
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s_sock2
 argument_list|)
 expr_stmt|;
 name|exit
