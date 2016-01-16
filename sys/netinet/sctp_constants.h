@@ -1988,7 +1988,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/*  * SCTP states for internal state machine XXX (should match "user" values)  */
+comment|/*  * SCTP states for internal state machine  */
 end_comment
 
 begin_define
