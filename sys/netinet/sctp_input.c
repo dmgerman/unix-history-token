@@ -28432,7 +28432,7 @@ name|sctp_log_mbc
 argument_list|(
 name|SCTP_BUF_NEXT
 argument_list|(
-name|mm
+name|op_err
 argument_list|)
 argument_list|,
 name|SCTP_MBUF_ICOPY
