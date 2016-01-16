@@ -13551,6 +13551,15 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
 name|sctp_stcb_is_feature_on
 argument_list|(
 name|stcb
