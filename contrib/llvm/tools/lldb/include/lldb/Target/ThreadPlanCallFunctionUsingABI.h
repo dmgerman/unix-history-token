@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Type.h"
+file|"llvm/IR/DerivedTypes.h"
 end_include
 
 begin_decl_stmt

@@ -506,6 +506,11 @@ comment|/// opaque mechanism like inline assembly or Win32 EH.
 name|bool
 name|HasOpaqueSPAdjustment
 decl_stmt|;
+comment|/// True if the function contains operations which will lower down to
+comment|/// instructions which manipulate the stack pointer.
+name|bool
+name|HasCopyImplyingStackAdjustment
+decl_stmt|;
 comment|/// True if the function contains a call to the llvm.vastart intrinsic.
 name|bool
 name|HasVAStart
@@ -626,6 +631,10 @@ operator|=
 name|false
 block|;
 name|HasOpaqueSPAdjustment
+operator|=
+name|false
+block|;
+name|HasCopyImplyingStackAdjustment
 operator|=
 name|false
 block|;
@@ -1532,6 +1541,29 @@ name|B
 parameter_list|)
 block|{
 name|HasOpaqueSPAdjustment
+operator|=
+name|B
+expr_stmt|;
+block|}
+comment|/// Returns true if the function contains operations which will lower down to
+comment|/// instructions which manipulate the stack pointer.
+name|bool
+name|hasCopyImplyingStackAdjustment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCopyImplyingStackAdjustment
+return|;
+block|}
+name|void
+name|setHasCopyImplyingStackAdjustment
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasCopyImplyingStackAdjustment
 operator|=
 name|B
 expr_stmt|;

@@ -7381,7 +7381,7 @@ name|false
 return|;
 block|}
 comment|/// Return true if the MachineFunction contains a COPY which would imply
-comment|/// HasOpaqueSPAdjustment.
+comment|/// HasCopyImplyingStackAdjustment.
 name|virtual
 name|bool
 name|hasCopyImplyingStackAdjustment

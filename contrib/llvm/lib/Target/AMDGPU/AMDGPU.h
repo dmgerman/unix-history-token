@@ -75,9 +75,9 @@ decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
-name|class
+struct_decl|struct
 name|MachineSchedContext
-decl_stmt|;
+struct_decl|;
 name|class
 name|MCAsmInfo
 decl_stmt|;
