@@ -23530,6 +23530,8 @@ operator|=
 name|sctp_send_stream_reset_out_if_possible
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
