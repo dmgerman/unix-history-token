@@ -940,7 +940,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sctp_rcvinfo
+name|sctp_nxtinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
