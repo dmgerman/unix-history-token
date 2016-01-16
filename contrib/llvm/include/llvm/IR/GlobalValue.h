@@ -1409,6 +1409,22 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// Returns true if the alignment of the value can be unilaterally
+end_comment
+
+begin_comment
+comment|// increased.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|canIncreaseAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// This method unlinks 'this' from the containing module, but does not delete
 end_comment
 
