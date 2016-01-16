@@ -1187,7 +1187,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_SHUTDOWN_GUARD_TIME_DESC
-value|"Default shutdown guard timer in seconds"
+value|"Shutdown guard timer in seconds (0 means 5 times RTO.Max)"
 end_define
 
 begin_define
@@ -1208,7 +1208,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_SHUTDOWN_GUARD_TIME_DEFAULT
-value|SCTP_DEF_MAX_SHUTDOWN_SEC
+value|0
 end_define
 
 begin_comment
