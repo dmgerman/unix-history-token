@@ -7216,6 +7216,15 @@ operator|=
 name|next_mtu
 expr_stmt|;
 block|}
+else|else
+block|{
+name|net
+operator|->
+name|mtu
+operator|=
+name|mtu
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* restart the timer */
