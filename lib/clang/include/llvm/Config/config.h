@@ -1665,7 +1665,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.8.0svn"
+value|"3.8.0"
 end_define
 
 begin_comment
@@ -1763,7 +1763,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.8.0svn"
+value|"LLVM 3.8.0"
 end_define
 
 begin_comment
@@ -1784,7 +1784,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.8.0svn"
+value|"3.8.0"
 end_define
 
 begin_comment

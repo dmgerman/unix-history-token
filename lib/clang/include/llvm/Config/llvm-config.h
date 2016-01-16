@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*===------- llvm/Config/llvm-config.h - llvm configuration -------*- C -*-===*/
 end_comment
 
@@ -323,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.8.0svn"
+value|"3.8.0"
 end_define
 
 begin_comment

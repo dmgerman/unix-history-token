@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|"LLVM 3.8.0svn"
+value|"LLVM 3.8.0"
 end_define
 
 begin_comment
