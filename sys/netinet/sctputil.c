@@ -11474,7 +11474,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: Unknown timer type %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|)
@@ -11503,7 +11503,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: %d:software error to_ticks:%d tmr:%p not set ??\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|,
@@ -12129,7 +12129,7 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"%s: Unknown timer type %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|t_type
 argument_list|)
@@ -20043,7 +20043,7 @@ name|SCTP_DEBUG_UTIL1
 argument_list|,
 literal|"%s: unknown notification %xh (%u)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|notification
 argument_list|,
