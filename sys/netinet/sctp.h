@@ -1468,7 +1468,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_INVALID_STREAM */
+comment|/* code=SCTP_CAUSE_INVALID_STREAM */
 name|uint16_t
 name|stream_id
 decl_stmt|;
@@ -1489,12 +1489,15 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_MISSING_PARAM */
+comment|/* code=SCTP_CAUSE_MISSING_PARAM */
 name|uint32_t
 name|num_missing_params
 decl_stmt|;
 comment|/* number of missing parameters */
-comment|/* uint16_t param_type's follow */
+name|uint16_t
+name|type
+index|[]
+decl_stmt|;
 block|}
 name|SCTP_PACKED
 struct|;
@@ -1508,7 +1511,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_STALE_COOKIE */
+comment|/* code=SCTP_CAUSE_STALE_COOKIE */
 name|uint32_t
 name|stale_time
 decl_stmt|;
@@ -1526,7 +1529,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_OUT_OF_RESOURCES */
+comment|/* code=SCTP_CAUSE_OUT_OF_RESOURCES */
 block|}
 name|SCTP_PACKED
 struct|;
@@ -1540,7 +1543,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_UNRESOLVABLE_ADDR */
+comment|/* code=SCTP_CAUSE_UNRESOLVABLE_ADDR */
 block|}
 name|SCTP_PACKED
 struct|;
@@ -1554,7 +1557,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_UNRECOG_CHUNK */
+comment|/* code=SCTP_CAUSE_UNRECOG_CHUNK */
 name|struct
 name|sctp_chunkhdr
 name|ch
@@ -1578,6 +1581,23 @@ name|uint32_t
 name|tsn
 decl_stmt|;
 comment|/* TSN of the empty data chunk */
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_error_auth_invalid_hmac
+block|{
+name|struct
+name|sctp_error_cause
+name|cause
+decl_stmt|;
+comment|/* code=SCTP_CAUSE_UNSUPPORTED_HMACID */
+name|uint16_t
+name|hmac_id
+decl_stmt|;
 block|}
 name|SCTP_PACKED
 struct|;
