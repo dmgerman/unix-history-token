@@ -2770,7 +2770,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INDATA1
 argument_list|,
-literal|"queue to stream called for ssn:%u lastdel:%u nxt:%u\n"
+literal|"queue to stream called for sid:%u ssn:%u tsn:%u lastdel:%u nxt:%u\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -2778,6 +2778,20 @@ operator|)
 name|control
 operator|->
 name|sinfo_stream
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|control
+operator|->
+name|sinfo_ssn
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|control
+operator|->
+name|sinfo_tsn
 argument_list|,
 operator|(
 name|uint32_t
