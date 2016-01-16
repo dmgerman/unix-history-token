@@ -994,7 +994,7 @@ expr_stmt|;
 comment|/* do not store thread identifier anywhere */
 else|#
 directive|else
-comment|/* the begintheadex routine setups for the C lib; aligns stack */
+comment|/* the beginthreadex routine setups for the C lib; aligns stack */
 operator|*
 name|thr
 operator|=

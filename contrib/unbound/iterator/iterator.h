@@ -232,9 +232,39 @@ name|int
 modifier|*
 name|target_fetch_policy
 decl_stmt|;
+comment|/** ip6.arpa dname in wireformat, used for qname-minimisation */
+name|uint8_t
+modifier|*
+name|ip6arpa_dname
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/**  * QNAME minimisation state  */
+end_comment
+
+begin_enum
+enum|enum
+name|minimisation_state
+block|{
+comment|/** 	 * (Re)start minimisation. Outgoing QNAME should be set to dp->name. 	 * State entered on new query or after following refferal or CNAME. 	 */
+name|INIT_MINIMISE_STATE
+init|=
+literal|0
+block|,
+comment|/** 	 * QNAME minimisataion ongoing. Increase QNAME on every iteration. 	 */
+name|MINIMISE_STATE
+block|,
+comment|/** 	 * Don't increment QNAME this iteration 	 */
+name|SKIP_MINIMISE_STATE
+block|,
+comment|/** 	 * Send out full QNAME + original QTYPE 	 */
+name|DONOT_MINIMISE_STATE
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/**  * State of the iterator for a query.  */
@@ -446,6 +476,16 @@ comment|/** list of pending queries to authoritative servers. */
 name|struct
 name|outbound_list
 name|outlist
+decl_stmt|;
+comment|/** QNAME minimisation state */
+name|enum
+name|minimisation_state
+name|minimisation_state
+decl_stmt|;
+comment|/** 	 * The query info that is sent upstream. Will be a subset of qchase 	 * when qname minimisation is enabled. 	 */
+name|struct
+name|query_info
+name|qinfo_out
 decl_stmt|;
 block|}
 struct|;
