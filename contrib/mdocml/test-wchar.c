@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: test-wchar.c,v 1.2 2014/08/28 10:38:06 schwarze Exp $	*/
+comment|/*	$Id: test-wchar.c,v 1.3 2015/10/06 18:32:20 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -93,9 +93,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -118,9 +116,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -146,9 +142,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -176,9 +170,7 @@ name|width
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|dup2
@@ -214,15 +206,11 @@ name|stderr
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

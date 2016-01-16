@@ -96,9 +96,7 @@ literal|"fts_open"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|entry
@@ -121,9 +119,7 @@ literal|"fts_read"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -146,9 +142,7 @@ literal|"fts_set"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -167,15 +161,11 @@ literal|"fts_close"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

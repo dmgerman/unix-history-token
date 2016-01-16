@@ -5416,6 +5416,17 @@ modifier|*
 name|isinet6p
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 name|int
 name|error
 decl_stmt|,
@@ -5429,6 +5440,8 @@ name|td_proc
 operator|->
 name|p_fibnum
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET

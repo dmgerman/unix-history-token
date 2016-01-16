@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_layout.c,v 1.38 2015/02/10 11:03:13 schwarze Exp $ */
+comment|/*	$Id: tbl_layout.c,v 1.41 2015/10/12 00:08:16 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -527,7 +527,6 @@ goto|;
 case|case
 literal|'p'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'v'
 case|:
@@ -825,7 +824,6 @@ block|{
 case|case
 literal|'3'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'B'
 case|:
@@ -841,7 +839,6 @@ goto|;
 case|case
 literal|'2'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'I'
 case|:
@@ -857,7 +854,6 @@ goto|;
 case|case
 literal|'1'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'R'
 case|:
@@ -1539,6 +1535,12 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
+name|tbl
+operator|->
+name|last_row
+operator|=
+name|rp
+expr_stmt|;
 block|}
 block|}
 return|return;
@@ -1755,9 +1757,7 @@ operator|+
 literal|1
 expr_stmt|;
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function

@@ -13,7 +13,6 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_MINIDUMP_H_
-value|1
 end_define
 
 begin_define
@@ -29,6 +28,10 @@ directive|define
 name|MINIDUMP_VERSION
 value|1
 end_define
+
+begin_comment
+comment|/*  * The first page of vmcore is dedicated to the following header.  * As the rest of the page is zeroed, any header extension can be  * done without version bumping. It should be taken into account  * only that new entries will be zero in old vmcores.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -55,9 +58,43 @@ decl_stmt|;
 name|uint32_t
 name|kernbase
 decl_stmt|;
+name|uint32_t
+name|arch
+decl_stmt|;
+name|uint32_t
+name|mmuformat
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MINIDUMP_MMU_FORMAT_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINIDUMP_MMU_FORMAT_V4
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINIDUMP_MMU_FORMAT_V6
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINIDUMP_MMU_FORMAT_V6_LPAE
+value|3
+end_define
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: att.c,v 1.13 2014/11/28 18:57:31 schwarze Exp $ */
+comment|/*	$Id: att.c,v 1.15 2015/10/06 18:32:19 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roff.h"
 end_include
 
 begin_include
@@ -161,9 +167,7 @@ literal|"AT&T System\\~V Release\\~4 UNIX"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function

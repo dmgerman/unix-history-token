@@ -4,7 +4,7 @@ comment|/*	$OpenBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"man.h"
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mandoc_aux.h"
+file|"roff.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"libman.h"
+file|"man.h"
 end_include
 
 begin_include
@@ -97,11 +97,23 @@ directive|include
 file|"libmandoc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"roff_int.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libman.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|CHKARGS
-value|struct man *man, struct man_node *n
+value|struct roff_man *man, struct roff_node *n
 end_define
 
 begin_typedef
@@ -190,27 +202,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|post_fi
-parameter_list|(
-name|CHKARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|post_ft
-parameter_list|(
-name|CHKARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|post_nf
 parameter_list|(
 name|CHKARGS
 parameter_list|)
@@ -332,10 +324,10 @@ comment|/* RI */
 name|post_vs
 block|,
 comment|/* sp */
-name|post_nf
+name|NULL
 block|,
 comment|/* nf */
-name|post_fi
+name|NULL
 block|,
 comment|/* fi */
 name|NULL
@@ -365,10 +357,10 @@ comment|/* ft */
 name|post_OP
 block|,
 comment|/* OP */
-name|post_nf
+name|NULL
 block|,
 comment|/* EX */
-name|post_fi
+name|NULL
 block|,
 comment|/* EE */
 name|post_UR
@@ -386,16 +378,16 @@ end_decl_stmt
 
 begin_function
 name|void
-name|man_valid_post
+name|man_node_validate
 parameter_list|(
 name|struct
-name|man
+name|roff_man
 modifier|*
 name|man
 parameter_list|)
 block|{
 name|struct
-name|man_node
+name|roff_node
 modifier|*
 name|n
 decl_stmt|;
@@ -409,20 +401,71 @@ name|man
 operator|->
 name|last
 expr_stmt|;
+name|man
+operator|->
+name|last
+operator|=
+name|man
+operator|->
+name|last
+operator|->
+name|child
+expr_stmt|;
+while|while
+condition|(
+name|man
+operator|->
+name|last
+operator|!=
+name|NULL
+condition|)
+block|{
+name|man_node_validate
+argument_list|(
+name|man
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|n
+name|man
 operator|->
-name|flags
-operator|&
-name|MAN_VALID
+name|last
+operator|==
+name|n
 condition|)
-return|return;
-name|n
+name|man
 operator|->
-name|flags
-operator||=
-name|MAN_VALID
+name|last
+operator|=
+name|man
+operator|->
+name|last
+operator|->
+name|child
+expr_stmt|;
+else|else
+name|man
+operator|->
+name|last
+operator|=
+name|man
+operator|->
+name|last
+operator|->
+name|next
+expr_stmt|;
+block|}
+name|man
+operator|->
+name|last
+operator|=
+name|n
+expr_stmt|;
+name|man
+operator|->
+name|next
+operator|=
+name|ROFF_NEXT_SIBLING
 expr_stmt|;
 switch|switch
 condition|(
@@ -432,7 +475,7 @@ name|type
 condition|)
 block|{
 case|case
-name|MAN_TEXT
+name|ROFFT_TEXT
 case|:
 name|check_text
 argument_list|(
@@ -443,7 +486,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MAN_ROOT
+name|ROFFT_ROOT
 case|:
 name|check_root
 argument_list|(
@@ -454,11 +497,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MAN_EQN
+name|ROFFT_EQN
 case|:
-comment|/* FALLTHROUGH */
 case|case
-name|MAN_TBL
+name|ROFFT_TBL
 case|:
 break|break;
 default|default:
@@ -479,6 +521,21 @@ call|(
 modifier|*
 name|cp
 call|)
+argument_list|(
+name|man
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|man
+operator|->
+name|last
+operator|==
+name|n
+condition|)
+name|man_state
 argument_list|(
 name|man
 argument_list|,
@@ -734,9 +791,9 @@ if|if
 condition|(
 name|n
 operator|->
-name|nchild
+name|child
 operator|==
-literal|0
+name|NULL
 condition|)
 name|mandoc_msg
 argument_list|(
@@ -762,9 +819,21 @@ if|if
 condition|(
 name|n
 operator|->
-name|nchild
-operator|>
-literal|2
+name|child
+operator|->
+name|next
+operator|!=
+name|NULL
+operator|&&
+name|n
+operator|->
+name|child
+operator|->
+name|next
+operator|->
+name|next
+operator|!=
+name|NULL
 condition|)
 block|{
 name|n
@@ -818,7 +887,7 @@ name|n
 operator|->
 name|type
 operator|==
-name|MAN_HEAD
+name|ROFFT_HEAD
 operator|&&
 name|n
 operator|->
@@ -872,11 +941,11 @@ name|ok
 decl_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|n
 operator|->
-name|nchild
+name|child
+operator|==
+name|NULL
 condition|)
 return|return;
 name|ok
@@ -900,27 +969,21 @@ block|{
 case|case
 literal|'1'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'2'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'3'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'4'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'I'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'P'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'R'
 case|:
@@ -1049,7 +1112,7 @@ name|n
 operator|->
 name|type
 operator|==
-name|MAN_BODY
+name|ROFFT_BODY
 operator|&&
 name|n
 operator|->
@@ -1100,19 +1163,19 @@ name|type
 condition|)
 block|{
 case|case
-name|MAN_BLOCK
+name|ROFFT_BLOCK
 case|:
 if|if
 condition|(
-literal|0
-operator|==
 name|n
 operator|->
 name|body
 operator|->
-name|nchild
+name|child
+operator|==
+name|NULL
 condition|)
-name|man_node_delete
+name|roff_node_delete
 argument_list|(
 name|man
 argument_list|,
@@ -1121,15 +1184,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MAN_BODY
+name|ROFFT_BODY
 case|:
 if|if
 condition|(
-literal|0
-operator|==
 name|n
 operator|->
-name|nchild
+name|child
+operator|==
+name|NULL
 condition|)
 name|mandoc_vmsg
 argument_list|(
@@ -1159,13 +1222,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MAN_HEAD
+name|ROFFT_HEAD
 case|:
 if|if
 condition|(
 name|n
 operator|->
-name|nchild
+name|child
+operator|!=
+name|NULL
 condition|)
 name|mandoc_vmsg
 argument_list|(
@@ -1200,9 +1265,11 @@ name|string
 argument_list|,
 name|n
 operator|->
-name|nchild
-operator|>
-literal|1
+name|child
+operator|->
+name|next
+operator|!=
+name|NULL
 condition|?
 literal|" ..."
 else|:
@@ -1232,27 +1299,27 @@ name|type
 condition|)
 block|{
 case|case
-name|MAN_BLOCK
+name|ROFFT_BLOCK
 case|:
 if|if
 condition|(
-literal|0
-operator|==
 name|n
 operator|->
 name|head
 operator|->
-name|nchild
-operator|&&
-literal|0
+name|child
 operator|==
+name|NULL
+operator|&&
 name|n
 operator|->
 name|body
 operator|->
-name|nchild
+name|child
+operator|==
+name|NULL
 condition|)
-name|man_node_delete
+name|roff_node_delete
 argument_list|(
 name|man
 argument_list|,
@@ -1261,25 +1328,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MAN_BODY
+name|ROFFT_BODY
 case|:
 if|if
 condition|(
-literal|0
-operator|==
 name|n
 operator|->
 name|parent
 operator|->
 name|head
 operator|->
-name|nchild
-operator|&&
-literal|0
+name|child
 operator|==
+name|NULL
+operator|&&
 name|n
 operator|->
-name|nchild
+name|child
+operator|==
+name|NULL
 condition|)
 name|mandoc_vmsg
 argument_list|(
@@ -1323,7 +1390,7 @@ name|CHKARGS
 parameter_list|)
 block|{
 name|struct
-name|man_node
+name|roff_node
 modifier|*
 name|nb
 decl_stmt|;
@@ -1356,7 +1423,7 @@ name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 argument_list|)
 expr_stmt|;
 name|free
@@ -1405,7 +1472,7 @@ name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 operator|=
 name|NULL
 expr_stmt|;
@@ -1413,7 +1480,7 @@ name|nb
 operator|=
 name|n
 expr_stmt|;
-comment|/* ->TITLE<- MSEC DATE SOURCE VOL */
+comment|/* ->TITLE<- MSEC DATE OS VOL */
 name|n
 operator|=
 name|n
@@ -1552,7 +1619,7 @@ literal|"TH"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* TITLE ->MSEC<- DATE SOURCE VOL */
+comment|/* TITLE ->MSEC<- DATE OS VOL */
 if|if
 condition|(
 name|n
@@ -1623,7 +1690,7 @@ name|title
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* TITLE MSEC ->DATE<- SOURCE VOL */
+comment|/* TITLE MSEC ->DATE<- OS VOL */
 if|if
 condition|(
 name|n
@@ -1734,7 +1801,7 @@ literal|"TH"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* TITLE MSEC DATE ->SOURCE<- VOL */
+comment|/* TITLE MSEC DATE ->OS<- VOL */
 if|if
 condition|(
 name|n
@@ -1751,7 +1818,7 @@ name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 operator|=
 name|mandoc_strdup
 argument_list|(
@@ -1773,7 +1840,7 @@ name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 operator|=
 name|mandoc_strdup
 argument_list|(
@@ -1782,7 +1849,7 @@ operator|->
 name|defos
 argument_list|)
 expr_stmt|;
-comment|/* TITLE MSEC DATE SOURCE ->VOL<- */
+comment|/* TITLE MSEC DATE OS ->VOL<- */
 comment|/* If missing, use the default VOL name for MSEC. */
 if|if
 condition|(
@@ -1891,7 +1958,7 @@ name|string
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the `TH' node after we've processed it for our 	 * meta-data. 	 */
-name|man_node_delete
+name|roff_node_delete
 argument_list|(
 name|man
 argument_list|,
@@ -1899,98 +1966,6 @@ name|man
 operator|->
 name|last
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|post_nf
-parameter_list|(
-name|CHKARGS
-parameter_list|)
-block|{
-if|if
-condition|(
-name|man
-operator|->
-name|flags
-operator|&
-name|MAN_LITERAL
-condition|)
-name|mandoc_msg
-argument_list|(
-name|MANDOCERR_NF_SKIP
-argument_list|,
-name|man
-operator|->
-name|parse
-argument_list|,
-name|n
-operator|->
-name|line
-argument_list|,
-name|n
-operator|->
-name|pos
-argument_list|,
-literal|"nf"
-argument_list|)
-expr_stmt|;
-name|man
-operator|->
-name|flags
-operator||=
-name|MAN_LITERAL
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|post_fi
-parameter_list|(
-name|CHKARGS
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|MAN_LITERAL
-operator|&
-name|man
-operator|->
-name|flags
-operator|)
-condition|)
-name|mandoc_msg
-argument_list|(
-name|MANDOCERR_FI_SKIP
-argument_list|,
-name|man
-operator|->
-name|parse
-argument_list|,
-name|n
-operator|->
-name|line
-argument_list|,
-name|n
-operator|->
-name|pos
-argument_list|,
-literal|"fi"
-argument_list|)
-expr_stmt|;
-name|man
-operator|->
-name|flags
-operator|&=
-operator|~
-name|MAN_LITERAL
 expr_stmt|;
 block|}
 end_function
@@ -2039,15 +2014,15 @@ name|child
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|n
+operator|==
+name|NULL
 operator|||
-name|MAN_TEXT
-operator|!=
 name|n
 operator|->
 name|type
+operator|!=
+name|ROFFT_TEXT
 condition|)
 name|p
 operator|=
@@ -2173,14 +2148,14 @@ name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 argument_list|)
 expr_stmt|;
 name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 operator|=
 name|mandoc_strdup
 argument_list|(
@@ -2216,6 +2191,11 @@ block|,
 literal|"System V Release 2"
 block|, 	}
 decl_stmt|;
+name|struct
+name|roff_node
+modifier|*
+name|nn
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -2223,11 +2203,6 @@ name|p
 decl_stmt|,
 modifier|*
 name|s
-decl_stmt|;
-name|struct
-name|man_node
-modifier|*
-name|nn
 decl_stmt|;
 name|n
 operator|=
@@ -2237,15 +2212,15 @@ name|child
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|n
+operator|==
+name|NULL
 operator|||
-name|MAN_TEXT
-operator|!=
 name|n
 operator|->
 name|type
+operator|!=
+name|ROFFT_TEXT
 condition|)
 name|p
 operator|=
@@ -2321,12 +2296,14 @@ expr_stmt|;
 if|if
 condition|(
 name|nn
+operator|!=
+name|NULL
 operator|&&
-name|MAN_TEXT
-operator|==
 name|nn
 operator|->
 name|type
+operator|==
+name|ROFFT_TEXT
 operator|&&
 name|nn
 operator|->
@@ -2334,6 +2311,8 @@ name|string
 index|[
 literal|0
 index|]
+operator|!=
+literal|'\0'
 condition|)
 name|p
 operator|=
@@ -2366,14 +2345,14 @@ name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 argument_list|)
 expr_stmt|;
 name|man
 operator|->
 name|meta
 operator|.
-name|source
+name|os
 operator|=
 name|mandoc_strdup
 argument_list|(
@@ -2412,7 +2391,6 @@ block|{
 case|case
 name|MAN_SH
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|MAN_SS
 case|:
@@ -2453,10 +2431,10 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-name|MAN_MAX
+name|TOKEN_NONE
 case|:
 comment|/* 		 * Don't warn about this because it occurs in pod2man 		 * and would cause considerable (unfixable) warnage. 		 */
-name|man_node_delete
+name|roff_node_delete
 argument_list|(
 name|man
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: test-getsubopt.c,v 1.3 2014/08/17 20:53:50 schwarze Exp $	*/
+comment|/*	$Id: test-getsubopt.c,v 1.4 2015/10/06 18:32:20 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -86,11 +86,8 @@ init|=
 name|NULL
 decl_stmt|;
 return|return
-operator|(
 operator|!
 operator|(
-literal|0
-operator|==
 name|getsubopt
 argument_list|(
 operator|&
@@ -101,6 +98,8 @@ argument_list|,
 operator|&
 name|value
 argument_list|)
+operator|==
+literal|0
 operator|&&
 name|value
 operator|==
@@ -113,7 +112,6 @@ operator|==
 name|buf
 operator|+
 literal|3
-operator|)
 operator|)
 return|;
 block|}

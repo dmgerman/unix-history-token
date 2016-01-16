@@ -116,14 +116,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|bus_space
-name|at91_bs_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|uart_class
 name|at91_usart_class
 decl_stmt|;
@@ -236,8 +228,7 @@ name|bas
 operator|.
 name|bst
 operator|=
-operator|&
-name|at91_bs_tag
+name|arm_base_bs_tag
 expr_stmt|;
 comment|/* 	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early.  At least we probed this so that the console will work on          * all flavors of Atmel we can detect. 	 */
 name|di
@@ -292,8 +283,7 @@ name|UART_PARITY_NONE
 expr_stmt|;
 name|uart_bus_space_io
 operator|=
-operator|&
-name|at91_bs_tag
+name|arm_base_bs_tag
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=

@@ -48,10 +48,6 @@ modifier|*
 name|fts_path
 decl_stmt|;
 comment|/* path for this descent */
-name|int
-name|fts_rfd
-decl_stmt|;
-comment|/* fd for root */
 name|size_t
 name|fts_pathlen
 decl_stmt|;
@@ -74,7 +70,7 @@ comment|/* don't cross devices */
 define|#
 directive|define
 name|FTS_OPTIONMASK
-value|0x00ff
+value|0x0054
 comment|/* valid user option mask */
 define|#
 directive|define
@@ -230,16 +226,6 @@ decl_stmt|;
 comment|/* user flags for FTSENT structure */
 define|#
 directive|define
-name|FTS_DONTCHDIR
-value|0x01
-comment|/* don't chdir .. to the parent */
-name|unsigned
-name|short
-name|fts_flags
-decl_stmt|;
-comment|/* private flags for FTSENT structure */
-define|#
-directive|define
 name|FTS_NOINSTR
 value|3
 comment|/* no instructions */
@@ -272,7 +258,6 @@ typedef|;
 end_typedef
 
 begin_function_decl
-name|__BEGIN_DECLS
 name|int
 name|fts_close
 parameter_list|(
@@ -325,10 +310,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 begin_endif
 endif|#

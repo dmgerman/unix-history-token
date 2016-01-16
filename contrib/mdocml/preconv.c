@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: preconv.c,v 1.14 2015/03/06 09:24:59 kristaps Exp $ */
+comment|/*	$Id: preconv.c,v 1.15 2015/10/06 18:32:19 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -396,9 +396,7 @@ operator|~
 name|MPARSE_LATIN1
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 name|latin
 label|:
@@ -413,9 +411,7 @@ name|MPARSE_LATIN1
 operator|)
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 operator|*
 name|oi
@@ -456,9 +452,7 @@ operator|~
 name|MPARSE_UTF8
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -572,11 +566,9 @@ literal|3
 argument_list|)
 condition|)
 return|return
-operator|(
 name|MPARSE_UTF8
 operator||
 name|MPARSE_LATIN1
-operator|)
 return|;
 comment|/* Move after the header and adjust for the trailer. */
 name|ln
@@ -715,9 +707,7 @@ operator|==
 name|sz
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* Check us against known encodings. */
 if|if
@@ -737,9 +727,7 @@ literal|5
 argument_list|)
 condition|)
 return|return
-operator|(
 name|MPARSE_UTF8
-operator|)
 return|;
 if|if
 condition|(
@@ -758,22 +746,16 @@ literal|11
 argument_list|)
 condition|)
 return|return
-operator|(
 name|MPARSE_LATIN1
-operator|)
 return|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|MPARSE_UTF8
 operator||
 name|MPARSE_LATIN1
-operator|)
 return|;
 block|}
 end_function

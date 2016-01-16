@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.c,v 1.92 2015/02/20 23:55:10 schwarze Exp $ */
+comment|/*	$Id: mandoc.c,v 1.98 2015/11/12 22:44:27 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -84,13 +84,6 @@ include|#
 directive|include
 file|"libmandoc.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DATESIZE
-value|32
-end_define
 
 begin_function_decl
 specifier|static
@@ -253,9 +246,7 @@ operator|*
 name|start
 condition|)
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 operator|*
 name|start
@@ -277,53 +268,47 @@ comment|/* 	 * Escapes taking no arguments at all. 	 */
 case|case
 literal|'d'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'u'
 case|:
+case|case
+literal|','
+case|:
+case|case
+literal|'/'
+case|:
 return|return
-operator|(
 name|ESCAPE_IGNORE
-operator|)
 return|;
 comment|/* 	 * The \z escape is supposed to output the following 	 * character without advancing the cursor position. 	 * Since we are mostly dealing with terminal mode, 	 * let us just skip the next character. 	 */
 case|case
 literal|'z'
 case|:
 return|return
-operator|(
 name|ESCAPE_SKIPCHAR
-operator|)
 return|;
 comment|/* 	 * Handle all triggers matching \X(xy, \Xx, and \X[xxxx], where 	 * 'X' is the trigger.  These have opaque sub-strings. 	 */
 case|case
 literal|'F'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'g'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'k'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'M'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'m'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'n'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'V'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'Y'
 case|:
@@ -396,23 +381,18 @@ comment|/* 	 * These escapes are of the form \X'Y', where 'X' is the trigger 	 *
 case|case
 literal|'A'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'b'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'D'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'R'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'X'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'Z'
 case|:
@@ -433,9 +413,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 if|if
 condition|(
@@ -465,27 +443,21 @@ comment|/* 	 * These escapes are of the form \X'N', where 'X' is the trigger 	 *
 case|case
 literal|'h'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'H'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'L'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'l'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'S'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'v'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'x'
 case|:
@@ -514,9 +486,7 @@ operator|*
 name|end
 expr_stmt|;
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 block|}
 name|gly
@@ -550,9 +520,7 @@ operator|*
 name|start
 condition|)
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 operator|(
 operator|*
@@ -580,9 +548,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-operator|(
 name|ESCAPE_IGNORE
-operator|)
 return|;
 block|}
 operator|(
@@ -634,9 +600,7 @@ operator|)
 operator|++
 expr_stmt|;
 return|return
-operator|(
 name|ESCAPE_NUMBERED
-operator|)
 return|;
 comment|/* 	 * Sizes get a special category of their own. 	 */
 case|case
@@ -730,11 +694,9 @@ break|break;
 case|case
 literal|'3'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'2'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'1'
 case|:
@@ -836,9 +798,7 @@ case|case
 literal|'\0'
 case|:
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 case|case
 literal|'\\'
@@ -863,9 +823,7 @@ name|NULL
 argument_list|)
 condition|)
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 break|break;
 default|default:
@@ -916,9 +874,7 @@ name|start
 argument_list|)
 condition|)
 return|return
-operator|(
 name|ESCAPE_ERROR
-operator|)
 return|;
 operator|*
 name|end
@@ -1017,7 +973,6 @@ block|{
 case|case
 literal|'3'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'B'
 case|:
@@ -1029,7 +984,6 @@ break|break;
 case|case
 literal|'2'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'I'
 case|:
@@ -1049,7 +1003,6 @@ break|break;
 case|case
 literal|'1'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'R'
 case|:
@@ -1150,6 +1103,39 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|*
+name|sz
+operator|==
+literal|5
+operator|&&
+operator|(
+operator|*
+name|start
+operator|)
+index|[
+literal|1
+index|]
+operator|==
+literal|'D'
+operator|&&
+name|strchr
+argument_list|(
+literal|"89ABCDEF"
+argument_list|,
+operator|(
+operator|*
+name|start
+operator|)
+index|[
+literal|2
+index|]
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+break|break;
+if|if
+condition|(
 operator|(
 name|int
 operator|)
@@ -1177,9 +1163,7 @@ default|default:
 break|break;
 block|}
 return|return
-operator|(
 name|gly
-operator|)
 return|;
 block|}
 end_function
@@ -1532,9 +1516,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|start
-operator|)
 return|;
 block|}
 end_function
@@ -1624,15 +1606,11 @@ name|tm
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -1680,9 +1658,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 comment|/* 	 * Reserve space: 	 * up to 9 characters for the month (September) + blank 	 * up to 2 characters for the day + comma + blank 	 * 4 characters for the year and a terminating '\0' 	 */
 name|p
@@ -1702,8 +1678,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 operator|(
 name|ssz
 operator|=
@@ -1720,6 +1694,8 @@ argument_list|,
 name|tm
 argument_list|)
 operator|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|fail
@@ -1731,11 +1707,9 @@ name|int
 operator|)
 name|ssz
 expr_stmt|;
+comment|/* 	 * The output format is just "%d" here, not "%2d" or "%02d". 	 * That's also the reason why we can't just format the 	 * date as a whole with "%B %e, %Y" or "%B %d, %Y". 	 * Besides, the present approach is less prone to buffer 	 * overflows, in case anybody should ever introduce the bug 	 * of looking at LC_TIME. 	 */
 if|if
 condition|(
-operator|-
-literal|1
-operator|==
 operator|(
 name|isz
 operator|=
@@ -1754,6 +1728,9 @@ operator|->
 name|tm_mday
 argument_list|)
 operator|)
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|fail
@@ -1764,8 +1741,6 @@ name|isz
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|strftime
 argument_list|(
 name|p
@@ -1778,14 +1753,14 @@ literal|"%Y"
 argument_list|,
 name|tm
 argument_list|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|fail
 goto|;
 return|return
-operator|(
 name|buf
-operator|)
 return|;
 name|fail
 label|:
@@ -1795,9 +1770,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -1823,26 +1796,21 @@ name|int
 name|pos
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|out
-decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+comment|/* No date specified: use today's date. */
 if|if
 condition|(
-name|NULL
-operator|==
 name|in
-operator|||
-literal|'\0'
 operator|==
+name|NULL
+operator|||
 operator|*
 name|in
-operator|||
-literal|0
 operator|==
+literal|'\0'
+operator|||
 name|strcmp
 argument_list|(
 name|in
@@ -1850,6 +1818,8 @@ argument_list|,
 literal|"$"
 literal|"Mdocdate$"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|mandoc_msg
@@ -1865,34 +1835,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+name|time2a
+argument_list|(
 name|time
 argument_list|(
-operator|&
-name|t
+name|NULL
 argument_list|)
-expr_stmt|;
+argument_list|)
+return|;
 block|}
-elseif|else
+comment|/* Valid mdoc(7) date format. */
 if|if
 condition|(
-name|a2time
-argument_list|(
-operator|&
-name|t
-argument_list|,
-literal|"%Y-%m-%d"
-argument_list|,
-name|in
-argument_list|)
-condition|)
-name|t
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
 name|a2time
 argument_list|(
 operator|&
@@ -1903,8 +1858,7 @@ literal|"Mdocdate: %b %d %Y $"
 argument_list|,
 name|in
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|a2time
 argument_list|(
 operator|&
@@ -1915,7 +1869,26 @@ argument_list|,
 name|in
 argument_list|)
 condition|)
-block|{
+return|return
+name|time2a
+argument_list|(
+name|t
+argument_list|)
+return|;
+comment|/* Do not warn about the legacy man(7) format. */
+if|if
+condition|(
+operator|!
+name|a2time
+argument_list|(
+operator|&
+name|t
+argument_list|,
+literal|"%Y-%m-%d"
+argument_list|,
+name|in
+argument_list|)
+condition|)
 name|mandoc_msg
 argument_list|(
 name|MANDOCERR_DATE_BAD
@@ -1929,33 +1902,12 @@ argument_list|,
 name|in
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|out
-operator|=
-name|t
-condition|?
-name|time2a
-argument_list|(
-name|t
-argument_list|)
-else|:
-name|NULL
-expr_stmt|;
+comment|/* Use any non-mdoc(7) date verbatim. */
 return|return
-operator|(
-name|out
-condition|?
-name|out
-else|:
 name|mandoc_strdup
 argument_list|(
 name|in
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -1990,9 +1942,7 @@ operator|==
 name|sz
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* 	 * End-of-sentence recognition must include situations where 	 * some symbols, such as `)', allow prior EOS punctuation to 	 * propagate outward. 	 */
 name|enclosed
@@ -2031,15 +1981,12 @@ block|{
 case|case
 literal|'\"'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'\''
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|']'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|')'
 case|:
@@ -2057,11 +2004,9 @@ break|break;
 case|case
 literal|'.'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'!'
 case|:
-comment|/* FALLTHROUGH */
 case|case
 literal|'?'
 case|:
@@ -2072,7 +2017,6 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 name|found
 operator|&&
 operator|(
@@ -2089,17 +2033,14 @@ operator|*
 name|q
 argument_list|)
 operator|)
-operator|)
 return|;
 block|}
 block|}
 return|return
-operator|(
 name|found
 operator|&&
 operator|!
 name|enclosed
-operator|)
 return|;
 block|}
 end_function
@@ -2144,10 +2085,8 @@ operator|>
 literal|31
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 name|memcpy
 argument_list|(
@@ -2199,10 +2138,8 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 if|if
 condition|(
@@ -2226,11 +2163,9 @@ name|INT_MIN
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|int
 operator|)
 name|v
-operator|)
 return|;
 block|}
 end_function

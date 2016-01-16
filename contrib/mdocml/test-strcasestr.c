@@ -60,13 +60,11 @@ literal|"Gst"
 argument_list|)
 decl_stmt|;
 return|return
-operator|(
+name|cp
+operator|!=
 name|big
 operator|+
 literal|2
-operator|!=
-name|cp
-operator|)
 return|;
 block|}
 end_function

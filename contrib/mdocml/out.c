@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: out.c,v 1.59 2015/01/30 04:11:50 schwarze Exp $ */
+comment|/*	$Id: out.c,v 1.62 2015/10/12 00:08:16 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -192,9 +192,7 @@ operator|==
 name|src
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 switch|switch
 condition|(
@@ -318,9 +316,7 @@ operator|==
 name|def
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 name|dst
 operator|->
@@ -331,7 +327,6 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-operator|(
 operator|*
 name|endptr
 operator|==
@@ -340,7 +335,6 @@ condition|?
 literal|2
 else|:
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -931,7 +925,6 @@ block|{
 case|case
 name|TBL_CELL_HORIZ
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_DHORIZ
 case|:
@@ -969,15 +962,12 @@ break|break;
 case|case
 name|TBL_CELL_LONG
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_CENTRE
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_LEFT
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|TBL_CELL_RIGHT
 case|:
@@ -1014,7 +1004,6 @@ default|default:
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: test-sqlite3.c,v 1.1 2014/08/16 19:00:01 schwarze Exp $	*/
+comment|/*	$Id: test-sqlite3.c,v 1.2 2015/10/06 18:32:20 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -73,9 +73,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|unlink
@@ -114,9 +112,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -142,15 +138,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

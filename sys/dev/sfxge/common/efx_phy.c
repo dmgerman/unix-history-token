@@ -837,24 +837,26 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__efx_phy_hunt_ops
+name|__efx_phy_ef10_ops
 init|=
 block|{
-name|hunt_phy_power
+name|ef10_phy_power
 block|,
 comment|/* epo_power */
 name|NULL
 block|,
 comment|/* epo_reset */
-name|hunt_phy_reconfigure
+name|ef10_phy_reconfigure
 block|,
 comment|/* epo_reconfigure */
-name|hunt_phy_verify
+name|ef10_phy_verify
 block|,
 comment|/* epo_verify */
 name|NULL
@@ -863,13 +865,13 @@ comment|/* epo_uplink_check */
 name|NULL
 block|,
 comment|/* epo_downlink_check */
-name|hunt_phy_oui_get
+name|ef10_phy_oui_get
 block|,
 comment|/* epo_oui_get */
 if|#
 directive|if
 name|EFSYS_OPT_PHY_STATS
-name|hunt_phy_stats_update
+name|ef10_phy_stats_update
 block|,
 comment|/* epo_stats_update */
 endif|#
@@ -881,15 +883,15 @@ name|EFSYS_OPT_PHY_PROPS
 if|#
 directive|if
 name|EFSYS_OPT_NAMES
-name|hunt_phy_prop_name
+name|ef10_phy_prop_name
 block|,
 comment|/* epo_prop_name */
 endif|#
 directive|endif
-name|hunt_phy_prop_get
+name|ef10_phy_prop_get
 block|,
 comment|/* epo_prop_get */
-name|hunt_phy_prop_set
+name|ef10_phy_prop_set
 block|,
 comment|/* epo_prop_set */
 endif|#
@@ -898,6 +900,7 @@ comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
 name|EFSYS_OPT_BIST
+comment|/* FIXME: Are these BIST methods appropriate for Medford? */
 name|hunt_bist_enable_offline
 block|,
 comment|/* epo_bist_enable_offline */
@@ -923,7 +926,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_function
@@ -1170,12 +1173,31 @@ name|efx_phy_ops_t
 operator|*
 operator|)
 operator|&
-name|__efx_phy_hunt_ops
+name|__efx_phy_ef10_ops
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_HUNTINGTON */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+case|case
+name|EFX_FAMILY_MEDFORD
+case|:
+name|epop
+operator|=
+operator|(
+name|efx_phy_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_phy_ef10_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_MEDFORD */
 default|default:
 name|rc
 operator|=

@@ -128,7 +128,6 @@ comment|/* For this to be tweakable, we use small primitives, and leave part of 
 end_comment
 
 begin_function_decl
-name|__BEGIN_DECLS
 name|void
 name|ohash_init
 parameter_list|(
@@ -363,10 +362,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msec.c,v 1.14 2014/12/21 14:14:35 schwarze Exp $ */
+comment|/*	$Id: msec.c,v 1.15 2015/10/06 18:32:19 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -66,9 +66,7 @@ include|#
 directive|include
 file|"msec.in"
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function

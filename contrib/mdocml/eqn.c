@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: eqn.c,v 1.58 2015/03/04 12:19:49 schwarze Exp $ */
+comment|/*	$Id: eqn.c,v 1.61 2016/01/08 00:50:45 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1234,9 +1234,7 @@ operator|*
 name|p
 condition|)
 return|return
-operator|(
 name|er
-operator|)
 return|;
 name|mandoc_vmsg
 argument_list|(
@@ -1256,9 +1254,7 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|er
-operator|)
 return|;
 block|}
 comment|/* 	 * Build up the full string, replacing all newlines with regular 	 * whitespace. 	 */
@@ -1347,9 +1343,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ROFF_IGN
-operator|)
 return|;
 block|}
 end_function
@@ -1419,9 +1413,7 @@ operator|=
 name|EQN_DEFSIZE
 expr_stmt|;
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function
@@ -1509,7 +1501,6 @@ name|sz
 argument_list|)
 condition|)
 return|return
-operator|(
 operator|&
 name|ep
 operator|->
@@ -1517,12 +1508,9 @@ name|defs
 index|[
 name|i
 index|]
-operator|)
 return|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -1635,9 +1623,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 name|ep
@@ -1675,9 +1661,7 @@ operator|*
 name|start
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 if|if
 condition|(
@@ -1945,9 +1929,7 @@ operator|!
 name|repl
 condition|)
 return|return
-operator|(
 name|start
-operator|)
 return|;
 if|if
 condition|(
@@ -2086,14 +2068,15 @@ operator|->
 name|valsz
 argument_list|)
 expr_stmt|;
+name|lim
+operator|++
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 block|}
 return|return
-operator|(
 name|start
-operator|)
 return|;
 block|}
 end_function
@@ -2120,7 +2103,6 @@ name|sz
 parameter_list|)
 block|{
 return|return
-operator|(
 name|eqn_next
 argument_list|(
 name|ep
@@ -2131,7 +2113,6 @@ name|sz
 argument_list|,
 literal|1
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -2158,7 +2139,6 @@ name|sz
 parameter_list|)
 block|{
 return|return
-operator|(
 name|eqn_next
 argument_list|(
 name|ep
@@ -2169,7 +2149,6 @@ name|sz
 argument_list|,
 literal|0
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -2249,9 +2228,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-operator|(
 name|EQN_TOK_EOF
-operator|)
 return|;
 if|if
 condition|(
@@ -2275,9 +2252,7 @@ name|sz
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|EQN_TOK__MAX
-operator|)
 return|;
 block|}
 for|for
@@ -2349,9 +2324,7 @@ name|sz
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 end_function
@@ -2543,9 +2516,7 @@ operator|=
 name|bp
 expr_stmt|;
 return|return
-operator|(
 name|bp
-operator|)
 return|;
 block|}
 end_function
@@ -2692,9 +2663,7 @@ operator|=
 name|newb
 expr_stmt|;
 return|return
-operator|(
 name|newb
-operator|)
 return|;
 block|}
 end_function
@@ -3387,9 +3356,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|ROFF_IGN
-operator|)
 return|;
 name|next_tok
 label|:
@@ -4828,11 +4795,9 @@ name|parent
 expr_stmt|;
 if|if
 condition|(
-name|EQN_TOK_BRACE_CLOSE
-operator|==
 name|tok
-operator|&&
-name|parent
+operator|==
+name|EQN_TOK_BRACE_CLOSE
 operator|&&
 operator|(
 name|parent
@@ -5267,9 +5232,7 @@ operator|)
 case|:
 comment|/* 		 * End of file! 		 * TODO: make sure we're not in an open subexpression. 		 */
 return|return
-operator|(
 name|ROFF_EQN
-operator|)
 return|;
 default|default:
 name|assert
@@ -5484,7 +5447,6 @@ operator|=
 name|UINT_MAX
 expr_stmt|;
 return|return
-operator|(
 name|eqn_parse
 argument_list|(
 name|ep
@@ -5495,7 +5457,6 @@ name|eqn
 operator|.
 name|root
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
