@@ -12119,7 +12119,7 @@ name|sh
 operator|->
 name|src_port
 operator|)
-operator|&&
+operator|||
 operator|(
 name|cookie
 operator|->
@@ -12129,7 +12129,7 @@ name|sh
 operator|->
 name|dest_port
 operator|)
-operator|&&
+operator|||
 operator|(
 name|cookie
 operator|->
