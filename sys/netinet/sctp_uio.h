@@ -4221,9 +4221,12 @@ name|uint32_t
 name|heartbeat_interval
 decl_stmt|;
 name|uint32_t
+name|ssthresh
+decl_stmt|;
+name|uint32_t
 name|extra_padding
 index|[
-literal|31
+literal|30
 index|]
 decl_stmt|;
 comment|/* future */
