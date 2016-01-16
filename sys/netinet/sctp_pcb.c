@@ -16064,24 +16064,26 @@ expr_stmt|;
 block|}
 comment|/* Now the sctp_pcb things */
 comment|/* 	 * free each asoc if it is not already closed/free. we can't use the 	 * macro here since le_next will get freed as part of the 	 * sctp_free_assoc() call. 	 */
-if|if
-condition|(
-name|so
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|IPSEC
+if|if
+condition|(
+name|ip_pcb
+operator|->
+name|inp_sp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ipsec_delete_pcbpolicy
 argument_list|(
 name|ip_pcb
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-comment|/* IPSEC */
-comment|/* Unlocks not needed since the socket is gone now */
-block|}
 if|if
 condition|(
 name|ip_pcb
