@@ -678,7 +678,10 @@ name|op_err
 operator|=
 name|sctp_generate_cause
 argument_list|(
-name|SCTP_CAUSE_PROTOCOL_VIOLATION
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_diag_info_code
+argument_list|)
 argument_list|,
 literal|"Association error counter exceeded"
 argument_list|)
@@ -4896,7 +4899,10 @@ name|op_err
 operator|=
 name|sctp_generate_cause
 argument_list|(
-name|SCTP_CAUSE_PROTOCOL_VIOLATION
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_diag_info_code
+argument_list|)
 argument_list|,
 literal|"Cookie timer expired, but no cookie"
 argument_list|)
