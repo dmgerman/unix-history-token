@@ -5167,6 +5167,11 @@ operator|.
 name|sv_thread_detach
 operator|=
 name|linux_thread_detach
+block|,
+operator|.
+name|sv_trap
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5372,6 +5377,11 @@ operator|.
 name|sv_thread_detach
 operator|=
 name|linux_thread_detach
+block|,
+operator|.
+name|sv_trap
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt

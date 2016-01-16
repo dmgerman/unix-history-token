@@ -1183,6 +1183,35 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
+comment|/* 			 * Emulator can take care about this trap? 			 */
+if|if
+condition|(
+operator|*
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_trap
+operator|!=
+name|NULL
+operator|&&
+call|(
+modifier|*
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_trap
+call|)
+argument_list|(
+name|td
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|userout
+goto|;
 name|addr
 operator|=
 name|frame
