@@ -6257,6 +6257,17 @@ literal|0
 expr_stmt|;
 name|asoc
 operator|->
+name|strmout
+index|[
+name|i
+index|]
+operator|.
+name|state
+operator|=
+name|SCTP_STREAM_OPENING
+expr_stmt|;
+name|asoc
+operator|->
 name|ss_functions
 operator|.
 name|sctp_ss_init_stream
@@ -35046,7 +35057,7 @@ parameter_list|,
 name|struct
 name|inpcb
 modifier|*
-name|ignored
+name|inp
 parameter_list|,
 specifier|const
 name|struct

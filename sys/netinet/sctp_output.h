@@ -788,18 +788,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sctp_add_stream_reset_out
+name|sctp_add_stream_reset_result
 parameter_list|(
 name|struct
 name|sctp_tmit_chunk
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|uint16_t
-modifier|*
-parameter_list|,
-name|uint32_t
 parameter_list|,
 name|uint32_t
 parameter_list|,
@@ -810,15 +803,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sctp_add_stream_reset_result
+name|sctp_send_deferred_reset_response
 parameter_list|(
 name|struct
-name|sctp_tmit_chunk
+name|sctp_tcb
 modifier|*
 parameter_list|,
-name|uint32_t
+name|struct
+name|sctp_stream_reset_list
+modifier|*
 parameter_list|,
-name|uint32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -844,6 +839,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sctp_send_stream_reset_out_if_possible
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sctp_send_str_reset_req
 parameter_list|(
 name|struct
@@ -854,8 +860,6 @@ name|uint16_t
 parameter_list|,
 name|uint16_t
 modifier|*
-parameter_list|,
-name|uint8_t
 parameter_list|,
 name|uint8_t
 parameter_list|,
