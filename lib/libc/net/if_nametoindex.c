@@ -148,9 +148,6 @@ operator|-
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PURIFY
 name|memset
 argument_list|(
 operator|&
@@ -164,8 +161,6 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|strlcpy
 argument_list|(
 name|ifr
