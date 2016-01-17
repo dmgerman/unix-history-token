@@ -2969,12 +2969,8 @@ name|hash
 decl_stmt|,
 name|retry
 decl_stmt|,
-name|state
-decl_stmt|,
 name|vflag
 decl_stmt|;
-name|state
-operator|=
 name|vflag
 operator|=
 literal|0
@@ -3345,14 +3341,6 @@ condition|?
 literal|"toe"
 else|:
 literal|"tcp"
-expr_stmt|;
-name|state
-operator|=
-name|xtp
-operator|->
-name|xt_tp
-operator|.
-name|t_state
 expr_stmt|;
 break|break;
 case|case
