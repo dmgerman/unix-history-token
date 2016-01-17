@@ -10349,6 +10349,15 @@ argument_list|)
 argument_list|,
 name|vrf_id
 argument_list|,
+name|ntohs
+argument_list|(
+name|initack_cp
+operator|->
+name|init
+operator|.
+name|num_outbound_streams
+argument_list|)
+argument_list|,
 operator|(
 expr|struct
 name|thread

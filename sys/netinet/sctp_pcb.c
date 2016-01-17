@@ -18553,6 +18553,9 @@ parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
+name|uint16_t
+name|o_streams
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -19303,6 +19306,8 @@ argument_list|,
 name|override_tag
 argument_list|,
 name|vrf_id
+argument_list|,
+name|o_streams
 argument_list|)
 operator|)
 condition|)
