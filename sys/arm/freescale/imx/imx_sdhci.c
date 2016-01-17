@@ -1764,6 +1764,7 @@ name|false
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
 block|}
 comment|/* 	 * Figure out whether we need to check the DAT0 line for busy status at 	 * interrupt time.  The controller should be doing this, but for some 	 * reason it doesn't.  There are two cases: 	 *  - R1B response with no data transfer should generate a DATA_END (aka 	 *    TRANSFER_COMPLETE) interrupt after waiting for busy, but if 	 *    there's no data transfer there's no DATA_END interrupt.  This is 	 *    documented; they seem to think it's a feature. 	 *  - R1B response after Auto-CMD12 appears to not work, even though 	 *    there's a control bit for it (bit 3) in the vendor register. 	 * When we're starting a command that needs a manual DAT0 line check at 	 * interrupt time, we leave ourselves a note in r1bfix_type so that we 	 * can do the extra work in imx_sdhci_intr(). 	 */
 if|if
