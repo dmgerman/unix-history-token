@@ -261,11 +261,11 @@ init|=
 literal|131
 block|,
 comment|/* Electric or Optical Compatibility 					 * (Table 33) */
-name|SFF_8436_CODE_E1040G
+name|SFF_8436_CODE_E1040100G
 init|=
 literal|131
 block|,
-comment|/* 10/40G Ethernet Compliance Code */
+comment|/* 10/40/100G Ethernet Compliance Code */
 name|SFF_8436_CODE_SONET
 init|=
 literal|132
