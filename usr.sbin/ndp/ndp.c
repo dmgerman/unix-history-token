@@ -3153,6 +3153,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_PINNED
+condition|)
+continue|continue;
 name|delete
 argument_list|(
 name|host_buf

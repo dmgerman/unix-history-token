@@ -3294,7 +3294,6 @@ name|struct
 name|rt_msghdr
 modifier|*
 name|rtm
-name|__unused
 parameter_list|)
 block|{
 name|char
@@ -3303,6 +3302,15 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_PINNED
+condition|)
+return|return;
 name|snprintf
 argument_list|(
 name|ip
