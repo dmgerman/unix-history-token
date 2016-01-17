@@ -338,6 +338,9 @@ decl_stmt|;
 name|int
 name|sc_pps_mode
 decl_stmt|;
+name|sbintime_t
+name|sc_pps_captime
+decl_stmt|;
 comment|/* Upper layer data. */
 name|void
 modifier|*
