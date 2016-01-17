@@ -49124,14 +49124,6 @@ expr_stmt|;
 name|do_it_again
 label|:
 comment|/* The Nagle algorithm is only applied when handling a send call. */
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|trigger_reset
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|from_where
@@ -49222,6 +49214,14 @@ operator|(
 name|asoc
 operator|->
 name|sent_queue_retran_cnt
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|asoc
+operator|->
+name|trigger_reset
 operator|==
 literal|0
 operator|)
@@ -59944,6 +59944,12 @@ operator|&
 name|stcb
 operator|->
 name|asoc
+expr_stmt|;
+name|asoc
+operator|->
+name|trigger_reset
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
