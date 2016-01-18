@@ -536,6 +536,17 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
+name|ef10_mac_pdu_set
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|__checkReturn
+name|efx_rc_t
 name|ef10_mac_reconfigure
 parameter_list|(
 name|__in
