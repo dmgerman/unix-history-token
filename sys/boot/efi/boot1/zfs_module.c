@@ -161,7 +161,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"vdev_read: failed dev: %p, id: %u, lba: %lu, size: %d,"
+literal|"vdev_read: failed dev: %p, id: %u, lba: %zu, size: %zu,"
 literal|" status: %lu\n"
 argument_list|,
 name|devinfo
@@ -178,7 +178,7 @@ name|MediaId
 argument_list|,
 name|lba
 argument_list|,
-name|size
+name|bytes
 argument_list|,
 name|EFI_ERROR_CODE
 argument_list|(
