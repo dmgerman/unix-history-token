@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: misc.c,v 1.45 2014/12/21 09:33:12 espie Exp $	*/
+comment|/*	$OpenBSD: misc.c,v 1.46 2015/12/07 14:12:46 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -1785,6 +1785,26 @@ modifier|*
 name|f
 parameter_list|)
 block|{
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|f
+operator|->
+name|file
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Fatal error reading from %s\n"
+argument_list|,
+name|f
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|f
