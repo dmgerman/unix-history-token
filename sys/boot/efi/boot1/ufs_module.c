@@ -744,6 +744,10 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
+name|dsk_meta
+operator|=
+literal|0
+expr_stmt|;
 name|devinfo
 operator|=
 name|dev
