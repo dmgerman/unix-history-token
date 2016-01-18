@@ -6475,6 +6475,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_DIAG
+end_if
+
 begin_function
 specifier|static
 name|__checkReturn
@@ -6610,12 +6616,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_DIAG
-end_if
 
 begin_function
 name|__checkReturn
