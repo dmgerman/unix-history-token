@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2012  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
+comment|/*  * Copyright (C) 1984-2015  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information, see the README file.  */
 end_comment
 
 begin_include
@@ -29,25 +29,6 @@ name|int
 name|jump_sline
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * A mark is an ifile (input file) plus a position within the file.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mark
-block|{
-name|IFILE
-name|m_ifile
-decl_stmt|;
-name|struct
-name|scrpos
-name|m_scrpos
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * The table of marks.  * Each mark is identified by a lowercase or uppercase letter.  * The final one is lmark, for the "last mark"; addressed by the apostrophe.  */
