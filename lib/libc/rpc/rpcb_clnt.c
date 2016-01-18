@@ -3159,6 +3159,11 @@ literal|0
 condition|)
 break|break;
 block|}
+name|endnetconfig
+argument_list|(
+name|localhandle
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nconf
@@ -3170,11 +3175,6 @@ operator|(
 name|FALSE
 operator|)
 return|;
-name|endnetconfig
-argument_list|(
-name|localhandle
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
