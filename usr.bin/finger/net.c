@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<wctype.h>
 end_include
 
 begin_include
@@ -116,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<utmpx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<wchar.h>
 end_include
 
 begin_include
@@ -404,7 +410,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|int
+name|wint_t
 name|c
 decl_stmt|,
 name|lastc
@@ -710,7 +716,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getc
+name|getwc
 argument_list|(
 name|fp
 argument_list|)
@@ -767,13 +773,13 @@ block|{
 if|if
 condition|(
 operator|!
-name|isprint
+name|iswprint
 argument_list|(
 name|c
 argument_list|)
 operator|&&
 operator|!
-name|isspace
+name|iswspace
 argument_list|(
 name|c
 argument_list|)
@@ -811,7 +817,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|putchar
+name|putwchar
 argument_list|(
 name|c
 argument_list|)
@@ -877,7 +883,8 @@ if|if
 condition|(
 name|lastc
 operator|!=
-literal|'\n'
+literal|L'
+expr|\n'
 condition|)
 name|putchar
 argument_list|(
