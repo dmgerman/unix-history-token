@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mman.h>
 end_include
 
@@ -96,6 +102,10 @@ block|{
 name|Elf_Word
 name|ehdr
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 comment|/* 	 * If we're running an old kernel that doesn't provide any data fail 	 * safe by doing nothing. 	 */
 if|if
 condition|(
@@ -130,7 +140,29 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * This is a soft float ABI binary. We need to use the soft float 	 * settings. For the moment, the standard library path includes the hard 	 * float paths as well. When upgrading, we need to execute the wrong 	 * kind of binary until we've installed the new binaries. We could go 	 * off whether or not /libsoft exists, but the simplicity of having it 	 * in the path wins. 	 */
+comment|/* 	 * If there's no /usr/libsoft, then we don't have a system with both 	 * hard and soft float. In that case, hope for the best and just 	 * return. Such systems are required to have all soft or all hard 	 * float ABI binaries and libraries. This is, at best, a transition 	 * compatibility hack. Once we're fully hard-float, this should 	 * be removed. 	 */
+if|if
+condition|(
+name|stat
+argument_list|(
+literal|"/usr/libsoft"
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+literal|0
+operator|||
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+return|return;
+comment|/* 	 * This is a soft float ABI binary. We need to use the soft float 	 * settings. 	 */
 name|ld_elf_hints_default
 operator|=
 name|_PATH_SOFT_ELF_HINTS

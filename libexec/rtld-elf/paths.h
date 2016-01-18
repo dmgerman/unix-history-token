@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|SOFT_STANDARD_LIBRARY_PATH
-value|"/libsoft:/usr/libsoft:/lib:/usr/lib"
+value|"/usr/libsoft"
 end_define
 
 begin_define
