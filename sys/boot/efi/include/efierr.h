@@ -42,6 +42,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|EFI_ERROR_CODE
+parameter_list|(
+name|a
+parameter_list|)
+value|(a& ~EFI_ERROR_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EFI_SUCCESS
 value|0
 end_define

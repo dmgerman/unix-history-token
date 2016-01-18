@@ -132,14 +132,9 @@ name|printf
 argument_list|(
 literal|"failed to allocate staging area: %lu\n"
 argument_list|,
-call|(
-name|unsigned
-name|long
-call|)
+name|EFI_ERROR_CODE
 argument_list|(
 name|status
-operator|&
-name|EFI_ERROR_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
