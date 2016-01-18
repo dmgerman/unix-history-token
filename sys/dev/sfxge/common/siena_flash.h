@@ -356,12 +356,9 @@ name|efx_byte_t
 name|mcfw_subtype
 decl_stmt|;
 name|efx_byte_t
-name|reserved_a
-index|[
-literal|1
-index|]
+name|generation
 decl_stmt|;
-comment|/* (set to 0) */
+comment|/* Valid for medford, SBZ for earlier chips */
 name|efx_dword_t
 name|firmware_text_offset
 decl_stmt|;
@@ -387,12 +384,9 @@ name|spi_phase_adj
 decl_stmt|;
 comment|/* SPI SDO/SCL phase adjustment, 0 is default (no adj) */
 name|efx_word_t
-name|reserved_b
-index|[
-literal|1
-index|]
+name|xpm_sector
 decl_stmt|;
-comment|/* (set to 0) */
+comment|/* The sector that contains the key, or 0xffff if unsigned (medford) SBZ (earlier) */
 name|efx_dword_t
 name|reserved_c
 index|[
