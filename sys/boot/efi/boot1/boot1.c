@@ -511,7 +511,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Failed start image provided by %s (%lu)\n"
+literal|"Failed to start image provided by %s (%lu)\n"
 argument_list|,
 name|mod
 operator|->
