@@ -15722,6 +15722,26 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|nrates
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: node supports 0 rates, odd!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * XXX .. and most of iwm_node is not initialised explicitly; 	 * it's all just 0x0 passed to the firmware. 	 */
 comment|/* first figure out which rates we should support */
 comment|/* XXX TODO: this isn't 11n aware /at all/ */
@@ -15756,6 +15776,7 @@ argument_list|,
 name|nrates
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Loop over nrates and populate in_ridx from the highest 	 * rate to the lowest rate.  Remember, in_ridx[] has 	 * IEEE80211_RATE_MAXSIZE entries! 	 */
 for|for
 control|(
 name|i
@@ -15764,7 +15785,12 @@ literal|0
 init|;
 name|i
 operator|<
+name|min
+argument_list|(
 name|nrates
+argument_list|,
+name|IEEE80211_RATE_MAXSIZE
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -15779,6 +15805,12 @@ name|ni_rates
 operator|.
 name|rs_rates
 index|[
+operator|(
+name|nrates
+operator|-
+literal|1
+operator|)
+operator|-
 name|i
 index|]
 operator|&
@@ -15951,12 +15983,6 @@ name|in
 operator|->
 name|in_ridx
 index|[
-operator|(
-name|nrates
-operator|-
-literal|1
-operator|)
-operator|-
 name|i
 index|]
 expr_stmt|;
