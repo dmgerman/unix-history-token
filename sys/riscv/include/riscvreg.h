@@ -106,7 +106,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXCP_RESERVED_0
+name|EXCP_LOAD_ADDR_MISALIGNED
 value|4
 end_define
 
@@ -120,7 +120,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXCP_AMO_ADDR_MISALIGNED
+name|EXCP_STORE_ADDR_MISALIGNED
 value|6
 end_define
 
@@ -134,15 +134,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXCP_ENV_CALL
+name|EXCP_UMODE_ENV_CALL
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_RESERVED_1
+name|EXCP_SMODE_ENV_CALL
 value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCP_HMODE_ENV_CALL
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCP_MMODE_ENV_CALL
+value|11
 end_define
 
 begin_define
