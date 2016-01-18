@@ -81,10 +81,6 @@ name|int
 name|sc_quirks
 decl_stmt|;
 name|struct
-name|ofw_pci_register
-name|sc_pcir
-decl_stmt|;
-name|struct
 name|ofw_pci_range
 modifier|*
 name|sc_range
