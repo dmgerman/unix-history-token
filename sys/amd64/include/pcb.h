@@ -37,6 +37,10 @@ directive|ifdef
 name|__amd64__
 end_ifdef
 
+begin_comment
+comment|/*  * NB: The fields marked with (*) are used by kernel debuggers.  Their  * ABI should be preserved.  */
+end_comment
+
 begin_struct
 struct|struct
 name|pcb
@@ -44,27 +48,35 @@ block|{
 name|register_t
 name|pcb_r15
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_r14
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_r13
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_r12
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_rbp
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_rsp
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_rbx
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_rip
 decl_stmt|;
+comment|/* (*) */
 name|register_t
 name|pcb_fsbase
 decl_stmt|;

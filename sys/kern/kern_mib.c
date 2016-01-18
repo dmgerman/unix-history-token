@@ -3224,6 +3224,47 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Used by kernel debuggers. */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|int
+name|pcb_size
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_sizeof
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pcb
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|SYSCTL_NULL_INT_PTR
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
+argument_list|,
+literal|"sizeof(struct pcb)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* XXX compatibility, remove for 6.0 */
 end_comment
 
