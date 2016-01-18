@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.127 2015/02/14 22:40:22 jca Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.130 2015/07/26 19:12:28 chl Exp $ */
 end_comment
 
 begin_comment
@@ -115,6 +115,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -122,6 +134,12 @@ begin_include
 include|#
 directive|include
 file|<poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -152,18 +170,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -965,6 +971,13 @@ expr_stmt|;
 name|sv
 operator|=
 name|NULL
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -5440,17 +5453,6 @@ name|iov
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|pfd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pfd
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mh
 operator|.
 name|msg_control
@@ -5561,6 +5563,12 @@ name|fd
 operator|=
 name|STDOUT_FILENO
 expr_stmt|;
+name|pfd
+operator|.
+name|events
+operator|=
+name|POLLOUT
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -5598,12 +5606,6 @@ operator|==
 name|EINTR
 condition|)
 block|{
-name|pfd
-operator|.
-name|events
-operator|=
-name|POLLOUT
-expr_stmt|;
 if|if
 condition|(
 name|poll
@@ -5641,8 +5643,7 @@ elseif|else
 if|if
 condition|(
 name|r
-operator|==
-operator|-
+operator|!=
 literal|1
 condition|)
 name|errx
