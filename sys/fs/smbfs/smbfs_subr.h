@@ -458,7 +458,7 @@ name|smbnode
 modifier|*
 name|np
 parameter_list|,
-name|int
+name|int64_t
 name|newsize
 parameter_list|,
 name|struct
