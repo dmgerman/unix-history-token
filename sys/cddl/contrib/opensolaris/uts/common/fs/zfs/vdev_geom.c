@@ -1159,6 +1159,9 @@ modifier|*
 name|vguid
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_lookup_uint64
 argument_list|(
 name|list
@@ -1168,6 +1171,9 @@ argument_list|,
 name|vguid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|nvlist_lookup_uint64
 argument_list|(
 name|list
