@@ -383,17 +383,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|setparam
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|freeparam
 parameter_list|(
 name|struct
