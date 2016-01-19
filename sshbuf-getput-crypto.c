@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-getput-crypto.c,v 1.4 2015/01/14 15:02:39 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf-getput-crypto.c,v 1.5 2016/01/12 23:42:54 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -795,7 +795,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|d
 argument_list|,
@@ -809,7 +809,7 @@ return|return
 name|r
 return|;
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|d
 argument_list|,
@@ -922,7 +922,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|d
 argument_list|,
@@ -960,7 +960,7 @@ argument_list|,
 name|len_bytes
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|d
 argument_list|,
@@ -1111,7 +1111,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|d
 argument_list|,

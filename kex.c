@@ -1416,6 +1416,7 @@ operator|)
 operator|!=
 literal|0
 operator|||
+comment|/* first_kex_follows */
 operator|(
 name|r
 operator|=
@@ -1430,6 +1431,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+comment|/* reserved */
 goto|goto
 name|out
 goto|;
@@ -1442,18 +1444,18 @@ condition|)
 operator|*
 name|first_kex_follows
 operator|=
-name|i
+name|v
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"kex_parse_kexinit: first_kex_follows %d "
+literal|"first_kex_follows %d "
 argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"kex_parse_kexinit: reserved %u "
+literal|"reserved %u "
 argument_list|,
 name|i
 argument_list|)

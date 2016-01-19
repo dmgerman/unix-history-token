@@ -8824,15 +8824,6 @@ name|fork_postauth
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|options
-operator|.
-name|use_roaming
-condition|)
-name|request_roaming
-argument_list|()
-expr_stmt|;
 return|return
 name|client_loop
 argument_list|(

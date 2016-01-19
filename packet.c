@@ -8060,6 +8060,9 @@ condition|)
 return|return
 name|r
 return|;
+return|return
+name|SSH_ERR_CONN_CORRUPT
+return|;
 block|}
 name|sshbuf_reset
 argument_list|(
