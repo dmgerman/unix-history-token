@@ -1737,6 +1737,9 @@ name|mbr_size
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
 operator|*
 name|mbr
 operator|=
@@ -1746,6 +1749,18 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: unable to allocate MBR buffer"
+argument_list|,
+name|disk
 argument_list|)
 expr_stmt|;
 name|memcpy
