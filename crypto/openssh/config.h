@@ -3624,12 +3624,15 @@ comment|/* #undef HAVE_SYS_BSDTTY_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<sys/capability.h> header file. */
+comment|/* Define to 1 if you have the<sys/capsicum.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_CAPABILITY_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_CAPSICUM_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/cdefs.h> header file. */
@@ -5328,6 +5331,28 @@ end_comment
 begin_comment
 comment|/* #undef XAUTH_PATH */
 end_comment
+
+begin_comment
+comment|/* Enable large inode numbers on Mac OS X 10.5.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DARWIN_USE_64_BIT_INODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DARWIN_USE_64_BIT_INODE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */
