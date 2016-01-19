@@ -12716,7 +12716,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Wiring VA=%lx to PA=%jx (size=%lx), "
+literal|"Wiring VA=%x to PA=%jx (size=%x), "
 literal|"using TLB1[%d]\n"
 argument_list|,
 name|va
