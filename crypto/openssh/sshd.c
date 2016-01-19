@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.444 2015/02/20 22:17:21 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.450 2015/05/24 23:39:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -4056,6 +4056,14 @@ name|char
 modifier|*
 name|fp
 decl_stmt|;
+comment|/* Some clients cannot cope with the hostkeys message, skip those. */
+if|if
+condition|(
+name|datafellows
+operator|&
+name|SSH_BUG_HOSTKEYS
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
@@ -4908,13 +4916,6 @@ literal|"%s: rsa_generate_additional_parameters "
 literal|"error"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fatal
-argument_list|(
-literal|"ssh1 not supported"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6585,6 +6586,9 @@ modifier|*
 name|line
 decl_stmt|,
 modifier|*
+name|laddr
+decl_stmt|,
+modifier|*
 name|logfile
 init|=
 name|NULL
@@ -6790,7 +6794,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"f:p:b:k:h:g:u:o:C:dDeE:iqrtQRT46"
+literal|"C:E:b:c:f:g:h:k:o:p:u:46DQRTdeiqrt"
 argument_list|)
 operator|)
 operator|!=
@@ -7546,7 +7550,18 @@ operator|&
 name|cfg
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|config_file_name
+argument_list|,
+literal|"none"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|load_server_config
 argument_list|(
 name|config_file_name
@@ -7627,6 +7642,39 @@ name|fatal
 argument_list|(
 literal|"AuthorizedKeysCommand set without "
 literal|"AuthorizedKeysCommandUser"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|authorized_principals_command_user
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|options
+operator|.
+name|authorized_principals_command
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|authorized_principals_command
+argument_list|,
+literal|"none"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"AuthorizedPrincipalsCommand set without "
+literal|"AuthorizedPrincipalsCommandUser"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check whether there is any path through configured auth methods. 	 * Unfortunately it is not possible to verify this generally before 	 * daemonisation in the presence of Match block, but this catches 	 * and warns for trivial misconfigurations that could break login. 	 */
@@ -9824,6 +9872,13 @@ endif|#
 directive|endif
 comment|/* LIBWRAP */
 comment|/* Log the connection. */
+name|laddr
+operator|=
+name|get_local_ipaddr
+argument_list|(
+name|sock_in
+argument_list|)
+expr_stmt|;
 name|verbose
 argument_list|(
 literal|"Connection from %s port %d on %s port %d"
@@ -9832,13 +9887,15 @@ name|remote_ip
 argument_list|,
 name|remote_port
 argument_list|,
-name|get_local_ipaddr
-argument_list|(
-name|sock_in
-argument_list|)
+name|laddr
 argument_list|,
 name|get_local_port
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|laddr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We don't want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don't set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */

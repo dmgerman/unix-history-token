@@ -185,11 +185,16 @@ literal|0
 condition|)
 endif|#
 directive|endif
-name|strcpy
+name|strlcpy
 argument_list|(
 name|cyg_privsep_user
 argument_list|,
 literal|"sshd"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cyg_privsep_user
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.105 2015/01/30 00:22:25 djm Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.106 2015/04/17 13:25:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1157,6 +1157,13 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|proposal
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i

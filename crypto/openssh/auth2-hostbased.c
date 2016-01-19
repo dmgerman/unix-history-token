@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-hostbased.c,v 1.24 2015/01/28 22:36:00 djm Exp $ */
+comment|/* $OpenBSD: auth2-hostbased.c,v 1.25 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -451,13 +451,6 @@ argument_list|,
 name|options
 operator|.
 name|hostbased_key_types
-argument_list|,
-name|strlen
-argument_list|(
-name|options
-operator|.
-name|hostbased_key_types
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)

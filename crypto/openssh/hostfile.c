@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.c,v 1.64 2015/02/16 22:08:57 djm Exp $ */
+comment|/* $OpenBSD: hostfile.c,v 1.66 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1093,7 +1093,8 @@ operator|==
 name|HKF_STATUS_INVALID
 condition|)
 block|{
-name|error
+comment|/* XXX make this verbose() in the future */
+name|debug
 argument_list|(
 literal|"%s:%ld: parse error in hostkeys file"
 argument_list|,
@@ -3473,8 +3474,6 @@ argument_list|(
 name|host
 argument_list|,
 name|names
-argument_list|,
-name|nlen
 argument_list|)
 operator|==
 literal|1
@@ -4314,9 +4313,6 @@ argument_list|(
 name|ktype
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_SSH1
 comment|/* 			 * Assume RSA1 if the first component is a short 			 * decimal number. 			 */
 if|if
 condition|(
@@ -4345,8 +4341,6 @@ name|keytype
 operator|=
 name|KEY_RSA1
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * Check that something other than whitespace follows 			 * the key type. This won't catch all corruption, but 			 * it does catch trivial truncation. 			 */
 name|cp2
 operator|+=

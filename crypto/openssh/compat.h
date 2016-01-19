@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.h,v 1.46 2015/01/19 20:20:20 markus Exp $ */
+comment|/* $OpenBSD: compat.h,v 1.48 2015/05/26 23:23:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -245,6 +245,20 @@ define|#
 directive|define
 name|SSH_BUG_CURVE25519PAD
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_HOSTKEYS
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_DHGEX_LARGE
+value|0x40000000
 end_define
 
 begin_function_decl

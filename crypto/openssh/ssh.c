@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.416 2015/03/03 06:48:58 djm Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.418 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1525,13 +1525,6 @@ name|rule
 operator|->
 name|source_list
 argument_list|,
-name|strlen
-argument_list|(
-name|rule
-operator|->
-name|source_list
-argument_list|)
-argument_list|,
 literal|1
 argument_list|)
 operator|!=
@@ -1544,13 +1537,6 @@ argument_list|,
 name|rule
 operator|->
 name|target_list
-argument_list|,
-name|strlen
-argument_list|(
-name|rule
-operator|->
-name|target_list
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -7942,6 +7928,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|display
+operator|==
+name|NULL
+operator|&&
+name|options
+operator|.
+name|forward_x11
+condition|)
+name|debug
+argument_list|(
+literal|"X11 forwarding requested but DISPLAY not set"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|options
 operator|.
 name|forward_x11
@@ -8318,6 +8319,21 @@ operator|=
 name|getenv
 argument_list|(
 literal|"DISPLAY"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|display
+operator|==
+name|NULL
+operator|&&
+name|options
+operator|.
+name|forward_x11
+condition|)
+name|debug
+argument_list|(
+literal|"X11 forwarding requested but DISPLAY not set"
 argument_list|)
 expr_stmt|;
 if|if

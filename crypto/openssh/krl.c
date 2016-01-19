@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.31 2015/01/30 01:10:33 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.32 2015/06/24 23:47:23 djm Exp $ */
 end_comment
 
 begin_include
@@ -4349,9 +4349,8 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out

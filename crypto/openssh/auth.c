@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.110 2015/02/25 17:29:38 djm Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.111 2015/05/01 04:17:51 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1761,17 +1761,6 @@ operator|.
 name|authorized_principals_file
 operator|==
 name|NULL
-operator|||
-name|strcasecmp
-argument_list|(
-name|options
-operator|.
-name|authorized_principals_file
-argument_list|,
-literal|"none"
-argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 name|NULL

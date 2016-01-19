@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.181 2015/01/16 06:40:12 deraadt Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.182 2015/04/24 01:36:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -7331,7 +7331,7 @@ name|bp
 operator|->
 name|buf
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|bp
 operator|->

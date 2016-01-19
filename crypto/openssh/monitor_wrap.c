@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.84 2015/02/16 22:13:32 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.85 2015/05/01 03:23:51 djm Exp $ */
 end_comment
 
 begin_comment
@@ -716,20 +716,11 @@ name|errno
 operator|==
 name|EPIPE
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"%s: socket closed"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|cleanup_exit
 argument_list|(
 literal|255
 argument_list|)
 expr_stmt|;
-block|}
 name|fatal
 argument_list|(
 literal|"%s: read: %s"
@@ -1813,6 +1804,9 @@ parameter_list|,
 name|Key
 modifier|*
 name|key
+parameter_list|,
+name|int
+name|pubkey_auth_attempt
 parameter_list|)
 block|{
 return|return
@@ -1826,6 +1820,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|key
+argument_list|,
+name|pubkey_auth_attempt
 argument_list|)
 operator|)
 return|;
@@ -1865,6 +1861,8 @@ argument_list|,
 name|host
 argument_list|,
 name|key
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -1914,6 +1912,8 @@ argument_list|,
 name|host
 argument_list|,
 name|key
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|key
@@ -1949,6 +1949,9 @@ parameter_list|,
 name|Key
 modifier|*
 name|key
+parameter_list|,
+name|int
+name|pubkey_auth_attempt
 parameter_list|)
 block|{
 name|Buffer
@@ -2043,6 +2046,14 @@ argument_list|,
 name|blob
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+name|buffer_put_int
+argument_list|(
+operator|&
+name|m
+argument_list|,
+name|pubkey_auth_attempt
 argument_list|)
 expr_stmt|;
 name|free

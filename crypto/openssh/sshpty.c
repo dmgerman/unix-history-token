@@ -326,9 +326,19 @@ modifier|*
 name|tty
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__APPLE_PRIVPTY__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_OPENPTY
+argument_list|)
 if|if
 condition|(
 name|chown
@@ -388,7 +398,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __APPLE_PRIVPTY__ */
+comment|/* !__APPLE_PRIVPTY__&& !HAVE_OPENPTY */
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_sshkey.c,v 1.3 2015/01/26 06:11:28 djm Exp $ */
+comment|/* 	$OpenBSD: test_sshkey.c,v 1.4 2015/04/22 01:38:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3432,7 +3432,7 @@ name|k3
 operator|=
 name|get_private
 argument_list|(
-literal|"ed25519_2"
+literal|"rsa_1"
 argument_list|)
 expr_stmt|;
 name|build_cert

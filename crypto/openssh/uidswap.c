@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: uidswap.c,v 1.37 2015/01/16 06:40:12 deraadt Exp $ */
+comment|/* $OpenBSD: uidswap.c,v 1.39 2015/06/24 01:49:19 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -323,7 +323,7 @@ condition|)
 block|{
 name|saved_egroups
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|saved_egroups
 argument_list|,
@@ -438,7 +438,7 @@ condition|)
 block|{
 name|user_groups
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|user_groups
 argument_list|,

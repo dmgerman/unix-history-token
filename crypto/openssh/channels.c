@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.341 2015/02/06 23:21:59 millert Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.347 2015/07/01 02:26:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -489,6 +489,17 @@ name|u_int
 name|x11_saved_data_len
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Deadline after which all X11 connections are refused */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|x11_refuse_time
 decl_stmt|;
 end_decl_stmt
 
@@ -1166,7 +1177,7 @@ argument_list|)
 expr_stmt|;
 name|channels
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|channels
 argument_list|,
@@ -4062,6 +4073,33 @@ name|proto_len
 decl_stmt|,
 name|data_len
 decl_stmt|;
+comment|/* Is this being called after the refusal deadline? */
+if|if
+condition|(
+name|x11_refuse_time
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|u_int
+operator|)
+name|monotime
+argument_list|()
+operator|>=
+name|x11_refuse_time
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"Rejected X11 connection after ForwardX11Timeout "
+literal|"expired"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* Check if the fixed size part of the packet is in buffer. */
 if|if
 condition|(
@@ -7307,6 +7345,21 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|channel_set_x11_refuse_time
+parameter_list|(
+name|u_int
+name|refuse_time
+parameter_list|)
+block|{
+name|x11_refuse_time
+operator|=
+name|refuse_time
 expr_stmt|;
 block|}
 end_function
@@ -11344,7 +11397,7 @@ block|{
 operator|*
 name|readsetp
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 name|readsetp
@@ -11360,7 +11413,7 @@ expr_stmt|;
 operator|*
 name|writesetp
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 name|writesetp
@@ -11680,8 +11733,6 @@ operator|->
 name|remote_window
 operator|-=
 name|dlen
-operator|+
-literal|4
 expr_stmt|;
 name|free
 argument_list|(
@@ -13244,6 +13295,8 @@ name|id
 decl_stmt|;
 name|u_int
 name|adjust
+decl_stmt|,
+name|tmp
 decl_stmt|;
 if|if
 condition|(
@@ -13301,11 +13354,40 @@ argument_list|,
 name|adjust
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|=
 name|c
 operator|->
 name|remote_window
-operator|+=
+operator|+
 name|adjust
+operator|)
+operator|<
+name|c
+operator|->
+name|remote_window
+condition|)
+name|fatal
+argument_list|(
+literal|"channel %d: adjust %u overflows remote window %u"
+argument_list|,
+name|id
+argument_list|,
+name|adjust
+argument_list|,
+name|c
+operator|->
+name|remote_window
+argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|remote_window
+operator|=
+name|tmp
 expr_stmt|;
 return|return
 literal|0
@@ -13910,6 +13992,34 @@ name|in_port_t
 modifier|*
 name|lport_p
 decl_stmt|;
+name|is_client
+operator|=
+operator|(
+name|type
+operator|==
+name|SSH_CHANNEL_PORT_LISTENER
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|is_client
+operator|&&
+name|fwd
+operator|->
+name|connect_path
+operator|!=
+name|NULL
+condition|)
+block|{
+name|host
+operator|=
+name|fwd
+operator|->
+name|connect_path
+expr_stmt|;
+block|}
+else|else
+block|{
 name|host
 operator|=
 operator|(
@@ -13925,14 +14035,6 @@ else|:
 name|fwd
 operator|->
 name|connect_host
-expr_stmt|;
-name|is_client
-operator|=
-operator|(
-name|type
-operator|==
-name|SSH_CHANNEL_PORT_LISTENER
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -13968,6 +14070,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 comment|/* Determine the bind address, cf. channel_fwd_bind_addr() comment */
 name|addr
@@ -15920,7 +16023,7 @@ block|{
 comment|/* Record that connection to this host/port is permitted. */
 name|permitted_opens
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|permitted_opens
 argument_list|,
@@ -16888,7 +16991,7 @@ argument_list|)
 expr_stmt|;
 name|permitted_opens
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|permitted_opens
 argument_list|,
@@ -17148,7 +17251,7 @@ argument_list|)
 expr_stmt|;
 name|permitted_adm_opens
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|permitted_adm_opens
 argument_list|,
@@ -17227,13 +17330,15 @@ argument_list|()
 expr_stmt|;
 name|permitted_adm_opens
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|permitted_adm_opens
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|permitted_adm_opens

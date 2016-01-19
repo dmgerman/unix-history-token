@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.c,v 1.31 2015/02/06 23:21:59 millert Exp $ */
+comment|/* $OpenBSD: xmalloc.c,v 1.32 2015/04/24 01:36:01 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -193,7 +193,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|xrealloc
+name|xreallocarray
 parameter_list|(
 name|void
 modifier|*
@@ -210,58 +210,15 @@ name|void
 modifier|*
 name|new_ptr
 decl_stmt|;
-name|size_t
-name|new_size
-init|=
-name|nmemb
-operator|*
-name|size
-decl_stmt|;
-if|if
-condition|(
-name|new_size
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"xrealloc: zero size"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SIZE_MAX
-operator|/
-name|nmemb
-operator|<
-name|size
-condition|)
-name|fatal
-argument_list|(
-literal|"xrealloc: nmemb * size> SIZE_MAX"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ptr
-operator|==
-name|NULL
-condition|)
 name|new_ptr
 operator|=
-name|malloc
-argument_list|(
-name|new_size
-argument_list|)
-expr_stmt|;
-else|else
-name|new_ptr
-operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|ptr
 argument_list|,
-name|new_size
+name|nmemb
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -272,9 +229,11 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xrealloc: out of memory (new_size %zu bytes)"
+literal|"xreallocarray: out of memory (%zu elements of %zu bytes)"
 argument_list|,
-name|new_size
+name|nmemb
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dispatch.c,v 1.26 2015/02/12 20:34:19 dtucker Exp $ */
+comment|/* $OpenBSD: dispatch.c,v 1.27 2015/05/01 07:10:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -599,82 +599,15 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-switch|switch
-condition|(
-name|r
-condition|)
-block|{
-case|case
-name|SSH_ERR_CONN_CLOSED
-case|:
-name|logit
-argument_list|(
-literal|"Connection closed by %.200s"
-argument_list|,
-name|ssh_remote_ipaddr
+name|sshpkt_fatal
 argument_list|(
 name|ssh
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
-case|case
-name|SSH_ERR_CONN_TIMEOUT
-case|:
-name|logit
-argument_list|(
-literal|"Connection to %.200s timed out while "
-literal|"waiting to read"
-argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
-case|case
-name|SSH_ERR_DISCONNECTED
-case|:
-name|logit
-argument_list|(
-literal|"Disconnected from %.200s"
-argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
-default|default:
-name|fatal
-argument_list|(
-literal|"%s: %s"
 argument_list|,
 name|__func__
 argument_list|,
-name|ssh_err
-argument_list|(
 name|r
 argument_list|)
-argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 

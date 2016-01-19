@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.259 2015/01/28 22:36:00 djm Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.262 2015/05/28 05:41:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -4336,7 +4336,7 @@ name|logit
 argument_list|(
 literal|"Failed to add the %s host key for IP "
 literal|"address '%.128s' to the list of known "
-literal|"hosts (%.30s)."
+literal|"hosts (%.500s)."
 argument_list|,
 name|type
 argument_list|,
@@ -6201,6 +6201,17 @@ argument_list|()
 expr_stmt|;
 comment|/* key exchange */
 comment|/* authenticate user */
+name|debug
+argument_list|(
+literal|"Authenticating to %s:%d as '%s'"
+argument_list|,
+name|host
+argument_list|,
+name|port
+argument_list|,
+name|server_user
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|compat20
@@ -6254,7 +6265,7 @@ else|#
 directive|else
 name|fatal
 argument_list|(
-literal|"ssh1 is not unsupported"
+literal|"ssh1 is not supported"
 argument_list|)
 expr_stmt|;
 endif|#

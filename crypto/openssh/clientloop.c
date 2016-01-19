@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.272 2015/02/25 19:54:02 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.274 2015/07/01 02:26:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -592,7 +592,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|x11_refuse_time
 decl_stmt|;
 end_decl_stmt
@@ -1100,6 +1100,13 @@ name|SSH_X11_PROTO
 value|"MIT-MAGIC-COOKIE-1"
 end_define
 
+begin_define
+define|#
+directive|define
+name|X11_TIMEOUT_SLACK
+value|60
+end_define
+
 begin_function
 name|void
 name|client_x11_get_proto
@@ -1193,6 +1200,8 @@ name|st
 decl_stmt|;
 name|u_int
 name|now
+decl_stmt|,
+name|x11_timeout_real
 decl_stmt|;
 name|xauthdir
 operator|=
@@ -1346,6 +1355,26 @@ argument_list|,
 name|PATH_MAX
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The authentication cookie should briefly outlive 			 * ssh's willingness to forward X11 connections to 			 * avoid nasty fail-open behaviour in the X server. 			 */
+if|if
+condition|(
+name|timeout
+operator|>=
+name|UINT_MAX
+operator|-
+name|X11_TIMEOUT_SLACK
+condition|)
+name|x11_timeout_real
+operator|=
+name|UINT_MAX
+expr_stmt|;
+else|else
+name|x11_timeout_real
+operator|=
+name|timeout
+operator|+
+name|X11_TIMEOUT_SLACK
+expr_stmt|;
 if|if
 condition|(
 name|mkdtemp
@@ -1391,7 +1420,7 @@ name|xauthfile
 argument_list|,
 name|display
 argument_list|,
-name|timeout
+name|x11_timeout_real
 argument_list|)
 expr_stmt|;
 name|debug2
@@ -1400,19 +1429,6 @@ literal|"x11_get_proto: %s"
 argument_list|,
 name|cmd
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|system
-argument_list|(
-name|cmd
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|generated
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1447,7 +1463,25 @@ name|now
 operator|+
 name|timeout
 expr_stmt|;
+name|channel_set_x11_refuse_time
+argument_list|(
+name|x11_refuse_time
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|system
+argument_list|(
+name|cmd
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|generated
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 comment|/* 		 * When in untrusted mode, we read the cookie only if it was 		 * successfully generated as an untrusted one in the step 		 * above. 		 */
@@ -7690,6 +7724,9 @@ name|x11_refuse_time
 operator|!=
 literal|0
 operator|&&
+operator|(
+name|u_int
+operator|)
 name|monotime
 argument_list|()
 operator|>=
@@ -10140,13 +10177,6 @@ argument_list|,
 name|options
 operator|.
 name|hostkeyalgorithms
-argument_list|,
-name|strlen
-argument_list|(
-name|options
-operator|.
-name|hostkeyalgorithms
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.208 2015/02/13 18:57:00 markus Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.212 2015/05/01 07:10:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -991,6 +991,11 @@ name|ssh_err
 argument_list|(
 name|r
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ssh
 argument_list|)
 expr_stmt|;
 return|return
@@ -3624,9 +3629,17 @@ name|int
 name|number
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|WITH_SSH1
+name|fatal
+argument_list|(
+literal|"no SSH protocol 1 support"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* WITH_SSH1 */
 name|struct
 name|session_state
 modifier|*
@@ -6494,9 +6507,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-name|r
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Stay in the loop until we have received a complete packet. */
 for|for
 control|(
@@ -6786,18 +6799,30 @@ name|len
 operator|==
 literal|0
 condition|)
-return|return
+block|{
+name|r
+operator|=
 name|SSH_ERR_CONN_CLOSED
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|len
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+name|r
+operator|=
 name|SSH_ERR_SYSTEM_ERROR
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Append it to the buffer. */
 if|if
 condition|(
@@ -6816,10 +6841,12 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-name|r
-return|;
+goto|goto
+name|out
+goto|;
 block|}
+name|out
+label|:
 name|free
 argument_list|(
 name|setp
@@ -9995,8 +10022,7 @@ name|SSH_ERR_CONN_TIMEOUT
 case|:
 name|logit
 argument_list|(
-literal|"Connection to %.200s timed out while "
-literal|"waiting to write"
+literal|"Connection to %.200s timed out"
 argument_list|,
 name|ssh_remote_ipaddr
 argument_list|(
@@ -10009,6 +10035,51 @@ argument_list|(
 literal|255
 argument_list|)
 expr_stmt|;
+case|case
+name|SSH_ERR_DISCONNECTED
+case|:
+name|logit
+argument_list|(
+literal|"Disconnected from %.200s"
+argument_list|,
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+case|case
+name|SSH_ERR_SYSTEM_ERROR
+case|:
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNRESET
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Connection reset by %.200s"
+argument_list|,
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* FALLTHROUGH */
 default|default:
 name|fatal
 argument_list|(
@@ -15165,19 +15236,17 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|WITH_OPENSSL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|OPENSSL_HAS_ECC
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -15222,7 +15291,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WITH_OPENSSL&& OPENSSL_HAS_ECC */
+comment|/* OPENSSL_HAS_ECC */
 end_comment
 
 begin_ifdef
@@ -15269,12 +15338,6 @@ end_endif
 begin_comment
 comment|/* WITH_SSH1 */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_OPENSSL
-end_ifdef
 
 begin_function
 name|int
@@ -15549,19 +15612,17 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|WITH_OPENSSL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|OPENSSL_HAS_ECC
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -15605,7 +15666,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WITH_OPENSSL&& OPENSSL_HAS_ECC */
+comment|/* OPENSSL_HAS_ECC */
 end_comment
 
 begin_ifdef
@@ -15651,12 +15712,6 @@ end_endif
 begin_comment
 comment|/* WITH_SSH1 */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_OPENSSL
-end_ifdef
 
 begin_function
 name|int

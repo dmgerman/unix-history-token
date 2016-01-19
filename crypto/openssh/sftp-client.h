@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.26 2015/01/14 13:54:13 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.27 2015/05/08 06:45:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -512,7 +512,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Recursively download 'remote_directory' to 'local_directory'. Preserve   * times if 'pflag' is set  */
+comment|/*  * Recursively download 'remote_directory' to 'local_directory'. Preserve  * times if 'pflag' is set  */
 end_comment
 
 begin_function_decl
@@ -575,7 +575,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Recursively upload 'local_directory' to 'remote_directory'. Preserve   * times if 'pflag' is set  */
+comment|/*  * Recursively upload 'local_directory' to 'remote_directory'. Preserve  * times if 'pflag' is set  */
 end_comment
 
 begin_function_decl

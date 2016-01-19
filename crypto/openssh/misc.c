@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.96 2015/01/16 06:40:12 deraadt Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.97 2015/04/24 01:36:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -2046,7 +2046,7 @@ name|args
 operator|->
 name|list
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|args
 operator|->

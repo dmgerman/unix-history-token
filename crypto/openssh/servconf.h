@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.116 2015/01/13 07:39:19 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.119 2015/05/22 03:50:02 djm Exp $ */
 end_comment
 
 begin_comment
@@ -297,11 +297,18 @@ name|MAX_PORTS
 index|]
 decl_stmt|;
 comment|/* Port number to listen on. */
+name|u_int
+name|num_queued_listens
+decl_stmt|;
 name|char
 modifier|*
-name|listen_addr
+modifier|*
+name|queued_listen_addrs
 decl_stmt|;
-comment|/* Address on which the server listens. */
+name|int
+modifier|*
+name|queued_listen_ports
+decl_stmt|;
 name|struct
 name|addrinfo
 modifier|*
@@ -506,6 +513,10 @@ name|gss_cleanup_creds
 decl_stmt|;
 comment|/* If true, destroy cred cache on logout */
 name|int
+name|gss_strict_acceptor
+decl_stmt|;
+comment|/* If true, restrict the GSSAPI acceptor name */
+name|int
 name|password_authentication
 decl_stmt|;
 comment|/* If true, permit password 						 * authentication. */
@@ -687,15 +698,23 @@ name|trusted_user_ca_keys
 decl_stmt|;
 name|char
 modifier|*
-name|authorized_principals_file
-decl_stmt|;
-name|char
-modifier|*
 name|authorized_keys_command
 decl_stmt|;
 name|char
 modifier|*
 name|authorized_keys_command_user
+decl_stmt|;
+name|char
+modifier|*
+name|authorized_principals_file
+decl_stmt|;
+name|char
+modifier|*
+name|authorized_principals_command
+decl_stmt|;
+name|char
+modifier|*
+name|authorized_principals_command_user
 decl_stmt|;
 name|int64_t
 name|rekey_limit
@@ -774,7 +793,7 @@ define|#
 directive|define
 name|COPY_MATCH_STRING_OPTS
 parameter_list|()
-value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STROPT(authorized_keys_command); \ 		M_CP_STROPT(authorized_keys_command_user); \ 		M_CP_STROPT(hostbased_key_types); \ 		M_CP_STROPT(pubkey_key_types); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 		M_CP_STRARRAYOPT(auth_methods, num_auth_methods); \ 	} while (0)
+value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_keys_command); \ 		M_CP_STROPT(authorized_keys_command_user); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STROPT(authorized_principals_command); \ 		M_CP_STROPT(authorized_principals_command_user); \ 		M_CP_STROPT(hostbased_key_types); \ 		M_CP_STROPT(pubkey_key_types); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 		M_CP_STRARRAYOPT(auth_methods, num_auth_methods); \ 	} while (0)
 end_define
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.120 2015/02/21 21:46:57 halex Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.122 2015/03/26 12:32:38 naddy Exp $ */
 end_comment
 
 begin_comment
@@ -206,8 +206,13 @@ directive|endif
 comment|/* WITH_OPENSSL */
 name|_PATH_SSH_CLIENT_ID_ED25519
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|_PATH_SSH_CLIENT_IDENTITY
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
@@ -632,7 +637,7 @@ name|ssh_remove_all_identities
 argument_list|(
 name|agent_fd
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 operator|==
 literal|0
@@ -641,13 +646,12 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* ignore error-code for ssh2 */
-comment|/* XXX revisit */
+comment|/* ignore error-code for ssh1 */
 name|ssh_remove_all_identities
 argument_list|(
 name|agent_fd
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1682,8 +1686,6 @@ modifier|*
 name|fp
 decl_stmt|;
 name|int
-name|version
-decl_stmt|,
 name|r
 decl_stmt|,
 name|had_identities
@@ -1698,11 +1700,25 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+name|int
+name|version
+init|=
+literal|1
+decl_stmt|;
+else|#
+directive|else
+name|int
+name|version
+init|=
+literal|2
+decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
-name|version
-operator|=
-literal|1
 init|;
 name|version
 operator|<=

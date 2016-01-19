@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: digest-libc.c,v 1.4 2014/12/21 22:27:56 djm Exp $ */
+comment|/* $OpenBSD: digest-libc.c,v 1.5 2015/05/05 02:48:17 jsg Exp $ */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.223 2015/01/30 11:43:14 djm Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.224 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -8375,13 +8375,6 @@ argument_list|,
 name|authctxt
 operator|->
 name|active_ktype
-argument_list|,
-name|strlen
-argument_list|(
-name|authctxt
-operator|->
-name|active_ktype
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.116 2015/01/19 20:07:45 markus Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.118 2015/07/01 02:26:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -529,7 +529,7 @@ comment|/* Pause IO until deadline (time_t) */
 name|int
 name|delayed
 decl_stmt|;
-comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler.  				 * this way post-select handlers are not 				 * accidentally called if a FD gets reused */
+comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler. 				 * this way post-select handlers are not 				 * accidentally called if a FD gets reused */
 name|Buffer
 name|input
 decl_stmt|;
@@ -1644,6 +1644,15 @@ end_function_decl
 begin_comment
 comment|/* x11 forwarding */
 end_comment
+
+begin_function_decl
+name|void
+name|channel_set_x11_refuse_time
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

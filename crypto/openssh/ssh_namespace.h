@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  # nm libprivatessh.a | LC_ALL=C awk '      /^[0-9a-z]+ [Tt] [A-Za-z_][0-9A-Za-z_]*$/&& $3 !~ /^Fssh_/ {          printf("#define %-39s Fssh_%s\n", $3, $3)      }' | unexpand -a | LC_ALL=C sort -u  *  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "Fssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  # nm libprivatessh.a | LC_ALL=C awk '      /^[0-9a-z]+ [Tt] [A-Za-z_][0-9A-Za-z_]*$/&& $3 !~ /^Fssh_/ {          printf("#define %-39s Fssh_%s\n", $3, $3)      }' | unexpand -a | LC_ALL=C sort -u  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -1336,6 +1336,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|channel_set_x11_refuse_time
+value|Fssh_channel_set_x11_refuse_time
+end_define
+
+begin_define
+define|#
+directive|define
 name|channel_setup_fwd_listener_streamlocal
 value|Fssh_channel_setup_fwd_listener_streamlocal
 end_define
@@ -2094,6 +2101,13 @@ define|#
 directive|define
 name|dh_new_group_asc
 value|Fssh_dh_new_group_asc
+end_define
+
+begin_define
+define|#
+directive|define
+name|dh_new_group_fallback
+value|Fssh_dh_new_group_fallback
 end_define
 
 begin_define
@@ -5823,6 +5837,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|sshkey_to_base64
+value|Fssh_sshkey_to_base64
+end_define
+
+begin_define
+define|#
+directive|define
 name|sshkey_to_blob
 value|Fssh_sshkey_to_blob
 end_define
@@ -6392,6 +6413,13 @@ define|#
 directive|define
 name|xrealloc
 value|Fssh_xrealloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|xreallocarray
+value|Fssh_xreallocarray
 end_define
 
 begin_define

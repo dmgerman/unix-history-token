@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.111 2015/02/23 16:55:51 djm Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.114 2015/04/17 13:32:09 djm Exp $ */
 end_comment
 
 begin_comment
@@ -854,7 +854,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"It is recommended that your private key files are NOT accessible by others."
+literal|"It is required that your private key files are NOT accessible by others."
 argument_list|)
 expr_stmt|;
 name|error
@@ -1708,6 +1708,14 @@ return|return
 name|r
 return|;
 block|}
+else|#
+directive|else
+comment|/* WITH_SSH1 */
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* WITH_SSH1 */

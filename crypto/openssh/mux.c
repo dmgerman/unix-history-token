@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mux.c,v 1.50 2015/01/20 23:14:00 deraadt Exp $ */
+comment|/* $OpenBSD: mux.c,v 1.53 2015/05/01 04:03:20 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1944,7 +1944,7 @@ name|cctx
 operator|->
 name|env
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|cctx
 operator|->
@@ -3330,6 +3330,34 @@ operator|>=
 name|options
 operator|.
 name|num_remote_forwards
+operator|||
+operator|(
+name|options
+operator|.
+name|remote_forwards
+index|[
+name|fctx
+operator|->
+name|fid
+index|]
+operator|.
+name|connect_path
+operator|==
+name|NULL
+operator|&&
+name|options
+operator|.
+name|remote_forwards
+index|[
+name|fctx
+operator|->
+name|fid
+index|]
+operator|.
+name|connect_host
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|xasprintf
@@ -3418,7 +3446,7 @@ operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
-name|logit
+name|debug
 argument_list|(
 literal|"Allocated port %u for mux remote forward"
 literal|" to %s:%d"
@@ -3554,6 +3582,75 @@ argument_list|,
 name|rfwd
 operator|->
 name|listen_port
+argument_list|)
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"%s: clearing registered forwarding for listen %d, "
+literal|"connect %s:%d"
+argument_list|,
+name|__func__
+argument_list|,
+name|rfwd
+operator|->
+name|listen_port
+argument_list|,
+name|rfwd
+operator|->
+name|connect_path
+condition|?
+name|rfwd
+operator|->
+name|connect_path
+else|:
+name|rfwd
+operator|->
+name|connect_host
+argument_list|,
+name|rfwd
+operator|->
+name|connect_port
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rfwd
+operator|->
+name|listen_host
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rfwd
+operator|->
+name|listen_path
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rfwd
+operator|->
+name|connect_host
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rfwd
+operator|->
+name|connect_path
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|rfwd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|rfwd
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9345,7 +9442,7 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
-name|logit
+name|verbose
 argument_list|(
 literal|"Allocated port %u for remote forward to %s:%d"
 argument_list|,
