@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.c,v 1.53 2013/11/21 00:45:44 djm Exp $ */
+comment|/* $OpenBSD: dh.c,v 1.55 2015/01/20 23:14:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,10 @@ include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_comment
+comment|/* MIN */
+end_comment
 
 begin_include
 include|#
@@ -58,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dh.h"
 end_include
 
@@ -77,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
 end_include
 
 begin_function
@@ -543,14 +559,7 @@ argument_list|()
 operator|)
 operator|==
 name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"parse_prime: BN_new failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 operator|(
 name|dhg
 operator|->
@@ -562,11 +571,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"parse_prime: BN_new failed"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|BN_hex2bn
@@ -727,13 +741,6 @@ operator|->
 name|p
 operator|=
 name|NULL
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Bad prime description in line %d"
-argument_list|,
-name|linenum
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -1076,7 +1083,8 @@ name|which
 operator|+
 literal|1
 condition|)
-name|fatal
+block|{
+name|logit
 argument_list|(
 literal|"WARNING: line %d disappeared in %s, giving up"
 argument_list|,
@@ -1085,6 +1093,13 @@ argument_list|,
 name|_PATH_DH_PRIMES
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|dh_new_group14
+argument_list|()
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|dh_new_group
@@ -1317,7 +1332,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|dh_gen_key
 parameter_list|(
 name|DH
@@ -1334,33 +1349,15 @@ decl_stmt|;
 if|if
 condition|(
 name|need
-operator|<=
+operator|<
 literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: need<= 0"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|dh
 operator|->
 name|p
 operator|==
 name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: dh->p == NULL"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 operator|(
 name|pbits
 operator|=
@@ -1373,14 +1370,22 @@ argument_list|)
 operator|)
 operator|<=
 literal|0
+operator|||
+name|need
+operator|>
+name|INT_MAX
+operator|/
+literal|2
+operator|||
+literal|2
+operator|*
+name|need
+operator|>=
+name|pbits
 condition|)
-name|fatal
-argument_list|(
-literal|"%s: bits(p)<= 0"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+return|return
+name|SSH_ERR_INVALID_ARGUMENT
+return|;
 name|dh
 operator|->
 name|length
@@ -1404,16 +1409,7 @@ name|dh
 argument_list|)
 operator|==
 literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: key generation failed"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 operator|!
 name|dh_pub_is_valid
 argument_list|(
@@ -1424,13 +1420,21 @@ operator|->
 name|pub_key
 argument_list|)
 condition|)
-name|fatal
+block|{
+name|BN_clear_free
 argument_list|(
-literal|"%s: generated invalid key"
-argument_list|,
-name|__func__
+name|dh
+operator|->
+name|priv_key
 argument_list|)
 expr_stmt|;
+return|return
+name|SSH_ERR_LIBCRYPTO_ERROR
+return|;
+block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1465,11 +1469,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
-argument_list|(
-literal|"dh_new_group_asc: DH_new"
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|BN_hex2bn
@@ -1483,14 +1485,7 @@ name|modulus
 argument_list|)
 operator|==
 literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"BN_hex2bn p"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|BN_hex2bn
 argument_list|(
 operator|&
@@ -1503,11 +1498,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|fatal
+block|{
+name|DH_free
 argument_list|(
-literal|"BN_hex2bn g"
+name|dh
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 operator|(
 name|dh
@@ -1549,11 +1549,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
-argument_list|(
-literal|"dh_new_group: DH_new"
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 name|dh
 operator|->
 name|p
@@ -1739,7 +1737,7 @@ comment|/*  * Estimates the group order for a Diffie-Hellman group that has an  
 end_comment
 
 begin_function
-name|int
+name|u_int
 name|dh_estimate
 parameter_list|(
 name|int

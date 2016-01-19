@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.106 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.110 2015/02/25 17:29:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -153,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -277,7 +277,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"krl.h"
+file|"authfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
 end_include
 
 begin_include
@@ -1493,9 +1499,9 @@ modifier|*
 name|authctxt
 parameter_list|)
 block|{
-name|packet_disconnect
+name|error
 argument_list|(
-literal|"Too many authentication failures for "
+literal|"maximum authentication attempts exceeded for "
 literal|"%s%.100s from %.200s port %d %s"
 argument_list|,
 name|authctxt
@@ -1521,6 +1527,11 @@ condition|?
 literal|"ssh2"
 else|:
 literal|"ssh1"
+argument_list|)
+expr_stmt|;
+name|packet_disconnect
+argument_list|(
+literal|"Too many authentication failures"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -1631,7 +1642,7 @@ name|file
 decl_stmt|,
 name|ret
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -2069,12 +2080,12 @@ block|{
 name|char
 name|buf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|,
 name|homedir
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|char
@@ -3103,12 +3114,14 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|WITH_OPENSSL
 name|char
 modifier|*
-name|key_fp
+name|fp
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|r
 decl_stmt|;
 if|if
 condition|(
@@ -3121,44 +3134,52 @@ condition|)
 return|return
 literal|0
 return|;
-switch|switch
+if|if
 condition|(
-name|ssh_krl_file_contains_key
+operator|(
+name|fp
+operator|=
+name|sshkey_fingerprint
 argument_list|(
+name|key
+argument_list|,
 name|options
 operator|.
-name|revoked_keys_file
+name|fingerprint_hash
 argument_list|,
-name|key
+name|SSH_FP_DEFAULT
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-case|case
-literal|0
-case|:
-return|return
-literal|0
-return|;
-comment|/* Not revoked */
-case|case
-operator|-
-literal|2
-case|:
-break|break;
-comment|/* Not a KRL */
-default|default:
-goto|goto
-name|revoked
-goto|;
-block|}
-endif|#
-directive|endif
-name|debug3
+name|r
+operator|=
+name|SSH_ERR_ALLOC_FAIL
+expr_stmt|;
+name|error
 argument_list|(
-literal|"%s: treating %s as a key list"
+literal|"%s: fingerprint key: %s"
 argument_list|,
 name|__func__
 argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|r
+operator|=
+name|sshkey_check_revoked
+argument_list|(
+name|key
+argument_list|,
 name|options
 operator|.
 name|revoked_keys_file
@@ -3166,88 +3187,84 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|key_in_file
-argument_list|(
-name|key
-argument_list|,
-name|options
-operator|.
-name|revoked_keys_file
-argument_list|,
-literal|0
-argument_list|)
+name|r
 condition|)
 block|{
 case|case
 literal|0
 case|:
-comment|/* key not revoked */
-return|return
-literal|0
-return|;
+break|break;
+comment|/* not revoked */
 case|case
-operator|-
-literal|1
+name|SSH_ERR_KEY_REVOKED
 case|:
-comment|/* Error opening revoked_keys_file: refuse all keys */
 name|error
 argument_list|(
-literal|"Revoked keys file is unreadable: refusing public key "
-literal|"authentication"
+literal|"Authentication key %s %s revoked by file %s"
+argument_list|,
+name|sshkey_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|,
+name|options
+operator|.
+name|revoked_keys_file
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-ifdef|#
-directive|ifdef
-name|WITH_OPENSSL
-case|case
-literal|1
-case|:
-name|revoked
-label|:
-comment|/* Key revoked */
-name|key_fp
+goto|goto
+name|out
+goto|;
+default|default:
+name|error
+argument_list|(
+literal|"Error checking authentication key %s %s in "
+literal|"revoked keys file %s: %s"
+argument_list|,
+name|sshkey_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|,
+name|options
+operator|.
+name|revoked_keys_file
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* Success */
+name|r
 operator|=
-name|key_fingerprint
-argument_list|(
-name|key
-argument_list|,
-name|SSH_FP_MD5
-argument_list|,
-name|SSH_FP_HEX
-argument_list|)
+literal|0
 expr_stmt|;
-name|error
-argument_list|(
-literal|"WARNING: authentication attempt with a revoked "
-literal|"%s key %s "
-argument_list|,
-name|key_type
-argument_list|(
-name|key
-argument_list|)
-argument_list|,
-name|key_fp
-argument_list|)
-expr_stmt|;
+name|out
+label|:
 name|free
 argument_list|(
-name|key_fp
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
+name|r
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
 literal|1
 return|;
-endif|#
-directive|endif
-block|}
-name|fatal
-argument_list|(
-literal|"key_in_file returned junk"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.76 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.77 2015/01/14 20:05:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -12,6 +12,12 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_include
 include|#
@@ -29,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/bn.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -187,6 +199,12 @@ directive|include
 file|"digest.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
+end_include
+
 begin_comment
 comment|/* Session id for the current session. */
 end_comment
@@ -236,15 +254,15 @@ name|void
 parameter_list|)
 block|{
 name|int
+name|r
+decl_stmt|,
 name|type
-decl_stmt|;
-name|char
-modifier|*
-name|comment
-decl_stmt|;
-name|AuthenticationConnection
-modifier|*
-name|auth
+decl_stmt|,
+name|agent_fd
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|u_char
 name|response
@@ -252,31 +270,58 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int
+name|size_t
 name|i
-decl_stmt|;
-name|Key
-modifier|*
-name|key
 decl_stmt|;
 name|BIGNUM
 modifier|*
 name|challenge
 decl_stmt|;
+name|struct
+name|ssh_identitylist
+modifier|*
+name|idlist
+init|=
+name|NULL
+decl_stmt|;
 comment|/* Get connection to the agent. */
-name|auth
-operator|=
-name|ssh_get_authentication_connection
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-operator|!
-name|auth
+operator|(
+name|r
+operator|=
+name|ssh_get_authentication_socket
+argument_list|(
+operator|&
+name|agent_fd
+argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|r
+operator|!=
+name|SSH_ERR_AGENT_NOT_PRESENT
+condition|)
+name|debug
+argument_list|(
+literal|"%s: ssh_get_authentication_socket: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -294,35 +339,61 @@ literal|"try_agent_authentication: BN_new failed"
 argument_list|)
 expr_stmt|;
 comment|/* Loop through identities served by the agent. */
+if|if
+condition|(
+operator|(
+name|r
+operator|=
+name|ssh_fetch_identitylist
+argument_list|(
+name|agent_fd
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|idlist
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|r
+operator|!=
+name|SSH_ERR_AGENT_NO_IDENTITIES
+condition|)
+name|debug
+argument_list|(
+literal|"%s: ssh_fetch_identitylist: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 for|for
 control|(
-name|key
+name|i
 operator|=
-name|ssh_get_first_identity
-argument_list|(
-name|auth
-argument_list|,
-operator|&
-name|comment
-argument_list|,
-literal|1
-argument_list|)
+literal|0
 init|;
-name|key
-operator|!=
-name|NULL
+name|i
+operator|<
+name|idlist
+operator|->
+name|nkeys
 condition|;
-name|key
-operator|=
-name|ssh_get_next_identity
-argument_list|(
-name|auth
-argument_list|,
-operator|&
-name|comment
-argument_list|,
-literal|1
-argument_list|)
+name|i
+operator|++
 control|)
 block|{
 comment|/* Try this identity. */
@@ -330,12 +401,12 @@ name|debug
 argument_list|(
 literal|"Trying RSA authentication via agent with '%.100s'"
 argument_list|,
-name|comment
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|comment
+name|idlist
+operator|->
+name|comments
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Tell the server that we are willing to authenticate using this key. */
@@ -346,7 +417,12 @@ argument_list|)
 expr_stmt|;
 name|packet_put_bignum
 argument_list|(
-name|key
+name|idlist
+operator|->
+name|keys
+index|[
+name|i
+index|]
 operator|->
 name|rsa
 operator|->
@@ -376,11 +452,6 @@ block|{
 name|debug
 argument_list|(
 literal|"Server refused our key."
-argument_list|)
-expr_stmt|;
-name|key_free
-argument_list|(
-name|key
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -415,27 +486,41 @@ expr_stmt|;
 comment|/* Ask the agent to decrypt the challenge. */
 if|if
 condition|(
-operator|!
+operator|(
+name|r
+operator|=
 name|ssh_decrypt_challenge
 argument_list|(
-name|auth
+name|agent_fd
 argument_list|,
-name|key
+name|idlist
+operator|->
+name|keys
+index|[
+name|i
+index|]
 argument_list|,
 name|challenge
 argument_list|,
 name|session_id
 argument_list|,
-literal|1
-argument_list|,
 name|response
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * The agent failed to authenticate this identifier 			 * although it advertised it supports this.  Just 			 * return a wrong value. 			 */
 name|logit
 argument_list|(
-literal|"Authentication agent failed to decrypt challenge."
+literal|"Authentication agent failed to decrypt "
+literal|"challenge: %s"
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|explicit_bzero
@@ -449,11 +534,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|key_free
-argument_list|(
-name|key
-argument_list|)
-expr_stmt|;
 name|debug
 argument_list|(
 literal|"Sending response to RSA challenge."
@@ -498,7 +578,7 @@ operator|=
 name|packet_read
 argument_list|()
 expr_stmt|;
-comment|/* The server returns success if it accepted the authentication. */
+comment|/* 		 * The server returns success if it accepted the 		 * authentication. 		 */
 if|if
 condition|(
 name|type
@@ -506,26 +586,18 @@ operator|==
 name|SSH_SMSG_SUCCESS
 condition|)
 block|{
-name|ssh_close_authentication_connection
-argument_list|(
-name|auth
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|challenge
-argument_list|)
-expr_stmt|;
 name|debug
 argument_list|(
 literal|"RSA authentication accepted by server."
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 literal|1
-return|;
+expr_stmt|;
+break|break;
 block|}
-comment|/* Otherwise it should return failure. */
+elseif|else
 if|if
 condition|(
 name|type
@@ -534,15 +606,34 @@ name|SSH_SMSG_FAILURE
 condition|)
 name|packet_disconnect
 argument_list|(
-literal|"Protocol error waiting RSA auth response: %d"
+literal|"Protocol error waiting RSA auth "
+literal|"response: %d"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
 block|}
-name|ssh_close_authentication_connection
+if|if
+condition|(
+name|ret
+operator|!=
+literal|1
+condition|)
+name|debug
 argument_list|(
-name|auth
+literal|"RSA authentication using agent refused."
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|ssh_free_identitylist
+argument_list|(
+name|idlist
+argument_list|)
+expr_stmt|;
+name|ssh_close_authentication_socket
+argument_list|(
+name|agent_fd
 argument_list|)
 expr_stmt|;
 name|BN_clear_free
@@ -550,13 +641,8 @@ argument_list|(
 name|challenge
 argument_list|)
 expr_stmt|;
-name|debug
-argument_list|(
-literal|"RSA authentication using agent refused."
-argument_list|)
-expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
@@ -3154,6 +3240,15 @@ return|return;
 comment|/* need statement after label */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SSH1 */
+end_comment
 
 end_unit
 

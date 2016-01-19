@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.8 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.10 2015/01/20 23:14:00 deraadt Exp $ */
 end_comment
 
 begin_comment

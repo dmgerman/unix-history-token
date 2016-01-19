@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.164 2014/07/09 01:45:10 djm Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.170 2015/01/20 23:14:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -20,6 +20,16 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* MIN MAX */
+end_comment
 
 begin_include
 include|#
@@ -180,6 +190,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -263,7 +279,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"ssherr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sshbuf.h"
 end_include
 
 begin_include
@@ -1177,9 +1199,9 @@ literal|"chown own path                     Change owner of file 'path' to 'own'
 literal|"df [-hi] [path]                    Display statistics for current directory or\n"
 literal|"                                   filesystem containing 'path'\n"
 literal|"exit                               Quit sftp\n"
-literal|"get [-Ppr] remote [local]          Download file\n"
-literal|"reget remote [local]		Resume download file\n"
-literal|"reput [local] remote               Resume upload file\n"
+literal|"get [-afPpRr] remote [local]       Download file\n"
+literal|"reget [-fPpRr] remote [local]      Resume download file\n"
+literal|"reput [-fPpRr] [local] remote      Resume upload file\n"
 literal|"help                               Display this help text\n"
 literal|"lcd path                           Change local directory to 'path'\n"
 literal|"lls [ls-options [path]]            Display local directory listing\n"
@@ -1190,7 +1212,7 @@ literal|"ls [-1afhlnrSt] [path]             Display remote directory listing\n"
 literal|"lumask umask                       Set local umask to 'umask'\n"
 literal|"mkdir path                         Create remote directory\n"
 literal|"progress                           Toggle display of progress meter\n"
-literal|"put [-Ppr] local [remote]          Upload file\n"
+literal|"put [-afPpRr] local [remote]       Upload file\n"
 literal|"pwd                                Display remote working directory\n"
 literal|"quit                               Quit sftp\n"
 literal|"rename oldpath newpath             Rename remote file\n"
@@ -7470,7 +7492,7 @@ decl_stmt|;
 name|char
 name|path_buf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -8136,6 +8158,25 @@ break|break;
 case|case
 name|I_LCHDIR
 case|:
+name|tmp
+operator|=
+name|tilde_expand_filename
+argument_list|(
+name|path1
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|path1
+argument_list|)
+expr_stmt|;
+name|path1
+operator|=
+name|tmp
+expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -11367,14 +11408,26 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
-name|setlinebuf
+name|setvbuf
 argument_list|(
 name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|setlinebuf
+name|setvbuf
 argument_list|(
 name|infile
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|interactive

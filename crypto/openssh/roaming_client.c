@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_client.c,v 1.8 2014/04/29 18:01:49 markus Exp $ */
+comment|/* $OpenBSD: roaming_client.c,v 1.9 2015/01/27 12:54:06 okan Exp $ */
 end_comment
 
 begin_comment
@@ -30,23 +30,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_INTTYPES_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

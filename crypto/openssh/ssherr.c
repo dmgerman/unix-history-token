@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssherr.c,v 1.1 2014/04/30 05:29:56 djm Exp $	*/
+comment|/*	$OpenBSD: ssherr.c,v 1.4 2015/02/16 22:13:32 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -339,6 +339,12 @@ return|return
 literal|"agent contains no identities"
 return|;
 case|case
+name|SSH_ERR_BUFFER_READ_ONLY
+case|:
+return|return
+literal|"internal error: buffer is read-only"
+return|;
+case|case
 name|SSH_ERR_KRL_BAD_MAGIC
 case|:
 return|return
@@ -349,6 +355,30 @@ name|SSH_ERR_KEY_REVOKED
 case|:
 return|return
 literal|"Key is revoked"
+return|;
+case|case
+name|SSH_ERR_CONN_CLOSED
+case|:
+return|return
+literal|"Connection closed"
+return|;
+case|case
+name|SSH_ERR_CONN_TIMEOUT
+case|:
+return|return
+literal|"Connection timed out"
+return|;
+case|case
+name|SSH_ERR_CONN_CORRUPT
+case|:
+return|return
+literal|"Connection corrupted"
+return|;
+case|case
+name|SSH_ERR_PROTOCOL_ERROR
+case|:
+return|return
+literal|"Protocol error"
 return|;
 default|default:
 return|return

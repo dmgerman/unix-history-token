@@ -227,6 +227,12 @@ end_function_decl
 begin_include
 include|#
 directive|include
+file|<openssl/objects.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/bn.h>
 end_include
 

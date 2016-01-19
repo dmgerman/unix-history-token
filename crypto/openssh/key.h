@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.h,v 1.42 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: key.h,v 1.47 2015/01/28 22:36:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -91,13 +91,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|key_fingerprint
-value|sshkey_fingerprint
-end_define
-
-begin_define
-define|#
-directive|define
 name|key_type
 value|sshkey_type
 end_define
@@ -168,13 +161,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|key_names_valid2
-value|sshkey_names_valid2
-end_define
-
-begin_define
-define|#
-directive|define
 name|key_is_cert
 value|sshkey_is_cert
 end_define
@@ -235,13 +221,6 @@ name|key_dump_ec_key
 value|sshkey_dump_ec_key
 end_define
 
-begin_define
-define|#
-directive|define
-name|key_fingerprint
-value|sshkey_fingerprint
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -284,24 +263,6 @@ name|key_demote
 parameter_list|(
 specifier|const
 name|Key
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_char
-modifier|*
-name|key_fingerprint_raw
-parameter_list|(
-specifier|const
-name|Key
-modifier|*
-parameter_list|,
-name|enum
-name|fp_type
-parameter_list|,
-name|u_int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -745,26 +706,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Key
-modifier|*
-name|key_load_private_pem
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|key_perm_ok
 parameter_list|(
@@ -773,22 +714,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|key_in_file
-parameter_list|(
-name|Key
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

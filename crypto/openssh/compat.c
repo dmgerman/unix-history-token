@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.85 2014/04/20 02:49:32 djm Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.87 2015/01/19 20:20:20 markus Exp $ */
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ comment|/* datafellows bug compatibility */
 end_comment
 
 begin_function
-name|void
+name|u_int
 name|compat_datafellows
 parameter_list|(
 specifier|const
@@ -624,15 +624,6 @@ operator|==
 literal|1
 condition|)
 block|{
-name|datafellows
-operator|=
-name|check
-index|[
-name|i
-index|]
-operator|.
-name|bugs
-expr_stmt|;
 name|debug
 argument_list|(
 literal|"match: %s pat %s compat 0x%08x"
@@ -646,10 +637,32 @@ index|]
 operator|.
 name|pat
 argument_list|,
-name|datafellows
+name|check
+index|[
+name|i
+index|]
+operator|.
+name|bugs
 argument_list|)
 expr_stmt|;
-return|return;
+name|datafellows
+operator|=
+name|check
+index|[
+name|i
+index|]
+operator|.
+name|bugs
+expr_stmt|;
+comment|/* XXX for now */
+return|return
+name|check
+index|[
+name|i
+index|]
+operator|.
+name|bugs
+return|;
 block|}
 block|}
 name|debug
@@ -659,6 +672,9 @@ argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -707,11 +723,20 @@ name|q
 operator|=
 name|s
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|spec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+name|ret
+return|;
 for|for
 control|(
 operator|(
@@ -947,6 +972,10 @@ name|fix_prop
 operator|=
 name|xstrdup
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 operator|&

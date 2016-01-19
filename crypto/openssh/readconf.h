@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.102 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.109 2015/02/16 22:13:32 djm Exp $ */
 end_comment
 
 begin_comment
@@ -310,7 +310,8 @@ index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]
 decl_stmt|;
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|identity_keys
 index|[
@@ -449,6 +450,21 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
+name|revoked_host_keys
+decl_stmt|;
+name|int
+name|fingerprint_hash
+decl_stmt|;
+name|int
+name|update_hostkeys
+decl_stmt|;
+comment|/* one of SSH_UPDATE_HOSTKEYS_* */
+name|char
+modifier|*
+name|hostbased_key_types
+decl_stmt|;
+name|char
+modifier|*
 name|version_addendum
 decl_stmt|;
 comment|/* Appended to SSH banner */
@@ -568,6 +584,38 @@ begin_comment
 comment|/* user provided config file not system */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSHCONF_POSTCANON
+value|4
+end_define
+
+begin_comment
+comment|/* After hostname canonicalisation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_UPDATE_HOSTKEYS_NO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_UPDATE_HOSTKEYS_YES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_UPDATE_HOSTKEYS_ASK
+value|2
+end_define
+
 begin_function_decl
 name|void
 name|initialize_options
@@ -613,6 +661,10 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -640,6 +692,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|passwd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 specifier|const
@@ -689,6 +745,22 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_client_config
+parameter_list|(
+name|Options
+modifier|*
+name|o
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|host
 parameter_list|)
 function_decl|;
 end_function_decl

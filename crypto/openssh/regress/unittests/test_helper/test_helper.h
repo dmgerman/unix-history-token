@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: test_helper.h,v 1.3 2014/05/02 09:41:32 andre Exp $	*/
+comment|/*	$OpenBSD: test_helper.h,v 1.6 2015/01/18 19:52:44 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -137,6 +137,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|test_info
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|set_onerror_func
 parameter_list|(
 name|test_onerror_func_t
@@ -158,6 +172,33 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|test_subtest_info
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1931,6 +1972,22 @@ end_comment
 begin_function_decl
 name|void
 name|fuzz_next
+parameter_list|(
+name|struct
+name|fuzz
+modifier|*
+name|fuzz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Check whether this fuzz case is identical to the original  * This is slow, but useful if the caller needs to ensure that all tests  * generated change the input (e.g. when fuzzing signatures).  */
+end_comment
+
+begin_function_decl
+name|int
+name|fuzz_matches_original
 parameter_list|(
 name|struct
 name|fuzz

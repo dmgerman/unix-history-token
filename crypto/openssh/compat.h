@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.h,v 1.45 2014/04/18 23:52:25 djm Exp $ */
+comment|/* $OpenBSD: compat.h,v 1.46 2015/01/19 20:20:20 markus Exp $ */
 end_comment
 
 begin_comment
@@ -266,7 +266,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|u_int
 name|compat_datafellows
 parameter_list|(
 specifier|const

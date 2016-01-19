@@ -866,6 +866,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `AI_NUMERICSERV', and to 0 if    you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_AI_NUMERICSERV
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `authenticate', and to 0 if you    don't. */
 end_comment
 
@@ -2684,6 +2695,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_READPASSPHRASE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `reallocarray' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REALLOCARRAY
 value|1
 end_define
 
@@ -4668,7 +4690,7 @@ comment|/* #undef OPENSSL_LOBOTOMISED_AES */
 end_comment
 
 begin_comment
-comment|/* Define if you want OpenSSL's internally seeded PRNG only */
+comment|/* Define if you want the OpenSSL internally seeded PRNG only */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.115 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.116 2015/01/19 20:07:45 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1083,7 +1083,7 @@ comment|/* protocol handler */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_close
 parameter_list|(
 name|int
@@ -1097,7 +1097,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_close_confirmation
 parameter_list|(
 name|int
@@ -1111,7 +1111,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_data
 parameter_list|(
 name|int
@@ -1125,7 +1125,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_extended_data
 parameter_list|(
 name|int
@@ -1139,7 +1139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_ieof
 parameter_list|(
 name|int
@@ -1153,7 +1153,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_oclose
 parameter_list|(
 name|int
@@ -1167,7 +1167,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_open_confirmation
 parameter_list|(
 name|int
@@ -1181,7 +1181,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_open_failure
 parameter_list|(
 name|int
@@ -1195,7 +1195,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_port_open
 parameter_list|(
 name|int
@@ -1209,7 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_window_adjust
 parameter_list|(
 name|int
@@ -1223,7 +1223,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_status_confirm
 parameter_list|(
 name|int
@@ -1675,7 +1675,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|x11_input_open
 parameter_list|(
 name|int
@@ -1712,7 +1712,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|deny_input_open
 parameter_list|(
 name|int

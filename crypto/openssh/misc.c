@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.94 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.96 2015/01/16 06:40:12 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -2506,7 +2506,7 @@ argument_list|,
 name|filename
 argument_list|)
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 name|fatal
 argument_list|(

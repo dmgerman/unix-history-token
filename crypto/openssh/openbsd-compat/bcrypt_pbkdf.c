@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bcrypt_pbkdf.c,v 1.4 2013/07/29 00:55:53 tedu Exp $ */
+comment|/* $OpenBSD: bcrypt_pbkdf.c,v 1.9 2014/07/13 21:21:25 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,23 @@ directive|include
 file|"crypto_api.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHA512_DIGEST_LENGTH
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|SHA512_DIGEST_LENGTH
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -85,7 +102,7 @@ value|crypto_hash_sha512_BYTES
 end_define
 
 begin_comment
-comment|/*  * pkcs #5 pbkdf2 implementation using the "bcrypt" hash  *  * The bcrypt hash function is derived from the bcrypt password hashing  * function with the following modifications:  * 1. The input password and salt are preprocessed with SHA512.  * 2. The output length is expanded to 256 bits.  * 3. Subsequently the magic string to be encrypted is lengthened and modifed  *    to "OxychromaticBlowfishSwatDynamite"  * 4. The hash function is defined to perform 64 rounds of initial state  *    expansion. (More rounds are performed by iterating the hash.)  *  * Note that this implementation pulls the SHA512 operations into the caller  * as a performance optimization.  *  * One modification from official pbkdf2. Instead of outputting key material  * linearly, we mix it. pbkdf2 has a known weakness where if one uses it to  * generate (i.e.) 512 bits of key material for use as two 256 bit keys, an  * attacker can merely run once through the outer loop below, but the user  * always runs it twice. Shuffling output bytes requires computing the  * entirety of the key material to assemble any subkey. This is something a  * wise caller could do; we just do it for you.  */
+comment|/*  * pkcs #5 pbkdf2 implementation using the "bcrypt" hash  *  * The bcrypt hash function is derived from the bcrypt password hashing  * function with the following modifications:  * 1. The input password and salt are preprocessed with SHA512.  * 2. The output length is expanded to 256 bits.  * 3. Subsequently the magic string to be encrypted is lengthened and modifed  *    to "OxychromaticBlowfishSwatDynamite"  * 4. The hash function is defined to perform 64 rounds of initial state  *    expansion. (More rounds are performed by iterating the hash.)  *  * Note that this implementation pulls the SHA512 operations into the caller  * as a performance optimization.  *  * One modification from official pbkdf2. Instead of outputting key material  * linearly, we mix it. pbkdf2 has a known weakness where if one uses it to  * generate (e.g.) 512 bits of key material for use as two 256 bit keys, an  * attacker can merely run once through the outer loop, but the user  * always runs it twice. Shuffling output bytes requires computing the  * entirety of the key material to assemble any subkey. This is something a  * wise caller could do; we just do it for you.  */
 end_comment
 
 begin_define
@@ -364,11 +381,9 @@ literal|0xff
 expr_stmt|;
 block|}
 comment|/* zap */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|ciphertext
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -376,11 +391,9 @@ name|ciphertext
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|cdata
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -388,12 +401,10 @@ name|cdata
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 operator|&
 name|state
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -475,6 +486,11 @@ name|stride
 decl_stmt|;
 name|uint32_t
 name|count
+decl_stmt|;
+name|size_t
+name|origkeylen
+init|=
+name|keylen
 decl_stmt|;
 comment|/* nothing crazy */
 if|if
@@ -783,8 +799,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|key
-index|[
+block|{
+name|size_t
+name|dest
+init|=
 name|i
 operator|*
 name|stride
@@ -794,6 +812,17 @@ name|count
 operator|-
 literal|1
 operator|)
+decl_stmt|;
+if|if
+condition|(
+name|dest
+operator|>=
+name|origkeylen
+condition|)
+break|break;
+name|key
+index|[
+name|dest
 index|]
 operator|=
 name|out
@@ -801,33 +830,21 @@ index|[
 name|i
 index|]
 expr_stmt|;
+block|}
 name|keylen
 operator|-=
-name|amt
+name|i
 expr_stmt|;
 block|}
 comment|/* zap */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|out
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|out
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|countsalt
-argument_list|,
-literal|0
-argument_list|,
-name|saltlen
-operator|+
-literal|4
 argument_list|)
 expr_stmt|;
 name|free

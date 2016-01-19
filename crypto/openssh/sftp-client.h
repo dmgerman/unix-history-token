@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.25 2014/04/21 14:36:16 logan Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.26 2015/01/14 13:54:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -141,7 +141,8 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
-name|char
+specifier|const
+name|u_char
 modifier|*
 parameter_list|,
 name|u_int
@@ -161,6 +162,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -199,6 +201,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -217,6 +220,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -240,6 +244,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -259,6 +264,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -280,6 +286,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -300,6 +307,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -321,7 +329,8 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
-name|char
+specifier|const
+name|u_char
 modifier|*
 parameter_list|,
 name|u_int
@@ -345,6 +354,7 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -388,12 +398,13 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
-name|m
 parameter_list|,
 name|int
 name|force_legacy
@@ -413,9 +424,11 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -434,9 +447,11 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -456,7 +471,7 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
-name|char
+name|u_char
 modifier|*
 parameter_list|,
 name|u_int
@@ -476,9 +491,11 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -506,9 +523,11 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -538,9 +557,11 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -565,9 +586,11 @@ name|struct
 name|sftp_conn
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -591,9 +614,11 @@ name|char
 modifier|*
 name|path_append
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

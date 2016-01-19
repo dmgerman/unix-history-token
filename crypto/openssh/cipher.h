@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.46 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.47 2015/01/14 10:24:42 markus Exp $ */
 end_comment
 
 begin_comment
@@ -289,6 +289,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|cipher_warning_message
+parameter_list|(
+specifier|const
+name|struct
+name|sshcipher_ctx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ciphers_valid
 parameter_list|(
@@ -337,20 +351,6 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|cipher_warning_message
-parameter_list|(
-specifier|const
-name|struct
-name|sshcipher_ctx
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

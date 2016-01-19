@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.h,v 1.18 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: monitor.h,v 1.19 2015/01/19 19:52:16 markus Exp $ */
 end_comment
 
 begin_comment
@@ -299,7 +299,7 @@ modifier|*
 name|m_zlib
 decl_stmt|;
 name|struct
-name|Kex
+name|kex
 modifier|*
 modifier|*
 name|m_pkex

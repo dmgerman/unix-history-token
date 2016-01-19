@@ -9,6 +9,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -1004,6 +1010,37 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
+
+begin_comment
+comment|/* Handled in arc4random() */
+end_comment
+
+begin_function
+name|void
+name|seed_rng
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.14 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.17 2015/02/03 08:07:20 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"key.h"
+file|"sshkey.h"
 end_include
 
 begin_include
@@ -1242,9 +1242,6 @@ literal|1
 operator|)
 return|;
 comment|/* bail out */
-if|if
-condition|(
-operator|(
 name|rv
 operator|=
 name|f
@@ -1268,9 +1265,16 @@ argument_list|(
 name|pin
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
 operator|!=
 name|CKR_OK
+operator|&&
+name|rv
+operator|!=
+name|CKR_USER_ALREADY_LOGGED_IN
 condition|)
 block|{
 name|free
@@ -1892,9 +1896,6 @@ operator|&&
 name|pin
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|rv
 operator|=
 name|f
@@ -1916,9 +1917,16 @@ argument_list|(
 name|pin
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
 operator|!=
 name|CKR_OK
+operator|&&
+name|rv
+operator|!=
+name|CKR_USER_ALREADY_LOGGED_IN
 condition|)
 block|{
 name|error
@@ -2011,7 +2019,8 @@ index|[
 literal|3
 index|]
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2051,7 +2060,8 @@ parameter_list|,
 name|CK_ULONG
 name|slotidx
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2241,7 +2251,8 @@ specifier|static
 name|int
 name|pkcs11_key_included
 parameter_list|(
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2251,7 +2262,8 @@ name|int
 modifier|*
 name|nkeys
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
@@ -2275,7 +2287,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|key_equal
+name|sshkey_equal
 argument_list|(
 name|key
 argument_list|,
@@ -2324,7 +2336,8 @@ index|[
 literal|3
 index|]
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2335,7 +2348,8 @@ modifier|*
 name|nkeys
 parameter_list|)
 block|{
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 decl_stmt|;
@@ -2865,7 +2879,7 @@ condition|)
 block|{
 name|key
 operator|=
-name|key_new
+name|sshkey_new
 argument_list|(
 name|KEY_UNSPEC
 argument_list|)
@@ -2900,7 +2914,7 @@ name|key
 argument_list|)
 condition|)
 block|{
-name|key_free
+name|sshkey_free
 argument_list|(
 name|key
 argument_list|)
@@ -2924,7 +2938,8 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Key
+expr|struct
+name|sshkey
 operator|*
 argument_list|)
 argument_list|)
@@ -3040,7 +3055,8 @@ name|char
 modifier|*
 name|pin
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
