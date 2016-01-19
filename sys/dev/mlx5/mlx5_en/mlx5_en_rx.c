@@ -1256,6 +1256,7 @@ name|int
 name|i
 parameter_list|)
 block|{
+comment|/* 	 * NOTE: The fields which are not set here are copied from the 	 * initial and common title. See memcpy() in 	 * mlx5e_write_cqe_slot(). 	 */
 name|title
 operator|->
 name|byte_cnt
