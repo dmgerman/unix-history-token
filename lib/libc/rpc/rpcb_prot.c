@@ -719,6 +719,9 @@ comment|/* 		 * the unfortunate side effect of non-recursion is that in 		 * the
 if|if
 condition|(
 name|freeing
+operator|&&
+operator|*
+name|rp
 condition|)
 name|next
 operator|=
@@ -766,9 +769,6 @@ block|}
 if|if
 condition|(
 name|freeing
-operator|&&
-operator|*
-name|rp
 condition|)
 block|{
 name|next_copy
