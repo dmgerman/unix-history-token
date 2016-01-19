@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.h,v 1.12 2012/05/23 03:28:28 djm Exp $ */
+comment|/* $OpenBSD: dns.h,v 1.13 2014/04/20 09:24:26 logan Exp $ */
 end_comment
 
 begin_comment
@@ -38,6 +38,10 @@ block|,
 name|SSHFP_KEY_ECDSA
 init|=
 literal|3
+block|,
+name|SSHFP_KEY_ED25519
+init|=
+literal|4
 block|}
 enum|;
 end_enum

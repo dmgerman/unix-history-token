@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.74 2014/02/02 03:44:32 djm Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.76 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"readconf.h"
 end_include
 
@@ -155,12 +161,6 @@ begin_include
 include|#
 directive|include
 file|"authfile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -612,7 +612,7 @@ name|challenge
 argument_list|,
 name|prv
 argument_list|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 name|packet_disconnect
@@ -993,7 +993,7 @@ name|public
 operator|->
 name|flags
 operator|&
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 condition|)
 name|private
 operator|=
@@ -1235,7 +1235,7 @@ name|private
 operator|->
 name|flags
 operator|&
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 operator|)
 condition|)
 name|key_free
@@ -2466,6 +2466,8 @@ name|SSH_KEY_BITS_RESERVED
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|rsa_public_encrypt
 argument_list|(
 name|key
@@ -2476,7 +2478,9 @@ name|server_key
 operator|->
 name|rsa
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+operator|||
 name|rsa_public_encrypt
 argument_list|(
 name|key
@@ -2486,6 +2490,15 @@ argument_list|,
 name|host_key
 operator|->
 name|rsa
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: rsa_public_encrypt failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2542,6 +2555,8 @@ name|SSH_KEY_BITS_RESERVED
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|rsa_public_encrypt
 argument_list|(
 name|key
@@ -2552,7 +2567,9 @@ name|host_key
 operator|->
 name|rsa
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+operator|||
 name|rsa_public_encrypt
 argument_list|(
 name|key
@@ -2562,6 +2579,15 @@ argument_list|,
 name|server_key
 operator|->
 name|rsa
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: rsa_public_encrypt failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

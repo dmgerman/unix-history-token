@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sandbox-systrace.c,v 1.9 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: sandbox-systrace.c,v 1.13 2014/07/17 00:10:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -172,12 +172,38 @@ block|,
 name|SYSTR_POLICY_NEVER
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|SYS_getentropy
+comment|/* OpenBSD 5.6 and newer use getentropy(2) to seed arc4random(3). */
+block|{
+name|SYS_getentropy
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+else|#
+directive|else
+comment|/* Previous releases used sysctl(3)'s kern.arnd variable. */
 block|{
 name|SYS___sysctl
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SYS_sendsyslog
+block|{
+name|SYS_sendsyslog
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|SYS_close
 block|,

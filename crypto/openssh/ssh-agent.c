@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.183 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.190 2014/07/25 21:22:03 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -91,6 +91,12 @@ directive|include
 file|"openbsd-compat/sys-queue.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -102,6 +108,11 @@ include|#
 directive|include
 file|"openbsd-compat/openssl-compat.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -421,6 +432,18 @@ end_decl_stmt
 begin_decl_stmt
 name|time_t
 name|parent_alive_interval
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pid of process for which cleanup_socket is applicable */
+end_comment
+
+begin_decl_stmt
+name|pid_t
+name|cleanup_pid
 init|=
 literal|0
 decl_stmt|;
@@ -952,6 +975,9 @@ operator|==
 name|KEY_RSA1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|buffer_put_int
 argument_list|(
 operator|&
@@ -997,6 +1023,8 @@ operator|->
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1089,6 +1117,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_comment
 comment|/* ssh1 only */
@@ -1325,7 +1359,7 @@ name|private
 operator|->
 name|rsa
 argument_list|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 goto|goto
@@ -1544,6 +1578,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ssh2 only */
@@ -1852,8 +1891,6 @@ parameter_list|)
 block|{
 name|u_int
 name|blen
-decl_stmt|,
-name|bits
 decl_stmt|;
 name|int
 name|success
@@ -1870,11 +1907,23 @@ name|u_char
 modifier|*
 name|blob
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+name|u_int
+name|bits
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* WITH_SSH1 */
 switch|switch
 condition|(
 name|version
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 literal|1
 case|:
@@ -1945,6 +1994,9 @@ name|bits
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* WITH_SSH1 */
 case|case
 literal|2
 case|:
@@ -2431,6 +2483,9 @@ condition|(
 name|version
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 literal|1
 case|:
@@ -2541,11 +2596,23 @@ argument_list|)
 expr_stmt|;
 comment|/* q */
 comment|/* Generate additional parameters */
+if|if
+condition|(
 name|rsa_generate_additional_parameters
 argument_list|(
 name|k
 operator|->
 name|rsa
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: rsa_generate_additional_parameters "
+literal|"error"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* enable blinding */
@@ -2578,6 +2645,9 @@ name|send
 goto|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* WITH_SSH1 */
 case|case
 literal|2
 case|:
@@ -2612,6 +2682,15 @@ goto|;
 block|}
 break|break;
 block|}
+if|if
+condition|(
+name|k
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|send
+goto|;
 name|comment
 operator|=
 name|buffer_get_string
@@ -2624,22 +2703,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|k
-operator|==
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|comment
-argument_list|)
-expr_stmt|;
-goto|goto
-name|send
-goto|;
-block|}
 while|while
 condition|(
 name|buffer_len
@@ -3911,6 +3974,9 @@ name|SSH_AGENTC_LOCK
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 comment|/* ssh1 */
 case|case
 name|SSH_AGENTC_RSA_CHALLENGE
@@ -3968,6 +4034,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* ssh2 */
 case|case
 name|SSH2_AGENTC_SIGN_REQUEST
@@ -5132,6 +5200,16 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|explicit_bzero
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|process_message
 argument_list|(
 operator|&
@@ -5168,6 +5246,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cleanup_pid
+operator|!=
+literal|0
+operator|&&
+name|getpid
+argument_list|()
+operator|!=
+name|cleanup_pid
+condition|)
+return|return;
+name|debug
+argument_list|(
+literal|"%s: cleanup"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|socket_name
@@ -5293,58 +5390,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [options] [command [arg ...]]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -c          Generate C-shell commands on stdout.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -s          Generate Bourne shell commands on stdout.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -k          Kill the current agent.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -d          Debug mode.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -a socket   Bind agent socket to given name.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t life     Default identity lifetime (seconds).\n"
+literal|"usage: ssh-agent [-c | -s] [-d] [-a bind_address] [-t life]\n"
+literal|"                 [command [arg ...]]\n"
+literal|"       ssh-agent [-c | -s] -k\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5432,10 +5480,6 @@ name|writesetp
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|sockaddr_un
-name|sunaddr
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SETRLIMIT
@@ -5445,9 +5489,6 @@ name|rlim
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|prev_mask
-decl_stmt|;
 specifier|extern
 name|int
 name|optind
@@ -5480,6 +5521,9 @@ name|NULL
 decl_stmt|;
 name|size_t
 name|len
+decl_stmt|;
+name|mode_t
+name|prev_mask
 decl_stmt|;
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
@@ -5525,9 +5569,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|__progname
 operator|=
 name|ssh_get_progname
@@ -5978,76 +6027,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Create socket early so it will exist before command gets run from 	 * the parent. 	 */
-name|sock
-operator|=
-name|socket
-argument_list|(
-name|AF_UNIX
-argument_list|,
-name|SOCK_STREAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sock
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"socket"
-argument_list|)
-expr_stmt|;
-operator|*
-name|socket_name
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* Don't unlink any existing file */
-name|cleanup_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|memset
-argument_list|(
-operator|&
-name|sunaddr
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sunaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sunaddr
-operator|.
-name|sun_family
-operator|=
-name|AF_UNIX
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|sunaddr
-operator|.
-name|sun_path
-argument_list|,
-name|socket_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sunaddr
-operator|.
-name|sun_path
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|prev_mask
 operator|=
 name|umask
@@ -6055,45 +6034,31 @@ argument_list|(
 literal|0177
 argument_list|)
 expr_stmt|;
+name|sock
+operator|=
+name|unix_listener
+argument_list|(
+name|socket_name
+argument_list|,
+name|SSH_LISTEN_BACKLOG
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|bind
-argument_list|(
 name|sock
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|sunaddr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sunaddr
-argument_list|)
-argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"bind"
-argument_list|)
-expr_stmt|;
+comment|/* XXX - unix_listener() calls error() not perror() */
 operator|*
 name|socket_name
 operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Don't unlink any existing file */
-name|umask
-argument_list|(
-name|prev_mask
-argument_list|)
-expr_stmt|;
 name|cleanup_exit
 argument_list|(
 literal|1
@@ -6105,29 +6070,6 @@ argument_list|(
 name|prev_mask
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|listen
-argument_list|(
-name|sock
-argument_list|,
-name|SSH_LISTEN_BACKLOG
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"listen"
-argument_list|)
-expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Fork, and have the parent execute the command, if any, or present 	 * the socket data.  The child continues as the authentication agent. 	 */
 if|if
 condition|(
@@ -6499,6 +6441,11 @@ endif|#
 directive|endif
 name|skip
 label|:
+name|cleanup_pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENABLE_PKCS11

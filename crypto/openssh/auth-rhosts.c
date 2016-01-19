@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rhosts.c,v 1.44 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: auth-rhosts.c,v 1.45 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -136,12 +142,6 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_comment

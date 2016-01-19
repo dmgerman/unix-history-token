@@ -1237,6 +1237,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_ripemd160' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_RIPEMD160
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `EVP_sha256' function. */
 end_comment
 
@@ -1259,9 +1270,12 @@ begin_comment
 comment|/* Define to 1 if you have the `explicit_bzero' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_EXPLICIT_BZERO */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_EXPLICIT_BZERO
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fchmod' function. */
@@ -2349,6 +2363,14 @@ directive|define
 name|HAVE_MEMORY_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `memset_s' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MEMSET_S */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `mkdtemp' function. */
@@ -3605,12 +3627,9 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/capability.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_CAPABILITY_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYS_CAPABILITY_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/cdefs.h> header file. */
@@ -4213,14 +4232,6 @@ directive|define
 name|HAVE_VA_COPY
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `vhangup' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_VHANGUP */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<vis.h> header file. */
@@ -5226,12 +5237,34 @@ comment|/* #undef WITH_IRIX_PROJECT */
 end_comment
 
 begin_comment
+comment|/* use libcrypto for cryptography */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WITH_OPENSSL
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you want SELinux support. */
 end_comment
 
 begin_comment
 comment|/* #undef WITH_SELINUX */
 end_comment
+
+begin_comment
+comment|/* include SSH protocol version 1 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WITH_SSH1
+value|1
+end_define
 
 begin_comment
 comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */

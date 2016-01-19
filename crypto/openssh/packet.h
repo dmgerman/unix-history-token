@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.59 2013/07/12 00:19:59 djm Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.61 2014/05/03 17:20:34 markus Exp $ */
 end_comment
 
 begin_comment
@@ -503,6 +503,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|void
 modifier|*
 name|packet_get_string_ptr
@@ -888,6 +889,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|packet_restore_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_set_postauth
 parameter_list|(
 name|void
 parameter_list|)

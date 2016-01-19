@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: digest-libc.c,v 1.2 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: digest-libc.c,v 1.3 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -64,7 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"ssherr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sshbuf.h"
 end_include
 
 begin_include
@@ -654,8 +660,7 @@ operator|->
 name|alg
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 name|memcpy
 argument_list|(
@@ -716,8 +721,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 name|digest
 operator|->
@@ -748,7 +752,8 @@ modifier|*
 name|ctx
 parameter_list|,
 specifier|const
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|b
 parameter_list|)
@@ -758,12 +763,12 @@ name|ssh_digest_update
 argument_list|(
 name|ctx
 argument_list|,
-name|buffer_ptr
+name|sshbuf_ptr
 argument_list|(
 name|b
 argument_list|)
 argument_list|,
-name|buffer_len
+name|sshbuf_len
 argument_list|(
 name|b
 argument_list|)
@@ -809,8 +814,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 if|if
 condition|(
@@ -819,8 +823,7 @@ operator|>
 name|UINT_MAX
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 if|if
 condition|(
@@ -832,8 +835,7 @@ name|digest_len
 condition|)
 comment|/* No truncation allowed */
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 name|digest
 operator|->
@@ -968,8 +970,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 if|if
 condition|(
@@ -996,8 +997,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_INVALID_ARGUMENT
 return|;
 name|ssh_digest_free
 argument_list|(
@@ -1018,7 +1018,8 @@ name|int
 name|alg
 parameter_list|,
 specifier|const
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|b
 parameter_list|,
@@ -1035,12 +1036,12 @@ name|ssh_digest_memory
 argument_list|(
 name|alg
 argument_list|,
-name|buffer_ptr
+name|sshbuf_ptr
 argument_list|(
 name|b
 argument_list|)
 argument_list|,
-name|buffer_len
+name|sshbuf_len
 argument_list|(
 name|b
 argument_list|)

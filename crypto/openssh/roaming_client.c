@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_client.c,v 1.7 2014/01/09 23:20:00 djm Exp $ */
+comment|/* $OpenBSD: roaming_client.c,v 1.8 2014/04/29 18:01:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -64,18 +64,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/sha.h>
 end_include
 
 begin_include

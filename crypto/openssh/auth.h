@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.77 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: auth.h,v 1.78 2014/07/03 11:16:55 djm Exp $ */
 end_comment
 
 begin_comment
@@ -839,6 +839,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|auth_maxtries_exceeded
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
 name|userauth_finish
 parameter_list|(
 name|Authctxt
@@ -1395,13 +1412,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|AUTH_FAIL_MSG
-value|"Too many authentication failures for %.100s"
-end_define
 
 begin_define
 define|#

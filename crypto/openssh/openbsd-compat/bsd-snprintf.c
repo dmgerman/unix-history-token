@@ -2446,7 +2446,6 @@ operator|*
 name|value
 argument_list|)
 expr_stmt|;
-operator|*
 name|value
 operator|++
 expr_stmt|;
@@ -2514,7 +2513,7 @@ parameter_list|,
 name|size_t
 name|maxlen
 parameter_list|,
-name|LLONG
+name|intmax_t
 name|value
 parameter_list|,
 name|int

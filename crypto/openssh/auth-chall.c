@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-chall.c,v 1.13 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: auth-chall.c,v 1.14 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -17,6 +17,24 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -53,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include

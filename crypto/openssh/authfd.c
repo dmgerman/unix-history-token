@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.92 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.93 2014/04/29 18:01:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -29,18 +29,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/evp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
 end_include
 
 begin_include
@@ -1127,12 +1115,17 @@ name|int
 name|version
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|int
 name|keybits
 decl_stmt|;
 name|u_int
 name|bits
 decl_stmt|;
+endif|#
+directive|endif
 name|u_char
 modifier|*
 name|blob
@@ -1164,6 +1157,9 @@ condition|(
 name|version
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 literal|1
 case|:
@@ -1266,6 +1262,8 @@ name|bits
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|2
 case|:
@@ -1330,6 +1328,12 @@ end_function
 begin_comment
 comment|/*  * Generates a random challenge, sends it to the agent, and waits for  * response from the agent.  Returns true (non-zero) if the agent gave the  * correct answer, zero otherwise.  Response type selects the style of  * response desired, with 0 corresponding to protocol version 1.0 (no longer  * supported) and 1 corresponding to protocol version 1.1.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_function
 name|int
@@ -1594,6 +1598,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ask agent to sign data, returns -1 on error, 0 on success */
 end_comment
@@ -1829,6 +1838,12 @@ begin_comment
 comment|/* Encode key for a message to the agent. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1928,6 +1943,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -2019,6 +2039,9 @@ operator|->
 name|type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 name|KEY_RSA1
 case|:
@@ -2051,6 +2074,11 @@ name|comment
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 case|case
 name|KEY_RSA
 case|:
@@ -2075,6 +2103,8 @@ case|:
 case|case
 name|KEY_ECDSA_CERT
 case|:
+endif|#
+directive|endif
 case|case
 name|KEY_ED25519
 case|:
@@ -2248,6 +2278,9 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 if|if
 condition|(
 name|key
@@ -2306,6 +2339,8 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|key

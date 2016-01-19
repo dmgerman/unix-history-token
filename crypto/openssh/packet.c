@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.192 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.198 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -167,12 +167,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"channels.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"compat.h"
 end_include
 
@@ -233,7 +227,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"channels.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ssh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
 end_include
 
 begin_include
@@ -578,6 +584,9 @@ argument_list|(
 literal|"none"
 argument_list|)
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|none
@@ -612,6 +621,11 @@ name|connection_out
 operator|=
 name|fd_out
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|=
 name|cipher_init
 argument_list|(
 operator|&
@@ -636,7 +650,13 @@ literal|0
 argument_list|,
 name|CIPHER_ENCRYPT
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|r
+operator|=
 name|cipher_init
 argument_list|(
 operator|&
@@ -660,6 +680,21 @@ argument_list|,
 literal|0
 argument_list|,
 name|CIPHER_DECRYPT
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: cipher_init: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|active_state
@@ -1207,6 +1242,9 @@ name|CipherContext
 modifier|*
 name|cc
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|mode
@@ -1228,6 +1266,11 @@ name|active_state
 operator|->
 name|receive_context
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|=
 name|cipher_get_keyiv
 argument_list|(
 name|cc
@@ -1235,6 +1278,21 @@ argument_list|,
 name|iv
 argument_list|,
 name|len
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: cipher_get_keyiv: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1397,6 +1455,9 @@ name|CipherContext
 modifier|*
 name|cc
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|mode
@@ -1418,11 +1479,31 @@ name|active_state
 operator|->
 name|receive_context
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|=
 name|cipher_set_keyiv
 argument_list|(
 name|cc
 argument_list|,
 name|dat
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: cipher_set_keyiv: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2079,6 +2160,9 @@ argument_list|(
 name|number
 argument_list|)
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|cipher
@@ -2135,6 +2219,11 @@ name|ssh1_keylen
 operator|=
 name|keylen
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|=
 name|cipher_init
 argument_list|(
 operator|&
@@ -2154,7 +2243,13 @@ literal|0
 argument_list|,
 name|CIPHER_ENCRYPT
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|r
+operator|=
 name|cipher_init
 argument_list|(
 operator|&
@@ -2173,6 +2268,21 @@ argument_list|,
 literal|0
 argument_list|,
 name|CIPHER_DECRYPT
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: cipher_init: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2459,6 +2569,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_function
 name|void
 name|packet_put_bignum
@@ -2502,6 +2618,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2992,6 +3113,8 @@ modifier|*
 name|max_blocks
 decl_stmt|;
 name|int
+name|r
+decl_stmt|,
 name|crypt_type
 decl_stmt|;
 name|debug2
@@ -3325,6 +3448,11 @@ name|mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|=
 name|cipher_init
 argument_list|(
 name|cc
@@ -3350,6 +3478,21 @@ operator|->
 name|iv_len
 argument_list|,
 name|crypt_type
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: cipher_init: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Deleting the keys does not gain extra security */
@@ -3983,9 +4126,13 @@ operator|->
 name|extra_pad
 operator|)
 expr_stmt|;
+name|DBG
+argument_list|(
 name|debug3
 argument_list|(
-literal|"packet_send2: adding %d (len %d padlen %d extra_pad %d)"
+literal|"%s: adding %d (len %d padlen %d extra_pad %d)"
+argument_list|,
+name|__func__
 argument_list|,
 name|pad
 argument_list|,
@@ -3996,6 +4143,7 @@ argument_list|,
 name|active_state
 operator|->
 name|extra_pad
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|padlen
@@ -7265,6 +7413,12 @@ begin_comment
 comment|/*  * Returns an arbitrary precision integer from the packet data.  The integer  * must have been initialized before this call.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_function
 name|void
 name|packet_get_bignum
@@ -7393,6 +7547,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|packet_remaining
@@ -7441,6 +7600,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|void
 modifier|*
 name|packet_get_string_ptr
@@ -9123,6 +9283,97 @@ name|add_recv_bytes
 argument_list|(
 name|len
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Reset after_authentication and reset compression in post-auth privsep */
+end_comment
+
+begin_function
+name|void
+name|packet_set_postauth
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|Comp
+modifier|*
+name|comp
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|debug
+argument_list|(
+literal|"%s: called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|/* This was set in net child, but is not visible in user child */
+name|active_state
+operator|->
+name|after_authentication
+operator|=
+literal|1
+expr_stmt|;
+name|active_state
+operator|->
+name|rekeying
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|mode
+operator|=
+literal|0
+init|;
+name|mode
+operator|<
+name|MODE_MAX
+condition|;
+name|mode
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|active_state
+operator|->
+name|newkeys
+index|[
+name|mode
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|comp
+operator|=
+operator|&
+name|active_state
+operator|->
+name|newkeys
+index|[
+name|mode
+index|]
+operator|->
+name|comp
+expr_stmt|;
+if|if
+condition|(
+name|comp
+operator|&&
+name|comp
+operator|->
+name|enabled
+condition|)
+name|packet_init_compression
+argument_list|()
 expr_stmt|;
 block|}
 block|}

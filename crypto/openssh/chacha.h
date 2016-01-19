@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: chacha.h,v 1.1 2013/11/21 00:45:44 djm Exp $ */
+comment|/* $OpenBSD: chacha.h,v 1.3 2014/05/02 03:27:54 djm Exp $ */
 end_comment
 
 begin_comment

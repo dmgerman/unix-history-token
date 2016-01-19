@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.28 2014/02/07 06:55:54 djm Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.30 2014/04/30 19:07:48 naddy Exp $ */
 end_comment
 
 begin_comment
@@ -1003,7 +1003,8 @@ name|b
 index|[
 literal|4
 index|]
-decl_stmt|,
+decl_stmt|;
+name|u_char
 name|nonce
 index|[
 literal|8

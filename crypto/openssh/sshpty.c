@@ -415,16 +415,6 @@ name|fd
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USE_VHANGUP
-name|void
-modifier|*
-name|old
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* USE_VHANGUP */
-ifdef|#
-directive|ifdef
 name|_UNICOS
 if|if
 condition|(
@@ -719,31 +709,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NEED_SETPGRP */
-ifdef|#
-directive|ifdef
-name|USE_VHANGUP
-name|old
-operator|=
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|vhangup
-argument_list|()
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|old
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_VHANGUP */
 name|fd
 operator|=
 name|open
@@ -775,31 +740,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|USE_VHANGUP
-name|close
-argument_list|(
-operator|*
-name|ttyfd
-argument_list|)
-expr_stmt|;
-operator|*
-name|ttyfd
-operator|=
-name|fd
-expr_stmt|;
-else|#
-directive|else
-comment|/* USE_VHANGUP */
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_VHANGUP */
 block|}
 comment|/* Verify that we now have a controlling tty. */
 name|fd

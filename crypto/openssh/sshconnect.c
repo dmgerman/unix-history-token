@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.246 2014/02/06 22:21:01 djm Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.251 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -244,6 +244,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"readconf.h"
 end_include
 
@@ -251,12 +257,6 @@ begin_include
 include|#
 directive|include
 file|"atomicio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -302,6 +302,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|server_version_string
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Key
+modifier|*
+name|previous_host_key
 init|=
 name|NULL
 decl_stmt|;
@@ -3404,7 +3413,6 @@ if|if
 condition|(
 name|buffer_len
 argument_list|(
-operator|&
 name|host_key
 operator|->
 name|cert
@@ -5594,6 +5602,11 @@ name|host_key
 parameter_list|)
 block|{
 name|int
+name|r
+init|=
+operator|-
+literal|1
+decl_stmt|,
 name|flags
 init|=
 literal|0
@@ -5636,6 +5649,27 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|key_equal
+argument_list|(
+name|previous_host_key
+argument_list|,
+name|host_key
+argument_list|)
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"%s: server host key matches cached key"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|options
@@ -5709,9 +5743,13 @@ argument_list|(
 name|plain
 argument_list|)
 expr_stmt|;
-return|return
+name|r
+operator|=
 literal|0
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -5748,7 +5786,8 @@ name|plain
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|r
+operator|=
 name|check_host_key
 argument_list|(
 name|host
@@ -5779,6 +5818,35 @@ name|options
 operator|.
 name|num_system_hostfiles
 argument_list|)
+expr_stmt|;
+name|done
+label|:
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+operator|&&
+name|host_key
+operator|!=
+name|NULL
+condition|)
+block|{
+name|key_free
+argument_list|(
+name|previous_host_key
+argument_list|)
+expr_stmt|;
+name|previous_host_key
+operator|=
+name|key_from_private
+argument_list|(
+name|host_key
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|r
 return|;
 block|}
 end_function
@@ -5902,6 +5970,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|ssh_kex
 argument_list|(
 name|host
@@ -5920,6 +5991,15 @@ argument_list|,
 name|sensitive
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fatal
+argument_list|(
+literal|"ssh1 is not unsupported"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|free
 argument_list|(

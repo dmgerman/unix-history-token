@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.112 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.114 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -400,6 +400,10 @@ name|permit_tty
 decl_stmt|;
 comment|/* If false, deny pty allocation */
 name|int
+name|permit_user_rc
+decl_stmt|;
+comment|/* If false, deny ~/.ssh/rc execution */
+name|int
 name|strict_modes
 decl_stmt|;
 comment|/* If true, require string home dir modes. */
@@ -434,10 +438,11 @@ name|int
 name|protocol
 decl_stmt|;
 comment|/* Supported protocol versions. */
-name|int
-name|gateway_ports
+name|struct
+name|ForwardOptions
+name|fwd_opts
 decl_stmt|;
-comment|/* If true, allow remote connects to forwarded ports. */
+comment|/* forwarding options */
 name|SyslogFacility
 name|log_facility
 decl_stmt|;
@@ -519,6 +524,10 @@ decl_stmt|;
 comment|/* If true, compression is allowed */
 name|int
 name|allow_tcp_forwarding
+decl_stmt|;
+comment|/* One of FORWARD_* */
+name|int
+name|allow_streamlocal_forwarding
 decl_stmt|;
 comment|/* One of FORWARD_* */
 name|int

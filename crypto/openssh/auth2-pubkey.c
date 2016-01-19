@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.39 2013/12/30 23:52:27 djm Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.41 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -141,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -213,12 +219,6 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -1116,7 +1116,7 @@ modifier|*
 name|principal_list
 parameter_list|,
 name|struct
-name|KeyCert
+name|sshkey_cert
 modifier|*
 name|cert
 parameter_list|)
@@ -1206,7 +1206,7 @@ modifier|*
 name|pw
 parameter_list|,
 name|struct
-name|KeyCert
+name|sshkey_cert
 modifier|*
 name|cert
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rijndael.c,v 1.16 2004/06/23 00:39:38 mouring Exp $ */
+comment|/*	$OpenBSD: rijndael.c,v 1.18 2014/04/29 15:42:07 markus Exp $ */
 end_comment
 
 begin_comment
@@ -31,11 +31,11 @@ directive|include
 file|"rijndael.h"
 end_include
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|FULL_UNROLL
-end_define
+end_undef
 
 begin_comment
 comment|/* Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02]; Te4[x] = S [x].[01, 01, 01, 01];  Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01, 01, 01, 01]; */
@@ -5351,7 +5351,6 @@ comment|/**  * Expand the cipher key into the encryption key schedule.  *  * @re
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|rijndaelKeySetupEnc
 parameter_list|(
@@ -6093,7 +6092,6 @@ comment|/**  * Expand the cipher key into the decryption key schedule.  *  * @re
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|rijndaelKeySetupDec
 parameter_list|(
@@ -6125,11 +6123,15 @@ decl_stmt|;
 name|u32
 name|temp
 decl_stmt|;
+comment|/* expand the cipher key: */
 if|if
 condition|(
 name|have_encrypt
+operator|>
+literal|0
 condition|)
 block|{
+comment|/* Already done */
 name|Nr
 operator|=
 name|have_encrypt
@@ -6137,7 +6139,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* expand the cipher key: */
 name|Nr
 operator|=
 name|rijndaelKeySetupEnc
@@ -6632,7 +6633,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|rijndaelEncrypt
 parameter_list|(

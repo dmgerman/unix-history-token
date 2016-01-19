@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.24 2013/10/17 00:30:13 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.25 2014/04/21 14:36:16 logan Exp $ */
 end_comment
 
 begin_comment
@@ -547,6 +547,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -568,6 +570,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

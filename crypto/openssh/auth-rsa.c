@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.86 2014/01/27 19:18:54 markus Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.88 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -166,12 +172,6 @@ begin_include
 include|#
 directive|include
 file|"ssh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -589,6 +589,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Encrypt the challenge with the public key. */
+if|if
+condition|(
 name|rsa_public_encrypt
 argument_list|(
 name|encrypted_challenge
@@ -598,6 +600,15 @@ argument_list|,
 name|key
 operator|->
 name|rsa
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: rsa_public_encrypt failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Send the encrypted challenge to the client. */

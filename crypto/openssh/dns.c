@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.29 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.31 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -279,6 +291,26 @@ operator|*
 name|algorithm
 operator|=
 name|SSHFP_KEY_ECDSA
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|digest_type
+condition|)
+operator|*
+name|digest_type
+operator|=
+name|SSHFP_HASH_SHA256
+expr_stmt|;
+break|break;
+case|case
+name|KEY_ED25519
+case|:
+operator|*
+name|algorithm
+operator|=
+name|SSHFP_KEY_ED25519
 expr_stmt|;
 if|if
 condition|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.h,v 1.17 2013/12/06 13:34:54 markus Exp $ */
+comment|/* $OpenBSD: authfile.h,v 1.19 2014/07/03 23:18:35 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+comment|/*  * Copyright (c) 2000, 2013 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -19,11 +19,24 @@ directive|define
 name|AUTHFILE_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|sshbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sshkey
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
-name|key_save_private
+name|sshkey_save_private
 parameter_list|(
-name|Key
+name|struct
+name|sshkey
 modifier|*
 parameter_list|,
 specifier|const
@@ -51,7 +64,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|key_load_file
+name|sshkey_load_file
 parameter_list|(
 name|int
 parameter_list|,
@@ -59,72 +72,40 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Key
-modifier|*
-name|key_load_cert
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|Key
-modifier|*
-name|key_load_public
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|Key
-modifier|*
-name|key_load_public_type
-parameter_list|(
 name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|Key
-modifier|*
-name|key_parse_private
+name|sshkey_load_cert
 parameter_list|(
-name|Buffer
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|struct
+name|sshkey
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshkey_load_public
+parameter_list|(
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+name|struct
+name|sshkey
+modifier|*
 modifier|*
 parameter_list|,
 name|char
@@ -135,9 +116,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Key
-modifier|*
-name|key_load_private
+name|int
+name|sshkey_load_private
 parameter_list|(
 specifier|const
 name|char
@@ -147,6 +127,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|struct
+name|sshkey
+modifier|*
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -155,9 +140,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Key
-modifier|*
-name|key_load_private_cert
+name|int
+name|sshkey_load_private_cert
 parameter_list|(
 name|int
 parameter_list|,
@@ -169,6 +153,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|struct
+name|sshkey
+modifier|*
+modifier|*
+parameter_list|,
 name|int
 modifier|*
 parameter_list|)
@@ -176,9 +165,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Key
-modifier|*
-name|key_load_private_type
+name|int
+name|sshkey_load_private_type
 parameter_list|(
 name|int
 parameter_list|,
@@ -188,6 +176,11 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+name|struct
+name|sshkey
+modifier|*
 modifier|*
 parameter_list|,
 name|char
@@ -201,9 +194,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Key
-modifier|*
-name|key_load_private_pem
+name|int
+name|sshkey_load_private_pem
 parameter_list|(
 name|int
 parameter_list|,
@@ -211,6 +203,11 @@ name|int
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+name|struct
+name|sshkey
+modifier|*
 modifier|*
 parameter_list|,
 name|char
@@ -222,7 +219,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|key_perm_ok
+name|sshkey_perm_ok
 parameter_list|(
 name|int
 parameter_list|,
@@ -235,9 +232,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|key_in_file
+name|sshkey_in_file
 parameter_list|(
-name|Key
+name|struct
+name|sshkey
 modifier|*
 parameter_list|,
 specifier|const

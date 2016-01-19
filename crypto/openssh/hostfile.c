@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.c,v 1.55 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: hostfile.c,v 1.57 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -790,6 +796,9 @@ name|u_long
 name|linenum
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 if|if
 condition|(
 name|key
@@ -869,6 +878,8 @@ name|linenum
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
@@ -1423,6 +1434,9 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|key
 operator|=
 name|key_new
@@ -1452,6 +1466,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+else|#
+directive|else
+continue|continue;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

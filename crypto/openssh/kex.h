@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.62 2014/01/27 18:58:14 markus Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.64 2014/05/02 03:27:54 djm Exp $ */
 end_comment
 
 begin_comment

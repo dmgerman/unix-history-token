@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.h,v 1.2 2010/02/24 06:12:53 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.h,v 1.3 2014/04/29 18:01:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -52,6 +52,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WITH_OPENSSL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ENABLE_PKCS11
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|ENABLE_PKCS11
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

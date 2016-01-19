@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.176 2014/01/17 13:12:38 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.183 2014/09/02 19:33:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2215,7 +2215,6 @@ begin_undef
 undef|#
 directive|undef
 name|_PATH_MAILDIR
-name|MAILDIR
 end_undef
 
 begin_endif
@@ -3306,36 +3305,6 @@ end_endif
 
 begin_comment
 comment|/* !defined(HAVE_MEMMOVE)&& defined(HAVE_BCOPY) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_VHANGUP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_DEV_PTMX
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_VHANGUP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(HAVE_VHANGUP)&& !defined(HAVE_DEV_PTMX) */
 end_comment
 
 begin_ifndef
@@ -4562,6 +4531,160 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_VA_COPY
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___VA_COPY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|__va_copy(dest, src)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__predict_true
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+operator|(
+name|__GNUC__
+operator|>
+operator|(
+literal|2
+operator|)
+operator|)
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+operator|(
+literal|2
+operator|)
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+operator|(
+literal|96
+operator|)
+operator|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__predict_true
+parameter_list|(
+name|exp
+parameter_list|)
+value|__builtin_expect(((exp) != 0), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__predict_false
+parameter_list|(
+name|exp
+parameter_list|)
+value|__builtin_expect(((exp) != 0), 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__predict_true
+parameter_list|(
+name|exp
+parameter_list|)
+value|((exp) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__predict_false
+parameter_list|(
+name|exp
+parameter_list|)
+value|((exp) != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* gcc version */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __predict_true */
+end_comment
 
 begin_endif
 endif|#

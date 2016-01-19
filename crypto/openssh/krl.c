@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.14 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.17 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_include
@@ -2009,13 +2009,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|r
-operator|==
-literal|0
-condition|?
-operator|-
-literal|1
-else|:
-literal|0
 return|;
 block|}
 end_function
@@ -2168,7 +2161,7 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 return|return
@@ -3112,6 +3105,12 @@ argument_list|(
 operator|&
 name|sect
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_clear
+argument_list|(
+operator|&
+name|sect
 argument_list|)
 expr_stmt|;
 block|}
@@ -4084,7 +4083,9 @@ name|nbits
 decl_stmt|;
 name|u_char
 name|type
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|u_char
 modifier|*
 name|blob
 decl_stmt|;
@@ -4795,12 +4796,14 @@ name|u_char
 name|type
 decl_stmt|,
 modifier|*
-name|blob
-decl_stmt|,
-modifier|*
 name|rdata
 init|=
 name|NULL
+decl_stmt|;
+specifier|const
+name|u_char
+modifier|*
+name|blob
 decl_stmt|;
 name|u_int
 name|i
@@ -6115,7 +6118,7 @@ name|rb
 operator|.
 name|len
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 return|return

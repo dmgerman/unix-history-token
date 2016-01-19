@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.179 2013/11/20 20:53:10 deraadt Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.180 2014/06/24 02:21:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3856,6 +3856,8 @@ name|statbytes
 decl_stmt|;
 name|size_t
 name|amt
+decl_stmt|,
+name|nr
 decl_stmt|;
 name|int
 name|fd
@@ -4348,6 +4350,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|nr
+operator|=
 name|atomicio
 argument_list|(
 name|read
@@ -4360,13 +4365,31 @@ name|buf
 argument_list|,
 name|amt
 argument_list|)
+operator|)
 operator|!=
 name|amt
 condition|)
+block|{
 name|haderr
 operator|=
 name|errno
 expr_stmt|;
+name|memset
+argument_list|(
+name|bp
+operator|->
+name|buf
+operator|+
+name|nr
+argument_list|,
+literal|0
+argument_list|,
+name|amt
+operator|-
+name|nr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Keep writing after error to retain sync */
 if|if
@@ -4386,6 +4409,17 @@ argument_list|,
 name|bp
 operator|->
 name|buf
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|bp
+operator|->
+name|buf
+argument_list|,
+literal|0
 argument_list|,
 name|amt
 argument_list|)

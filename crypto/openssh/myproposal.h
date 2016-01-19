@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.35 2013/12/06 13:39:49 markus Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.41 2014/07/11 13:54:34 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -162,14 +162,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEX_CURVE25519_METHODS
-define|\
-value|"curve25519-sha256@libssh.org,"
-end_define
-
-begin_define
-define|#
-directive|define
 name|SHA2_HMAC_MODES
 define|\
 value|"hmac-sha2-256," \ 	"hmac-sha2-512,"
@@ -189,13 +181,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEX_CURVE25519_METHODS
+name|SHA2_HMAC_MODES
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_SHA256
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|SHA2_HMAC_MODES
+name|KEX_CURVE25519_METHODS
+value|"curve25519-sha256@libssh.org,"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEX_CURVE25519_METHODS
+value|""
 end_define
 
 begin_endif
@@ -206,9 +228,16 @@ end_endif
 begin_define
 define|#
 directive|define
-name|KEX_DEFAULT_KEX
+name|KEX_SERVER_KEX
 define|\
-value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
+value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS \ 	"diffie-hellman-group14-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_CLIENT_KEX
+value|KEX_SERVER_KEX "," \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group1-sha1"
 end_define
 
 begin_define
@@ -226,18 +255,99 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KEX_DEFAULT_ENCRYPT
+name|KEX_SERVER_ENCRYPT
 define|\
-value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"arcfour256,arcfour128," \ 	AESGCM_CIPHER_MODES \ 	"chacha20-poly1305@openssh.com," \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
+value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	AESGCM_CIPHER_MODES \ 	"chacha20-poly1305@openssh.com"
 end_define
 
 begin_define
 define|#
 directive|define
-name|KEX_DEFAULT_MAC
-define|\
-value|"hmac-md5-etm@openssh.com," \ 	"hmac-sha1-etm@openssh.com," \ 	"umac-64-etm@openssh.com," \ 	"umac-128-etm@openssh.com," \ 	"hmac-sha2-256-etm@openssh.com," \ 	"hmac-sha2-512-etm@openssh.com," \ 	"hmac-ripemd160-etm@openssh.com," \ 	"hmac-sha1-96-etm@openssh.com," \ 	"hmac-md5-96-etm@openssh.com," \ 	"hmac-md5," \ 	"hmac-sha1," \ 	"umac-64@openssh.com," \ 	"umac-128@openssh.com," \ 	SHA2_HMAC_MODES \ 	"hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96," \ 	"hmac-md5-96"
+name|KEX_CLIENT_ENCRYPT
+value|KEX_SERVER_ENCRYPT "," \ 	"arcfour256,arcfour128," \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
 end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_SERVER_MAC
+define|\
+value|"umac-64-etm@openssh.com," \ 	"umac-128-etm@openssh.com," \ 	"hmac-sha2-256-etm@openssh.com," \ 	"hmac-sha2-512-etm@openssh.com," \ 	"hmac-sha1-etm@openssh.com," \ 	"umac-64@openssh.com," \ 	"umac-128@openssh.com," \ 	"hmac-sha2-256," \ 	"hmac-sha2-512," \ 	"hmac-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_CLIENT_MAC
+value|KEX_SERVER_MAC "," \ 	"hmac-md5-etm@openssh.com," \ 	"hmac-ripemd160-etm@openssh.com," \ 	"hmac-sha1-96-etm@openssh.com," \ 	"hmac-md5-96-etm@openssh.com," \ 	"hmac-md5," \ 	"hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96," \ 	"hmac-md5-96"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEX_SERVER_KEX
+define|\
+value|"curve25519-sha256@libssh.org"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_DEFAULT_PK_ALG
+define|\
+value|"ssh-ed25519-cert-v01@openssh.com," \ 	"ssh-ed25519"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_SERVER_ENCRYPT
+define|\
+value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"chacha20-poly1305@openssh.com"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_SERVER_MAC
+define|\
+value|"umac-64-etm@openssh.com," \ 	"umac-128-etm@openssh.com," \ 	"hmac-sha2-256-etm@openssh.com," \ 	"hmac-sha2-512-etm@openssh.com," \ 	"hmac-sha1-etm@openssh.com," \ 	"umac-64@openssh.com," \ 	"umac-128@openssh.com," \ 	"hmac-sha2-256," \ 	"hmac-sha2-512," \ 	"hmac-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_CLIENT_KEX
+value|KEX_SERVER_KEX
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_CLIENT_ENCRYPT
+value|KEX_SERVER_ENCRYPT
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_CLIENT_MAC
+value|KEX_SERVER_MAC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 begin_define
 define|#
@@ -253,38 +363,21 @@ name|KEX_DEFAULT_LANG
 value|""
 end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|myproposal
-index|[
-name|PROPOSAL_MAX
-index|]
-init|=
-block|{
-name|KEX_DEFAULT_KEX
-block|,
-name|KEX_DEFAULT_PK_ALG
-block|,
-name|KEX_DEFAULT_ENCRYPT
-block|,
-name|KEX_DEFAULT_ENCRYPT
-block|,
-name|KEX_DEFAULT_MAC
-block|,
-name|KEX_DEFAULT_MAC
-block|,
-name|KEX_DEFAULT_COMP
-block|,
-name|KEX_DEFAULT_COMP
-block|,
-name|KEX_DEFAULT_LANG
-block|,
-name|KEX_DEFAULT_LANG
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|KEX_CLIENT
+define|\
+value|KEX_CLIENT_KEX, \ 	KEX_DEFAULT_PK_ALG, \ 	KEX_CLIENT_ENCRYPT, \ 	KEX_CLIENT_ENCRYPT, \ 	KEX_CLIENT_MAC, \ 	KEX_CLIENT_MAC, \ 	KEX_DEFAULT_COMP, \ 	KEX_DEFAULT_COMP, \ 	KEX_DEFAULT_LANG, \ 	KEX_DEFAULT_LANG
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_SERVER
+define|\
+value|KEX_SERVER_KEX, \ 	KEX_DEFAULT_PK_ALG, \ 	KEX_SERVER_ENCRYPT, \ 	KEX_SERVER_ENCRYPT, \ 	KEX_SERVER_MAC, \ 	KEX_SERVER_MAC, \ 	KEX_DEFAULT_COMP, \ 	KEX_DEFAULT_COMP, \ 	KEX_DEFAULT_LANG, \ 	KEX_DEFAULT_LANG
+end_define
 
 end_unit
 

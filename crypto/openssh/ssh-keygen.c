@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.241 2014/02/05 20:13:25 naddy Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.249 2014/07/03 03:47:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -713,7 +713,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-name|MAXHOSTNAMELEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -876,6 +876,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 if|if
 condition|(
 name|type
@@ -935,6 +938,8 @@ literal|"Invalid ECDSA key length - valid lengths are "
 literal|"256, 384 or 521 bits"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1275,6 +1280,12 @@ directive|define
 name|SSH_COM_PRIVATE_KEY_MAGIC
 value|0x3f6ff9eb
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
 
 begin_function
 specifier|static
@@ -1918,6 +1929,8 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|sig
+init|=
+name|NULL
 decl_stmt|,
 name|data
 index|[]
@@ -2389,11 +2402,23 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rsa_generate_additional_parameters
 argument_list|(
 name|key
 operator|->
 name|rsa
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: rsa_generate_additional_parameters "
+literal|"error"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3697,6 +3722,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -5247,6 +5277,9 @@ name|int
 name|ca
 parameter_list|,
 name|int
+name|revoked
+parameter_list|,
+name|int
 name|hash
 parameter_list|)
 block|{
@@ -5386,11 +5419,13 @@ argument_list|,
 name|ca
 condition|?
 name|CA_MARKER
+literal|" "
 else|:
 literal|""
 argument_list|,
-name|ca
+name|revoked
 condition|?
+name|REVOKE_MARKER
 literal|" "
 else|:
 literal|""
@@ -5509,6 +5544,8 @@ literal|0
 decl_stmt|;
 name|int
 name|ca
+decl_stmt|,
+name|revoked
 decl_stmt|;
 name|int
 name|found_key
@@ -5595,6 +5632,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX this code is a mess; refactor -djm */
 comment|/* 	 * Find hosts goes to stdout, hash and deletions happen in-place 	 * A corner case is ssh-keygen -HF foo, which should go to stdout 	 */
 if|if
 condition|(
@@ -5877,7 +5915,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Check whether this is a CA key */
+comment|/* Check whether this is a CA key or revocation marker */
 if|if
 condition|(
 name|strncasecmp
@@ -5937,6 +5975,68 @@ expr_stmt|;
 block|}
 else|else
 name|ca
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|cp
+argument_list|,
+name|REVOKE_MARKER
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|REVOKE_MARKER
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|cp
+index|[
+sizeof|sizeof
+argument_list|(
+name|REVOKE_MARKER
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+operator|||
+name|cp
+index|[
+sizeof|sizeof
+argument_list|(
+name|REVOKE_MARKER
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\t'
+operator|)
+condition|)
+block|{
+name|revoked
+operator|=
+literal|1
+expr_stmt|;
+name|cp
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|REVOKE_MARKER
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|revoked
 operator|=
 literal|0
 expr_stmt|;
@@ -6171,6 +6271,10 @@ name|ca
 condition|?
 literal|" (CA key)"
 else|:
+name|revoked
+condition|?
+literal|" (revoked)"
+else|:
 literal|""
 argument_list|)
 expr_stmt|;
@@ -6183,6 +6287,8 @@ argument_list|,
 name|pub
 argument_list|,
 name|ca
+argument_list|,
+name|revoked
 argument_list|,
 literal|0
 argument_list|)
@@ -6201,10 +6307,12 @@ if|if
 condition|(
 operator|!
 name|c
-operator|&&
-operator|!
+operator|||
 name|ca
+operator|||
+name|revoked
 condition|)
+block|{
 name|printhost
 argument_list|(
 name|out
@@ -6215,10 +6323,14 @@ name|pub
 argument_list|,
 name|ca
 argument_list|,
+name|revoked
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"# Host %s found: "
@@ -6236,6 +6348,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -6250,6 +6363,8 @@ argument_list|,
 name|pub
 argument_list|,
 name|ca
+argument_list|,
+name|revoked
 argument_list|,
 literal|0
 argument_list|)
@@ -6325,10 +6440,16 @@ name|pub
 argument_list|,
 name|ca
 argument_list|,
+name|revoked
+argument_list|,
 name|hash_hosts
 operator|&&
 operator|!
+operator|(
 name|ca
+operator|||
+name|revoked
+operator|)
 argument_list|)
 expr_stmt|;
 name|found_key
@@ -6345,10 +6466,12 @@ if|if
 condition|(
 operator|!
 name|c
-operator|&&
-operator|!
+operator|||
 name|ca
+operator|||
+name|revoked
 condition|)
+block|{
 name|printhost
 argument_list|(
 name|out
@@ -6359,10 +6482,14 @@ name|pub
 argument_list|,
 name|ca
 argument_list|,
+name|revoked
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"# Host %s found: "
@@ -6380,12 +6507,47 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|hash_hosts
+operator|&&
+operator|(
+name|ca
+operator|||
+name|revoked
+operator|)
+condition|)
+block|{
+comment|/* Don't hash CA and revoked keys' hostnames */
+name|printhost
+argument_list|(
+name|out
+argument_list|,
+name|cp
+argument_list|,
+name|pub
+argument_list|,
+name|ca
+argument_list|,
+name|revoked
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|has_unhashed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 name|hash_hosts
 condition|)
 block|{
+comment|/* Hash each hostname separately */
 for|for
 control|(
 name|cp2
@@ -6418,37 +6580,6 @@ literal|","
 argument_list|)
 control|)
 block|{
-if|if
-condition|(
-name|ca
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: "
-literal|"ignoring CA key for host: "
-literal|"%.64s\n"
-argument_list|,
-name|cp2
-argument_list|)
-expr_stmt|;
-name|printhost
-argument_list|(
-name|out
-argument_list|,
-name|cp2
-argument_list|,
-name|pub
-argument_list|,
-name|ca
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|strcspn
@@ -6485,11 +6616,18 @@ name|pub
 argument_list|,
 name|ca
 argument_list|,
+name|revoked
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|has_unhashed
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
+block|{
 name|printhost
 argument_list|(
 name|out
@@ -6500,14 +6638,13 @@ name|pub
 argument_list|,
 name|ca
 argument_list|,
+name|revoked
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|has_unhashed
-operator|=
-literal|1
-expr_stmt|;
+block|}
 block|}
 block|}
 name|key_free
@@ -8623,11 +8760,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ENABLE_PKCS11
 name|pkcs11_init
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|tmp
 operator|=
 name|tilde_expand_filename
@@ -8966,7 +9108,6 @@ condition|)
 block|{
 name|prepare_options_buf
 argument_list|(
-operator|&
 name|public
 operator|->
 name|cert
@@ -8983,7 +9124,6 @@ else|else
 block|{
 name|prepare_options_buf
 argument_list|(
-operator|&
 name|public
 operator|->
 name|cert
@@ -8995,7 +9135,6 @@ argument_list|)
 expr_stmt|;
 name|prepare_options_buf
 argument_list|(
-operator|&
 name|public
 operator|->
 name|cert
@@ -9242,9 +9381,14 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ENABLE_PKCS11
 name|pkcs11_terminate
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
@@ -10084,7 +10228,11 @@ block|{
 name|char
 modifier|*
 name|name
+decl_stmt|,
+modifier|*
+name|arg
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -10265,9 +10413,9 @@ literal|0
 operator|)
 condition|)
 block|{
-name|data
+name|arg
 operator|=
-name|buffer_get_string
+name|buffer_get_cstring
 argument_list|(
 operator|&
 name|option
@@ -10279,12 +10427,12 @@ name|printf
 argument_list|(
 literal|" %s\n"
 argument_list|,
-name|data
+name|arg
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|data
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -10662,7 +10810,6 @@ if|if
 condition|(
 name|buffer_len
 argument_list|(
-operator|&
 name|key
 operator|->
 name|cert
@@ -10686,7 +10833,6 @@ argument_list|)
 expr_stmt|;
 name|show_options
 argument_list|(
-operator|&
 name|key
 operator|->
 name|cert
@@ -10714,7 +10860,6 @@ if|if
 condition|(
 name|buffer_len
 argument_list|(
-operator|&
 name|key
 operator|->
 name|cert
@@ -10738,7 +10883,6 @@ argument_list|)
 expr_stmt|;
 name|show_options
 argument_list|(
-operator|&
 name|key
 operator|->
 name|cert
@@ -10759,6 +10903,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
 
 begin_function
 specifier|static
@@ -12219,6 +12369,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -12231,58 +12386,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [options]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -A          Generate non-existent host keys for all key types.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -a number   Number of KDF rounds for new key format or moduli primality tests.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -B          Show bubblebabble digest of key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -b bits     Number of bits in the key to create.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -C comment  Provide new comment.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -c          Change comment in private and public key files.\n"
+literal|"usage: ssh-keygen [-q] [-b bits] [-t dsa | ecdsa | ed25519 | rsa | rsa1]\n"
+literal|"                  [-N new_passphrase] [-C comment] [-f output_keyfile]\n"
+literal|"       ssh-keygen -p [-P old_passphrase] [-N new_passphrase] [-f keyfile]\n"
+literal|"       ssh-keygen -i [-m key_format] [-f input_keyfile]\n"
+literal|"       ssh-keygen -e [-m key_format] [-f input_keyfile]\n"
+literal|"       ssh-keygen -y [-f input_keyfile]\n"
+literal|"       ssh-keygen -c [-P passphrase] [-C comment] [-f keyfile]\n"
+literal|"       ssh-keygen -l [-f input_keyfile]\n"
+literal|"       ssh-keygen -B [-f input_keyfile]\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -12292,7 +12404,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -D pkcs11   Download public key from pkcs11 token.\n"
+literal|"       ssh-keygen -D pkcs11\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -12301,266 +12413,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -e          Export OpenSSH to foreign format key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -F hostname Find hostname in known hosts file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -f filename Filename of the key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -G file     Generate candidates for DH-GEX moduli.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -g          Use generic DNS resource record format.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -H          Hash names in known_hosts file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -h          Generate host certificate instead of a user certificate.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -I key_id   Key identifier to include in certificate.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -i          Import foreign format to OpenSSH key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -J number   Screen this number of moduli lines.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -j number   Start screening moduli at specified line.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -K checkpt  Write checkpoints to this file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -k          Generate a KRL file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -L          Print the contents of a certificate.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -l          Show fingerprint of key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -M memory   Amount of memory (MB) to use for generating DH-GEX moduli.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -m key_fmt  Conversion format for -e/-i (PEM|PKCS8|RFC4716).\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -N phrase   Provide new passphrase.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -n name,... User/host principal names to include in certificate\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -O option   Specify a certificate option.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -o          Enforce new private key format.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -P phrase   Provide old passphrase.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -p          Change passphrase of private key file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -Q          Test whether key(s) are revoked in KRL.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -q          Quiet.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -R hostname Remove host from known_hosts file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -r hostname Print DNS resource record.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -S start    Start point (hex) for generating DH-GEX moduli.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -s ca_key   Certify keys with CA key.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -T file     Screen candidates for DH-GEX moduli.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t type     Specify type of key to create.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -u          Update KRL rather than creating a new one.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -V from:to  Specify certificate validity interval.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -v          Verbose.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -W gen      Generator to use for generating DH-GEX moduli.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -y          Read private key file and print public key.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -Z cipher   Specify a cipher for new private key format.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -z serial   Specify a serial number.\n"
+literal|"       ssh-keygen -F hostname [-f known_hosts_file] [-l]\n"
+literal|"       ssh-keygen -H [-f known_hosts_file]\n"
+literal|"       ssh-keygen -R hostname [-f known_hosts_file]\n"
+literal|"       ssh-keygen -r hostname [-f input_keyfile] [-g]\n"
+literal|"       ssh-keygen -G output_file [-v] [-b bits] [-M memory] [-S start_point]\n"
+literal|"       ssh-keygen -T output_file -f input_file [-v] [-a rounds] [-J num_lines]\n"
+literal|"                  [-j start_line] [-K checkpt] [-W generator]\n"
+literal|"       ssh-keygen -s ca_key -I certificate_identity [-h] [-n principals]\n"
+literal|"                  [-O option] [-V validity_interval] [-z serial_number] file ...\n"
+literal|"       ssh-keygen -L [-f input_keyfile]\n"
+literal|"       ssh-keygen -A\n"
+literal|"       ssh-keygen -k -f krl_file [-u] [-s ca_public] [-z version_number]\n"
+literal|"                  file ...\n"
+literal|"       ssh-keygen -Q -f krl_file file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -13689,6 +13555,9 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 if|if
 condition|(
 name|gen_krl
@@ -13731,6 +13600,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ca_key_path
@@ -13823,6 +13694,9 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 if|if
 condition|(
 name|convert_to
@@ -13841,6 +13715,8 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|print_public
@@ -13934,6 +13810,17 @@ argument_list|(
 name|pw
 argument_list|,
 name|_PATH_HOST_ECDSA_KEY_FILE
+argument_list|,
+name|rr_hostname
+argument_list|)
+expr_stmt|;
+name|n
+operator|+=
+name|do_print_resource_record
+argument_list|(
+name|pw
+argument_list|,
+name|_PATH_HOST_ED25519_KEY_FILE
 argument_list|,
 name|rr_hostname
 argument_list|)
