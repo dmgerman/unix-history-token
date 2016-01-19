@@ -5466,14 +5466,6 @@ name|aiothreadflags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* The daemon resides in its own pgrp. */
-name|sys_setsid
-argument_list|(
-name|td
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * and creating too many daemons.) 	 */
 name|sema_post
 argument_list|(
