@@ -7625,7 +7625,7 @@ argument_list|,
 literal|"rx_small_cnt"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -7649,7 +7649,7 @@ argument_list|,
 literal|"number of lro merge queues flushed"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -7673,7 +7673,7 @@ argument_list|,
 literal|"number of bad csums preventing LRO"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,

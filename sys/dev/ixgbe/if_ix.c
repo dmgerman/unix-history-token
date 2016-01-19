@@ -21129,7 +21129,7 @@ argument_list|,
 literal|"Copied RX Frames"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -21151,7 +21151,7 @@ argument_list|,
 literal|"LRO Queued"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
