@@ -2984,6 +2984,10 @@ argument_list|,
 name|__in
 name|size_t
 name|size
+argument_list|,
+name|__in
+name|uint32_t
+name|mode
 argument_list|)
 block|{
 name|efx_mcdi_req_t
@@ -2994,7 +2998,7 @@ name|payload
 index|[
 name|MAX
 argument_list|(
-name|MC_CMD_NVRAM_READ_IN_LEN
+name|MC_CMD_NVRAM_READ_IN_V2_LEN
 argument_list|,
 name|MC_CMD_NVRAM_READ_OUT_LENMAX
 argument_list|)
@@ -3049,7 +3053,7 @@ name|req
 operator|.
 name|emr_in_length
 operator|=
-name|MC_CMD_NVRAM_READ_IN_LEN
+name|MC_CMD_NVRAM_READ_IN_V2_LEN
 expr_stmt|;
 name|req
 operator|.
@@ -3067,7 +3071,7 @@ name|MCDI_IN_SET_DWORD
 argument_list|(
 name|req
 argument_list|,
-name|NVRAM_READ_IN_TYPE
+name|NVRAM_READ_IN_V2_TYPE
 argument_list|,
 name|partn
 argument_list|)
@@ -3076,7 +3080,7 @@ name|MCDI_IN_SET_DWORD
 argument_list|(
 name|req
 argument_list|,
-name|NVRAM_READ_IN_OFFSET
+name|NVRAM_READ_IN_V2_OFFSET
 argument_list|,
 name|offset
 argument_list|)
@@ -3085,9 +3089,18 @@ name|MCDI_IN_SET_DWORD
 argument_list|(
 name|req
 argument_list|,
-name|NVRAM_READ_IN_LENGTH
+name|NVRAM_READ_IN_V2_LENGTH
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|MCDI_IN_SET_DWORD
+argument_list|(
+name|req
+argument_list|,
+name|NVRAM_READ_IN_V2_MODE
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 name|efx_mcdi_execute
