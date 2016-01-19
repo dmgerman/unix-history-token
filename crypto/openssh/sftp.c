@@ -293,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_NUM_REQUESTS
-value|256
+value|64
 end_define
 
 begin_comment

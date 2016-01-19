@@ -32,14 +32,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_FREEBSD
-value|"FreeBSD-20140420"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH_VERSION_HPN
-value|"_hpn13v11"
+value|"FreeBSD-20160119"
 end_define
 
 end_unit

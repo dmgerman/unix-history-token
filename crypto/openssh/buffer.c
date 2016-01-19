@@ -80,12 +80,8 @@ begin_define
 define|#
 directive|define
 name|BUFFER_MAX_LEN
-value|0x4000000
+value|0xa00000
 end_define
-
-begin_comment
-comment|/* 64MB */
-end_comment
 
 begin_define
 define|#
@@ -634,25 +630,6 @@ operator|-
 name|buffer
 operator|->
 name|offset
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Returns the maximum number of bytes of data that may be in the buffer. */
-end_comment
-
-begin_function
-name|u_int
-name|buffer_get_max_len
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BUFFER_MAX_LEN
-operator|)
 return|;
 block|}
 end_function

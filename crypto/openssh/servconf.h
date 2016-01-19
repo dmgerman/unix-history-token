@@ -689,18 +689,6 @@ modifier|*
 name|version_addendum
 decl_stmt|;
 comment|/* Appended to SSH banner */
-name|int
-name|hpn_disabled
-decl_stmt|;
-comment|/* Disable HPN functionality. */
-name|int
-name|hpn_buffer_size
-decl_stmt|;
-comment|/* Set HPN buffer size - default 2MB.*/
-name|int
-name|tcp_rcv_buf_poll
-decl_stmt|;
-comment|/* Poll TCP rcv window in autotuning 					 * kernels. */
 name|u_int
 name|num_auth_methods
 decl_stmt|;

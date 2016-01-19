@@ -1098,7 +1098,7 @@ goto|goto
 name|authsock_err
 goto|;
 block|}
-comment|/* 	 * Allocate a channel for the authentication agent socket. 	 * Ignore HPN on that one given no improvement expected. 	 */
+comment|/* Allocate a channel for the authentication agent socket. */
 name|nc
 operator|=
 name|channel_new
@@ -10958,12 +10958,6 @@ operator|->
 name|self
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|options
-operator|.
-name|hpn_disabled
-condition|)
 name|channel_set_fds
 argument_list|(
 name|s
@@ -10987,34 +10981,6 @@ argument_list|,
 name|is_tty
 argument_list|,
 name|CHAN_SES_WINDOW_DEFAULT
-argument_list|)
-expr_stmt|;
-else|else
-name|channel_set_fds
-argument_list|(
-name|s
-operator|->
-name|chanid
-argument_list|,
-name|fdout
-argument_list|,
-name|fdin
-argument_list|,
-name|fderr
-argument_list|,
-name|ignore_fderr
-condition|?
-name|CHAN_EXTENDED_IGNORE
-else|:
-name|CHAN_EXTENDED_READ
-argument_list|,
-literal|1
-argument_list|,
-name|is_tty
-argument_list|,
-name|options
-operator|.
-name|hpn_buffer_size
 argument_list|)
 expr_stmt|;
 block|}

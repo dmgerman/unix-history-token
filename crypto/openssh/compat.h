@@ -247,13 +247,6 @@ name|SSH_BUG_CURVE25519PAD
 value|0x10000000
 end_define
 
-begin_define
-define|#
-directive|define
-name|SSH_BUG_LARGEWINDOW
-value|0x80000000
-end_define
-
 begin_function_decl
 name|void
 name|enable_compat13
