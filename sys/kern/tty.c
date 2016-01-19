@@ -545,6 +545,11 @@ name|t_outq
 argument_list|)
 operator|>
 literal|0
+operator|||
+name|ttydevsw_busy
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 block|{
 name|ttydevsw_outwakeup
@@ -568,6 +573,12 @@ condition|(
 name|bytesused
 operator|==
 literal|0
+operator|&&
+operator|!
+name|ttydevsw_busy
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -4102,6 +4113,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|bool
+name|ttydevsw_defbusy
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * TTY allocation and deallocation. TTY devices can be deallocated when  * the driver doesn't use it anymore, when the TTY isn't a session's  * controlling TTY and when the device node isn't opened through devfs.  */
 end_comment
@@ -4224,6 +4255,11 @@ expr_stmt|;
 name|PATCH_FUNC
 argument_list|(
 name|free
+argument_list|)
+expr_stmt|;
+name|PATCH_FUNC
+argument_list|(
+name|busy
 argument_list|)
 expr_stmt|;
 undef|#
