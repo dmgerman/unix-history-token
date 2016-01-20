@@ -796,7 +796,23 @@ literal|2
 block|,
 name|EFX_NVRAM_CPLD
 block|}
-block|, }
+block|,
+block|{
+name|MC_CMD_NVRAM_TYPE_LICENSE
+block|,
+literal|1
+block|,
+name|EFX_NVRAM_LICENSE
+block|}
+block|,
+block|{
+name|MC_CMD_NVRAM_TYPE_LICENSE
+block|,
+literal|2
+block|,
+name|EFX_NVRAM_LICENSE
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
