@@ -2560,6 +2560,13 @@ name|MV_DEV_DISCOVERY
 value|0x7800
 end_define
 
+begin_define
+define|#
+directive|define
+name|MV_DEV_ARMADA38X
+value|0x6800
+end_define
+
 begin_comment
 comment|/*  * Doorbell register control  */
 end_comment
