@@ -77,6 +77,12 @@ directive|include
 file|<arm/mv/mvreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pmsu.h"
+end_include
+
 begin_function_decl
 name|int
 name|cpu_reset_deassert

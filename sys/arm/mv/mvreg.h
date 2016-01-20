@@ -2749,6 +2749,13 @@ name|MV_SCU_ENABLE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCU_CFG_REG_NCPU_MASK
+value|0x3
+end_define
+
 begin_endif
 endif|#
 directive|endif
