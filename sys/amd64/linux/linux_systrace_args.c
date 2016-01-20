@@ -372,15 +372,19 @@ name|p
 init|=
 name|params
 decl_stmt|;
-name|iarg
+name|uarg
 index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|intptr_t
+operator|)
 name|p
-operator|->*
+operator|->
+name|fds
 expr_stmt|;
-comment|/* struct pollfd */
+comment|/* struct pollfd * */
 name|uarg
 index|[
 literal|1
@@ -390,7 +394,7 @@ name|p
 operator|->
 name|nfds
 expr_stmt|;
-comment|/* unsigned int */
+comment|/* u_int */
 name|iarg
 index|[
 literal|2
@@ -3269,6 +3273,8 @@ operator|=
 name|p
 operator|->
 name|arg
+operator|.
+name|buf
 expr_stmt|;
 comment|/* union l_semun */
 operator|*
@@ -6932,7 +6938,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|tp
+name|tv
 expr_stmt|;
 comment|/* struct l_timeval * */
 name|uarg
@@ -11394,7 +11400,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct pollfd"
+literal|"struct pollfd *"
 expr_stmt|;
 break|break;
 case|case
@@ -11402,7 +11408,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"unsigned int"
+literal|"u_int"
 expr_stmt|;
 break|break;
 case|case
