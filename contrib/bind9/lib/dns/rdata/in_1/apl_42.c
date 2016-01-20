@@ -513,7 +513,7 @@ name|txt
 index|[
 sizeof|sizeof
 argument_list|(
-literal|" !64000"
+literal|" !64000:"
 argument_list|)
 index|]
 decl_stmt|;
