@@ -748,9 +748,9 @@ modifier|*
 name|enp
 parameter_list|,
 name|__out
-name|hunt_link_state_t
+name|ef10_link_state_t
 modifier|*
-name|hlsp
+name|elsp
 parameter_list|)
 block|{
 comment|/* 	 * TBD: consider common Siena/Hunt function: Hunt is very similar 	 * (at least for now; not clear that the loopbacks should necessarily 	 * be quite the same...) 	 */
@@ -870,9 +870,9 @@ name|GET_LINK_OUT_CAP
 argument_list|)
 argument_list|,
 operator|&
-name|hlsp
+name|elsp
 operator|->
-name|hls_adv_cap_mask
+name|els_adv_cap_mask
 argument_list|)
 expr_stmt|;
 name|hunt_phy_decode_cap
@@ -885,9 +885,9 @@ name|GET_LINK_OUT_LP_CAP
 argument_list|)
 argument_list|,
 operator|&
-name|hlsp
+name|elsp
 operator|->
-name|hls_lp_cap_mask
+name|els_lp_cap_mask
 argument_list|)
 expr_stmt|;
 name|hunt_phy_decode_link_mode
@@ -916,14 +916,14 @@ name|GET_LINK_OUT_FCNTL
 argument_list|)
 argument_list|,
 operator|&
-name|hlsp
+name|elsp
 operator|->
-name|hls_link_mode
+name|els_link_mode
 argument_list|,
 operator|&
-name|hlsp
+name|elsp
 operator|->
-name|hls_fcntl
+name|els_fcntl
 argument_list|)
 expr_stmt|;
 if|#
@@ -1056,9 +1056,9 @@ operator|==
 name|EFX_LOOPBACK_PMA_PMD
 argument_list|)
 expr_stmt|;
-name|hlsp
+name|elsp
 operator|->
-name|hls_loopback
+name|els_loopback
 operator|=
 name|MCDI_OUT_DWORD
 argument_list|(
@@ -1070,9 +1070,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_LOOPBACK */
-name|hlsp
+name|elsp
 operator|->
-name|hls_mac_up
+name|els_mac_up
 operator|=
 name|MCDI_OUT_DWORD
 argument_list|(
