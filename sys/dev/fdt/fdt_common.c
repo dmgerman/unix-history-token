@@ -935,7 +935,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|fdt_is_compatible_strict
+name|fdt_is_compatible
 argument_list|(
 name|node
 argument_list|,
@@ -975,7 +975,7 @@ name|node
 argument_list|,
 literal|"simple-bus"
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|)
 operator|==
