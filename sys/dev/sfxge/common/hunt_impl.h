@@ -2468,6 +2468,9 @@ modifier|*
 name|buffer
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_RX_SCALE */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
@@ -2489,9 +2492,6 @@ modifier|*
 name|lengthp
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_RX_SCALE */
 specifier|extern
 name|void
 name|ef10_rx_qpost
