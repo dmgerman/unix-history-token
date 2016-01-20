@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.203 2015/05/15 05:44:21 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.204 2015/07/08 20:24:02 markus Exp $ */
 end_comment
 
 begin_comment
@@ -217,26 +217,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"key.h"
-end_include
-
-begin_comment
-comment|/* XXX for typedef */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"buffer.h"
-end_include
-
-begin_comment
-comment|/* XXX for typedef */
-end_comment
 
 begin_include
 include|#

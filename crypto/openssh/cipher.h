@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.47 2015/01/14 10:24:42 markus Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.48 2015/07/08 19:09:25 markus Exp $ */
 end_comment
 
 begin_comment
@@ -215,22 +215,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|sshcipher
-name|Cipher
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|sshcipher_ctx
-name|CipherContext
-typedef|;
-end_typedef
 
 begin_function_decl
 name|u_int

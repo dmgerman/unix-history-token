@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.212 2015/05/01 07:10:01 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.213 2015/07/29 04:43:06 djm Exp $ */
 end_comment
 
 begin_comment
@@ -10076,6 +10076,60 @@ expr_stmt|;
 name|cleanup_exit
 argument_list|(
 literal|255
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* FALLTHROUGH */
+case|case
+name|SSH_ERR_NO_CIPHER_ALG_MATCH
+case|:
+case|case
+name|SSH_ERR_NO_MAC_ALG_MATCH
+case|:
+case|case
+name|SSH_ERR_NO_COMPRESS_ALG_MATCH
+case|:
+case|case
+name|SSH_ERR_NO_KEX_ALG_MATCH
+case|:
+case|case
+name|SSH_ERR_NO_HOSTKEY_ALG_MATCH
+case|:
+if|if
+condition|(
+name|ssh
+operator|&&
+name|ssh
+operator|->
+name|kex
+operator|&&
+name|ssh
+operator|->
+name|kex
+operator|->
+name|failed_choice
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"Unable to negotiate with %.200s: %s. "
+literal|"Their offer: %s"
+argument_list|,
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
+argument_list|,
+name|ssh
+operator|->
+name|kex
+operator|->
+name|failed_choice
 argument_list|)
 expr_stmt|;
 block|}

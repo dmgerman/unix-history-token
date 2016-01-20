@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.109 2015/02/16 22:13:32 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.110 2015/07/10 06:21:53 markus Exp $ */
 end_comment
 
 begin_comment
@@ -462,6 +462,10 @@ comment|/* one of SSH_UPDATE_HOSTKEYS_* */
 name|char
 modifier|*
 name|hostbased_key_types
+decl_stmt|;
+name|char
+modifier|*
+name|pubkey_key_types
 decl_stmt|;
 name|char
 modifier|*

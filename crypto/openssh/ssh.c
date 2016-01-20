@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.418 2015/05/04 06:10:48 djm Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.420 2015/07/30 00:01:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -390,6 +390,12 @@ directive|include
 file|"ssherr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"myproposal.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -691,10 +697,10 @@ argument_list|,
 literal|"usage: ssh [-1246AaCfGgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]\n"
 literal|"           [-D [bind_address:]port] [-E log_file] [-e escape_char]\n"
 literal|"           [-F configfile] [-I pkcs11] [-i identity_file]\n"
-literal|"           [-L [bind_address:]port:host:hostport] [-l login_name] [-m mac_spec]\n"
+literal|"           [-L address] [-l login_name] [-m mac_spec]\n"
 literal|"           [-O ctl_cmd] [-o option] [-p port]\n"
 literal|"           [-Q cipher | cipher-auth | mac | kex | key]\n"
-literal|"           [-R [bind_address:]port:host:hostport] [-S ctl_path] [-W host:port]\n"
+literal|"           [-R address] [-S ctl_path] [-W host:port]\n"
 literal|"           [-w local_tun[:remote_tun]] [user@]hostname [command]\n"
 argument_list|)
 expr_stmt|;
@@ -3610,6 +3616,15 @@ if|if
 condition|(
 name|ciphers_valid
 argument_list|(
+operator|*
+name|optarg
+operator|==
+literal|'+'
+condition|?
+name|optarg
+operator|+
+literal|1
+else|:
 name|optarg
 argument_list|)
 condition|)
@@ -3630,9 +3645,8 @@ name|cipher
 operator|=
 name|SSH_CIPHER_INVALID
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
 comment|/* SSH1 only */
 name|options
 operator|.
@@ -3680,7 +3694,10 @@ name|options
 operator|.
 name|ciphers
 operator|=
+name|xstrdup
+argument_list|(
 literal|"3des-cbc"
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -3695,21 +3712,21 @@ name|options
 operator|.
 name|ciphers
 operator|=
+name|xstrdup
+argument_list|(
 literal|"blowfish-cbc"
+argument_list|)
 expr_stmt|;
 else|else
 name|options
 operator|.
 name|ciphers
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
+name|xstrdup
+argument_list|(
+name|KEX_CLIENT_ENCRYPT
+argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'m'

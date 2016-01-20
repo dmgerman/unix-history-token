@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.48 2015/03/24 20:09:11 markus Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.49 2015/07/03 03:56:25 djm Exp $ */
 end_comment
 
 begin_comment
@@ -995,6 +995,7 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX This really needs to read sshd_config for the paths */
 name|key_fd
 index|[
 name|i

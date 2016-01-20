@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.71 2015/02/16 22:13:32 djm Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.73 2015/07/30 00:01:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -482,6 +482,10 @@ name|char
 modifier|*
 name|server_version_string
 decl_stmt|;
+name|char
+modifier|*
+name|failed_choice
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -652,6 +656,37 @@ modifier|*
 name|kex_alg_list
 parameter_list|(
 name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|kex_names_cat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kex_assemble_names
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

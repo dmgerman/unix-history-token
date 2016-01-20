@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.94 2015/05/26 23:23:40 dtucker Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.96 2015/07/28 23:20:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -541,6 +541,8 @@ block|{
 literal|"Cisco-1.*"
 block|,
 name|SSH_BUG_DHGEX_LARGE
+operator||
+name|SSH_BUG_HOSTKEYS
 block|}
 block|,
 block|{
@@ -571,6 +573,8 @@ name|SSH_BUG_SCANNER
 block|}
 block|,
 block|{
+literal|"PuTTY_Local:*,"
+comment|/* dev versions< Sep 2014 */
 literal|"PuTTY-Release-0.5*,"
 comment|/* 0.50-0.57, DH-GEX in>=0.52 */
 literal|"PuTTY_Release_0.5*,"

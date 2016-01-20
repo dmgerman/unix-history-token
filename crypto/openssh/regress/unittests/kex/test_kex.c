@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_kex.c,v 1.1 2015/01/15 23:41:29 markus Exp $ */
+comment|/* 	$OpenBSD: test_kex.c,v 1.2 2015/07/10 06:23:25 markus Exp $ */
 end_comment
 
 begin_comment
@@ -465,6 +465,12 @@ block|{
 name|KEX_CLIENT
 block|}
 decl_stmt|;
+name|char
+modifier|*
+name|keyname
+init|=
+name|NULL
+decl_stmt|;
 name|TEST_START
 argument_list|(
 literal|"sshkey_generate"
@@ -542,6 +548,32 @@ name|PROPOSAL_KEX_ALGS
 index|]
 operator|=
 name|kex
+expr_stmt|;
+name|keyname
+operator|=
+name|strdup
+argument_list|(
+name|sshkey_ssh_name
+argument_list|(
+name|private
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ASSERT_PTR_NE
+argument_list|(
+name|keyname
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|kex_params
+operator|.
+name|proposal
+index|[
+name|PROPOSAL_SERVER_HOST_KEY_ALGS
+index|]
+operator|=
+name|keyname
 expr_stmt|;
 name|ASSERT_INT_EQ
 argument_list|(
@@ -999,6 +1031,11 @@ expr_stmt|;
 name|ssh_free
 argument_list|(
 name|server2
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|keyname
 argument_list|)
 expr_stmt|;
 name|TEST_DONE

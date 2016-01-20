@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.111 2015/05/01 04:17:51 djm Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.112 2015/08/06 14:53:21 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -1574,10 +1574,26 @@ name|strcmp
 argument_list|(
 name|method
 argument_list|,
-literal|"password"
+literal|"publickey"
 argument_list|)
-operator|!=
+operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"hostbased"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"gssapi-with-mic"
+argument_list|)
 condition|)
 return|return
 literal|1

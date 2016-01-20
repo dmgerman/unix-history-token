@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshpty.c,v 1.29 2014/09/03 18:55:07 djm Exp $ */
+comment|/* $OpenBSD: sshpty.c,v 1.30 2015/07/30 23:09:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -925,7 +925,7 @@ operator|!=
 name|NULL
 operator|)
 condition|?
-literal|0622
+literal|0620
 else|:
 literal|0600
 expr_stmt|;

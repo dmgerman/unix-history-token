@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.c,v 1.19 2015/05/21 04:55:51 djm Exp $ */
+comment|/* $OpenBSD: sshkey.c,v 1.20 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -504,30 +504,6 @@ comment|/* OPENSSL_HAS_NISTP521 */
 endif|#
 directive|endif
 comment|/* OPENSSL_HAS_ECC */
-block|{
-literal|"ssh-rsa-cert-v00@openssh.com"
-block|,
-literal|"RSA-CERT-V00"
-block|,
-name|KEY_RSA_CERT_V00
-block|,
-literal|0
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"ssh-dss-cert-v00@openssh.com"
-block|,
-literal|"DSA-CERT-V00"
-block|,
-name|KEY_DSA_CERT_V00
-block|,
-literal|0
-block|,
-literal|1
-block|}
-block|,
 endif|#
 directive|endif
 comment|/* WITH_OPENSSL */
@@ -1355,9 +1331,6 @@ case|case
 name|KEY_RSA
 case|:
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 return|return
@@ -1372,9 +1345,6 @@ argument_list|)
 return|;
 case|case
 name|KEY_DSA
-case|:
-case|case
-name|KEY_DSA_CERT_V00
 case|:
 case|case
 name|KEY_DSA_CERT
@@ -1420,41 +1390,6 @@ block|}
 return|return
 literal|0
 return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|sshkey_cert_is_legacy
-parameter_list|(
-specifier|const
-name|struct
-name|sshkey
-modifier|*
-name|k
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|k
-operator|->
-name|type
-condition|)
-block|{
-case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
-name|KEY_RSA_CERT_V00
-case|:
-return|return
-literal|1
-return|;
-default|default:
-return|return
-literal|0
-return|;
-block|}
 block|}
 end_function
 
@@ -1544,17 +1479,11 @@ name|type
 condition|)
 block|{
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 return|return
 name|KEY_RSA
 return|;
-case|case
-name|KEY_DSA_CERT_V00
-case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -2237,9 +2166,6 @@ case|case
 name|KEY_RSA
 case|:
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -2305,9 +2231,6 @@ expr_stmt|;
 break|break;
 case|case
 name|KEY_DSA
-case|:
-case|case
-name|KEY_DSA_CERT_V00
 case|:
 case|case
 name|KEY_DSA_CERT
@@ -2494,9 +2417,6 @@ case|case
 name|KEY_RSA
 case|:
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 define|#
@@ -2568,9 +2488,6 @@ return|;
 break|break;
 case|case
 name|KEY_DSA
-case|:
-case|case
-name|KEY_DSA_CERT_V00
 case|:
 case|case
 name|KEY_DSA_CERT
@@ -2715,9 +2632,6 @@ case|case
 name|KEY_RSA
 case|:
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -2744,9 +2658,6 @@ expr_stmt|;
 break|break;
 case|case
 name|KEY_DSA
-case|:
-case|case
-name|KEY_DSA_CERT_V00
 case|:
 case|case
 name|KEY_DSA_CERT
@@ -3095,9 +3006,6 @@ case|case
 name|KEY_RSA1
 case|:
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 case|case
@@ -3150,9 +3058,6 @@ argument_list|)
 operator|==
 literal|0
 return|;
-case|case
-name|KEY_DSA_CERT_V00
-case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -3602,12 +3507,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
-case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
-name|KEY_RSA_CERT_V00
-case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -6717,12 +6616,6 @@ case|case
 name|KEY_ED25519
 case|:
 case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_DSA_CERT
 case|:
 case|case
@@ -9274,9 +9167,6 @@ case|case
 name|KEY_DSA
 case|:
 case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
 name|KEY_DSA_CERT
 case|:
 if|if
@@ -9487,9 +9377,6 @@ name|KEY_RSA
 case|:
 case|case
 name|KEY_RSA1
-case|:
-case|case
-name|KEY_RSA_CERT_V00
 case|:
 case|case
 name|KEY_RSA_CERT
@@ -9758,14 +9645,6 @@ name|ret
 init|=
 name|SSH_ERR_INTERNAL_ERROR
 decl_stmt|;
-name|int
-name|v00
-init|=
-name|sshkey_cert_is_legacy
-argument_list|(
-name|key
-argument_list|)
-decl_stmt|;
 comment|/* Copy the entire key blob for verification and later serialisation */
 if|if
 condition|(
@@ -9789,12 +9668,9 @@ condition|)
 return|return
 name|ret
 return|;
+comment|/* Parse body of certificate up to signature */
 if|if
 condition|(
-operator|(
-operator|!
-name|v00
-operator|&&
 operator|(
 name|ret
 operator|=
@@ -9812,7 +9688,6 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
 operator|||
 operator|(
 name|ret
@@ -9918,10 +9793,6 @@ operator|!=
 literal|0
 operator|||
 operator|(
-operator|!
-name|v00
-operator|&&
-operator|(
 name|ret
 operator|=
 name|sshbuf_froms
@@ -9934,26 +9805,6 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
-name|v00
-operator|&&
-operator|(
-name|ret
-operator|=
-name|sshbuf_get_string_direct
-argument_list|(
-name|b
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-operator|)
-operator|!=
-literal|0
-operator|)
 operator|||
 operator|(
 name|ret
@@ -10150,7 +10001,7 @@ name|cert
 operator|->
 name|principals
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|key
 operator|->
@@ -10158,7 +10009,6 @@ name|cert
 operator|->
 name|principals
 argument_list|,
-operator|(
 name|key
 operator|->
 name|cert
@@ -10166,8 +10016,7 @@ operator|->
 name|nprincipals
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -10274,7 +10123,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Validate critical options and extensions sections format. 	 * NB. extensions are not present in v00 certs. 	 */
+comment|/* 	 * Validate critical options and extensions sections format. 	 */
 while|while
 condition|(
 name|sshbuf_len
@@ -10733,9 +10582,6 @@ comment|/* FALLTHROUGH */
 case|case
 name|KEY_RSA
 case|:
-case|case
-name|KEY_RSA_CERT_V00
-case|:
 if|if
 condition|(
 operator|(
@@ -10841,9 +10687,6 @@ block|}
 comment|/* FALLTHROUGH */
 case|case
 name|KEY_DSA
-case|:
-case|case
-name|KEY_DSA_CERT_V00
 case|:
 if|if
 condition|(
@@ -11709,9 +11552,6 @@ ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
 case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
 name|KEY_DSA_CERT
 case|:
 case|case
@@ -11761,9 +11601,6 @@ return|;
 endif|#
 directive|endif
 comment|/* OPENSSL_HAS_ECC */
-case|case
-name|KEY_RSA_CERT_V00
-case|:
 case|case
 name|KEY_RSA_CERT
 case|:
@@ -11877,9 +11714,6 @@ ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
 case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
 name|KEY_DSA_CERT
 case|:
 case|case
@@ -11929,9 +11763,6 @@ return|;
 endif|#
 directive|endif
 comment|/* OPENSSL_HAS_ECC */
-case|case
-name|KEY_RSA_CERT_V00
-case|:
 case|case
 name|KEY_RSA_CERT
 case|:
@@ -12116,9 +11947,6 @@ ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -12207,9 +12035,6 @@ name|fail
 goto|;
 block|}
 break|break;
-case|case
-name|KEY_DSA_CERT_V00
-case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -12536,9 +12361,6 @@ name|struct
 name|sshkey
 modifier|*
 name|k
-parameter_list|,
-name|int
-name|legacy
 parameter_list|)
 block|{
 name|int
@@ -12559,10 +12381,6 @@ name|KEY_RSA
 case|:
 name|newtype
 operator|=
-name|legacy
-condition|?
-name|KEY_RSA_CERT_V00
-else|:
 name|KEY_RSA_CERT
 expr_stmt|;
 break|break;
@@ -12571,23 +12389,12 @@ name|KEY_DSA
 case|:
 name|newtype
 operator|=
-name|legacy
-condition|?
-name|KEY_DSA_CERT_V00
-else|:
 name|KEY_DSA_CERT
 expr_stmt|;
 break|break;
 case|case
 name|KEY_ECDSA
 case|:
-if|if
-condition|(
-name|legacy
-condition|)
-return|return
-name|SSH_ERR_INVALID_ARGUMENT
-return|;
 name|newtype
 operator|=
 name|KEY_ECDSA_CERT
@@ -12599,13 +12406,6 @@ comment|/* WITH_OPENSSL */
 case|case
 name|KEY_ED25519
 case|:
-if|if
-condition|(
-name|legacy
-condition|)
-return|return
-name|SSH_ERR_INVALID_ARGUMENT
-return|;
 name|newtype
 operator|=
 name|KEY_ED25519_CERT
@@ -12882,15 +12682,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|sshkey_cert_is_legacy
-argument_list|(
-name|k
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 operator|(
 name|ret
 operator|=
@@ -12912,7 +12703,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-block|}
 comment|/* XXX this substantially duplicates to_blob(); refactor */
 switch|switch
 condition|(
@@ -12924,9 +12714,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
-case|case
-name|KEY_DSA_CERT_V00
-case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -13063,9 +12850,6 @@ endif|#
 directive|endif
 comment|/* OPENSSL_HAS_ECC */
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -13146,16 +12930,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* -v01 certs have a serial number next */
-if|if
-condition|(
-operator|!
-name|sshkey_cert_is_legacy
-argument_list|(
-name|k
-argument_list|)
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -13174,13 +12948,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
+operator|||
 operator|(
 name|ret
 operator|=
@@ -13347,22 +13115,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-comment|/* -v01 certs have non-critical options here */
-if|if
-condition|(
-operator|!
-name|sshkey_cert_is_legacy
-argument_list|(
-name|k
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|||
 operator|(
 name|ret
 operator|=
@@ -13379,46 +13132,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* -v00 certs put the nonce at the end */
-if|if
-condition|(
-name|sshkey_cert_is_legacy
-argument_list|(
-name|k
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|ret
-operator|=
-name|sshbuf_put_string
-argument_list|(
-name|cert
-argument_list|,
-name|nonce
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|nonce
-argument_list|)
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
+operator|||
 operator|(
 name|ret
 operator|=
@@ -13998,9 +13712,6 @@ name|out
 goto|;
 break|break;
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -14216,9 +13927,6 @@ goto|goto
 name|out
 goto|;
 break|break;
-case|case
-name|KEY_DSA_CERT_V00
-case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -14821,9 +14529,6 @@ name|out
 goto|;
 break|break;
 case|case
-name|KEY_DSA_CERT_V00
-case|:
-case|case
 name|KEY_DSA_CERT
 case|:
 if|if
@@ -15380,9 +15085,6 @@ name|out
 goto|;
 break|break;
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -15729,9 +15431,6 @@ condition|)
 block|{
 case|case
 name|KEY_RSA
-case|:
-case|case
-name|KEY_RSA_CERT_V00
 case|:
 case|case
 name|KEY_RSA_CERT
