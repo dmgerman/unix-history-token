@@ -196,6 +196,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|armada38x_open_bootrom_win
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1003,6 +1012,24 @@ argument_list|(
 literal|"WARNING: could not enable SCU\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* Open window to bootROM memory - needed for SMP */
+if|if
+condition|(
+name|armada38x_open_bootrom_win
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: could not open window to bootROM\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
