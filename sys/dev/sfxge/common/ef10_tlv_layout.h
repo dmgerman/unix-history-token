@@ -691,7 +691,7 @@ name|int8_t
 name|clk_mode
 decl_stmt|;
 comment|/* 0 -> off, 1 -> on, -1 -> leave alone */
-comment|/* Consumed by sram.c */
+comment|/* No longer used, superseded by TLV_TAG_DESCRIPTOR_CACHE_CONFIG. */
 name|int8_t
 name|rx_dc_size
 decl_stmt|;
