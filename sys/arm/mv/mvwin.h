@@ -668,6 +668,22 @@ name|MV_PCIE_BASE
 value|(MV_BASE + 0x8000)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE_BASE
+value|(MV_BASE + 0x80000)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -772,6 +788,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 end_if
 
@@ -887,6 +908,11 @@ directive|elif
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 end_elif
 
@@ -1465,6 +1491,45 @@ parameter_list|(
 name|n
 parameter_list|)
 value|(0xE0 + (0x10 * ((n) / 2)))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_TARGET
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) == 0 ? 8 : 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_MEM_ATTR
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)< 2 ? 0xE8 : (0xD8 - (((n) % 2) * 0x20)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_PCIE_IO_ATTR
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)< 2 ? 0xE0 : (0xD0 - (((n) % 2) * 0x20)))
 end_define
 
 begin_elif
