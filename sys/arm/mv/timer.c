@@ -140,6 +140,11 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 end_if
 
 begin_define
@@ -547,6 +552,12 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 name|uint32_t
 name|irq_cause
 decl_stmt|,
@@ -729,6 +740,12 @@ operator|!
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 name|irq_cause
 operator|=
@@ -1364,6 +1381,12 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 name|uint32_t
 name|irq_mask
 decl_stmt|;
@@ -1392,6 +1415,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 name|val
 operator|=
@@ -1472,6 +1500,11 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 name|val
 operator||=
 name|CPU_TIMER_WD_25MHZ_EN
@@ -1506,6 +1539,12 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 name|uint32_t
 name|irq_mask
 decl_stmt|;
@@ -1535,6 +1574,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 name|val
 operator|=
@@ -1977,6 +2021,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 comment|/* Enable 25MHz mode */
 name|val

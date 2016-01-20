@@ -210,6 +210,26 @@ begin_comment
 comment|/* 3x PCIE */
 end_comment
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_PCI_PORTS
+value|4
+end_define
+
+begin_comment
+comment|/* 4x PCIE */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -527,6 +547,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 end_if
 

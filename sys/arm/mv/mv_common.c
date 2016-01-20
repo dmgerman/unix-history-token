@@ -1089,6 +1089,11 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 end_if
 
 begin_function
@@ -1204,6 +1209,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
 argument_list|)
 name|write_cpu_misc
 argument_list|(
@@ -1717,6 +1727,30 @@ condition|)
 name|rev
 operator|=
 literal|"A1"
+expr_stmt|;
+break|break;
+case|case
+name|MV_DEV_88F6828
+case|:
+name|dev
+operator|=
+literal|"Marvell 88F6828"
+expr_stmt|;
+break|break;
+case|case
+name|MV_DEV_88F6820
+case|:
+name|dev
+operator|=
+literal|"Marvell 88F6820"
+expr_stmt|;
+break|break;
+case|case
+name|MV_DEV_88F6810
+case|:
+name|dev
+operator|=
+literal|"Marvell 88F6810"
 expr_stmt|;
 break|break;
 case|case
@@ -10229,6 +10263,27 @@ argument_list|,
 name|MV_MISC_BASE
 argument_list|,
 name|SAMPLE_AT_RESET_LO
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+name|sar_high
+operator|=
+literal|0
+expr_stmt|;
+name|sar_low
+operator|=
+name|bus_space_read_4
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|MV_MISC_BASE
+argument_list|,
+name|SAMPLE_AT_RESET
 argument_list|)
 expr_stmt|;
 else|#
