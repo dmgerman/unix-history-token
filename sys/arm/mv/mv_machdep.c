@@ -169,6 +169,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|armada38x_win_set_iosync_barrier
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -937,6 +960,27 @@ endif|#
 directive|endif
 name|armadaxp_l2_init
 argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+comment|/* Set IO Sync Barrier bit for all Mbus devices */
+if|if
+condition|(
+name|armada38x_win_set_iosync_barrier
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: could not map CPU Subsystem registers\n"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
