@@ -305,11 +305,15 @@ name|fp
 operator|->
 name|f_args
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|modulep
 argument_list|,
 operator|&
 name|kernend
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
