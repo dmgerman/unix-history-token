@@ -114,10 +114,10 @@ name|s2
 expr_stmt|;
 while|while
 condition|(
+name|n
+operator|&&
 operator|*
 name|r
-operator|&&
-name|n
 condition|)
 block|{
 operator|*
