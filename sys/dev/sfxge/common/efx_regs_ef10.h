@@ -33,7 +33,7 @@ define|#
 directive|define
 name|ER_DZ_BIU_HW_REV_ID_REG_OFST
 value|0x00000000
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_BIU_HW_REV_ID_REG_RESET
@@ -51,7 +51,7 @@ define|#
 directive|define
 name|ER_DZ_BIU_MC_SFT_STATUS_REG_OFST
 value|0x00000010
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_BIU_MC_SFT_STATUS_REG_STEP
@@ -77,7 +77,7 @@ define|#
 directive|define
 name|ER_DZ_BIU_INT_ISR_REG_OFST
 value|0x00000090
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_BIU_INT_ISR_REG_RESET
@@ -95,7 +95,7 @@ define|#
 directive|define
 name|ER_DZ_MC_DB_LWRD_REG_OFST
 value|0x00000200
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_MC_DB_LWRD_REG_RESET
@@ -113,7 +113,7 @@ define|#
 directive|define
 name|ER_DZ_MC_DB_HWRD_REG_OFST
 value|0x00000204
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_MC_DB_HWRD_REG_RESET
@@ -131,7 +131,7 @@ define|#
 directive|define
 name|ER_DZ_EVQ_RPTR_REG_OFST
 value|0x00000400
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_EVQ_RPTR_REG_STEP
@@ -165,7 +165,7 @@ define|#
 directive|define
 name|ER_DZ_EVQ_TMR_REG_OFST
 value|0x00000420
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_EVQ_TMR_REG_STEP
@@ -199,7 +199,7 @@ define|#
 directive|define
 name|ER_DZ_RX_DESC_UPD_REG_OFST
 value|0x00000830
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_RX_DESC_UPD_REG_STEP
@@ -225,7 +225,7 @@ define|#
 directive|define
 name|ER_DZ_TX_DESC_UPD_REG_OFST
 value|0x00000a10
-comment|/* hunta0=pcie_pf_bar2 */
+comment|/* hunta0,medforda0=pcie_pf_bar2 */
 define|#
 directive|define
 name|ER_DZ_TX_DESC_UPD_REG_STEP
@@ -468,12 +468,36 @@ name|ESF_DZ_RX_DROP_EVENT_WIDTH
 value|1
 define|#
 directive|define
-name|ESF_DZ_RX_EV_RSVD2_LBN
+name|ESF_DD_RX_EV_RSVD2_LBN
 value|54
 define|#
 directive|define
-name|ESF_DZ_RX_EV_RSVD2_WIDTH
+name|ESF_DD_RX_EV_RSVD2_WIDTH
 value|4
+define|#
+directive|define
+name|ESF_EZ_RX_TCP_UDP_INNER_CHKSUM_ERR_LBN
+value|57
+define|#
+directive|define
+name|ESF_EZ_RX_TCP_UDP_INNER_CHKSUM_ERR_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_RX_IP_INNER_CHKSUM_ERR_LBN
+value|56
+define|#
+directive|define
+name|ESF_EZ_RX_IP_INNER_CHKSUM_ERR_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_RX_EV_RSVD2_LBN
+value|54
+define|#
+directive|define
+name|ESF_EZ_RX_EV_RSVD2_WIDTH
+value|2
 define|#
 directive|define
 name|ESF_DZ_RX_EV_SOFT2_LBN
@@ -648,20 +672,64 @@ name|ESE_DZ_MAC_CLASS_UCAST
 value|0
 define|#
 directive|define
-name|ESF_DZ_RX_EV_SOFT1_LBN
+name|ESF_DD_RX_EV_SOFT1_LBN
 value|32
 define|#
 directive|define
-name|ESF_DZ_RX_EV_SOFT1_WIDTH
+name|ESF_DD_RX_EV_SOFT1_WIDTH
 value|3
 define|#
 directive|define
-name|ESF_DZ_RX_EV_RSVD1_LBN
+name|ESF_EZ_RX_EV_SOFT1_LBN
+value|34
+define|#
+directive|define
+name|ESF_EZ_RX_EV_SOFT1_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_RX_ENCAP_HDR_LBN
+value|32
+define|#
+directive|define
+name|ESF_EZ_RX_ENCAP_HDR_WIDTH
+value|2
+define|#
+directive|define
+name|ESE_EZ_ENCAP_HDR_GRE
+value|2
+define|#
+directive|define
+name|ESE_EZ_ENCAP_HDR_VXLAN
+value|1
+define|#
+directive|define
+name|ESE_EZ_ENCAP_HDR_NONE
+value|0
+define|#
+directive|define
+name|ESF_DD_RX_EV_RSVD1_LBN
 value|30
 define|#
 directive|define
-name|ESF_DZ_RX_EV_RSVD1_WIDTH
+name|ESF_DD_RX_EV_RSVD1_WIDTH
 value|2
+define|#
+directive|define
+name|ESF_EZ_RX_EV_RSVD1_LBN
+value|31
+define|#
+directive|define
+name|ESF_EZ_RX_EV_RSVD1_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_RX_ABORT_LBN
+value|30
+define|#
+directive|define
+name|ESF_EZ_RX_ABORT_WIDTH
+value|1
 define|#
 directive|define
 name|ESF_DZ_RX_ECC_ERR_LBN
@@ -919,12 +987,36 @@ name|ESF_DZ_TX_DROP_EVENT_WIDTH
 value|1
 define|#
 directive|define
-name|ESF_DZ_TX_EV_RSVD_LBN
+name|ESF_DD_TX_EV_RSVD_LBN
 value|48
 define|#
 directive|define
-name|ESF_DZ_TX_EV_RSVD_WIDTH
+name|ESF_DD_TX_EV_RSVD_WIDTH
 value|10
+define|#
+directive|define
+name|ESF_EZ_TCP_UDP_INNER_CHKSUM_ERR_LBN
+value|57
+define|#
+directive|define
+name|ESF_EZ_TCP_UDP_INNER_CHKSUM_ERR_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_IP_INNER_CHKSUM_ERR_LBN
+value|56
+define|#
+directive|define
+name|ESF_EZ_IP_INNER_CHKSUM_ERR_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_TX_EV_RSVD_LBN
+value|48
+define|#
+directive|define
+name|ESF_EZ_TX_EV_RSVD_WIDTH
+value|8
 define|#
 directive|define
 name|ESF_DZ_TX_SOFT2_LBN
@@ -935,12 +1027,28 @@ name|ESF_DZ_TX_SOFT2_WIDTH
 value|16
 define|#
 directive|define
-name|ESF_DZ_TX_SOFT1_LBN
+name|ESF_DD_TX_SOFT1_LBN
 value|24
 define|#
 directive|define
-name|ESF_DZ_TX_SOFT1_WIDTH
+name|ESF_DD_TX_SOFT1_WIDTH
 value|8
+define|#
+directive|define
+name|ESF_EZ_TX_CAN_MERGE_LBN
+value|31
+define|#
+directive|define
+name|ESF_EZ_TX_CAN_MERGE_WIDTH
+value|1
+define|#
+directive|define
+name|ESF_EZ_TX_SOFT1_LBN
+value|24
+define|#
+directive|define
+name|ESF_EZ_TX_SOFT1_WIDTH
+value|7
 define|#
 directive|define
 name|ESF_DZ_TX_QLABEL_LBN
