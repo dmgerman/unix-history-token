@@ -10825,12 +10825,9 @@ name|needed
 operator|->
 name|obj
 argument_list|,
-name|globallist_next
-argument_list|(
 name|needed
 operator|->
 name|obj
-argument_list|)
 argument_list|,
 name|list
 argument_list|)
@@ -10895,7 +10892,7 @@ name|nobj
 operator|!=
 name|NULL
 operator|&&
-name|nobj
+name|obj
 operator|!=
 name|tail
 condition|)
@@ -16017,10 +16014,7 @@ name|initlist_add_objects
 argument_list|(
 name|obj
 argument_list|,
-name|globallist_next
-argument_list|(
 name|obj
-argument_list|)
 argument_list|,
 operator|&
 name|initlist
