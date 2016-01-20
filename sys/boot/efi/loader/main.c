@@ -1656,6 +1656,13 @@ name|SIMPLE_TEXT_OUTPUT_INTERFACE
 modifier|*
 name|conout
 decl_stmt|;
+specifier|extern
+name|void
+name|HO
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
 name|conout
 operator|=
 name|ST
@@ -1796,6 +1803,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|HO
+argument_list|()
+expr_stmt|;
+comment|/* set cursor */
 return|return
 operator|(
 name|CMD_OK
