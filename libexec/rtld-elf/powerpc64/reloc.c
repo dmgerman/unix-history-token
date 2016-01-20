@@ -312,9 +312,10 @@ for|for
 control|(
 name|srcobj
 operator|=
+name|globallist_next
+argument_list|(
 name|dstobj
-operator|->
-name|next
+argument_list|)
 init|;
 name|srcobj
 operator|!=
@@ -322,9 +323,10 @@ name|NULL
 condition|;
 name|srcobj
 operator|=
+name|globallist_next
+argument_list|(
 name|srcobj
-operator|->
-name|next
+argument_list|)
 control|)
 block|{
 name|res
