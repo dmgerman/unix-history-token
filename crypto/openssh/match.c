@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: match.c,v 1.29 2013/11/20 20:54:10 deraadt Exp $ */
+comment|/* $OpenBSD: match.c,v 1.30 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -247,9 +247,6 @@ name|char
 modifier|*
 name|pattern
 parameter_list|,
-name|u_int
-name|len
-parameter_list|,
 name|int
 name|dolower
 parameter_list|)
@@ -270,6 +267,13 @@ name|u_int
 name|i
 decl_stmt|,
 name|subi
+decl_stmt|,
+name|len
+init|=
+name|strlen
+argument_list|(
+name|pattern
+argument_list|)
 decl_stmt|;
 name|got_positive
 operator|=
@@ -470,9 +474,6 @@ specifier|const
 name|char
 modifier|*
 name|pattern
-parameter_list|,
-name|u_int
-name|len
 parameter_list|)
 block|{
 return|return
@@ -481,8 +482,6 @@ argument_list|(
 name|host
 argument_list|,
 name|pattern
-argument_list|,
-name|len
 argument_list|,
 literal|1
 argument_list|)
@@ -563,11 +562,6 @@ argument_list|(
 name|host
 argument_list|,
 name|patterns
-argument_list|,
-name|strlen
-argument_list|(
-name|patterns
-argument_list|)
 argument_list|)
 operator|)
 operator|==

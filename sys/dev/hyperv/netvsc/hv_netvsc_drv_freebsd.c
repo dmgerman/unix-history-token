@@ -1607,7 +1607,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -1631,7 +1631,7 @@ argument_list|,
 literal|"LRO queued"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,

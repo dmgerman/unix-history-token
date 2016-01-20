@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl.c,v 1.39 2015/01/30 17:32:16 schwarze Exp $ */
+comment|/*	$Id: tbl.c,v 1.40 2015/10/06 18:32:20 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -206,9 +206,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|(
 name|ROFF_IGN
-operator|)
 return|;
 block|}
 block|}
@@ -235,15 +233,12 @@ name|pos
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ROFF_IGN
-operator|)
 return|;
 case|case
 name|TBL_PART_CDATA
 case|:
 return|return
-operator|(
 name|tbl_cdata
 argument_list|(
 name|tbl
@@ -258,7 +253,6 @@ condition|?
 name|ROFF_TBL
 else|:
 name|ROFF_IGN
-operator|)
 return|;
 default|default:
 break|break;
@@ -275,9 +269,7 @@ name|pos
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ROFF_TBL
-operator|)
 return|;
 block|}
 end_function
@@ -359,9 +351,7 @@ operator|=
 literal|'.'
 expr_stmt|;
 return|return
-operator|(
 name|tbl
-operator|)
 return|;
 block|}
 end_function
@@ -633,9 +623,7 @@ operator|=
 name|span
 expr_stmt|;
 return|return
-operator|(
 name|span
-operator|)
 return|;
 block|}
 end_function
@@ -749,15 +737,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function

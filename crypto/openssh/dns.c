@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.29 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.34 2015/01/28 22:36:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -52,13 +52,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xmalloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"key.h"
+file|"sshkey.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
 end_include
 
 begin_include
@@ -71,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"digest.h"
 end_include
 
 begin_decl_stmt
@@ -205,25 +229,28 @@ modifier|*
 modifier|*
 name|digest
 parameter_list|,
-name|u_int
+name|size_t
 modifier|*
 name|digest_len
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
 block|{
 name|int
+name|r
+decl_stmt|,
 name|success
 init|=
 literal|0
 decl_stmt|;
-name|enum
-name|fp_type
-name|fp_type
+name|int
+name|fp_alg
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 switch|switch
 condition|(
@@ -292,6 +319,26 @@ operator|=
 name|SSHFP_HASH_SHA256
 expr_stmt|;
 break|break;
+case|case
+name|KEY_ED25519
+case|:
+operator|*
+name|algorithm
+operator|=
+name|SSHFP_KEY_ED25519
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|digest_type
+condition|)
+operator|*
+name|digest_type
+operator|=
+name|SSHFP_HASH_SHA256
+expr_stmt|;
+break|break;
 default|default:
 operator|*
 name|algorithm
@@ -315,17 +362,17 @@ block|{
 case|case
 name|SSHFP_HASH_SHA1
 case|:
-name|fp_type
+name|fp_alg
 operator|=
-name|SSH_FP_SHA1
+name|SSH_DIGEST_SHA1
 expr_stmt|;
 break|break;
 case|case
 name|SSHFP_HASH_SHA256
 case|:
-name|fp_type
+name|fp_alg
 operator|=
-name|SSH_FP_SHA256
+name|SSH_DIGEST_SHA256
 expr_stmt|;
 break|break;
 default|default:
@@ -345,28 +392,35 @@ operator|*
 name|digest_type
 condition|)
 block|{
-operator|*
-name|digest
+if|if
+condition|(
+operator|(
+name|r
 operator|=
-name|key_fingerprint_raw
+name|sshkey_fingerprint_raw
 argument_list|(
 name|key
 argument_list|,
-name|fp_type
+name|fp_alg
+argument_list|,
+name|digest
 argument_list|,
 name|digest_len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|digest
-operator|==
-name|NULL
+operator|)
+operator|!=
+literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"dns_read_key: null from key_fingerprint_raw()"
+literal|"%s: sshkey_fingerprint_raw: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|success
@@ -419,7 +473,7 @@ modifier|*
 modifier|*
 name|digest
 parameter_list|,
-name|u_int
+name|size_t
 modifier|*
 name|digest_len
 parameter_list|,
@@ -654,7 +708,8 @@ name|sockaddr
 modifier|*
 name|address
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|hostkey
 parameter_list|,
@@ -688,7 +743,7 @@ name|u_char
 modifier|*
 name|hostkey_digest
 decl_stmt|;
-name|u_int
+name|size_t
 name|hostkey_digest_len
 decl_stmt|;
 name|u_int8_t
@@ -701,7 +756,7 @@ name|u_char
 modifier|*
 name|dnskey_digest
 decl_stmt|;
-name|u_int
+name|size_t
 name|dnskey_digest_len
 decl_stmt|;
 operator|*
@@ -1024,7 +1079,7 @@ argument_list|(
 name|hostkey_digest
 argument_list|)
 expr_stmt|;
-comment|/* from key_fingerprint_raw() */
+comment|/* from sshkey_fingerprint_raw() */
 name|freerrset
 argument_list|(
 name|fingerprints
@@ -1080,7 +1135,8 @@ name|char
 modifier|*
 name|hostname
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|,
@@ -1109,7 +1165,7 @@ name|u_char
 modifier|*
 name|rdata_digest
 decl_stmt|;
-name|u_int
+name|size_t
 name|i
 decl_stmt|,
 name|rdata_digest_len
@@ -1166,7 +1222,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s IN TYPE%d \\# %d %02x %02x "
+literal|"%s IN TYPE%d \\# %zu %02x %02x "
 argument_list|,
 name|hostname
 argument_list|,
@@ -1235,7 +1291,7 @@ argument_list|(
 name|rdata_digest
 argument_list|)
 expr_stmt|;
-comment|/* from key_fingerprint_raw() */
+comment|/* from sshkey_fingerprint_raw() */
 name|success
 operator|=
 literal|1

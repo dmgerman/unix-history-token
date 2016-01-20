@@ -119,7 +119,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/**  * Simplified accessors for xenbus devices  */
+comment|/**  * Simplified accessors for xenbus devices:  *  * xenbus_get_node  * xenbus_get_type  * xenbus_get_state  * xenbus_get_otherend_id  * xenbus_get_otherend_path  */
 end_comment
 
 begin_define

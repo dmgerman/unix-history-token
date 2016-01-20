@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.28 2013/10/24 00:49:49 dtucker Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.30 2015/01/20 23:14:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -17,11 +17,21 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_comment
+comment|/* MAX */
+end_comment
 
 begin_include
 include|#
@@ -81,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -1699,7 +1715,7 @@ decl_stmt|;
 name|char
 name|tmp
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -1730,7 +1746,7 @@ literal|1
 operator|||
 name|r
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|logit
@@ -1793,6 +1809,11 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 name|close
@@ -3317,6 +3338,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 end_unit
 

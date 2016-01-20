@@ -692,7 +692,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"1..0 # SKIP: must be root"
+literal|"1..0 # SKIP: must be root\n"
 argument_list|)
 expr_stmt|;
 return|return

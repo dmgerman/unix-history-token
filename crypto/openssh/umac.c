@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.c,v 1.8 2013/11/08 00:39:15 djm Exp $ */
+comment|/* $OpenBSD: umac.c,v 1.11 2014/07/22 07:13:42 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -124,19 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"umac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -149,6 +143,24 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"umac.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_comment
@@ -369,7 +381,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|HAVE_SWAP32
+operator|(
+name|__LITTLE_ENDIAN__
+operator|)
 end_if
 
 begin_define
@@ -379,7 +393,7 @@ name|LOAD_UINT32_REVERSED
 parameter_list|(
 name|p
 parameter_list|)
-value|(swap32(*(const UINT32 *)(p)))
+value|get_u32(p)
 end_define
 
 begin_define
@@ -391,7 +405,7 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|(*(UINT32 *)(p) = swap32(v))
+value|put_u32(p,v)
 end_define
 
 begin_else
@@ -399,184 +413,41 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* HAVE_SWAP32 */
-end_comment
-
-begin_function
-specifier|static
-name|UINT32
+begin_define
+define|#
+directive|define
 name|LOAD_UINT32_REVERSED
 parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|ptr
+name|p
 parameter_list|)
-block|{
-name|UINT32
-name|temp
-init|=
-operator|*
-operator|(
-specifier|const
-name|UINT32
-operator|*
-operator|)
-name|ptr
-decl_stmt|;
-name|temp
-operator|=
-operator|(
-name|temp
-operator|>>
-literal|24
-operator|)
-operator||
-operator|(
-operator|(
-name|temp
-operator|&
-literal|0x00FF0000
-operator|)
-operator|>>
-literal|8
-operator|)
-operator||
-operator|(
-operator|(
-name|temp
-operator|&
-literal|0x0000FF00
-operator|)
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|temp
-operator|<<
-literal|24
-operator|)
-expr_stmt|;
-return|return
-operator|(
-name|UINT32
-operator|)
-name|temp
-return|;
-block|}
-end_function
+value|get_u32_le(p)
+end_define
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__LITTLE_ENDIAN__
-operator|)
-end_if
-
-begin_function
-specifier|static
-name|void
+begin_define
+define|#
+directive|define
 name|STORE_UINT32_REVERSED
 parameter_list|(
-name|void
-modifier|*
-name|ptr
+name|p
 parameter_list|,
-name|UINT32
-name|x
+name|v
 parameter_list|)
-block|{
-name|UINT32
-name|i
-init|=
-operator|(
-name|UINT32
-operator|)
-name|x
-decl_stmt|;
-operator|*
-operator|(
-name|UINT32
-operator|*
-operator|)
-name|ptr
-operator|=
-operator|(
-name|i
-operator|>>
-literal|24
-operator|)
-operator||
-operator|(
-operator|(
-name|i
-operator|&
-literal|0x00FF0000
-operator|)
-operator|>>
-literal|8
-operator|)
-operator||
-operator|(
-operator|(
-name|i
-operator|&
-literal|0x0000FF00
-operator|)
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|i
-operator|<<
-literal|24
-operator|)
-expr_stmt|;
-block|}
-end_function
+value|put_u32_le(p,v)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __LITTLE_ENDIAN */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SWAP32 */
-end_comment
-
-begin_comment
-comment|/* The following definitions use the above reversal-primitives to do the right  * thing on endian specific load and stores.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__LITTLE_ENDIAN__
-operator|)
-end_if
 
 begin_define
 define|#
 directive|define
 name|LOAD_UINT32_LITTLE
 parameter_list|(
-name|ptr
+name|p
 parameter_list|)
-value|(*(const UINT32 *)(ptr))
+value|(get_u32_le(p))
 end_define
 
 begin_define
@@ -584,44 +455,12 @@ define|#
 directive|define
 name|STORE_UINT32_BIG
 parameter_list|(
-name|ptr
+name|p
 parameter_list|,
-name|x
+name|v
 parameter_list|)
-value|STORE_UINT32_REVERSED(ptr,x)
+value|put_u32(p, v)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LOAD_UINT32_LITTLE
-parameter_list|(
-name|ptr
-parameter_list|)
-value|LOAD_UINT32_REVERSED(ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STORE_UINT32_BIG
-parameter_list|(
-name|ptr
-parameter_list|,
-name|x
-parameter_list|)
-value|(*(UINT32 *)(ptr) = (UINT32)(x))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ---------------------------------------------------------------------- */
@@ -657,6 +496,12 @@ end_define
 begin_comment
 comment|/* OpenSSL's AES */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
 
 begin_include
 include|#
@@ -718,6 +563,79 @@ parameter_list|)
 define|\
 value|AES_set_encrypt_key((const u_char *)(key),UMAC_KEY_LEN*8,int_key)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"rijndael.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|AES_ROUNDS
+value|((UMAC_KEY_LEN / 4) + 6)
+end_define
+
+begin_typedef
+typedef|typedef
+name|UINT8
+name|aes_int_key
+index|[
+name|AES_ROUNDS
+operator|+
+literal|1
+index|]
+index|[
+literal|4
+index|]
+index|[
+literal|4
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* AES internal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|aes_encryption
+parameter_list|(
+name|in
+parameter_list|,
+name|out
+parameter_list|,
+name|int_key
+parameter_list|)
+define|\
+value|rijndaelEncrypt((u32 *)(int_key), AES_ROUNDS, (u8 *)(in), (u8 *)(out))
+end_define
+
+begin_define
+define|#
+directive|define
+name|aes_key_setup
+parameter_list|(
+name|key
+parameter_list|,
+name|int_key
+parameter_list|)
+define|\
+value|rijndaelKeySetupEnc((u32 *)(int_key), (const unsigned char *)(key), \   UMAC_KEY_LEN*8)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The user-supplied UMAC key is stretched using AES in a counter  * mode to supply all random bits needed by UMAC. The kdf function takes  * an AES internal key representation 'key' and writes a stream of  * 'nbytes' bytes to the memory pointed at by 'bufp'. Each distinct  * 'ndx' causes a distinct byte stream.  */

@@ -18,15 +18,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_RANGES_TUPLES
-value|5
+name|RANGES_TUPLES_MAX
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIN_RANGES_TUPLES
-value|2
+name|RANGES_TUPLES_INVALID
+value|(RANGES_TUPLES_MAX + 1)
 end_define
 
 begin_struct

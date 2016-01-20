@@ -689,6 +689,19 @@ name|dev
 parameter_list|)
 function_decl|;
 comment|/* Device woken up */
+name|void
+function_decl|(
+modifier|*
+name|shutdown
+function_decl|)
+parameter_list|(
+name|struct
+name|pci_dev
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+comment|/* Device shutdown */
 name|driver_t
 name|driver
 decl_stmt|;

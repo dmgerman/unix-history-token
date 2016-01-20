@@ -673,6 +673,9 @@ case|:
 case|case
 name|FSL_E500mc
 case|:
+case|case
+name|FSL_E5500
+case|:
 name|error
 operator|=
 name|pmc_e500_initialize

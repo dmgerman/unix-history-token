@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_opts.c,v 1.20 2015/01/28 17:32:07 schwarze Exp $ */
+comment|/*	$Id: tbl_opts.c,v 1.21 2015/09/26 00:54:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -432,7 +432,6 @@ default|default:
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 if|if
 condition|(

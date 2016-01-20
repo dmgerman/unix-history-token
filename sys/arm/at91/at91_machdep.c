@@ -384,14 +384,6 @@ value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|bus_space
-name|at91_bs_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernel_pt_table

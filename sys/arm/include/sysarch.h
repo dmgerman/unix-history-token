@@ -26,6 +26,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/armreg.h>
 end_include
 
@@ -37,39 +43,12 @@ begin_comment
 comment|/* ARM_TP_ADDRESS is needed for processors that don't support  * the exclusive-access opcodes introduced with ARMv6K. */
 end_comment
 
-begin_comment
-comment|/* TODO: #if !defined(_HAVE_ARMv6K_INSTRUCTIONS) */
-end_comment
-
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__ARM_ARCH_7__
-argument_list|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|__ARM_ARCH_7A__
-argument_list|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|__ARM_ARCH_6K__
-argument_list|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|__ARM_ARCH_6ZK__
-argument_list|)
+name|__ARM_ARCH
+operator|<=
+literal|5
 end_if
 
 begin_define

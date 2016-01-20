@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: msg.c,v 1.15 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: msg.c,v 1.16 2015/01/15 09:40:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -58,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"sshbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
 end_include
 
 begin_include
@@ -95,7 +101,8 @@ parameter_list|,
 name|u_char
 name|type
 parameter_list|,
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|m
 parameter_list|)
@@ -109,7 +116,7 @@ decl_stmt|;
 name|u_int
 name|mlen
 init|=
-name|buffer_len
+name|sshbuf_len
 argument_list|(
 name|m
 argument_list|)
@@ -186,7 +193,11 @@ name|vwrite
 argument_list|,
 name|fd
 argument_list|,
-name|buffer_ptr
+operator|(
+name|u_char
+operator|*
+operator|)
+name|sshbuf_ptr
 argument_list|(
 name|m
 argument_list|)
@@ -224,7 +235,8 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|m
 parameter_list|)
@@ -234,9 +246,15 @@ name|buf
 index|[
 literal|4
 index|]
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|u_int
 name|msg_len
+decl_stmt|;
+name|int
+name|r
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -313,18 +331,47 @@ literal|1
 operator|)
 return|;
 block|}
-name|buffer_clear
+name|sshbuf_reset
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|buffer_append_space
+if|if
+condition|(
+operator|(
+name|r
+operator|=
+name|sshbuf_reserve
 argument_list|(
 name|m
 argument_list|,
 name|msg_len
+argument_list|,
+operator|&
+name|p
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: buffer error: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|atomicio
@@ -333,10 +380,7 @@ name|read
 argument_list|,
 name|fd
 argument_list|,
-name|buffer_ptr
-argument_list|(
-name|m
-argument_list|)
+name|p
 argument_list|,
 name|msg_len
 argument_list|)

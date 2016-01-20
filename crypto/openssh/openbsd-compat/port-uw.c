@@ -116,6 +116,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_comment
+comment|/* servconf.h needs misc.h for struct ForwardOptions */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 

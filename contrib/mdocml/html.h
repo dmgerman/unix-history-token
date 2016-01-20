@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.70 2014/12/02 10:08:06 schwarze Exp $ */
+comment|/*	$Id: html.h,v 1.72 2015/11/07 14:01:16 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -344,13 +344,6 @@ modifier|*
 name|tblt
 decl_stmt|;
 comment|/* current open table scope */
-specifier|const
-name|struct
-name|mchars
-modifier|*
-name|symtab
-decl_stmt|;
-comment|/* character table */
 name|char
 modifier|*
 name|base_man
@@ -404,10 +397,6 @@ comment|/* don't emit HTML/HEAD/BODY */
 block|}
 struct|;
 end_struct
-
-begin_macro
-name|__BEGIN_DECLS
-end_macro
 
 begin_struct_decl
 struct_decl|struct
@@ -734,10 +723,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 end_unit
 

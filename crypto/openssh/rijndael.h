@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rijndael.h,v 1.12 2001/12/19 07:18:56 deraadt Exp $ */
+comment|/*	$OpenBSD: rijndael.h,v 1.14 2014/04/29 15:42:07 markus Exp $ */
 end_comment
 
 begin_comment
@@ -10,33 +10,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__RIJNDAEL_H
+name|_PRIVATE_RIJNDAEL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__RIJNDAEL_H
+name|_PRIVATE_RIJNDAEL_H
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXKC
-value|(256/32)
+name|AES_MAXKEYBITS
+value|(256)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXKB
-value|(256/8)
+name|AES_MAXKEYBYTES
+value|(AES_MAXKEYBITS/8)
 end_define
+
+begin_comment
+comment|/* for 256-bit keys, fewer for less */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXNR
+name|AES_MAXROUNDS
 value|14
 end_define
 
@@ -64,6 +68,47 @@ name|u32
 typedef|;
 end_typedef
 
+begin_function_decl
+name|int
+name|rijndaelKeySetupEnc
+parameter_list|(
+name|unsigned
+name|int
+index|[]
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+index|[]
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rijndaelEncrypt
+parameter_list|(
+specifier|const
+name|unsigned
+name|int
+index|[]
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+index|[]
+parameter_list|,
+name|unsigned
+name|char
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  The structure for key information */
 end_comment
@@ -85,7 +130,7 @@ index|[
 literal|4
 operator|*
 operator|(
-name|MAXNR
+name|AES_MAXROUNDS
 operator|+
 literal|1
 operator|)
@@ -98,7 +143,7 @@ index|[
 literal|4
 operator|*
 operator|(
-name|MAXNR
+name|AES_MAXROUNDS
 operator|+
 literal|1
 operator|)
@@ -165,7 +210,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __RIJNDAEL_H */
+comment|/* _PRIVATE_RIJNDAEL_H */
 end_comment
 
 end_unit

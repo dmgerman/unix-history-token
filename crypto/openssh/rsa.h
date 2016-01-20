@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: rsa.h,v 1.16 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: rsa.h,v 1.17 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ file|<openssl/rsa.h>
 end_include
 
 begin_function_decl
-name|void
+name|int
 name|rsa_public_encrypt
 parameter_list|(
 name|BIGNUM
@@ -64,7 +64,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|rsa_generate_additional_parameters
 parameter_list|(
 name|RSA

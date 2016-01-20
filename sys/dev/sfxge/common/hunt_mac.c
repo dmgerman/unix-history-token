@@ -38,7 +38,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_poll
+name|ef10_mac_poll
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -51,7 +51,6 @@ modifier|*
 name|link_modep
 parameter_list|)
 block|{
-comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 * essentially identical. 	 */
 name|efx_port_t
 modifier|*
 name|epp
@@ -63,8 +62,8 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
-name|hunt_link_state_t
-name|hls
+name|ef10_link_state_t
+name|els
 decl_stmt|;
 name|efx_rc_t
 name|rc
@@ -74,12 +73,12 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_phy_get_link
+name|ef10_phy_get_link
 argument_list|(
 name|enp
 argument_list|,
 operator|&
-name|hls
+name|els
 argument_list|)
 operator|)
 operator|!=
@@ -92,24 +91,24 @@ name|epp
 operator|->
 name|ep_adv_cap_mask
 operator|=
-name|hls
+name|els
 operator|.
-name|hls_adv_cap_mask
+name|els_adv_cap_mask
 expr_stmt|;
 name|epp
 operator|->
 name|ep_fcntl
 operator|=
-name|hls
+name|els
 operator|.
-name|hls_fcntl
+name|els_fcntl
 expr_stmt|;
 operator|*
 name|link_modep
 operator|=
-name|hls
+name|els
 operator|.
-name|hls_link_mode
+name|els_link_mode
 expr_stmt|;
 return|return
 operator|(
@@ -143,7 +142,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_up
+name|ef10_mac_up
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -156,25 +155,24 @@ modifier|*
 name|mac_upp
 parameter_list|)
 block|{
-comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 * essentially identical. 	 */
-name|hunt_link_state_t
-name|hls
+name|ef10_link_state_t
+name|els
 decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* 	 * Because Huntington doesn't *require* polling, we can't rely on 	 * hunt_mac_poll() being executed to populate epp->ep_mac_up. 	 */
+comment|/* 	 * Because EF10 doesn't *require* polling, we can't rely on 	 * ef10_mac_poll() being executed to populate epp->ep_mac_up. 	 */
 if|if
 condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_phy_get_link
+name|ef10_phy_get_link
 argument_list|(
 name|enp
 argument_list|,
 operator|&
-name|hls
+name|els
 argument_list|)
 operator|)
 operator|!=
@@ -186,9 +184,9 @@ goto|;
 operator|*
 name|mac_upp
 operator|=
-name|hls
+name|els
 operator|.
-name|hls_mac_up
+name|els_mac_up
 expr_stmt|;
 return|return
 operator|(
@@ -215,7 +213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Huntington uses MC_CMD_VADAPTOR_SET_MAC to set the  * MAC address; the address field in MC_CMD_SET_MAC has no  * effect.  * MC_CMD_VADAPTOR_SET_MAC requires mac-spoofing privilege and  * the port to have no filters or queues active.  */
+comment|/*  * EF10 adapters use MC_CMD_VADAPTOR_SET_MAC to set the  * MAC address; the address field in MC_CMD_SET_MAC has no  * effect.  * MC_CMD_VADAPTOR_SET_MAC requires mac-spoofing privilege and  * the port to have no filters or queues active.  */
 end_comment
 
 begin_function
@@ -384,7 +382,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_addr_set
+name|ef10_mac_addr_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -418,13 +416,278 @@ condition|)
 goto|goto
 name|fail1
 goto|;
-comment|/* Fallback for older firmware without Vadapter support */
+comment|/* 		 * Fallback for older Huntington firmware without Vadapter 		 * support. 		 */
 if|if
 condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_mac_reconfigure
+name|ef10_mac_reconfigure
+argument_list|(
+name|enp
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail2
+goto|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
+name|fail1
+label|:
+name|EFSYS_PROBE1
+argument_list|(
+name|fail1
+argument_list|,
+name|efx_rc_t
+argument_list|,
+name|rc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rc
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__checkReturn
+name|efx_rc_t
+name|efx_mcdi_mtu_set
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__in
+name|uint32_t
+name|mtu
+parameter_list|)
+block|{
+name|efx_mcdi_req_t
+name|req
+decl_stmt|;
+name|uint8_t
+name|payload
+index|[
+name|MAX
+argument_list|(
+name|MC_CMD_SET_MAC_EXT_IN_LEN
+argument_list|,
+name|MC_CMD_SET_MAC_OUT_LEN
+argument_list|)
+index|]
+decl_stmt|;
+name|efx_rc_t
+name|rc
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|memset
+argument_list|(
+name|payload
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|payload
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|req
+operator|.
+name|emr_cmd
+operator|=
+name|MC_CMD_SET_MAC
+expr_stmt|;
+name|req
+operator|.
+name|emr_in_buf
+operator|=
+name|payload
+expr_stmt|;
+name|req
+operator|.
+name|emr_in_length
+operator|=
+name|MC_CMD_SET_MAC_EXT_IN_LEN
+expr_stmt|;
+name|req
+operator|.
+name|emr_out_buf
+operator|=
+name|payload
+expr_stmt|;
+name|req
+operator|.
+name|emr_out_length
+operator|=
+name|MC_CMD_SET_MAC_OUT_LEN
+expr_stmt|;
+comment|/* Only configure the MTU in this call to MC_CMD_SET_MAC */
+name|MCDI_IN_SET_DWORD
+argument_list|(
+name|req
+argument_list|,
+name|SET_MAC_EXT_IN_MTU
+argument_list|,
+name|mtu
+argument_list|)
+expr_stmt|;
+name|MCDI_IN_POPULATE_DWORD_1
+argument_list|(
+name|req
+argument_list|,
+name|SET_MAC_EXT_IN_CONTROL
+argument_list|,
+name|SET_MAC_EXT_IN_CFG_MTU
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|efx_mcdi_execute
+argument_list|(
+name|enp
+argument_list|,
+operator|&
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|.
+name|emr_rc
+operator|!=
+literal|0
+condition|)
+block|{
+name|rc
+operator|=
+name|req
+operator|.
+name|emr_rc
+expr_stmt|;
+goto|goto
+name|fail1
+goto|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|fail1
+label|:
+name|EFSYS_PROBE1
+argument_list|(
+name|fail1
+argument_list|,
+name|efx_rc_t
+argument_list|,
+name|rc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rc
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__checkReturn
+name|efx_rc_t
+name|ef10_mac_pdu_set
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|)
+block|{
+name|efx_port_t
+modifier|*
+name|epp
+init|=
+operator|&
+operator|(
+name|enp
+operator|->
+name|en_port
+operator|)
+decl_stmt|;
+name|efx_nic_cfg_t
+modifier|*
+name|encp
+init|=
+operator|&
+operator|(
+name|enp
+operator|->
+name|en_nic_cfg
+operator|)
+decl_stmt|;
+name|efx_rc_t
+name|rc
+decl_stmt|;
+if|if
+condition|(
+name|encp
+operator|->
+name|enc_enhanced_set_mac_supported
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|efx_mcdi_mtu_set
+argument_list|(
+name|enp
+argument_list|,
+name|epp
+operator|->
+name|ep_mac_pdu
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail1
+goto|;
+block|}
+else|else
+block|{
+comment|/* 		 * Fallback for older Huntington firmware, which always 		 * configure all of the parameters to MC_CMD_SET_MAC. This isn't 		 * suitable for setting the MTU on unpriviliged functions. 		 */
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|ef10_mac_reconfigure
 argument_list|(
 name|enp
 argument_list|)
@@ -470,7 +733,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_reconfigure
+name|ef10_mac_reconfigure
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -593,7 +856,7 @@ operator|->
 name|ep_mac_addr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: The Huntington MAC does not support REJECT_BRDCST. 	 * The REJECT_UNCST flag will also prevent multicast traffic 	 * from reaching the filters. As Huntington filters drop any 	 * traffic that does not match a filter it is ok to leave the 	 * MAC running in promiscuous mode. See bug41141. 	 */
+comment|/* 	 * Note: The Huntington MAC does not support REJECT_BRDCST. 	 * The REJECT_UNCST flag will also prevent multicast traffic 	 * from reaching the filters. As Huntington filters drop any 	 * traffic that does not match a filter it is ok to leave the 	 * MAC running in promiscuous mode. See bug41141. 	 * 	 * FIXME: Does REJECT_UNCST behave the same way on Medford? 	 */
 name|MCDI_IN_POPULATE_DWORD_2
 argument_list|(
 name|req
@@ -732,7 +995,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_multicast_list_set
+name|ef10_mac_multicast_list_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -769,9 +1032,14 @@ operator|->
 name|en_family
 operator|==
 name|EFX_FAMILY_HUNTINGTON
+operator|||
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_MEDFORD
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: Insert filters for multicast list */
 if|if
 condition|(
 operator|(
@@ -817,7 +1085,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_filter_default_rxq_set
+name|ef10_mac_filter_default_rxq_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -954,7 +1222,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_mac_filter_default_rxq_clear
+name|ef10_mac_filter_default_rxq_clear
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1023,7 +1291,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_loopback_set
+name|ef10_mac_loopback_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1039,7 +1307,6 @@ name|efx_loopback_type_t
 name|loopback_type
 parameter_list|)
 block|{
-comment|/* 	 * TBD: Consider a common Siena/Huntington function.  The code is 	 * essentially identical. 	 */
 name|efx_port_t
 modifier|*
 name|epp
@@ -1068,7 +1335,7 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* The PHY object handles this on Huntington */
+comment|/* The PHY object handles this on EF10 */
 name|old_loopback_type
 operator|=
 name|epp
@@ -1165,7 +1432,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 parameter_list|(
 name|_esmp
 parameter_list|,
@@ -1180,7 +1447,7 @@ end_define
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_stats_update
+name|ef10_mac_stats_update
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1229,7 +1496,7 @@ argument_list|,
 name|EFX_MAC_STATS_SIZE
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1243,7 +1510,7 @@ name|EFSYS_MEM_READ_BARRIER
 argument_list|()
 expr_stmt|;
 comment|/* TX */
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1267,7 +1534,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1291,7 +1558,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1315,7 +1582,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1339,7 +1606,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1363,7 +1630,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1387,7 +1654,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1411,7 +1678,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1435,7 +1702,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1459,7 +1726,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1483,7 +1750,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1507,7 +1774,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1531,7 +1798,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1555,7 +1822,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1579,7 +1846,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1603,7 +1870,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1627,7 +1894,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1651,7 +1918,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1675,7 +1942,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1699,7 +1966,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1723,7 +1990,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1747,7 +2014,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1771,7 +2038,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1796,7 +2063,7 @@ name|value
 argument_list|)
 expr_stmt|;
 comment|/* RX */
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1820,7 +2087,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1844,7 +2111,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1868,7 +2135,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1892,7 +2159,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1916,7 +2183,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1940,7 +2207,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1964,7 +2231,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -1988,7 +2255,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2012,7 +2279,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2036,7 +2303,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2060,7 +2327,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2084,7 +2351,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2108,7 +2375,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2132,7 +2399,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2156,7 +2423,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2180,7 +2447,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2204,7 +2471,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2228,7 +2495,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2252,7 +2519,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2276,7 +2543,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2300,7 +2567,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2324,7 +2591,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2376,7 +2643,7 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2428,7 +2695,7 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2480,7 +2747,7 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2532,7 +2799,7 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2556,7 +2823,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2581,7 +2848,7 @@ name|value
 argument_list|)
 expr_stmt|;
 comment|/* Packet memory (EF10 only) */
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2605,7 +2872,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2629,7 +2896,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2653,7 +2920,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2677,7 +2944,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2701,7 +2968,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2725,7 +2992,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2750,7 +3017,7 @@ name|value
 argument_list|)
 expr_stmt|;
 comment|/* RX datapath */
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2774,7 +3041,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2798,7 +3065,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2822,7 +3089,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2846,7 +3113,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2871,7 +3138,7 @@ name|value
 argument_list|)
 expr_stmt|;
 comment|/* VADAPTER RX */
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2895,7 +3162,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2919,7 +3186,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2943,7 +3210,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2967,7 +3234,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -2991,7 +3258,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3015,7 +3282,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3039,7 +3306,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3063,7 +3330,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3088,7 +3355,7 @@ name|value
 argument_list|)
 expr_stmt|;
 comment|/* VADAPTER TX */
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3112,7 +3379,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3136,7 +3403,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3160,7 +3427,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3184,7 +3451,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3208,7 +3475,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3232,7 +3499,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3256,7 +3523,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3280,7 +3547,7 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,
@@ -3316,7 +3583,7 @@ expr_stmt|;
 name|EFSYS_MEM_READ_BARRIER
 argument_list|()
 expr_stmt|;
-name|HUNT_MAC_STAT_READ
+name|EF10_MAC_STAT_READ
 argument_list|(
 name|esmp
 argument_list|,

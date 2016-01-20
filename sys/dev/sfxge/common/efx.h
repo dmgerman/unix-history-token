@@ -2930,12 +2930,19 @@ decl_stmt|;
 name|boolean_t
 name|enc_allow_set_mac_with_installed_filters
 decl_stmt|;
+name|boolean_t
+name|enc_enhanced_set_mac_supported
+decl_stmt|;
 comment|/* External port identifier */
 name|uint8_t
 name|enc_external_port
 decl_stmt|;
 name|uint32_t
 name|enc_mcdi_max_payload_length
+decl_stmt|;
+comment|/* VPD may be per-PF or global */
+name|boolean_t
+name|enc_vpd_is_global
 decl_stmt|;
 block|}
 name|efx_nic_cfg_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-gss.c,v 1.21 2014/02/26 20:28:44 djm Exp $ */
+comment|/* $OpenBSD: auth2-gss.c,v 1.22 2015/01/19 20:07:45 markus Exp $ */
 end_comment
 
 begin_comment
@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -112,7 +118,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_gssapi_token
 parameter_list|(
 name|int
@@ -130,7 +136,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_gssapi_mic
 parameter_list|(
 name|int
@@ -148,7 +154,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_gssapi_exchange_complete
 parameter_list|(
 name|int
@@ -166,7 +172,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_gssapi_errtok
 parameter_list|(
 name|int
@@ -493,7 +499,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_gssapi_token
 parameter_list|(
 name|int
@@ -750,12 +756,15 @@ operator|&
 name|send_tok
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_gssapi_errtok
 parameter_list|(
 name|int
@@ -891,6 +900,9 @@ operator|&
 name|send_tok
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -900,7 +912,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_gssapi_exchange_complete
 parameter_list|(
 name|int
@@ -1006,12 +1018,15 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_gssapi_mic
 parameter_list|(
 name|int
@@ -1227,6 +1242,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

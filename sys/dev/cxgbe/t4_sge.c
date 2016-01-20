@@ -16615,7 +16615,7 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 operator|&
 name|vi
@@ -16642,7 +16642,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 operator|&
 name|vi

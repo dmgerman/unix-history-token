@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-serv.c,v 1.26 2014/02/26 20:28:44 djm Exp $ */
+comment|/* $OpenBSD: gss-serv.c,v 1.29 2015/05/22 03:50:02 djm Exp $ */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -112,8 +106,21 @@ end_include
 begin_include
 include|#
 directive|include
+file|"servconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ssh-gss.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|ServerOptions
+name|options
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -302,12 +309,19 @@ decl_stmt|;
 name|char
 name|lname
 index|[
-name|MAXHOSTNAMELEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 name|gss_OID_set
 name|oidset
 decl_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|gss_strict_acceptor
+condition|)
+block|{
 name|gss_create_empty_oid_set
 argument_list|(
 operator|&
@@ -441,6 +455,25 @@ name|ctx
 operator|->
 name|major
 operator|)
+return|;
+block|}
+else|else
+block|{
+name|ctx
+operator|->
+name|name
+operator|=
+name|GSS_C_NO_NAME
+expr_stmt|;
+name|ctx
+operator|->
+name|creds
+operator|=
+name|GSS_C_NO_CREDENTIAL
+expr_stmt|;
+block|}
+return|return
+name|GSS_S_COMPLETE
 return|;
 block|}
 end_function

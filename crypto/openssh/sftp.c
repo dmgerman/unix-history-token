@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.158 2013/11/20 20:54:10 deraadt Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.170 2015/01/20 23:14:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -20,6 +20,16 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* MIN MAX */
+end_comment
 
 begin_include
 include|#
@@ -180,6 +190,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -263,7 +279,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"ssherr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sshbuf.h"
 end_include
 
 begin_include
@@ -293,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_NUM_REQUESTS
-value|256
+value|64
 end_define
 
 begin_comment
@@ -374,7 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* When this option is set, we resume download if possible */
+comment|/* When this option is set, we resume download or upload if possible */
 end_comment
 
 begin_decl_stmt
@@ -672,7 +694,11 @@ name|I_PWD
 block|,
 name|I_QUIT
 block|,
+name|I_REGET
+block|,
 name|I_RENAME
+block|,
+name|I_REPUT
 block|,
 name|I_RM
 block|,
@@ -685,8 +711,6 @@ block|,
 name|I_VERSION
 block|,
 name|I_PROGRESS
-block|,
-name|I_REGET
 block|, }
 enum|;
 end_enum
@@ -971,6 +995,14 @@ name|REMOTE
 block|}
 block|,
 block|{
+literal|"reput"
+block|,
+name|I_REPUT
+block|,
+name|LOCAL
+block|}
+block|,
+block|{
 literal|"rm"
 block|,
 name|I_RM
@@ -1167,8 +1199,9 @@ literal|"chown own path                     Change owner of file 'path' to 'own'
 literal|"df [-hi] [path]                    Display statistics for current directory or\n"
 literal|"                                   filesystem containing 'path'\n"
 literal|"exit                               Quit sftp\n"
-literal|"get [-Ppr] remote [local]          Download file\n"
-literal|"reget remote [local]		Resume download file\n"
+literal|"get [-afPpRr] remote [local]       Download file\n"
+literal|"reget [-fPpRr] remote [local]      Resume download file\n"
+literal|"reput [-fPpRr] [local] remote      Resume upload file\n"
 literal|"help                               Display this help text\n"
 literal|"lcd path                           Change local directory to 'path'\n"
 literal|"lls [ls-options [path]]            Display local directory listing\n"
@@ -1179,7 +1212,7 @@ literal|"ls [-1afhlnrSt] [path]             Display remote directory listing\n"
 literal|"lumask umask                       Set local umask to 'umask'\n"
 literal|"mkdir path                         Create remote directory\n"
 literal|"progress                           Toggle display of progress meter\n"
-literal|"put [-Ppr] local [remote]          Upload file\n"
+literal|"put [-afPpRr] local [remote]       Upload file\n"
 literal|"pwd                                Display remote working directory\n"
 literal|"quit                               Quit sftp\n"
 literal|"rename oldpath newpath             Rename remote file\n"
@@ -2662,6 +2695,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|r
+decl_stmt|,
 name|err
 init|=
 literal|0
@@ -2704,6 +2739,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|remote_glob
 argument_list|(
 name|conn
@@ -2717,7 +2755,27 @@ argument_list|,
 operator|&
 name|g
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|r
+operator|==
+name|GLOB_NOSPACE
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Too many matches for \"%s\"."
+argument_list|,
+name|abs_src
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|error
 argument_list|(
@@ -2726,6 +2784,7 @@ argument_list|,
 name|abs_src
 argument_list|)
 expr_stmt|;
+block|}
 name|err
 operator|=
 operator|-
@@ -3120,6 +3179,9 @@ name|int
 name|rflag
 parameter_list|,
 name|int
+name|resume
+parameter_list|,
+name|int
 name|fflag
 parameter_list|)
 block|{
@@ -3473,10 +3535,39 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+name|resume
+operator||=
+name|global_aflag
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|quiet
+operator|&&
+name|resume
+condition|)
+name|printf
+argument_list|(
+literal|"Resuming upload of %s to %s\n"
+argument_list|,
+name|g
+operator|.
+name|gl_pathv
+index|[
+name|i
+index|]
+argument_list|,
+name|abs_dst
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|quiet
+operator|&&
+operator|!
+name|resume
 condition|)
 name|printf
 argument_list|(
@@ -3532,6 +3623,8 @@ name|global_pflag
 argument_list|,
 literal|1
 argument_list|,
+name|resume
+argument_list|,
 name|fflag
 operator|||
 name|global_fflag
@@ -3566,6 +3659,8 @@ argument_list|,
 name|pflag
 operator|||
 name|global_pflag
+argument_list|,
+name|resume
 argument_list|,
 name|fflag
 operator|||
@@ -4323,6 +4418,8 @@ name|g
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|r
 decl_stmt|;
 name|struct
 name|winsize
@@ -4366,6 +4463,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|remote_glob
 argument_list|(
 name|conn
@@ -4387,6 +4487,9 @@ argument_list|,
 operator|&
 name|g
 argument_list|)
+operator|)
+operator|!=
+literal|0
 operator|||
 operator|(
 name|g
@@ -4412,6 +4515,23 @@ operator|&
 name|g
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|GLOB_NOSPACE
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Can't ls: Too many matches for \"%s\""
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|error
 argument_list|(
 literal|"Can't ls: \"%s\" not found"
@@ -4419,6 +4539,7 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|-
 literal|1
@@ -6579,6 +6700,9 @@ case|case
 name|I_REGET
 case|:
 case|case
+name|I_REPUT
+case|:
+case|case
 name|I_PUT
 case|:
 if|if
@@ -6675,27 +6799,6 @@ operator|*
 name|path2
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|*
-name|aflag
-operator|&&
-name|cmdnum
-operator|==
-name|I_PUT
-condition|)
-block|{
-comment|/* XXX implement resume for uploads */
-name|error
-argument_list|(
-literal|"Resume is not supported for uploads"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
 break|break;
 case|case
@@ -7389,7 +7492,7 @@ decl_stmt|;
 name|char
 name|path_buf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -7530,6 +7633,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|I_REPUT
+case|:
+name|aflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|I_PUT
 case|:
 name|err
@@ -7548,6 +7659,8 @@ argument_list|,
 name|pflag
 argument_list|,
 name|rflag
+argument_list|,
+name|aflag
 argument_list|,
 name|fflag
 argument_list|)
@@ -8045,6 +8158,25 @@ break|break;
 case|case
 name|I_LCHDIR
 case|:
+name|tmp
+operator|=
+name|tilde_expand_filename
+argument_list|(
+name|path1
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|path1
+argument_list|)
+expr_stmt|;
+name|path1
+operator|=
+name|tmp
+expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -9866,6 +9998,10 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|g
@@ -9893,10 +10029,6 @@ name|gl_pathv
 argument_list|,
 name|pwdlen
 argument_list|)
-expr_stmt|;
-name|tmp
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* Don't try to extend globs */
 if|if
@@ -10242,6 +10374,10 @@ if|if
 condition|(
 operator|!
 name|terminated
+operator|&&
+name|quote
+operator|!=
+literal|'\0'
 condition|)
 name|ins
 index|[
@@ -11272,14 +11408,26 @@ name|dir
 argument_list|)
 expr_stmt|;
 block|}
-name|setlinebuf
+name|setvbuf
 argument_list|(
 name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|setlinebuf
+name|setvbuf
 argument_list|(
 name|infile
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|interactive

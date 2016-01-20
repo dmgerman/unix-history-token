@@ -746,6 +746,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vmspace_switch_aio
+parameter_list|(
+name|struct
+name|vmspace
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vnode_pager_setsize
 parameter_list|(
 name|struct

@@ -13,7 +13,6 @@ name|void
 parameter_list|)
 block|{
 return|return
-operator|(
 operator|!
 name|reallocarray
 argument_list|(
@@ -23,7 +22,6 @@ literal|2
 argument_list|,
 literal|2
 argument_list|)
-operator|)
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: test-strtonum.c,v 1.1 2015/02/16 14:56:22 schwarze Exp $	*/
+comment|/*	$Id: test-strtonum.c,v 1.2 2015/10/06 18:32:20 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -42,9 +42,7 @@ operator|!=
 literal|1
 condition|)
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 if|if
 condition|(
@@ -53,9 +51,7 @@ operator|!=
 name|NULL
 condition|)
 return|return
-operator|(
 literal|2
-operator|)
 return|;
 if|if
 condition|(
@@ -74,9 +70,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 literal|3
-operator|)
 return|;
 if|if
 condition|(
@@ -85,9 +79,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 literal|4
-operator|)
 return|;
 if|if
 condition|(
@@ -106,9 +98,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 literal|5
-operator|)
 return|;
 if|if
 condition|(
@@ -117,9 +107,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 literal|6
-operator|)
 return|;
 if|if
 condition|(
@@ -138,9 +126,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 literal|7
-operator|)
 return|;
 if|if
 condition|(
@@ -149,14 +135,10 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 literal|8
-operator|)
 return|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

@@ -1758,6 +1758,9 @@ name|mbr_size
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
 operator|*
 name|mbr
 operator|=
@@ -1768,11 +1771,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|mbr
+operator|)
 operator|==
 name|NULL
 condition|)

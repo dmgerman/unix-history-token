@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: poly1305.h,v 1.2 2013/12/19 22:57:13 djm Exp $ */
+comment|/* $OpenBSD: poly1305.h,v 1.4 2014/05/02 03:27:54 djm Exp $ */
 end_comment
 
 begin_comment

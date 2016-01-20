@@ -120,6 +120,9 @@ block|,
 comment|/* emo_addr_set */
 name|falcon_gmac_reconfigure
 block|,
+comment|/* emo_pdu_set */
+name|falcon_gmac_reconfigure
+block|,
 comment|/* emo_reconfigure */
 name|falconsiena_mac_multicast_list_set
 block|,
@@ -190,6 +193,9 @@ comment|/* emo_up */
 name|falcon_xmac_reconfigure
 block|,
 comment|/* emo_addr_set */
+name|falcon_xmac_reconfigure
+block|,
+comment|/* emo_pdu_set */
 name|falcon_xmac_reconfigure
 block|,
 comment|/* emo_reconfigure */
@@ -264,6 +270,9 @@ block|,
 comment|/* emo_addr_set */
 name|siena_mac_reconfigure
 block|,
+comment|/* emo_pdu_set */
+name|siena_mac_reconfigure
+block|,
 comment|/* emo_reconfigure */
 name|falconsiena_mac_multicast_list_set
 block|,
@@ -314,42 +323,47 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_mac_ops_t
-name|__efx_hunt_mac_ops
+name|__efx_ef10_mac_ops
 init|=
 block|{
 name|NULL
 block|,
 comment|/* emo_reset */
-name|hunt_mac_poll
+name|ef10_mac_poll
 block|,
 comment|/* emo_poll */
-name|hunt_mac_up
+name|ef10_mac_up
 block|,
 comment|/* emo_up */
-name|hunt_mac_addr_set
+name|ef10_mac_addr_set
 block|,
 comment|/* emo_addr_set */
-name|hunt_mac_reconfigure
+name|ef10_mac_pdu_set
+block|,
+comment|/* emo_pdu_set */
+name|ef10_mac_reconfigure
 block|,
 comment|/* emo_reconfigure */
-name|hunt_mac_multicast_list_set
+name|ef10_mac_multicast_list_set
 block|,
 comment|/* emo_multicast_list_set */
-name|hunt_mac_filter_default_rxq_set
+name|ef10_mac_filter_default_rxq_set
 block|,
 comment|/* emo_filter_default_rxq_set */
-name|hunt_mac_filter_default_rxq_clear
+name|ef10_mac_filter_default_rxq_clear
 block|,
 comment|/* emo_filter_default_rxq_clear */
 if|#
 directive|if
 name|EFSYS_OPT_LOOPBACK
-name|hunt_mac_loopback_set
+name|ef10_mac_loopback_set
 block|,
 comment|/* emo_loopback_set */
 endif|#
@@ -364,7 +378,7 @@ comment|/* emo_stats_upload */
 name|efx_mcdi_mac_stats_periodic
 block|,
 comment|/* emo_stats_periodic */
-name|hunt_mac_stats_update
+name|ef10_mac_stats_update
 comment|/* emo_stats_update */
 endif|#
 directive|endif
@@ -379,7 +393,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 begin_decl_stmt
@@ -437,7 +451,20 @@ if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
 operator|&
-name|__efx_hunt_mac_ops
+name|__efx_ef10_mac_ops
+block|,
+else|#
+directive|else
+name|NULL
+block|,
+endif|#
+directive|endif
+comment|/* [EFX_MAC_MEDFORD] */
+if|#
+directive|if
+name|EFSYS_OPT_MEDFORD
+operator|&
+name|__efx_ef10_mac_ops
 block|,
 else|#
 directive|else
@@ -570,7 +597,7 @@ name|rc
 operator|=
 name|emop
 operator|->
-name|emo_reconfigure
+name|emo_pdu_set
 argument_list|(
 name|enp
 argument_list|)
@@ -2881,6 +2908,28 @@ name|EINVAL
 decl_stmt|;
 if|#
 directive|if
+name|EFSYS_OPT_SIENA
+if|if
+condition|(
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_SIENA
+condition|)
+block|{
+name|type
+operator|=
+name|EFX_MAC_SIENA
+expr_stmt|;
+goto|goto
+name|chosen
+goto|;
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
 name|EFSYS_OPT_HUNTINGTON
 if|if
 condition|(
@@ -2903,19 +2952,19 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|EFSYS_OPT_SIENA
+name|EFSYS_OPT_MEDFORD
 if|if
 condition|(
 name|enp
 operator|->
 name|en_family
 operator|==
-name|EFX_FAMILY_SIENA
+name|EFX_FAMILY_MEDFORD
 condition|)
 block|{
 name|type
 operator|=
-name|EFX_MAC_SIENA
+name|EFX_MAC_MEDFORD
 expr_stmt|;
 goto|goto
 name|chosen

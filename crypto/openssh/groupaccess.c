@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: groupaccess.c,v 1.14 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: groupaccess.c,v 1.16 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -53,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -367,14 +367,6 @@ name|found
 init|=
 literal|0
 decl_stmt|;
-name|size_t
-name|len
-init|=
-name|strlen
-argument_list|(
-name|group_pattern
-argument_list|)
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -399,8 +391,6 @@ name|i
 index|]
 argument_list|,
 name|group_pattern
-argument_list|,
-name|len
 argument_list|,
 literal|0
 argument_list|)

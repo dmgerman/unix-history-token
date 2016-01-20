@@ -9647,12 +9647,16 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) LRO Queued= %d\n"
+literal|"RX(%d) LRO Queued= %lld\n"
 argument_list|,
 name|rxr
 operator|->
 name|me
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|lro
 operator|->
 name|lro_queued
@@ -9662,12 +9666,16 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) LRO Flushed= %d\n"
+literal|"RX(%d) LRO Flushed= %lld\n"
 argument_list|,
 name|rxr
 operator|->
 name|me
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|lro
 operator|->
 name|lro_flushed

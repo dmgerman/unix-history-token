@@ -196,6 +196,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Thread local storage used to indicate when a thread is probing geoms  * for their guids.  If NULL, this thread is not tasting geoms.  If non NULL,  * it is looking for a replacement for the vdev_t* that is its value.  */
+end_comment
+
+begin_decl_stmt
+name|uint_t
+name|zfs_geom_probe_vdev_key
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -540,15 +550,6 @@ comment|/* Vdev close in progress.  Ignore the event. */
 return|return;
 block|}
 comment|/* 	 * Orphan callbacks occur from the GEOM event thread. 	 * Concurrent with this call, new I/O requests may be 	 * working their way through GEOM about to find out 	 * (only once executed by the g_down thread) that we've 	 * been orphaned from our disk provider.  These I/Os 	 * must be retired before we can detach our consumer. 	 * This is most easily achieved by acquiring the 	 * SPA ZIO configuration lock as a writer, but doing 	 * so with the GEOM topology lock held would cause 	 * a lock order reversal.  Instead, rely on the SPA's 	 * async removal support to invoke a close on this 	 * vdev once it is safe to do so. 	 */
-name|zfs_post_remove
-argument_list|(
-name|vd
-operator|->
-name|vdev_spa
-argument_list|,
-name|vd
-argument_list|)
-expr_stmt|;
 name|vd
 operator|->
 name|vdev_remove_wanted
@@ -1158,6 +1159,9 @@ modifier|*
 name|vguid
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_lookup_uint64
 argument_list|(
 name|list
@@ -1167,6 +1171,9 @@ argument_list|,
 name|vguid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|nvlist_lookup_uint64
 argument_list|(
 name|list
@@ -1399,23 +1406,17 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|KASSERT
+name|ZFS_LOG
 argument_list|(
-literal|1
-operator|==
 literal|0
 argument_list|,
-operator|(
-literal|"%s called while tasting %s."
-operator|,
-name|__func__
-operator|,
+literal|"WARNING: Orphan %s while tasting its VDev GUID."
+argument_list|,
 name|cp
 operator|->
 name|provider
 operator|->
 name|name
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2671,7 +2672,6 @@ argument_list|,
 literal|"zfs::vdev::taste"
 argument_list|)
 expr_stmt|;
-comment|/* This orphan function should be never called. */
 name|zgp
 operator|->
 name|orphan
@@ -3284,6 +3284,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Set the TLS to indicate downstack that we should not access zvols*/
+name|VERIFY
+argument_list|(
+name|tsd_set
+argument_list|(
+name|zfs_geom_probe_vdev_key
+argument_list|,
+name|vd
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We must have a pathname, and it must be absolute. 	 */
 if|if
 condition|(
@@ -3398,6 +3411,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Clear the TLS now that tasting is done */
+name|VERIFY
+argument_list|(
+name|tsd_set
+argument_list|(
+name|zfs_geom_probe_vdev_key
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cp

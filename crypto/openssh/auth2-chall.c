@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-chall.c,v 1.41 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: auth2-chall.c,v 1.42 2015/01/19 20:07:45 markus Exp $ */
 end_comment
 
 begin_comment
@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -132,7 +138,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_userauth_info_response
 parameter_list|(
 name|int
@@ -1337,7 +1343,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_userauth_info_response
 parameter_list|(
 name|int
@@ -1671,6 +1677,9 @@ argument_list|,
 name|devicename
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

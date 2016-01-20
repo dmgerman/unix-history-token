@@ -118,23 +118,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|bus_space
-name|at91_bs_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bus_space_tag_t
-name|fdtbus_bs_tag
-init|=
-operator|&
-name|at91_bs_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|fdt_fixup_entry
 name|fdt_fixup_table

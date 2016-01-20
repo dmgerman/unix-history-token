@@ -304,6 +304,9 @@ end_assert
 begin_assert
 assert|_Static_assert
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|PG_FRAME
 operator|==
 name|I386_PG_FRAME

@@ -470,7 +470,7 @@ name|struct
 name|pcie_range
 name|ranges
 index|[
-name|MAX_RANGES_TUPLES
+name|RANGES_TUPLES_MAX
 index|]
 decl_stmt|;
 name|struct

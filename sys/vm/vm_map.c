@@ -1733,6 +1733,97 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Switch between vmspaces in an AIO kernel process.  *  * The AIO kernel processes switch to and from a user process's  * vmspace while performing an I/O operation on behalf of a user  * process.  The new vmspace is either the vmspace of a user process  * obtained from an active AIO request or the initial vmspace of the  * AIO kernel process (when it is idling).  Because user processes  * will block to drain any active AIO requests before proceeding in  * exit() or execve(), the vmspace reference count for these vmspaces  * can never be 0.  This allows for a much simpler implementation than  * the loop in vmspace_acquire_ref() above.  Similarly, AIO kernel  * processes hold an extra reference on their initial vmspace for the  * life of the process so that this guarantee is true for any vmspace  * passed as 'newvm'.  */
+end_comment
+
+begin_function
+name|void
+name|vmspace_switch_aio
+parameter_list|(
+name|struct
+name|vmspace
+modifier|*
+name|newvm
+parameter_list|)
+block|{
+name|struct
+name|vmspace
+modifier|*
+name|oldvm
+decl_stmt|;
+comment|/* XXX: Need some way to assert that this is an aio daemon. */
+name|KASSERT
+argument_list|(
+name|newvm
+operator|->
+name|vm_refcnt
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"vmspace_switch_aio: newvm unreferenced"
+operator|)
+argument_list|)
+expr_stmt|;
+name|oldvm
+operator|=
+name|curproc
+operator|->
+name|p_vmspace
+expr_stmt|;
+if|if
+condition|(
+name|oldvm
+operator|==
+name|newvm
+condition|)
+return|return;
+comment|/* 	 * Point to the new address space and refer to it. 	 */
+name|curproc
+operator|->
+name|p_vmspace
+operator|=
+name|newvm
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|newvm
+operator|->
+name|vm_refcnt
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Activate the new mapping. */
+name|pmap_activate
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* Remove the daemon's reference to the old address space. */
+name|KASSERT
+argument_list|(
+name|oldvm
+operator|->
+name|vm_refcnt
+operator|>
+literal|1
+argument_list|,
+operator|(
+literal|"vmspace_switch_aio: oldvm dropping last reference"
+operator|)
+argument_list|)
+expr_stmt|;
+name|vmspace_free
+argument_list|(
+name|oldvm
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|void
 name|_vm_map_lock

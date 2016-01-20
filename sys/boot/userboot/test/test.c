@@ -1741,7 +1741,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"usage: [-d<disk image path>] [-h<host filesystem path>\n"
+literal|"usage: [-b<userboot shared object>] [-d<disk image path>] [-h<host filesystem path>\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1796,6 +1796,13 @@ name|disk_image
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|userboot_obj
+init|=
+literal|"/boot/userboot.so"
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -1807,7 +1814,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:h:"
+literal|"b:d:h:"
 argument_list|)
 operator|)
 operator|!=
@@ -1820,6 +1827,14 @@ condition|(
 name|opt
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
+name|userboot_obj
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -1848,7 +1863,7 @@ name|h
 operator|=
 name|dlopen
 argument_list|(
-literal|"/boot/userboot.so"
+name|userboot_obj
 argument_list|,
 name|RTLD_LOCAL
 argument_list|)

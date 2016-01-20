@@ -61,11 +61,22 @@ name|DMA_NO_WAIT
 value|0x2
 end_define
 
+begin_comment
+comment|/*  * Disallow prefetching the source of the following operation.  Ordinarily, DMA  * operations can be pipelined on some hardware.  E.g., operation 2's source  * may be prefetched before operation 1 completes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA_FENCE
+value|0x4
+end_define
+
 begin_define
 define|#
 directive|define
 name|DMA_ALL_FLAGS
-value|(DMA_INT_EN | DMA_NO_WAIT)
+value|(DMA_INT_EN | DMA_NO_WAIT | DMA_FENCE)
 end_define
 
 begin_comment

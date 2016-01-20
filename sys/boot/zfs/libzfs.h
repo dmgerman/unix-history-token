@@ -145,6 +145,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|init_zfs_bootenv
+parameter_list|(
+name|char
+modifier|*
+name|currdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|zfs_bootenv
 parameter_list|(

@@ -270,7 +270,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Large Page  - 64k - not used yet*/
+comment|/* Large Page - 64k */
 end_comment
 
 begin_define
@@ -281,7 +281,18 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Small Page  - 4 */
+comment|/* Small Page -  4k */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_L2_TYPE_T
+value|0x03
+end_define
+
+begin_comment
+comment|/* Tiny Page  -  1k - not used */
 end_comment
 
 begin_define
@@ -307,6 +318,12 @@ ifdef|#
 directive|ifdef
 name|__arm__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
 
 begin_assert
 assert|_Static_assert
@@ -607,6 +624,31 @@ literal|"L2_TYPE_S mismatch"
 argument_list|)
 assert|;
 end_assert
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|L2_TYPE_T
+operator|==
+name|ARM_L2_TYPE_T
+argument_list|,
+literal|"L2_TYPE_T mismatch"
+argument_list|)
+assert|;
+end_assert
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_assert
 assert|_Static_assert

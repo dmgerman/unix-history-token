@@ -27824,7 +27824,7 @@ argument_list|,
 literal|"Queue Bytes Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -27846,7 +27846,7 @@ argument_list|,
 literal|"LRO Queued"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,

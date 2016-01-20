@@ -2408,14 +2408,16 @@ block|{
 comment|/* 			 * Changing from route to net => route to host. 			 * Create new route, rather than smashing route to net. 			 */
 name|create
 label|:
-name|RTFREE
+if|if
+condition|(
+name|rt
+operator|!=
+name|NULL
+condition|)
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
-expr_stmt|;
-name|rt
-operator|=
-name|NULL
 expr_stmt|;
 name|flags
 operator||=

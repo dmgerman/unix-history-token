@@ -33,13 +33,11 @@ name|rc
 parameter_list|)
 block|{
 return|return
-operator|(
 name|rc
 condition|?
 literal|"unknown error"
 else|:
 literal|"not an error"
-operator|)
 return|;
 block|}
 end_function
