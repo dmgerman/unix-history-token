@@ -110,15 +110,15 @@ decl_stmt|;
 comment|/* Find the end of dst and adjust bytes left but don't go past end */
 while|while
 condition|(
-operator|*
-name|d
-operator|!=
-literal|'\0'
-operator|&&
 name|n
 operator|--
 operator|!=
 literal|0
+operator|&&
+operator|*
+name|d
+operator|!=
+literal|'\0'
 condition|)
 name|d
 operator|++
