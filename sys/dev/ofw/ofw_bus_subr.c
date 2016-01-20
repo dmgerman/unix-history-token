@@ -3440,7 +3440,7 @@ name|char
 modifier|*
 modifier|*
 modifier|*
-name|array
+name|out_array
 parameter_list|)
 block|{
 name|char
@@ -3449,6 +3449,12 @@ name|elems
 decl_stmt|,
 modifier|*
 name|tptr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|array
 decl_stmt|;
 name|int
 name|i
@@ -3523,7 +3529,6 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* Allocate space for arrays and all strings. */
-operator|*
 name|array
 operator|=
 name|malloc
@@ -3555,10 +3560,11 @@ name|char
 operator|*
 operator|)
 operator|(
-operator|*
 name|array
 operator|+
 name|cnt
+operator|+
+literal|1
 operator|)
 expr_stmt|;
 comment|/* Copy strings. */
@@ -3602,13 +3608,10 @@ operator|=
 name|strlen
 argument_list|(
 name|tptr
-operator|+
-name|i
 argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-operator|*
 name|array
 index|[
 name|cnt
@@ -3625,13 +3628,17 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-operator|*
 name|array
 index|[
 name|cnt
 index|]
 operator|=
 literal|0
+expr_stmt|;
+operator|*
+name|out_array
+operator|=
+name|array
 expr_stmt|;
 return|return
 operator|(
