@@ -2775,6 +2775,13 @@ name|R92C_TDECTRL_BLK_DESC_NUM_S
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|R92C_TDECTRL_BCN_VALID
+value|0x00010000
+end_define
+
 begin_comment
 comment|/* Bits for R92C_FWHW_TXQ_CTRL. */
 end_comment

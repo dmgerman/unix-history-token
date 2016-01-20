@@ -283,13 +283,6 @@ directive|include
 file|"usbdevs.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|USB_DEBUG_VAR
-value|urtwn_debug
-end_define
-
 begin_include
 include|#
 directive|include
@@ -314,53 +307,108 @@ directive|ifdef
 name|USB_DEBUG
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|int
-name|urtwn_debug
+begin_enum
+enum|enum
+block|{
+name|URTWN_DEBUG_XMIT
 init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+literal|0x00000001
+block|,
+comment|/* basic xmit operation */
+name|URTWN_DEBUG_RECV
+init|=
+literal|0x00000002
+block|,
+comment|/* basic recv operation */
+name|URTWN_DEBUG_STATE
+init|=
+literal|0x00000004
+block|,
+comment|/* 802.11 state transitions */
+name|URTWN_DEBUG_RA
+init|=
+literal|0x00000008
+block|,
+comment|/* f/w rate adaptation setup */
+name|URTWN_DEBUG_USB
+init|=
+literal|0x00000010
+block|,
+comment|/* usb requests */
+name|URTWN_DEBUG_FIRMWARE
+init|=
+literal|0x00000020
+block|,
+comment|/* firmware(9) loading debug */
+name|URTWN_DEBUG_BEACON
+init|=
+literal|0x00000040
+block|,
+comment|/* beacon handling */
+name|URTWN_DEBUG_INTR
+init|=
+literal|0x00000080
+block|,
+comment|/* ISR */
+name|URTWN_DEBUG_TEMP
+init|=
+literal|0x00000100
+block|,
+comment|/* temperature calibration */
+name|URTWN_DEBUG_ROM
+init|=
+literal|0x00000200
+block|,
+comment|/* various ROM info */
+name|URTWN_DEBUG_KEY
+init|=
+literal|0x00000400
+block|,
+comment|/* crypto keys management */
+name|URTWN_DEBUG_TXPWR
+init|=
+literal|0x00000800
+block|,
+comment|/* dump Tx power values */
+name|URTWN_DEBUG_ANY
+init|=
+literal|0xffffffff
+block|}
+enum|;
+end_enum
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_hw_usb
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|urtwn
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"USB urtwn"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|URTWN_DPRINTF
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_m
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	if ((_sc)->sc_debug& (_m))				\ 		device_printf((_sc)->sc_dev, __VA_ARGS__);	\ } while(0)
+end_define
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_usb_urtwn
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|debug
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|urtwn_debug
-argument_list|,
-literal|0
-argument_list|,
-literal|"Debug level"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|URTWN_DPRINTF
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_m
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do { (void) sc; } while (0)
+end_define
 
 begin_endif
 endif|#
@@ -916,12 +964,23 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
+name|urtwn_sysctlattach
+parameter_list|(
+name|struct
+name|urtwn_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|urtwn_drain_mbufq
 parameter_list|(
 name|struct
 name|urtwn_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1508,7 +1567,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|URTWN_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -3183,6 +3242,46 @@ name|chip
 operator||=
 name|URTWN_CHIP_88E
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|int
+name|debug
+decl_stmt|;
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+literal|"debug"
+argument_list|,
+operator|&
+name|debug
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_debug
+operator|=
+name|debug
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_init
 argument_list|(
 operator|&
@@ -3758,6 +3857,11 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+name|urtwn_sysctlattach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -3785,6 +3889,76 @@ name|ENXIO
 operator|)
 return|;
 comment|/* failure */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|urtwn_sysctlattach
+parameter_list|(
+name|struct
+name|urtwn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|ctx
+init|=
+name|device_get_sysctl_ctx
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|tree
+init|=
+name|device_get_sysctl_tree
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+decl_stmt|;
+name|SYSCTL_ADD_U32
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"debug"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_debug
+argument_list|,
+name|sc
+operator|->
+name|sc_debug
+argument_list|,
+literal|"control debugging printfs"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4157,16 +4331,22 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|1
+name|sc
 argument_list|,
-literal|"Control request failed, %s (retrying)\n"
+name|URTWN_DEBUG_USB
+argument_list|,
+literal|"%s: control request failed, %s (retries left: %d)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
+argument_list|,
+name|ntries
 argument_list|)
 expr_stmt|;
 name|usb_pause_mtx
@@ -4642,11 +4822,15 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * This should not happen since we setup our Rx filter 		 * to not receive these frames. 		 */
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"RX flags error (%s)\n"
+name|URTWN_DEBUG_RECV
+argument_list|,
+literal|"%s: RX flags error (%s)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|rxdw0
 operator|&
@@ -4681,11 +4865,15 @@ name|ieee80211_frame_ack
 argument_list|)
 condition|)
 block|{
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"frame too short: %d\n"
+name|URTWN_DEBUG_RECV
+argument_list|,
+literal|"%s: frame is too short: %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|pktlen
 argument_list|)
@@ -4980,11 +5168,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|7
+name|sc
 argument_list|,
-literal|"case %d was not handled\n"
+name|URTWN_DEBUG_INTR
+argument_list|,
+literal|"%s: case %d was not handled\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|report_sel
 argument_list|)
@@ -5089,11 +5281,15 @@ argument_list|,
 name|R92C_RXDW2_PKTCNT
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"Rx %d frames in one chunk\n"
+name|URTWN_DEBUG_RECV
+argument_list|,
+literal|"%s: Rx %d frames in one chunk\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|npkts
 argument_list|)
@@ -5343,6 +5539,34 @@ name|ni
 operator|->
 name|ni_vap
 expr_stmt|;
+name|URTWN_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_INTR
+argument_list|,
+literal|"%s: frame for macid %d was"
+literal|"%s sent (%d retries)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|macid
+argument_list|,
+operator|(
+name|rpt
+operator|->
+name|rptb1
+operator|&
+name|R88E_RPTB1_PKT_OK
+operator|)
+condition|?
+literal|""
+else|:
+literal|" not"
+argument_list|,
+name|ntries
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rpt
@@ -5386,15 +5610,21 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|DPRINTFN
+block|{
+name|URTWN_DPRINTF
 argument_list|(
-literal|8
+name|sc
 argument_list|,
-literal|"macid %d, ni is NULL\n"
+name|URTWN_DEBUG_INTR
+argument_list|,
+literal|"%s: macid %d, ni is NULL\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|macid
 argument_list|)
 expr_stmt|;
+block|}
 name|URTWN_NT_UNLOCK
 argument_list|(
 name|sc
@@ -6879,8 +7109,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_XMIT
+argument_list|,
 literal|"%s: empty pending queue\n"
 argument_list|,
 name|__func__
@@ -7046,15 +7280,19 @@ name|next
 argument_list|)
 expr_stmt|;
 else|else
-name|DPRINTF
+block|{
+name|URTWN_DPRINTF
 argument_list|(
-literal|"%s: %s\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: out of xmit buffers\n"
 argument_list|,
 name|__func__
-argument_list|,
-literal|"out of xmit buffers"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|bf
@@ -7099,13 +7337,19 @@ name|bf
 operator|==
 name|NULL
 condition|)
-name|DPRINTF
+block|{
+name|URTWN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_XMIT
+argument_list|,
 literal|"%s: stop queue\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|bf
@@ -8798,8 +9042,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_ROM
+argument_list|,
 literal|"rom[0x%03X] == 0x%02X\n"
 argument_list|,
 name|off
@@ -8849,8 +9097,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_ROM
+argument_list|,
 literal|"rom[0x%03X] == 0x%02X\n"
 argument_list|,
 name|off
@@ -8893,7 +9145,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|URTWN_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function
@@ -9180,12 +9432,14 @@ name|end
 label|:
 ifdef|#
 directive|ifdef
-name|URTWN_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
-name|urtwn_debug
-operator|>=
-literal|2
+name|sc
+operator|->
+name|sc_debug
+operator|&
+name|URTWN_DEBUG_ROM
 condition|)
 name|urtwn_dump_rom_contents
 argument_list|(
@@ -9637,9 +9891,15 @@ operator|(
 name|error
 operator|)
 return|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
-literal|"PA setting=0x%x\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_ROM
+argument_list|,
+literal|"%s: PA setting=0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -9672,9 +9932,15 @@ argument_list|,
 name|R92C_ROM_RF1_REGULATORY
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
-literal|"regulatory type=%d\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_ROM
+argument_list|,
+literal|"%s: regulatory type=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -9838,9 +10104,15 @@ argument_list|,
 name|R92C_ROM_RF1_REGULATORY
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
-literal|"regulatory type=%d\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_ROM
+argument_list|,
+literal|"%s: regulatory type %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -10106,9 +10378,15 @@ name|mode
 operator|=
 name|R92C_RAID_11BG
 expr_stmt|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
-literal|"mode=0x%x rates=0x%08x, basicrates=0x%08x\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_RA
+argument_list|,
+literal|"%s: mode 0x%x, rates 0x%08x, basicrates 0x%08x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|mode
 argument_list|,
@@ -10184,9 +10462,15 @@ operator|)
 return|;
 block|}
 comment|/* Set initial MRR rate. */
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
-literal|"maxbasicrate=%d\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_RA
+argument_list|,
+literal|"%s: maxbasicrate %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|maxbasicrate
 argument_list|)
@@ -10270,9 +10554,15 @@ operator|)
 return|;
 block|}
 comment|/* Set initial MRR rate. */
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
-literal|"maxrate=%d\n"
+name|sc
+argument_list|,
+name|URTWN_DEBUG_RA
+argument_list|,
+literal|"%s: maxrate %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|maxrate
 argument_list|)
@@ -10630,6 +10920,36 @@ operator|(
 name|error
 operator|)
 return|;
+name|URTWN_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_BEACON
+argument_list|,
+literal|"%s: beacon was %srecognized\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|urtwn_read_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_TDECTRL
+operator|+
+literal|2
+argument_list|)
+operator|&
+operator|(
+name|R92C_TDECTRL_BCN_VALID
+operator|>>
+literal|16
+operator|)
+condition|?
+literal|""
+else|:
+literal|"not "
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -11228,12 +11548,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|9
+name|sc
 argument_list|,
-literal|"keyix %d, keyid %d, algo %d/%d, flags %04X, len %d, "
+name|URTWN_DEBUG_KEY
+argument_list|,
+literal|"%s: keyix %d, keyid %d, algo %d/%d, flags %04X, len %d, "
 literal|"macaddr %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|k
 operator|->
@@ -11457,11 +11781,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|9
+name|sc
 argument_list|,
-literal|"keyix %d, flags %04X, macaddr %s\n"
+name|URTWN_DEBUG_KEY
+argument_list|,
+literal|"%s: keyix %d, flags %04X, macaddr %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|k
 operator|->
@@ -12460,8 +12788,12 @@ name|vap
 operator|->
 name|iv_state
 expr_stmt|;
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_STATE
+argument_list|,
 literal|"%s -> %s\n"
 argument_list|,
 name|ieee80211_state_name
@@ -13440,11 +13772,15 @@ operator|/
 literal|20
 operator|)
 expr_stmt|;
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|4
+name|sc
 argument_list|,
-literal|"PWDB=%d EMA=%d\n"
+name|URTWN_DEBUG_RA
+argument_list|,
+literal|"%s: PWDB %d, EMA %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|pwdb
 argument_list|,
@@ -17736,8 +18072,12 @@ operator|==
 literal|0x92c
 condition|)
 block|{
-name|DPRINTF
+name|URTWN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_FIRMWARE
+argument_list|,
 literal|"FW V%d.%d %02d-%02d %02d:%02d\n"
 argument_list|,
 name|le16toh
@@ -21982,12 +22322,14 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|URTWN_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
-name|urtwn_debug
-operator|>=
-literal|4
+name|sc
+operator|->
+name|sc_debug
+operator|&
+name|URTWN_DEBUG_TXPWR
 condition|)
 block|{
 comment|/* Dump per-rate Tx power values. */
@@ -23260,11 +23602,15 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|URTWN_DPRINTF
 argument_list|(
-literal|10
+name|sc
 argument_list|,
-literal|"setting slot time to %uus\n"
+name|URTWN_DEBUG_ANY
+argument_list|,
+literal|"%s: setting slot time to %uus\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|slottime
 argument_list|)

@@ -494,10 +494,13 @@ name|usb_device
 modifier|*
 name|sc_udev
 decl_stmt|;
+name|uint32_t
+name|sc_debug
+decl_stmt|;
 name|uint8_t
 name|sc_iface_index
 decl_stmt|;
-name|u_int
+name|uint8_t
 name|sc_flags
 decl_stmt|;
 define|#
