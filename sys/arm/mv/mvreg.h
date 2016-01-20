@@ -673,6 +673,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RSTOUTn_MASK_WD
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSTEM_SOFT_RESET
 value|0x64
 end_define
@@ -1260,15 +1267,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPU_TIMER_WD_EN
+name|CPU_TIMER2_EN
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPU_TIMER_WD_AUTO
+name|CPU_TIMER2_AUTO
 value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_TIMER_WD_EN
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_TIMER_WD_AUTO
+value|0x00000200
 end_define
 
 begin_comment
