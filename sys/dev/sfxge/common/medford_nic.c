@@ -555,13 +555,9 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|efx_mcdi_privilege_mask
+name|ef10_get_privilege_mask
 argument_list|(
 name|enp
-argument_list|,
-name|pf
-argument_list|,
-name|vf
 argument_list|,
 operator|&
 name|mask
