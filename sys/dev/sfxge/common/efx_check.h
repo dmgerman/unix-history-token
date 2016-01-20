@@ -2004,6 +2004,61 @@ begin_comment
 comment|/* EFSYS_OPT_BIST */
 end_comment
 
+begin_comment
+comment|/* Support MCDI licensing API */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_LICENSING
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|EFSYS_OPT_MCDI
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"LICENSING requires MCDI"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|EFSYS_HAS_UINT64
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"LICENSING requires UINT64"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_LICENSING */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

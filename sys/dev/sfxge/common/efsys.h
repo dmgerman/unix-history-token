@@ -534,6 +534,22 @@ name|_n
 parameter_list|)
 define|#
 directive|define
+name|__out_bcount_part
+parameter_list|(
+name|_n
+parameter_list|,
+name|_l
+parameter_list|)
+define|#
+directive|define
+name|__out_bcount_part_opt
+parameter_list|(
+name|_n
+parameter_list|,
+name|_l
+parameter_list|)
+define|#
+directive|define
 name|__deref_out
 define|#
 directive|define
@@ -790,6 +806,10 @@ define|#
 directive|define
 name|EFSYS_OPT_DECODE_INTR_FATAL
 value|1
+define|#
+directive|define
+name|EFSYS_OPT_LICENSING
+value|0
 comment|/* ID */
 typedef|typedef
 name|struct

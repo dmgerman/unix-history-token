@@ -2574,7 +2574,7 @@ operator|&
 name|EFX_MOD_PROBE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * All modules except the MCDI, PROBE, NVRAM, VPD, MON (which we 	 * do not reset here) must have been shut down or never initialized. 	 * 	 * A rule of thumb here is: If the controller or MC reboots, is *any* 	 * state lost. If it's lost and needs reapplying, then the module 	 * *must* not be initialised during the reset. 	 */
+comment|/* 	 * All modules except the MCDI, PROBE, NVRAM, VPD, MON, LIC 	 * (which we do not reset here) must have been shut down or never 	 * initialized. 	 * 	 * A rule of thumb here is: If the controller or MC reboots, is *any* 	 * state lost. If it's lost and needs reapplying, then the module 	 * *must* not be initialised during the reset. 	 */
 name|mod_flags
 operator|=
 name|enp
@@ -2594,6 +2594,8 @@ operator||
 name|EFX_MOD_VPD
 operator||
 name|EFX_MOD_MON
+operator||
+name|EFX_MOD_LIC
 operator|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
