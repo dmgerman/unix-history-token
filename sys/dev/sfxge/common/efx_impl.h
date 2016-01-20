@@ -2889,6 +2889,10 @@ argument_list|,
 name|__in
 name|size_t
 name|size
+argument_list|,
+name|__in
+name|uint32_t
+name|mode
 argument_list|)
 decl_stmt|;
 name|__checkReturn

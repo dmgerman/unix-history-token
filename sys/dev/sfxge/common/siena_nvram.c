@@ -282,6 +282,8 @@ argument_list|,
 name|data
 argument_list|,
 name|chunk
+argument_list|,
+name|MC_CMD_NVRAM_READ_IN_V2_DEFAULT
 argument_list|)
 operator|)
 operator|!=
