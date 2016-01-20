@@ -515,6 +515,10 @@ define|#
 directive|define
 name|URTWN_RUNNING
 value|0x04
+define|#
+directive|define
+name|URTWN_TEMP_MEASURED
+value|0x10
 name|u_int
 name|chip
 decl_stmt|;
@@ -616,10 +620,7 @@ decl_stmt|;
 name|int
 name|avg_pwdb
 decl_stmt|;
-name|int
-name|thcal_state
-decl_stmt|;
-name|int
+name|uint8_t
 name|thcal_lctemp
 decl_stmt|;
 name|int
@@ -691,6 +692,10 @@ name|rom
 decl_stmt|;
 name|uint16_t
 name|last_rom_addr
+decl_stmt|;
+name|struct
+name|callout
+name|sc_calib_to
 decl_stmt|;
 name|struct
 name|callout
