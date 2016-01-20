@@ -450,6 +450,9 @@ block|,
 comment|/* etxo_qdesc_tso_create */
 name|NULL
 block|,
+comment|/* etxo_qdesc_tso2_create */
+name|NULL
+block|,
 comment|/* etxo_qdesc_vlantci_create */
 if|#
 directive|if
@@ -534,6 +537,9 @@ block|,
 comment|/* etxo_qdesc_tso_create */
 name|NULL
 block|,
+comment|/* etxo_qdesc_tso2_create */
+name|NULL
+block|,
 comment|/* etxo_qdesc_vlantci_create */
 if|#
 directive|if
@@ -616,6 +622,9 @@ comment|/* etxo_qdesc_dma_create */
 name|hunt_tx_qdesc_tso_create
 block|,
 comment|/* etxo_qdesc_tso_create */
+name|ef10_tx_qdesc_tso2_create
+block|,
+comment|/* etxo_qdesc_tso2_create */
 name|ef10_tx_qdesc_vlantci_create
 block|,
 comment|/* etxo_qdesc_vlantci_create */
@@ -700,6 +709,9 @@ comment|/* etxo_qdesc_dma_create */
 name|NULL
 block|,
 comment|/* etxo_qdesc_tso_create */
+name|ef10_tx_qdesc_tso2_create
+block|,
+comment|/* etxo_qdesc_tso2_create */
 name|ef10_tx_qdesc_vlantci_create
 block|,
 comment|/* etxo_qdesc_vlantci_create */
@@ -2533,6 +2545,96 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|void
+name|efx_tx_qdesc_tso2_create
+argument_list|(
+name|__in
+name|efx_txq_t
+operator|*
+name|etp
+argument_list|,
+name|__in
+name|uint16_t
+name|ipv4_id
+argument_list|,
+name|__in
+name|uint32_t
+name|tcp_seq
+argument_list|,
+name|__in
+name|uint16_t
+name|mss
+argument_list|,
+name|__out_ecount
+argument_list|(
+argument|count
+argument_list|)
+name|efx_desc_t
+operator|*
+name|edp
+argument_list|,
+name|__in
+name|int
+name|count
+argument_list|)
+block|{
+name|efx_nic_t
+modifier|*
+name|enp
+init|=
+name|etp
+operator|->
+name|et_enp
+decl_stmt|;
+name|efx_tx_ops_t
+modifier|*
+name|etxop
+init|=
+name|enp
+operator|->
+name|en_etxop
+decl_stmt|;
+name|EFSYS_ASSERT3U
+argument_list|(
+name|etp
+operator|->
+name|et_magic
+argument_list|,
+operator|==
+argument_list|,
+name|EFX_TXQ_MAGIC
+argument_list|)
+expr_stmt|;
+name|EFSYS_ASSERT
+argument_list|(
+name|etxop
+operator|->
+name|etxo_qdesc_tso2_create
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|etxop
+operator|->
+name|etxo_qdesc_tso2_create
+argument_list|(
+name|etp
+argument_list|,
+name|ipv4_id
+argument_list|,
+name|tcp_seq
+argument_list|,
+name|mss
+argument_list|,
+name|edp
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_function
 name|void

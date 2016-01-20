@@ -3718,6 +3718,32 @@ name|enc_fw_assisted_tso_enabled
 operator|=
 name|B_FALSE
 expr_stmt|;
+comment|/* Check if the firmware supports FATSOv2 */
+if|if
+condition|(
+name|MCDI_CMD_DWORD_FIELD
+argument_list|(
+operator|&
+name|datapath_capabilities_v2
+argument_list|,
+name|GET_CAPABILITIES_V2_OUT_TX_TSO_V2
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|encp
+operator|->
+name|enc_fw_assisted_tso_v2_enabled
+operator|=
+name|B_TRUE
+expr_stmt|;
+else|else
+name|encp
+operator|->
+name|enc_fw_assisted_tso_v2_enabled
+operator|=
+name|B_FALSE
+expr_stmt|;
 comment|/* Check if the firmware has vadapter/vport/vswitch support */
 if|if
 condition|(
