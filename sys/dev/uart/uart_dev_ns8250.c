@@ -1720,6 +1720,16 @@ name|uart_ns8250_class
 block|}
 block|,
 block|{
+literal|"snps,dw-apb-uart"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|uart_ns8250_class
+block|}
+block|,
+block|{
 name|NULL
 block|,
 operator|(
@@ -1878,6 +1888,19 @@ ifdef|#
 directive|ifdef
 name|FDT
 comment|/*  	 * Check whether uart requires to read USR reg when IIR_BUSY and  	 * has broken txfifo.  	 */
+name|ns8250
+operator|->
+name|busy_detect
+operator|=
+name|ofw_bus_is_compatible
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"snps,dw-apb-uart"
+argument_list|)
+expr_stmt|;
 name|node
 operator|=
 name|ofw_bus_get_node
@@ -1887,6 +1910,7 @@ operator|->
 name|sc_dev
 argument_list|)
 expr_stmt|;
+comment|/* XXX: This is kept for a short time for compatibility with older device trees */
 if|if
 condition|(
 operator|(
@@ -1907,16 +1931,16 @@ argument_list|)
 operator|)
 operator|>
 literal|0
+operator|&&
+name|cell
+operator|!=
+literal|0
 condition|)
 name|ns8250
 operator|->
 name|busy_detect
 operator|=
-name|cell
-condition|?
 literal|1
-else|:
-literal|0
 expr_stmt|;
 if|if
 condition|(

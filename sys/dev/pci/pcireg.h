@@ -4374,6 +4374,17 @@ value|0x3
 end_define
 
 begin_comment
+comment|/* PCI Device capability definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_DEVICE_LENGTH
+value|0x2
+end_define
+
+begin_comment
 comment|/* PCI EHCI Debug Port definitions */
 end_comment
 

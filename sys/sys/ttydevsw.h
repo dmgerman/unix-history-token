@@ -865,8 +865,16 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
+name|tty_lock_assert
+argument_list|(
+name|tp
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|MPASS
 argument_list|(
+operator|!
 name|tty_gone
 argument_list|(
 name|tp

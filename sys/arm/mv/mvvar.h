@@ -502,6 +502,11 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 end_if
 
 begin_function_decl
