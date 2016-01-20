@@ -356,7 +356,7 @@ goto|goto
 name|fail1
 goto|;
 block|}
-comment|/* Accept pre-Medford size (8 bytes - no CurrentMode field) */
+comment|/* 	 * Require only Modes and DefaultMode fields. 	 * (CurrentMode field was added for Medford) 	 */
 if|if
 condition|(
 name|req
