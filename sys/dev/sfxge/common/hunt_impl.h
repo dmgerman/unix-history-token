@@ -493,7 +493,7 @@ comment|/* MAC */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_poll
+name|ef10_mac_poll
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -509,7 +509,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_up
+name|ef10_mac_up
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -525,7 +525,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_addr_set
+name|ef10_mac_addr_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -536,7 +536,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_reconfigure
+name|ef10_mac_reconfigure
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -547,7 +547,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_multicast_list_set
+name|ef10_mac_multicast_list_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -558,7 +558,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_filter_default_rxq_set
+name|ef10_mac_filter_default_rxq_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -577,7 +577,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_mac_filter_default_rxq_clear
+name|ef10_mac_filter_default_rxq_clear
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -591,7 +591,7 @@ name|EFSYS_OPT_LOOPBACK
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_loopback_set
+name|ef10_mac_loopback_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -616,7 +616,7 @@ name|EFSYS_OPT_MAC_STATS
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_mac_stats_update
+name|ef10_mac_stats_update
 argument_list|(
 name|__in
 name|efx_nic_t
