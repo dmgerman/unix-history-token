@@ -15,6 +15,12 @@ directive|define
 name|_MVREG_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvwin.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -2660,6 +2666,52 @@ parameter_list|,
 name|u
 parameter_list|)
 value|(0x10 * (u) + 0x8 * (d) + 0x4 * (m) + 0x30)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * SCU  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_SCU_BASE
+value|(MV_BASE + 0xc000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SCU_REGS_LEN
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SCU_REG_CTRL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SCU_ENABLE
+value|1
 end_define
 
 begin_endif
