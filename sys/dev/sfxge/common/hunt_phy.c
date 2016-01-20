@@ -38,7 +38,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|hunt_phy_decode_cap
+name|mcdi_phy_decode_cap
 parameter_list|(
 name|__in
 name|uint32_t
@@ -50,7 +50,6 @@ modifier|*
 name|maskp
 parameter_list|)
 block|{
-comment|/* 	 * TBD: consider common Siena/Hunt function: Hunt is a superset of 	 * Siena here (adds 40G) 	 */
 name|uint32_t
 name|mask
 decl_stmt|;
@@ -267,7 +266,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hunt_phy_decode_link_mode
+name|mcdi_phy_decode_link_mode
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -300,7 +299,6 @@ modifier|*
 name|fcntlp
 parameter_list|)
 block|{
-comment|/* 	 * TBD: consider common Siena/Hunt function: Hunt is a superset of 	 * Siena here (adds 40G and generate-only flow control) 	 */
 name|boolean_t
 name|fd
 init|=
@@ -498,7 +496,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_phy_link_ev
+name|ef10_phy_link_ev
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -516,7 +514,6 @@ modifier|*
 name|link_modep
 parameter_list|)
 block|{
-comment|/* 	 * TBD: consider common Siena/Hunt function: Hunt is a superset of 	 * Siena here (adds 40G) 	 */
 name|efx_port_t
 modifier|*
 name|epp
@@ -605,7 +602,7 @@ argument_list|,
 name|LINKCHANGE_LINK_FLAGS
 argument_list|)
 expr_stmt|;
-name|hunt_phy_decode_link_mode
+name|mcdi_phy_decode_link_mode
 argument_list|(
 name|enp
 argument_list|,
@@ -627,7 +624,7 @@ operator|&
 name|fcntl
 argument_list|)
 expr_stmt|;
-name|hunt_phy_decode_cap
+name|mcdi_phy_decode_cap
 argument_list|(
 name|MCDI_EV_FIELD
 argument_list|(
@@ -664,7 +661,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_power
+name|ef10_phy_power
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -676,7 +673,6 @@ name|boolean_t
 name|power
 parameter_list|)
 block|{
-comment|/* TBD: consider common Siena/Hunt function: essentially identical */
 name|efx_rc_t
 name|rc
 decl_stmt|;
@@ -696,7 +692,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_phy_verify
+name|ef10_phy_verify
 argument_list|(
 name|enp
 argument_list|)
@@ -740,7 +736,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_get_link
+name|ef10_phy_get_link
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -753,7 +749,6 @@ modifier|*
 name|elsp
 parameter_list|)
 block|{
-comment|/* 	 * TBD: consider common Siena/Hunt function: Hunt is very similar 	 * (at least for now; not clear that the loopbacks should necessarily 	 * be quite the same...) 	 */
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
@@ -860,7 +855,7 @@ goto|goto
 name|fail2
 goto|;
 block|}
-name|hunt_phy_decode_cap
+name|mcdi_phy_decode_cap
 argument_list|(
 name|MCDI_OUT_DWORD
 argument_list|(
@@ -875,7 +870,7 @@ operator|->
 name|els_adv_cap_mask
 argument_list|)
 expr_stmt|;
-name|hunt_phy_decode_cap
+name|mcdi_phy_decode_cap
 argument_list|(
 name|MCDI_OUT_DWORD
 argument_list|(
@@ -890,7 +885,7 @@ operator|->
 name|els_lp_cap_mask
 argument_list|)
 expr_stmt|;
-name|hunt_phy_decode_link_mode
+name|mcdi_phy_decode_link_mode
 argument_list|(
 name|enp
 argument_list|,
@@ -1117,7 +1112,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_reconfigure
+name|ef10_phy_reconfigure
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1125,7 +1120,6 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-comment|/* 	 * TBD: this is a little different for now (no LED support for Hunt 	 * yet), but ultimately should consider common Siena/Hunt function: 	 * Hunt should be a superset of Siena here (adds 40G) 	 */
 name|efx_nic_cfg_t
 modifier|*
 name|encp
@@ -1682,7 +1676,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_verify
+name|ef10_phy_verify
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1690,7 +1684,6 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-comment|/* TBD: consider common Siena/Hunt function: essentially identical */
 name|efx_mcdi_req_t
 name|req
 decl_stmt|;
@@ -1880,7 +1873,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_oui_get
+name|ef10_phy_oui_get
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1914,7 +1907,7 @@ end_if
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_stats_update
+name|ef10_phy_stats_update
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1985,11 +1978,10 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_function
-specifier|extern
 specifier|const
 name|char
 modifier|*
-name|hunt_phy_prop_name
+name|ef10_phy_prop_name
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2024,10 +2016,9 @@ comment|/* EFSYS_OPT_NAMES */
 end_comment
 
 begin_function
-specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_prop_get
+name|ef10_phy_prop_get
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2062,10 +2053,9 @@ block|}
 end_function
 
 begin_function
-specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_prop_set
+name|ef10_phy_prop_set
 parameter_list|(
 name|__in
 name|efx_nic_t

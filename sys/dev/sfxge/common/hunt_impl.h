@@ -1256,7 +1256,7 @@ name|ef10_link_state_t
 typedef|;
 specifier|extern
 name|void
-name|hunt_phy_link_ev
+name|ef10_phy_link_ev
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1277,7 +1277,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_get_link
+name|ef10_phy_get_link
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1293,7 +1293,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_power
+name|ef10_phy_power
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1308,7 +1308,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_reconfigure
+name|ef10_phy_reconfigure
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1319,7 +1319,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_verify
+name|ef10_phy_verify
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1330,7 +1330,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_oui_get
+name|ef10_phy_oui_get
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1349,7 +1349,7 @@ name|EFSYS_OPT_PHY_STATS
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_stats_update
+name|ef10_phy_stats_update
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -1383,7 +1383,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|hunt_phy_prop_name
+name|ef10_phy_prop_name
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1402,7 +1402,7 @@ comment|/* EFSYS_OPT_NAMES */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_prop_get
+name|ef10_phy_prop_get
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1427,7 +1427,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_phy_prop_set
+name|ef10_phy_prop_set
 parameter_list|(
 name|__in
 name|efx_nic_t
