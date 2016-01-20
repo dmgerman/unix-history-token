@@ -886,9 +886,18 @@ name|unsigned
 name|int
 name|txq_count
 decl_stmt|;
+name|unsigned
 name|int
 name|tso_fw_assisted
 decl_stmt|;
+define|#
+directive|define
+name|SFXGE_FATSOV1
+value|(1<< 0)
+define|#
+directive|define
+name|SFXGE_FATSOV2
+value|(1<< 1)
 if|#
 directive|if
 name|EFSYS_OPT_MCDI_LOGGING
