@@ -61,6 +61,11 @@ define|#
 directive|define
 name|EF10_RX_WPTR_ALIGN
 value|8
+comment|/*  * Max byte offset into the packet the TCP header must start for the hardware  * to be able to parse the packet correctly.  * FIXME: Move to ef10_impl.h when it is included in all driver builds.  */
+define|#
+directive|define
+name|EF10_TCP_HEADER_OFFSET_LIMIT
+value|208
 comment|/* Invalid RSS context handle */
 define|#
 directive|define
@@ -350,6 +355,17 @@ specifier|extern
 name|__checkReturn
 name|efx_rc_t
 name|ef10_nic_probe
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|__checkReturn
+name|efx_rc_t
+name|hunt_board_cfg
 parameter_list|(
 name|__in
 name|efx_nic_t

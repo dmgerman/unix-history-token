@@ -59,7 +59,6 @@ file|"ef10_tlv_layout.h"
 end_include
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_port_assignment
@@ -238,7 +237,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_port_modes
@@ -724,7 +722,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_mac_address_pf
@@ -955,7 +952,6 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_mac_address_vf
@@ -1195,7 +1191,6 @@ block|}
 end_decl_stmt
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_clock
@@ -1397,7 +1392,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|efx_mcdi_get_vector_cfg
@@ -3618,7 +3612,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|ef10_get_datapath_caps
@@ -3951,6 +3944,30 @@ block|,
 literal|1
 block|}
 block|,
+block|{
+name|EFX_FAMILY_MEDFORD
+block|,
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_10G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_10G_10G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_10G_10G_10G_10G
+operator|)
+block|,
+literal|1
+block|}
+block|,
 comment|/* Supported modes requiring 2 outputs per port */
 block|{
 name|EFX_FAMILY_HUNTINGTON
@@ -3981,13 +3998,60 @@ operator|)
 block|,
 literal|2
 block|}
-comment|/* 	 * NOTE: Medford modes will require 4 outputs per port: 	 *	TLV_PORT_MODE_10G_10G_10G_10G_Q 	 *	TLV_PORT_MODE_10G_10G_10G_10G_Q2 	 * The Q2 mode routes outputs to external port 2. Support for this 	 * will require a new field specifying the number to add after 	 * scaling by stride. This is fixed at 1 currently. 	 */
+block|,
+block|{
+name|EFX_FAMILY_MEDFORD
+block|,
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_40G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_40G_40G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_40G_10G_10G
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_10G_10G_40G
+operator|)
+block|,
+literal|2
 block|}
+block|,
+comment|/* Supported modes requiring 4 outputs per port */
+block|{
+name|EFX_FAMILY_MEDFORD
+block|,
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_10G_10G_10G_10G_Q
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+name|TLV_PORT_MODE_10G_10G_10G_10G_Q2
+operator|)
+block|,
+literal|4
+block|}
+block|, }
 struct|;
 end_struct
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|ef10_external_port_mapping
@@ -4173,7 +4237,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|__checkReturn
 name|efx_rc_t
 name|hunt_board_cfg
@@ -5050,7 +5113,7 @@ name|encp
 operator|->
 name|enc_tx_tso_tcp_header_offset_limit
 operator|=
-literal|208
+name|EF10_TCP_HEADER_OFFSET_LIMIT
 expr_stmt|;
 return|return
 operator|(
@@ -5178,6 +5241,14 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+name|efx_nic_ops_t
+modifier|*
+name|enop
+init|=
+name|enp
+operator|->
+name|en_enop
+decl_stmt|;
 name|efx_nic_cfg_t
 modifier|*
 name|encp
@@ -5281,7 +5352,9 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_board_cfg
+name|enop
+operator|->
+name|eno_board_cfg
 argument_list|(
 name|enp
 argument_list|)
