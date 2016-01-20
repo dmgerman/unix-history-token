@@ -2382,6 +2382,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_MIPS_ABIFLAGS
+value|0x7000002a
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHT_HIPROC
 value|0x7fffffff
 end_define
