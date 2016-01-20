@@ -361,14 +361,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_rt_sendsig
+name|LINUX32_SYS_linux_rt_sendsig
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_sendsig
+name|LINUX32_SYS_linux_sendsig
 value|0
 end_define
 
@@ -420,9 +420,9 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|sysent
-name|linux_sysent
+name|linux32_sysent
 index|[
-name|LINUX_SYS_MAXSYSCALL
+name|LINUX32_SYS_MAXSYSCALL
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -5327,12 +5327,12 @@ block|{
 operator|.
 name|sv_size
 operator|=
-name|LINUX_SYS_MAXSYSCALL
+name|LINUX32_SYS_MAXSYSCALL
 block|,
 operator|.
 name|sv_table
 operator|=
-name|linux_sysent
+name|linux32_sysent
 block|,
 operator|.
 name|sv_mask

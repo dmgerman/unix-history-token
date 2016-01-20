@@ -11586,13 +11586,43 @@ begin_comment
 comment|/* XXX: can be removed when every ldebug(...) and KTR stuff are removed. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_LINUX32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|L_MAXSYSCALL
+value|LINUX32_SYS_MAXSYSCALL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|L_MAXSYSCALL
+value|LINUX_SYS_MAXSYSCALL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|u_char
 name|linux_debug_map
 index|[
 name|howmany
 argument_list|(
-name|LINUX_SYS_MAXSYSCALL
+name|L_MAXSYSCALL
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -11658,7 +11688,7 @@ literal|0
 operator|||
 name|syscall
 operator|>=
-name|LINUX_SYS_MAXSYSCALL
+name|L_MAXSYSCALL
 condition|)
 return|return
 operator|(
@@ -11691,6 +11721,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|L_MAXSYSCALL
+end_undef
 
 begin_comment
 comment|/*  * Usage: sysctl linux.debug=<syscall_nr>.<0/1>  *  *    E.g.: sysctl linux.debug=21.0  *  * As a special case, syscall "all" will apply to all syscalls globally.  */

@@ -46,7 +46,7 @@ name|ldebug
 parameter_list|(
 name|name
 parameter_list|)
-value|isclr(linux_debug_map, LINUX_SYS_linux_ ## name)
+value|isclr(linux_debug_map, LINUX32_SYS_linux_ ## name)
 end_define
 
 begin_define
