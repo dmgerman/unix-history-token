@@ -977,7 +977,9 @@ literal|"Can't determine memory map size\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CMD_ERROR
+operator|)
 return|;
 block|}
 name|map
@@ -1022,7 +1024,9 @@ literal|"Can't read memory map\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|CMD_ERROR
+operator|)
 return|;
 block|}
 name|ndesc
@@ -1208,7 +1212,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CMD_OK
+operator|)
 return|;
 block|}
 end_function
@@ -1594,7 +1600,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|CMD_OK
+operator|)
 return|;
 block|}
 end_function
