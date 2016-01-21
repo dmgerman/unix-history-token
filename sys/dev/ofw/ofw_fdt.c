@@ -1891,6 +1891,20 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -2063,6 +2077,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -2084,6 +2103,17 @@ modifier|*
 name|retvals
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
 name|int
 name|rv
 decl_stmt|;
@@ -2131,6 +2161,15 @@ operator|(
 name|rv
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
