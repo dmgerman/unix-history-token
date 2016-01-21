@@ -1321,14 +1321,6 @@ argument_list|(
 argument_list|,
 argument|aiocblist
 argument_list|)
-name|kaio_sockqueue
-expr_stmt|;
-comment|/* (a) queue for aios waiting on sockets, 						 *  NOT USED YET. 						 */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|aiocblist
-argument_list|)
 name|kaio_syncqueue
 expr_stmt|;
 comment|/* (a) queue for aio_fsync */
@@ -1549,14 +1541,6 @@ specifier|static
 name|struct
 name|mtx
 name|aio_job_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|aio_sock_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -2474,18 +2458,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|,
-literal|"aio_sock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -2843,12 +2815,6 @@ operator|&
 name|aio_job_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|)
-expr_stmt|;
 name|sema_destroy
 argument_list|(
 operator|&
@@ -3011,14 +2977,6 @@ operator|&
 name|ki
 operator|->
 name|kaio_liojoblist
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
