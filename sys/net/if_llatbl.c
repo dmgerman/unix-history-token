@@ -207,6 +207,11 @@ argument_list|)
 argument_list|,
 name|lltables
 argument_list|)
+operator|=
+name|SLIST_HEAD_INITIALIZER
+argument_list|(
+name|lltables
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -216,16 +221,6 @@ directive|define
 name|V_lltables
 value|VNET(lltables)
 end_define
-
-begin_function_decl
-specifier|static
-name|void
-name|vnet_lltable_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -1406,37 +1401,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function
-specifier|static
-name|void
-name|vnet_lltable_init
-parameter_list|()
-block|{
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|V_lltables
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|VNET_SYSINIT
-argument_list|(
-name|vnet_lltable_init
-argument_list|,
-name|SI_SUB_PSEUDO
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|vnet_lltable_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
