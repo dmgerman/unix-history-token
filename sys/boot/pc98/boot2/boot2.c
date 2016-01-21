@@ -1657,11 +1657,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 condition|)
 return|return
 literal|0x4F020F
