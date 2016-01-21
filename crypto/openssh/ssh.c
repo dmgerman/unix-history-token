@@ -4428,6 +4428,7 @@ if|if
 condition|(
 name|debug_flag
 condition|)
+comment|/* version_addendum is always NULL at this point */
 name|logit
 argument_list|(
 literal|"%s, %s"
