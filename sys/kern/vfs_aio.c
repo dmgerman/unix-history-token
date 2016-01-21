@@ -581,7 +581,7 @@ name|max_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum number of kernel threads to use for handling async IO "
+literal|"Maximum number of kernel processes to use for handling async IO "
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -611,7 +611,7 @@ name|num_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of presently active kernel threads for async IO"
+literal|"Number of presently active kernel processes for async IO"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -645,7 +645,7 @@ name|target_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Preferred number of ready kernel threads for async IO"
+literal|"Preferred number of ready kernel processes for async IO"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -741,7 +741,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Number of async I/O thread in the process of being started */
+comment|/* Number of async I/O processes in the process of being started */
 end_comment
 
 begin_comment
@@ -955,7 +955,7 @@ comment|/*  * Below is a key of locks used to protect each member of struct aioc
 end_comment
 
 begin_comment
-comment|/*  * Current, there is only two backends: BIO and generic file I/O.  * socket I/O is served by generic file I/O, this is not a good idea, since  * disk file I/O and any other types without O_NONBLOCK flag can block daemon  * threads, if there is no thread to serve socket I/O, the socket I/O will be  * delayed too long or starved, we should create some threads dedicated to  * sockets to do non-blocking I/O, same for pipe and fifo, for these I/O  * systems we really need non-blocking interface, fiddling O_NONBLOCK in file  * structure is not safe because there is race between userland and aio  * daemons.  */
+comment|/*  * Current, there is only two backends: BIO and generic file I/O.  * socket I/O is served by generic file I/O, this is not a good idea, since  * disk file I/O and any other types without O_NONBLOCK flag can block daemon  * processes, if there is no thread to serve socket I/O, the socket I/O will be  * delayed too long or starved, we should create some processes dedicated to  * sockets to do non-blocking I/O, same for pipe and fifo, for these I/O  * systems we really need non-blocking interface, fiddling O_NONBLOCK in file  * structure is not safe because there is race between userland and aio  * daemons.  */
 end_comment
 
 begin_struct
@@ -1134,25 +1134,25 @@ end_comment
 
 begin_struct
 struct|struct
-name|aiothreadlist
+name|aioproc
 block|{
 name|int
-name|aiothreadflags
+name|aioprocflags
 decl_stmt|;
 comment|/* (c) AIO proc flags */
 name|TAILQ_ENTRY
 argument_list|(
-argument|aiothreadlist
+argument|aioproc
 argument_list|)
 name|list
 expr_stmt|;
 comment|/* (c) list of processes */
 name|struct
-name|thread
+name|proc
 modifier|*
-name|aiothread
+name|aioproc
 decl_stmt|;
-comment|/* (*) the AIO thread */
+comment|/* (*) the AIO proc */
 block|}
 struct|;
 end_struct
@@ -1328,7 +1328,7 @@ name|struct
 name|task
 name|kaio_task
 decl_stmt|;
-comment|/* (*) task to kick aio threads */
+comment|/* (*) task to kick aio processes */
 block|}
 struct|;
 end_struct
@@ -1518,7 +1518,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiothreadlist
+argument|aioproc
 argument_list|)
 name|aio_freeproc
 expr_stmt|;
@@ -1952,7 +1952,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io thread data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
+comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io process data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
 end_comment
 
 begin_decl_stmt
@@ -2509,7 +2509,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aiothreadlist
+name|aioproc
 argument_list|)
 argument_list|,
 name|NULL
@@ -3988,7 +3988,7 @@ modifier|*
 name|aio_selectjob
 parameter_list|(
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 parameter_list|)
@@ -5356,7 +5356,7 @@ modifier|*
 name|aiocbe
 decl_stmt|;
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 decl_stmt|;
@@ -5432,13 +5432,13 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothread
+name|aioproc
 operator|=
-name|td
+name|p
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|=
 literal|0
 expr_stmt|;
@@ -5466,7 +5466,7 @@ if|if
 condition|(
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&
 name|AIOP_FREE
 condition|)
@@ -5483,7 +5483,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -5675,7 +5675,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator||=
 name|AIOP_FREE
 expr_stmt|;
@@ -5684,9 +5684,7 @@ if|if
 condition|(
 name|msleep
 argument_list|(
-name|aiop
-operator|->
-name|aiothread
+name|p
 argument_list|,
 operator|&
 name|aio_job_mtx
@@ -5709,7 +5707,7 @@ operator|&&
 operator|(
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&
 name|AIOP_FREE
 operator|)
@@ -8781,7 +8779,7 @@ operator|->
 name|p_aioinfo
 decl_stmt|;
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 decl_stmt|;
@@ -8820,7 +8818,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -8829,7 +8827,7 @@ name|wakeup
 argument_list|(
 name|aiop
 operator|->
-name|aiothread
+name|aioproc
 argument_list|)
 expr_stmt|;
 block|}
@@ -8896,7 +8894,7 @@ operator|->
 name|p_aioinfo
 decl_stmt|;
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 decl_stmt|;
@@ -8944,7 +8942,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -8953,7 +8951,7 @@ name|wakeup
 argument_list|(
 name|aiop
 operator|->
-name|aiothread
+name|aioproc
 argument_list|)
 expr_stmt|;
 block|}
