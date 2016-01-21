@@ -1183,7 +1183,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|if_detach_internal
 parameter_list|(
 name|struct
@@ -4150,7 +4150,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|if_detach_internal
 parameter_list|(
 name|struct
@@ -4255,25 +4255,19 @@ operator|!
 name|found
 condition|)
 block|{
-if|if
-condition|(
-name|vmove
-condition|)
-name|panic
-argument_list|(
-literal|"%s: ifp=%p not on the ifnet tailq %p"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-argument_list|,
-operator|&
-name|V_ifnet
-argument_list|)
-expr_stmt|;
-else|else
-return|return;
+comment|/* 		 * While we would want to panic here, we cannot 		 * guarantee that the interface is indeed still on 		 * the list given we don't hold locks all the way. 		 */
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+if|#
+directive|if
+literal|0
+block|if (vmove) 			panic("%s: ifp=%p not on the ifnet tailq %p", 			    __func__, ifp,&V_ifnet); 		else 			return;
 comment|/* XXX this should panic as well? */
+endif|#
+directive|endif
 block|}
 comment|/* Check if this is a cloned interface or not. */
 if|if
@@ -4630,6 +4624,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -4666,7 +4665,12 @@ name|if_clone
 modifier|*
 name|ifc
 decl_stmt|;
-comment|/* 	 * Detach from current vnet, but preserve LLADDR info, do not 	 * mark as dead etc. so that the ifnet can be reattached later. 	 */
+name|int
+name|rc
+decl_stmt|;
+comment|/* 	 * Detach from current vnet, but preserve LLADDR info, do not 	 * mark as dead etc. so that the ifnet can be reattached later. 	 * If we cannot find it, we lost the race to someone else. 	 */
+name|rc
+operator|=
 name|if_detach_internal
 argument_list|(
 name|ifp
@@ -4677,6 +4681,13 @@ operator|&
 name|ifc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Unlink the ifnet from ifindex_table[] in current vnet, and shrink 	 * the if_index for that vnet if possible. 	 * 	 * NOTE: IFNET_WLOCK/IFNET_WUNLOCK() are assumed to be unvirtualized, 	 * or we'd lock on one vnet and unlock on another. 	 */
 name|IFNET_WLOCK
 argument_list|()
