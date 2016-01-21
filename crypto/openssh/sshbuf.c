@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.c,v 1.3 2015/01/20 23:14:00 deraadt Exp $	*/
+comment|/*	$OpenBSD: sshbuf.c,v 1.4 2015/10/05 17:11:21 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -685,7 +685,7 @@ modifier|*
 name|ret
 parameter_list|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|ret
 argument_list|,
@@ -844,7 +844,7 @@ operator|->
 name|readonly
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 operator|->
@@ -863,7 +863,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
@@ -934,7 +934,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 operator|->
@@ -1228,7 +1228,7 @@ name|rlen
 operator|=
 name|max_size
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|buf
 operator|->

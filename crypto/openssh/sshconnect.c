@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.262 2015/05/28 05:41:29 dtucker Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.263 2015/08/20 22:32:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -1706,10 +1706,6 @@ goto|;
 block|}
 name|fdset
 operator|=
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 name|howmany

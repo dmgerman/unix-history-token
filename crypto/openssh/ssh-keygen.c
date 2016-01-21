@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.276 2015/07/03 03:49:45 djm Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.277 2015/08/19 23:17:51 djm Exp $ */
 end_comment
 
 begin_comment
@@ -6835,6 +6835,10 @@ argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inplace
+condition|)
 name|unlink
 argument_list|(
 name|tmp

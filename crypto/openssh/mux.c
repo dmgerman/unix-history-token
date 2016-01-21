@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mux.c,v 1.53 2015/05/01 04:03:20 djm Exp $ */
+comment|/* $OpenBSD: mux.c,v 1.54 2015/08/19 23:18:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3810,6 +3810,19 @@ name|freefwd
 init|=
 literal|1
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|fwd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fwd
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX - lport/cport check redundant */
 if|if
 condition|(
@@ -4749,6 +4762,19 @@ name|lport
 decl_stmt|,
 name|cport
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|fwd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fwd
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buffer_get_int_ret

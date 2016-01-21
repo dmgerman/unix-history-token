@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.96 2015/07/28 23:20:42 djm Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.97 2015/08/19 23:21:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -581,6 +581,13 @@ name|SSH_OLD_DHGEX
 block|}
 block|,
 block|{
+literal|"FuTTY*"
+block|,
+name|SSH_OLD_DHGEX
+block|}
+block|,
+comment|/* Putty Fork */
+block|{
 literal|"Probe-*"
 block|,
 name|SSH_BUG_PROBE
@@ -603,7 +610,16 @@ name|SSH_BUG_HOSTKEYS
 block|}
 block|,
 block|{
-literal|"WinSCP*"
+literal|"WinSCP_release_4*,"
+literal|"WinSCP_release_5.0*,"
+literal|"WinSCP_release_5.1*,"
+literal|"WinSCP_release_5.5*,"
+literal|"WinSCP_release_5.6*,"
+literal|"WinSCP_release_5.7,"
+literal|"WinSCP_release_5.7.1,"
+literal|"WinSCP_release_5.7.2,"
+literal|"WinSCP_release_5.7.3,"
+literal|"WinSCP_release_5.7.4"
 block|,
 name|SSH_OLD_DHGEX
 block|}

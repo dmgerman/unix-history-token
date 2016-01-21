@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.c,v 1.20 2015/07/03 03:43:18 djm Exp $ */
+comment|/* $OpenBSD: sshkey.c,v 1.21 2015/08/19 23:19:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -8107,11 +8107,6 @@ name|private
 argument_list|)
 condition|)
 block|{
-name|DSA_free
-argument_list|(
-name|private
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|SSH_ERR_LIBCRYPTO_ERROR
