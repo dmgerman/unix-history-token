@@ -504,7 +504,7 @@ begin_define
 define|#
 directive|define
 name|GPSWRAP
-value|990U
+value|990
 end_define
 
 begin_comment
@@ -515,7 +515,7 @@ begin_define
 define|#
 directive|define
 name|GPSWEEKS
-value|1024U
+value|1024
 end_define
 
 begin_comment

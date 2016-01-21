@@ -628,10 +628,6 @@ condition|(
 operator|!
 name|auth_md5
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|rpkt
 argument_list|,
 name|pkt_len

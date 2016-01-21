@@ -653,6 +653,7 @@ begin_struct
 struct|struct
 name|jjyRawDataBreak
 block|{
+specifier|const
 name|char
 modifier|*
 name|pString
@@ -2908,6 +2909,10 @@ if|if
 condition|(
 name|iscntrl
 argument_list|(
+call|(
+name|u_char
+call|)
+argument_list|(
 name|pp
 operator|->
 name|a_lastcode
@@ -2916,6 +2921,7 @@ name|i
 index|]
 operator|&
 literal|0x7F
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -3193,6 +3199,9 @@ condition|(
 operator|!
 name|iscntrl
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|up
 operator|->
 name|sRawBuf
@@ -5238,7 +5247,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|pBuf
-decl_stmt|,
+decl_stmt|;
+name|char
 name|sLog
 index|[
 literal|100
@@ -9138,7 +9148,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|pBuf
-decl_stmt|,
+decl_stmt|;
+name|char
 name|sLog
 index|[
 literal|100
@@ -12232,7 +12243,19 @@ index|[
 literal|5
 index|]
 function_decl|)
-parameter_list|( )
+parameter_list|(
+name|struct
+name|peer
+modifier|*
+parameter_list|,
+name|struct
+name|refclockproc
+modifier|*
+parameter_list|,
+name|struct
+name|jjyunit
+modifier|*
+parameter_list|)
 init|=
 block|{
 comment|/*STATE_IDLE           STATE_DAILOUT       STATE_LOGIN           STATE_CONNECT       STATE_BYE        */
@@ -13351,15 +13374,16 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
-operator|*
 operator|(
+name|u_char
+operator|)
 name|sys_phone
 index|[
 literal|0
 index|]
-operator|+
+index|[
 name|i
-operator|)
+index|]
 argument_list|)
 condition|)
 block|{
@@ -13381,15 +13405,13 @@ name|iFirstThreeDigitsCount
 operator|++
 index|]
 operator|=
-operator|*
-operator|(
 name|sys_phone
 index|[
 literal|0
 index|]
-operator|+
+index|[
 name|i
-operator|)
+index|]
 expr_stmt|;
 block|}
 name|iNumberOfDigitsOfPhoneNumber
@@ -13399,15 +13421,13 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|*
-operator|(
 name|sys_phone
 index|[
 literal|0
 index|]
-operator|+
+index|[
 name|i
-operator|)
+index|]
 operator|==
 literal|','
 condition|)
@@ -13451,15 +13471,13 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|*
-operator|(
 name|sys_phone
 index|[
 literal|0
 index|]
-operator|+
+index|[
 name|i
-operator|)
+index|]
 operator|!=
 literal|'-'
 condition|)
@@ -15932,6 +15950,7 @@ modifier|*
 name|up
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -18440,7 +18459,19 @@ index|[
 literal|5
 index|]
 function_decl|)
-parameter_list|( )
+parameter_list|(
+name|struct
+name|peer
+modifier|*
+parameter_list|,
+name|struct
+name|refclockproc
+modifier|*
+parameter_list|,
+name|struct
+name|jjyunit
+modifier|*
+parameter_list|)
 init|=
 block|{
 comment|/*STATE_DISCONNECT   STATE_INITIALIZE   STATE_DAILING       STATE_CONNECT      STATE_ESCAPE     */
@@ -20556,10 +20587,12 @@ modifier|*
 name|up
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pCmd
-decl_stmt|,
+decl_stmt|;
+name|char
 name|cBuf
 index|[
 literal|46
@@ -20673,7 +20706,7 @@ name|cBuf
 expr_stmt|;
 name|snprintf
 argument_list|(
-name|pCmd
+name|cBuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -20752,7 +20785,7 @@ name|cBuf
 expr_stmt|;
 name|snprintf
 argument_list|(
-name|pCmd
+name|cBuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -21407,6 +21440,7 @@ modifier|*
 name|up
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -21660,6 +21694,7 @@ modifier|*
 name|up
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -21779,6 +21814,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pMark

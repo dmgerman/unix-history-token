@@ -47,10 +47,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//#ifdef ISC_PLATFORM_HAVEIPV6
-end_comment
-
 begin_function_decl
 name|void
 name|test_IPv6AddressWithPort
@@ -68,10 +64,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|//#endif /* ISC_PLATFORM_HAVEIPV6 */
-end_comment
 
 begin_function_decl
 name|void
@@ -110,7 +102,6 @@ block|{
 name|init_lib
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
