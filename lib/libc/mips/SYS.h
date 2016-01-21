@@ -185,7 +185,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|PSEUDO_NOERROR(x)
+value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	SYSTRAP(x);							\ 	j ra;								\ END(__sys_ ## x)
 end_define
 
 begin_comment
@@ -200,7 +200,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|PSEUDO(x)
+value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	PIC_PROLOGUE(__sys_ ## x);					\ 	SYSTRAP(x);							\ 	bne a3,zero,err;						\ 	PIC_RETURN();							\ err:									\ 	PIC_TAILCALL(__cerror);						\ END(__sys_ ## x)
 end_define
 
 begin_comment
@@ -215,7 +215,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	SYSTRAP(x);							\ 	j ra;								\ 	END(__sys_ ## x)
+value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	SYSTRAP(x);							\ 	j ra;								\ END(__sys_ ## x)
 end_define
 
 begin_define
@@ -226,7 +226,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(x);						\ 	_C_LABEL(x) = _C_LABEL(__CONCAT(__sys_,x));			\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	PIC_PROLOGUE(__sys_ ## x);					\ 	SYSTRAP(x);							\ 	bne a3,zero,err;						\ 	PIC_RETURN();							\ err:									\ 	PIC_TAILCALL(__cerror);						\ END(__sys_ ## x)
+value|LEAF(__sys_ ## x);							\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	_C_LABEL(__CONCAT(_,x)) = _C_LABEL(__CONCAT(__sys_,x));		\ 	PIC_PROLOGUE(__sys_ ## x);					\ 	SYSTRAP(x);							\ 	bne a3,zero,err;						\ 	PIC_RETURN();							\ err:									\ 	PIC_TAILCALL(__cerror);						\ END(__sys_ ## x)
 end_define
 
 end_unit
