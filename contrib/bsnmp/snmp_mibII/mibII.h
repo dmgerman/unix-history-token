@@ -154,6 +154,22 @@ file|"mibII_tree.h"
 end_include
 
 begin_comment
+comment|/* maximum size of the interface alias */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u_int
+name|MIBIF_ALIAS_SIZE
+init|=
+literal|64
+operator|+
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Interface list and flags.  */
 end_comment
 
@@ -210,6 +226,13 @@ name|hc_imcasts
 decl_stmt|;
 name|uint64_t
 name|hc_ipackets
+decl_stmt|;
+comment|/* this should be made public */
+name|char
+name|alias
+index|[
+name|MIBIF_ALIAS_SIZE
+index|]
 decl_stmt|;
 block|}
 struct|;
