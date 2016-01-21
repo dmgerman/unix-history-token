@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/cc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -231,6 +225,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -265,6 +265,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_cc.h>
 end_include
 
 begin_ifdef
