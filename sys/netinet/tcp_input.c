@@ -222,12 +222,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip.h>
 end_include
 
@@ -279,6 +273,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_var.h>
 end_include
 
 begin_include

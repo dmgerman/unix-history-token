@@ -170,18 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -229,12 +217,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -297,12 +279,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/nd6.h>
 end_include
 
 begin_include
