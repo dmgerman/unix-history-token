@@ -135,7 +135,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: try_0send"
@@ -151,7 +150,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: try_0send: returned %zd"
@@ -208,7 +206,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: try_0write"
@@ -224,7 +221,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: try_0write: returned %zd"
@@ -326,7 +322,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udp: socket"
@@ -358,7 +353,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udp: bind(%s, %d)"
@@ -408,7 +402,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udp: connect(%s, %d)"
@@ -444,7 +437,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udp: socket"
@@ -476,7 +468,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udp: bind(%s, %d)"
@@ -526,7 +517,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udp: connect(%s, %d)"
@@ -663,7 +653,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: socket"
@@ -695,7 +684,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: bind(%s, %d)"
@@ -726,7 +714,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: listen"
@@ -754,7 +741,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: socket"
@@ -777,7 +763,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: fcntl(O_NONBLOCK)"
@@ -813,7 +798,6 @@ name|EINPROGRESS
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: connect(%s, %d)"
@@ -837,12 +821,11 @@ name|sleep
 argument_list|(
 literal|1
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: sleep(1)"
@@ -869,7 +852,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: accept"
@@ -883,12 +865,11 @@ name|sleep
 argument_list|(
 literal|1
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: sleep(1)"
@@ -964,7 +945,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: select"
@@ -984,7 +964,6 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: select: exception"
@@ -1005,7 +984,6 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_tcp: select: not writable"
@@ -1067,7 +1045,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udsstream: socketpair"
@@ -1110,7 +1087,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_udsdgram: socketpair"
@@ -1147,7 +1123,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_pipe: pipe"
@@ -1196,7 +1171,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_fifo: mktemp"
@@ -1222,7 +1196,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_fifo: mkfifo(%s)"
@@ -1251,7 +1224,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_fifo: open(%s, O_RDONLY)"
@@ -1280,7 +1252,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: setup_fifo: open(%s, O_WRONLY)"
@@ -1356,13 +1327,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|int
