@@ -1226,6 +1226,42 @@ name|ImmutableCallSite
 name|CS
 parameter_list|)
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//  Intrinsic pattern matching
+comment|//
+comment|/// Try and match a bitreverse or bswap idiom.
+comment|///
+comment|/// If an idiom is matched, an intrinsic call is inserted before \c I. Any added
+comment|/// instructions are returned in \c InsertedInsts. They will all have been added
+comment|/// to a basic block.
+comment|///
+comment|/// A bitreverse idiom normally requires around 2*BW nodes to be searched (where
+comment|/// BW is the bitwidth of the integer type). A bswap idiom requires anywhere up
+comment|/// to BW / 4 nodes to be searched, so is significantly faster.
+comment|///
+comment|/// This function returns true on a successful match or false otherwise.
+name|bool
+name|recognizeBitReverseOrBSwapIdiom
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|bool
+name|MatchBSwaps
+argument_list|,
+name|bool
+name|MatchBitReversals
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|InsertedInsts
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 
