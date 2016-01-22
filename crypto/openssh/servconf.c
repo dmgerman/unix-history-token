@@ -3578,6 +3578,14 @@ name|SSHCFG_GLOBAL
 block|}
 block|,
 block|{
+literal|"noneenabled"
+block|,
+name|sUnsupported
+block|,
+name|SSHCFG_ALL
+block|}
+block|,
+block|{
 literal|"hpndisabled"
 block|,
 name|sDeprecated
