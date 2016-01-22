@@ -500,22 +500,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pty_clone: failed to create %s: %d\n"
-argument_list|,
-name|name
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 operator|*
 name|dev
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 
