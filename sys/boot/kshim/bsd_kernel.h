@@ -3854,6 +3854,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Should be defined in user application since it is machine-dependent */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|delay
+parameter_list|(
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
