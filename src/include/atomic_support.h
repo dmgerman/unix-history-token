@@ -1,4 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===----------------------------------------------------------------------===////
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is dual licensed under the MIT and the University of Illinois Open
+end_comment
+
+begin_comment
+comment|// Source Licenses. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===////
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
