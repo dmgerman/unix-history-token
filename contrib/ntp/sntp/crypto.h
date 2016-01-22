@@ -112,6 +112,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|extern
 name|int
 name|auth_init
 parameter_list|(
@@ -130,6 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|get_key
 parameter_list|(
@@ -146,10 +148,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|make_mac
 parameter_list|(
-name|char
+specifier|const
+name|void
 modifier|*
 name|pkt_data
 parameter_list|,
@@ -159,12 +163,13 @@ parameter_list|,
 name|int
 name|mac_size
 parameter_list|,
+specifier|const
 name|struct
 name|key
 modifier|*
 name|cmp_key
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|digest
 parameter_list|)
@@ -172,10 +177,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|auth_md5
 parameter_list|(
-name|char
+specifier|const
+name|void
 modifier|*
 name|pkt_data
 parameter_list|,
@@ -185,6 +192,7 @@ parameter_list|,
 name|int
 name|mac_size
 parameter_list|,
+specifier|const
 name|struct
 name|key
 modifier|*

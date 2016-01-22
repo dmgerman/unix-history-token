@@ -5300,11 +5300,13 @@ name|i
 operator|<
 name|nchar
 operator|&&
+operator|(
 name|i
+operator|-
+literal|10
+operator|)
 operator|<
 name|k
-operator|+
-literal|10
 condition|;
 name|i
 operator|++

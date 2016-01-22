@@ -1413,6 +1413,8 @@ argument_list|,
 name|dgst
 argument_list|,
 name|len
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|authtrust
