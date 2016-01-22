@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -18,25 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
+file|<unistd.h>
 end_include
 
 begin_typedef
@@ -734,34 +734,40 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| futureModal: 0x%.2x 0x%.2x 0x%.2x 0x%.2x |\n"
+literal|"| tx_diversity: 0x%.2x |\n"
+argument_list|,
+name|mh
+operator|->
+name|tx_diversity
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"| flc_pwr_thresh: 0x%.2x |\n"
+argument_list|,
+name|mh
+operator|->
+name|flc_pwr_thresh
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"| bb_scale_smrt_antenna: 0x%.2x |\n"
+argument_list|,
+name|mh
+operator|->
+name|bb_scale_smrt_antenna
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"| futureModal: 0x%.2x |\n"
 argument_list|,
 name|mh
 operator|->
 name|futureModal
 index|[
 literal|0
-index|]
-argument_list|,
-name|mh
-operator|->
-name|futureModal
-index|[
-literal|1
-index|]
-argument_list|,
-name|mh
-operator|->
-name|futureModal
-index|[
-literal|2
-index|]
-argument_list|,
-name|mh
-operator|->
-name|futureModal
-index|[
-literal|3
 index|]
 argument_list|)
 expr_stmt|;
