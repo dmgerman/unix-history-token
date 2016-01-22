@@ -11027,6 +11027,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|emitOMPSimpleStore
+parameter_list|(
+name|LValue
+name|LVal
+parameter_list|,
+name|RValue
+name|RVal
+parameter_list|,
+name|QualType
+name|RValTy
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// \brief Perform element by element copying of arrays with type \a
 end_comment

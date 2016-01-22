@@ -987,8 +987,9 @@ block|}
 comment|/// Should we be emitting segmented stack stuff for the function
 name|bool
 name|shouldSplitStack
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getNumBlockIDs - Return the number of MBB ID's allocated.
 comment|///
 name|unsigned
