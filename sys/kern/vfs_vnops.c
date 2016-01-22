@@ -3581,6 +3581,14 @@ operator|->
 name|f_advice
 operator|==
 name|NULL
+operator|||
+name|fp
+operator|->
+name|f_vnode
+operator|->
+name|v_type
+operator|!=
+name|VREG
 condition|)
 return|return
 operator|(
@@ -3603,6 +3611,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fp
+operator|->
+name|f_advice
+operator|!=
+name|NULL
+operator|&&
 name|uio
 operator|->
 name|uio_offset
