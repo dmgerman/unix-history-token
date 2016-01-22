@@ -287,6 +287,16 @@ decl_stmt|;
 name|int
 name|ispipe
 decl_stmt|;
+specifier|volatile
+name|u_int
+name|resp_ready_seen
+decl_stmt|;
+comment|/* signal/scan */
+specifier|volatile
+name|u_int
+name|resp_ready_done
+decl_stmt|;
+comment|/* consumer/mainloop */
 block|}
 name|blocking_child
 typedef|;
@@ -306,7 +316,7 @@ typedef|typedef
 struct|struct
 name|blocking_child_tag
 block|{
-comment|/*  * blocking workitems and blocking_responses are dynamically-sized  * one-dimensional arrays of pointers to blocking worker requests and  * responses.  *  * IMPORTANT: This structure is shared between threads, and all access  * that is not atomic (especially queue operations) must hold the  * 'accesslock' semaphore to avoid data races.  *  * The resource management (thread/semaphore creation/destruction)  * functions and functions just testing a handle are safe because these  * are only changed by the main thread when no worker is running on the  * same data structure.  */
+comment|/* 	 * blocking workitems and blocking_responses are 	 * dynamically-sized one-dimensional arrays of pointers to 	 * blocking worker requests and responses. 	 * 	 * IMPORTANT: This structure is shared between threads, and all 	 * access that is not atomic (especially queue operations) must 	 * hold the 'accesslock' semaphore to avoid data races. 	 * 	 * The resource management (thread/semaphore 	 * creation/destruction) functions and functions just testing a 	 * handle are safe because these are only changed by the main 	 * thread when no worker is running on the same data structure. 	 */
 name|int
 name|reusable
 decl_stmt|;
@@ -384,6 +394,16 @@ modifier|*
 name|resp_read_ctx
 decl_stmt|;
 comment|/* child */
+specifier|volatile
+name|u_int
+name|resp_ready_seen
+decl_stmt|;
+comment|/* signal/scan */
+specifier|volatile
+name|u_int
+name|resp_ready_done
+decl_stmt|;
+comment|/* consumer/mainloop */
 else|#
 directive|else
 name|sem_ref
@@ -416,6 +436,34 @@ end_endif
 
 begin_comment
 comment|/* WORK_THREAD */
+end_comment
+
+begin_comment
+comment|/* we need some global tag to indicate any blocking child may be ready: */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|blocking_child_ready_seen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* signal/scan */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|blocking_child_ready_done
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* consumer/mainloop */
 end_comment
 
 begin_decl_stmt
@@ -509,6 +557,16 @@ name|process_blocking_resp
 parameter_list|(
 name|blocking_child
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|harvest_blocking_responses
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

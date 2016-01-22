@@ -4733,10 +4733,6 @@ name|mac_size
 operator|=
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|x_pkt
 argument_list|,
 name|pkt_len

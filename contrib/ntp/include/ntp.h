@@ -1482,6 +1482,10 @@ name|l_fp
 name|borg
 decl_stmt|;
 comment|/* alternate origin timestamp */
+name|l_fp
+name|bxmt
+decl_stmt|;
+comment|/* most recent broadcast transmit timestamp */
 name|double
 name|offset
 decl_stmt|;
@@ -1566,9 +1570,13 @@ name|timereset
 decl_stmt|;
 comment|/* time stat counters were reset */
 name|u_long
-name|timereceived
+name|timelastrec
 decl_stmt|;
 comment|/* last packet received time */
+name|u_long
+name|timereceived
+decl_stmt|;
+comment|/* last (clean) packet received time */
 name|u_long
 name|timereachable
 decl_stmt|;
@@ -3538,6 +3546,27 @@ define|#
 directive|define
 name|PROTO_MODE7
 value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_UECRYPTO
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_UECRYPTONAK
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_UEDIGEST
+value|31
 end_define
 
 begin_comment

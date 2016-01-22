@@ -1,30 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A Bison parser, made by GNU Bison 3.0.2.  */
+comment|/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
 end_comment
 
 begin_comment
-comment|/* Bison interface for Yacc-like parsers in C     Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.     This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
+comment|/* Bison interface for Yacc-like parsers in C           Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.        This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
 end_comment
 
 begin_comment
-comment|/* As a special exception, you may create a larger work that contains    part or all of the Bison parser skeleton and distribute that work    under terms of your choice, so long as that work isn't itself a    parser generator using the skeleton or a modified version thereof    as a parser skeleton.  Alternatively, if you modify or redistribute    the parser skeleton itself, you may (at your option) remove this    special exception, which will cause the skeleton and the resulting    Bison output files to be licensed under the GNU General Public    License without this special exception.     This special exception was added by the Free Software Foundation in    version 2.2 of Bison.  */
+comment|/* As a special exception, you may create a larger work that contains    part or all of the Bison parser skeleton and distribute that work    under terms of your choice, so long as that work isn't itself a    parser generator using the skeleton or a modified version thereof    as a parser skeleton.  Alternatively, if you modify or redistribute    the parser skeleton itself, you may (at your option) remove this    special exception, which will cause the skeleton and the resulting    Bison output files to be licensed under the GNU General Public    License without this special exception.        This special exception was added by the Free Software Foundation in    version 2.2 of Bison.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YY_YY__NTPD_NTP_PARSER_H_INCLUDED
+name|YY_YY_NTP_PARSER_H_INCLUDED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|YY_YY__NTPD_NTP_PARSER_H_INCLUDED
+name|YY_YY_NTP_PARSER_H_INCLUDED
 end_define
 
 begin_comment
-comment|/* Debug traces.  */
+comment|/* Enabling traces.  */
 end_comment
 
 begin_ifndef
@@ -64,7 +64,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Token type.  */
+comment|/* Tokens.  */
 end_comment
 
 begin_ifndef
@@ -78,6 +78,10 @@ define|#
 directive|define
 name|YYTOKENTYPE
 end_define
+
+begin_comment
+comment|/* Put the tokens into the symbol table, so that GDB and other debuggers       know about them.  */
+end_comment
 
 begin_enum
 enum|enum
@@ -767,85 +771,97 @@ name|T_U_int
 init|=
 literal|428
 block|,
-name|T_Unconfig
+name|T_UEcrypto
 init|=
 literal|429
 block|,
-name|T_Unpeer
+name|T_UEcryptonak
 init|=
 literal|430
 block|,
-name|T_Version
+name|T_UEdigest
 init|=
 literal|431
 block|,
-name|T_WanderThreshold
+name|T_Unconfig
 init|=
 literal|432
 block|,
-name|T_Week
+name|T_Unpeer
 init|=
 literal|433
 block|,
-name|T_Wildcard
+name|T_Version
 init|=
 literal|434
 block|,
-name|T_Xleave
+name|T_WanderThreshold
 init|=
 literal|435
 block|,
-name|T_Year
+name|T_Week
 init|=
 literal|436
 block|,
-name|T_Flag
+name|T_Wildcard
 init|=
 literal|437
 block|,
-name|T_EOC
+name|T_Xleave
 init|=
 literal|438
 block|,
-name|T_Simulate
+name|T_Year
 init|=
 literal|439
 block|,
-name|T_Beep_Delay
+name|T_Flag
 init|=
 literal|440
 block|,
-name|T_Sim_Duration
+name|T_EOC
 init|=
 literal|441
 block|,
-name|T_Server_Offset
+name|T_Simulate
 init|=
 literal|442
 block|,
-name|T_Duration
+name|T_Beep_Delay
 init|=
 literal|443
 block|,
-name|T_Freq_Offset
+name|T_Sim_Duration
 init|=
 literal|444
 block|,
-name|T_Wander
+name|T_Server_Offset
 init|=
 literal|445
 block|,
-name|T_Jitter
+name|T_Duration
 init|=
 literal|446
 block|,
-name|T_Prop_Delay
+name|T_Freq_Offset
 init|=
 literal|447
 block|,
-name|T_Proc_Delay
+name|T_Wander
 init|=
 literal|448
+block|,
+name|T_Jitter
+init|=
+literal|449
+block|,
+name|T_Prop_Delay
+init|=
+literal|450
+block|,
+name|T_Proc_Delay
+init|=
+literal|451
 block|}
 enum|;
 end_enum
@@ -2059,146 +2075,163 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_Unconfig
+name|T_UEcrypto
 value|429
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Unpeer
+name|T_UEcryptonak
 value|430
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Version
+name|T_UEdigest
 value|431
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_WanderThreshold
+name|T_Unconfig
 value|432
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Week
+name|T_Unpeer
 value|433
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Wildcard
+name|T_Version
 value|434
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Xleave
+name|T_WanderThreshold
 value|435
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Year
+name|T_Week
 value|436
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Flag
+name|T_Wildcard
 value|437
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_EOC
+name|T_Xleave
 value|438
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Simulate
+name|T_Year
 value|439
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Beep_Delay
+name|T_Flag
 value|440
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Sim_Duration
+name|T_EOC
 value|441
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Server_Offset
+name|T_Simulate
 value|442
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Duration
+name|T_Beep_Delay
 value|443
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Freq_Offset
+name|T_Sim_Duration
 value|444
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Wander
+name|T_Server_Offset
 value|445
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Jitter
+name|T_Duration
 value|446
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Prop_Delay
+name|T_Freq_Offset
 value|447
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Proc_Delay
+name|T_Wander
 value|448
 end_define
 
-begin_comment
-comment|/* Value type.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|T_Jitter
+value|449
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_Prop_Delay
+value|450
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_Proc_Delay
+value|451
+end_define
 
 begin_if
 if|#
@@ -2214,21 +2247,14 @@ end_if
 
 begin_typedef
 typedef|typedef
-name|union
-name|YYSTYPE
-name|YYSTYPE
-typedef|;
-end_typedef
-
-begin_union
 union|union
 name|YYSTYPE
 block|{
+comment|/* Line 2053 of yacc.c  */
 line|#
 directive|line
 number|51
 file|"../../ntpd/ntp_parser.y"
-comment|/* yacc.c:1909  */
 name|char
 modifier|*
 name|String
@@ -2290,14 +2316,15 @@ name|script_info_fifo
 modifier|*
 name|Sim_script_fifo
 decl_stmt|;
+comment|/* Line 2053 of yacc.c  */
 line|#
 directive|line
-number|459
-file|"../../ntpd/ntp_parser.h"
-comment|/* yacc.c:1909  */
+number|469
+file|"ntp_parser.h"
 block|}
-union|;
-end_union
+name|YYSTYPE
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -2305,6 +2332,17 @@ directive|define
 name|YYSTYPE_IS_TRIVIAL
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|yystype
+value|YYSTYPE
+end_define
+
+begin_comment
+comment|/* obsolescent; will be withdrawn */
+end_comment
 
 begin_define
 define|#
@@ -2325,6 +2363,69 @@ name|yylval
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YYPARSE_PARAM
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__STDC__
+operator|||
+name|defined
+name|__cplusplus
+end_if
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|(
+name|void
+modifier|*
+name|YYPARSE_PARAM
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! YYPARSE_PARAM */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__STDC__
+operator|||
+name|defined
+name|__cplusplus
+end_if
+
 begin_function_decl
 name|int
 name|yyparse
@@ -2334,13 +2435,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|yyparse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !YY_YY__NTPD_NTP_PARSER_H_INCLUDED  */
+comment|/* ! YYPARSE_PARAM */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !YY_YY_NTP_PARSER_H_INCLUDED  */
 end_comment
 
 end_unit
