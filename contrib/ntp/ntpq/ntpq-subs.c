@@ -13736,6 +13736,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|REQ_ROOM
 operator|<=
 name|chars
@@ -15013,6 +15016,10 @@ name|order
 index|]
 argument_list|)
 expr_stmt|;
+name|mrulist_interrupted
+operator|=
+name|FALSE
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"lstint avgint rstr r m v  count rport remote address\n"
@@ -15197,6 +15204,25 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mrulist_interrupted
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"\n --interrupted--\n"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|fflush
 argument_list|(
