@@ -2500,7 +2500,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-aAbfgiIklmPQr] [-c country-code | -h hostname] "
+literal|"usage: whois [-aAbfgiIklmPQrRS] [-c country-code | -h hostname] "
 literal|"[-p port] name ...\n"
 argument_list|)
 expr_stmt|;
