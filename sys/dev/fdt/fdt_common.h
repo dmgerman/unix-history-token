@@ -63,6 +63,21 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ARM_INTRNG
+argument_list|)
+end_if
+
 begin_typedef
 typedef|typedef
 name|int
@@ -95,6 +110,11 @@ name|fdt_pic_table
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
