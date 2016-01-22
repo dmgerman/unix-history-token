@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ge25519.h,v 1.3 2013/12/09 11:03:45 markus Exp $ */
+comment|/* $OpenBSD: ge25519.h,v 1.4 2015/02/16 18:26:26 miod Exp $ */
 end_comment
 
 begin_comment
@@ -102,6 +102,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|ge25519
 name|ge25519_base

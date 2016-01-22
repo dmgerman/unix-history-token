@@ -179,12 +179,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_compat_linux.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usbhid.h>
 end_include
 

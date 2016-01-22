@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -131,64 +137,16 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
-operator|)
-end_if
-
-begin_extern
-extern|extern char *minbrk
-asm|__asm (".minbrk");
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
-extern|extern char *minbrk
-asm|__asm ("_minbrk");
-else|#
-directive|else
-extern|extern char *minbrk
-asm|__asm ("minbrk");
-endif|#
-directive|endif
-extern|struct gmonparam _gmonparam =
+begin_decl_stmt
+name|struct
+name|gmonparam
+name|_gmonparam
+init|=
 block|{
 name|GMON_PROF_OFF
 block|}
-end_extern
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -400,8 +358,10 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|sbrk
+name|mmap
 argument_list|(
+name|NULL
+argument_list|,
 name|p
 operator|->
 name|kcountsize
@@ -413,18 +373,24 @@ operator|+
 name|p
 operator|->
 name|tossize
+argument_list|,
+name|PROT_READ
+operator||
+name|PROT_WRITE
+argument_list|,
+name|MAP_ANON
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|cp
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|ERR
@@ -498,13 +464,6 @@ name|u_short
 operator|*
 operator|)
 name|cp
-expr_stmt|;
-name|minbrk
-operator|=
-name|sbrk
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 name|p
 operator|->

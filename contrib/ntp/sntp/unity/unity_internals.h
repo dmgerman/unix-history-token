@@ -3447,7 +3447,7 @@ name|line
 parameter_list|,
 name|message
 parameter_list|)
-value|UnityAssertEqualMemory((UNITY_PTR_ATTRIBUTE void*)(expected), (UNITY_PTR_ATTRIBUTE void*)(actual), (_UU32)(len), 1, (message), (UNITY_LINE_TYPE)line)
+value|UnityAssertEqualMemory((UNITY_PTR_ATTRIBUTE const void*)(expected), (UNITY_PTR_ATTRIBUTE const void*)(actual), (_UU32)(len), 1, (message), (UNITY_LINE_TYPE)line)
 end_define
 
 begin_define

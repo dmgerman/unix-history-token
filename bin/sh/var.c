@@ -3683,6 +3683,13 @@ operator|==
 name|VUNSET
 condition|)
 block|{
+name|vp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VREADONLY
+expr_stmt|;
 operator|(
 name|void
 operator|)

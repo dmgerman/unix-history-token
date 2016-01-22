@@ -1789,9 +1789,14 @@ argument_list|)
 operator|+
 name|GIC_FIRST_PPI
 expr_stmt|;
-comment|/* 		 * In intr[2], bits[3:0] are trigger type and level flags. 		 *   1 = low-to-high edge triggered 		 *   2 = high-to-low edge triggered 		 *   4 = active high level-sensitive 		 *   8 = active low level-sensitive 		 * The hardware only supports active-high-level or rising-edge. 		 */
+comment|/* 		 * In intr[2], bits[3:0] are trigger type and level flags. 		 *   1 = low-to-high edge triggered 		 *   2 = high-to-low edge triggered 		 *   4 = active high level-sensitive 		 *   8 = active low level-sensitive 		 * The hardware only supports active-high-level or rising-edge 		 * for SPIs 		 */
 if|if
 condition|(
+operator|*
+name|interrupt
+operator|>=
+name|GIC_FIRST_SPI
+operator|&&
 name|fdt32_to_cpu
 argument_list|(
 name|intr

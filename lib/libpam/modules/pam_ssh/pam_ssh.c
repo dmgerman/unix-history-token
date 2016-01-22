@@ -1353,10 +1353,6 @@ modifier|*
 name|pamh
 parameter_list|)
 block|{
-name|AuthenticationConnection
-modifier|*
-name|ac
-decl_stmt|;
 specifier|const
 name|struct
 name|pam_ssh_key
@@ -1384,6 +1380,8 @@ modifier|*
 name|env
 decl_stmt|;
 name|int
+name|fd
+decl_stmt|,
 name|pam_err
 decl_stmt|;
 comment|/* switch to PAM environment */
@@ -1418,14 +1416,13 @@ block|}
 comment|/* get a connection to the agent */
 if|if
 condition|(
-operator|(
-name|ac
-operator|=
-name|ssh_get_authentication_connection
-argument_list|()
-operator|)
-operator|==
-name|NULL
+name|ssh_get_authentication_socket
+argument_list|(
+operator|&
+name|fd
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|openpam_log
@@ -1491,7 +1488,7 @@ if|if
 condition|(
 name|ssh_add_identity
 argument_list|(
-name|ac
+name|fd
 argument_list|,
 name|psk
 operator|->
@@ -1501,6 +1498,8 @@ name|psk
 operator|->
 name|comment
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|openpam_log
 argument_list|(
@@ -1545,20 +1544,14 @@ name|pam_err
 operator|=
 name|PAM_SUCCESS
 expr_stmt|;
-name|end
-label|:
 comment|/* disconnect from agent */
-if|if
-condition|(
-name|ac
-operator|!=
-name|NULL
-condition|)
-name|ssh_close_authentication_connection
+name|ssh_close_authentication_socket
 argument_list|(
-name|ac
+name|fd
 argument_list|)
 expr_stmt|;
+name|end
+label|:
 comment|/* switch back to original environment */
 for|for
 control|(

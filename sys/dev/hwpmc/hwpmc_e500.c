@@ -2692,6 +2692,9 @@ break|break;
 case|case
 name|FSL_E500mc
 case|:
+case|case
+name|FSL_E5500
+case|:
 name|pe_cpu_mask
 operator|=
 name|ev

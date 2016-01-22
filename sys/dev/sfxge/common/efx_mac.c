@@ -120,6 +120,9 @@ block|,
 comment|/* emo_addr_set */
 name|falcon_gmac_reconfigure
 block|,
+comment|/* emo_pdu_set */
+name|falcon_gmac_reconfigure
+block|,
 comment|/* emo_reconfigure */
 name|falconsiena_mac_multicast_list_set
 block|,
@@ -190,6 +193,9 @@ comment|/* emo_up */
 name|falcon_xmac_reconfigure
 block|,
 comment|/* emo_addr_set */
+name|falcon_xmac_reconfigure
+block|,
+comment|/* emo_pdu_set */
 name|falcon_xmac_reconfigure
 block|,
 comment|/* emo_reconfigure */
@@ -264,6 +270,9 @@ block|,
 comment|/* emo_addr_set */
 name|siena_mac_reconfigure
 block|,
+comment|/* emo_pdu_set */
+name|siena_mac_reconfigure
+block|,
 comment|/* emo_reconfigure */
 name|falconsiena_mac_multicast_list_set
 block|,
@@ -336,6 +345,9 @@ comment|/* emo_up */
 name|ef10_mac_addr_set
 block|,
 comment|/* emo_addr_set */
+name|ef10_mac_pdu_set
+block|,
+comment|/* emo_pdu_set */
 name|ef10_mac_reconfigure
 block|,
 comment|/* emo_reconfigure */
@@ -585,7 +597,7 @@ name|rc
 operator|=
 name|emop
 operator|->
-name|emo_reconfigure
+name|emo_pdu_set
 argument_list|(
 name|enp
 argument_list|)

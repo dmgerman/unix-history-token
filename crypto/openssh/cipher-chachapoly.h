@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher-chachapoly.h,v 1.1 2013/11/21 00:45:44 djm Exp $ */
+comment|/* $OpenBSD: cipher-chachapoly.h,v 1.4 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|void
+name|int
 name|chachapoly_init
 parameter_list|(
 name|struct

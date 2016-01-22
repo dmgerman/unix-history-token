@@ -599,7 +599,7 @@ define|#
 directive|define
 name|endgrent
 parameter_list|()
-value|do { } while (0)
+value|do { } while(0)
 end_define
 
 begin_endif

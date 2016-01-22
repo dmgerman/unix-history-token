@@ -3456,7 +3456,7 @@ expr_stmt|;
 name|assert
 argument_list|(
 name|fd
-operator|>
+operator|>=
 literal|0
 argument_list|)
 expr_stmt|;

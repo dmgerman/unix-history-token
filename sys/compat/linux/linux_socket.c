@@ -5049,6 +5049,10 @@ argument_list|,
 name|UIO_USERSPACE
 argument_list|)
 expr_stmt|;
+name|control
+operator|=
+name|NULL
+expr_stmt|;
 name|bad
 label|:
 name|m_freem

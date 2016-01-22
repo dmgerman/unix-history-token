@@ -199,8 +199,10 @@ name|l_fp
 name|actual
 parameter_list|)
 block|{
-if|if
-condition|(
+return|return
+operator|!
+operator|!
+operator|(
 name|L_ISEQU
 argument_list|(
 operator|&
@@ -209,13 +211,7 @@ argument_list|,
 operator|&
 name|actual
 argument_list|)
-condition|)
-return|return
-name|TRUE
-return|;
-else|else
-return|return
-name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -234,6 +230,11 @@ decl_stmt|;
 name|struct
 name|timeval
 name|xmt
+decl_stmt|;
+name|l_fp
+name|expected_xmt
+decl_stmt|,
+name|actual_xmt
 decl_stmt|;
 name|GETTIMEOFDAY
 argument_list|(
@@ -324,11 +325,6 @@ operator|.
 name|ppoll
 argument_list|)
 expr_stmt|;
-name|l_fp
-name|expected_xmt
-decl_stmt|,
-name|actual_xmt
-decl_stmt|;
 name|TVTOTS
 argument_list|(
 operator|&
@@ -369,9 +365,37 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|int
+name|EXPECTED_PKTLEN
+init|=
+name|LEN_PKT_NOMAC
+operator|+
+name|MAX_MD5_LEN
+decl_stmt|;
 name|struct
 name|key
 name|testkey
+decl_stmt|;
+name|struct
+name|pkt
+name|testpkt
+decl_stmt|;
+name|struct
+name|timeval
+name|xmt
+decl_stmt|;
+name|l_fp
+name|expected_xmt
+decl_stmt|,
+name|actual_xmt
+decl_stmt|;
+name|char
+name|expected_mac
+index|[
+name|MAX_MD5_LEN
+index|]
 decl_stmt|;
 name|testkey
 operator|.
@@ -415,14 +439,6 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|struct
-name|pkt
-name|testpkt
-decl_stmt|;
-name|struct
-name|timeval
-name|xmt
-decl_stmt|;
 name|GETTIMEOFDAY
 argument_list|(
 operator|&
@@ -437,14 +453,6 @@ name|tv_sec
 operator|+=
 name|JAN_1970
 expr_stmt|;
-specifier|const
-name|int
-name|EXPECTED_PKTLEN
-init|=
-name|LEN_PKT_NOMAC
-operator|+
-name|MAX_MD5_LEN
-decl_stmt|;
 name|TEST_ASSERT_EQUAL
 argument_list|(
 name|EXPECTED_PKTLEN
@@ -523,11 +531,6 @@ operator|.
 name|ppoll
 argument_list|)
 expr_stmt|;
-name|l_fp
-name|expected_xmt
-decl_stmt|,
-name|actual_xmt
-decl_stmt|;
 name|TVTOTS
 argument_list|(
 operator|&
@@ -575,25 +578,15 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|char
-name|expected_mac
-index|[
-name|MAX_MD5_LEN
-index|]
-decl_stmt|;
 name|TEST_ASSERT_EQUAL
 argument_list|(
 name|MAX_MD5_LEN
 operator|-
 literal|4
 argument_list|,
-comment|// Remove the key_id, only keep the mac.
+comment|/* Remove the key_id, only keep the mac. */
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 argument_list|,
@@ -643,6 +636,22 @@ name|struct
 name|pkt
 name|rpkt
 decl_stmt|;
+name|l_fp
+name|reftime
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|struct
+name|timeval
+name|dst
+decl_stmt|;
+name|double
+name|offset
+decl_stmt|,
+name|precision
+decl_stmt|,
+name|synch_distance
+decl_stmt|;
 name|rpkt
 operator|.
 name|precision
@@ -650,7 +659,7 @@ operator|=
 operator|-
 literal|16
 expr_stmt|;
-comment|// 0,000015259
+comment|/* 0,000015259 */
 name|rpkt
 operator|.
 name|rootdelay
@@ -675,10 +684,7 @@ literal|0.25
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Synch Distance: (0.125+0.25)/2.0 == 0.1875
-name|l_fp
-name|reftime
-decl_stmt|;
+comment|/* Synch Distance: (0.125+0.25)/2.0 == 0.1875 */
 name|get_systime
 argument_list|(
 operator|&
@@ -696,10 +702,7 @@ operator|.
 name|reftime
 argument_list|)
 expr_stmt|;
-name|l_fp
-name|tmp
-decl_stmt|;
-comment|// T1 - Originate timestamp
+comment|/* T1 - Originate timestamp */
 name|tmp
 operator|.
 name|l_ui
@@ -723,7 +726,7 @@ operator|.
 name|org
 argument_list|)
 expr_stmt|;
-comment|// T2 - Receive timestamp
+comment|/* T2 - Receive timestamp */
 name|tmp
 operator|.
 name|l_ui
@@ -747,7 +750,7 @@ operator|.
 name|rec
 argument_list|)
 expr_stmt|;
-comment|// T3 - Transmit timestamp
+comment|/* T3 - Transmit timestamp */
 name|tmp
 operator|.
 name|l_ui
@@ -771,7 +774,7 @@ operator|.
 name|xmt
 argument_list|)
 expr_stmt|;
-comment|// T4 - Destination timestamp as standard timeval
+comment|/* T4 - Destination timestamp as standard timeval */
 name|tmp
 operator|.
 name|l_ui
@@ -784,10 +787,6 @@ name|l_uf
 operator|=
 literal|0UL
 expr_stmt|;
-name|struct
-name|timeval
-name|dst
-decl_stmt|;
 name|TSTOTV
 argument_list|(
 operator|&
@@ -803,13 +802,6 @@ name|tv_sec
 operator|-=
 name|JAN_1970
 expr_stmt|;
-name|double
-name|offset
-decl_stmt|,
-name|precision
-decl_stmt|,
-name|synch_distance
-decl_stmt|;
 name|offset_calculation
 argument_list|(
 operator|&
@@ -849,7 +841,7 @@ argument_list|,
 name|precision
 argument_list|)
 expr_stmt|;
-comment|// 1.1250150000000001 ?
+comment|/* 1.1250150000000001 ? */
 name|TEST_ASSERT_EQUAL_DOUBLE
 argument_list|(
 literal|1.125015
@@ -870,6 +862,22 @@ block|{
 name|struct
 name|pkt
 name|rpkt
+decl_stmt|;
+name|l_fp
+name|reftime
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|struct
+name|timeval
+name|dst
+decl_stmt|;
+name|double
+name|offset
+decl_stmt|,
+name|precision
+decl_stmt|,
+name|synch_distance
 decl_stmt|;
 name|rpkt
 operator|.
@@ -902,10 +910,7 @@ literal|0.5
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Synch Distance is (0.5+0.5)/2.0, or 0.5
-name|l_fp
-name|reftime
-decl_stmt|;
+comment|/* Synch Distance is (0.5+0.5)/2.0, or 0.5 */
 name|get_systime
 argument_list|(
 operator|&
@@ -923,10 +928,7 @@ operator|.
 name|reftime
 argument_list|)
 expr_stmt|;
-name|l_fp
-name|tmp
-decl_stmt|;
-comment|// T1 - Originate timestamp
+comment|/* T1 - Originate timestamp */
 name|tmp
 operator|.
 name|l_ui
@@ -950,7 +952,7 @@ operator|.
 name|org
 argument_list|)
 expr_stmt|;
-comment|// T2 - Receive timestamp
+comment|/* T2 - Receive timestamp */
 name|tmp
 operator|.
 name|l_ui
@@ -974,7 +976,7 @@ operator|.
 name|rec
 argument_list|)
 expr_stmt|;
-comment|// T3 - Transmit timestamp
+comment|/*/ T3 - Transmit timestamp */
 name|tmp
 operator|.
 name|l_ui
@@ -998,7 +1000,7 @@ operator|.
 name|xmt
 argument_list|)
 expr_stmt|;
-comment|// T4 - Destination timestamp as standard timeval
+comment|/* T4 - Destination timestamp as standard timeval */
 name|tmp
 operator|.
 name|l_ui
@@ -1011,10 +1013,6 @@ name|l_uf
 operator|=
 literal|0UL
 expr_stmt|;
-name|struct
-name|timeval
-name|dst
-decl_stmt|;
 name|TSTOTV
 argument_list|(
 operator|&
@@ -1030,13 +1028,6 @@ name|tv_sec
 operator|-=
 name|JAN_1970
 expr_stmt|;
-name|double
-name|offset
-decl_stmt|,
-name|precision
-decl_stmt|,
-name|synch_distance
-decl_stmt|;
 name|offset_calculation
 argument_list|(
 operator|&
@@ -1251,6 +1242,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1258,6 +1250,7 @@ name|HOSTNAME
 init|=
 literal|"192.0.2.1"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1327,7 +1320,7 @@ argument_list|(
 name|HOSTNAME
 argument_list|)
 expr_stmt|;
-comment|// Test that the KOD-entry is added to the database.
+comment|/* Test that the KOD-entry is added to the database. */
 name|kod_init_kod_db
 argument_list|(
 literal|"/dev/null"
@@ -1452,7 +1445,7 @@ decl_stmt|;
 name|l_fp
 name|now
 decl_stmt|;
-comment|// We don't want our testing code to actually change the system clock.
+comment|/* We don't want our testing code to actually change the system clock. */
 name|TEST_ASSERT_FALSE
 argument_list|(
 name|ENABLED_OPT

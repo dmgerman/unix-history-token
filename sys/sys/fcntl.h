@@ -527,6 +527,17 @@ value|O_VERIFY
 end_define
 
 begin_comment
+comment|/* Only for fo_close() from half-succeeded open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOPENFAILED
+value|O_TTY_INIT
+end_define
+
+begin_comment
 comment|/* convert from open() flags to/from fflags; convert O_RD/WR to FREAD/FWRITE */
 end_comment
 

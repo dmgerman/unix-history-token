@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: atomicio.c,v 1.26 2010/09/22 22:58:51 djm Exp $ */
+comment|/* $OpenBSD: atomicio.c,v 1.27 2015/01/16 06:40:12 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include

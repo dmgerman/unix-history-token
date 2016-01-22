@@ -56,21 +56,6 @@ comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|falcon_nvram_get_version
-block|,
-comment|/* envo_get_version */
-name|falcon_nvram_erase
-block|,
-comment|/* envo_erase */
-name|falcon_nvram_write_chunk
-block|,
-comment|/* envo_write_chunk */
-name|falcon_nvram_rw_finish
-block|,
-comment|/* envo_rw_finish */
-name|falcon_nvram_set_version
-block|,
-comment|/* envo_set_version */
 name|falcon_nvram_type_to_partn
 block|,
 comment|/* envo_type_to_partn */
@@ -83,6 +68,21 @@ comment|/* envo_partn_rw_start */
 name|falcon_nvram_partn_read
 block|,
 comment|/* envo_partn_read */
+name|falcon_nvram_partn_erase
+block|,
+comment|/* envo_partn_erase */
+name|falcon_nvram_partn_write
+block|,
+comment|/* envo_partn_write */
+name|falcon_nvram_partn_rw_finish
+block|,
+comment|/* envo_partn_rw_finish */
+name|falcon_nvram_partn_get_version
+block|,
+comment|/* envo_partn_get_version */
+name|falcon_nvram_partn_set_version
+block|,
+comment|/* envo_partn_set_version */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -117,21 +117,6 @@ comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|siena_nvram_get_version
-block|,
-comment|/* envo_get_version */
-name|siena_nvram_erase
-block|,
-comment|/* envo_erase */
-name|siena_nvram_write_chunk
-block|,
-comment|/* envo_write_chunk */
-name|siena_nvram_rw_finish
-block|,
-comment|/* envo_rw_finish */
-name|siena_nvram_set_version
-block|,
-comment|/* envo_set_version */
 name|siena_nvram_type_to_partn
 block|,
 comment|/* envo_type_to_partn */
@@ -144,6 +129,21 @@ comment|/* envo_partn_rw_start */
 name|siena_nvram_partn_read
 block|,
 comment|/* envo_partn_read */
+name|siena_nvram_partn_erase
+block|,
+comment|/* envo_partn_erase */
+name|siena_nvram_partn_write
+block|,
+comment|/* envo_partn_write */
+name|siena_nvram_partn_rw_finish
+block|,
+comment|/* envo_partn_rw_finish */
+name|siena_nvram_partn_get_version
+block|,
+comment|/* envo_partn_get_version */
+name|siena_nvram_partn_set_version
+block|,
+comment|/* envo_partn_set_version */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -180,21 +180,6 @@ comment|/* envo_test */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_DIAG */
-name|ef10_nvram_get_version
-block|,
-comment|/* envo_get_version */
-name|ef10_nvram_erase
-block|,
-comment|/* envo_erase */
-name|ef10_nvram_write_chunk
-block|,
-comment|/* envo_write_chunk */
-name|ef10_nvram_rw_finish
-block|,
-comment|/* envo_rw_finish */
-name|ef10_nvram_set_version
-block|,
-comment|/* envo_set_version */
 name|ef10_nvram_type_to_partn
 block|,
 comment|/* envo_type_to_partn */
@@ -207,6 +192,21 @@ comment|/* envo_partn_rw_start */
 name|ef10_nvram_partn_read
 block|,
 comment|/* envo_partn_read */
+name|ef10_nvram_partn_erase
+block|,
+comment|/* envo_partn_erase */
+name|ef10_nvram_partn_write
+block|,
+comment|/* envo_partn_write */
+name|ef10_nvram_partn_rw_finish
+block|,
+comment|/* envo_partn_rw_finish */
+name|ef10_nvram_partn_get_version
+block|,
+comment|/* envo_partn_get_version */
+name|ef10_nvram_partn_set_version
+block|,
+comment|/* envo_partn_set_version */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -690,6 +690,9 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
+name|uint32_t
+name|partn
+decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
@@ -742,11 +745,34 @@ name|rc
 operator|=
 name|envop
 operator|->
-name|envo_get_version
+name|envo_type_to_partn
 argument_list|(
 name|enp
 argument_list|,
 name|type
+argument_list|,
+operator|&
+name|partn
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail1
+goto|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|envop
+operator|->
+name|envo_partn_get_version
+argument_list|(
+name|enp
+argument_list|,
+name|partn
 argument_list|,
 name|subtypep
 argument_list|,
@@ -757,13 +783,20 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail1
+name|fail2
 goto|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
 name|fail1
 label|:
 name|EFSYS_PROBE1
@@ -1149,6 +1182,20 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
+name|unsigned
+name|int
+name|offset
+init|=
+literal|0
+decl_stmt|;
+name|size_t
+name|size
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|partn
+decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
@@ -1210,11 +1257,14 @@ name|rc
 operator|=
 name|envop
 operator|->
-name|envo_erase
+name|envo_type_to_partn
 argument_list|(
 name|enp
 argument_list|,
 name|type
+argument_list|,
+operator|&
+name|partn
 argument_list|)
 operator|)
 operator|!=
@@ -1223,11 +1273,72 @@ condition|)
 goto|goto
 name|fail1
 goto|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|envop
+operator|->
+name|envo_partn_size
+argument_list|(
+name|enp
+argument_list|,
+name|partn
+argument_list|,
+operator|&
+name|size
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail2
+goto|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|envop
+operator|->
+name|envo_partn_erase
+argument_list|(
+name|enp
+argument_list|,
+name|partn
+argument_list|,
+name|offset
+argument_list|,
+name|size
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail3
+goto|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|fail3
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail3
+argument_list|)
+expr_stmt|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
 name|fail1
 label|:
 name|EFSYS_PROBE1
@@ -1286,6 +1397,9 @@ name|enp
 operator|->
 name|en_envop
 decl_stmt|;
+name|uint32_t
+name|partn
+decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
@@ -1347,11 +1461,34 @@ name|rc
 operator|=
 name|envop
 operator|->
-name|envo_write_chunk
+name|envo_type_to_partn
 argument_list|(
 name|enp
 argument_list|,
 name|type
+argument_list|,
+operator|&
+name|partn
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail1
+goto|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|envop
+operator|->
+name|envo_partn_write
+argument_list|(
+name|enp
+argument_list|,
+name|partn
 argument_list|,
 name|offset
 argument_list|,
@@ -1364,13 +1501,20 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail1
+name|fail2
 goto|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
 name|fail1
 label|:
 name|EFSYS_PROBE1
@@ -1411,6 +1555,9 @@ init|=
 name|enp
 operator|->
 name|en_envop
+decl_stmt|;
+name|uint32_t
+name|partn
 decl_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
@@ -1463,13 +1610,29 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|envop
 operator|->
-name|envo_rw_finish
+name|envo_type_to_partn
 argument_list|(
 name|enp
 argument_list|,
 name|type
+argument_list|,
+operator|&
+name|partn
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|envop
+operator|->
+name|envo_partn_rw_finish
+argument_list|(
+name|enp
+argument_list|,
+name|partn
 argument_list|)
 expr_stmt|;
 name|enp
@@ -1513,6 +1676,9 @@ init|=
 name|enp
 operator|->
 name|en_envop
+decl_stmt|;
+name|uint32_t
+name|partn
 decl_stmt|;
 name|efx_rc_t
 name|rc
@@ -1578,13 +1744,14 @@ name|rc
 operator|=
 name|envop
 operator|->
-name|envo_set_version
+name|envo_type_to_partn
 argument_list|(
 name|enp
 argument_list|,
 name|type
 argument_list|,
-name|version
+operator|&
+name|partn
 argument_list|)
 operator|)
 operator|!=
@@ -1593,11 +1760,40 @@ condition|)
 goto|goto
 name|fail1
 goto|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|envop
+operator|->
+name|envo_partn_set_version
+argument_list|(
+name|enp
+argument_list|,
+name|partn
+argument_list|,
+name|version
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail2
+goto|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
 name|fail1
 label|:
 name|EFSYS_PROBE1
@@ -2788,6 +2984,10 @@ argument_list|,
 name|__in
 name|size_t
 name|size
+argument_list|,
+name|__in
+name|uint32_t
+name|mode
 argument_list|)
 block|{
 name|efx_mcdi_req_t
@@ -2798,7 +2998,7 @@ name|payload
 index|[
 name|MAX
 argument_list|(
-name|MC_CMD_NVRAM_READ_IN_LEN
+name|MC_CMD_NVRAM_READ_IN_V2_LEN
 argument_list|,
 name|MC_CMD_NVRAM_READ_OUT_LENMAX
 argument_list|)
@@ -2853,7 +3053,7 @@ name|req
 operator|.
 name|emr_in_length
 operator|=
-name|MC_CMD_NVRAM_READ_IN_LEN
+name|MC_CMD_NVRAM_READ_IN_V2_LEN
 expr_stmt|;
 name|req
 operator|.
@@ -2871,7 +3071,7 @@ name|MCDI_IN_SET_DWORD
 argument_list|(
 name|req
 argument_list|,
-name|NVRAM_READ_IN_TYPE
+name|NVRAM_READ_IN_V2_TYPE
 argument_list|,
 name|partn
 argument_list|)
@@ -2880,7 +3080,7 @@ name|MCDI_IN_SET_DWORD
 argument_list|(
 name|req
 argument_list|,
-name|NVRAM_READ_IN_OFFSET
+name|NVRAM_READ_IN_V2_OFFSET
 argument_list|,
 name|offset
 argument_list|)
@@ -2889,9 +3089,18 @@ name|MCDI_IN_SET_DWORD
 argument_list|(
 name|req
 argument_list|,
-name|NVRAM_READ_IN_LENGTH
+name|NVRAM_READ_IN_V2_LENGTH
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|MCDI_IN_SET_DWORD
+argument_list|(
+name|req
+argument_list|,
+name|NVRAM_READ_IN_V2_MODE
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 name|efx_mcdi_execute

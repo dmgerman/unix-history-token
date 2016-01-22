@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: match.h,v 1.15 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: match.h,v 1.16 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -46,8 +46,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|u_int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -64,8 +62,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

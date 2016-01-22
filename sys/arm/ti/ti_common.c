@@ -111,6 +111,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -211,12 +217,6 @@ name|defined
 argument_list|(
 name|SOC_OMAP4
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ARM_INTRNG
-argument_list|)
 operator|&
 name|gic_decode_fdt
 block|,
@@ -234,6 +234,15 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ARM_INTRNG */
+end_comment
 
 end_unit
 

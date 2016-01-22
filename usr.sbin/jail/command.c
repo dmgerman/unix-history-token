@@ -5344,6 +5344,10 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|pwdp
 operator|=

@@ -665,6 +665,26 @@ operator|.
 name|kidx
 index|]
 expr_stmt|;
+name|ptv
+operator|->
+name|no
+operator|.
+name|name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pval
+index|[
+name|ptv
+operator|->
+name|no
+operator|.
+name|kidx
+index|]
+expr_stmt|;
 block|}
 end_function
 

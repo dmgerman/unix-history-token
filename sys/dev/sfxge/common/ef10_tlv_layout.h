@@ -76,8 +76,9 @@ decl_stmt|;
 name|uint16_t
 name|type_id
 decl_stmt|;
+comment|/* 0 indicates the default segment (always located at offset 0), while other values  * are for RFID-selectable presets that should immediately follow the default segment.  * The default segment may also have preset> 0, which means that it is a preset  * selected through an RFID command and copied by FW to the location at offset 0. */
 name|uint16_t
-name|reserved
+name|preset
 decl_stmt|;
 name|uint32_t
 name|generation
@@ -690,7 +691,7 @@ name|int8_t
 name|clk_mode
 decl_stmt|;
 comment|/* 0 -> off, 1 -> on, -1 -> leave alone */
-comment|/* Consumed by sram.c */
+comment|/* No longer used, superseded by TLV_TAG_DESCRIPTOR_CACHE_CONFIG. */
 name|int8_t
 name|rx_dc_size
 decl_stmt|;

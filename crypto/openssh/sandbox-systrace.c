@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sandbox-systrace.c,v 1.9 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: sandbox-systrace.c,v 1.17 2015/07/27 16:29:23 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -118,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"atomicio.h"
 end_include
 
@@ -167,13 +167,7 @@ index|[]
 init|=
 block|{
 block|{
-name|SYS_open
-block|,
-name|SYSTR_POLICY_NEVER
-block|}
-block|,
-block|{
-name|SYS___sysctl
+name|SYS_clock_gettime
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}
@@ -190,8 +184,35 @@ block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|SYS_getentropy
+comment|/* OpenBSD 5.6 and newer use getentropy(2) to seed arc4random(3). */
+block|{
+name|SYS_getentropy
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+else|#
+directive|else
+comment|/* Previous releases used sysctl(3)'s kern.arnd variable. */
+block|{
+name|SYS___sysctl
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|SYS_getpid
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+block|{
+name|SYS_getpgid
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}
@@ -202,12 +223,17 @@ block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|SYS_kbind
 block|{
-name|SYS_clock_gettime
+name|SYS_kbind
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|SYS_madvise
 block|,
@@ -233,13 +259,19 @@ name|SYSTR_POLICY_PERMIT
 block|}
 block|,
 block|{
-name|SYS_poll
+name|SYS_munmap
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
 block|{
-name|SYS_munmap
+name|SYS_open
+block|,
+name|SYSTR_POLICY_NEVER
+block|}
+block|,
+block|{
+name|SYS_poll
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}
@@ -256,6 +288,17 @@ block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|SYS_sendsyslog
+block|{
+name|SYS_sendsyslog
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|SYS_shutdown
 block|,

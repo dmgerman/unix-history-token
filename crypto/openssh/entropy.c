@@ -9,6 +9,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -100,6 +106,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_include
@@ -891,46 +903,16 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * OpenSSL version numbers: MNNFFPPS: major minor fix patch status 	 * We match major, minor, fix and status (not patch) for<1.0.0. 	 * After that, we acceptable compatible fix versions (so we 	 * allow 1.0.1 to work with 1.0.0). Going backwards is only allowed 	 * within a patch series. 	 */
-name|u_long
-name|version_mask
-init|=
-name|SSLeay
-argument_list|()
-operator|>=
-literal|0x1000000f
-condition|?
-operator|~
-literal|0xffff0L
-else|:
-operator|~
-literal|0xff0L
-decl_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
+operator|!
+name|ssh_compatible_openssl
+argument_list|(
+name|OPENSSL_VERSION_NUMBER
+argument_list|,
 name|SSLeay
 argument_list|()
-operator|^
-name|OPENSSL_VERSION_NUMBER
-operator|)
-operator|&
-name|version_mask
-operator|)
-operator|||
-operator|(
-name|SSLeay
-argument_list|()
-operator|>>
-literal|12
-operator|)
-operator|<
-operator|(
-name|OPENSSL_VERSION_NUMBER
-operator|>>
-literal|12
-operator|)
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
@@ -1028,6 +1010,37 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
+
+begin_comment
+comment|/* Handled in arc4random() */
+end_comment
+
+begin_function
+name|void
+name|seed_rng
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 end_unit
 

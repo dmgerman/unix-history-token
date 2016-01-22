@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.113 2013/06/07 15:37:52 dtucker Exp $ */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $OpenBSD: channels.h,v 1.118 2015/07/01 02:26:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -213,8 +209,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CHANNEL_MAX_TYPE
+name|SSH_CHANNEL_UNIX_LISTENER
 value|18
+end_define
+
+begin_comment
+comment|/* Listening on a domain socket. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_RUNIX_LISTENER
+value|19
+end_define
+
+begin_comment
+comment|/* Listening to a R-style domain socket. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_MAX_TYPE
+value|20
 end_define
 
 begin_define
@@ -507,7 +525,7 @@ comment|/* Pause IO until deadline (time_t) */
 name|int
 name|delayed
 decl_stmt|;
-comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler.  				 * this way post-select handlers are not 				 * accidentally called if a FD gets reused */
+comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler. 				 * this way post-select handlers are not 				 * accidentally called if a FD gets reused */
 name|Buffer
 name|input
 decl_stmt|;
@@ -559,12 +577,6 @@ name|local_consumed
 decl_stmt|;
 name|u_int
 name|local_maxpacket
-decl_stmt|;
-name|u_int
-name|tcpwinsz
-decl_stmt|;
-name|int
-name|dynamic_window
 decl_stmt|;
 name|int
 name|extended_usage
@@ -704,13 +716,6 @@ define|#
 directive|define
 name|CHAN_X11_WINDOW_DEFAULT
 value|(4*CHAN_X11_PACKET_DEFAULT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHAN_HPN_MIN_WINDOW_DEFAULT
-value|(2*1024*1024)
 end_define
 
 begin_comment
@@ -1074,7 +1079,7 @@ comment|/* protocol handler */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_close
 parameter_list|(
 name|int
@@ -1088,7 +1093,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_close_confirmation
 parameter_list|(
 name|int
@@ -1102,7 +1107,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_data
 parameter_list|(
 name|int
@@ -1116,7 +1121,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_extended_data
 parameter_list|(
 name|int
@@ -1130,7 +1135,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_ieof
 parameter_list|(
 name|int
@@ -1144,7 +1149,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_oclose
 parameter_list|(
 name|int
@@ -1158,7 +1163,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_open_confirmation
 parameter_list|(
 name|int
@@ -1172,7 +1177,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_open_failure
 parameter_list|(
 name|int
@@ -1186,7 +1191,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_port_open
 parameter_list|(
 name|int
@@ -1200,7 +1205,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_window_adjust
 parameter_list|(
 name|int
@@ -1214,7 +1219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|channel_input_status_confirm
 parameter_list|(
 name|int
@@ -1329,6 +1334,18 @@ begin_comment
 comment|/* tcp forwarding */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|Forward
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ForwardOptions
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|channel_set_af
@@ -1425,7 +1442,9 @@ name|channel_input_port_forward_request
 parameter_list|(
 name|int
 parameter_list|,
-name|int
+name|struct
+name|ForwardOptions
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1433,13 +1452,31 @@ end_function_decl
 begin_function_decl
 name|Channel
 modifier|*
-name|channel_connect_to
+name|channel_connect_to_port
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 parameter_list|,
 name|u_short
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Channel
+modifier|*
+name|channel_connect_to_path
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 name|char
 modifier|*
@@ -1473,7 +1510,29 @@ name|Channel
 modifier|*
 name|channel_connect_by_listen_address
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|u_short
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Channel
+modifier|*
+name|channel_connect_by_listen_path
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 name|char
 modifier|*
@@ -1488,17 +1547,9 @@ begin_function_decl
 name|int
 name|channel_request_remote_forwarding
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|Forward
 modifier|*
-parameter_list|,
-name|u_short
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1507,19 +1558,13 @@ begin_function_decl
 name|int
 name|channel_setup_local_fwd_listener
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|Forward
 modifier|*
 parameter_list|,
-name|u_short
-parameter_list|,
-specifier|const
-name|char
+name|struct
+name|ForwardOptions
 modifier|*
-parameter_list|,
-name|u_short
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1528,13 +1573,9 @@ begin_function_decl
 name|int
 name|channel_request_rforward_cancel
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|Forward
 modifier|*
-name|host
-parameter_list|,
-name|u_short
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1543,16 +1584,16 @@ begin_function_decl
 name|int
 name|channel_setup_remote_fwd_listener
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|u_short
-parameter_list|,
-name|int
+name|struct
+name|Forward
 modifier|*
 parameter_list|,
 name|int
+modifier|*
+parameter_list|,
+name|struct
+name|ForwardOptions
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1561,11 +1602,9 @@ begin_function_decl
 name|int
 name|channel_cancel_rport_listener
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|Forward
 modifier|*
-parameter_list|,
-name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1574,15 +1613,15 @@ begin_function_decl
 name|int
 name|channel_cancel_lport_listener
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|Forward
 modifier|*
 parameter_list|,
-name|u_short
-parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|struct
+name|ForwardOptions
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1601,6 +1640,15 @@ end_function_decl
 begin_comment
 comment|/* x11 forwarding */
 end_comment
+
+begin_function_decl
+name|void
+name|channel_set_x11_refuse_time
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1632,7 +1680,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|x11_input_open
 parameter_list|(
 name|int
@@ -1669,7 +1717,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|deny_input_open
 parameter_list|(
 name|int
@@ -1795,21 +1843,6 @@ name|chan_obuf_empty
 parameter_list|(
 name|Channel
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* hpn handler */
-end_comment
-
-begin_function_decl
-name|void
-name|channel_set_hpn
-parameter_list|(
-name|int
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

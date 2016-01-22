@@ -101,7 +101,7 @@ literal|0
 init|;
 name|tuple
 operator|<
-name|MAX_RANGES_TUPLES
+name|RANGES_TUPLES_MAX
 condition|;
 name|tuple
 operator|++
@@ -191,7 +191,7 @@ literal|0
 init|;
 name|tuple
 operator|<
-name|MAX_RANGES_TUPLES
+name|RANGES_TUPLES_MAX
 condition|;
 name|tuple
 operator|++
@@ -282,7 +282,7 @@ literal|0
 init|;
 name|tuple
 operator|<
-name|MAX_RANGES_TUPLES
+name|RANGES_TUPLES_MAX
 condition|;
 name|tuple
 operator|++

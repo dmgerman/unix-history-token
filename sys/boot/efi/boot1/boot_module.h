@@ -52,11 +52,9 @@ name|DPRINTF
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-define|\
-value|do { \                 printf(fmt, ##args) \         } while (0)
+value|printf(fmt, __VA_ARGS__)
 end_define
 
 begin_else
@@ -71,7 +69,6 @@ name|DPRINTF
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 value|{}

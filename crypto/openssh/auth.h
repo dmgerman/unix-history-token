@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.77 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: auth.h,v 1.84 2015/05/08 06:41:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -81,6 +81,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|ssh
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sshkey
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -212,6 +224,15 @@ decl_stmt|;
 name|void
 modifier|*
 name|methoddata
+decl_stmt|;
+name|struct
+name|sshkey
+modifier|*
+modifier|*
+name|prev_userkeys
+decl_stmt|;
+name|u_int
+name|nprev_userkeys
 decl_stmt|;
 block|}
 struct|;
@@ -529,6 +550,8 @@ modifier|*
 parameter_list|,
 name|Key
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -565,6 +588,34 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|void
+name|auth2_record_userkey
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|,
+name|struct
+name|sshkey
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|auth2_userkey_already_used
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|,
+name|struct
+name|sshkey
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -836,6 +887,23 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|auth_maxtries_exceeded
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1253,6 +1321,10 @@ modifier|*
 name|get_hostkey_public_by_index
 parameter_list|(
 name|int
+parameter_list|,
+name|struct
+name|ssh
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1263,6 +1335,12 @@ modifier|*
 name|get_hostkey_public_by_type
 parameter_list|(
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ssh
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1273,6 +1351,12 @@ modifier|*
 name|get_hostkey_private_by_type
 parameter_list|(
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ssh
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1282,6 +1366,12 @@ name|int
 name|get_hostkey_index
 parameter_list|(
 name|Key
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ssh
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1298,7 +1388,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sshd_hostkey_sign
 parameter_list|(
 name|Key
@@ -1311,11 +1401,14 @@ name|u_char
 modifier|*
 modifier|*
 parameter_list|,
-name|u_int
+name|size_t
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -1395,13 +1488,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|AUTH_FAIL_MSG
-value|"Too many authentication failures for %.100s"
-end_define
 
 begin_define
 define|#

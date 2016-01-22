@@ -581,7 +581,7 @@ name|max_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum number of kernel threads to use for handling async IO "
+literal|"Maximum number of kernel processes to use for handling async IO "
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -611,7 +611,7 @@ name|num_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of presently active kernel threads for async IO"
+literal|"Number of presently active kernel processes for async IO"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -645,7 +645,7 @@ name|target_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Preferred number of ready kernel threads for async IO"
+literal|"Preferred number of ready kernel processes for async IO"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -741,7 +741,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Number of async I/O thread in the process of being started */
+comment|/* Number of async I/O processes in the process of being started */
 end_comment
 
 begin_comment
@@ -955,7 +955,7 @@ comment|/*  * Below is a key of locks used to protect each member of struct aioc
 end_comment
 
 begin_comment
-comment|/*  * Current, there is only two backends: BIO and generic file I/O.  * socket I/O is served by generic file I/O, this is not a good idea, since  * disk file I/O and any other types without O_NONBLOCK flag can block daemon  * threads, if there is no thread to serve socket I/O, the socket I/O will be  * delayed too long or starved, we should create some threads dedicated to  * sockets to do non-blocking I/O, same for pipe and fifo, for these I/O  * systems we really need non-blocking interface, fiddling O_NONBLOCK in file  * structure is not safe because there is race between userland and aio  * daemons.  */
+comment|/*  * Current, there is only two backends: BIO and generic file I/O.  * socket I/O is served by generic file I/O, this is not a good idea, since  * disk file I/O and any other types without O_NONBLOCK flag can block daemon  * processes, if there is no thread to serve socket I/O, the socket I/O will be  * delayed too long or starved, we should create some processes dedicated to  * sockets to do non-blocking I/O, same for pipe and fifo, for these I/O  * systems we really need non-blocking interface, fiddling O_NONBLOCK in file  * structure is not safe because there is race between userland and aio  * daemons.  */
 end_comment
 
 begin_struct
@@ -1134,25 +1134,25 @@ end_comment
 
 begin_struct
 struct|struct
-name|aiothreadlist
+name|aioproc
 block|{
 name|int
-name|aiothreadflags
+name|aioprocflags
 decl_stmt|;
 comment|/* (c) AIO proc flags */
 name|TAILQ_ENTRY
 argument_list|(
-argument|aiothreadlist
+argument|aioproc
 argument_list|)
 name|list
 expr_stmt|;
 comment|/* (c) list of processes */
 name|struct
-name|thread
+name|proc
 modifier|*
-name|aiothread
+name|aioproc
 decl_stmt|;
-comment|/* (*) the AIO thread */
+comment|/* (*) the AIO proc */
 block|}
 struct|;
 end_struct
@@ -1321,14 +1321,6 @@ argument_list|(
 argument_list|,
 argument|aiocblist
 argument_list|)
-name|kaio_sockqueue
-expr_stmt|;
-comment|/* (a) queue for aios waiting on sockets, 						 *  NOT USED YET. 						 */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|aiocblist
-argument_list|)
 name|kaio_syncqueue
 expr_stmt|;
 comment|/* (a) queue for aio_fsync */
@@ -1336,7 +1328,7 @@ name|struct
 name|task
 name|kaio_task
 decl_stmt|;
-comment|/* (*) task to kick aio threads */
+comment|/* (*) task to kick aio processes */
 block|}
 struct|;
 end_struct
@@ -1526,7 +1518,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiothreadlist
+argument|aioproc
 argument_list|)
 name|aio_freeproc
 expr_stmt|;
@@ -1549,14 +1541,6 @@ specifier|static
 name|struct
 name|mtx
 name|aio_job_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|aio_sock_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1968,7 +1952,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io thread data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
+comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io process data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
 end_comment
 
 begin_decl_stmt
@@ -2474,18 +2458,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|,
-literal|"aio_sock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -2537,7 +2509,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aiothreadlist
+name|aioproc
 argument_list|)
 argument_list|,
 name|NULL
@@ -2843,12 +2815,6 @@ operator|&
 name|aio_job_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|aio_sock_mtx
-argument_list|)
-expr_stmt|;
 name|sema_destroy
 argument_list|(
 operator|&
@@ -3011,14 +2977,6 @@ operator|&
 name|ki
 operator|->
 name|kaio_liojoblist
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_sockqueue
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -4030,7 +3988,7 @@ modifier|*
 name|aio_selectjob
 parameter_list|(
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 parameter_list|)
@@ -5355,6 +5313,29 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|aio_switch_vmspace
+parameter_list|(
+name|struct
+name|aiocblist
+modifier|*
+name|aiocbe
+parameter_list|)
+block|{
+name|vmspace_switch_aio
+argument_list|(
+name|aiocbe
+operator|->
+name|userproc
+operator|->
+name|p_vmspace
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The AIO daemon, most of the actual work is done in aio_process_*,  * but the setup (and address space mgmt) is done in this routine.  */
 end_comment
@@ -5375,7 +5356,7 @@ modifier|*
 name|aiocbe
 decl_stmt|;
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 decl_stmt|;
@@ -5387,10 +5368,7 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|curcp
-decl_stmt|,
-modifier|*
-name|mycp
+name|p
 decl_stmt|,
 modifier|*
 name|userp
@@ -5399,9 +5377,6 @@ name|struct
 name|vmspace
 modifier|*
 name|myvm
-decl_stmt|,
-modifier|*
-name|tmpvm
 decl_stmt|;
 name|struct
 name|thread
@@ -5418,8 +5393,8 @@ name|intptr_t
 operator|)
 name|_id
 decl_stmt|;
-comment|/* 	 * Local copies of curproc (cp) and vmspace (myvm) 	 */
-name|mycp
+comment|/* 	 * Grab an extra reference on the daemon's vmspace so that it 	 * doesn't get freed by jobs that switch to a different 	 * vmspace. 	 */
+name|p
 operator|=
 name|td
 operator|->
@@ -5427,13 +5402,14 @@ name|td_proc
 expr_stmt|;
 name|myvm
 operator|=
-name|mycp
-operator|->
-name|p_vmspace
+name|vmspace_acquire_ref
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|mycp
+name|p
 operator|->
 name|p_textvp
 operator|==
@@ -5456,23 +5432,15 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothread
+name|aioproc
 operator|=
-name|td
+name|p
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|=
 literal|0
-expr_stmt|;
-comment|/* The daemon resides in its own pgrp. */
-name|sys_setsid
-argument_list|(
-name|td
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * and creating too many daemons.) 	 */
 name|sema_post
@@ -5493,17 +5461,12 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * curcp is the current daemon process context. 		 * userp is the current user process context. 		 */
-name|curcp
-operator|=
-name|mycp
-expr_stmt|;
 comment|/* 		 * Take daemon off of free queue 		 */
 if|if
 condition|(
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&
 name|AIOP_FREE
 condition|)
@@ -5520,7 +5483,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -5554,69 +5517,11 @@ operator|->
 name|userproc
 expr_stmt|;
 comment|/* 			 * Connect to process address space for user program. 			 */
-if|if
-condition|(
-name|userp
-operator|!=
-name|curcp
-condition|)
-block|{
-comment|/* 				 * Save the current address space that we are 				 * connected to. 				 */
-name|tmpvm
-operator|=
-name|mycp
-operator|->
-name|p_vmspace
-expr_stmt|;
-comment|/* 				 * Point to the new user address space, and 				 * refer to it. 				 */
-name|mycp
-operator|->
-name|p_vmspace
-operator|=
-name|userp
-operator|->
-name|p_vmspace
-expr_stmt|;
-name|atomic_add_int
+name|aio_switch_vmspace
 argument_list|(
-operator|&
-name|mycp
-operator|->
-name|p_vmspace
-operator|->
-name|vm_refcnt
-argument_list|,
-literal|1
+name|aiocbe
 argument_list|)
 expr_stmt|;
-comment|/* Activate the new mapping. */
-name|pmap_activate
-argument_list|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|mycp
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 				 * If the old address space wasn't the daemons 				 * own address space, then we need to remove the 				 * daemon's reference from the other process 				 * that it was acting on behalf of. 				 */
-if|if
-condition|(
-name|tmpvm
-operator|!=
-name|myvm
-condition|)
-block|{
-name|vmspace_free
-argument_list|(
-name|tmpvm
-argument_list|)
-expr_stmt|;
-block|}
-name|curcp
-operator|=
-name|userp
-expr_stmt|;
-block|}
 name|ki
 operator|=
 name|userp
@@ -5723,9 +5628,11 @@ block|}
 comment|/* 		 * Disconnect from user address space. 		 */
 if|if
 condition|(
-name|curcp
+name|p
+operator|->
+name|p_vmspace
 operator|!=
-name|mycp
+name|myvm
 condition|)
 block|{
 name|mtx_unlock
@@ -5734,60 +5641,10 @@ operator|&
 name|aio_job_mtx
 argument_list|)
 expr_stmt|;
-comment|/* Get the user address space to disconnect from. */
-name|tmpvm
-operator|=
-name|mycp
-operator|->
-name|p_vmspace
-expr_stmt|;
-comment|/* Get original address space for daemon. */
-name|mycp
-operator|->
-name|p_vmspace
-operator|=
+name|vmspace_switch_aio
+argument_list|(
 name|myvm
-expr_stmt|;
-comment|/* Activate the daemon's address space. */
-name|pmap_activate
-argument_list|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|mycp
 argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|tmpvm
-operator|==
-name|myvm
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"AIOD: vmspace problem -- %d\n"
-argument_list|,
-name|mycp
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* Remove our vmspace reference. */
-name|vmspace_free
-argument_list|(
-name|tmpvm
-argument_list|)
-expr_stmt|;
-name|curcp
-operator|=
-name|mycp
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -5795,7 +5652,7 @@ operator|&
 name|aio_job_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We have to restart to avoid race, we only sleep if 			 * no job can be selected, that should be 			 * curcp == mycp. 			 */
+comment|/* 			 * We have to restart to avoid race, we only sleep if 			 * no job can be selected. 			 */
 continue|continue;
 block|}
 name|mtx_assert
@@ -5818,7 +5675,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator||=
 name|AIOP_FREE
 expr_stmt|;
@@ -5827,9 +5684,7 @@ if|if
 condition|(
 name|msleep
 argument_list|(
-name|aiop
-operator|->
-name|aiothread
+name|p
 argument_list|,
 operator|&
 name|aio_job_mtx
@@ -5840,34 +5695,29 @@ literal|"aiordy"
 argument_list|,
 name|aiod_lifetime
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|==
+name|EWOULDBLOCK
+operator|&&
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|aio_jobs
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&
 name|AIOP_FREE
 operator|)
 operator|&&
-operator|(
 name|num_aio_procs
 operator|>
 name|target_aio_procs
-operator|)
 condition|)
-block|{
+break|break;
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5901,53 +5751,44 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|mycp
-operator|->
-name|p_vmspace
-operator|->
-name|vm_refcnt
-operator|<=
-literal|1
-condition|)
-block|{
-name|printf
+name|vmspace_free
 argument_list|(
-literal|"AIOD: bad vm refcnt for"
-literal|" exiting daemon: %d\n"
-argument_list|,
-name|mycp
-operator|->
-name|p_vmspace
-operator|->
-name|vm_refcnt
+name|myvm
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_vmspace
+operator|==
+name|myvm
+argument_list|,
+operator|(
+literal|"AIOD: bad vmspace for exiting daemon"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|myvm
+operator|->
+name|vm_refcnt
+operator|>
+literal|1
+argument_list|,
+operator|(
+literal|"AIOD: bad vm refcnt for exiting daemon: %d"
+operator|,
+name|myvm
+operator|->
+name|vm_refcnt
+operator|)
+argument_list|)
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|aio_job_mtx
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"shouldn't be here\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8938,7 +8779,7 @@ operator|->
 name|p_aioinfo
 decl_stmt|;
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 decl_stmt|;
@@ -8977,7 +8818,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -8986,7 +8827,7 @@ name|wakeup
 argument_list|(
 name|aiop
 operator|->
-name|aiothread
+name|aioproc
 argument_list|)
 expr_stmt|;
 block|}
@@ -9053,7 +8894,7 @@ operator|->
 name|p_aioinfo
 decl_stmt|;
 name|struct
-name|aiothreadlist
+name|aioproc
 modifier|*
 name|aiop
 decl_stmt|;
@@ -9101,7 +8942,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aiothreadflags
+name|aioprocflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -9110,7 +8951,7 @@ name|wakeup
 argument_list|(
 name|aiop
 operator|->
-name|aiothread
+name|aioproc
 argument_list|)
 expr_stmt|;
 block|}

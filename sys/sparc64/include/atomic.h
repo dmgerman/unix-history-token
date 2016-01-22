@@ -477,6 +477,13 @@ name|atomic_fetchadd_long
 value|atomic_add_long
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_64
+value|atomic_add_64
+end_define
+
 begin_undef
 undef|#
 directive|undef

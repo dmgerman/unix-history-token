@@ -545,6 +545,11 @@ name|t_outq
 argument_list|)
 operator|>
 literal|0
+operator|||
+name|ttydevsw_busy
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 block|{
 name|ttydevsw_outwakeup
@@ -568,6 +573,12 @@ condition|(
 name|bytesused
 operator|==
 literal|0
+operator|&&
+operator|!
+name|ttydevsw_busy
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -828,7 +839,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* Destroy associated buffers already. */
+comment|/* Free i/o queues now since they might be large. */
 name|ttyinq_free
 argument_list|(
 operator|&
@@ -4102,6 +4113,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|bool
+name|ttydevsw_defbusy
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * TTY allocation and deallocation. TTY devices can be deallocated when  * the driver doesn't use it anymore, when the TTY isn't a session's  * controlling TTY and when the device node isn't opened through devfs.  */
 end_comment
@@ -4224,6 +4255,11 @@ expr_stmt|;
 name|PATCH_FUNC
 argument_list|(
 name|free
+argument_list|)
+expr_stmt|;
+name|PATCH_FUNC
+argument_list|(
+name|busy
 argument_list|)
 expr_stmt|;
 undef|#
@@ -4415,31 +4451,21 @@ name|tp
 init|=
 name|arg
 decl_stmt|;
-comment|/* Make sure we haven't leaked buffers. */
-name|MPASS
-argument_list|(
-name|ttyinq_getsize
+comment|/* 	 * ttyydev_leave() usually frees the i/o queues earlier, but it is 	 * not always called between queue allocation and here.  The queues 	 * may be allocated by ioctls on a pty control device without the 	 * corresponding pty slave device ever being open, or after it is 	 * closed. 	 */
+name|ttyinq_free
 argument_list|(
 operator|&
 name|tp
 operator|->
 name|t_inq
 argument_list|)
-operator|==
-literal|0
-argument_list|)
 expr_stmt|;
-name|MPASS
-argument_list|(
-name|ttyoutq_getsize
+name|ttyoutq_free
 argument_list|(
 operator|&
 name|tp
 operator|->
 name|t_outq
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|seldrain

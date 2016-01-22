@@ -3828,6 +3828,22 @@ name|B_TRUE
 else|:
 name|B_FALSE
 expr_stmt|;
+comment|/* 	 * Check if firmware supports the extended MC_CMD_SET_MAC, which allows 	 * specifying which parameters to configure. 	 */
+name|encp
+operator|->
+name|enc_enhanced_set_mac_supported
+operator|=
+name|CAP_FLAG
+argument_list|(
+name|flags
+argument_list|,
+name|SET_MAC_ENHANCED
+argument_list|)
+condition|?
+name|B_TRUE
+else|:
+name|B_FALSE
+expr_stmt|;
 undef|#
 directive|undef
 name|CAP_FLAG

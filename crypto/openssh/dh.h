@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.h,v 1.11 2013/10/08 11:42:13 dtucker Exp $ */
+comment|/* $OpenBSD: dh.h,v 1.13 2015/05/27 23:39:18 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -103,7 +103,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|DH
+modifier|*
+name|dh_new_group_fallback
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|dh_gen_key
 parameter_list|(
 name|DH
@@ -128,7 +138,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u_int
 name|dh_estimate
 parameter_list|(
 name|int

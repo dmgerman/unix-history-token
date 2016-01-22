@@ -137,7 +137,10 @@ for|for
 control|(
 name|obj
 operator|=
+name|globallist_curr
+argument_list|(
 name|obj0
+argument_list|)
 init|;
 name|obj
 operator|!=
@@ -145,9 +148,10 @@ name|NULL
 condition|;
 name|obj
 operator|=
+name|globallist_next
+argument_list|(
 name|obj
-operator|->
-name|next
+argument_list|)
 control|)
 block|{
 name|dump_obj_relocations

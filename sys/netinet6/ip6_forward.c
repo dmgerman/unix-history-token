@@ -1052,6 +1052,12 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|rt
+operator|=
+name|rin6
+operator|.
+name|ro_rt
+expr_stmt|;
 if|if
 condition|(
 name|rin6
@@ -1106,12 +1112,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|rt
-operator|=
-name|rin6
-operator|.
-name|ro_rt
-expr_stmt|;
 comment|/* 	 * Source scope check: if a packet can't be delivered to its 	 * destination for the reason that the destination is beyond the scope 	 * of the source address, discard the packet and return an icmp6 	 * destination unreachable error with Code 2 (beyond scope of source 	 * address).  We use a local copy of ip6_src, since in6_setscope() 	 * will possibly modify its first argument. 	 * [draft-ietf-ipngwg-icmp-v3-04.txt, Section 3.1] 	 */
 name|src_in6
 operator|=
@@ -1667,10 +1667,17 @@ operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
 else|else
+block|{
+name|RTFREE
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* Redo the routing table lookup. */
+block|}
 block|}
 comment|/* See if local, if yes, send it to netisr. */
 if|if
@@ -1840,6 +1847,11 @@ argument_list|(
 name|m
 argument_list|,
 name|fwd_tag
+argument_list|)
+expr_stmt|;
+name|RTFREE
+argument_list|(
+name|rt
 argument_list|)
 expr_stmt|;
 goto|goto

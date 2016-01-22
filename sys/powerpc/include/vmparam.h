@@ -492,7 +492,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc__
+name|__powerpc64__
 end_ifdef
 
 begin_define

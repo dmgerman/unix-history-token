@@ -37,7 +37,8 @@ begin_function
 name|int
 name|make_mac
 parameter_list|(
-name|char
+specifier|const
+name|void
 modifier|*
 name|pkt_data
 parameter_list|,
@@ -47,12 +48,13 @@ parameter_list|,
 name|int
 name|mac_size
 parameter_list|,
+specifier|const
 name|struct
 name|key
 modifier|*
 name|cmp_key
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|digest
 parameter_list|)
@@ -121,6 +123,7 @@ operator|&
 name|ctx
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -141,10 +144,6 @@ argument_list|(
 operator|&
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|pkt_data
 argument_list|,
 operator|(
@@ -158,10 +157,6 @@ argument_list|(
 operator|&
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|digest
 argument_list|,
 operator|&
@@ -178,14 +173,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generates a md5 digest of the key specified in keyid concatinated with the   * ntp packet (exluding the MAC) and compares this digest to the digest in  * the packet's MAC. If they're equal this function returns 1 (packet is   * authentic) or else 0 (not authentic).  */
+comment|/* Generates a md5 digest of the key specified in keyid concatenated with the   * ntp packet (exluding the MAC) and compares this digest to the digest in  * the packet's MAC. If they're equal this function returns 1 (packet is   * authentic) or else 0 (not authentic).  */
 end_comment
 
 begin_function
 name|int
 name|auth_md5
 parameter_list|(
-name|char
+specifier|const
+name|void
 modifier|*
 name|pkt_data
 parameter_list|,
@@ -195,6 +191,7 @@ parameter_list|,
 name|int
 name|mac_size
 parameter_list|,
+specifier|const
 name|struct
 name|key
 modifier|*
@@ -213,6 +210,11 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+specifier|const
+name|u_char
+modifier|*
+name|pkt_ptr
+decl_stmt|;
 if|if
 condition|(
 name|mac_size
@@ -228,11 +230,15 @@ condition|)
 return|return
 literal|0
 return|;
+name|pkt_ptr
+operator|=
+name|pkt_data
+expr_stmt|;
 name|hash_len
 operator|=
 name|make_mac
 argument_list|(
-name|pkt_data
+name|pkt_ptr
 argument_list|,
 name|pkt_size
 argument_list|,
@@ -263,7 +269,7 @@ name|memcmp
 argument_list|(
 name|digest
 argument_list|,
-name|pkt_data
+name|pkt_ptr
 operator|+
 name|pkt_size
 operator|+

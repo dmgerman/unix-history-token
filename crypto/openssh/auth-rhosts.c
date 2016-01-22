@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rhosts.c,v 1.44 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: auth-rhosts.c,v 1.46 2014/12/23 22:42:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -136,12 +142,6 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_comment
@@ -201,10 +201,14 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+define|#
+directive|define
+name|RBUFLN
+value|1024
 name|char
 name|buf
 index|[
-literal|1024
+name|RBUFLN
 index|]
 decl_stmt|;
 comment|/* Must not be larger than host, user, dummy below. */
@@ -334,23 +338,24 @@ name|f
 argument_list|)
 condition|)
 block|{
-comment|/* All three must be at least as big as buf to avoid overflows. */
+comment|/* All three must have length>= buf to avoid overflows. */
 name|char
 name|hostbuf
 index|[
-literal|1024
+name|RBUFLN
 index|]
 decl_stmt|,
 name|userbuf
 index|[
-literal|1024
+name|RBUFLN
 index|]
 decl_stmt|,
 name|dummy
 index|[
-literal|1024
+name|RBUFLN
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|host
 decl_stmt|,
@@ -574,7 +579,8 @@ block|{
 comment|/* We come here if either was '+' or '-'. */
 name|auth_debug_add
 argument_list|(
-literal|"Ignoring wild host/user names in %.100s."
+literal|"Ignoring wild host/user names "
+literal|"in %.100s."
 argument_list|,
 name|filename
 argument_list|)
@@ -855,7 +861,7 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Quick check: if the user has no .shosts or .rhosts files, return 	 * failure immediately without doing costly lookups from name 	 * servers. 	 */
+comment|/* 	 * Quick check: if the user has no .shosts or .rhosts files and 	 * no system hosts.equiv/shosts.equiv files exist then return 	 * failure immediately without doing costly lookups from name 	 * servers. 	 */
 for|for
 control|(
 name|rhosts_file_index
@@ -909,7 +915,7 @@ comment|/* Switch back to privileged uid. */
 name|restore_uid
 argument_list|()
 expr_stmt|;
-comment|/* Deny if The user has no .shosts or .rhosts file and there are no system-wide files. */
+comment|/* 	 * Deny if The user has no .shosts or .rhosts file and there 	 * are no system-wide files. 	 */
 if|if
 condition|(
 operator|!
@@ -938,18 +944,35 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|debug3
+argument_list|(
+literal|"%s: no hosts access files exist"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* If not logging in as superuser, try /etc/hosts.equiv and shosts.equiv. */
+block|}
+comment|/* 	 * If not logging in as superuser, try /etc/hosts.equiv and 	 * shosts.equiv. 	 */
 if|if
 condition|(
 name|pw
 operator|->
 name|pw_uid
-operator|!=
+operator|==
 literal|0
 condition|)
+name|debug3
+argument_list|(
+literal|"%s: root user, ignoring system hosts files"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 if|if
 condition|(
@@ -971,7 +994,8 @@ condition|)
 block|{
 name|auth_debug_add
 argument_list|(
-literal|"Accepted for %.100s [%.100s] by /etc/hosts.equiv."
+literal|"Accepted for %.100s [%.100s] by "
+literal|"/etc/hosts.equiv."
 argument_list|,
 name|hostname
 argument_list|,
@@ -1002,7 +1026,8 @@ condition|)
 block|{
 name|auth_debug_add
 argument_list|(
-literal|"Accepted for %.100s [%.100s] by %.100s."
+literal|"Accepted for %.100s [%.100s] by "
+literal|"%.100s."
 argument_list|,
 name|hostname
 argument_list|,
@@ -1234,7 +1259,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Check if we have been configured to ignore .rhosts and .shosts files. */
+comment|/* 		 * Check if we have been configured to ignore .rhosts 		 * and .shosts files. 		 */
 if|if
 condition|(
 name|options
@@ -1244,7 +1269,8 @@ condition|)
 block|{
 name|auth_debug_add
 argument_list|(
-literal|"Server has been configured to ignore %.100s."
+literal|"Server has been configured to "
+literal|"ignore %.100s."
 argument_list|,
 name|rhosts_files
 index|[
@@ -1289,7 +1315,8 @@ argument_list|()
 expr_stmt|;
 name|auth_debug_add
 argument_list|(
-literal|"Accepted host %s ip %s client_user %s server_user %s"
+literal|"Accepted host %s ip %s client_user "
+literal|"%s server_user %s"
 argument_list|,
 name|hostname
 argument_list|,

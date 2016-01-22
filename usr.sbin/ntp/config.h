@@ -592,12 +592,9 @@ begin_comment
 comment|/* Enable debugging code? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
+begin_comment
+comment|/* #undef DEBUG */
+end_comment
 
 begin_comment
 comment|/* Enable processing time debugging? */
@@ -4612,7 +4609,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ntp 4.2.8p5"
+value|"ntp 4.2.8p6"
 end_define
 
 begin_comment
@@ -4645,7 +4642,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2.8p5"
+value|"4.2.8p6"
 end_define
 
 begin_comment
@@ -5378,7 +5375,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2.8p5"
+value|"4.2.8p6"
 end_define
 
 begin_comment
@@ -6037,14 +6034,14 @@ begin_define
 define|#
 directive|define
 name|MKREPRO_DATE
-value|"Jan 8 2016"
+value|"Jan 21 2016"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MKREPRO_TIME
-value|"12:37:48"
+value|"01:03:28"
 end_define
 
 end_unit

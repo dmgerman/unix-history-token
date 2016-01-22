@@ -848,7 +848,7 @@ literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-CHPpx] [-b color] [-c appearance] [-f [[size] file]]"
 argument_list|,
-literal|"                  [-g geometry] [-h size] [-i adapter | mode]"
+literal|"                  [-g geometry] [-h size] [-i active | adapter | mode]"
 argument_list|,
 literal|"                  [-M char] [-m on | off] [-r foreground background]"
 argument_list|,
@@ -4838,6 +4838,30 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Show active VTY, ie current console number.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|show_active_info
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|cur_info
+operator|.
+name|active_vty
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Show graphics adapter information.  */
 end_comment
 
@@ -5428,6 +5452,22 @@ name|strcmp
 argument_list|(
 name|arg
 argument_list|,
+literal|"active"
+argument_list|)
+condition|)
+block|{
+name|show_active_info
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
 literal|"adapter"
 argument_list|)
 condition|)
@@ -5461,7 +5501,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"argument to -i must be either adapter or mode"
+literal|"argument to -i must be active, adapter, or mode"
 argument_list|)
 expr_stmt|;
 block|}

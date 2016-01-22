@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.11 2013/11/13 13:48:20 markus Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.21 2015/07/18 08:02:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"key.h"
+file|"sshkey.h"
 end_include
 
 begin_include
@@ -1055,6 +1055,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|pin
+init|=
+name|NULL
 decl_stmt|,
 name|prompt
 index|[
@@ -1192,7 +1194,21 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"need pin"
+literal|"need pin entry%s"
+argument_list|,
+operator|(
+name|si
+operator|->
+name|token
+operator|.
+name|flags
+operator|&
+name|CKF_PROTECTED_AUTHENTICATION_PATH
+operator|)
+condition|?
+literal|" on reader keypad"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -1202,6 +1218,23 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|si
+operator|->
+name|token
+operator|.
+name|flags
+operator|&
+name|CKF_PROTECTED_AUTHENTICATION_PATH
+condition|)
+name|verbose
+argument_list|(
+literal|"Deferring PIN entry to reader keypad."
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|snprintf
 argument_list|(
 name|prompt
@@ -1242,9 +1275,7 @@ literal|1
 operator|)
 return|;
 comment|/* bail out */
-if|if
-condition|(
-operator|(
+block|}
 name|rv
 operator|=
 name|f
@@ -1263,21 +1294,54 @@ operator|*
 operator|)
 name|pin
 argument_list|,
+operator|(
+name|pin
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|strlen
+argument_list|(
+name|pin
+argument_list|)
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pin
+operator|!=
+name|NULL
+condition|)
+block|{
+name|explicit_bzero
+argument_list|(
+name|pin
+argument_list|,
 name|strlen
 argument_list|(
 name|pin
 argument_list|)
 argument_list|)
-operator|)
-operator|!=
-name|CKR_OK
-condition|)
-block|{
+expr_stmt|;
 name|free
 argument_list|(
 name|pin
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|rv
+operator|!=
+name|CKR_OK
+operator|&&
+name|rv
+operator|!=
+name|CKR_USER_ALREADY_LOGGED_IN
+condition|)
+block|{
 name|error
 argument_list|(
 literal|"C_Login failed: %lu"
@@ -1292,11 +1356,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|free
-argument_list|(
-name|pin
-argument_list|)
-expr_stmt|;
 name|si
 operator|->
 name|logged_in
@@ -1892,9 +1951,6 @@ operator|&&
 name|pin
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|rv
 operator|=
 name|f
@@ -1916,9 +1972,16 @@ argument_list|(
 name|pin
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
 operator|!=
 name|CKR_OK
+operator|&&
+name|rv
+operator|!=
+name|CKR_USER_ALREADY_LOGGED_IN
 condition|)
 block|{
 name|error
@@ -2011,7 +2074,8 @@ index|[
 literal|3
 index|]
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2051,7 +2115,8 @@ parameter_list|,
 name|CK_ULONG
 name|slotidx
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2241,7 +2306,8 @@ specifier|static
 name|int
 name|pkcs11_key_included
 parameter_list|(
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2251,7 +2317,8 @@ name|int
 modifier|*
 name|nkeys
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
@@ -2275,7 +2342,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|key_equal
+name|sshkey_equal
 argument_list|(
 name|key
 argument_list|,
@@ -2324,7 +2391,8 @@ index|[
 literal|3
 index|]
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -2335,7 +2403,8 @@ modifier|*
 name|nkeys
 parameter_list|)
 block|{
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 decl_stmt|;
@@ -2526,18 +2595,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* check that none of the attributes are zero length */
+comment|/* 		 * Allow CKA_ID (always first attribute) to be empty, but 		 * ensure that none of the others are zero length. 		 * XXX assumes CKA_ID is always first. 		 */
 if|if
 condition|(
-name|attribs
-index|[
-literal|0
-index|]
-operator|.
-name|ulValueLen
-operator|==
-literal|0
-operator|||
 name|attribs
 index|[
 literal|1
@@ -2573,6 +2633,19 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|attribs
+index|[
+name|i
+index|]
+operator|.
+name|ulValueLen
+operator|>
+literal|0
+condition|)
+block|{
 name|attribs
 index|[
 name|i
@@ -2590,6 +2663,8 @@ operator|.
 name|ulValueLen
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|/* 		 * retrieve ID, modulus and public exponent of RSA key, 		 * or ID, subject and value for certificates. 		 */
 name|rsa
 operator|=
@@ -2865,7 +2940,7 @@ condition|)
 block|{
 name|key
 operator|=
-name|key_new
+name|sshkey_new
 argument_list|(
 name|KEY_UNSPEC
 argument_list|)
@@ -2886,7 +2961,7 @@ name|key
 operator|->
 name|flags
 operator||=
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 expr_stmt|;
 if|if
 condition|(
@@ -2900,7 +2975,7 @@ name|key
 argument_list|)
 condition|)
 block|{
-name|key_free
+name|sshkey_free
 argument_list|(
 name|key
 argument_list|)
@@ -2912,7 +2987,7 @@ comment|/* expand key array and add key */
 operator|*
 name|keysp
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 name|keysp
@@ -2924,7 +2999,8 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Key
+expr|struct
+name|sshkey
 operator|*
 argument_list|)
 argument_list|)
@@ -3040,7 +3116,8 @@ name|char
 modifier|*
 name|pin
 parameter_list|,
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 modifier|*
@@ -3577,6 +3654,34 @@ argument_list|(
 literal|"C_GetTokenInfo failed: %lu"
 argument_list|,
 name|rv
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|token
+operator|->
+name|flags
+operator|&
+name|CKF_TOKEN_INITIALIZED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"%s: ignoring uninitialised token in slot %lu"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|i
 argument_list|)
 expr_stmt|;
 continue|continue;

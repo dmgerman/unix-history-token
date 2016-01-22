@@ -19929,7 +19929,7 @@ argument_list|,
 literal|"dump of the transmit queue"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -19955,7 +19955,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -19981,7 +19981,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_U64
 argument_list|(
 name|ctx
 argument_list|,

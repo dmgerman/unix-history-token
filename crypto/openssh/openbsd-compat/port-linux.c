@@ -1187,7 +1187,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|verbose
+name|debug
 argument_list|(
 literal|"Set %s from %d to %d"
 argument_list|,
@@ -1286,7 +1286,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|verbose
+name|debug
 argument_list|(
 literal|"Set %s to %d"
 argument_list|,

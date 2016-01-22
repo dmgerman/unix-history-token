@@ -170,18 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -200,12 +188,6 @@ end_define
 begin_comment
 comment|/* for logging */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/cc.h>
-end_include
 
 begin_include
 include|#
@@ -229,12 +211,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -302,7 +278,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/nd6.h>
+file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -345,6 +321,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_syncache.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_cc.h>
 end_include
 
 begin_ifdef

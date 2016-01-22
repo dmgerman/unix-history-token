@@ -2803,92 +2803,103 @@ end_define
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F20
+name|__JB_SIGMASK_REMAINDER
 value|14
 end_define
+
+begin_comment
+comment|/* sigmask_t is 128-bits */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F21
+name|_JB_FPREG_F20
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F22
+name|_JB_FPREG_F21
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F23
+name|_JB_FPREG_F22
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F24
+name|_JB_FPREG_F23
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F25
+name|_JB_FPREG_F24
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F26
+name|_JB_FPREG_F25
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F27
+name|_JB_FPREG_F26
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F28
+name|_JB_FPREG_F27
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F29
+name|_JB_FPREG_F28
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F30
+name|_JB_FPREG_F29
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_F31
+name|_JB_FPREG_F30
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|_JB_FPREG_FCSR
+name|_JB_FPREG_F31
 value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|_JB_FPREG_FCSR
+value|27
 end_define
 
 begin_comment

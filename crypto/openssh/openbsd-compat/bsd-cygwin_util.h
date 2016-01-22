@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cygwin_util.h,v 1.17 2014/01/18 10:04:00 dtucker Exp $ */
+comment|/* $Id: bsd-cygwin_util.h,v 1.18 2014/05/27 04:34:43 djm Exp $ */
 end_comment
 
 begin_comment
@@ -50,6 +50,20 @@ name|INVALID_HANDLE_VALUE
 value|((HANDLE) -1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNLEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLEN
+value|256
+end_define
+
 begin_comment
 comment|/* Cygwin functions for which declarations are only available when including    windows headers, so we have to define them here explicitely. */
 end_comment
@@ -93,6 +107,22 @@ include|#
 directive|include
 file|<io.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|CYGWIN_SSH_PRIVSEP_USER
+value|(cygwin_ssh_privsep_user())
+end_define
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|cygwin_ssh_privsep_user
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
