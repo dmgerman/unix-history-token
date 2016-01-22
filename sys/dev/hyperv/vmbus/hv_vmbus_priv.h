@@ -110,6 +110,25 @@ value|(256 / sizeof(uint32_t))
 end_define
 
 begin_comment
+comment|/**  * max channel count<== event_flags_dword_count * bit_of_dword  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_CHANNEL_DWORD_LEN
+value|(32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_CHANNEL_MAX_COUNT
+define|\
+value|((HV_EVENT_FLAGS_DWORD_COUNT) * HV_CHANNEL_DWORD_LEN)
+end_define
+
+begin_comment
 comment|/*  * MessageId: HV_STATUS_INSUFFICIENT_BUFFERS  * MessageText:  *    You did not supply enough message buffers to send a message.  */
 end_comment
 
@@ -807,6 +826,12 @@ expr_stmt|;
 name|struct
 name|mtx
 name|channel_lock
+decl_stmt|;
+comment|/** 	 * channel table for fast lookup through id. 	 */
+name|hv_vmbus_channel
+modifier|*
+modifier|*
+name|channels
 decl_stmt|;
 name|hv_vmbus_handle
 name|work_queue
@@ -1997,17 +2022,6 @@ name|struct
 name|hv_device
 modifier|*
 name|child_dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|hv_vmbus_channel
-modifier|*
-name|hv_vmbus_get_channel_from_rel_id
-parameter_list|(
-name|uint32_t
-name|rel_id
 parameter_list|)
 function_decl|;
 end_function_decl
