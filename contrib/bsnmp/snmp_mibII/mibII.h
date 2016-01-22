@@ -157,17 +157,12 @@ begin_comment
 comment|/* maximum size of the interface alias */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_int
+begin_define
+define|#
+directive|define
 name|MIBIF_ALIAS_SIZE
-init|=
-literal|64
-operator|+
-literal|1
-decl_stmt|;
-end_decl_stmt
+value|(64 + 1)
+end_define
 
 begin_comment
 comment|/*  * Interface list and flags.  */
