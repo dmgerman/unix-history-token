@@ -505,6 +505,25 @@ modifier|*
 name|ccv
 parameter_list|)
 function_decl|;
+comment|/* Called for {get|set}sockopt() on a TCP socket with TCP_CCALGOOPT. */
+name|int
+function_decl|(
+modifier|*
+name|ctl_output
+function_decl|)
+parameter_list|(
+name|struct
+name|cc_var
+modifier|*
+parameter_list|,
+name|struct
+name|sockopt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|cc_algo
