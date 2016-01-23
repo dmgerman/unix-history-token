@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2012-2016 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -121,28 +121,28 @@ begin_define
 define|#
 directive|define
 name|HDSPE_FREQ_0
-value|(1<<6)
+value|(1<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPE_FREQ_1
-value|(1<<7)
+value|(1<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPE_FREQ_DOUBLE
-value|(1<<8)
+value|(1<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPE_FREQ_QUAD
-value|(1<<31)
+value|(1<< 31)
 end_define
 
 begin_define
@@ -209,21 +209,21 @@ begin_define
 define|#
 directive|define
 name|HDSPE_LAT_0
-value|(1<<1)
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPE_LAT_1
-value|(1<<2)
+value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPE_LAT_2
-value|(1<<3)
+value|(1<< 3)
 end_define
 
 begin_define
@@ -258,6 +258,150 @@ value|(((x)<<1)& HDSPE_LAT_MASK)
 end_define
 
 begin_comment
+comment|/* Gain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDSP_ADGain0
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_ADGain1
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_DAGain0
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_DAGain1
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_PhoneGain0
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_PhoneGain1
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_ADGainMask
+value|(HDSP_ADGain0 | HDSP_ADGain1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_ADGainMinus10dBV
+value|(HDSP_ADGainMask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_ADGainPlus4dBu
+value|(HDSP_ADGain0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_ADGainLowGain
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_DAGainMask
+value|(HDSP_DAGain0 | HDSP_DAGain1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_DAGainHighGain
+value|(HDSP_DAGainMask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_DAGainPlus4dBu
+value|(HDSP_DAGain0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_DAGainMinus10dBV
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_PhoneGainMask
+value|(HDSP_PhoneGain0|HDSP_PhoneGain1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_PhoneGain0dB
+value|HDSP_PhoneGainMask
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_PhoneGainMinus6dB
+value|(HDSP_PhoneGain0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSP_PhoneGainMinus12dB
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSPM_statusRegister
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDSPM_statusRegister2
+value|192
+end_define
+
+begin_comment
 comment|/* Settings */
 end_comment
 
@@ -286,14 +430,14 @@ begin_define
 define|#
 directive|define
 name|HDSPE_ENABLE
-value|(1<<0)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPM_CLOCK_MODE_MASTER
-value|(1<<4)
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -304,14 +448,14 @@ begin_define
 define|#
 directive|define
 name|HDSPE_AUDIO_IRQ_PENDING
-value|(1<<0)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDSPE_AUDIO_INT_ENABLE
-value|(1<<5)
+value|(1<< 5)
 end_define
 
 begin_define
