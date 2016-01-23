@@ -91,6 +91,7 @@ name|mtx
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|struct
 name|umutex
 name|default_mtx
@@ -116,6 +117,7 @@ name|rwl
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|struct
 name|urwlock
 name|default_rwl
