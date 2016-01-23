@@ -2172,14 +2172,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_ARCH_GET_GS
+name|LINUX_ARCH_GET_FS
 value|0x1003
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_ARCH_GET_FS
+name|LINUX_ARCH_GET_GS
 value|0x1004
 end_define
 
