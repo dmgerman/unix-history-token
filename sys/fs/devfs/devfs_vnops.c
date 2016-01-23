@@ -568,7 +568,8 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-name|cdevpriv_dtr_t
+name|d_priv_dtor_t
+modifier|*
 name|priv_dtr
 parameter_list|)
 block|{
