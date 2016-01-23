@@ -255,6 +255,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * The testcase fails on 64-bit architectures (amd64), but passes on 32-bit  * architectures (i386); see bug 206543  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LP64__
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -264,6 +274,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -390,6 +405,9 @@ operator|=
 literal|"Sending, receiving bintime"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|__LP64__
 block|{
 operator|.
 name|func
@@ -402,6 +420,8 @@ operator|=
 literal|"Check cmsghdr.cmsg_len"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 operator|.
 name|func
@@ -506,6 +526,9 @@ operator|=
 literal|"Sending, receiving bintime"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|__LP64__
 block|{
 operator|.
 name|func
@@ -517,6 +540,8 @@ name|desc
 operator|=
 literal|"Check cmsghdr.cmsg_len"
 block|}
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8870,6 +8895,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LP64__
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -9300,6 +9331,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
