@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -141,6 +147,9 @@ name|fileid
 parameter_list|,
 name|int
 name|verbose
+parameter_list|,
+name|int
+name|humanized
 parameter_list|)
 block|{
 name|struct
@@ -149,6 +158,12 @@ name|stat
 decl_stmt|;
 name|int
 name|modid
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|5
+index|]
 decl_stmt|;
 name|stat
 operator|.
@@ -172,6 +187,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|err
 argument_list|(
 literal|1
@@ -181,7 +197,62 @@ argument_list|,
 name|fileid
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+if|if
+condition|(
+name|humanized
+condition|)
+block|{
+name|humanize_number
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|stat
+operator|.
+name|size
+argument_list|,
+literal|""
+argument_list|,
+name|HN_AUTOSCALE
+argument_list|,
+name|HN_DECIMAL
+operator||
+name|HN_NOSPACE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%2d %4d %p %5s %s"
+argument_list|,
+name|stat
+operator|.
+name|id
+argument_list|,
+name|stat
+operator|.
+name|refs
+argument_list|,
+name|stat
+operator|.
+name|address
+argument_list|,
+name|buf
+argument_list|,
+name|stat
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"%2d %4d %p %-8zx %s"
@@ -207,6 +278,8 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|verbose
@@ -278,7 +351,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldstat [-q] [-v] [-i id] [-n filename]\n"
+literal|"usage: kldstat [-h] [-q] [-v] [-i id] [-n filename]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -311,6 +384,11 @@ parameter_list|)
 block|{
 name|int
 name|c
+decl_stmt|;
+name|int
+name|humanized
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|verbose
@@ -354,7 +432,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:m:n:qv"
+literal|"hi:m:n:qv"
 argument_list|)
 operator|)
 operator|!=
@@ -366,6 +444,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'h'
+case|:
+name|humanized
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'i'
 case|:
@@ -609,6 +695,22 @@ literal|0
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|humanized
+condition|)
+name|printf
+argument_list|(
+literal|"Id Refs Address%*c  Size Name\n"
+argument_list|,
+name|POINTER_WIDTH
+operator|-
+literal|7
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Id Refs Address%*c Size     Name\n"
@@ -631,6 +733,8 @@ argument_list|(
 name|fileid
 argument_list|,
 name|verbose
+argument_list|,
+name|humanized
 argument_list|)
 expr_stmt|;
 else|else
@@ -659,6 +763,8 @@ argument_list|(
 name|fileid
 argument_list|,
 name|verbose
+argument_list|,
+name|humanized
 argument_list|)
 expr_stmt|;
 return|return
