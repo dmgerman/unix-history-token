@@ -246,6 +246,12 @@ parameter_list|,
 name|int
 modifier|*
 name|fdp
+parameter_list|,
+name|int
+name|port1
+parameter_list|,
+name|int
+name|port2
 parameter_list|)
 block|{
 name|struct
@@ -300,7 +306,7 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|PORT1
+name|port1
 argument_list|)
 expr_stmt|;
 name|sock1
@@ -375,7 +381,7 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|PORT2
+name|port2
 argument_list|)
 expr_stmt|;
 if|if
@@ -490,7 +496,7 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|PORT1
+name|port1
 argument_list|)
 expr_stmt|;
 if|if
@@ -563,6 +569,9 @@ parameter_list|,
 name|int
 modifier|*
 name|fdp
+parameter_list|,
+name|int
+name|port
 parameter_list|)
 block|{
 name|fd_set
@@ -631,7 +640,7 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|PORT1
+name|port
 argument_list|)
 expr_stmt|;
 name|sock1
@@ -1341,6 +1350,10 @@ argument_list|(
 literal|"udp_0send"
 argument_list|,
 name|fd
+argument_list|,
+name|PORT1
+argument_list|,
+name|PORT2
 argument_list|)
 expr_stmt|;
 name|try_0send
@@ -1363,6 +1376,14 @@ argument_list|(
 literal|"udp_0write"
 argument_list|,
 name|fd
+argument_list|,
+name|PORT1
+operator|+
+literal|10
+argument_list|,
+name|PORT2
+operator|+
+literal|10
 argument_list|)
 expr_stmt|;
 name|try_0write
@@ -1385,6 +1406,8 @@ argument_list|(
 literal|"tcp_0send"
 argument_list|,
 name|fd
+argument_list|,
+name|PORT1
 argument_list|)
 expr_stmt|;
 name|try_0send
@@ -1407,6 +1430,10 @@ argument_list|(
 literal|"tcp_0write"
 argument_list|,
 name|fd
+argument_list|,
+name|PORT1
+operator|+
+literal|10
 argument_list|)
 expr_stmt|;
 name|try_0write
