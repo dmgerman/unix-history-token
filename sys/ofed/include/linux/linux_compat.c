@@ -2335,7 +2335,7 @@ name|vma
 operator|.
 name|vm_page_prot
 operator|=
-literal|0
+name|VM_MEMATTR_DEFAULT
 expr_stmt|;
 if|if
 condition|(
