@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -3463,11 +3469,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|tidhash_remove
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Allow Linux emulation layer to do some work 			 * before thread suicide. 			 */
 if|if
 condition|(
@@ -3493,33 +3494,15 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|tdsigcleanup
+name|kern_thr_exit
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|umtx_thread_exit
+name|panic
 argument_list|(
-name|td
+literal|"stopped thread did not exit"
 argument_list|)
-expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|thread_stopped
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|thread_exit
-argument_list|()
 expr_stmt|;
 block|}
 name|PROC_SLOCK
