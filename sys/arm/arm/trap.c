@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -991,9 +997,9 @@ block|}
 comment|/* 	 * We need to know whether the page should be mapped as R or R/W.  On 	 * armv6 and later the fault status register indicates whether the 	 * access was a read or write.  Prior to armv6, we know that a 	 * permission fault can only be the result of a write to a read-only 	 * location, so we can deal with those quickly.  Otherwise we need to 	 * disassemble the faulting instruction to determine if it was a write. 	 */
 if|#
 directive|if
-name|ARM_ARCH_6
-operator|||
-name|ARM_ARCH_7A
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|ftype
 operator|=
 operator|(

@@ -4001,14 +4001,9 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|ARM_ARCH_6
-operator|||
-name|ARM_ARCH_7A
-operator|||
-name|defined
-argument_list|(
-name|CPU_MV_PJ4B
-argument_list|)
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|set_curthread
 argument_list|(
 operator|&
