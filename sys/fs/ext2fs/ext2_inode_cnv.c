@@ -871,14 +871,6 @@ name|ip
 operator|->
 name|i_ctime
 expr_stmt|;
-if|if
-condition|(
-name|E2DI_HAS_XTIME
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-block|{
 name|ei
 operator|->
 name|e2di_ctime_extra
@@ -931,7 +923,6 @@ operator|->
 name|i_birthnsec
 argument_list|)
 expr_stmt|;
-block|}
 name|ei
 operator|->
 name|e2di_flags
