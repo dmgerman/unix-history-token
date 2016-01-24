@@ -212,7 +212,6 @@ end_function_decl
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getkey
 parameter_list|(
@@ -584,7 +583,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getchanlist
 parameter_list|(
@@ -654,7 +652,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getchaninfo
 parameter_list|(
@@ -731,7 +728,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getwpaie
 parameter_list|(
@@ -756,6 +752,7 @@ name|ni
 decl_stmt|;
 name|struct
 name|ieee80211req_wpaie2
+modifier|*
 name|wpaie
 decl_stmt|;
 name|int
@@ -772,6 +769,32 @@ condition|)
 return|return
 name|EINVAL
 return|;
+name|wpaie
+operator|=
+name|IEEE80211_MALLOC
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|wpaie
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|IEEE80211_M_NOWAIT
+operator||
+name|IEEE80211_M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wpaie
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|error
 operator|=
 name|copyin
@@ -781,7 +804,7 @@ operator|->
 name|i_data
 argument_list|,
 name|wpaie
-operator|.
+operator|->
 name|wpa_macaddr
 argument_list|,
 name|IEEE80211_ADDR_LEN
@@ -793,9 +816,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|bad
+goto|;
 name|ni
 operator|=
 name|ieee80211_find_vap_node
@@ -810,7 +833,7 @@ argument_list|,
 name|vap
 argument_list|,
 name|wpaie
-operator|.
+operator|->
 name|wpa_macaddr
 argument_list|)
 expr_stmt|;
@@ -820,25 +843,15 @@ name|ni
 operator|==
 name|NULL
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|ENOENT
-return|;
-name|memset
-argument_list|(
-name|wpaie
-operator|.
-name|wpa_ie
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|wpaie
-operator|.
-name|wpa_ie
-argument_list|)
-argument_list|)
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 if|if
 condition|(
 name|ni
@@ -871,7 +884,7 @@ operator|>
 sizeof|sizeof
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|wpa_ie
 argument_list|)
 condition|)
@@ -880,14 +893,14 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|wpa_ie
 argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|wpa_ie
 argument_list|,
 name|ni
@@ -907,22 +920,6 @@ operator|==
 name|IEEE80211_IOC_WPAIE2
 condition|)
 block|{
-name|memset
-argument_list|(
-name|wpaie
-operator|.
-name|rsn_ie
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|wpaie
-operator|.
-name|rsn_ie
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -955,7 +952,7 @@ operator|>
 sizeof|sizeof
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|rsn_ie
 argument_list|)
 condition|)
@@ -964,14 +961,14 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|rsn_ie
 argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|rsn_ie
 argument_list|,
 name|ni
@@ -1043,7 +1040,7 @@ operator|>
 sizeof|sizeof
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|wpa_ie
 argument_list|)
 condition|)
@@ -1052,14 +1049,14 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|wpa_ie
 argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
 name|wpaie
-operator|.
+operator|->
 name|wpa_ie
 argument_list|,
 name|ni
@@ -1100,10 +1097,10 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|copyout
 argument_list|(
-operator|&
 name|wpaie
 argument_list|,
 name|ireq
@@ -1114,13 +1111,24 @@ name|ireq
 operator|->
 name|i_len
 argument_list|)
+expr_stmt|;
+name|bad
+label|:
+name|IEEE80211_FREE
+argument_list|(
+name|wpaie
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getstastats
 parameter_list|(
@@ -1406,7 +1414,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|void
 name|get_scan_result
 parameter_list|(
@@ -1789,7 +1796,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getscanresults
 parameter_list|(
@@ -2109,7 +2115,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|void
 name|get_sta_info
 parameter_list|(
@@ -2746,7 +2751,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|getstainfo_common
 parameter_list|(
@@ -2999,7 +3003,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getstainfo
 parameter_list|(
@@ -3141,7 +3144,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getstatxpow
 parameter_list|(
@@ -3273,7 +3275,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getwmeparam
 parameter_list|(
@@ -3502,7 +3503,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getmaccmd
 parameter_list|(
@@ -3550,7 +3550,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getcurchan
 parameter_list|(
@@ -3844,7 +3843,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getregdomain
 parameter_list|(
@@ -3910,7 +3908,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getroam
 parameter_list|(
@@ -3973,7 +3970,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_gettxparams
 parameter_list|(
@@ -4036,7 +4032,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getdevcaps
 parameter_list|(
@@ -4252,7 +4247,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_getstavlan
 parameter_list|(
@@ -4502,13 +4496,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * When building the kernel with -O2 on the i386 architecture, gcc  * seems to want to inline this function into ieee80211_ioctl()  * (which is the only routine that calls it). When this happens,  * ieee80211_ioctl() ends up consuming an additional 2K of stack  * space. (Exactly why it needs so much is unclear.) The problem  * is that it's possible for ieee80211_ioctl() to invoke other  * routines (including driver init functions) which could then find  * themselves perilously close to exhausting the stack.  *  * To avoid this, we deliberately prevent gcc from inlining this  * routine. Another way to avoid this is to use less agressive  * optimization when compiling this file (i.e. -O instead of -O2)  * but special-casing the compilation of this one module in the  * build system would be awkward.  */
-end_comment
-
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_get80211
 parameter_list|(
@@ -6339,7 +6328,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setkey
 parameter_list|(
@@ -6775,7 +6763,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_delkey
 parameter_list|(
@@ -7465,7 +7452,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|setmlme_common
 parameter_list|(
@@ -8098,7 +8084,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|setmlme_assoc_sta
 parameter_list|(
@@ -8236,7 +8221,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|setmlme_assoc_adhoc
 parameter_list|(
@@ -8265,7 +8249,11 @@ parameter_list|)
 block|{
 name|struct
 name|ieee80211_scan_req
+modifier|*
 name|sr
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -8301,6 +8289,32 @@ literal|0
 condition|)
 return|return
 name|EINVAL
+return|;
+name|sr
+operator|=
+name|IEEE80211_MALLOC
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sr
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|IEEE80211_M_NOWAIT
+operator||
+name|IEEE80211_M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sr
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
 return|;
 comment|/* NB: IEEE80211_IOC_SSID call missing for ap_scan=2. */
 name|memset
@@ -8352,21 +8366,8 @@ name|iv_des_nssid
 operator|=
 literal|1
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
 name|sr
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sr
-operator|.
+operator|->
 name|sr_flags
 operator|=
 name|IEEE80211_IOC_SCAN_ACTIVE
@@ -8374,7 +8375,7 @@ operator||
 name|IEEE80211_IOC_SCAN_ONCE
 expr_stmt|;
 name|sr
-operator|.
+operator|->
 name|sr_duration
 operator|=
 name|IEEE80211_IOC_SCAN_FOREVER
@@ -8382,7 +8383,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 name|sr
-operator|.
+operator|->
 name|sr_ssid
 index|[
 literal|0
@@ -8396,7 +8397,7 @@ name|ssid_len
 argument_list|)
 expr_stmt|;
 name|sr
-operator|.
+operator|->
 name|sr_ssid
 index|[
 literal|0
@@ -8407,26 +8408,35 @@ operator|=
 name|ssid_len
 expr_stmt|;
 name|sr
-operator|.
+operator|->
 name|sr_nssid
 operator|=
 literal|1
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|ieee80211_scanreq
 argument_list|(
 name|vap
 argument_list|,
-operator|&
 name|sr
 argument_list|)
+expr_stmt|;
+name|IEEE80211_FREE
+argument_list|(
+name|sr
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setmlme
 parameter_list|(
@@ -8593,7 +8603,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_macmac
 parameter_list|(
@@ -8736,7 +8745,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setmaccmd
 parameter_list|(
@@ -8903,7 +8911,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setchanlist
 parameter_list|(
@@ -9183,7 +9190,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setstastats
 parameter_list|(
@@ -9302,7 +9308,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setstatxpow
 parameter_list|(
@@ -9417,7 +9422,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setwmeparam
 parameter_list|(
@@ -10514,7 +10518,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setchannel
 parameter_list|(
@@ -10795,7 +10798,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setcurchan
 parameter_list|(
@@ -10931,7 +10933,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setregdomain
 parameter_list|(
@@ -11322,7 +11323,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_settxparams
 parameter_list|(
@@ -11968,7 +11968,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setappie_locked
 parameter_list|(
@@ -12287,7 +12286,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setappie
 parameter_list|(
@@ -12369,7 +12367,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_chanswitch
 parameter_list|(
@@ -13102,7 +13099,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_scanreq
 parameter_list|(
@@ -13119,9 +13115,9 @@ parameter_list|)
 block|{
 name|struct
 name|ieee80211_scan_req
+modifier|*
 name|sr
 decl_stmt|;
-comment|/* XXX off stack? */
 name|int
 name|error
 decl_stmt|;
@@ -13133,11 +13129,38 @@ name|i_len
 operator|!=
 sizeof|sizeof
 argument_list|(
+operator|*
 name|sr
 argument_list|)
 condition|)
 return|return
 name|EINVAL
+return|;
+name|sr
+operator|=
+name|IEEE80211_MALLOC
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sr
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|IEEE80211_M_NOWAIT
+operator||
+name|IEEE80211_M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sr
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
 return|;
 name|error
 operator|=
@@ -13147,11 +13170,11 @@ name|ireq
 operator|->
 name|i_data
 argument_list|,
-operator|&
 name|sr
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|sr
 argument_list|)
 argument_list|)
@@ -13162,24 +13185,35 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
+goto|goto
+name|bad
+goto|;
 name|error
-return|;
-return|return
+operator|=
 name|ieee80211_scanreq
 argument_list|(
 name|vap
 argument_list|,
-operator|&
 name|sr
 argument_list|)
+expr_stmt|;
+name|bad
+label|:
+name|IEEE80211_FREE
+argument_list|(
+name|sr
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_setstavlan
 parameter_list|(
@@ -13492,7 +13526,6 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
 name|int
 name|ieee80211_ioctl_set80211
 parameter_list|(
