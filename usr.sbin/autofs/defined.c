@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -157,12 +163,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libutil.h>
 end_include
 
 begin_include
