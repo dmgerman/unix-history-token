@@ -8399,8 +8399,8 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|kern_envp
-operator|=
+name|init_static_kenv
+argument_list|(
 name|MD_FETCH
 argument_list|(
 name|kmdp
@@ -8412,6 +8412,9 @@ operator|*
 argument_list|)
 operator|+
 name|KERNBASE
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
