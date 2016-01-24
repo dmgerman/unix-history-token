@@ -1343,6 +1343,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|compat_kex_proposal
+value|ssh_compat_kex_proposal
+end_define
+
+begin_define
+define|#
+directive|define
 name|compat_pkalg_proposal
 value|ssh_compat_pkalg_proposal
 end_define
