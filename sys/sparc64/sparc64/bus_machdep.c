@@ -1768,7 +1768,7 @@ name|mflags
 operator||=
 name|M_ZERO
 expr_stmt|;
-comment|/* 	 * XXX: 	 * (dmat->dt_alignment< dmat->dt_maxsize) is just a quick hack; the 	 * exact alignment guarantees of malloc need to be nailed down, and 	 * the code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
+comment|/* 	 * XXX: 	 * (dmat->dt_alignment<= dmat->dt_maxsize) is just a quick hack; the 	 * exact alignment guarantees of malloc need to be nailed down, and 	 * the code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
 if|if
 condition|(
 name|dmat
@@ -1780,7 +1780,7 @@ operator|&&
 name|dmat
 operator|->
 name|dt_alignment
-operator|<
+operator|<=
 name|dmat
 operator|->
 name|dt_maxsize
