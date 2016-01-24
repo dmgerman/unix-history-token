@@ -13,14 +13,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -649,38 +641,6 @@ argument_list|,
 name|datafellows
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Check to see if the remote side is OpenSSH and not 			 * HPN.  It is utterly strange to check it from the 			 * version string and expose the option that way. 			 */
-if|if
-condition|(
-name|strstr
-argument_list|(
-name|version
-argument_list|,
-literal|"OpenSSH"
-argument_list|)
-operator|!=
-name|NULL
-operator|&&
-name|strstr
-argument_list|(
-name|version
-argument_list|,
-literal|"hpn"
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|datafellows
-operator||=
-name|SSH_BUG_LARGEWINDOW
-expr_stmt|;
-name|debug
-argument_list|(
-literal|"Remote is not HPN-aware"
-argument_list|)
-expr_stmt|;
-block|}
 return|return;
 block|}
 block|}

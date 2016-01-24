@@ -4,10 +4,6 @@ comment|/* $OpenBSD: servconf.h,v 1.112 2014/01/29 06:18:35 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Definitions for server configuration data and for the functions reading it.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -693,18 +689,6 @@ modifier|*
 name|version_addendum
 decl_stmt|;
 comment|/* Appended to SSH banner */
-name|int
-name|hpn_disabled
-decl_stmt|;
-comment|/* Disable HPN functionality. */
-name|int
-name|hpn_buffer_size
-decl_stmt|;
-comment|/* Set HPN buffer size - default 2MB.*/
-name|int
-name|tcp_rcv_buf_poll
-decl_stmt|;
-comment|/* Poll TCP rcv window in autotuning 					 * kernels. */
 name|u_int
 name|num_auth_methods
 decl_stmt|;
@@ -715,15 +699,6 @@ index|[
 name|MAX_AUTH_METHODS
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-name|int
-name|none_enabled
-decl_stmt|;
-comment|/* Enable NONE cipher switch. */
-endif|#
-directive|endif
 block|}
 name|ServerOptions
 typedef|;

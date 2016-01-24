@@ -1728,21 +1728,13 @@ argument_list|(
 operator|&
 name|server_version_string
 argument_list|,
-literal|"SSH-%d.%d-%.100s%s%s%s%s"
+literal|"SSH-%d.%d-%.100s%s%s%s"
 argument_list|,
 name|major
 argument_list|,
 name|minor
 argument_list|,
 name|SSH_VERSION
-argument_list|,
-name|options
-operator|.
-name|hpn_disabled
-condition|?
-literal|""
-else|:
-name|SSH_VERSION_HPN
 argument_list|,
 operator|*
 name|options
@@ -3971,17 +3963,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s %s, %s\n"
+literal|"%s %s, %s\n"
 argument_list|,
 name|SSH_RELEASE
-argument_list|,
-name|options
-operator|.
-name|hpn_disabled
-condition|?
-literal|""
-else|:
-name|SSH_VERSION_HPN
 argument_list|,
 name|options
 operator|.
@@ -3998,17 +3982,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s, %s\n"
+literal|"%s, %s\n"
 argument_list|,
 name|SSH_RELEASE
-argument_list|,
-name|options
-operator|.
-name|hpn_disabled
-condition|?
-literal|""
-else|:
-name|SSH_VERSION_HPN
 argument_list|,
 name|SSLeay_version
 argument_list|(
@@ -4934,15 +4910,6 @@ argument_list|(
 literal|"Server TCP RWIN socket size: %d"
 argument_list|,
 name|socksize
-argument_list|)
-expr_stmt|;
-name|debug
-argument_list|(
-literal|"HPN Buffer Size: %d"
-argument_list|,
-name|options
-operator|.
-name|hpn_buffer_size
 argument_list|)
 expr_stmt|;
 comment|/* Bind the socket to the desired port. */
@@ -7272,32 +7239,9 @@ expr_stmt|;
 block|}
 name|debug
 argument_list|(
-literal|"sshd version %.100s%.100s%s%.100s, %.100s"
+literal|"sshd version %s, %s"
 argument_list|,
-name|SSH_RELEASE
-argument_list|,
-name|options
-operator|.
-name|hpn_disabled
-condition|?
-literal|""
-else|:
-name|SSH_VERSION_HPN
-argument_list|,
-operator|*
-name|options
-operator|.
-name|version_addendum
-operator|==
-literal|'\0'
-condition|?
-literal|""
-else|:
-literal|" "
-argument_list|,
-name|options
-operator|.
-name|version_addendum
+name|SSH_VERSION
 argument_list|,
 name|SSLeay_version
 argument_list|(
@@ -9296,18 +9240,6 @@ name|get_local_port
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Set HPN options for the child. */
-name|channel_set_hpn
-argument_list|(
-name|options
-operator|.
-name|hpn_disabled
-argument_list|,
-name|options
-operator|.
-name|hpn_buffer_size
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We don't want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don't set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */
 name|signal
 argument_list|(
@@ -10902,39 +10834,6 @@ name|options
 operator|.
 name|ciphers
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-block|}
-elseif|else
-if|if
-condition|(
-name|options
-operator|.
-name|none_enabled
-operator|==
-literal|1
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"WARNING: None cipher enabled"
-argument_list|)
-expr_stmt|;
-name|myproposal
-index|[
-name|PROPOSAL_ENC_ALGS_CTOS
-index|]
-operator|=
-name|myproposal
-index|[
-name|PROPOSAL_ENC_ALGS_STOC
-index|]
-operator|=
-name|KEX_ENCRYPT_INCLUDE_NONE
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|myproposal
 index|[

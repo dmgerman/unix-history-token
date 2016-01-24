@@ -482,43 +482,14 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|ignored_unknown
-decl_stmt|;
-comment|/* Pattern list of unknown tokens to ignore */
-name|char
-modifier|*
 name|version_addendum
 decl_stmt|;
 comment|/* Appended to SSH banner */
-name|int
-name|hpn_disabled
+name|char
+modifier|*
+name|ignored_unknown
 decl_stmt|;
-comment|/* Switch to disable HPN buffer management. */
-name|int
-name|hpn_buffer_size
-decl_stmt|;
-comment|/* User definable size for HPN buffer 					 * window. */
-name|int
-name|tcp_rcv_buf_poll
-decl_stmt|;
-comment|/* Option to poll recv buf every window 					 * transfer. */
-name|int
-name|tcp_rcv_buf
-decl_stmt|;
-comment|/* User switch to set tcp recv buffer. */
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-name|int
-name|none_enabled
-decl_stmt|;
-comment|/* Allow none to be used */
-name|int
-name|none_switch
-decl_stmt|;
-comment|/* Use none cipher */
-endif|#
-directive|endif
+comment|/* Pattern list of unknown tokens to ignore */
 block|}
 name|Options
 typedef|;

@@ -13,14 +13,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -323,36 +315,6 @@ name|Options
 name|options
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|Kex
-modifier|*
-name|xxx_kex
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * tty_flag is set in ssh.c so we can use it here.  If set then prevent  * the switch to the null cipher.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tty_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * SSH2 key exchange  */
@@ -2152,92 +2114,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-comment|/* 	 * If the user explicitly requests to use the none cipher enable it 	 * post authentication and only if the right conditions are met: both 	 * of the NONE switches must be true and there must be no tty allocated. 	 */
-if|if
-condition|(
-name|options
-operator|.
-name|none_switch
-operator|==
-literal|1
-operator|&&
-name|options
-operator|.
-name|none_enabled
-operator|==
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|tty_flag
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"Requesting none cipher re-keying..."
-argument_list|)
-expr_stmt|;
-name|myproposal
-index|[
-name|PROPOSAL_ENC_ALGS_STOC
-index|]
-operator|=
-literal|"none"
-expr_stmt|;
-name|myproposal
-index|[
-name|PROPOSAL_ENC_ALGS_CTOS
-index|]
-operator|=
-literal|"none"
-expr_stmt|;
-name|kex_prop2buf
-argument_list|(
-operator|&
-name|xxx_kex
-operator|->
-name|my
-argument_list|,
-name|myproposal
-argument_list|)
-expr_stmt|;
-name|packet_request_rekeying
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: enabled NONE cipher\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Requested NONE cipher on an interactive session. */
-name|debug
-argument_list|(
-literal|"Cannot switch to NONE cipher with tty "
-literal|"allocated"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"NONE cipher switch disabled given "
-literal|"a TTY is allocated\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
 name|debug
 argument_list|(
 literal|"Authentication succeeded (%s)."

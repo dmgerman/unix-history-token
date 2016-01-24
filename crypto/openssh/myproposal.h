@@ -235,24 +235,6 @@ define|\
 value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"arcfour256,arcfour128," \ 	AESGCM_CIPHER_MODES \ 	"chacha20-poly1305@openssh.com," \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NONE_CIPHER_ENABLED
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KEX_ENCRYPT_INCLUDE_NONE
-value|KEX_DEFAULT_ENCRYPT \ 	",none"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
