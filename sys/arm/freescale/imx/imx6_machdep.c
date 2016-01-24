@@ -287,6 +287,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
+name|uint32_t
+name|IMX6_WDOG_SR_PHYS
+init|=
+literal|0x020bc004
+decl_stmt|;
+name|imx_wdog_init_last_reset
+argument_list|(
+name|IMX6_WDOG_SR_PHYS
+argument_list|)
+expr_stmt|;
 comment|/* Cache the gpio1 node handle for imx6_decode_fdt() workaround code. */
 name|gpio1_node
 operator|=

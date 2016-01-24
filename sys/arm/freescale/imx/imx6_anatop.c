@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/freescale/imx/imx_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/imx/imx6_anatopreg.h>
 end_include
 
@@ -134,25 +140,6 @@ include|#
 directive|include
 file|<arm/freescale/imx/imx6_anatopvar.h>
 end_include
-
-begin_expr_stmt
-specifier|static
-name|SYSCTL_NODE
-argument_list|(
-name|_hw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|imx6
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-name|NULL
-argument_list|,
-literal|"i.MX6 container"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1411,7 +1398,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -1436,7 +1423,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -1464,7 +1451,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -1492,7 +1479,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -1517,7 +1504,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -2383,7 +2370,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -2411,7 +2398,7 @@ name|NULL
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_imx6
+name|_hw_imx
 argument_list|)
 argument_list|,
 name|OID_AUTO

@@ -155,6 +155,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WDOG_RSR_POR
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Due to Power-On Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WDOG_RSR_TOUT
 value|(1<< 1)
 end_define
