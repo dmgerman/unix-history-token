@@ -752,7 +752,13 @@ directive|ifdef
 name|KDB
 name|kdb_trap
 argument_list|(
+operator|(
+name|prefetch
+operator|)
+condition|?
 name|T_BREAKPOINT
+else|:
+name|T_WATCHPOINT
 argument_list|,
 literal|0
 argument_list|,
