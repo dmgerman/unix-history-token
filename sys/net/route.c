@@ -5953,7 +5953,10 @@ name|rnh_matchaddr
 argument_list|(
 name|dst
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
