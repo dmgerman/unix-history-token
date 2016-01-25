@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -420,7 +426,7 @@ begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 expr|struct
-name|radix_node_head
+name|rib_head
 operator|*
 argument_list|,
 name|rt_tables
@@ -498,7 +504,7 @@ name|int
 name|rtrequest1_fib_change
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 parameter_list|,
 name|struct
@@ -558,7 +564,7 @@ modifier|*
 name|rt_unlinkrte
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -606,7 +612,7 @@ modifier|*
 name|rt_mpath_unlink
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -763,7 +769,7 @@ begin_expr_stmt
 specifier|static
 name|__inline
 expr|struct
-name|radix_node_head
+name|rib_head
 operator|*
 operator|*
 name|rt_tables_get_rnh_ptr
@@ -773,7 +779,7 @@ argument_list|,
 argument|int fam
 argument_list|)
 block|{ 	struct
-name|radix_node_head
+name|rib_head
 operator|*
 operator|*
 name|rnh
@@ -821,7 +827,7 @@ name|rnh
 operator|=
 operator|(
 expr|struct
-name|radix_node_head
+name|rib_head
 operator|*
 operator|*
 operator|)
@@ -850,7 +856,7 @@ end_expr_stmt
 
 begin_function
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rt_tables_get_rnh
 parameter_list|(
@@ -1131,7 +1137,7 @@ modifier|*
 name|dom
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 modifier|*
 name|rnh
@@ -1157,7 +1163,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|radix_node_head
+name|rib_head
 operator|*
 argument_list|)
 argument_list|,
@@ -1339,7 +1345,7 @@ modifier|*
 name|dom
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 modifier|*
 name|rnh
@@ -1476,6 +1482,168 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|struct
+name|rib_head
+modifier|*
+name|rt_table_init
+parameter_list|(
+name|int
+name|offset
+parameter_list|)
+block|{
+name|struct
+name|rib_head
+modifier|*
+name|rh
+decl_stmt|;
+name|rh
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rib_head
+argument_list|)
+argument_list|,
+name|M_RTABLE
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+comment|/* TODO: These details should be hidded inside radix.c */
+comment|/* Init masks tree */
+name|rn_inithead_internal
+argument_list|(
+operator|&
+name|rh
+operator|->
+name|head
+argument_list|,
+name|rh
+operator|->
+name|rnh_nodes
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|rn_inithead_internal
+argument_list|(
+operator|&
+name|rh
+operator|->
+name|rmhead
+operator|.
+name|head
+argument_list|,
+name|rh
+operator|->
+name|rmhead
+operator|.
+name|mask_nodes
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|rh
+operator|->
+name|head
+operator|.
+name|rnh_masks
+operator|=
+operator|&
+name|rh
+operator|->
+name|rmhead
+expr_stmt|;
+comment|/* Init locks */
+name|rw_init
+argument_list|(
+operator|&
+name|rh
+operator|->
+name|rib_lock
+argument_list|,
+literal|"rib head lock"
+argument_list|)
+expr_stmt|;
+comment|/* Finally, set base callbacks */
+name|rh
+operator|->
+name|rnh_addaddr
+operator|=
+name|rn_addroute
+expr_stmt|;
+name|rh
+operator|->
+name|rnh_deladdr
+operator|=
+name|rn_delete
+expr_stmt|;
+name|rh
+operator|->
+name|rnh_matchaddr
+operator|=
+name|rn_match
+expr_stmt|;
+name|rh
+operator|->
+name|rnh_lookup
+operator|=
+name|rn_lookup
+expr_stmt|;
+name|rh
+operator|->
+name|rnh_walktree
+operator|=
+name|rn_walktree
+expr_stmt|;
+name|rh
+operator|->
+name|rnh_walktree_from
+operator|=
+name|rn_walktree_from
+expr_stmt|;
+return|return
+operator|(
+name|rh
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rt_table_destroy
+parameter_list|(
+name|struct
+name|rib_head
+modifier|*
+name|rh
+parameter_list|)
+block|{
+comment|/* Assume table is already empty */
+name|rw_destroy
+argument_list|(
+operator|&
+name|rh
+operator|->
+name|rib_lock
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rh
+argument_list|,
+name|M_RTABLE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_ifndef
 ifndef|#
@@ -1709,9 +1877,9 @@ name|fibnum
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
-name|rnh
+name|rh
 decl_stmt|;
 name|struct
 name|radix_node
@@ -1749,7 +1917,7 @@ literal|"rtalloc1_fib: bad fibnum"
 operator|)
 argument_list|)
 expr_stmt|;
-name|rnh
+name|rh
 operator|=
 name|rt_tables_get_rnh
 argument_list|(
@@ -1766,7 +1934,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|rnh
+name|rh
 operator|==
 name|NULL
 condition|)
@@ -1774,20 +1942,23 @@ goto|goto
 name|miss
 goto|;
 comment|/* 	 * Look up the address in the table for that Address Family 	 */
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
-name|rnh
+name|rh
 argument_list|)
 expr_stmt|;
 name|rn
 operator|=
-name|rnh
+name|rh
 operator|->
 name|rnh_matchaddr
 argument_list|(
 name|dst
 argument_list|,
-name|rnh
+operator|&
+name|rh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -1824,9 +1995,9 @@ argument_list|(
 name|newrt
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
-name|rnh
+name|rh
 argument_list|)
 expr_stmt|;
 return|return
@@ -1836,9 +2007,9 @@ operator|)
 return|;
 block|}
 else|else
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
-name|rnh
+name|rh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Either we hit the root or couldn't find any match, 	 * Which basically means 	 * "caint get there frm here" 	 */
@@ -1913,7 +2084,7 @@ name|rt
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -2022,7 +2193,10 @@ operator|*
 operator|)
 name|rt
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are no longer "up" (and ref == 0) 	 * then we can free the resources associated 	 * with the route. 	 */
@@ -2191,7 +2365,7 @@ modifier|*
 name|ifa
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -2561,7 +2735,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -2583,7 +2757,7 @@ argument_list|,
 name|gateway
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3602,7 +3776,7 @@ name|info
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rh
 decl_stmt|;
@@ -3654,7 +3828,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -3673,7 +3847,10 @@ argument_list|,
 name|dst
 argument_list|)
 argument_list|,
+operator|&
 name|rh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -3734,7 +3911,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -3746,7 +3923,7 @@ operator|)
 return|;
 block|}
 block|}
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -3808,7 +3985,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -3873,7 +4050,7 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3882,7 +4059,10 @@ name|rnh
 operator|->
 name|rnh_walktree
 argument_list|(
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 operator|(
 name|walktree_f_t
@@ -3893,7 +4073,7 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3947,7 +4127,7 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3956,7 +4136,10 @@ name|rnh
 operator|->
 name|rnh_walktree
 argument_list|(
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 operator|(
 name|walktree_f_t
@@ -3967,7 +4150,7 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3986,7 +4169,7 @@ name|rt_addrinfo
 name|info
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -4172,7 +4355,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -4300,7 +4483,7 @@ name|rnh
 operator|=
 name|rnh
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -4309,7 +4492,10 @@ name|rnh
 operator|->
 name|rnh_walktree
 argument_list|(
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 name|rt_checkdelroute
 argument_list|,
@@ -4317,7 +4503,7 @@ operator|&
 name|di
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -4515,7 +4701,7 @@ modifier|*
 name|rt_unlinkrte
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -4580,7 +4766,10 @@ name|dst
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -4697,7 +4886,7 @@ directive|ifdef
 name|RADIX_MPATH
 if|if
 condition|(
-name|rn_mpath_capable
+name|rt_mpath_capable
 argument_list|(
 name|rnh
 argument_list|)
@@ -4728,7 +4917,10 @@ name|dst
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -5289,7 +5481,7 @@ name|if_mtuinfo
 name|ifmtu
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -5360,7 +5552,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -5369,7 +5561,10 @@ name|rnh
 operator|->
 name|rnh_walktree
 argument_list|(
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 name|if_updatemtu_cb
 argument_list|,
@@ -5377,7 +5572,7 @@ operator|&
 name|ifmtu
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -5417,7 +5612,7 @@ modifier|*
 name|rt_mpath_unlink
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -5603,7 +5798,10 @@ name|dst
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5675,7 +5873,7 @@ modifier|*
 name|rt_flowtable_check_route
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -5994,7 +6192,7 @@ modifier|*
 name|rn
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -6135,7 +6333,7 @@ operator|&
 name|mdst
 expr_stmt|;
 block|}
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6152,7 +6350,7 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6449,7 +6647,7 @@ argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6465,7 +6663,7 @@ name|RADIX_MPATH
 comment|/* do not permit exactly the same dst/mask/gw pair */
 if|if
 condition|(
-name|rn_mpath_capable
+name|rt_mpath_capable
 argument_list|(
 name|rnh
 argument_list|)
@@ -6480,7 +6678,7 @@ name|netmask
 argument_list|)
 condition|)
 block|{
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6541,7 +6739,10 @@ name|ndst
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 name|rt
 operator|->
@@ -6642,7 +6843,10 @@ name|ndst
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 name|rt
 operator|->
@@ -6650,7 +6854,7 @@ name|rt_nodes
 argument_list|)
 expr_stmt|;
 block|}
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6810,7 +7014,7 @@ break|break;
 case|case
 name|RTM_CHANGE
 case|:
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6828,7 +7032,7 @@ argument_list|,
 name|fibnum
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6890,7 +7094,7 @@ name|int
 name|rtrequest1_fib_change
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -6960,7 +7164,10 @@ index|[
 name|RTAX_NETMASK
 index|]
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -6980,7 +7187,7 @@ name|RADIX_MPATH
 comment|/* 	 * If we got multipath routes, 	 * we require users to specify a matching RTAX_GATEWAY. 	 */
 if|if
 condition|(
-name|rn_mpath_capable
+name|rt_mpath_capable
 argument_list|(
 name|rnh
 argument_list|)
@@ -7949,7 +8156,7 @@ name|AF_LINK
 block|}
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -8177,7 +8384,7 @@ name|NULL
 condition|)
 comment|/* this table doesn't exist but others might */
 continue|continue;
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -8192,7 +8399,10 @@ name|dst
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8200,7 +8410,7 @@ directive|ifdef
 name|RADIX_MPATH
 if|if
 condition|(
-name|rn_mpath_capable
+name|rt_mpath_capable
 argument_list|(
 name|rnh
 argument_list|)
@@ -8276,7 +8486,7 @@ operator|!=
 name|ifa
 operator|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)

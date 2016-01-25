@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/radix.h>
 end_include
 
@@ -6086,7 +6092,7 @@ name|AF_LINK
 block|}
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -6248,7 +6254,7 @@ name|AF_INET6
 argument_list|)
 expr_stmt|;
 comment|/* XXX what if rhn == NULL? */
-name|RADIX_NODE_HEAD_LOCK
+name|RIB_WLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -6318,7 +6324,7 @@ operator|->
 name|if_index
 expr_stmt|;
 block|}
-name|RADIX_NODE_HEAD_UNLOCK
+name|RIB_WUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
