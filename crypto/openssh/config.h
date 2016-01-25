@@ -139,12 +139,15 @@ comment|/* #undef BROKEN_READ_COMPARISON */
 end_comment
 
 begin_comment
-comment|/* Define if you have a broken realpath. */
+comment|/* realpath does not work with nonexistent files */
 end_comment
 
-begin_comment
-comment|/* #undef BROKEN_REALPATH */
-end_comment
+begin_define
+define|#
+directive|define
+name|BROKEN_REALPATH
+value|1
+end_define
 
 begin_comment
 comment|/* Needed for NeXT */

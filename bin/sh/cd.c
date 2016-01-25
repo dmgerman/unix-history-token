@@ -221,7 +221,9 @@ name|char
 modifier|*
 name|getcomponent
 parameter_list|(
-name|void
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -284,26 +286,6 @@ end_decl_stmt
 begin_comment
 comment|/* current working directory */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prevdir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* previous working directory */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|cdcomppath
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -486,24 +468,27 @@ condition|)
 block|{
 name|dest
 operator|=
-name|prevdir
-condition|?
-name|prevdir
-else|:
-name|curdir
+name|bltinlookup
+argument_list|(
+literal|"OLDPWD"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|dest
+operator|==
+name|NULL
 condition|)
+name|error
+argument_list|(
+literal|"OLDPWD not set"
+argument_list|)
+expr_stmt|;
 name|print
 operator|=
 literal|1
-expr_stmt|;
-else|else
-name|dest
-operator|=
-literal|"."
 expr_stmt|;
 block|}
 if|if
@@ -870,6 +855,10 @@ name|char
 modifier|*
 name|component
 decl_stmt|;
+name|char
+modifier|*
+name|path
+decl_stmt|;
 name|struct
 name|stat
 name|statb
@@ -885,7 +874,7 @@ name|badstat
 operator|=
 literal|0
 expr_stmt|;
-name|cdcomppath
+name|path
 operator|=
 name|stsavestr
 argument_list|(
@@ -912,7 +901,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|cdcomppath
+name|path
 operator|++
 expr_stmt|;
 block|}
@@ -926,7 +915,10 @@ operator|(
 name|q
 operator|=
 name|getcomponent
-argument_list|()
+argument_list|(
+operator|&
+name|path
+argument_list|)
 operator|)
 operator|!=
 name|NULL
@@ -1152,7 +1144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next component of the path name pointed to by cdcomppath.  * This routine overwrites the string pointed to by cdcomppath.  */
+comment|/*  * Get the next component of the path name pointed to by *path.  * This routine overwrites *path and the string pointed to by it.  */
 end_comment
 
 begin_function
@@ -1161,7 +1153,10 @@ name|char
 modifier|*
 name|getcomponent
 parameter_list|(
-name|void
+name|char
+modifier|*
+modifier|*
+name|path
 parameter_list|)
 block|{
 name|char
@@ -1177,7 +1172,8 @@ condition|(
 operator|(
 name|p
 operator|=
-name|cdcomppath
+operator|*
+name|path
 operator|)
 operator|==
 name|NULL
@@ -1187,7 +1183,8 @@ name|NULL
 return|;
 name|start
 operator|=
-name|cdcomppath
+operator|*
+name|path
 expr_stmt|;
 while|while
 condition|(
@@ -1212,7 +1209,8 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|cdcomppath
+operator|*
+name|path
 operator|=
 name|NULL
 expr_stmt|;
@@ -1225,7 +1223,8 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|cdcomppath
+operator|*
+name|path
 operator|=
 name|p
 expr_stmt|;
@@ -1255,6 +1254,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|path
+decl_stmt|;
 comment|/* 	 * If our argument is NULL, we don't know the current directory 	 * any more because we traversed a symbolic link or something 	 * we couldn't stat(). 	 */
 if|if
 condition|(
@@ -1270,7 +1273,7 @@ return|return
 name|getpwd2
 argument_list|()
 return|;
-name|cdcomppath
+name|path
 operator|=
 name|stsavestr
 argument_list|(
@@ -1318,7 +1321,10 @@ operator|(
 name|p
 operator|=
 name|getcomponent
-argument_list|()
+argument_list|(
+operator|&
+name|path
+argument_list|)
 operator|)
 operator|!=
 name|NULL
@@ -1428,17 +1434,30 @@ modifier|*
 name|dir
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|prevdir
+decl_stmt|;
 name|hashcd
 argument_list|()
 expr_stmt|;
 comment|/* update command hash table */
-if|if
-condition|(
-name|prevdir
-condition|)
-name|ckfree
+name|setvar
 argument_list|(
-name|prevdir
+literal|"PWD"
+argument_list|,
+name|dir
+argument_list|,
+name|VEXPORT
+argument_list|)
+expr_stmt|;
+name|setvar
+argument_list|(
+literal|"OLDPWD"
+argument_list|,
+name|curdir
+argument_list|,
+name|VEXPORT
 argument_list|)
 expr_stmt|;
 name|prevdir
@@ -1456,22 +1475,9 @@ argument_list|)
 else|:
 name|NULL
 expr_stmt|;
-name|setvar
+name|ckfree
 argument_list|(
-literal|"PWD"
-argument_list|,
-name|curdir
-argument_list|,
-name|VEXPORT
-argument_list|)
-expr_stmt|;
-name|setvar
-argument_list|(
-literal|"OLDPWD"
-argument_list|,
 name|prevdir
-argument_list|,
-name|VEXPORT
 argument_list|)
 expr_stmt|;
 block|}

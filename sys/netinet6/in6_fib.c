@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -752,7 +758,7 @@ name|pnh6
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rh
 decl_stmt|;
@@ -858,7 +864,7 @@ operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -876,7 +882,10 @@ operator|)
 operator|&
 name|sin6
 argument_list|,
+operator|&
 name|rh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -930,7 +939,7 @@ argument_list|,
 name|pnh6
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -942,7 +951,7 @@ operator|)
 return|;
 block|}
 block|}
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -988,7 +997,7 @@ name|pnh6
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rh
 decl_stmt|;
@@ -1094,7 +1103,7 @@ operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -1112,7 +1121,10 @@ operator|)
 operator|&
 name|sin6
 argument_list|,
+operator|&
 name|rh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -1160,7 +1172,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -1211,7 +1223,7 @@ condition|)
 block|{
 comment|/* TODO: Do lwref on egress ifp's */
 block|}
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)
@@ -1223,7 +1235,7 @@ operator|)
 return|;
 block|}
 block|}
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rh
 argument_list|)

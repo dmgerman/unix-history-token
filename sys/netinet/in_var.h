@@ -1133,12 +1133,6 @@ name|ip_moptions
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|radix_node_head
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|struct
 name|in_multi

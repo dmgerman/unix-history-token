@@ -137,6 +137,23 @@ directive|include
 file|<net/route.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOTP_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/route_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1722,7 +1739,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -1747,7 +1764,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -1760,7 +1777,7 @@ operator|->
 name|rnh_treetop
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)

@@ -541,6 +541,17 @@ value|0x2
 end_define
 
 begin_comment
+comment|/* APB0_GATING */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCM_APB0_GATING_ADDA
+value|(1<< 0)
+end_define
+
+begin_comment
 comment|/* AHB_GATING_REG0 */
 end_comment
 
@@ -563,6 +574,13 @@ define|#
 directive|define
 name|CCM_AHB_GATING_EHCI1
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_AHB_GATING_DMA
+value|(1<< 6)
 end_define
 
 begin_define
@@ -691,6 +709,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_PLL2_CFG_POSTDIV
+value|0x3c000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_PLL2_CFG_POSTDIV_SHIFT
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_PLL2_CFG_PREDIV
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_PLL2_CFG_PREDIV_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_PLL6_CFG_SATA_CLKEN
 value|(1U<< 14)
 end_define
@@ -775,6 +821,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_AUDIO_CODEC_ENABLE
+value|(1U<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CLK_REF_FREQ
 value|24000000U
 end_define
@@ -839,6 +892,25 @@ name|a10_clk_mmc_cfg
 parameter_list|(
 name|int
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_dmac_activate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_codec_activate
+parameter_list|(
+name|unsigned
 name|int
 parameter_list|)
 function_decl|;

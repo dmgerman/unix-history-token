@@ -186,6 +186,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|hv_rf_channel_rollup
+parameter_list|(
+name|netvsc_dev
+modifier|*
+name|net_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|hv_rf_on_device_add
 parameter_list|(

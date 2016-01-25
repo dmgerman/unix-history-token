@@ -2775,6 +2775,13 @@ name|R92C_TDECTRL_BLK_DESC_NUM_S
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|R92C_TDECTRL_BCN_VALID
+value|0x00010000
+end_define
+
 begin_comment
 comment|/* Bits for R92C_FWHW_TXQ_CTRL. */
 end_comment
@@ -4794,6 +4801,13 @@ parameter_list|)
 value|(0x31 + (i))
 end_define
 
+begin_define
+define|#
+directive|define
+name|R88E_RF_T_METER
+value|0x42
+end_define
+
 begin_comment
 comment|/* Bits for R92C_RF_AC. */
 end_comment
@@ -4856,6 +4870,56 @@ define|#
 directive|define
 name|R92C_RF_CHNLBW_LCSTART
 value|0x08000
+end_define
+
+begin_comment
+comment|/* Bits for R92C_RF_T_METER. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_RF_T_METER_START
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RF_T_METER_VAL_M
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RF_T_METER_VAL_S
+value|0
+end_define
+
+begin_comment
+comment|/* Bits for R88E_RF_T_METER. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R88E_RF_T_METER_VAL_M
+value|0x0fc00
+end_define
+
+begin_define
+define|#
+directive|define
+name|R88E_RF_T_METER_VAL_S
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|R88E_RF_T_METER_START
+value|0x30000
 end_define
 
 begin_comment

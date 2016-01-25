@@ -241,6 +241,33 @@ name|BREAKPOINT_INSTR_SZ
 value|4
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_INSTR
+value|0x00100073
+end_define
+
+begin_comment
+comment|/* sbreak */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_INSTR_SZ
+value|4
+end_define
+
 begin_else
 else|#
 directive|else

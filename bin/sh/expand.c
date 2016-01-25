@@ -297,10 +297,12 @@ end_comment
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -315,10 +317,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|exptilde
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -329,10 +333,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|expari
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -370,6 +376,7 @@ specifier|static
 name|void
 name|subevalvar_trim
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -387,6 +394,7 @@ specifier|static
 name|int
 name|subevalvar_misc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -405,10 +413,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|evalvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1424,10 +1434,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|argstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1900,10 +1912,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|exptilde
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1914,11 +1928,18 @@ parameter_list|)
 block|{
 name|char
 name|c
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|startp
 init|=
 name|p
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|user
 decl_stmt|;
 name|struct
 name|passwd
@@ -1928,6 +1949,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|home
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 for|for
 control|(
@@ -1998,19 +2022,40 @@ case|:
 case|case
 name|CTLENDVAR
 case|:
-operator|*
-name|p
+name|len
 operator|=
-literal|'\0'
+name|p
+operator|-
+name|startp
+operator|-
+literal|1
+expr_stmt|;
+name|STPUTBIN
+argument_list|(
+name|startp
+operator|+
+literal|1
+argument_list|,
+name|len
+argument_list|,
+name|expdest
+argument_list|)
+expr_stmt|;
+name|STACKSTRNUL
+argument_list|(
+name|expdest
+argument_list|)
+expr_stmt|;
+name|user
+operator|=
+name|expdest
+operator|-
+name|len
 expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
-name|startp
-operator|+
-literal|1
-operator|)
+name|user
 operator|==
 literal|'\0'
 condition|)
@@ -2029,9 +2074,7 @@ name|pw
 operator|=
 name|getpwnam
 argument_list|(
-name|startp
-operator|+
-literal|1
+name|user
 argument_list|)
 expr_stmt|;
 name|home
@@ -2047,10 +2090,13 @@ else|:
 name|NULL
 expr_stmt|;
 block|}
-operator|*
-name|p
-operator|=
-name|c
+name|STADJUST
+argument_list|(
+operator|-
+name|len
+argument_list|,
+name|expdest
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2100,10 +2146,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|expari
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2849,6 +2897,7 @@ specifier|static
 name|void
 name|subevalvar_trim
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3181,6 +3230,7 @@ specifier|static
 name|int
 name|subevalvar_misc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3347,10 +3397,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|evalvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3370,6 +3422,7 @@ decl_stmt|;
 name|int
 name|varflags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|var

@@ -585,6 +585,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCP_CCALGOOPT
+value|65
+end_define
+
+begin_comment
+comment|/* get/set cc algorithm specific options */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCP_KEEPINIT
 value|128
 end_define

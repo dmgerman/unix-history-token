@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.274 2015/07/01 02:26:31 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.275 2015/07/10 06:21:53 markus Exp $ */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -242,6 +234,12 @@ begin_include
 include|#
 directive|include
 file|"kex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"myproposal.h"
 end_include
 
 begin_include
@@ -10161,12 +10159,6 @@ expr_stmt|;
 comment|/* Check that the key is accepted in HostkeyAlgorithms */
 if|if
 condition|(
-name|options
-operator|.
-name|hostkeyalgorithms
-operator|!=
-name|NULL
-operator|&&
 name|match_pattern_list
 argument_list|(
 name|sshkey_ssh_name
@@ -10177,6 +10169,12 @@ argument_list|,
 name|options
 operator|.
 name|hostkeyalgorithms
+condition|?
+name|options
+operator|.
+name|hostkeyalgorithms
+else|:
+name|KEX_DEFAULT_PK_ALG
 argument_list|,
 literal|0
 argument_list|)

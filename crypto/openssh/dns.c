@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.34 2015/01/28 22:36:00 djm Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.35 2015/08/20 22:32:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -541,10 +541,6 @@ block|{
 operator|*
 name|digest
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 operator|*

@@ -102,19 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/cc.h>
+file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -133,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_cc.h>
 end_include
 
 begin_include

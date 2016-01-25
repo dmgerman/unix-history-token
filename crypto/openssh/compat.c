@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.94 2015/05/26 23:23:40 dtucker Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.97 2015/08/19 23:21:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -541,6 +533,8 @@ block|{
 literal|"Cisco-1.*"
 block|,
 name|SSH_BUG_DHGEX_LARGE
+operator||
+name|SSH_BUG_HOSTKEYS
 block|}
 block|,
 block|{
@@ -571,6 +565,8 @@ name|SSH_BUG_SCANNER
 block|}
 block|,
 block|{
+literal|"PuTTY_Local:*,"
+comment|/* dev versions< Sep 2014 */
 literal|"PuTTY-Release-0.5*,"
 comment|/* 0.50-0.57, DH-GEX in>=0.52 */
 literal|"PuTTY_Release_0.5*,"
@@ -584,6 +580,13 @@ block|,
 name|SSH_OLD_DHGEX
 block|}
 block|,
+block|{
+literal|"FuTTY*"
+block|,
+name|SSH_OLD_DHGEX
+block|}
+block|,
+comment|/* Putty Fork */
 block|{
 literal|"Probe-*"
 block|,
@@ -607,7 +610,16 @@ name|SSH_BUG_HOSTKEYS
 block|}
 block|,
 block|{
-literal|"WinSCP*"
+literal|"WinSCP_release_4*,"
+literal|"WinSCP_release_5.0*,"
+literal|"WinSCP_release_5.1*,"
+literal|"WinSCP_release_5.5*,"
+literal|"WinSCP_release_5.6*,"
+literal|"WinSCP_release_5.7,"
+literal|"WinSCP_release_5.7.1,"
+literal|"WinSCP_release_5.7.2,"
+literal|"WinSCP_release_5.7.3,"
+literal|"WinSCP_release_5.7.4"
 block|,
 name|SSH_OLD_DHGEX
 block|}

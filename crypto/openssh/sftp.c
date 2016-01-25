@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.170 2015/01/20 23:14:00 deraadt Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.171 2015/08/20 22:32:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -10571,10 +10563,6 @@ name|buffer
 expr_stmt|;
 name|line
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|cursor
@@ -10636,10 +10624,6 @@ name|buffer
 expr_stmt|;
 name|line
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|len

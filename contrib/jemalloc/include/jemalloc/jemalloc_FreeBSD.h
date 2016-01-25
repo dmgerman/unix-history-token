@@ -270,6 +270,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__riscv__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LG_SIZEOF_PTR
+value|3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef

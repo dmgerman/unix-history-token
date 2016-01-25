@@ -132,7 +132,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include

@@ -192,12 +192,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<netinet/cc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -217,12 +211,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -284,6 +272,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/in6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
@@ -309,6 +303,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
 
 begin_include
 include|#
@@ -344,6 +344,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_cc.h>
 end_include
 
 begin_ifdef

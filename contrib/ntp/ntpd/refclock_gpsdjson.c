@@ -1216,29 +1216,6 @@ begin_comment
 comment|/* =====================================================================  * local / static stuff  */
 end_comment
 
-begin_comment
-comment|/* The logon string is actually the ?WATCH command of GPSD, using JSON  * data and selecting the GPS device name we created from our unit  * number. We have an old a newer version that request PPS (and TOFF)  * transmission.  * Note: These are actually format strings!  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|s_req_watch
-index|[
-literal|2
-index|]
-init|=
-block|{
-literal|"?WATCH={\"device\":\"%s\",\"enable\":true,\"json\":true};\r\n"
-block|,
-literal|"?WATCH={\"device\":\"%s\",\"enable\":true,\"json\":true,\"pps\":true};\r\n"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -4573,6 +4550,9 @@ name|tid
 operator|>=
 literal|0
 operator|&&
+operator|(
+name|u_int
+operator|)
 name|tid
 operator|<
 name|ctx
@@ -4642,15 +4622,22 @@ name|tid
 expr_stmt|;
 break|break;
 block|}
+comment|/* The next condition should never be true, but paranoia 		 * prevails... 		 */
 if|if
 condition|(
+name|tid
+operator|<
+literal|0
+operator|||
+operator|(
+name|u_int
+operator|)
 name|tid
 operator|>
 name|ctx
 operator|->
 name|ntok
 condition|)
-comment|/* Impossible? Paranoia rulez. */
 name|tid
 operator|=
 name|ctx
@@ -4827,6 +4814,9 @@ name|what
 operator|<
 literal|0
 operator|||
+operator|(
+name|u_int
+operator|)
 name|what
 operator|==
 name|ctx
@@ -6069,6 +6059,7 @@ operator|->
 name|fl_watch
 condition|)
 return|return;
+comment|/* The logon string is actually the ?WATCH command of GPSD, 	 * using JSON data and selecting the GPS device name we created 	 * from our unit number. We have an old a newer version that 	 * request PPS (and TOFF) transmission. 	 */
 name|snprintf
 argument_list|(
 name|up
@@ -6082,18 +6073,21 @@ operator|->
 name|buffer
 argument_list|)
 argument_list|,
-name|s_req_watch
-index|[
-name|up
-operator|->
-name|pf_toff
-operator|!=
-literal|0
-index|]
+literal|"?WATCH={\"device\":\"%s\",\"enable\":true,\"json\":true%s};\r\n"
 argument_list|,
 name|up
 operator|->
 name|device
+argument_list|,
+operator|(
+name|up
+operator|->
+name|pf_toff
+condition|?
+literal|",\"pps\":true"
+else|:
+literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 name|buf

@@ -709,6 +709,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_paddr_t
+name|pmap_dump_kextract
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|pt2_entry_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pmap_fault
 parameter_list|(

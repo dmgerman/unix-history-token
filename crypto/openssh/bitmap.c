@@ -192,13 +192,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|b
 operator|->
 name|d
-argument_list|,
-literal|0
 argument_list|,
 name|b
 operator|->

@@ -163,7 +163,10 @@ begin_define
 define|#
 directive|define
 name|mutex_init
-value|linux_mutex_init
+parameter_list|(
+name|m
+parameter_list|)
+value|linux_mutex_init(m)
 end_define
 
 begin_endif

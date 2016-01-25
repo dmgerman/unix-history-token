@@ -4527,7 +4527,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|sc_type

@@ -790,9 +790,15 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|ni
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 if|if
 condition|(
 operator|(

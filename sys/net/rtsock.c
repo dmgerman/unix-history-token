@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -2441,7 +2447,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -3334,7 +3340,7 @@ argument_list|(
 name|EAFNOSUPPORT
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3376,7 +3382,10 @@ index|[
 name|RTAX_DST
 index|]
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 block|}
@@ -3406,7 +3415,10 @@ index|[
 name|RTAX_NETMASK
 index|]
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -3416,7 +3428,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3433,7 +3445,7 @@ name|RADIX_MPATH
 comment|/* 		 * for RTM_CHANGE/LOCK, if we got multipath routes, 		 * we require users to specify a matching RTAX_GATEWAY. 		 * 		 * for RTM_GET, gate is optional even with multipath. 		 * if gate == NULL the first match is returned. 		 * (no need to call rt_mpath_matchgate if gate == NULL) 		 */
 if|if
 condition|(
-name|rn_mpath_capable
+name|rt_mpath_capable
 argument_list|(
 name|rnh
 argument_list|)
@@ -3474,7 +3486,7 @@ operator|!
 name|rt
 condition|)
 block|{
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3595,7 +3607,10 @@ argument_list|(
 operator|&
 name|laddr
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -3605,7 +3620,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -3627,7 +3642,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -9148,7 +9163,7 @@ init|=
 name|arg2
 decl_stmt|;
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 init|=
@@ -9514,7 +9529,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_RLOCK
+name|RIB_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -9525,7 +9540,10 @@ name|rnh
 operator|->
 name|rnh_walktree
 argument_list|(
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|,
 name|sysctl_dumpentry
 argument_list|,
@@ -9533,7 +9551,7 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_RUNLOCK
+name|RIB_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)

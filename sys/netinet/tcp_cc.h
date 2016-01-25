@@ -10,24 +10,35 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NETINET_CC_H_
+name|_NETINET_TCP_CC_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NETINET_CC_H_
+name|_NETINET_TCP_CC_H_
 end_define
 
-begin_comment
-comment|/* XXX: TCP_CA_NAME_MAX define lives in tcp.h for compat reasons. */
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
+begin_error
+error|#
+directive|error
+literal|"no user-servicable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Global CC vars. */
@@ -494,6 +505,25 @@ modifier|*
 name|ccv
 parameter_list|)
 function_decl|;
+comment|/* Called for {get|set}sockopt() on a TCP socket with TCP_CCALGOOPT. */
+name|int
+function_decl|(
+modifier|*
+name|ctl_output
+function_decl|)
+parameter_list|(
+name|struct
+name|cc_var
+modifier|*
+parameter_list|,
+name|struct
+name|sockopt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|cc_algo
@@ -614,7 +644,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NETINET_CC_H_ */
+comment|/* _NETINET_TCP_CC_H_ */
 end_comment
 
 end_unit

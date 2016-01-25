@@ -267,7 +267,7 @@ file|"int_util.h"
 end_include
 
 begin_comment
-comment|/*  * Workaround for LLVM bug 11663.  Prevent endless recursion in  * __c?zdi2(), where calls to __builtin_c?z() are expanded to  * __c?zdi2() instead of __c?zsi2().  *  * Instead of placing this workaround in c?zdi2.c, put it in this  * global header to prevent other C files from making the detour  * through __c?zdi2() as well.  *  * This problem has only been observed on FreeBSD for sparc64 and  * mips64 with GCC 4.2.1.  */
+comment|/*  * Workaround for LLVM bug 11663.  Prevent endless recursion in  * __c?zdi2(), where calls to __builtin_c?z() are expanded to  * __c?zdi2() instead of __c?zsi2().  *  * Instead of placing this workaround in c?zdi2.c, put it in this  * global header to prevent other C files from making the detour  * through __c?zdi2() as well.  *  * This problem has been observed on FreeBSD for sparc64 and  * mips64 with GCC 4.2.1, and for riscv with GCC 5.2.0.  * Presumably it's any version of GCC, and targeting an arch that  * does not have dedicated bit counting instructions.  */
 end_comment
 
 begin_if
@@ -293,6 +293,11 @@ operator|||
 name|defined
 argument_list|(
 name|__mips_o64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
 argument_list|)
 operator|)
 end_if

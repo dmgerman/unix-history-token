@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.97 2015/03/26 19:32:19 markus Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.98 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2798,16 +2798,10 @@ case|case
 name|KEY_RSA_CERT
 case|:
 case|case
-name|KEY_RSA_CERT_V00
-case|:
-case|case
 name|KEY_DSA
 case|:
 case|case
 name|KEY_DSA_CERT
-case|:
-case|case
-name|KEY_DSA_CERT_V00
 case|:
 case|case
 name|KEY_ECDSA

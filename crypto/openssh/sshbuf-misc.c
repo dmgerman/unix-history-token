@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-misc.c,v 1.4 2015/03/24 20:03:44 markus Exp $	*/
+comment|/*	$OpenBSD: sshbuf-misc.c,v 1.5 2015/10/05 17:11:21 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -593,7 +593,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|ret
 argument_list|,
@@ -690,7 +690,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|p
 argument_list|,
@@ -724,7 +724,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|p
 argument_list|,
@@ -740,7 +740,7 @@ return|return
 name|r
 return|;
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|p
 argument_list|,

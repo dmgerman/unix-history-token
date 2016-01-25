@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.67 2015/05/01 03:20:54 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.68 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2804,65 +2804,6 @@ name|cert_source_address_done
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|sshkey_cert_is_legacy
-argument_list|(
-name|k
-argument_list|)
-condition|)
-block|{
-comment|/* All options are in the one field for v00 certs */
-if|if
-condition|(
-name|parse_option_list
-argument_list|(
-name|k
-operator|->
-name|cert
-operator|->
-name|critical
-argument_list|,
-name|pw
-argument_list|,
-name|OPTIONS_CRITICAL
-operator||
-name|OPTIONS_EXTENSIONS
-argument_list|,
-literal|1
-argument_list|,
-operator|&
-name|cert_no_port_forwarding_flag
-argument_list|,
-operator|&
-name|cert_no_agent_forwarding_flag
-argument_list|,
-operator|&
-name|cert_no_x11_forwarding_flag
-argument_list|,
-operator|&
-name|cert_no_pty_flag
-argument_list|,
-operator|&
-name|cert_no_user_rc
-argument_list|,
-operator|&
-name|cert_forced_command
-argument_list|,
-operator|&
-name|cert_source_address_done
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-block|}
-else|else
-block|{
 comment|/* Separate options and extensions for v01 certs */
 if|if
 condition|(
@@ -2947,7 +2888,6 @@ return|return
 operator|-
 literal|1
 return|;
-block|}
 name|no_port_forwarding_flag
 operator||=
 name|cert_no_port_forwarding_flag

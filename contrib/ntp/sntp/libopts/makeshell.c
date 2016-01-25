@@ -1465,6 +1465,10 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pz
 operator|++
@@ -2628,6 +2632,10 @@ while|while
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|od
 operator|->
 name|pz_DisableName
@@ -2638,6 +2646,10 @@ argument_list|)
 operator|==
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 name|match_ct

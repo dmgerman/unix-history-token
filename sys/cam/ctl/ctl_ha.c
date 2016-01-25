@@ -2227,6 +2227,8 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|bootverbose
 condition|)
 block|{
 name|printf
