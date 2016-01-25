@@ -1347,11 +1347,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Not ufs\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
