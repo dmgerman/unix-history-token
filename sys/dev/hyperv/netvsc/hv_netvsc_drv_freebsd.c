@@ -3368,10 +3368,6 @@ name|sc
 operator|->
 name|net_dev
 decl_stmt|;
-name|netvsc_packet
-modifier|*
-name|packet
-decl_stmt|;
 name|struct
 name|ether_vlan_header
 modifier|*
@@ -3463,6 +3459,10 @@ name|hn_txdesc
 modifier|*
 name|txd
 decl_stmt|;
+name|netvsc_packet
+modifier|*
+name|packet
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -3528,20 +3528,6 @@ operator|&
 name|txd
 operator|->
 name|netvsc_pkt
-expr_stmt|;
-comment|/* XXX not necessary */
-name|memset
-argument_list|(
-name|packet
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|packet
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|packet
 operator|->
