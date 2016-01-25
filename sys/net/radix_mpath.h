@@ -137,18 +137,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|rtalloc_mpath
-parameter_list|(
-name|_route
-parameter_list|,
-name|_hash
-parameter_list|)
-value|rtalloc_mpath_fib((_route), (_hash), 0)
-end_define
-
 begin_function_decl
 name|struct
 name|rtentry
@@ -160,25 +148,6 @@ name|rtentry
 modifier|*
 parameter_list|,
 name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|radix_node
-modifier|*
-name|rn_mpath_lookup
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|radix_node_head
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
