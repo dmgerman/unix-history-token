@@ -48,10 +48,10 @@ begin_function_decl
 name|void
 name|arm_physmem_hardware_region
 parameter_list|(
-name|vm_paddr_t
+name|uint64_t
 name|pa
 parameter_list|,
-name|vm_size_t
+name|uint64_t
 name|sz
 parameter_list|)
 function_decl|;
