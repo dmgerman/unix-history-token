@@ -68,6 +68,17 @@ begin_comment
 comment|/* page table entry */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|pt_entry_t
+name|pt2_entry_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* compatibility with v6 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
