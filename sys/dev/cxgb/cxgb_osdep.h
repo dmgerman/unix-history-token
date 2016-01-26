@@ -1064,12 +1064,26 @@ parameter_list|)
 value|bswap32(x)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|simple_strtoul
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|simple_strtoul
-value|strtoul
+parameter_list|(
+modifier|...
+parameter_list|)
+value|strtoul(__VA_ARGS__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
