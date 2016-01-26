@@ -10135,7 +10135,7 @@ name|off
 operator|+=
 name|cacheline_size
 control|)
-asm|__asm __volatile("dcbzl 0,%0" :: "r"(va + off));
+asm|__asm __volatile("dcbz 0,%0" :: "r"(va + off));
 name|mmu_booke_kremove
 argument_list|(
 name|mmu
