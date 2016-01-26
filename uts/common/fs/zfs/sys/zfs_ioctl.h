@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -213,6 +213,11 @@ define|#
 directive|define
 name|DRR_FLAG_CI_DATA
 value|(1<<1)
+comment|/*  * This send stream, if it is a full send, includes the FREE and FREEOBJECT  * records that are created by the sending process.  This means that the send  * stream can be received as a clone, even though it is not an incremental.  * This is not implemented as a feature flag, because the receiving side does  * not need to have implemented it to receive this stream; it is fully backwards  * compatible.  We need a flag, though, because full send streams without it  * cannot necessarily be received as a clone correctly.  */
+define|#
+directive|define
+name|DRR_FLAG_FREERECORDS
+value|(1<<2)
 comment|/*  * flags in the drr_checksumflags field in the DRR_WRITE and  * DRR_WRITE_BYREF blocks  */
 define|#
 directive|define
