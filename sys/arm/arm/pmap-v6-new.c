@@ -25618,7 +25618,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|EFAULT
+name|KERN_INVALID_ADDRESS
 operator|)
 return|;
 block|}
@@ -25683,7 +25683,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|EFAULT
+name|KERN_INVALID_ADDRESS
 operator|)
 return|;
 block|}
@@ -25740,7 +25740,7 @@ goto|;
 block|}
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -25799,7 +25799,7 @@ goto|;
 block|}
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -25887,7 +25887,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -25976,7 +25976,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -26065,7 +26065,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|EAGAIN
+name|KERN_FAILURE
 operator|)
 return|;
 block|}
