@@ -8250,11 +8250,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark this transaction as typically resulting in a net free of 	 * space, unless object removal will be delayed indefinitely 	 * (due to active holds on the vnode due to the file being open). 	 */
-if|if
-condition|(
-name|may_delete_now
-condition|)
+comment|/* 	 * Mark this transaction as typically resulting in a net free of space 	 */
 name|dmu_tx_mark_netfree
 argument_list|(
 name|tx
