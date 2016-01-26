@@ -2206,6 +2206,14 @@ return|;
 comment|/* 	 * We can't rely on a pool's state if it's been imported 	 * read-only.  Instead we look to see if the pools is marked 	 * read-only in the namespace and set the state to active. 	 */
 if|if
 condition|(
+name|state
+operator|!=
+name|POOL_STATE_SPARE
+operator|&&
+name|state
+operator|!=
+name|POOL_STATE_L2CACHE
+operator|&&
 operator|(
 name|spa
 operator|=
