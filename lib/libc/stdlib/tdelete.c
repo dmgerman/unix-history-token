@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tdelete.c,v 1.2 1999/09/16 11:45:37 lukem Exp $	*/
+comment|/*	$NetBSD: tdelete.c,v 1.8 2016/01/20 20:47:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|__RCSID("$NetBSD: tdelete.c,v 1.6 2012/06/25 22:32:45 abs Exp $");
+unit|__RCSID("$NetBSD: tdelete.c,v 1.8 2016/01/20 20:47:41 christos Exp $");
 endif|#
 directive|endif
 end_endif
@@ -76,7 +76,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * find a node with given key  *  * vkey:   key to be found  * vrootp: address of the root of the tree  * compar: function to carry out node comparisons  */
+comment|/*  * delete node with given key  *  * vkey:   key to be deleted  * vrootp: address of the root of the tree  * compar: function to carry out node comparisons  */
 end_comment
 
 begin_function
@@ -341,13 +341,6 @@ name|rlink
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|p
-operator|!=
-operator|*
-name|rootp
-condition|)
 name|free
 argument_list|(
 operator|*
