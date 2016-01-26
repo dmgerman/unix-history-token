@@ -1577,10 +1577,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX do all */
-end_comment
-
 begin_function
 name|int
 name|linux_arch_prctl
