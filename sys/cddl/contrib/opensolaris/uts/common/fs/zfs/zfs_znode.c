@@ -5766,13 +5766,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|sa_buf_rele
-argument_list|(
-name|db
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Don't let the vnode disappear after ZFS_OBJ_HOLD_EXIT. */
 if|if
 condition|(
@@ -5791,6 +5784,13 @@ operator|&
 name|zp
 operator|->
 name|z_lock
+argument_list|)
+expr_stmt|;
+name|sa_buf_rele
+argument_list|(
+name|db
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ZFS_OBJ_HOLD_EXIT
