@@ -64,7 +64,7 @@ value|(  5*hz)
 end_define
 
 begin_comment
-comment|/* retransmit persistence */
+comment|/* minimum persist interval */
 end_comment
 
 begin_define
@@ -457,6 +457,28 @@ name|tp
 parameter_list|)
 value|(TP_KEEPCNT(tp) * TP_KEEPINTVL(tp))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_persmin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum persist interval */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_persmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum persist interval */
+end_comment
 
 begin_decl_stmt
 specifier|extern
