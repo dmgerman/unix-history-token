@@ -776,19 +776,6 @@ name|constty_clear
 argument_list|()
 expr_stmt|;
 comment|/* Drain any output. */
-name|MPASS
-argument_list|(
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_STOPPED
-operator|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1481,17 +1468,12 @@ argument_list|,
 name|FWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This can only be called once. The callin and the callout 	 * devices cannot be opened at the same time. 	 */
 name|tp
 operator|->
 name|t_flags
 operator|&=
 operator|~
-operator|(
 name|TF_EXCLUDE
-operator||
-name|TF_STOPPED
-operator|)
 expr_stmt|;
 comment|/* Properly wake up threads that are stuck - revoke(). */
 name|tp
@@ -6553,6 +6535,12 @@ argument_list|(
 name|tp
 argument_list|)
 condition|)
+block|{
+name|ttydevsw_outwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|ttydevsw_pktnotify
 argument_list|(
 name|tp
@@ -6560,6 +6548,7 @@ argument_list|,
 name|TIOCPKT_FLUSHWRITE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -6579,6 +6568,13 @@ operator|&
 name|tp
 operator|->
 name|t_inq
+argument_list|)
+expr_stmt|;
+name|tty_wakeup
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
 argument_list|)
 expr_stmt|;
 if|if
