@@ -1283,7 +1283,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_all
 expr_stmt|;
-comment|/* (a) all AIOs in the process */
+comment|/* (a) all AIOs in a process */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1315,7 +1315,7 @@ argument|aiocblist
 argument_list|)
 name|kaio_bufqueue
 expr_stmt|;
-comment|/* (a) buffer job queue for process */
+comment|/* (a) buffer job queue */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1394,7 +1394,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* wakeup process when there is a significant event */
+comment|/* wakeup process when AIO completes */
 end_comment
 
 begin_comment
@@ -4082,7 +4082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Move all data to a permanent storage device, this code  *  simulates fsync syscall.  */
+comment|/*  * Move all data to a permanent storage device.  This code  * simulates the fsync syscall.  */
 end_comment
 
 begin_function
@@ -8834,29 +8834,21 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-operator|(
 name|num_aio_resv_start
 operator|+
 name|num_aio_procs
-operator|)
 operator|<
 name|max_aio_procs
-operator|)
 operator|&&
-operator|(
-operator|(
 name|ki
 operator|->
 name|kaio_active_count
 operator|+
 name|num_aio_resv_start
-operator|)
 operator|<
 name|ki
 operator|->
 name|kaio_maxactive_count
-operator|)
 condition|)
 block|{
 name|taskqueue_enqueue
@@ -8958,29 +8950,21 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-operator|(
 name|num_aio_resv_start
 operator|+
 name|num_aio_procs
-operator|)
 operator|<
 name|max_aio_procs
-operator|)
 operator|&&
-operator|(
-operator|(
 name|ki
 operator|->
 name|kaio_active_count
 operator|+
 name|num_aio_resv_start
-operator|)
 operator|<
 name|ki
 operator|->
 name|kaio_maxactive_count
-operator|)
 condition|)
 block|{
 name|num_aio_resv_start
