@@ -3211,14 +3211,8 @@ modifier|*
 name|jval
 decl_stmt|;
 name|int
-name|err
-decl_stmt|,
 name|i
 decl_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 name|assert
 argument_list|(
 name|bc
