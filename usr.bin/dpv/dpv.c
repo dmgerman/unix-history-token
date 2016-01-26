@@ -1199,7 +1199,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:dDhi:I:lL:mn:No:p:P:t:TU:wx:X"
+literal|"a:b:dDhi:I:klL:mn:No:p:P:t:TU:wx:X"
 argument_list|)
 operator|)
 operator|!=
@@ -1390,6 +1390,17 @@ operator|->
 name|status_many
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+comment|/* keep tite */
+name|config
+operator|->
+name|keep_tite
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -2189,6 +2200,13 @@ argument_list|(
 literal|"dpv(3) returned error!?"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|config
+operator|->
+name|keep_tite
+condition|)
 name|end_dialog
 argument_list|()
 expr_stmt|;
