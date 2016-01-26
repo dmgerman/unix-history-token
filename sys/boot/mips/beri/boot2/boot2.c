@@ -424,7 +424,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|uint32_t
 name|opts
 decl_stmt|;
