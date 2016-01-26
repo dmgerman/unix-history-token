@@ -358,6 +358,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -366,6 +367,7 @@ name|tsw_open
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -551,6 +553,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -565,6 +568,7 @@ name|data
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -612,6 +616,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -628,6 +633,7 @@ name|data
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -659,6 +665,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -669,6 +676,7 @@ name|tp
 argument_list|,
 name|t
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -701,6 +709,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -713,6 +722,7 @@ name|sigon
 argument_list|,
 name|sigoff
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -753,6 +763,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -769,6 +780,7 @@ name|nprot
 argument_list|,
 name|memattr
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

@@ -26,6 +26,149 @@ file|<machine/acle-compat.h>
 end_include
 
 begin_comment
+comment|/*  * CP14 registers  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGDIDR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c0, c0, 0
+end_define
+
+begin_comment
+comment|/* Debug ID Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGDSCRext_V6
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c0, c1, 0
+end_define
+
+begin_comment
+comment|/* Debug Status and Ctrl Register v6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGDSCRext_V7
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c0, c2, 2
+end_define
+
+begin_comment
+comment|/* Debug Status and Ctrl Register v7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGVCR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c0, c7, 0
+end_define
+
+begin_comment
+comment|/* Vector Catch Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGOSLAR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c1, c0, 4
+end_define
+
+begin_comment
+comment|/* OS Lock Access Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGOSLSR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c1, c1, 4
+end_define
+
+begin_comment
+comment|/* OS Lock Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGOSDLR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c1, c3, 4
+end_define
+
+begin_comment
+comment|/* OS Double Lock Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGPRSR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p14, 0, rr, c1, c5, 4
+end_define
+
+begin_comment
+comment|/* Device Powerdown and Reset Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP14_DBGDSCRint
+parameter_list|(
+name|rr
+parameter_list|)
+value|CP14_DBGDSCRext_V6(rr)
+end_define
+
+begin_comment
+comment|/* Debug Status and Ctrl internal view */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * CP15 C0 registers  */
 end_comment
 

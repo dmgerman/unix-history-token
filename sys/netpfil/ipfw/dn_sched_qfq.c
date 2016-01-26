@@ -204,7 +204,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * bitmaps ops are critical. Some linux versions have __fls  * and the bitmap ops. Some machines have ffs  */
+comment|/*  * bitmaps ops are critical. Some linux versions have __fls  * and the bitmap ops. Some machines have ffs  * NOTE: fls() returns 1 for the least significant bit,  *       __fls() returns 0 for the same case.  * We use the base-0 version __fls() to match the description in  * the ToN QFQ paper  */
 end_comment
 
 begin_if
@@ -1680,11 +1680,11 @@ operator|!=
 name|old_vslot
 condition|)
 block|{
-comment|/* should be 1ULL not 2ULL */
+comment|/* must be 2ULL, see ToN QFQ article fig.5, we use base-0 fls */
 name|mask
 operator|=
 operator|(
-literal|1ULL
+literal|2ULL
 operator|<<
 operator|(
 name|__fls

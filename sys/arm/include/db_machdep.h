@@ -33,11 +33,24 @@ directive|include
 file|<machine/armreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|T_BREAKPOINT
 value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_WATCHPOINT
+value|(2)
 end_define
 
 begin_typedef
@@ -93,12 +106,51 @@ name|BKPT_SKIP
 value|do {							\ 	kdb_frame->tf_pc += BKPT_SIZE; \ } while (0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
+begin_define
+define|#
+directive|define
+name|db_clear_single_step
+value|kdb_cpu_clear_singlestep
+end_define
+
+begin_define
+define|#
+directive|define
+name|db_set_single_step
+value|kdb_cpu_set_singlestep
+end_define
+
+begin_define
+define|#
+directive|define
+name|db_pc_is_singlestep
+value|kdb_cpu_pc_is_singlestep
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|SOFTWARE_SSTEP
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -121,7 +173,7 @@ name|type
 parameter_list|,
 name|code
 parameter_list|)
-value|(0)
+value|(type == T_WATCHPOINT)
 end_define
 
 begin_define

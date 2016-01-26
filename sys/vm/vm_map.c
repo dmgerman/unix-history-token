@@ -6224,7 +6224,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_simplify_entry:  *  *	Simplify the given map entry by merging with either neighbor.  This  *	routine also has the ability to merge with both neighbors.  *  *	The map must be locked.  *  *	This routine guarentees that the passed entry remains valid (though  *	possibly extended).  When merging, this routine may delete one or  *	both neighbors.  */
+comment|/*  *	vm_map_simplify_entry:  *  *	Simplify the given map entry by merging with either neighbor.  This  *	routine also has the ability to merge with both neighbors.  *  *	The map must be locked.  *  *	This routine guarantees that the passed entry remains valid (though  *	possibly extended).  When merging, this routine may delete one or  *	both neighbors.  */
 end_comment
 
 begin_function

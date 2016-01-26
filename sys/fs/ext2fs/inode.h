@@ -555,7 +555,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_E4INDEX
+name|IN_E3INDEX
 value|0x010000
 end_define
 

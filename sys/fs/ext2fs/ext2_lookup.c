@@ -3683,7 +3683,7 @@ operator|->
 name|i_flag
 operator|&=
 operator|~
-name|IN_E4INDEX
+name|IN_E3INDEX
 expr_stmt|;
 name|dp
 operator|->

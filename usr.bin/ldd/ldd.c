@@ -90,14 +90,24 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/* We don't support a.out executables on arm64 */
+comment|/* We don't support a.out executables on arm64 and riscv */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__aarch64__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
+end_if
 
 begin_include
 include|#

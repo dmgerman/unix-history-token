@@ -50,10 +50,10 @@ begin_struct
 struct|struct
 name|mem_region
 block|{
-name|vm_offset_t
+name|uint64_t
 name|mr_start
 decl_stmt|;
-name|vm_size_t
+name|uint64_t
 name|mr_size
 decl_stmt|;
 block|}

@@ -41,19 +41,11 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_PATH_LOADER
-value|"/boot/loader"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PATH_KERNEL
-value|"/boot/kernel/kernel"
-end_define
+begin_include
+include|#
+directive|include
+file|"paths.h"
+end_include
 
 begin_define
 define|#
@@ -1947,7 +1939,7 @@ name|len
 decl_stmt|;
 name|path
 operator|=
-name|_PATH_LOADER
+name|PATH_LOADER
 expr_stmt|;
 for|for
 control|(

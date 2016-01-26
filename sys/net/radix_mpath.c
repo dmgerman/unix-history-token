@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -112,10 +118,10 @@ end_decl_stmt
 
 begin_function
 name|int
-name|rn_mpath_capable
+name|rt_mpath_capable
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|)
@@ -124,6 +130,32 @@ return|return
 name|rnh
 operator|->
 name|rnh_multipath
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|rn_mpath_capable
+parameter_list|(
+name|struct
+name|radix_head
+modifier|*
+name|rh
+parameter_list|)
+block|{
+return|return
+operator|(
+name|rt_mpath_capable
+argument_list|(
+operator|(
+expr|struct
+name|rib_head
+operator|*
+operator|)
+name|rh
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -525,7 +557,7 @@ name|int
 name|rt_mpath_conflict
 parameter_list|(
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 parameter_list|,
@@ -575,7 +607,10 @@ argument_list|)
 argument_list|,
 name|netmask
 argument_list|,
+operator|&
 name|rnh
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 if|if
@@ -1158,7 +1193,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -1183,7 +1218,7 @@ name|rnh
 operator|=
 operator|(
 expr|struct
-name|radix_node_head
+name|rib_head
 operator|*
 operator|)
 operator|*
@@ -1231,7 +1266,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|radix_node_head
+name|rib_head
 modifier|*
 name|rnh
 decl_stmt|;
@@ -1256,7 +1291,7 @@ name|rnh
 operator|=
 operator|(
 expr|struct
-name|radix_node_head
+name|rib_head
 operator|*
 operator|)
 operator|*

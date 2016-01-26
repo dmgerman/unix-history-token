@@ -1443,6 +1443,17 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 for|for
 control|(
 name|i

@@ -310,7 +310,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DEFINE_CLASS_0
 argument_list|(
-name|gic_v3
+name|gic
 argument_list|,
 name|gic_v3_driver
 argument_list|,

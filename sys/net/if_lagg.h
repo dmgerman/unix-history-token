@@ -546,6 +546,10 @@ name|int
 name|ro_flowid_shift
 decl_stmt|;
 comment|/* shift the flowid */
+name|uint32_t
+name|ro_bkt
+decl_stmt|;
+comment|/* packet bucket for roundrobin */
 block|}
 struct|;
 end_struct
@@ -885,6 +889,14 @@ name|int
 name|flowid_shift
 decl_stmt|;
 comment|/* shift the flowid */
+name|uint32_t
+name|sc_bkt
+decl_stmt|;
+comment|/* packates bucket for roundrobin */
+name|uint32_t
+name|sc_bkt_count
+decl_stmt|;
+comment|/* packates bucket count for roundrobin */
 name|struct
 name|lagg_counters
 name|detached_counters

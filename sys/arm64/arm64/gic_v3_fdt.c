@@ -244,7 +244,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DEFINE_CLASS_1
 argument_list|(
-name|gic_v3
+name|gic
 argument_list|,
 name|gic_v3_fdt_driver
 argument_list|,
@@ -1107,7 +1107,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DEFINE_CLASS_1
 argument_list|(
-name|gic_v3_its
+name|its
 argument_list|,
 name|gic_v3_its_fdt_driver
 argument_list|,
@@ -1134,9 +1134,9 @@ end_decl_stmt
 begin_expr_stmt
 name|EARLY_DRIVER_MODULE
 argument_list|(
-name|gic_v3_its
+name|its
 argument_list|,
-name|gic_v3
+name|gic
 argument_list|,
 name|gic_v3_its_fdt_driver
 argument_list|,

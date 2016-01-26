@@ -7134,8 +7134,6 @@ name|uint64_t
 name|sectors
 decl_stmt|;
 name|uint8_t
-name|start_track
-decl_stmt|,
 modifier|*
 name|bp
 decl_stmt|,
@@ -7156,13 +7154,6 @@ literal|1
 operator|)
 operator|&
 literal|1
-expr_stmt|;
-name|start_track
-operator|=
-name|acmd
-index|[
-literal|6
-index|]
 expr_stmt|;
 name|bp
 operator|=
@@ -7779,11 +7770,6 @@ name|blockif_req
 modifier|*
 name|breq
 decl_stmt|;
-name|struct
-name|pci_ahci_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|uint8_t
 modifier|*
 name|acmd
@@ -7797,12 +7783,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|sc
-operator|=
-name|p
-operator|->
-name|pr_sc
-expr_stmt|;
 name|acmd
 operator|=
 name|cfis
