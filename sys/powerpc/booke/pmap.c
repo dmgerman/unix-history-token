@@ -6313,12 +6313,21 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"physsz = 0x%08x physmem = %ld (0x%08lx)\n"
+literal|"physsz = 0x%09jx physmem = %jd (0x%09jx)\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|physsz
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|physmem
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|physmem
 argument_list|)
 expr_stmt|;
