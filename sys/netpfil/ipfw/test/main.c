@@ -3893,6 +3893,9 @@ name|c
 operator|->
 name|pending
 operator|>=
+operator|(
+name|uint32_t
+operator|)
 name|c
 operator|->
 name|th_max
@@ -3916,6 +3919,9 @@ name|c
 operator|->
 name|pending
 operator|<=
+operator|(
+name|uint32_t
+operator|)
 name|c
 operator|->
 name|th_min
