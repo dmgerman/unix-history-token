@@ -85,14 +85,9 @@ name|char
 modifier|*
 name|type
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|syscallnames
-decl_stmt|;
-name|int
-name|nsyscalls
+name|enum
+name|sysdecode_abi
+name|abi
 decl_stmt|;
 name|int
 function_decl|(
