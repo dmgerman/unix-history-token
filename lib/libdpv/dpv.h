@@ -234,6 +234,10 @@ begin_struct
 struct|struct
 name|dpv_config
 block|{
+name|uint8_t
+name|keep_tite
+decl_stmt|;
+comment|/* Prevent visually distracting exit */
 name|enum
 name|dpv_display
 name|display_type

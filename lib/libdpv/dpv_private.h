@@ -51,6 +51,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint8_t
+name|keep_tite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint8_t
 name|no_labels
 decl_stmt|;
 end_decl_stmt

@@ -248,6 +248,18 @@ end_comment
 
 begin_decl_stmt
 name|uint8_t
+name|keep_tite
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dpv_config.keep_tite */
+end_comment
+
+begin_decl_stmt
+name|uint8_t
 name|no_labels
 init|=
 name|FALSE
@@ -637,6 +649,10 @@ name|display_type
 operator|=
 name|DPV_DISPLAY_LIBDIALOG
 expr_stmt|;
+name|keep_tite
+operator|=
+name|FALSE
+expr_stmt|;
 name|label_size
 operator|=
 name|LABEL_SIZE_DEFAULT
@@ -849,6 +865,12 @@ operator|=
 name|config
 operator|->
 name|display_type
+expr_stmt|;
+name|keep_tite
+operator|=
+name|config
+operator|->
+name|keep_tite
 expr_stmt|;
 name|label_size
 operator|=
@@ -3120,6 +3142,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|keep_tite
+operator|&&
 operator|!
 name|dpv_interrupt
 condition|)
