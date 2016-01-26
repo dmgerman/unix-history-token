@@ -113,6 +113,12 @@ directive|include
 file|<sdcard.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"paths.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -377,34 +383,6 @@ define|#
 directive|define
 name|RBX_MASK
 value|(OPT_SET(RBX_ASKNAME) | OPT_SET(RBX_SINGLE) | \ 			OPT_SET(RBX_DFLTROOT) | OPT_SET(RBX_KDB ) | \ 			OPT_SET(RBX_CONFIG) | OPT_SET(RBX_VERBOSE) | \ 			OPT_SET(RBX_SERIAL) | OPT_SET(RBX_CDROM) | \ 			OPT_SET(RBX_GDB ) | OPT_SET(RBX_MUTE) | \ 			OPT_SET(RBX_PAUSE) | OPT_SET(RBX_DUAL))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_DOTCONFIG
-value|"/boot.config"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_CONFIG
-value|"/boot/config"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_BOOT3
-value|"/boot/loader"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_KERNEL
-value|"/boot/kernel/kernel"
 end_define
 
 begin_define

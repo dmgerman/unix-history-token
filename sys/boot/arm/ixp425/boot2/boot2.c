@@ -65,6 +65,12 @@ directive|include
 file|"lib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"paths.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -227,27 +233,6 @@ define|#
 directive|define
 name|RBX_MASK
 value|(OPT_SET(RBX_ASKNAME) | OPT_SET(RBX_SINGLE) | \ 			OPT_SET(RBX_DFLTROOT) | \ 			OPT_SET(RBX_VERBOSE) | \ 			OPT_SET(RBX_GDB))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_DOTCONFIG
-value|"/boot.config"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_CONFIG
-value|"/boot/config"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_KERNEL
-value|"/boot/kernel/kernel"
 end_define
 
 begin_decl_stmt

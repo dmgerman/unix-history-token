@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2008 John Hay  * Copyright (c) 2006 Warner Losh  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Redistribution and use in source and binary forms are freely  * permitted provided that the above copyright notice and this  * paragraph and the following disclaimer are duplicated in all  * such forms.  *  * This software is provided "AS IS" and without any express or  * implied warranties, including, without limitation, the implied  * warranties of merchantability and fitness for a particular  * purpose.  */
+comment|/*-  * Copyright (c) 2008 John Hay  * Copyright (c) 2006 M Warner Losh<imp@freebsd.org>  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Redistribution and use in source and binary forms are freely  * permitted provided that the above copyright notice and this  * paragraph and the following disclaimer are duplicated in all  * such forms.  *  * This software is provided "AS IS" and without any express or  * implied warranties, including, without limitation, the implied  * warranties of merchantability and fitness for a particular  * purpose.  */
 end_comment
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"board.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"paths.h"
 end_include
 
 begin_define
@@ -235,23 +241,11 @@ name|RBX_MASK
 value|(OPT_SET(RBX_ASKNAME) | OPT_SET(RBX_SINGLE) | \ 			OPT_SET(RBX_DFLTROOT) | \ 			OPT_SET(RBX_VERBOSE) | \ 			OPT_SET(RBX_GDB))
 end_define
 
-begin_define
-define|#
-directive|define
-name|PATH_DOTCONFIG
-value|"/boot.config"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_CONFIG
-value|"/boot/config"
-end_define
-
-begin_comment
-comment|//#define PATH_KERNEL	"/boot/kernel/kernel"
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|PATH_KERNEL
+end_undef
 
 begin_define
 define|#
