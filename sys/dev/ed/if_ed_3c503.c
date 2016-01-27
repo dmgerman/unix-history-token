@@ -212,7 +212,7 @@ decl_stmt|;
 name|u_char
 name|isa16bit
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_maddr
 decl_stmt|,
 name|conf_msize

@@ -139,6 +139,13 @@ name|GFP_IOFS
 value|M_NOWAIT
 end_define
 
+begin_define
+define|#
+directive|define
+name|GFP_NOIO
+value|M_NOWAIT
+end_define
+
 begin_function
 specifier|static
 specifier|inline

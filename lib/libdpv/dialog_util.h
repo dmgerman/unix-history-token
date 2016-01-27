@@ -166,15 +166,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dialog_gauge_free
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|dialog_maxsize_free
 parameter_list|(
 name|void

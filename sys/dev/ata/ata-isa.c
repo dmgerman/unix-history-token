@@ -194,7 +194,7 @@ name|ctlio
 init|=
 name|NULL
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|tmp
 decl_stmt|;
 name|int
@@ -411,7 +411,7 @@ name|ctlio
 init|=
 name|NULL
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|tmp
 decl_stmt|;
 name|int

@@ -516,8 +516,6 @@ name|bytesused
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|revokecnt
 decl_stmt|;
 if|if
 condition|(
@@ -591,12 +589,6 @@ condition|(
 name|leaving
 condition|)
 block|{
-name|revokecnt
-operator|=
-name|tp
-operator|->
-name|t_revokecnt
-expr_stmt|;
 name|error
 operator|=
 name|tty_timedwait
@@ -611,32 +603,12 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|error
-condition|)
-block|{
-case|case
-name|ERESTART
-case|:
 if|if
 condition|(
-name|revokecnt
-operator|!=
-name|tp
-operator|->
-name|t_revokecnt
-condition|)
 name|error
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
+operator|==
 name|EWOULDBLOCK
-case|:
-if|if
-condition|(
+operator|&&
 name|ttyoutq_bytesused
 argument_list|(
 operator|&
@@ -651,8 +623,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-break|break;
-block|}
 block|}
 else|else
 name|error
@@ -806,19 +776,6 @@ name|constty_clear
 argument_list|()
 expr_stmt|;
 comment|/* Drain any output. */
-name|MPASS
-argument_list|(
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_STOPPED
-operator|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -947,6 +904,7 @@ name|oflags
 parameter_list|,
 name|int
 name|devtype
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -1044,7 +1002,7 @@ name|t_flags
 operator||=
 name|TF_OPENCLOSE
 expr_stmt|;
-comment|/* 	 * Make sure the "tty" and "cua" device cannot be opened at the 	 * same time. 	 */
+comment|/* 	 * Make sure the "tty" and "cua" device cannot be opened at the 	 * same time.  The console is a "tty" device. 	 */
 if|if
 condition|(
 name|TTY_CALLOUT
@@ -1061,7 +1019,11 @@ name|tp
 operator|->
 name|t_flags
 operator|&
+operator|(
+name|TF_OPENED_CONS
+operator||
 name|TF_OPENED_IN
+operator|)
 condition|)
 block|{
 name|error
@@ -1324,6 +1286,33 @@ name|t_flags
 operator||=
 name|TF_OPENED_IN
 expr_stmt|;
+name|MPASS
+argument_list|(
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+operator|(
+name|TF_OPENED_CONS
+operator||
+name|TF_OPENED_IN
+operator|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_OPENED_OUT
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|done
 label|:
 name|tp
@@ -1369,11 +1358,13 @@ name|fflag
 parameter_list|,
 name|int
 name|devtype
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1398,10 +1389,24 @@ name|tp
 operator|->
 name|t_flags
 operator|&
-name|TF_OPENED
+operator|(
+name|TF_OPENED_CONS
+operator||
+name|TF_OPENED_IN
 operator|)
-operator|!=
-name|TF_OPENED
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_OPENED_OUT
+operator|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1449,17 +1454,26 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * This can only be called once. The callin and the callout 	 * devices cannot be opened at the same time. 	 */
+comment|/* If revoking, flush output now to avoid draining it later. */
+if|if
+condition|(
+name|fflag
+operator|&
+name|FREVOKE
+condition|)
+name|tty_flush
+argument_list|(
+name|tp
+argument_list|,
+name|FWRITE
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_flags
 operator|&=
 operator|~
-operator|(
 name|TF_EXCLUDE
-operator||
-name|TF_STOPPED
-operator|)
 expr_stmt|;
 comment|/* Properly wake up threads that are stuck - revoke(). */
 name|tp
@@ -2833,6 +2847,7 @@ name|kn
 parameter_list|,
 name|long
 name|hint
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2950,6 +2965,7 @@ name|kn
 parameter_list|,
 name|long
 name|hint
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3276,9 +3292,11 @@ name|dev
 parameter_list|,
 name|int
 name|oflags
+name|__unused
 parameter_list|,
 name|int
 name|devtype
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -3342,17 +3360,21 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+name|__unused
 parameter_list|,
 name|int
 name|flag
+name|__unused
 parameter_list|,
 name|int
 name|mode
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3372,14 +3394,17 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+name|__unused
 parameter_list|,
 name|struct
 name|uio
 modifier|*
 name|uio
+name|__unused
 parameter_list|,
 name|int
 name|ioflag
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3812,6 +3837,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3831,8 +3857,9 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -3844,6 +3871,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
 block|{
 name|panic
@@ -3863,8 +3891,9 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -3876,17 +3905,21 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
+name|__unused
 parameter_list|,
 name|caddr_t
 name|data
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3906,20 +3939,25 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|int
 name|unit
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
+name|__unused
 parameter_list|,
 name|caddr_t
 name|data
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3939,6 +3977,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|struct
 name|termios
@@ -4028,12 +4067,15 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|int
 name|sigon
+name|__unused
 parameter_list|,
 name|int
 name|sigoff
+name|__unused
 parameter_list|)
 block|{
 comment|/* Simulate a carrier to make the TTY layer happy. */
@@ -4054,20 +4096,25 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|vm_ooffset_t
 name|offset
+name|__unused
 parameter_list|,
 name|vm_paddr_t
 modifier|*
 name|paddr
+name|__unused
 parameter_list|,
 name|int
 name|nprot
+name|__unused
 parameter_list|,
 name|vm_memattr_t
 modifier|*
 name|memattr
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -4088,11 +4135,13 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|char
 name|event
+name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -4103,6 +4152,7 @@ parameter_list|(
 name|void
 modifier|*
 name|softc
+name|__unused
 parameter_list|)
 block|{
 name|panic
@@ -6477,6 +6527,20 @@ argument_list|,
 name|FWRITE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+block|{
+name|ttydevsw_outwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|ttydevsw_pktnotify
 argument_list|(
 name|tp
@@ -6484,6 +6548,7 @@ argument_list|,
 name|TIOCPKT_FLUSHWRITE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -6505,6 +6570,22 @@ operator|->
 name|t_inq
 argument_list|)
 expr_stmt|;
+name|tty_wakeup
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+block|{
 name|ttydevsw_inwakeup
 argument_list|(
 name|tp
@@ -6517,6 +6598,7 @@ argument_list|,
 name|TIOCPKT_FLUSHREAD
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -8331,16 +8413,20 @@ operator|->
 name|t_dev
 condition|)
 return|return
+operator|(
 name|dev2udev
 argument_list|(
 name|tp
 operator|->
 name|t_dev
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|NODEV
+operator|)
 return|;
 block|}
 end_function
@@ -9246,6 +9332,7 @@ parameter_list|(
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 name|dev_console
@@ -9336,6 +9423,7 @@ end_include
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
@@ -9498,7 +9586,7 @@ define|#
 directive|define
 name|TTY_FLAG_BITS
 define|\
-value|"\20\1NOPREFIX\2INITLOCK\3CALLOUT\4OPENED_IN\5OPENED_OUT\6GONE" \ 	"\7OPENCLOSE\10ASYNC\11LITERAL\12HIWAT_IN\13HIWAT_OUT\14STOPPED" \ 	"\15EXCLUDE\16BYPASS\17ZOMBIE\20HOOK"
+value|"\20\1NOPREFIX\2INITLOCK\3CALLOUT\4OPENED_IN" \ 	"\5OPENED_OUT\6OPENED_CONS\7GONE\10OPENCLOSE" \ 	"\11ASYNC\12LITERAL\13HIWAT_IN\14HIWAT_OUT" \ 	"\15STOPPED\16EXCLUDE\17BYPASS\20ZOMBIE" \ 	"\21HOOK\22BUSY_IN\23BUSY_OUT"
 end_define
 
 begin_define
@@ -9867,7 +9955,7 @@ name|addr
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"0x%p: %s\n"
+literal|"%p: %s\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -9888,7 +9976,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\tflags: %b\n"
+literal|"\tflags: 0x%b\n"
 argument_list|,
 name|tp
 operator|->
@@ -10348,7 +10436,8 @@ name|TTYOUTQ_DATASIZE
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%p %10s %5zu %4u %4u %4zu %5zu %4u %4zu %5u %5d %5d "
+literal|"%p %10s %5zu %4u %4u %4zu %5zu %4u %4zu %5u %5d "
+literal|"%5d "
 argument_list|,
 name|tp
 argument_list|,

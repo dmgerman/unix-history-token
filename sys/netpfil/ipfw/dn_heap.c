@@ -309,6 +309,10 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|h
 operator|->
 name|size
@@ -1695,6 +1699,16 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|obj
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|arg
+expr_stmt|;
 return|return
 name|DNHT_SCAN_DEL
 return|;

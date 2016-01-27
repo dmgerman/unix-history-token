@@ -765,8 +765,6 @@ name|svdcount
 parameter_list|,
 name|uint64_t
 name|txg
-parameter_list|,
-name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern

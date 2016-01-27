@@ -236,7 +236,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DEFINE_CLASS_0
 argument_list|(
-name|gic_v3_its
+name|its
 argument_list|,
 name|gic_v3_its_driver
 argument_list|,

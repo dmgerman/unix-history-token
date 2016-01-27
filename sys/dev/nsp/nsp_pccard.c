@@ -394,7 +394,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|ioaddr
 decl_stmt|,
 name|iosize

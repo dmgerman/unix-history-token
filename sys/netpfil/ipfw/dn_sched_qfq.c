@@ -131,6 +131,17 @@ directive|ifdef
 name|QFQ_DEBUG
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_P64
+value|unsigned long long
+end_define
+
+begin_comment
+comment|/* cast for printing uint64_t */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|qfq_sched
@@ -204,7 +215,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * bitmaps ops are critical. Some linux versions have __fls  * and the bitmap ops. Some machines have ffs  */
+comment|/*  * bitmaps ops are critical. Some linux versions have __fls  * and the bitmap ops. Some machines have ffs  * NOTE: fls() returns 1 for the least significant bit,  *       __fls() returns 0 for the same case.  * We use the base-0 version __fls() to match the description in  * the ToN QFQ paper  */
 end_comment
 
 begin_if
@@ -354,6 +365,7 @@ name|QFQ_DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|test_bit
 parameter_list|(
@@ -396,6 +408,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|__set_bit
 parameter_list|(
@@ -437,6 +450,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|__clear_bit
 parameter_list|(
@@ -798,12 +812,18 @@ comment|/* inverse weight sum */
 name|NO
 argument_list|(
 argument|uint32_t	i_wsum;
-comment|/* ONE_FP/w_sum */
-argument|uint32_t	_queued;
-comment|/* debugging */
-argument|uint32_t	loops;
-comment|/* debugging */
 argument_list|)
+comment|/* ONE_FP/w_sum */
+name|NO
+argument_list|(
+argument|uint32_t	queued;
+argument_list|)
+comment|/* debugging */
+name|NO
+argument_list|(
+argument|uint32_t	loops;
+argument_list|)
+comment|/* debugging */
 name|bitmap
 name|bitmaps
 index|[
@@ -1680,11 +1700,11 @@ operator|!=
 name|old_vslot
 condition|)
 block|{
-comment|/* should be 1ULL not 2ULL */
+comment|/* must be 2ULL, see ToN QFQ article fig.5, we use base-0 fls */
 name|mask
 operator|=
 operator|(
-literal|1ULL
+literal|2ULL
 operator|<<
 operator|(
 name|__fls
@@ -2008,6 +2028,11 @@ name|grp
 operator|->
 name|slot_shift
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|q
+expr_stmt|;
 name|grp
 operator|->
 name|full_slots
@@ -2154,6 +2179,11 @@ modifier|*
 name|cl
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|q
+expr_stmt|;
 name|cl
 operator|->
 name|S
@@ -3635,8 +3665,11 @@ expr_stmt|;
 block|}
 name|D
 argument_list|(
-literal|"full_slots 0x%x"
+literal|"full_slots 0x%llx"
 argument_list|,
+operator|(
+name|_P64
+operator|)
 name|g
 operator|->
 name|full_slots
@@ -3648,10 +3681,16 @@ literal|"        %2d S 0x%20llx F 0x%llx %c"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|_P64
+operator|)
 name|g
 operator|->
 name|S
 argument_list|,
+operator|(
+name|_P64
+operator|)
 name|g
 operator|->
 name|F
@@ -3696,7 +3735,7 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|ND
+name|D
 argument_list|(
 literal|"loops %d queued %d V 0x%llx"
 argument_list|,
@@ -3708,6 +3747,9 @@ name|q
 operator|->
 name|queued
 argument_list|,
+operator|(
+name|_P64
+operator|)
 name|q
 operator|->
 name|V
@@ -3717,6 +3759,9 @@ name|D
 argument_list|(
 literal|"    ER 0x%08x"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|q
 operator|->
 name|bitmaps
@@ -3729,6 +3774,9 @@ name|D
 argument_list|(
 literal|"    EB 0x%08x"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|q
 operator|->
 name|bitmaps
@@ -3741,6 +3789,9 @@ name|D
 argument_list|(
 literal|"    IR 0x%08x"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|q
 operator|->
 name|bitmaps
@@ -3753,6 +3804,9 @@ name|D
 argument_list|(
 literal|"    IB 0x%08x"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|q
 operator|->
 name|bitmaps

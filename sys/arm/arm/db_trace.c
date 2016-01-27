@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<machine/db_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/debug_monitor.h>
 end_include
 
 begin_include
@@ -472,15 +484,15 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* XXX stubs */
-end_comment
-
 begin_function
 name|void
 name|db_md_list_watchpoints
 parameter_list|()
-block|{ }
+block|{
+name|dbg_show_watchpoint
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -496,7 +508,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+name|dbg_remove_watchpoint
+argument_list|(
+name|addr
+argument_list|,
+name|size
+argument_list|)
 operator|)
 return|;
 block|}
@@ -515,7 +532,14 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+name|dbg_setup_watchpoint
+argument_list|(
+name|addr
+argument_list|,
+name|size
+argument_list|,
+name|HW_WATCHPOINT_RW
+argument_list|)
 operator|)
 return|;
 block|}

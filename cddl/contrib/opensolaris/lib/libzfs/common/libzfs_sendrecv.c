@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -246,6 +246,10 @@ parameter_list|,
 name|int
 parameter_list|,
 name|uint64_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -13007,6 +13011,12 @@ name|NULL
 decl_stmt|;
 name|char
 modifier|*
+name|sendsnap
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
 name|cp
 decl_stmt|;
 name|char
@@ -13858,11 +13868,22 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 		 * Find the "sendsnap", the final snapshot in a replication 		 * stream.  zfs_receive_one() handles certain errors 		 * differently, depending on if the contained stream is the 		 * last one or not. 		 */
+name|sendsnap
+operator|=
+operator|(
+name|cp
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+block|}
 comment|/* Finally, receive each contained stream */
 do|do
 block|{
@@ -13892,6 +13913,8 @@ argument_list|,
 name|cleanup_fd
 argument_list|,
 name|action_handlep
+argument_list|,
+name|sendsnap
 argument_list|)
 expr_stmt|;
 if|if
@@ -14694,6 +14717,11 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|action_handlep
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|finalsnap
 parameter_list|)
 block|{
 name|zfs_cmd_t
@@ -14777,6 +14805,12 @@ decl_stmt|;
 name|boolean_t
 name|recursive
 decl_stmt|;
+name|char
+modifier|*
+name|snapname
+init|=
+name|NULL
+decl_stmt|;
 name|begin_time
 operator|=
 name|time
@@ -14824,10 +14858,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|snapname
-decl_stmt|;
 name|nvlist_t
 modifier|*
 name|fs
@@ -16672,8 +16702,43 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|snapname
+operator|==
+name|NULL
+operator|||
+name|finalsnap
+operator|==
+name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|finalsnap
+argument_list|,
+name|snapname
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|nvpair_name
+argument_list|(
+name|prop_err
+argument_list|)
+argument_list|,
+name|zfs_prop_to_name
+argument_list|(
+name|ZFS_PROP_REFQUOTA
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
 block|{
+comment|/* 				 * Skip the special case of, for example, 				 * "refquota", errors on intermediate 				 * snapshots leading up to a final one. 				 * That's why we have all of the checks above. 				 * 				 * See zfs_ioctl.c's extract_delay_props() for 				 * a list of props which can fail on 				 * intermediate snapshots, but shouldn't 				 * affect the overall receive. 				 */
 operator|(
 name|void
 operator|)
@@ -17619,6 +17684,11 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|action_handlep
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|finalsnap
 parameter_list|)
 block|{
 name|int
@@ -18199,6 +18269,13 @@ name|sendfs
 operator|=
 name|nonpackage_sendfs
 expr_stmt|;
+name|VERIFY
+argument_list|(
+name|finalsnap
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -18231,6 +18308,8 @@ argument_list|,
 name|cleanup_fd
 argument_list|,
 name|action_handlep
+argument_list|,
+name|finalsnap
 argument_list|)
 operator|)
 return|;
@@ -18411,6 +18490,8 @@ name|cleanup_fd
 argument_list|,
 operator|&
 name|action_handle
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|VERIFY

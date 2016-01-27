@@ -2184,13 +2184,13 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|)
 block|{
@@ -2257,7 +2257,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|rescount
@@ -2852,7 +2852,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|rescount
@@ -3417,7 +3417,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|drq

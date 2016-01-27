@@ -771,7 +771,7 @@ name|atrtc_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|s
 decl_stmt|;
 name|int

@@ -182,6 +182,41 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|hlist_add_head_rcu
+parameter_list|(
+name|n
+parameter_list|,
+name|h
+parameter_list|)
+define|\
+value|do {						\   	sx_xlock(&linux_global_rcu_lock);	\ 	hlist_add_head(n, h);			\ 	sx_xunlock(&linux_global_rcu_lock);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|hlist_del_init_rcu
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|do {						\     	sx_xlock(&linux_global_rcu_lock);	\ 	hlist_del_init(n);			\ 	sx_xunlock(&linux_global_rcu_lock);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|hlist_del_rcu
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|do {						\     	sx_xlock(&linux_global_rcu_lock);	\ 	hlist_del(n);				\ 	sx_xunlock(&linux_global_rcu_lock);	\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -280,7 +280,7 @@ decl_stmt|;
 name|int
 name|max_port_index
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|iocount

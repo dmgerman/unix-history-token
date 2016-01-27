@@ -75,6 +75,13 @@ name|MAX_EXCNT
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_PHYS_ADDR
+value|0xFFFFFFFFull
+end_define
+
 begin_struct
 struct|struct
 name|region
@@ -958,17 +965,17 @@ begin_function
 name|void
 name|arm_physmem_hardware_region
 parameter_list|(
-name|vm_paddr_t
+name|uint64_t
 name|pa
 parameter_list|,
-name|vm_size_t
+name|uint64_t
 name|sz
 parameter_list|)
 block|{
 name|vm_offset_t
 name|adj
 decl_stmt|;
-comment|/* 	 * Filter out the page at PA 0x00000000.  The VM can't handle it, as 	 * pmap_extract() == 0 means failure. 	 * 	 * Also filter out the page at the end of the physical address space -- 	 * if addr is non-zero and addr+size is zero we wrapped to the next byte 	 * beyond what vm_paddr_t can express.  That leads to a NULL pointer 	 * deref early in startup; work around it by leaving the last page out. 	 * 	 * XXX This just in:  subtract out a whole megabyte, not just 1 page. 	 * Reducing the size by anything less than 1MB results in the NULL 	 * pointer deref in _vm_map_lock_read().  Better to give up a megabyte 	 * than leave some folks with an unusable system while we investigate. 	 */
+comment|/* 	 * Filter out the page at PA 0x00000000.  The VM can't handle it, as 	 * pmap_extract() == 0 means failure. 	 */
 if|if
 condition|(
 name|pa
@@ -996,12 +1003,39 @@ elseif|else
 if|if
 condition|(
 name|pa
-operator|+
-name|sz
-operator|==
-literal|0
+operator|>
+name|MAX_PHYS_ADDR
 condition|)
 block|{
+comment|/* This range is past usable memory, ignore it */
+return|return;
+block|}
+comment|/* 	 * Also filter out the page at the end of the physical address space -- 	 * if addr is non-zero and addr+size is zero we wrapped to the next byte 	 * beyond what vm_paddr_t can express.  That leads to a NULL pointer 	 * deref early in startup; work around it by leaving the last page out. 	 * 	 * XXX This just in:  subtract out a whole megabyte, not just 1 page. 	 * Reducing the size by anything less than 1MB results in the NULL 	 * pointer deref in _vm_map_lock_read().  Better to give up a megabyte 	 * than leave some folks with an unusable system while we investigate. 	 */
+if|if
+condition|(
+operator|(
+name|pa
+operator|+
+name|sz
+operator|)
+operator|>
+operator|(
+name|MAX_PHYS_ADDR
+operator|-
+literal|1024
+operator|*
+literal|1024
+operator|)
+condition|)
+block|{
+name|sz
+operator|=
+name|MAX_PHYS_ADDR
+operator|-
+name|pa
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|sz

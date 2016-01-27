@@ -1979,6 +1979,15 @@ name|struct
 name|mtx
 name|inbound_lock
 decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|rxq
+decl_stmt|;
+name|struct
+name|task
+name|channel_task
+decl_stmt|;
 name|hv_vmbus_pfn_channel_callback
 name|on_channel_callback
 decl_stmt|;

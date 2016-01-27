@@ -312,6 +312,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/debug_monitor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/db_machdep.h>
 end_include
 
@@ -7871,6 +7877,9 @@ argument_list|(
 name|physmem
 argument_list|)
 expr_stmt|;
+name|dbg_monitor_init
+argument_list|()
+expr_stmt|;
 name|kdb_init
 argument_list|()
 expr_stmt|;
@@ -8479,6 +8488,9 @@ name|msgbufp
 argument_list|,
 name|msgbufsize
 argument_list|)
+expr_stmt|;
+name|dbg_monitor_init
+argument_list|()
 expr_stmt|;
 name|kdb_init
 argument_list|()

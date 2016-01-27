@@ -3626,7 +3626,7 @@ name|done
 decl_stmt|,
 name|type
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|start
 decl_stmt|,
 name|end

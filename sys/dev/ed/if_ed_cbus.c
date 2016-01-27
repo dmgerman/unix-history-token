@@ -2689,7 +2689,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_maddr
 decl_stmt|,
 name|conf_msize
@@ -4274,7 +4274,7 @@ decl_stmt|;
 name|u_char
 name|tmp
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_irq
 decl_stmt|,
 name|junk
@@ -4881,7 +4881,7 @@ index|]
 decl_stmt|,
 name|tmp
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_irq
 decl_stmt|,
 name|junk
@@ -5237,7 +5237,7 @@ decl_stmt|;
 name|u_char
 name|tmp
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_irq
 decl_stmt|,
 name|junk
@@ -5422,7 +5422,7 @@ decl_stmt|;
 name|u_char
 name|tmp
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_irq
 decl_stmt|,
 name|junk
@@ -5965,7 +5965,7 @@ decl_stmt|;
 name|u_char
 name|tmp
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|conf_irq
 decl_stmt|,
 name|junk

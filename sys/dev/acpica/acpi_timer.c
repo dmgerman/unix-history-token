@@ -468,7 +468,7 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|rlen
 decl_stmt|,
 name|rstart

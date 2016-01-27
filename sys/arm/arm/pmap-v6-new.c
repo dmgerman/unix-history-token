@@ -15172,7 +15172,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. Do it now, before the mapping is stored and made 		 * valid for hardware table walk. If done later, there is a race 		 * for other threads of current process in lazy loading case. 		 * 		 * QQQ: (1) Does it exist any better way where 		 *          or how to sync icache? 		 *      (2) Now, we do it on a page basis. 		 */
+comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. Do it now, before the mapping is stored and made 		 * valid for hardware table walk. If done later, there is a race 		 * for other threads of current process in lazy loading case. 		 * Don't do it for kernel memory which is mapped with exec 		 * permission even if the memory isn't going to hold executable 		 * code. The only time when icache sync is needed is after 		 * kernel module is loaded and the relocation info is processed. 		 * And it's done in elf_cpu_load_file(). 		 * 		 * QQQ: (1) Does it exist any better way where 		 *          or how to sync icache? 		 *      (2) Now, we do it on a page basis. 		 */
 if|if
 condition|(
 operator|(
@@ -15181,7 +15181,10 @@ operator|&
 name|VM_PROT_EXECUTE
 operator|)
 operator|&&
-operator|(
+name|pmap
+operator|!=
+name|kernel_pmap
+operator|&&
 name|m
 operator|->
 name|md
@@ -15189,14 +15192,11 @@ operator|.
 name|pat_mode
 operator|==
 name|PTE2_ATTR_WB_WA
-operator|)
 operator|&&
-operator|(
 operator|(
 name|opa
 operator|!=
 name|pa
-operator|)
 operator|||
 operator|(
 name|opte2
@@ -17886,6 +17886,10 @@ operator|.
 name|pat_mode
 operator|==
 name|PTE2_ATTR_WB_WA
+operator|&&
+name|pmap
+operator|!=
+name|kernel_pmap
 condition|)
 block|{
 comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. QQQ: For more info, see comments in pmap_enter(). 		 */
@@ -18180,6 +18184,10 @@ operator|.
 name|pat_mode
 operator|==
 name|PTE2_ATTR_WB_WA
+operator|&&
+name|pmap
+operator|!=
+name|kernel_pmap
 condition|)
 block|{
 comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. QQQ: For more info, see comments in pmap_enter(). 		 */
@@ -25610,7 +25618,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|EFAULT
+name|KERN_INVALID_ADDRESS
 operator|)
 return|;
 block|}
@@ -25675,7 +25683,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|EFAULT
+name|KERN_INVALID_ADDRESS
 operator|)
 return|;
 block|}
@@ -25732,7 +25740,7 @@ goto|;
 block|}
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -25791,7 +25799,7 @@ goto|;
 block|}
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -25879,7 +25887,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -25968,7 +25976,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|KERN_SUCCESS
 operator|)
 return|;
 block|}
@@ -26057,7 +26065,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|EAGAIN
+name|KERN_FAILURE
 operator|)
 return|;
 block|}

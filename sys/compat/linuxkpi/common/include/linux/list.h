@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2016 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -355,7 +355,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|_list_add
+name|linux_list_add
 parameter_list|(
 name|struct
 name|list_head
@@ -477,7 +477,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for (p = (head)->next; p != (head); p = p->next)
+value|for (p = (head)->next; p != (head); p = (p)->next)
 end_define
 
 begin_define
@@ -492,7 +492,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for (p = (head)->next, n = p->next; p != (head); p = n, n = p->next)
+value|for (p = (head)->next, n = (p)->next; p != (head); p = n, n = (p)->next)
 end_define
 
 begin_define
@@ -507,7 +507,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for (p = list_entry((h)->next, typeof(*p), field);&p->field != (h); \ 	    p = list_entry(p->field.next, typeof(*p), field))
+value|for (p = list_entry((h)->next, typeof(*p), field);&(p)->field != (h); \ 	    p = list_entry((p)->field.next, typeof(*p), field))
 end_define
 
 begin_define
@@ -524,7 +524,22 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for (p = list_entry((h)->next, typeof(*p), field), 		\ 	    n = list_entry(p->field.next, typeof(*p), field);&p->field != (h);\ 	    p = n, n = list_entry(n->field.next, typeof(*n), field))
+value|for (p = list_entry((h)->next, typeof(*p), field), 		\ 	    n = list_entry((p)->field.next, typeof(*p), field);&(p)->field != (h);\ 	    p = n, n = list_entry(n->field.next, typeof(*n), field))
+end_define
+
+begin_define
+define|#
+directive|define
+name|list_for_each_entry_from
+parameter_list|(
+name|p
+parameter_list|,
+name|h
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|for ( ;&(p)->field != (h); \ 	    p = list_entry((p)->field.next, typeof(*p), field))
 end_define
 
 begin_define
@@ -539,7 +554,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for (p = list_next_entry((p), field);&p->field != (h);		\ 	    p = list_next_entry((p), field))
+value|for (p = list_next_entry((p), field);&(p)->field != (h);	\ 	    p = list_next_entry((p), field))
 end_define
 
 begin_define
@@ -556,7 +571,7 @@ parameter_list|,
 name|member
 parameter_list|)
 define|\
-value|for (n = list_entry(pos->member.next, typeof(*pos), member);		\&pos->member != (head);						\ 	     pos = n, n = list_entry(n->member.next, typeof(*n), member))
+value|for (n = list_entry((pos)->member.next, typeof(*pos), member);		\&(pos)->member != (head);						\ 	     pos = n, n = list_entry(n->member.next, typeof(*n), member))
 end_define
 
 begin_define
@@ -571,7 +586,22 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for (p = list_entry((h)->prev, typeof(*p), field);&p->field != (h); \ 	    p = list_entry(p->field.prev, typeof(*p), field))
+value|for (p = list_entry((h)->prev, typeof(*p), field);&(p)->field != (h); \ 	    p = list_entry((p)->field.prev, typeof(*p), field))
+end_define
+
+begin_define
+define|#
+directive|define
+name|list_for_each_entry_continue_reverse
+parameter_list|(
+name|p
+parameter_list|,
+name|h
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|for (p = list_entry((p)->field.prev, typeof(*p), field);&(p)->field != (h); \ 	    p = list_entry((p)->field.prev, typeof(*p), field))
 end_define
 
 begin_define
@@ -583,7 +613,7 @@ name|p
 parameter_list|,
 name|h
 parameter_list|)
-value|for (p = (h)->prev; p != (h); p = p->prev)
+value|for (p = (h)->prev; p != (h); p = (p)->prev)
 end_define
 
 begin_function
@@ -603,7 +633,7 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-name|_list_add
+name|linux_list_add
 argument_list|(
 name|new
 argument_list|,
@@ -634,7 +664,7 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-name|_list_add
+name|linux_list_add
 argument_list|(
 name|new
 argument_list|,
@@ -716,7 +746,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|_list_splice
+name|linux_list_splice
 parameter_list|(
 specifier|const
 name|struct
@@ -810,7 +840,7 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-name|_list_splice
+name|linux_list_splice
 argument_list|(
 name|list
 argument_list|,
@@ -841,7 +871,7 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-name|_list_splice
+name|linux_list_splice
 argument_list|(
 name|list
 argument_list|,
@@ -872,7 +902,7 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-name|_list_splice
+name|linux_list_splice
 argument_list|(
 name|list
 argument_list|,
@@ -908,7 +938,7 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-name|_list_splice
+name|linux_list_splice
 argument_list|(
 name|list
 argument_list|,
@@ -1597,7 +1627,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for (p = (head)->first; p; p = p->next)
+value|for (p = (head)->first; p; p = (p)->next)
 end_define
 
 begin_define
@@ -1612,7 +1642,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for (p = (head)->first; p&& ({ n = p->next; 1; }); p = n)
+value|for (p = (head)->first; p&& ({ n = (p)->next; 1; }); p = n)
 end_define
 
 begin_define
@@ -1650,14 +1680,12 @@ define|#
 directive|define
 name|hlist_for_each_entry_continue
 parameter_list|(
-name|tp
+name|pos
 parameter_list|,
-name|p
-parameter_list|,
-name|field
+name|member
 parameter_list|)
 define|\
-value|for (p = (p)->next;						\ 	    p ? (tp = hlist_entry(p, typeof(*tp), field)): NULL; p = p->next)
+value|for (pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member); \ 	     (pos);							\ 	     pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member))
 end_define
 
 begin_define
@@ -1665,14 +1693,12 @@ define|#
 directive|define
 name|hlist_for_each_entry_from
 parameter_list|(
-name|tp
+name|pos
 parameter_list|,
-name|p
-parameter_list|,
-name|field
+name|member
 parameter_list|)
 define|\
-value|for (; p ? (tp = hlist_entry(p, typeof(*tp), field)): NULL; p = p->next)
+value|for (; (pos);								\ 	     pos = hlist_entry_safe((pos)->member.next, typeof(*(pos)), member))
 end_define
 
 begin_define
@@ -1680,8 +1706,6 @@ define|#
 directive|define
 name|hlist_for_each_entry_safe
 parameter_list|(
-name|tpos
-parameter_list|,
 name|pos
 parameter_list|,
 name|n
@@ -1691,29 +1715,7 @@ parameter_list|,
 name|member
 parameter_list|)
 define|\
-value|for (pos = (head)->first;					 \ 	     (pos) != 0&& ({ n = (pos)->next; \ 		 tpos = hlist_entry((pos), typeof(*(tpos)), member); 1;}); \ 	     pos = (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|hlist_add_head_rcu
-parameter_list|(
-name|n
-parameter_list|,
-name|h
-parameter_list|)
-value|hlist_add_head(n, h)
-end_define
-
-begin_define
-define|#
-directive|define
-name|hlist_del_init_rcu
-parameter_list|(
-name|n
-parameter_list|)
-value|hlist_del_init(n)
+value|for (pos = hlist_entry_safe((head)->first, typeof(*(pos)), member); \ 	     (pos)&& ({ n = (pos)->member.next; 1; });			\ 	     pos = hlist_entry_safe(n, typeof(*(pos)), member))
 end_define
 
 begin_endif

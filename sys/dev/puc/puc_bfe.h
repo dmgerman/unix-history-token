@@ -261,11 +261,11 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|u_long
+name|rman_res_t
 parameter_list|,
-name|u_long
+name|rman_res_t
 parameter_list|,
-name|u_long
+name|rman_res_t
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -284,10 +284,10 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 parameter_list|)
 function_decl|;

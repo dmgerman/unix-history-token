@@ -33,6 +33,12 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/db_machdep.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -42,6 +48,48 @@ name|pc
 parameter_list|)
 value|&stoppcbs[pc->pc_cpuid]
 end_define
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
+begin_function_decl
+specifier|extern
+name|void
+name|kdb_cpu_clear_singlestep
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|kdb_cpu_set_singlestep
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|kdb_cpu_pc_is_singlestep
+parameter_list|(
+name|db_addr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function
 specifier|static
@@ -64,6 +112,11 @@ name|void
 parameter_list|)
 block|{ }
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

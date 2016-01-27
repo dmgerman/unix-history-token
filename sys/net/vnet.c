@@ -282,13 +282,6 @@ name|VNET_SIZE
 value|roundup2(VNET_BYTES, PAGE_SIZE)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VNET_MODSIZE
-value|(VNET_SIZE - (VNET_BYTES - VNET_MODMIN))
-end_define
-
 begin_comment
 comment|/*  * Space to store virtualized global variables from loadable kernel modules,  * and the free list to manage it.  */
 end_comment
