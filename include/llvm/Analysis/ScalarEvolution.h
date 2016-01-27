@@ -1387,7 +1387,31 @@ name|Max
 argument_list|(
 argument|M
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isa
+operator|<
+name|SCEVCouldNotCompute
+operator|>
+operator|(
+name|Exact
+operator|)
+operator|||
+operator|!
+name|isa
+operator|<
+name|SCEVCouldNotCompute
+operator|>
+operator|(
+name|Max
+operator|)
+operator|)
+operator|&&
+literal|"Exact is not allowed to be less precise than Max"
+argument_list|)
+block|;       }
 comment|/// Test whether this ExitLimit contains any computed information, or
 comment|/// whether it's all SCEVCouldNotCompute values.
 name|bool
