@@ -5,6 +5,28 @@ directive|include
 file|"config.h"
 end_include
 
+begin_comment
+comment|/* need autokey for some of the tests, or the will create buffer overruns. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AUTOKEY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AUTOKEY
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -474,7 +496,7 @@ name|restoreKeyDb
 operator|=
 name|false
 expr_stmt|;
-comment|/* Initialize the test packet and socket, 	 * so they contain at least some valid data. */
+comment|/* Initialize the test packet and socket, 	 * so they contain at least some valid data. 	 */
 name|testpkt
 operator|.
 name|li_vn_mode
@@ -506,7 +528,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Set the origin timestamp of the received packet to the 	 * same value as the transmit timestamp of the sent packet. */
+comment|/* Set the origin timestamp of the received packet to the 	 * same value as the transmit timestamp of the sent packet. 	 */
 name|l_fp
 name|tmp
 decl_stmt|;
@@ -576,7 +598,7 @@ block|}
 name|sntptest_destroy
 argument_list|()
 expr_stmt|;
-comment|//only on the final test!! if counter == 0 etc...
+comment|/* only on the final test!! if counter == 0 etc... */
 block|}
 end_function
 
@@ -707,7 +729,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* The lower 16-bits are the length of the extension field. 	 * This lengths must be multiples of 4 bytes, which gives 	 * a minimum of 4 byte extension field length. */
+comment|/* The lower 16-bits are the length of the extension field. 	 * This lengths must be multiples of 4 bytes, which gives 	 * a minimum of 4 byte extension field length. 	 */
 name|testpkt
 operator|.
 name|exten
@@ -720,8 +742,8 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// 3 bytes is too short.
-comment|/* We send in a pkt_len of header size + 4 byte extension 	 * header + 24 byte MAC, this prevents the length error to 	 * be caught at an earlier stage */
+comment|/* 3 bytes is too short. */
+comment|/* We send in a pkt_len of header size + 4 byte extension 	 * header + 24 byte MAC, this prevents the length error to 	 * be caught at an earlier stage 	 */
 name|int
 name|pkt_len
 init|=
@@ -764,8 +786,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|//sntptest();
-comment|// Activate authentication option
+comment|/* Activate authentication option */
 name|ActivateOption
 argument_list|(
 literal|"-a"
@@ -786,7 +807,7 @@ name|pkt_len
 init|=
 name|LEN_PKT_NOMAC
 decl_stmt|;
-comment|// We demand authentication, but no MAC header is present.
+comment|/* We demand authentication, but no MAC header is present. */
 name|TEST_ASSERT_EQUAL
 argument_list|(
 name|SERVER_AUTH_FAIL
@@ -820,7 +841,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// Activate authentication option
+comment|/* Activate authentication option */
 name|ActivateOption
 argument_list|(
 literal|"-a"
@@ -843,7 +864,7 @@ name|LEN_PKT_NOMAC
 operator|+
 literal|4
 decl_stmt|;
-comment|// + 4 byte MAC = Crypto-NAK
+comment|/* + 4 byte MAC = Crypto-NAK */
 name|TEST_ASSERT_EQUAL
 argument_list|(
 name|SERVER_AUTH_FAIL
@@ -877,7 +898,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// Activate authentication option
+comment|/* Activate authentication option */
 name|PrepareAuthenticationTestMD5
 argument_list|(
 literal|50
@@ -895,7 +916,7 @@ name|AUTHENTICATION
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Prepare the packet.
+comment|/* Prepare the packet. */
 name|int
 name|pkt_len
 init|=
@@ -918,10 +939,6 @@ name|mac_len
 init|=
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 argument_list|,
@@ -931,10 +948,6 @@ name|MAX_MD5_LEN
 argument_list|,
 name|key_ptr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 operator|.
@@ -950,7 +963,7 @@ literal|4
 operator|+
 name|mac_len
 expr_stmt|;
-comment|// Now, alter the MAC so it becomes invalid.
+comment|/* Now, alter the MAC so it becomes invalid. */
 name|testpkt
 operator|.
 name|exten
@@ -993,7 +1006,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// Activate authentication option
+comment|/* Activate authentication option */
 name|PrepareAuthenticationTestMD5
 argument_list|(
 literal|30
@@ -1011,8 +1024,7 @@ name|AUTHENTICATION
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Prepare the packet. Observe that the Key-ID expected is 30,
-comment|// but the packet has a key id of 50.
+comment|/* Prepare the packet. Note that the Key-ID expected is 30, but 	 * the packet has a key id of 50. 	 */
 name|int
 name|pkt_len
 init|=
@@ -1035,10 +1047,6 @@ name|mac_len
 init|=
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 argument_list|,
@@ -1048,10 +1056,6 @@ name|MAX_MD5_LEN
 argument_list|,
 name|key_ptr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 operator|.
@@ -1267,7 +1271,7 @@ argument_list|,
 name|MODE_CLIENT
 argument_list|)
 expr_stmt|;
-comment|// The packet has a mode of MODE_CLIENT, but process_pkt expects MODE_SERVER
+comment|/* The packet has a mode of MODE_CLIENT, but process_pkt expects 	 * MODE_SERVER 	 */
 name|TEST_ASSERT_EQUAL
 argument_list|(
 name|SERVER_UNUSEABLE
@@ -1683,7 +1687,7 @@ name|pkt_len
 init|=
 name|LEN_PKT_NOMAC
 decl_stmt|;
-comment|// Prepare the packet.
+comment|/* Prepare the packet. */
 name|testpkt
 operator|.
 name|exten
@@ -1701,10 +1705,6 @@ name|mac_len
 init|=
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 argument_list|,
@@ -1714,10 +1714,6 @@ name|MAX_MD5_LEN
 argument_list|,
 name|key_ptr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 operator|.
@@ -1790,7 +1786,7 @@ name|pkt_len
 init|=
 name|LEN_PKT_NOMAC
 decl_stmt|;
-comment|// Prepare the packet.
+comment|/* Prepare the packet. */
 name|testpkt
 operator|.
 name|exten
@@ -1808,10 +1804,6 @@ name|mac_len
 init|=
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 argument_list|,
@@ -1821,10 +1813,6 @@ name|MAX_MAC_LEN
 argument_list|,
 name|key_ptr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|testpkt
 operator|.

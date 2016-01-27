@@ -92,6 +92,8 @@ argument_list|,
 name|str
 argument_list|,
 name|len
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
