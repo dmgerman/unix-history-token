@@ -479,9 +479,9 @@ index|]
 decl_stmt|;
 comment|/* 	 * Each cpu has its own software interrupt handler for channel 	 * event and msg handling. 	 */
 name|struct
-name|intr_event
+name|taskqueue
 modifier|*
-name|hv_event_intr_event
+name|hv_event_queue
 index|[
 name|MAXCPU
 index|]
@@ -490,13 +490,6 @@ name|struct
 name|intr_event
 modifier|*
 name|hv_msg_intr_event
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-name|void
-modifier|*
-name|event_swintr
 index|[
 name|MAXCPU
 index|]
@@ -2077,8 +2070,8 @@ begin_function_decl
 name|void
 name|hv_vmbus_on_events
 parameter_list|(
-name|void
-modifier|*
+name|int
+name|cpu
 parameter_list|)
 function_decl|;
 end_function_decl
