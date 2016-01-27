@@ -2410,6 +2410,26 @@ parameter_list|)
 value|TCPSTAT_ADD(name, 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCPSTAT_DEC
+parameter_list|(
+name|name
+parameter_list|)
+value|TCPSTAT_ADD(name, -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPSTAT_FETCH
+parameter_list|(
+name|name
+parameter_list|)
+value|VNET_PCPUSTAT_FETCH(struct tcpstat, tcpstat, \ 				    name)
+end_define
+
 begin_comment
 comment|/*  * Kernel module consumers must use this accessor macro.  */
 end_comment

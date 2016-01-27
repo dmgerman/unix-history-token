@@ -180,6 +180,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|VNET_PCPUSTAT_FETCH
+parameter_list|(
+name|type
+parameter_list|,
+name|name
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|counter_u64_fetch(VNET(name)[offsetof(type, f) / sizeof(uint64_t)])
+end_define
+
+begin_define
+define|#
+directive|define
 name|VNET_PCPUSTAT_SYSINIT
 parameter_list|(
 name|name
