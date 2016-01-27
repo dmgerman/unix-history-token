@@ -7373,7 +7373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Entry point for bread() and breadn() via #defines in sys/buf.h.  *  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything, see  * getblk(). Also starts asynchronous I/O on read-ahead blocks.  */
+comment|/*  * Entry point for bread() and breadn() via #defines in sys/buf.h.  *  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything, see  * getblk(). Also starts asynchronous I/O on read-ahead blocks.  *  * Always return a NULL buffer pointer (in bpp) when returning an error.  */
 end_comment
 
 begin_function
@@ -7598,6 +7598,24 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+literal|0
+condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+operator|*
+name|bpp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -8808,6 +8826,14 @@ block|{
 name|int
 name|qindex
 decl_stmt|;
+comment|/* 	 * Many function erroneously call brelse with a NULL bp under rare 	 * error conditions. Simply return when called with a NULL bp. 	 */
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return;
 name|CTR3
 argument_list|(
 name|KTR_BUF
