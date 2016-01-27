@@ -235,6 +235,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|bool
+name|tsw_busy_t
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ttydevsw
@@ -299,11 +312,16 @@ modifier|*
 name|tsw_free
 decl_stmt|;
 comment|/* Destructor. */
+name|tsw_busy_t
+modifier|*
+name|tsw_busy
+decl_stmt|;
+comment|/* Draining output. */
 name|void
 modifier|*
 name|tsw_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* For future use. */
@@ -340,6 +358,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -348,6 +367,7 @@ name|tsw_open
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -533,6 +553,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -547,6 +568,7 @@ name|data
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -594,6 +616,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -610,6 +633,7 @@ name|data
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -641,6 +665,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -651,6 +676,7 @@ name|tp
 argument_list|,
 name|t
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -683,6 +709,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -695,6 +722,7 @@ name|sigon
 argument_list|,
 name|sigoff
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -735,6 +763,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tp
 operator|->
 name|t_devsw
@@ -751,6 +780,7 @@ name|nprot
 argument_list|,
 name|memattr
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -832,6 +862,49 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|bool
+name|ttydevsw_busy
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+block|{
+name|tty_lock_assert
+argument_list|(
+name|tp
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+operator|!
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|tp
+operator|->
+name|t_devsw
+operator|->
+name|tsw_busy
+argument_list|(
+name|tp
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

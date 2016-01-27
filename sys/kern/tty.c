@@ -545,6 +545,11 @@ name|t_outq
 argument_list|)
 operator|>
 literal|0
+operator|||
+name|ttydevsw_busy
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 block|{
 name|ttydevsw_outwakeup
@@ -568,6 +573,12 @@ condition|(
 name|bytesused
 operator|==
 literal|0
+operator|&&
+operator|!
+name|ttydevsw_busy
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -936,6 +947,7 @@ name|oflags
 parameter_list|,
 name|int
 name|devtype
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -1391,11 +1403,13 @@ name|fflag
 parameter_list|,
 name|int
 name|devtype
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2855,6 +2869,7 @@ name|kn
 parameter_list|,
 name|long
 name|hint
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2972,6 +2987,7 @@ name|kn
 parameter_list|,
 name|long
 name|hint
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3298,9 +3314,11 @@ name|dev
 parameter_list|,
 name|int
 name|oflags
+name|__unused
 parameter_list|,
 name|int
 name|devtype
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -3397,17 +3415,21 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+name|__unused
 parameter_list|,
 name|int
 name|flag
+name|__unused
 parameter_list|,
 name|int
 name|mode
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3427,14 +3449,17 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+name|__unused
 parameter_list|,
 name|struct
 name|uio
 modifier|*
 name|uio
+name|__unused
 parameter_list|,
 name|int
 name|ioflag
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3867,6 +3892,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3886,8 +3912,9 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -3899,6 +3926,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
 block|{
 name|panic
@@ -3918,8 +3946,9 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -3931,17 +3960,21 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
+name|__unused
 parameter_list|,
 name|caddr_t
 name|data
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3961,20 +3994,25 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|int
 name|unit
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
+name|__unused
 parameter_list|,
 name|caddr_t
 name|data
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -3994,6 +4032,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|struct
 name|termios
@@ -4083,12 +4122,15 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|int
 name|sigon
+name|__unused
 parameter_list|,
 name|int
 name|sigoff
+name|__unused
 parameter_list|)
 block|{
 comment|/* Simulate a carrier to make the TTY layer happy. */
@@ -4109,20 +4151,25 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|vm_ooffset_t
 name|offset
+name|__unused
 parameter_list|,
 name|vm_paddr_t
 modifier|*
 name|paddr
+name|__unused
 parameter_list|,
 name|int
 name|nprot
+name|__unused
 parameter_list|,
 name|vm_memattr_t
 modifier|*
 name|memattr
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -4143,11 +4190,13 @@ name|struct
 name|tty
 modifier|*
 name|tp
+name|__unused
 parameter_list|,
 name|char
 name|event
+name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -4158,6 +4207,7 @@ parameter_list|(
 name|void
 modifier|*
 name|softc
+name|__unused
 parameter_list|)
 block|{
 name|panic
@@ -4165,6 +4215,26 @@ argument_list|(
 literal|"Terminal device freed without a free-handler"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|ttydevsw_defbusy
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 end_function
 
@@ -4290,6 +4360,11 @@ expr_stmt|;
 name|PATCH_FUNC
 argument_list|(
 name|free
+argument_list|)
+expr_stmt|;
+name|PATCH_FUNC
+argument_list|(
+name|busy
 argument_list|)
 expr_stmt|;
 undef|#
@@ -8495,16 +8570,20 @@ operator|->
 name|t_dev
 condition|)
 return|return
+operator|(
 name|dev2udev
 argument_list|(
 name|tp
 operator|->
 name|t_dev
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|NODEV
+operator|)
 return|;
 block|}
 end_function
@@ -9412,6 +9491,7 @@ parameter_list|(
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 name|dev_console
@@ -9502,6 +9582,7 @@ end_include
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
@@ -10514,7 +10595,8 @@ name|TTYOUTQ_DATASIZE
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%p %10s %5zu %4u %4u %4zu %5zu %4u %4zu %5u %5d %5d "
+literal|"%p %10s %5zu %4u %4u %4zu %5zu %4u %4zu %5u %5d "
+literal|"%5d "
 argument_list|,
 name|tp
 argument_list|,
