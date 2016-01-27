@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
@@ -177,6 +171,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_fsm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_var.h>
 end_include
 
 begin_include
