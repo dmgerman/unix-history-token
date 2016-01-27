@@ -543,14 +543,15 @@ name|struct
 name|file
 modifier|*
 name|fp
-init|=
-name|filemon
-operator|->
-name|fp
 decl_stmt|;
-comment|/* Get exclusive write access. */
+comment|/* Follow same locking order as filemon_pid_check. */
 name|filemon_lock_write
 argument_list|()
+expr_stmt|;
+name|filemon_filemon_lock
+argument_list|(
+name|filemon
+argument_list|)
 expr_stmt|;
 comment|/* Remove from the in-use list. */
 name|TAILQ_REMOVE
@@ -562,6 +563,12 @@ name|filemon
 argument_list|,
 name|link
 argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|filemon
+operator|->
+name|fp
 expr_stmt|;
 name|filemon
 operator|->
@@ -588,6 +595,11 @@ name|link
 argument_list|)
 expr_stmt|;
 comment|/* Give up write access. */
+name|filemon_filemon_unlock
+argument_list|(
+name|filemon
+argument_list|)
+expr_stmt|;
 name|filemon_unlock_write
 argument_list|()
 expr_stmt|;
