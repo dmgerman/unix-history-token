@@ -403,6 +403,9 @@ decl_stmt|;
 name|uint16_t
 name|eh_type
 decl_stmt|;
+name|uint16_t
+name|tot_len
+decl_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -426,6 +429,12 @@ name|uint32_t
 modifier|*
 name|ts_ptr
 decl_stmt|;
+name|uint8_t
+name|l4_hdr_type
+decl_stmt|;
+name|int
+name|tcp_ack
+decl_stmt|;
 name|eh
 operator|=
 name|mtod
@@ -446,17 +455,15 @@ operator|->
 name|ether_type
 argument_list|)
 expr_stmt|;
-name|u8
 name|l4_hdr_type
-init|=
+operator|=
 name|get_cqe_l4_hdr_type
 argument_list|(
 name|cqe
 argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|tcp_ack
-init|=
+operator|=
 operator|(
 operator|(
 name|CQE_L4_HDR_TYPE_TCP_ACK_NO_DATA
@@ -470,11 +477,10 @@ operator|==
 name|l4_hdr_type
 operator|)
 operator|)
-decl_stmt|;
+expr_stmt|;
 comment|/* TODO: consider vlan */
-name|u16
 name|tot_len
-init|=
+operator|=
 name|be32_to_cpu
 argument_list|(
 name|cqe
@@ -483,7 +489,7 @@ name|byte_cnt
 argument_list|)
 operator|-
 name|ETHER_HDR_LEN
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|eh_type
