@@ -917,11 +917,11 @@ name|memcpy
 argument_list|(
 name|kname
 argument_list|,
-name|PATH_BOOT3
+name|PATH_LOADER
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|PATH_BOOT3
+name|PATH_LOADER
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -946,11 +946,11 @@ name|memcpy
 argument_list|(
 name|kname
 argument_list|,
-name|PATH_BOOT3
+name|PATH_LOADER
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|PATH_BOOT3
+name|PATH_LOADER
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -32,13 +32,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATH_BOOT3
-value|"/boot/loader"
-end_define
-
-begin_define
-define|#
-directive|define
 name|PATH_LOADER
 value|"/boot/loader"
 end_define
@@ -48,6 +41,13 @@ define|#
 directive|define
 name|PATH_LOADER_EFI
 value|"/boot/loader.efi"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_LOADER_ZFS
+value|"/boot/zfsloader"
 end_define
 
 begin_define
