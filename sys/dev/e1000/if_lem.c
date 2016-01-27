@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2012, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -289,7 +289,7 @@ name|char
 name|lem_driver_version
 index|[]
 init|=
-literal|"1.0.6"
+literal|"1.1.0"
 decl_stmt|;
 end_decl_stmt
 
@@ -7802,12 +7802,14 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|EM_MAX_SCATTER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7819,7 +7821,7 @@ condition|)
 block|{
 name|adapter
 operator|->
-name|mbuf_alloc_failed
+name|mbuf_defrag_failed
 operator|++
 expr_stmt|;
 name|m_freem
@@ -12707,12 +12709,6 @@ name|fail_0
 label|:
 name|dma
 operator|->
-name|dma_map
-operator|=
-name|NULL
-expr_stmt|;
-name|dma
-operator|->
 name|dma_tag
 operator|=
 name|NULL
@@ -12754,9 +12750,9 @@ if|if
 condition|(
 name|dma
 operator|->
-name|dma_map
+name|dma_paddr
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|bus_dmamap_sync
@@ -12785,6 +12781,22 @@ operator|->
 name|dma_map
 argument_list|)
 expr_stmt|;
+name|dma
+operator|->
+name|dma_paddr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dma
+operator|->
+name|dma_vaddr
+operator|!=
+name|NULL
+condition|)
+block|{
 name|bus_dmamem_free
 argument_list|(
 name|dma
@@ -12802,7 +12814,7 @@ argument_list|)
 expr_stmt|;
 name|dma
 operator|->
-name|dma_map
+name|dma_vaddr
 operator|=
 name|NULL
 expr_stmt|;
@@ -13921,30 +13933,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-if|if
-condition|(
-name|adapter
-operator|->
-name|br
-operator|!=
-name|NULL
-condition|)
-name|buf_ring_free
-argument_list|(
-name|adapter
-operator|->
-name|br
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -21582,26 +21570,6 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"mbuf_alloc_fail"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|mbuf_alloc_failed
-argument_list|,
-literal|"Std mbuf failed"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_ULONG
-argument_list|(
-name|ctx
-argument_list|,
-name|child
-argument_list|,
-name|OID_AUTO
-argument_list|,
 literal|"cluster_alloc_fail"
 argument_list|,
 name|CTLFLAG_RD
@@ -21612,6 +21580,26 @@ operator|->
 name|mbuf_cluster_failed
 argument_list|,
 literal|"Std mbuf cluster failed"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_defrag_fail"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|mbuf_defrag_failed
+argument_list|,
+literal|"Defragmenting mbuf chain failed"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_ULONG

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2991,6 +2991,24 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QV_RELEASE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_LPT_B0_SUPPORT
+argument_list|)
+name|u16
+name|pci_cfg
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* QV_RELEASE || !defined(NO_PCH_LPT_B0_SUPPORT) */
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_mac_params_ich8lan"
@@ -3264,6 +3282,45 @@ expr_stmt|;
 case|case
 name|e1000_pchlan
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QV_RELEASE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_LPT_B0_SUPPORT
+argument_list|)
+comment|/* save PCH revision_id */
+name|e1000_read_pci_cfg
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_PCI_REVISION_ID_REG
+argument_list|,
+operator|&
+name|pci_cfg
+argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|revision_id
+operator|=
+call|(
+name|u8
+call|)
+argument_list|(
+name|pci_cfg
+operator|&=
+literal|0x000F
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* QV_RELEASE || !defined(NO_PCH_LPT_B0_SUPPORT) */
 comment|/* check management mode */
 name|mac
 operator|->
@@ -4350,7 +4407,6 @@ comment|/* max LTR latency encoded */
 name|s64
 name|lat_ns
 decl_stmt|;
-comment|/* latency (ns) */
 name|s64
 name|value
 decl_stmt|;
@@ -5237,7 +5293,6 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT1
 argument_list|(
 literal|"Error in ULP enable flow: %d\n"
@@ -5245,7 +5300,6 @@ argument_list|,
 name|ret_val
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|hw
 operator|->
@@ -5798,7 +5852,6 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT1
 argument_list|(
 literal|"Error in ULP disable flow: %d\n"
@@ -5806,7 +5859,6 @@ argument_list|,
 name|ret_val
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|hw
 operator|->

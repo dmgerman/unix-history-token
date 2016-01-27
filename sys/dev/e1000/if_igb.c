@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -8826,12 +8826,14 @@ name|FALSE
 expr_stmt|;
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|IGB_MAX_SCATTER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8873,19 +8875,6 @@ name|retry
 goto|;
 block|}
 else|else
-return|return
-operator|(
-name|error
-operator|)
-return|;
-case|case
-name|ENOMEM
-case|:
-name|txr
-operator|->
-name|no_tx_dma_setup
-operator|++
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -15394,12 +15383,6 @@ name|fail_0
 label|:
 name|dma
 operator|->
-name|dma_map
-operator|=
-name|NULL
-expr_stmt|;
-name|dma
-operator|->
 name|dma_tag
 operator|=
 name|NULL
@@ -15441,9 +15424,9 @@ if|if
 condition|(
 name|dma
 operator|->
-name|dma_map
+name|dma_paddr
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|bus_dmamap_sync
@@ -15472,6 +15455,22 @@ operator|->
 name|dma_map
 argument_list|)
 expr_stmt|;
+name|dma
+operator|->
+name|dma_paddr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dma
+operator|->
+name|dma_vaddr
+operator|!=
+name|NULL
+condition|)
+block|{
 name|bus_dmamem_free
 argument_list|(
 name|dma
@@ -15489,7 +15488,7 @@ argument_list|)
 expr_stmt|;
 name|dma
 operator|->
-name|dma_map
+name|dma_vaddr
 operator|=
 name|NULL
 expr_stmt|;
@@ -26780,6 +26779,26 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"dropped"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|dropped_pkts
+argument_list|,
+literal|"Driver dropped packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"link_irq"
 argument_list|,
 name|CTLFLAG_RD
@@ -26800,16 +26819,16 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"dropped"
+literal|"mbuf_defrag_fail"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|adapter
 operator|->
-name|dropped_pkts
+name|mbuf_defrag_failed
 argument_list|,
-literal|"Driver dropped packets"
+literal|"Defragmenting mbuf chain failed"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_ULONG

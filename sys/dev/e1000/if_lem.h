@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -785,6 +785,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* NIC_PARAVIRT */
+end_comment
+
+begin_comment
 comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
 end_comment
 
@@ -855,18 +859,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-name|struct
-name|buf_ring
-modifier|*
-name|br
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|e1000_hw
 name|hw
@@ -1161,11 +1153,15 @@ name|dropped_pkts
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_alloc_failed
+name|link_irq
 decl_stmt|;
 name|unsigned
 name|long
 name|mbuf_cluster_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_defrag_failed
 decl_stmt|;
 name|unsigned
 name|long
@@ -1177,11 +1173,11 @@ name|no_tx_desc_avail2
 decl_stmt|;
 name|unsigned
 name|long
-name|no_tx_map_avail
+name|no_tx_dma_setup
 decl_stmt|;
 name|unsigned
 name|long
-name|no_tx_dma_setup
+name|no_tx_map_avail
 decl_stmt|;
 name|unsigned
 name|long
@@ -1189,19 +1185,15 @@ name|watchdog_events
 decl_stmt|;
 name|unsigned
 name|long
-name|rx_overruns
-decl_stmt|;
-name|unsigned
-name|long
 name|rx_irq
 decl_stmt|;
 name|unsigned
 name|long
-name|tx_irq
+name|rx_overruns
 decl_stmt|;
 name|unsigned
 name|long
-name|link_irq
+name|tx_irq
 decl_stmt|;
 comment|/* 82547 workaround */
 name|uint32_t
@@ -1231,33 +1223,73 @@ name|in_detach
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|NIC_SEND_COMBINING
+comment|/* 0 = idle; 1xxxx int-pending; 3xxxx int + d pending + tdt */
+define|#
+directive|define
+name|MIT_PENDING_INT
+value|0x10000
+comment|/* pending interrupt */
+define|#
+directive|define
+name|MIT_PENDING_TDT
+value|0x30000
+comment|/* both intr and tdt write are pending */
+name|uint32_t
+name|shadow_tdt
+decl_stmt|;
+name|uint32_t
+name|sc_enable
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NIC_SEND_COMBINING */
+ifdef|#
+directive|ifdef
+name|BATCH_DISPATCH
+name|uint32_t
+name|batch_enable
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* BATCH_DISPATCH */
+ifdef|#
+directive|ifdef
 name|NIC_PARAVIRT
 name|struct
 name|em_dma_alloc
 name|csb_mem
 decl_stmt|;
+comment|/* phys address */
 name|struct
 name|paravirt_csb
 modifier|*
 name|csb
 decl_stmt|;
+comment|/* virtual addr */
 name|uint32_t
 name|rx_retries
 decl_stmt|;
+comment|/* optimize rx loop */
 name|uint32_t
 name|tdt_csb_count
 decl_stmt|;
+comment|// XXX stat
 name|uint32_t
 name|tdt_reg_count
 decl_stmt|;
+comment|// XXX stat
 name|uint32_t
 name|tdt_int_count
 decl_stmt|;
+comment|// XXX stat
 name|uint32_t
 name|guest_need_kick_count
 decl_stmt|;
+comment|// XXX stat
 endif|#
 directive|endif
+comment|/* NIC_PARAVIRT */
 name|struct
 name|e1000_hw_stats
 name|stats
