@@ -267,7 +267,7 @@ name|rman_res_t
 name|rm_start
 decl_stmt|;
 comment|/* base of managed region */
-name|bus_size_t
+name|rman_res_t
 name|rm_size
 decl_stmt|;
 comment|/* size of managed region */
