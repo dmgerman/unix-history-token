@@ -208,7 +208,7 @@ name|struct
 name|isa_config
 name|config
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|start
 decl_stmt|,
 name|count

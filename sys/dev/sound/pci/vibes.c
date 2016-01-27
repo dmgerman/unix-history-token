@@ -3700,6 +3700,13 @@ name|sc_info
 modifier|*
 name|sc
 decl_stmt|;
+name|rman_res_t
+name|count
+decl_stmt|,
+name|midi_start
+decl_stmt|,
+name|games_start
+decl_stmt|;
 name|u_int32_t
 name|data
 decl_stmt|;
@@ -3710,12 +3717,6 @@ name|SND_STATUSLEN
 index|]
 decl_stmt|;
 name|u_long
-name|midi_start
-decl_stmt|,
-name|games_start
-decl_stmt|,
-name|count
-decl_stmt|,
 name|sdmaa
 decl_stmt|,
 name|sdmac

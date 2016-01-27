@@ -1909,13 +1909,13 @@ name|int
 modifier|*
 name|rid
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int
@@ -2176,7 +2176,7 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-name|u_long
+name|bus_space_handle_t
 name|p
 decl_stmt|;
 name|int

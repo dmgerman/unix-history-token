@@ -198,6 +198,13 @@ name|RM_TEXTLEN
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|RM_MAX_END
+value|((rman_res_t)~0)
+end_define
+
 begin_comment
 comment|/*  * Userspace-exported structures.  */
 end_comment
@@ -225,11 +232,11 @@ name|RM_TEXTLEN
 index|]
 decl_stmt|;
 comment|/* device name XXX obsolete */
-name|u_long
+name|rman_res_t
 name|r_start
 decl_stmt|;
 comment|/* offset in resource space */
-name|u_long
+name|rman_res_t
 name|r_size
 decl_stmt|;
 comment|/* size in resource space */
@@ -256,11 +263,11 @@ name|RM_TEXTLEN
 index|]
 decl_stmt|;
 comment|/* rman description */
-name|u_long
+name|rman_res_t
 name|rm_start
 decl_stmt|;
 comment|/* base of managed region */
-name|u_long
+name|bus_size_t
 name|rm_size
 decl_stmt|;
 comment|/* size of managed region */
@@ -341,11 +348,11 @@ argument_list|)
 name|rm_link
 expr_stmt|;
 comment|/* link in list of all rmans */
-name|u_long
+name|rman_res_t
 name|rm_start
 decl_stmt|;
 comment|/* index of globally first entry */
-name|u_long
+name|rman_res_t
 name|rm_end
 decl_stmt|;
 comment|/* index of globally last entry */
@@ -395,10 +402,10 @@ name|resource
 modifier|*
 name|r
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 function_decl|;
@@ -431,11 +438,11 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|end
 parameter_list|)
@@ -465,7 +472,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|rman_res_t
 name|rman_get_end
 parameter_list|(
 name|struct
@@ -511,7 +518,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|rman_res_t
 name|rman_get_size
 parameter_list|(
 name|struct
@@ -522,7 +529,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|rman_res_t
 name|rman_get_start
 parameter_list|(
 name|struct
@@ -606,11 +613,11 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|end
 parameter_list|)
@@ -636,10 +643,10 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 function_decl|;
@@ -685,13 +692,13 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int
@@ -716,16 +723,16 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|bound
 parameter_list|,
 name|u_int
@@ -795,7 +802,7 @@ name|resource
 modifier|*
 name|_r
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|_end
 parameter_list|)
 function_decl|;
@@ -825,7 +832,7 @@ name|resource
 modifier|*
 name|_r
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|_start
 parameter_list|)
 function_decl|;

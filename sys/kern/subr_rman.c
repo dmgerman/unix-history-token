@@ -145,11 +145,11 @@ argument_list|)
 operator|*
 name|r_sharehead
 expr_stmt|;
-name|u_long
+name|rman_res_t
 name|r_start
 decl_stmt|;
 comment|/* index of the first entry in this resource */
-name|u_long
+name|rman_res_t
 name|r_end
 decl_stmt|;
 comment|/* index of the last entry (inclusive) */
@@ -508,10 +508,10 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 block|{
@@ -1130,11 +1130,11 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|end
 parameter_list|)
@@ -1224,11 +1224,11 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|end
 parameter_list|)
@@ -1324,10 +1324,10 @@ name|resource
 modifier|*
 name|rr
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 block|{
@@ -2025,16 +2025,16 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|bound
 parameter_list|,
 name|u_int
@@ -2060,7 +2060,7 @@ decl_stmt|,
 modifier|*
 name|rv
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|rstart
 decl_stmt|,
 name|rend
@@ -3133,13 +3133,13 @@ name|rman
 modifier|*
 name|rm
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int
@@ -3793,7 +3793,7 @@ name|resource
 modifier|*
 name|r
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|)
 block|{
@@ -3809,7 +3809,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|rman_res_t
 name|rman_get_start
 parameter_list|(
 name|struct
@@ -3839,7 +3839,7 @@ name|resource
 modifier|*
 name|r
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 block|{
@@ -3855,7 +3855,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|rman_res_t
 name|rman_get_end
 parameter_list|(
 name|struct
@@ -3877,7 +3877,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|rman_res_t
 name|rman_get_size
 parameter_list|(
 name|struct

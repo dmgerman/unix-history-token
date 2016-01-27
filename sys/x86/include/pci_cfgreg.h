@@ -100,19 +100,19 @@ value|0x0e
 end_define
 
 begin_function_decl
-name|u_long
+name|rman_res_t
 name|hostb_alloc_start
 parameter_list|(
 name|int
 name|type
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|)
 function_decl|;

@@ -246,7 +246,7 @@ name|rman
 modifier|*
 name|rm
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|end
 decl_stmt|,
 name|start
@@ -2701,13 +2701,13 @@ name|int
 modifier|*
 name|rid
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int
@@ -3175,11 +3175,11 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|startp
 parameter_list|,
-name|u_long
+name|rman_res_t
 modifier|*
 name|countp
 parameter_list|)
@@ -3194,7 +3194,7 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|start
 decl_stmt|;
 comment|/* Get our immediate child. */

@@ -1314,8 +1314,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-name|unsigned
-name|long
+name|rman_res_t
 name|junk
 decl_stmt|,
 name|sirq

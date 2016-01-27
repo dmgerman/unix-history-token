@@ -1142,6 +1142,13 @@ name|vm_size_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__rman_res_t
+name|rman_res_t
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef

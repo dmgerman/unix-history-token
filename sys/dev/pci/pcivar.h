@@ -1508,10 +1508,10 @@ name|__inline
 name|int
 name|pci_is_vga_ioport_range
 parameter_list|(
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 block|{
@@ -1553,10 +1553,10 @@ name|__inline
 name|int
 name|pci_is_vga_memory_range
 parameter_list|(
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 block|{

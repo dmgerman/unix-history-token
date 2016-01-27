@@ -483,6 +483,14 @@ name|__mbstate_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|__rman_res_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
