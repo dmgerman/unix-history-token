@@ -21,6 +21,12 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_fsm.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2320,6 +2326,13 @@ name|uint64_t
 name|tcps_sig_err_nosigopt
 decl_stmt|;
 comment|/* No signature provided by segment */
+comment|/* Running connection count. */
+name|uint64_t
+name|tcps_states
+index|[
+name|TCP_NSTATES
+index|]
+decl_stmt|;
 name|uint64_t
 name|_pad
 index|[

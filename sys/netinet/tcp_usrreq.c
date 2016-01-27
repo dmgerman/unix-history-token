@@ -8601,6 +8601,14 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
+name|TCPSTAT_INC
+argument_list|(
+name|tcps_states
+index|[
+name|TCPS_CLOSED
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -1846,6 +1846,14 @@ argument_list|)
 expr_stmt|;
 name|TCPSTAT_INC
 argument_list|(
+name|tcps_states
+index|[
+name|TCPS_SYN_RECEIVED
+index|]
+argument_list|)
+expr_stmt|;
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_sc_added
 argument_list|)
 expr_stmt|;
@@ -1875,6 +1883,14 @@ block|{
 name|SCH_LOCK_ASSERT
 argument_list|(
 name|sch
+argument_list|)
+expr_stmt|;
+name|TCPSTAT_DEC
+argument_list|(
+name|tcps_states
+index|[
+name|TCPS_SYN_RECEIVED
+index|]
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -4617,7 +4633,15 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Pull out the entry to unlock the bucket row. */
+comment|/* 		 * Pull out the entry to unlock the bucket row. 		 *  		 * NOTE: We must decrease TCPS_SYN_RECEIVED count here, not 		 * tcp_state_change().  The tcpcb is not existent at this 		 * moment.  A new one will be allocated via syncache_socket-> 		 * sonewconn->tcp_usr_attach in TCPS_CLOSED state, then 		 * syncache_socket() will change it to TCPS_SYN_RECEIVED. 		 */
+name|TCPSTAT_DEC
+argument_list|(
+name|tcps_states
+index|[
+name|TCPS_SYN_RECEIVED
+index|]
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
