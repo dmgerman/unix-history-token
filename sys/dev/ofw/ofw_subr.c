@@ -898,7 +898,7 @@ operator|(
 literal|"Bus sddress is too large: %jx"
 operator|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|addr
 operator|)
@@ -914,9 +914,9 @@ operator|(
 literal|"Bus size is too large: %jx"
 operator|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
-name|addr
+name|size
 operator|)
 argument_list|)
 expr_stmt|;
