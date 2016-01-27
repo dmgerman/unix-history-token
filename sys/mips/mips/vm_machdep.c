@@ -1759,13 +1759,10 @@ comment|/* 	 * At the point where a function is called, sp must be 8 	 * byte al
 name|sp
 operator|=
 operator|(
-call|(
-name|register_t
-call|)
-argument_list|(
+operator|(
+operator|(
 name|intptr_t
-argument_list|)
-argument_list|(
+operator|)
 name|stack
 operator|->
 name|ss_sp
@@ -1773,7 +1770,7 @@ operator|+
 name|stack
 operator|->
 name|ss_size
-argument_list|)
+operator|)
 operator|&
 operator|~
 literal|0x7

@@ -1394,6 +1394,9 @@ name|sigframe
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk

@@ -3191,6 +3191,9 @@ condition|)
 block|{
 name|sp
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk

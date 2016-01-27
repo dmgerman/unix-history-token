@@ -1809,6 +1809,10 @@ condition|)
 block|{
 name|sp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|td
 operator|->
 name|td_sigstk
