@@ -588,6 +588,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_EXP_LNKCAP_SLS_2_5GB
+value|0x01
+end_define
+
+begin_comment
+comment|/* Supported Link Speed 2.5GT/s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_EXP_LNKCAP_SLS_5_0GB
+value|0x02
+end_define
+
+begin_comment
+comment|/* Supported Link Speed 5.0GT/s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_EXP_LNKCAP_MLW
+value|0x03f0
+end_define
+
+begin_comment
+comment|/* Maximum Link Width */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_EXP_LNKCAP2_SLS_2_5GB
+value|0x02
+end_define
+
+begin_comment
+comment|/* Supported Link Speed 2.5GT/s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_EXP_LNKCAP2_SLS_5_0GB
+value|0x04
+end_define
+
+begin_comment
+comment|/* Supported Link Speed 5.0GT/s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_EXP_LNKCAP2_SLS_8_0GB
+value|0x08
+end_define
+
+begin_comment
+comment|/* Supported Link Speed 8.0GT/s */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IORESOURCE_MEM
 value|SYS_RES_MEMORY
 end_define
@@ -605,6 +671,36 @@ directive|define
 name|IORESOURCE_IRQ
 value|SYS_RES_IRQ
 end_define
+
+begin_enum
+enum|enum
+name|pci_bus_speed
+block|{
+name|PCI_SPEED_UNKNOWN
+init|=
+operator|-
+literal|1
+block|,
+name|PCIE_SPEED_2_5GT
+block|,
+name|PCIE_SPEED_5_0GT
+block|,
+name|PCIE_SPEED_8_0GT
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|pcie_link_width
+block|{
+name|PCIE_LNK_WIDTH_UNKNOWN
+init|=
+operator|-
+literal|1
+block|, }
+enum|;
+end_enum
 
 begin_struct_decl
 struct_decl|struct
@@ -1700,10 +1796,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * pci_pcie_cap - get the saved PCIe capability offset  * @dev: PCI device  *  * PCIe capability offset is calculated at PCI device initialization  * time and saved in the data structure. This function returns saved  * PCIe capability offset. Using this instead of pci_find_capability()  * reduces unnecessary search in the PCI configuration space. If you  * need to calculate PCIe capability offset from raw device for some  * reasons, please use pci_find_capability() instead.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -2392,10 +2484,6 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_comment
-comment|/**  * DEFINE_PCI_DEVICE_TABLE - macro used to describe a pci device table  * @_table: device table name  *  * This macro is used to create a struct pci_device_id array (a device table)  * in a generic manner.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2749,31 +2837,16 @@ begin_enum
 enum|enum
 name|pci_channel_state
 block|{
-comment|/* I/O channel is in normal state */
 name|pci_channel_io_normal
 init|=
-operator|(
-name|__force
-name|pci_channel_state_t
-operator|)
 literal|1
 block|,
-comment|/* I/O to channel is blocked */
 name|pci_channel_io_frozen
 init|=
-operator|(
-name|__force
-name|pci_channel_state_t
-operator|)
 literal|2
 block|,
-comment|/* PCI card is dead */
 name|pci_channel_io_perm_failure
 init|=
-operator|(
-name|__force
-name|pci_channel_state_t
-operator|)
 literal|3
 block|, }
 enum|;
@@ -2783,49 +2856,24 @@ begin_enum
 enum|enum
 name|pci_ers_result
 block|{
-comment|/* no result/none/not supported in device driver */
 name|PCI_ERS_RESULT_NONE
 init|=
-operator|(
-name|__force
-name|pci_ers_result_t
-operator|)
 literal|1
 block|,
-comment|/* Device driver can recover without slot reset */
 name|PCI_ERS_RESULT_CAN_RECOVER
 init|=
-operator|(
-name|__force
-name|pci_ers_result_t
-operator|)
 literal|2
 block|,
-comment|/* Device driver wants slot to be reset. */
 name|PCI_ERS_RESULT_NEED_RESET
 init|=
-operator|(
-name|__force
-name|pci_ers_result_t
-operator|)
 literal|3
 block|,
-comment|/* Device has completely failed, is unrecoverable */
 name|PCI_ERS_RESULT_DISCONNECT
 init|=
-operator|(
-name|__force
-name|pci_ers_result_t
-operator|)
 literal|4
 block|,
-comment|/* Device driver is fully recovered and operational */
 name|PCI_ERS_RESULT_RECOVERED
 init|=
-operator|(
-name|__force
-name|pci_ers_result_t
-operator|)
 literal|5
 block|, }
 enum|;
@@ -2839,7 +2887,6 @@ begin_struct
 struct|struct
 name|pci_error_handlers
 block|{
-comment|/* PCI bus error detected on this device */
 name|pci_ers_result_t
 function_decl|(
 modifier|*
@@ -2856,7 +2903,6 @@ name|pci_channel_state
 name|error
 parameter_list|)
 function_decl|;
-comment|/* MMIO has been re-enabled, but not DMA */
 name|pci_ers_result_t
 function_decl|(
 modifier|*
@@ -2869,7 +2915,6 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
-comment|/* PCI Express link has been reset */
 name|pci_ers_result_t
 function_decl|(
 modifier|*
@@ -2882,7 +2927,6 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
-comment|/* PCI slot has been reset */
 name|pci_ers_result_t
 function_decl|(
 modifier|*
@@ -2895,7 +2939,6 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
-comment|/* Device driver may resume normal operations */
 name|void
 function_decl|(
 modifier|*
@@ -2913,7 +2956,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* freeBSD does not support SRIOV - yet */
+comment|/* FreeBSD does not support SRIOV - yet */
 end_comment
 
 begin_function
@@ -3342,6 +3385,67 @@ begin_function
 specifier|static
 specifier|inline
 name|int
+name|pcie_capability_read_dword
+parameter_list|(
+name|struct
+name|pci_dev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|pos
+parameter_list|,
+name|u32
+modifier|*
+name|dst
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pos
+operator|&
+literal|3
+condition|)
+return|return
+operator|-
+name|EINVAL
+return|;
+if|if
+condition|(
+operator|!
+name|pcie_capability_reg_implemented
+argument_list|(
+name|dev
+argument_list|,
+name|pos
+argument_list|)
+condition|)
+return|return
+operator|-
+name|EINVAL
+return|;
+return|return
+name|pci_read_config_dword
+argument_list|(
+name|dev
+argument_list|,
+name|pci_pcie_cap
+argument_list|(
+name|dev
+argument_list|)
+operator|+
+name|pos
+argument_list|,
+name|dst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
 name|pcie_capability_write_word
 parameter_list|(
 name|struct
@@ -3393,6 +3497,66 @@ name|pos
 argument_list|,
 name|val
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|pcie_get_minimum_link
+parameter_list|(
+name|struct
+name|pci_dev
+modifier|*
+name|dev
+parameter_list|,
+name|enum
+name|pci_bus_speed
+modifier|*
+name|speed
+parameter_list|,
+name|enum
+name|pcie_link_width
+modifier|*
+name|width
+parameter_list|)
+block|{
+operator|*
+name|speed
+operator|=
+name|PCI_SPEED_UNKNOWN
+expr_stmt|;
+operator|*
+name|width
+operator|=
+name|PCIE_LNK_WIDTH_UNKNOWN
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|pci_num_vf
+parameter_list|(
+name|struct
+name|pci_dev
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function

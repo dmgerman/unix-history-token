@@ -322,7 +322,7 @@ decl_stmt|,
 modifier|*
 name|port1
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|count
 decl_stmt|,
 name|start
@@ -646,7 +646,7 @@ decl_stmt|;
 name|phandle_t
 name|child
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|count
 decl_stmt|,
 name|intr

@@ -1760,6 +1760,10 @@ name|advertise
 decl_stmt|;
 comment|/* link speeds */
 name|bool
+name|enable_aim
+decl_stmt|;
+comment|/* adaptive interrupt moderation */
+name|bool
 name|link_active
 decl_stmt|;
 name|u16

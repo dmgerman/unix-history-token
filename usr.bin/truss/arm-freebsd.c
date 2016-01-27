@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"truss.h"
+file|<sysdecode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"freebsd_syscalls.h"
+file|"truss.h"
 end_include
 
 begin_function
@@ -520,12 +520,7 @@ init|=
 block|{
 literal|"FreeBSD ELF32"
 block|,
-name|syscallnames
-block|,
-name|nitems
-argument_list|(
-name|syscallnames
-argument_list|)
+name|FREEBSD
 block|,
 name|arm_fetch_args
 block|,

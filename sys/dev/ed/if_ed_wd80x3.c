@@ -251,7 +251,7 @@ name|sum
 decl_stmt|,
 name|totalsum
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|irq
 decl_stmt|,
 name|junk

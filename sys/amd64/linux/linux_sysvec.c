@@ -1369,6 +1369,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|issetugid
+decl_stmt|;
 name|p
 operator|=
 name|imgp
@@ -1441,6 +1444,18 @@ name|envc
 operator|+
 literal|2
 operator|)
+expr_stmt|;
+name|issetugid
+operator|=
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_SUGID
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 name|AUXARGS_ENTRY
 argument_list|(
@@ -1618,7 +1633,7 @@ name|pos
 argument_list|,
 name|LINUX_AT_SECURE
 argument_list|,
-literal|0
+name|issetugid
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
@@ -3176,6 +3191,9 @@ condition|)
 block|{
 name|sp
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk

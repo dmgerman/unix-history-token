@@ -576,13 +576,13 @@ name|int
 modifier|*
 name|rid
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int
@@ -1235,7 +1235,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|u_long p; 	int error; 	 	if (type == SYS_RES_MEMORY) { 		error = bus_space_map(rman_get_bustag(r), 		    rman_get_bushandle(r), rman_get_size(r), 0,&p); 		if (error) 			return (error); 		rman_set_bushandle(r, p); 	}
+block|rman_res_t p; 	int error; 	 	if (type == SYS_RES_MEMORY) { 		error = bus_space_map(rman_get_bustag(r), 		    rman_get_bushandle(r), rman_get_size(r), 0,&p); 		if (error) 			return (error); 		rman_set_bushandle(r, p); 	}
 endif|#
 directive|endif
 return|return

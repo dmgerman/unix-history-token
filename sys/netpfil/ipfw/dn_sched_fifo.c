@@ -151,6 +151,11 @@ name|m
 parameter_list|)
 block|{
 comment|/* XXX if called with q != NULL and m=NULL, this is a 	 * re-enqueue from an existing scheduler, which we should 	 * handle. 	 */
+operator|(
+name|void
+operator|)
+name|q
+expr_stmt|;
 return|return
 name|dn_enqueue
 argument_list|(

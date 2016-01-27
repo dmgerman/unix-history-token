@@ -3011,9 +3011,6 @@ decl_stmt|;
 name|struct
 name|hlist_node
 modifier|*
-name|n
-decl_stmt|,
-modifier|*
 name|tmp
 decl_stmt|;
 name|struct
@@ -3052,8 +3049,6 @@ expr_stmt|;
 name|hlist_for_each_entry_safe
 argument_list|(
 argument|entry
-argument_list|,
-argument|n
 argument_list|,
 argument|tmp
 argument_list|,

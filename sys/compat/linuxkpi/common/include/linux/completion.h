@@ -52,7 +52,18 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|((c)->done = 0)
+value|do { (c)->done = 0; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|reinit_completion
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|do { (c)->done = 0; } while (0)
 end_define
 
 begin_define

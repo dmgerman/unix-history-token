@@ -212,7 +212,7 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|tmp
 decl_stmt|;
 comment|/* dont probe PnP devices */
@@ -812,13 +812,13 @@ name|int
 modifier|*
 name|rid
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int

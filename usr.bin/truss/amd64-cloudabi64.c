@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cloudabi.h"
+file|<sysdecode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cloudabi64_syscalls.h"
+file|"cloudabi.h"
 end_include
 
 begin_include
@@ -393,12 +393,7 @@ init|=
 block|{
 literal|"CloudABI ELF64"
 block|,
-name|syscallnames
-block|,
-name|nitems
-argument_list|(
-name|syscallnames
-argument_list|)
+name|CLOUDABI64
 block|,
 name|amd64_cloudabi64_fetch_args
 block|,

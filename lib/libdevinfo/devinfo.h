@@ -116,13 +116,11 @@ name|devinfo_handle_t
 name|dm_handle
 decl_stmt|;
 comment|/* resource manager handle */
-name|unsigned
-name|long
+name|rman_res_t
 name|dm_start
 decl_stmt|;
 comment|/* resource start */
-name|unsigned
-name|long
+name|rman_res_t
 name|dm_size
 decl_stmt|;
 comment|/* resource size */
@@ -151,13 +149,11 @@ name|devinfo_handle_t
 name|dr_device
 decl_stmt|;
 comment|/* owning device */
-name|unsigned
-name|long
+name|rman_res_t
 name|dr_start
 decl_stmt|;
 comment|/* region start */
-name|unsigned
-name|long
+name|rman_res_t
 name|dr_size
 decl_stmt|;
 comment|/* region size */

@@ -358,7 +358,7 @@ name|ED_HPP_TEST_SIZE
 index|]
 decl_stmt|;
 comment|/* probing card */
-name|u_long
+name|rman_res_t
 name|conf_maddr
 decl_stmt|,
 name|conf_msize

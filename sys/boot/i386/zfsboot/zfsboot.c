@@ -2593,7 +2593,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * Try to exec stage 3 boot loader. If interrupted by a keypress,      * or in case of failure, try to load a kernel directly instead.      */
+comment|/*      * Try to exec /boot/loader. If interrupted by a keypress,      * or in case of failure, try to load a kernel directly instead.      */
 if|if
 condition|(
 name|autoboot
@@ -2607,11 +2607,11 @@ name|memcpy
 argument_list|(
 name|kname
 argument_list|,
-name|PATH_BOOT3
+name|PATH_LOADER_ZFS
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|PATH_BOOT3
+name|PATH_LOADER_ZFS
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -325,7 +325,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_long
+name|rman_res_t
 name|start
 decl_stmt|,
 name|count

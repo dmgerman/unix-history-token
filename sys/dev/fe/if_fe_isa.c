@@ -777,7 +777,7 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|irq
@@ -2720,7 +2720,7 @@ name|error
 decl_stmt|,
 name|xirq
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|irq
@@ -3188,7 +3188,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|irq
@@ -3424,7 +3424,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|irq
@@ -3712,7 +3712,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|irq
@@ -3924,7 +3924,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|iobase
 decl_stmt|,
 name|irq

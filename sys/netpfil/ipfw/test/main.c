@@ -3,23 +3,15 @@ begin_comment
 comment|/*  * $FreeBSD$  *  * Testing program for schedulers  *  * The framework include a simple controller which, at each  * iteration, decides whether we can enqueue and/or dequeue.  * Then the mainloop runs the required number of tests,  * keeping track of statistics.  */
 end_comment
 
+begin_comment
+comment|// #define USE_BURST	// what is this for ?
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"dn_test.h"
 end_include
-
-begin_struct
-struct|struct
-name|q_list
-block|{
-name|struct
-name|list_head
-name|h
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -60,14 +52,21 @@ name|uint32_t
 name|dequeue
 decl_stmt|;
 comment|/* generator parameters */
-name|int
+name|int32_t
 name|th_min
 decl_stmt|,
 name|th_max
 decl_stmt|;
+comment|/* thresholds for hysteresis; negative means per flow */
+ifdef|#
+directive|ifdef
+name|USE_BURST
 name|int
 name|maxburst
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* USE_BURST */
 name|int
 name|lmin
 decl_stmt|,
@@ -86,16 +85,22 @@ name|int
 name|wsum
 decl_stmt|;
 comment|/* sum of weights of all flows */
+ifdef|#
+directive|ifdef
+name|USE_CUR
 name|int
 name|max_y
 decl_stmt|;
 comment|/* max random number in the generation */
 name|int
 name|cur_y
-decl_stmt|,
+name|int
 name|cur_fs
 decl_stmt|;
 comment|/* used in generation, between 0 and max_y - 1 */
+endif|#
+directive|endif
+comment|/* USE_CUR */
 specifier|const
 name|char
 modifier|*
@@ -163,14 +168,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* size of the three fields including sched-specific areas */
-name|int
+name|uint32_t
 name|schk_len
 decl_stmt|;
-name|int
+name|uint32_t
 name|q_len
 decl_stmt|;
 comment|/* size of a queue including sched-fields */
-name|int
+name|uint32_t
 name|si_len
 decl_stmt|;
 comment|/* size of a sch_inst including sched-fields */
@@ -180,33 +185,36 @@ name|q
 decl_stmt|;
 comment|/* array of flow queues */
 comment|/* use a char* because size is variable */
+comment|/* 	 * The scheduler template (one) followd by schk_datalen bytes 	 * for scheduler-specific parameters, total size is schk_len 	 */
 name|struct
-name|dn_fsk
+name|dn_schk
 modifier|*
-name|fs
+name|sched
 decl_stmt|;
-comment|/* array of flowsets */
+comment|/* 	 * one scheduler instance, followed by si_datalen bytes 	 * for scheduler specific parameters of this instance, 	 * total size is si_len. si->sched points to sched 	 */
 name|struct
 name|dn_sch_inst
 modifier|*
 name|si
 decl_stmt|;
 name|struct
-name|dn_schk
+name|dn_fsk
 modifier|*
-name|sched
+name|fs
 decl_stmt|;
+comment|/* array of flowsets */
 comment|/* generator state */
 name|int
 name|state
 decl_stmt|;
-comment|/* 0 = going up, 1: going down */
+comment|/* 0 = going up (enqueue), 1: going down (dequeue) */
 comment|/* 	 * We keep lists for each backlog level, and always serve 	 * the one with shortest backlog. llmask contains a bitmap 	 * of lists, and ll are the heads of the lists. The last 	 * entry (BACKLOG) contains all entries considered 'full' 	 * XXX to optimize things, entry i could contain queues with 	 * 2^{i-1}+1 .. 2^i entries. 	 */
 define|#
 directive|define
 name|BACKLOG
 value|30
-name|uint32_t
+comment|/* this many backlogged classes, we only need BACKLOG+1 */
+name|uint64_t
 name|llmask
 decl_stmt|;
 name|struct
@@ -232,7 +240,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* FI2Q and Q2FI converts from flow_id to dn_queue and back.  * We cannot easily use pointer arithmetic because it is variable size.   */
+comment|/* FI2Q and Q2FI converts from flow_id (i.e. queue index)  * to dn_queue and back. We cannot simply use pointer arithmetic  * because the queu has variable size, q_len  */
 end_comment
 
 begin_define
@@ -288,10 +296,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* release a packet: put the mbuf in the freelist, and the queue in  * the bucket.  */
+comment|/* release a packet for a given flow_id.  * Put the mbuf in the freelist, and in case move the  * flow to the end of the bucket.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|drop
 parameter_list|(
@@ -438,74 +447,64 @@ block|}
 end_function
 
 begin_comment
-comment|/* dequeue returns NON-NULL when a packet is dropped */
+comment|/*  * dn_sch_inst does not have a queue, for the RR we  * allocate a mq right after si  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|enqueue
+name|default_enqueue
 parameter_list|(
 name|struct
-name|cfg_s
+name|dn_sch_inst
 modifier|*
-name|c
+name|si
 parameter_list|,
-name|void
+name|struct
+name|dn_queue
 modifier|*
-name|_m
-parameter_list|)
-block|{
+name|q
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|)
+block|{
+name|struct
+name|mq
+modifier|*
+name|mq
 init|=
-name|_m
-decl_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|enq
-condition|)
-return|return
-name|c
-operator|->
-name|enq
-argument_list|(
-name|c
-operator|->
+operator|(
+expr|struct
+name|mq
+operator|*
+operator|)
 name|si
-argument_list|,
-name|FI2Q
-argument_list|(
-name|c
-argument_list|,
-name|m
-operator|->
-name|flow_id
-argument_list|)
-argument_list|,
-name|m
-argument_list|)
-return|;
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|q
+expr_stmt|;
+comment|/* this is the default function if no scheduler is provided */
 if|if
 condition|(
-name|c
+name|mq
 operator|->
 name|head
 operator|==
 name|NULL
 condition|)
-name|c
+name|mq
 operator|->
 name|head
 operator|=
 name|m
 expr_stmt|;
 else|else
-name|c
+name|mq
 operator|->
 name|tail
 operator|->
@@ -513,7 +512,7 @@ name|m_nextpkt
 operator|=
 name|m
 expr_stmt|;
-name|c
+name|mq
 operator|->
 name|tail
 operator|=
@@ -526,49 +525,43 @@ comment|/* default - success */
 block|}
 end_function
 
-begin_comment
-comment|/* dequeue returns NON-NULL when a packet is available */
-end_comment
-
 begin_function
 specifier|static
-name|void
+name|struct
+name|mbuf
 modifier|*
-name|dequeue
+name|default_dequeue
 parameter_list|(
 name|struct
-name|cfg_s
+name|dn_sch_inst
 modifier|*
-name|c
+name|si
 parameter_list|)
 block|{
+name|struct
+name|mq
+modifier|*
+name|mq
+init|=
+operator|(
+expr|struct
+name|mq
+operator|*
+operator|)
+name|si
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|deq
-condition|)
-return|return
-name|c
-operator|->
-name|deq
-argument_list|(
-name|c
-operator|->
-name|si
-argument_list|)
-return|;
+comment|/* this is the default function if no scheduler is provided */
 if|if
 condition|(
 operator|(
 name|m
 operator|=
-name|c
+name|mq
 operator|->
 name|head
 operator|)
@@ -576,11 +569,11 @@ condition|)
 block|{
 name|m
 operator|=
-name|c
+name|mq
 operator|->
 name|head
 expr_stmt|;
-name|c
+name|mq
 operator|->
 name|head
 operator|=
@@ -911,19 +904,46 @@ name|tosend
 operator|)
 condition|)
 block|{
+name|int
+name|ret
+decl_stmt|;
+name|struct
+name|dn_queue
+modifier|*
+name|q
+init|=
+name|FI2Q
+argument_list|(
+name|c
+argument_list|,
+name|m
+operator|->
+name|flow_id
+argument_list|)
+decl_stmt|;
 name|c
 operator|->
 name|_enqueue
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|enqueue
+name|ret
+operator|=
+name|c
+operator|->
+name|enq
 argument_list|(
 name|c
+operator|->
+name|si
+argument_list|,
+name|q
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 condition|)
 block|{
 name|drop
@@ -933,13 +953,17 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|ND
+name|D
 argument_list|(
 literal|"loop %d enqueue fail"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 				 * XXX do not insist; rather, try dequeue 				 */
+goto|goto
+name|do_dequeue
+goto|;
 block|}
 else|else
 block|{
@@ -962,6 +986,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
 if|if
 condition|(
 name|c
@@ -969,21 +994,27 @@ operator|->
 name|can_dequeue
 condition|)
 block|{
+name|do_dequeue
+label|:
 name|c
 operator|->
 name|dequeue
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|m
 operator|=
-name|dequeue
+name|c
+operator|->
+name|deq
 argument_list|(
 name|c
+operator|->
+name|si
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 condition|)
 block|{
 name|c
@@ -1011,6 +1042,21 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|D
+argument_list|(
+literal|"--- ouch, cannot operate on iteration %d, pending %d"
+argument_list|,
+name|i
+argument_list|,
+name|c
+operator|->
+name|pending
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
@@ -1042,11 +1088,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|dn_queue
-modifier|*
-name|q
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -1063,16 +1104,8 @@ name|i
 operator|++
 control|)
 block|{
-name|q
-operator|=
-name|FI2Q
-argument_list|(
-name|c
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|DX
+comment|//struct dn_queue *q = FI2Q(c, i);
+name|ND
 argument_list|(
 literal|1
 argument_list|,
@@ -1396,7 +1429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * flowsets are a comma-separated list of  *     weight:maxlen:flows  * indicating how many flows are hooked to that fs.  * Both weight and range can be min-max-steps.  * In a first pass we just count the number of flowsets and flows,  * in a second pass we complete the setup.  */
+comment|/*  * flowsets are a comma-separated list of  *     weight:maxlen:flows  * indicating how many flows are hooked to that fs.  * Both weight and range can be min-max-steps.  * The first pass (fs != NULL) justs count the number of flowsets and flows,  * the second pass (fs == NULL) we complete the setup.  */
 end_comment
 
 begin_function
@@ -1413,9 +1446,6 @@ specifier|const
 name|char
 modifier|*
 name|fs
-parameter_list|,
-name|int
-name|pass
 parameter_list|)
 block|{
 name|char
@@ -1453,6 +1483,15 @@ name|prev
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|pass
+init|=
+operator|(
+name|fs
+operator|==
+name|NULL
+operator|)
+decl_stmt|;
 name|DX
 argument_list|(
 literal|3
@@ -1472,16 +1511,36 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pass
-operator|==
-literal|0
+name|fs
+operator|!=
+name|NULL
 condition|)
+block|{
+comment|/* first pass */
+if|if
+condition|(
+name|c
+operator|->
+name|fs_config
+condition|)
+name|D
+argument_list|(
+literal|"warning, overwriting fs %s with %s"
+argument_list|,
+name|c
+operator|->
+name|fs_config
+argument_list|,
+name|fs
+argument_list|)
+expr_stmt|;
 name|c
 operator|->
 name|fs_config
 operator|=
 name|fs
 expr_stmt|;
+block|}
 name|s
 operator|=
 name|c
@@ -1785,7 +1844,7 @@ literal|4
 argument_list|,
 literal|"wrong parameters %s"
 argument_list|,
-name|fs
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2071,22 +2130,6 @@ block|}
 block|}
 name|c
 operator|->
-name|max_y
-operator|=
-name|prev
-condition|?
-name|prev
-operator|->
-name|base_y
-operator|+
-name|prev
-operator|->
-name|y
-else|:
-literal|0
-expr_stmt|;
-name|c
-operator|->
 name|flows
 operator|=
 name|n_flows
@@ -2115,6 +2158,40 @@ name|DX
 argument_list|(
 literal|1
 argument_list|,
+literal|"%d flows on %d flowsets"
+argument_list|,
+name|c
+operator|->
+name|flows
+argument_list|,
+name|c
+operator|->
+name|flowsets
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_CUR
+name|c
+operator|->
+name|max_y
+operator|=
+name|prev
+condition|?
+name|prev
+operator|->
+name|base_y
+operator|+
+name|prev
+operator|->
+name|y
+else|:
+literal|0
+expr_stmt|;
+name|DX
+argument_list|(
+literal|1
+argument_list|,
 literal|"%d flows on %d flowsets max_y %d"
 argument_list|,
 name|c
@@ -2130,6 +2207,9 @@ operator|->
 name|max_y
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_CUR */
 for|for
 control|(
 name|i
@@ -2247,6 +2327,80 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* available schedulers */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|moduledata_t
+modifier|*
+name|_g_dn_fifo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|moduledata_t
+modifier|*
+name|_g_dn_wf2qp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|moduledata_t
+modifier|*
+name|_g_dn_rr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|moduledata_t
+modifier|*
+name|_g_dn_qfq
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_QFQP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|moduledata_t
+modifier|*
+name|_g_dn_qfqp
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_KPS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|moduledata_t
+modifier|*
+name|_g_dn_kps
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -2315,8 +2469,10 @@ name|c
 operator|->
 name|th_min
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
+comment|/* 1 packet per flow */
 name|c
 operator|->
 name|th_max
@@ -2436,46 +2592,6 @@ literal|"-alg"
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|moduledata_t
-modifier|*
-name|_g_dn_fifo
-decl_stmt|;
-specifier|extern
-name|moduledata_t
-modifier|*
-name|_g_dn_wf2qp
-decl_stmt|;
-specifier|extern
-name|moduledata_t
-modifier|*
-name|_g_dn_rr
-decl_stmt|;
-specifier|extern
-name|moduledata_t
-modifier|*
-name|_g_dn_qfq
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_QFQP
-specifier|extern
-name|moduledata_t
-modifier|*
-name|_g_dn_qfqp
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|WITH_KPS
-specifier|extern
-name|moduledata_t
-modifier|*
-name|_g_dn_kps
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2684,6 +2800,9 @@ operator|->
 name|th_max
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BURST
 block|}
 elseif|else
 if|if
@@ -2728,6 +2847,9 @@ operator|->
 name|th_max
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_BURST */
 block|}
 elseif|else
 if|if
@@ -2882,10 +3004,9 @@ name|av
 index|[
 literal|1
 index|]
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+comment|/* first pass */
 name|DX
 argument_list|(
 literal|3
@@ -2918,6 +3039,9 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|USE_BURST
 if|if
 condition|(
 name|c
@@ -2932,6 +3056,9 @@ name|maxburst
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_BURST */
 if|if
 condition|(
 name|c
@@ -3065,6 +3192,7 @@ name|th_min
 operator|+
 literal|1
 expr_stmt|;
+comment|/* now load parameters from the module */
 if|if
 condition|(
 name|mod
@@ -3110,6 +3238,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
+comment|// XXX check enq and deq not null
 name|c
 operator|->
 name|enq
@@ -3151,42 +3280,90 @@ operator|->
 name|schk_datalen
 expr_stmt|;
 block|}
-comment|/* allocate queues, flowsets and one scheduler */
+else|else
+block|{
+comment|/* make sure c->si has room for a queue */
 name|c
 operator|->
-name|q
+name|enq
 operator|=
-name|calloc
+name|default_enqueue
+expr_stmt|;
+name|c
+operator|->
+name|deq
+operator|=
+name|default_dequeue
+expr_stmt|;
+block|}
+comment|/* allocate queues, flowsets and one scheduler */
+name|D
 argument_list|(
+literal|"using %d flows, %d flowsets"
+argument_list|,
 name|c
 operator|->
 name|flows
+argument_list|,
+name|c
+operator|->
+name|flowsets
+argument_list|)
+expr_stmt|;
+name|D
+argument_list|(
+literal|"q_len %d dn_fsk %d si %d sched %d"
 argument_list|,
 name|c
 operator|->
 name|q_len
-argument_list|)
-expr_stmt|;
-name|c
-operator|->
-name|q_wfi
-operator|=
-operator|(
-name|double
-operator|*
-operator|)
-name|calloc
-argument_list|(
-name|c
-operator|->
-name|flows
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
-name|double
+expr|struct
+name|dn_fsk
 argument_list|)
+argument_list|,
+name|c
+operator|->
+name|si_len
+argument_list|,
+name|c
+operator|->
+name|schk_len
 argument_list|)
 expr_stmt|;
+name|c
+operator|->
+name|sched
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+name|c
+operator|->
+name|schk_len
+argument_list|)
+expr_stmt|;
+comment|/* one parent scheduler */
+name|c
+operator|->
+name|si
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+name|c
+operator|->
+name|si_len
+argument_list|)
+expr_stmt|;
+comment|/* one scheduler instance */
 name|c
 operator|->
 name|fs
@@ -3206,20 +3383,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|->
-name|si
-operator|=
-name|calloc
-argument_list|(
-literal|1
-argument_list|,
-name|c
-operator|->
-name|si_len
-argument_list|)
-expr_stmt|;
-name|c
-operator|->
-name|sched
+name|q
 operator|=
 name|calloc
 argument_list|(
@@ -3229,22 +3393,48 @@ name|flows
 argument_list|,
 name|c
 operator|->
-name|schk_len
+name|q_len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* one queue per flow */
 name|c
 operator|->
-name|q
-operator|==
-name|NULL
+name|q_wfi
+operator|=
+name|calloc
+argument_list|(
+name|c
+operator|->
+name|flows
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|double
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* stats, one per flow */
+if|if
+condition|(
+operator|!
+name|c
+operator|->
+name|sched
 operator|||
+operator|!
+name|c
+operator|->
+name|si
+operator|||
+operator|!
 name|c
 operator|->
 name|fs
-operator|==
-name|NULL
+operator|||
+operator|!
+name|c
+operator|->
+name|q
 operator|||
 operator|!
 name|c
@@ -3254,7 +3444,7 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"error allocating memory for flows"
+literal|"error allocating memory"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3273,11 +3463,13 @@ name|c
 operator|->
 name|sched
 expr_stmt|;
+comment|/* link scheduler instance to template */
 if|if
 condition|(
 name|p
 condition|)
 block|{
+comment|/* run initialization code if needed */
 if|if
 condition|(
 name|p
@@ -3289,6 +3481,8 @@ operator|->
 name|config
 argument_list|(
 name|c
+operator|->
+name|si
 operator|->
 name|sched
 argument_list|)
@@ -3314,14 +3508,10 @@ name|parse_flowsets
 argument_list|(
 name|c
 argument_list|,
-name|av
-index|[
-literal|1
-index|]
-argument_list|,
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* second pass */
 comment|/* complete the work calling new_fsk */
 for|for
 control|(
@@ -3339,15 +3529,23 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|struct
+name|dn_fsk
+modifier|*
+name|fsk
+init|=
+operator|&
 name|c
 operator|->
 name|fs
 index|[
 name|i
 index|]
-operator|.
+decl_stmt|;
+if|if
+condition|(
+name|fsk
+operator|->
 name|fs
 operator|.
 name|par
@@ -3357,13 +3555,8 @@ index|]
 operator|==
 literal|0
 condition|)
-name|c
+name|fsk
 operator|->
-name|fs
-index|[
-name|i
-index|]
-operator|.
 name|fs
 operator|.
 name|par
@@ -3374,16 +3567,13 @@ operator|=
 literal|1000
 expr_stmt|;
 comment|/* default pkt len */
-name|c
+name|fsk
 operator|->
-name|fs
-index|[
-name|i
-index|]
-operator|.
 name|sched
 operator|=
 name|c
+operator|->
+name|si
 operator|->
 name|sched
 expr_stmt|;
@@ -3399,17 +3589,12 @@ name|p
 operator|->
 name|new_fsk
 argument_list|(
-operator|&
-name|c
-operator|->
-name|fs
-index|[
-name|i
-index|]
+name|fsk
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* initialize the lists for the generator, and put 	 * all flows in the list for backlog = 0 	 */
+comment|/* --- now the scheduler is initialized --- */
+comment|/* 	 * initialize the lists for the generator, and put 	 * all flows in the list for backlog = 0 	 */
 for|for
 control|(
 name|i
@@ -3543,6 +3728,7 @@ name|llmask
 operator|=
 literal|1
 expr_stmt|;
+comment|/* all flows are in the first list */
 return|return
 literal|0
 return|;
@@ -3565,10 +3751,6 @@ block|{
 name|struct
 name|cfg_s
 name|c
-decl_stmt|;
-name|struct
-name|timeval
-name|end
 decl_stmt|;
 name|double
 name|ll
@@ -3621,12 +3803,30 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|D
+argument_list|(
+literal|"th_min %d th_max %d"
+argument_list|,
+name|c
+operator|.
+name|th_min
+argument_list|,
+name|c
+operator|.
+name|th_max
+argument_list|)
+expr_stmt|;
 name|mainloop
 argument_list|(
 operator|&
 name|c
 argument_list|)
 expr_stmt|;
+block|{
+name|struct
+name|timeval
+name|end
+decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -3635,62 +3835,36 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|timersub
+argument_list|(
+operator|&
 name|end
-operator|.
-name|tv_sec
-operator|-=
+argument_list|,
+operator|&
 name|c
 operator|.
 name|time
-operator|.
-name|tv_sec
-expr_stmt|;
-name|end
-operator|.
-name|tv_usec
-operator|-=
+argument_list|,
+operator|&
 name|c
 operator|.
 name|time
-operator|.
-name|tv_usec
-expr_stmt|;
-if|if
-condition|(
-name|end
-operator|.
-name|tv_usec
-operator|<
-literal|0
-condition|)
-block|{
-name|end
-operator|.
-name|tv_usec
-operator|+=
-literal|1000000
-expr_stmt|;
-name|end
-operator|.
-name|tv_sec
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
+name|ll
+operator|=
 name|c
 operator|.
 name|time
-operator|=
-name|end
-expr_stmt|;
-name|ll
-operator|=
-name|end
 operator|.
 name|tv_sec
 operator|*
 literal|1000000
 operator|+
-name|end
+name|c
+operator|.
+name|time
 operator|.
 name|tv_usec
 expr_stmt|;
@@ -3759,7 +3933,8 @@ expr_stmt|;
 block|}
 name|D
 argument_list|(
-literal|"sched=%-12s\ttime=%d.%03d sec (%.0f nsec)\twfi=%.02f\tflow=%-16s"
+literal|"sched=%-12s\ttime=%d.%03d sec (%.0f nsec) enq %lu %lu deq\n"
+literal|"\twfi=%.02f\tflow=%-16s"
 argument_list|,
 name|c
 operator|.
@@ -3786,6 +3961,22 @@ operator|/
 literal|1000
 argument_list|,
 name|ll
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|c
+operator|.
+name|_enqueue
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|c
+operator|.
+name|dequeue
 argument_list|,
 name|c
 operator|.
@@ -3880,7 +4071,7 @@ decl_stmt|;
 name|int
 name|flow_id
 decl_stmt|;
-comment|/* histeresis between max and min */
+comment|/* hysteresis between max and min */
 if|if
 condition|(
 name|c
@@ -3893,6 +4084,9 @@ name|c
 operator|->
 name|pending
 operator|>=
+operator|(
+name|uint32_t
+operator|)
 name|c
 operator|->
 name|th_max
@@ -3916,6 +4110,9 @@ name|c
 operator|->
 name|pending
 operator|<=
+operator|(
+name|uint32_t
+operator|)
 name|c
 operator|->
 name|th_min
@@ -3959,9 +4156,10 @@ if|if
 condition|(
 name|c
 operator|->
-name|state
+name|can_dequeue
 condition|)
 return|return;
+comment|/* 	 * locate the flow to use for enqueueing 	 * We take the queue with the lowest number of queued packets, 	 * generate a packet for it, and put the queue in the next highest. 	 */
 if|if
 condition|(
 literal|1
@@ -3998,10 +4196,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|DX
+name|D
 argument_list|(
-literal|2
-argument_list|,
 literal|"no candidate"
 argument_list|)
 expr_stmt|;
@@ -4229,6 +4425,15 @@ name|fs
 operator|->
 name|fs
 expr_stmt|;
+name|fs
+operator|->
+name|cur
+operator|=
+name|flow_id
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_CUR
 name|c
 operator|->
 name|cur_fs
@@ -4240,12 +4445,6 @@ operator|-
 name|c
 operator|->
 name|fs
-expr_stmt|;
-name|fs
-operator|->
-name|cur
-operator|=
-name|flow_id
 expr_stmt|;
 block|}
 else|else
@@ -4337,6 +4536,9 @@ operator|->
 name|cur_fs
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_CUR */
 block|}
 comment|/* construct a packet */
 if|if
@@ -4394,12 +4596,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|m
-operator|->
-name|cfg
-operator|=
-name|c
-expr_stmt|;
+comment|//m->cfg = c;
 name|m
 operator|->
 name|m_nextpkt
@@ -4460,10 +4657,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* Packet allocation: to achieve a distribution that matches weights, for each X=w/lmax class we should generate a number of packets proportional to Y = X times the number of flows in the class. So we construct an array with the cumulative distribution of Y's, and use it to identify the flow via inverse mapping (if the Y's are not too many we can use an array for the lookup). In practice, each flow will have X entries [virtually] pointing to it.  */
-end_comment
 
 end_unit
 

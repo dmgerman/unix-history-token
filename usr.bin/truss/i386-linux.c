@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"truss.h"
+file|<sysdecode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386-linux_syscalls.h"
+file|"truss.h"
 end_include
 
 begin_function
@@ -665,12 +665,7 @@ init|=
 block|{
 literal|"Linux ELF32"
 block|,
-name|syscallnames
-block|,
-name|nitems
-argument_list|(
-name|syscallnames
-argument_list|)
+name|LINUX
 block|,
 name|i386_linux_fetch_args
 block|,

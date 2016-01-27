@@ -1289,7 +1289,7 @@ name|dev
 decl_stmt|,
 name|bus
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|start
 decl_stmt|,
 name|end
@@ -4055,13 +4055,13 @@ name|int
 modifier|*
 name|rid
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|count
 parameter_list|,
 name|u_int
@@ -4093,7 +4093,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|bar_start
 decl_stmt|,
 name|bar_end

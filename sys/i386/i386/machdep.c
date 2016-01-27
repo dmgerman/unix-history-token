@@ -1688,6 +1688,9 @@ name|osigframe
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -2766,6 +2769,9 @@ name|sigframe4
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -3735,6 +3741,10 @@ condition|)
 block|{
 name|sp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|td
 operator|->
 name|td_sigstk

@@ -448,7 +448,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|uint32_t
 name|opts
 decl_stmt|;
@@ -1897,7 +1896,7 @@ condition|)
 block|{
 name|kname
 operator|=
-name|PATH_BOOT3
+name|PATH_LOADER
 expr_stmt|;
 if|if
 condition|(

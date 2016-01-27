@@ -5685,7 +5685,18 @@ value|13
 end_define
 
 begin_comment
-comment|/* reserved range for processor */
+comment|/* Start of processor reserved range. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_SPARC_REGISTER
+value|13
+end_define
+
+begin_comment
+comment|/* SPARC register information. */
 end_comment
 
 begin_define
@@ -5696,7 +5707,7 @@ value|15
 end_define
 
 begin_comment
-comment|/*   specific semantics. */
+comment|/* End of processor reserved range. */
 end_comment
 
 begin_comment

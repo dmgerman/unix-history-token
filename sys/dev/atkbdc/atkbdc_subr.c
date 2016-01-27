@@ -116,7 +116,7 @@ name|atkbdc_device_t
 modifier|*
 name|kbdcdev
 decl_stmt|;
-name|u_long
+name|rman_res_t
 name|irq
 decl_stmt|;
 name|int

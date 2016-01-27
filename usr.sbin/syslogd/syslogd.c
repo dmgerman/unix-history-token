@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|MAXSVLINE
-value|120
+value|MAXLINE
 end_define
 
 begin_comment

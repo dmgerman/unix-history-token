@@ -6733,10 +6733,6 @@ name|int
 name|sc_cap_off
 decl_stmt|;
 name|struct
-name|task
-name|sc_reinit_task
-decl_stmt|;
-name|struct
 name|callout
 name|calib_to
 decl_stmt|;

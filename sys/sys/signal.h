@@ -1966,7 +1966,7 @@ struct|struct
 block|{
 endif|#
 directive|endif
-name|char
+name|void
 modifier|*
 name|ss_sp
 decl_stmt|;
@@ -2094,8 +2094,7 @@ comment|/*  * Structure used in sigstack call.  */
 struct|struct
 name|sigstack
 block|{
-comment|/* XXX ss_sp's type should be `void *'. */
-name|char
+name|void
 modifier|*
 name|ss_sp
 decl_stmt|;

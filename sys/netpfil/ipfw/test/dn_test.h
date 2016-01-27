@@ -86,7 +86,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|fprintf(stderr, "%-8s " fmt "\n",      \         __FUNCTION__, ## args)
+value|fprintf(stderr, "%-10s %4d %-8s " fmt "\n",      \         __FILE__, __LINE__, __FUNCTION__, ## args)
 define|#
 directive|define
 name|DX
@@ -154,23 +154,28 @@ block|,
 name|DN_SCHED_WF2QP
 block|, }
 enum|;
+comment|/* from ip_dummynet.h, fields used in ip_dn_private.h */
 struct|struct
 name|dn_id
 block|{
-name|int
-name|type
-decl_stmt|,
-name|subtype
-decl_stmt|,
+name|uint16_t
 name|len
-decl_stmt|,
-name|id
 decl_stmt|;
+comment|/* total len inc. this header */
+name|uint8_t
+name|type
+decl_stmt|;
+name|uint8_t
+name|subtype
+decl_stmt|;
+comment|//	uint32_t	id;	/* generic id */
 block|}
 struct|;
+comment|/* (from ip_dummynet.h)  * A flowset, which is a template for flows. Contains parameters  * from the command line: id, target scheduler, queue sizes, plr,  * flow masks, buckets for the flow hash, and possibly scheduler-  * specific parameters (weight, quantum and so on).  */
 struct|struct
 name|dn_fs
 block|{
+comment|/* generic scheduler parameters. Leave them at -1 if unset.          * Now we use 0: weight, 1: lmax, 2: priority          */
 name|int
 name|par
 index|[
@@ -210,10 +215,12 @@ name|cur
 decl_stmt|;
 block|}
 struct|;
+comment|/* (ip_dummynet.h)  * scheduler template, indicating nam, number, mask and buckets  */
 struct|struct
 name|dn_sch
 block|{ }
 struct|;
+comment|/* (from ip_dummynet.h)  * dn_flow collects flow_id and stats for queues and scheduler  * instances, and is used to pass these info to userland.  * oid.type/oid.subtype describe the object, oid.id is number  * of the parent object.  */
 struct|struct
 name|dn_flow
 block|{
@@ -221,21 +228,25 @@ name|struct
 name|dn_id
 name|oid
 decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-name|int
-name|len_bytes
-decl_stmt|;
-name|int
-name|drops
+name|uint64_t
+name|tot_pkts
 decl_stmt|;
 name|uint64_t
 name|tot_bytes
 decl_stmt|;
 name|uint32_t
-name|flow_id
+name|length
 decl_stmt|;
+comment|/* Queue length, in packets */
+name|uint32_t
+name|len_bytes
+decl_stmt|;
+comment|/* Queue length, in bytes */
+name|uint32_t
+name|drops
+decl_stmt|;
+comment|//uint32_t flow_id;
+comment|/* the following fields are used by the traffic generator. 	 */
 name|struct
 name|list_head
 name|h
@@ -251,6 +262,7 @@ name|sch_bytes
 decl_stmt|;
 block|}
 struct|;
+comment|/* the link */
 struct|struct
 name|dn_link
 block|{ }
@@ -275,16 +287,12 @@ name|mbuf
 modifier|*
 name|m_nextpkt
 decl_stmt|;
-name|int
+name|uint32_t
 name|flow_id
 decl_stmt|;
 comment|/* for testing, index of a flow */
 comment|//int flowset_id;	/* for testing, index of a flowset */
-name|void
-modifier|*
-name|cfg
-decl_stmt|;
-comment|/* config args */
+comment|//void *cfg;	/* config args */
 block|}
 struct|;
 define|#
@@ -373,9 +381,6 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|IPFW
 include|#
 directive|include
 file|<dn_heap.h>
@@ -385,127 +390,6 @@ file|<ip_dn_private.h>
 include|#
 directive|include
 file|<dn_sched.h>
-else|#
-directive|else
-struct|struct
-name|dn_queue
-block|{
-name|struct
-name|dn_fsk
-modifier|*
-name|fs
-decl_stmt|;
-comment|/* parent flowset. */
-name|struct
-name|dn_sch_inst
-modifier|*
-name|_si
-decl_stmt|;
-comment|/* parent sched instance. */
-block|}
-struct|;
-struct|struct
-name|dn_schk
-block|{ }
-struct|;
-struct|struct
-name|dn_fsk
-block|{
-name|struct
-name|dn_fs
-name|fs
-decl_stmt|;
-name|struct
-name|dn_schk
-modifier|*
-name|sched
-decl_stmt|;
-block|}
-struct|;
-struct|struct
-name|dn_sch_inst
-block|{
-name|struct
-name|dn_schk
-modifier|*
-name|sched
-decl_stmt|;
-block|}
-struct|;
-struct|struct
-name|dn_alg
-block|{
-name|int
-name|type
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|void
-modifier|*
-name|enqueue
-decl_stmt|,
-modifier|*
-name|dequeue
-decl_stmt|;
-name|int
-name|q_datalen
-decl_stmt|,
-name|si_datalen
-decl_stmt|,
-name|schk_datalen
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|config
-function_decl|)
-parameter_list|(
-name|struct
-name|dn_schk
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|new_sched
-function_decl|)
-parameter_list|(
-name|struct
-name|dn_sch_inst
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|new_fsk
-function_decl|)
-parameter_list|(
-name|struct
-name|dn_fsk
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|new_queue
-function_decl|)
-parameter_list|(
-name|struct
-name|dn_queue
-modifier|*
-name|q
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|__FreeBSD__

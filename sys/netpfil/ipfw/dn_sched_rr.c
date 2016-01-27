@@ -149,14 +149,14 @@ name|int
 name|status
 decl_stmt|;
 comment|/* 1: queue is in the list */
-name|int
+name|uint32_t
 name|credit
 decl_stmt|;
-comment|/* Number of bytes to transmit */
-name|int
+comment|/* max bytes we can transmit */
+name|uint32_t
 name|quantum
 decl_stmt|;
-comment|/* quantum * C */
+comment|/* quantum * weight */
 name|struct
 name|rr_queue
 modifier|*
@@ -175,18 +175,18 @@ begin_struct
 struct|struct
 name|rr_schk
 block|{
-name|int
+name|uint32_t
 name|min_q
 decl_stmt|;
 comment|/* Min quantum */
-name|int
+name|uint32_t
 name|max_q
 decl_stmt|;
 comment|/* Max quantum */
-name|int
+name|uint32_t
 name|q_bytes
 decl_stmt|;
-comment|/* Bytes per quantum */
+comment|/* default quantum in bytes */
 block|}
 struct|;
 end_struct
@@ -900,6 +900,11 @@ modifier|*
 name|_si
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|_si
+expr_stmt|;
 name|ND
 argument_list|(
 literal|"called"
@@ -942,6 +947,7 @@ literal|1
 operator|)
 decl_stmt|;
 comment|/* par[0] is the weight, par[1] is the quantum step */
+comment|/* make sure the product fits an uint32_t */
 name|ipdn_bound_var
 argument_list|(
 operator|&
@@ -1019,6 +1025,9 @@ operator|*
 operator|)
 name|_q
 decl_stmt|;
+name|uint64_t
+name|quantum
+decl_stmt|;
 name|_q
 operator|->
 name|ni
@@ -1029,10 +1038,11 @@ name|subtype
 operator|=
 name|DN_SCHED_RR
 expr_stmt|;
-name|q
-operator|->
 name|quantum
 operator|=
+operator|(
+name|uint64_t
+operator|)
 name|_q
 operator|->
 name|fs
@@ -1054,6 +1064,39 @@ name|par
 index|[
 literal|1
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|quantum
+operator|>=
+operator|(
+literal|1ULL
+operator|<<
+literal|32
+operator|)
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"quantum too large, truncating to 4G - 1"
+argument_list|)
+expr_stmt|;
+name|quantum
+operator|=
+operator|(
+literal|1ULL
+operator|<<
+literal|32
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
+name|q
+operator|->
+name|quantum
+operator|=
+name|quantum
 expr_stmt|;
 name|ND
 argument_list|(
@@ -1221,7 +1264,11 @@ operator|.
 name|schk_datalen
 operator|=
 argument_list|)
-literal|0
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rr_schk
+argument_list|)
 block|,
 name|_SI
 argument_list|(

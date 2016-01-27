@@ -270,7 +270,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_cc.h>
+file|<netinet/cc/cc.h>
 end_include
 
 begin_ifdef
@@ -6329,9 +6329,9 @@ operator|->
 name|t_rxtshift
 index|]
 argument_list|,
-name|TCPTV_PERSMIN
+name|tcp_persmin
 argument_list|,
-name|TCPTV_PERSMAX
+name|tcp_persmax
 argument_list|)
 expr_stmt|;
 name|tcp_timer_activate

@@ -179,12 +179,6 @@ directive|include
 file|<netinet/tcp_timer.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_var.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -195,6 +189,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_fsm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_var.h>
 end_include
 
 begin_include
