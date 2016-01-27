@@ -1363,22 +1363,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_assert
-assert|_Static_assert
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_schk
-argument_list|)
-operator|<
-literal|193
-argument_list|,
-literal|"a"
-argument_list|)
-assert|;
-end_assert
-
 begin_expr_stmt
 name|DECLARE_DNSCHED_MODULE
 argument_list|(
