@@ -589,10 +589,6 @@ argument_list|(
 literal|"PATH"
 argument_list|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|prg_path
 argument_list|,
 literal|"rx"

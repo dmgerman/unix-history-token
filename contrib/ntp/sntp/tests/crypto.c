@@ -187,10 +187,6 @@ name|MD5_LENGTH
 argument_list|,
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|PKT_DATA
 argument_list|,
 name|PKT_LEN
@@ -315,10 +311,6 @@ name|SHA1_LENGTH
 argument_list|,
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|PKT_DATA
 argument_list|,
 name|PKT_LEN
@@ -367,11 +359,11 @@ modifier|*
 name|PKT_DATA
 init|=
 literal|"sometestdata"
-comment|// Data
+comment|/* Data */
 literal|"\0\0\0\0"
-comment|// Key-ID (unused)
+comment|/* Key-ID (unused) */
 literal|"\xc7\x58\x99\xdd\x99\x32\x0f\x71"
-comment|// MAC
+comment|/* MAC */
 literal|"\x2b\x7b\xfe\x4f\xa2\x32\xcf\xac"
 decl_stmt|;
 specifier|const
@@ -432,10 +424,6 @@ name|TEST_ASSERT_TRUE
 argument_list|(
 name|auth_md5
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|PKT_DATA
 argument_list|,
 name|PKT_LEN
@@ -466,11 +454,11 @@ modifier|*
 name|PKT_DATA
 init|=
 literal|"sometestdata"
-comment|// Data
+comment|/* Data */
 literal|"\0\0\0\0"
-comment|// Key-ID (unused)
+comment|/* Key-ID (unused) */
 literal|"\xad\x07\xde\x36\x39\xa6\x77\xfa\x5b\xce"
-comment|// MAC
+comment|/* MAC */
 literal|"\x2d\x8a\x7d\x06\x96\xe6\x0c\xbc\xed\xe1"
 decl_stmt|;
 specifier|const
@@ -531,10 +519,6 @@ name|TEST_ASSERT_TRUE
 argument_list|(
 name|auth_md5
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|PKT_DATA
 argument_list|,
 name|PKT_LEN
@@ -566,21 +550,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* We use a copy of the MD5 verification code, but modify 	 * the last bit to make sure verification fails. */
+comment|/* We use a copy of the MD5 verification code, but modify the 	 * last bit to make sure verification fails. 	 */
 specifier|const
 name|char
 modifier|*
 name|PKT_DATA
 init|=
 literal|"sometestdata"
-comment|// Data
+comment|/* Data */
 literal|"\0\0\0\0"
-comment|// Key-ID (unused)
+comment|/* Key-ID (unused) */
 literal|"\xc7\x58\x99\xdd\x99\x32\x0f\x71"
-comment|// MAC
+comment|/* MAC */
 literal|"\x2b\x7b\xfe\x4f\xa2\x32\xcf\x00"
 decl_stmt|;
-comment|// Last byte is wrong!
+comment|/* Last byte is wrong! */
 specifier|const
 name|int
 name|PKT_LEN
@@ -639,10 +623,6 @@ name|TEST_ASSERT_FALSE
 argument_list|(
 name|auth_md5
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|PKT_DATA
 argument_list|,
 name|PKT_LEN
@@ -737,10 +717,6 @@ literal|0
 argument_list|,
 name|make_mac
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|PKT_DATA
 argument_list|,
 name|PKT_LEN

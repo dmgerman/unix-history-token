@@ -370,10 +370,6 @@ name|opt_find_long
 argument_list|(
 name|pOpts
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|pzArg
 argument_list|,
 operator|&

@@ -181,6 +181,7 @@ operator|+=
 name|ao_string_cook_escape_char
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
