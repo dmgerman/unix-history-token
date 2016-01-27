@@ -418,17 +418,10 @@ name|struct
 name|timeval
 name|now
 decl_stmt|;
-comment|/* Load timestamp before locking.  Less accurate but less contention. */
 name|getmicrotime
 argument_list|(
 operator|&
 name|now
-argument_list|)
-expr_stmt|;
-comment|/* Lock the found filemon structure. */
-name|filemon_filemon_lock
-argument_list|(
-name|filemon
 argument_list|)
 expr_stmt|;
 name|len
@@ -480,12 +473,6 @@ operator|->
 name|msgbufr
 argument_list|,
 name|len
-argument_list|)
-expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
-argument_list|(
-name|filemon
 argument_list|)
 expr_stmt|;
 block|}

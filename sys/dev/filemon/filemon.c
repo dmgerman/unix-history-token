@@ -605,6 +605,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|filemon_filemon_lock
+argument_list|(
+name|filemon
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -732,6 +737,11 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|filemon_filemon_unlock
+argument_list|(
+name|filemon
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
