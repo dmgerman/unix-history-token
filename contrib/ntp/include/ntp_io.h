@@ -204,6 +204,12 @@ begin_comment
 comment|/* This needs Something above for GETDTABLESIZE */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ntp_keyacc.h"
+end_include
+
 begin_comment
 comment|/*  * Define FNDELAY and FASYNC using O_NONBLOCK and O_ASYNC if we need  * to (and can).  This is here initially for QNX, but may help for  * others as well...  */
 end_comment
@@ -330,23 +336,6 @@ name|isc_boolean_t
 name|get_broadcastclient_flag
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|is_ip_address
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|u_short
-parameter_list|,
-name|sockaddr_u
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

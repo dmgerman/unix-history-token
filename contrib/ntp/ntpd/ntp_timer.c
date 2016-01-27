@@ -2178,7 +2178,9 @@ else|else
 block|{
 name|int
 name|fired
-init|=
+decl_stmt|;
+name|fired
+operator|=
 name|leapsec_query
 argument_list|(
 operator|&
@@ -2188,10 +2190,10 @@ name|now
 argument_list|,
 name|tpiv
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|1
+literal|3
 argument_list|,
 operator|(
 literal|"*** leapsec_query: fired %i, now %u (0x%08X), tai_diff %i, ddist %u\n"
@@ -2624,6 +2626,9 @@ operator|=
 operator|(
 name|sys_tai
 operator|!=
+operator|(
+name|u_int
+operator|)
 name|lsdata
 operator|.
 name|tai_offs

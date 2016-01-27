@@ -2501,6 +2501,13 @@ name|lencode
 operator|=
 operator|(
 name|c
+operator|>
+literal|0
+operator|&&
+operator|(
+name|size_t
+operator|)
+name|c
 operator|<
 sizeof|sizeof
 argument_list|(

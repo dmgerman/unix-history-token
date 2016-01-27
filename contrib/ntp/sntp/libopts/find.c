@@ -306,11 +306,10 @@ expr_stmt|;
 operator|*
 name|arg_pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 name|p
+argument_list|)
 expr_stmt|;
 return|return
 name|res
