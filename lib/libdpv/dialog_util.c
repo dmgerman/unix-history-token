@@ -1112,7 +1112,7 @@ index|]
 operator|=
 name|malloc
 argument_list|(
-literal|8
+literal|1
 argument_list|)
 operator|)
 operator|==
@@ -1125,16 +1125,14 @@ argument_list|,
 literal|"Out of memory?!"
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
+operator|*
 name|dargv
 index|[
 name|n
 operator|++
 index|]
-argument_list|,
-literal|""
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 if|if
