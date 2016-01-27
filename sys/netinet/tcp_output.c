@@ -270,7 +270,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_cc.h>
+file|<netinet/cc/cc.h>
 end_include
 
 begin_ifdef
