@@ -15,6 +15,10 @@ directive|define
 name|_MYLIST_H
 end_define
 
+begin_comment
+comment|/* not just a head, also the link field for a list entry */
+end_comment
+
 begin_struct
 struct|struct
 name|list_head

@@ -228,6 +228,13 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+name|q
+operator|->
+name|ni
+operator|.
+name|tot_pkts
+operator|++
+expr_stmt|;
 return|return
 literal|0
 return|;
