@@ -10467,6 +10467,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * Second test is purely to silence bogus compiler 			 * warning about accessing past the end of dn_bonus. 			 */
 if|if
 condition|(
 name|sb
@@ -10481,6 +10482,18 @@ operator|<=
 name|dn
 operator|.
 name|dn_bonuslen
+operator|&&
+sizeof|sizeof
+argument_list|(
+name|znode_phys_t
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|dn
+operator|.
+name|dn_bonus
+argument_list|)
 condition|)
 block|{
 name|memcpy
