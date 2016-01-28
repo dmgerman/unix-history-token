@@ -1533,16 +1533,6 @@ decl_stmt|;
 comment|/* chip specific flags */
 define|#
 directive|define
-name|EHCI_SCFLG_SETMODE
-value|0x0001
-comment|/* set bridge mode again after init */
-define|#
-directive|define
-name|EHCI_SCFLG_FORCESPEED
-value|0x0002
-comment|/* force speed */
-define|#
-directive|define
 name|EHCI_SCFLG_NORESTERM
 value|0x0004
 comment|/* don't terminate reset sequence */
@@ -1551,11 +1541,6 @@ directive|define
 name|EHCI_SCFLG_BIGEDESC
 value|0x0008
 comment|/* big-endian byte order descriptors */
-define|#
-directive|define
-name|EHCI_SCFLG_BIGEMMIO
-value|0x0010
-comment|/* big-endian byte order MMIO */
 define|#
 directive|define
 name|EHCI_SCFLG_TT
@@ -1616,6 +1601,33 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* vendor string for root hub */
+name|void
+function_decl|(
+modifier|*
+name|sc_vendor_post_reset
+function_decl|)
+parameter_list|(
+name|struct
+name|ehci_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+name|uint16_t
+function_decl|(
+modifier|*
+name|sc_vendor_get_port_speed
+function_decl|)
+parameter_list|(
+name|struct
+name|ehci_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint16_t
+name|index
+parameter_list|)
+function_decl|;
 block|}
 name|ehci_softc_t
 typedef|;
@@ -2109,6 +2121,36 @@ parameter_list|(
 name|ehci_softc_t
 modifier|*
 name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint16_t
+name|ehci_get_port_speed_portsc
+parameter_list|(
+name|struct
+name|ehci_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint16_t
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint16_t
+name|ehci_get_port_speed_hostc
+parameter_list|(
+name|struct
+name|ehci_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint16_t
+name|index
 parameter_list|)
 function_decl|;
 end_function_decl
