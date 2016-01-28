@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -307,33 +313,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|struct
-name|resource
-modifier|*
-name|thunder_pcie_alloc_resource
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|rman_res_t
-parameter_list|,
-name|rman_res_t
-parameter_list|,
-name|rman_res_t
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|thunder_pcie_identify_pcib
 parameter_list|(
@@ -384,26 +363,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|uintptr_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|thunder_pcie_release_resource
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|resource
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1183,7 +1142,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|thunder_pcie_release_resource
 parameter_list|(
@@ -1239,7 +1197,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|resource
 modifier|*
