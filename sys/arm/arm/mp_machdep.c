@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/debug_monitor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -1071,6 +1077,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|dbg_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR0
 argument_list|(
 name|KTR_SMP
@@ -1407,6 +1421,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|dbg_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR0
 argument_list|(
 name|KTR_SMP
