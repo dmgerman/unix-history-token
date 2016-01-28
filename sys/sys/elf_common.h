@@ -5488,7 +5488,18 @@ value|10
 end_define
 
 begin_comment
-comment|/* Reserved range for operating system */
+comment|/* Start of operating system reserved range. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_GNU_UNIQUE
+value|10
+end_define
+
+begin_comment
+comment|/* Unique symbol (GNU) */
 end_comment
 
 begin_define
@@ -5499,7 +5510,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*   specific semantics. */
+comment|/* End of operating system reserved range. */
 end_comment
 
 begin_define
