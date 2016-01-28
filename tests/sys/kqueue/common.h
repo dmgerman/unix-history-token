@@ -177,6 +177,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|kevent
+modifier|*
+name|kevent_get_timeout
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|kevent_cmp
 parameter_list|(
