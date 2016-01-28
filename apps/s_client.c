@@ -874,7 +874,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -verify_host host - check peer certificate matches \"host\"\n"
+literal|" -verify_hostname host - check peer certificate matches \"host\"\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf

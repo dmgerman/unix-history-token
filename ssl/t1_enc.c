@@ -6177,7 +6177,7 @@ name|s3
 operator|->
 name|server_opaque_prf_input
 expr_stmt|;
-comment|/*          * must be same as col (see          * draft-resc-00.txts-opaque-prf-input-00.txt, section 3.1)          */
+comment|/*          * must be same as col (see          * draft-rescorla-tls-opaque-prf-input-00.txt, section 3.1)          */
 name|sol
 operator|=
 name|s
