@@ -1159,11 +1159,14 @@ decl_stmt|;
 comment|/* For PCIe devices that do not have FDT nodes, use PCIB method */
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ofw_bus_get_node
 argument_list|(
 name|child
 argument_list|)
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1467,11 +1470,14 @@ block|{
 comment|/* For PCIe devices that do not have FDT nodes, use PCIB method */
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ofw_bus_get_node
 argument_list|(
 name|child
 argument_list|)
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
