@@ -7023,7 +7023,7 @@ function_decl|;
 name|int
 name|degree
 decl_stmt|;
-comment|/*      * Qx, Qy and D are taken from      * http://csrcdocut.gov/groups/ST/toolkit/documents/Examples/ECDSA_Prime.pdf      * Otherwise, values are standard curve parameters from FIPS 180-3      */
+comment|/*      * Qx, Qy and D are taken from      * http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/ECDSA_Prime.pdf      * Otherwise, values are standard curve parameters from FIPS 180-3      */
 specifier|const
 name|char
 modifier|*

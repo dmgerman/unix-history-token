@@ -1077,6 +1077,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_SHUTDOWN
+argument_list|)
+block|,
+literal|"ssl3_shutdown"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_WRITE_BYTES
 argument_list|)
 block|,
@@ -4157,6 +4166,15 @@ name|SSL_R_SHORT_READ
 argument_list|)
 block|,
 literal|"short read"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SHUTDOWN_WHILE_IN_INIT
+argument_list|)
+block|,
+literal|"shutdown while in init"
 block|}
 block|,
 block|{

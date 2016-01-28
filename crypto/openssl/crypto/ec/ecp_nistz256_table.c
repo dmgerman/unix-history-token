@@ -52,7 +52,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|align
-name|4096
+name|64
 name|(
 name|ecp_nistz256_precomputed
 name|)

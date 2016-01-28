@@ -67,6 +67,10 @@ literal|"b@"
 block|,
 literal|".."
 block|,
+literal|"-example.com"
+block|,
+literal|"example-.com"
+block|,
 literal|"@@"
 block|,
 literal|"**"
@@ -109,6 +113,18 @@ literal|"example.net"
 block|,
 literal|"xn--rger-koa.example.com"
 block|,
+literal|"*.xn--rger-koa.example.com"
+block|,
+literal|"www.xn--rger-koa.example.com"
+block|,
+literal|"*.good--example.com"
+block|,
+literal|"www.good--example.com"
+block|,
+literal|"*.xn--bar.com"
+block|,
+literal|"xn--foo.xn--bar.com"
+block|,
 literal|"a.example.com"
 block|,
 literal|"b.example.com"
@@ -150,6 +166,12 @@ literal|"set CN: host: [*www.example.com] matches [www.example.com]"
 block|,
 literal|"set CN: host: [test.www.example.com] matches [.www.example.com]"
 block|,
+literal|"set CN: host: [*.xn--rger-koa.example.com] matches [www.xn--rger-koa.example.com]"
+block|,
+literal|"set CN: host: [*.xn--bar.com] matches [xn--foo.xn--bar.com]"
+block|,
+literal|"set CN: host: [*.good--example.com] matches [www.good--example.com]"
+block|,
 literal|"set CN: host-no-wildcards: [*.www.example.com] matches [.www.example.com]"
 block|,
 literal|"set CN: host-no-wildcards: [test.www.example.com] matches [.www.example.com]"
@@ -181,6 +203,12 @@ block|,
 literal|"set dnsName: host: [*www.example.com] matches [www.example.com]"
 block|,
 literal|"set dnsName: host: [test.www.example.com] matches [.www.example.com]"
+block|,
+literal|"set dnsName: host: [*.xn--rger-koa.example.com] matches [www.xn--rger-koa.example.com]"
+block|,
+literal|"set dnsName: host: [*.xn--bar.com] matches [xn--foo.xn--bar.com]"
+block|,
+literal|"set dnsName: host: [*.good--example.com] matches [www.good--example.com]"
 block|,
 literal|"set rfc822Name: email: [postmaster@example.com] does not match [Postmaster@example.com]"
 block|,
