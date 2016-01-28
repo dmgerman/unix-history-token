@@ -23,6 +23,14 @@ value|"Cavium ThunderX SMI/MDIO driver"
 end_define
 
 begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_THUNDER_MDIO
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DECLARE_CLASS
 argument_list|(
 name|thunder_mdio_driver
