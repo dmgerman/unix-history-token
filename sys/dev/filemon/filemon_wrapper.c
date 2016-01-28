@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -130,13 +136,6 @@ name|sys_vfork
 value|vfork
 end_define
 
-begin_define
-define|#
-directive|define
-name|sys_sys_exit
-value|sys_exit
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -163,6 +162,13 @@ end_endif
 begin_comment
 comment|/* __FreeBSD_version */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|filemon_exit_tag
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -2346,17 +2352,17 @@ end_endif
 begin_function
 specifier|static
 name|void
-name|filemon_wrapper_sys_exit
+name|filemon_event_process_exit
 parameter_list|(
-name|struct
-name|thread
+name|void
 modifier|*
-name|td
+name|arg
+name|__unused
 parameter_list|,
 name|struct
-name|sys_exit_args
+name|proc
 modifier|*
-name|uap
+name|p
 parameter_list|)
 block|{
 name|size_t
@@ -2385,7 +2391,7 @@ name|filemon
 operator|=
 name|filemon_pid_check
 argument_list|(
-name|curproc
+name|p
 argument_list|)
 operator|)
 operator|!=
@@ -2407,15 +2413,19 @@ operator|->
 name|msgbufr
 argument_list|)
 argument_list|,
-literal|"X %d %d\n"
+literal|"X %d %d %d\n"
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_pid
 argument_list|,
-name|uap
+name|p
 operator|->
-name|rval
+name|p_xexit
+argument_list|,
+name|p
+operator|->
+name|p_xsig
 argument_list|)
 expr_stmt|;
 name|filemon_output
@@ -2436,7 +2446,7 @@ name|filemon
 operator|->
 name|pid
 operator|==
-name|curproc
+name|p
 operator|->
 name|p_pid
 condition|)
@@ -2499,13 +2509,6 @@ name|filemon
 argument_list|)
 expr_stmt|;
 block|}
-name|sys_sys_exit
-argument_list|(
-name|td
-argument_list|,
-name|uap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2810,19 +2813,6 @@ name|filemon_wrapper_chdir
 expr_stmt|;
 name|sv_table
 index|[
-name|SYS_exit
-index|]
-operator|.
-name|sy_call
-operator|=
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|filemon_wrapper_sys_exit
-expr_stmt|;
-name|sv_table
-index|[
 name|SYS_execve
 index|]
 operator|.
@@ -3006,19 +2996,6 @@ name|filemon_wrapper_chdir
 expr_stmt|;
 name|sv_table
 index|[
-name|FREEBSD32_SYS_exit
-index|]
-operator|.
-name|sy_call
-operator|=
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|filemon_wrapper_sys_exit
-expr_stmt|;
-name|sv_table
-index|[
 name|FREEBSD32_SYS_freebsd32_execve
 index|]
 operator|.
@@ -3168,6 +3145,19 @@ directive|endif
 endif|#
 directive|endif
 comment|/* COMPAT_ARCH32 */
+name|filemon_exit_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|process_exit
+argument_list|,
+name|filemon_event_process_exit
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_LAST
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3219,19 +3209,6 @@ name|sy_call_t
 operator|*
 operator|)
 name|sys_chdir
-expr_stmt|;
-name|sv_table
-index|[
-name|SYS_exit
-index|]
-operator|.
-name|sy_call
-operator|=
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_sys_exit
 expr_stmt|;
 name|sv_table
 index|[
@@ -3418,19 +3395,6 @@ name|sys_chdir
 expr_stmt|;
 name|sv_table
 index|[
-name|FREEBSD32_SYS_exit
-index|]
-operator|.
-name|sy_call
-operator|=
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sys_sys_exit
-expr_stmt|;
-name|sv_table
-index|[
 name|FREEBSD32_SYS_freebsd32_execve
 index|]
 operator|.
@@ -3580,6 +3544,13 @@ directive|endif
 endif|#
 directive|endif
 comment|/* COMPAT_ARCH32 */
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|process_exit
+argument_list|,
+name|filemon_exit_tag
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
