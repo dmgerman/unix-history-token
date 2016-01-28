@@ -327,6 +327,13 @@ name|MMP2_CLK_SSP3
 value|80
 end_define
 
+begin_define
+define|#
+directive|define
+name|MMP2_CLK_TIMER
+value|81
+end_define
+
 begin_comment
 comment|/* axi periphrals */
 end_comment

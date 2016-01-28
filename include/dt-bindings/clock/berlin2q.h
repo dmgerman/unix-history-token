@@ -192,5 +192,12 @@ name|CLKID_TWD
 value|26
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLKID_CPU
+value|27
+end_define
+
 end_unit
 

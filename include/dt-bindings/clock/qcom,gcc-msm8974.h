@@ -2157,6 +2157,17 @@ name|GCC_SDCC1_CDCCAL_FF_CLK
 value|305
 end_define
 
+begin_comment
+comment|/* gdscs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_HS_HSIC_GDSC
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif

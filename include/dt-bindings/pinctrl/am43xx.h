@@ -81,6 +81,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MUX_MODE9
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|PULL_DISABLE
 value|(1<< 16)
 end_define
@@ -102,8 +109,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SLEWCTRL_FAST
+name|SLEWCTRL_SLOW
 value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLEWCTRL_FAST
+value|0
 end_define
 
 begin_define
@@ -111,6 +125,13 @@ define|#
 directive|define
 name|DS0_PULL_UP_DOWN_EN
 value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WAKEUP_ENABLE
+value|(1<< 29)
 end_define
 
 begin_define
@@ -153,6 +174,22 @@ define|#
 directive|define
 name|PIN_INPUT_PULLDOWN
 value|(INPUT_EN)
+end_define
+
+begin_comment
+comment|/*  * Macro to allow using the absolute physical address instead of the  * padconf registers instead of the offset from padconf base.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AM4372_IOPAD
+parameter_list|(
+name|pa
+parameter_list|,
+name|val
+parameter_list|)
+value|(((pa)& 0xffff) - 0x0800) (val)
 end_define
 
 begin_endif

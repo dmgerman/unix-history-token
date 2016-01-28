@@ -130,8 +130,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PXA910_CLK_PLL1_192
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|PXA910_CLK_UART_PLL
 value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|PXA910_CLK_USB_PLL
+value|28
 end_define
 
 begin_comment
@@ -248,6 +262,20 @@ define|#
 directive|define
 name|PXA910_CLK_SSP1
 value|75
+end_define
+
+begin_define
+define|#
+directive|define
+name|PXA910_CLK_TIMER0
+value|76
+end_define
+
+begin_define
+define|#
+directive|define
+name|PXA910_CLK_TIMER1
+value|77
 end_define
 
 begin_comment

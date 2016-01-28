@@ -130,8 +130,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PXA168_CLK_PLL1_192
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|PXA168_CLK_UART_PLL
 value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|PXA168_CLK_USB_PLL
+value|28
 end_define
 
 begin_comment
@@ -269,6 +283,13 @@ define|#
 directive|define
 name|PXA168_CLK_SSP4
 value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|PXA168_CLK_TIMER
+value|79
 end_define
 
 begin_comment

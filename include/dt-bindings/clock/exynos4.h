@@ -606,6 +606,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CLK_SSS
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLK_FIMC0
 value|256
 end_define

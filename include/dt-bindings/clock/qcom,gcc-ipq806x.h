@@ -1933,6 +1933,27 @@ name|UBI32_CORE2_CLK
 value|280
 end_define
 
+begin_define
+define|#
+directive|define
+name|EBI2_AON_CLK
+value|281
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSSTCM_CLK_SRC
+value|282
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSSTCM_CLK
+value|283
+end_define
+
 begin_endif
 endif|#
 directive|endif
