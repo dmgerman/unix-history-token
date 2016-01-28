@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bootstrap.h>
 end_include
 
@@ -243,8 +249,6 @@ name|np
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|err
 decl_stmt|;
 comment|/* minimum length check */
 if|if
@@ -321,6 +325,18 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+name|np
+operator|=
+name|devspec
+operator|+
+name|strlen
+argument_list|(
+name|dv
+operator|->
+name|dv_name
+argument_list|)
+expr_stmt|;
+block|{
 name|idev
 operator|=
 name|malloc
@@ -363,21 +379,6 @@ name|d_unit
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
-name|np
-operator|=
-name|devspec
-operator|+
-name|strlen
-argument_list|(
-name|dv
-operator|->
-name|dv_name
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -430,6 +431,7 @@ operator|(
 name|EUNIT
 operator|)
 return|;
+block|}
 block|}
 block|}
 if|if
@@ -529,10 +531,11 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|32
+name|SPECNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
-comment|/* XXX device length constant? */
 switch|switch
 condition|(
 name|dev
