@@ -1774,6 +1774,14 @@ name|tcp_rexmit_min
 operator|=
 literal|1
 expr_stmt|;
+name|tcp_persmin
+operator|=
+name|TCPTV_PERSMIN
+expr_stmt|;
+name|tcp_persmax
+operator|=
+name|TCPTV_PERSMAX
+expr_stmt|;
 name|tcp_rexmit_slop
 operator|=
 name|TCPTV_CPU_VAR
