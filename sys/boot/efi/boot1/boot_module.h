@@ -52,11 +52,9 @@ name|DPRINTF
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-define|\
-value|do { \                 printf(fmt, ##args) \         } while (0)
+value|printf(fmt, __VA_ARGS__)
 end_define
 
 begin_else
@@ -71,7 +69,6 @@ name|DPRINTF
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
 value|{}
@@ -206,6 +203,25 @@ specifier|extern
 specifier|const
 name|boot_module_t
 name|ufs_module
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFI_ZFS_BOOT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|boot_module_t
+name|zfs_module
 decl_stmt|;
 end_decl_stmt
 
