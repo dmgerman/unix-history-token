@@ -1630,7 +1630,7 @@ define|#
 directive|define
 name|SSL_OP_SINGLE_ECDH_USE
 value|0x00080000L
-comment|/* If set, always create a new key when using tmp_dh parameters */
+comment|/* Does nothing: retained for compatibility */
 define|#
 directive|define
 name|SSL_OP_SINGLE_DH_USE

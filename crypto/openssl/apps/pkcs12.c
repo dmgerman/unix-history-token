@@ -132,6 +132,7 @@ value|0x10
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|get_cert_chain
 argument_list|(
@@ -3008,8 +3009,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|vret
+operator|==
+name|X509_V_OK
 condition|)
 block|{
 comment|/* Exclude verified certificate */
@@ -3063,8 +3065,8 @@ block|{
 if|if
 condition|(
 name|vret
-operator|>=
-literal|0
+operator|!=
+name|X509_V_ERR_UNSPECIFIED
 condition|)
 name|BIO_printf
 argument_list|(
@@ -4595,11 +4597,8 @@ begin_comment
 comment|/* Given a single certificate return a verified chain or NULL if error */
 end_comment
 
-begin_comment
-comment|/* Hope this is OK .... */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|get_cert_chain
 argument_list|(
@@ -4629,13 +4628,17 @@ name|X509
 argument_list|)
 operator|*
 name|chn
+operator|=
+name|NULL
 expr_stmt|;
 name|int
 name|i
 init|=
 literal|0
 decl_stmt|;
-comment|/*      * FIXME: Should really check the return status of X509_STORE_CTX_init      * for an error, but how that fits into the return value of this function      * is less obvious.      */
+if|if
+condition|(
+operator|!
 name|X509_STORE_CTX_init
 argument_list|(
 operator|&
@@ -4647,7 +4650,17 @@ name|cert
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+block|{
+operator|*
+name|chain
+operator|=
+name|NULL
 expr_stmt|;
+return|return
+name|X509_V_ERR_UNSPECIFIED
+return|;
+block|}
 if|if
 condition|(
 name|X509_verify_cert
@@ -4655,39 +4668,9 @@ argument_list|(
 operator|&
 name|store_ctx
 argument_list|)
-operator|<=
+operator|>
 literal|0
 condition|)
-block|{
-name|i
-operator|=
-name|X509_STORE_CTX_get_error
-argument_list|(
-operator|&
-name|store_ctx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-comment|/*              * avoid returning 0 if X509_verify_cert() did not set an              * appropriate error value in the context              */
-name|i
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|chn
-operator|=
-name|NULL
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-else|else
 name|chn
 operator|=
 name|X509_STORE_CTX_get1_chain
@@ -4696,8 +4679,25 @@ operator|&
 name|store_ctx
 argument_list|)
 expr_stmt|;
-name|err
-label|:
+elseif|else
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|X509_STORE_CTX_get_error
+argument_list|(
+operator|&
+name|store_ctx
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|i
+operator|=
+name|X509_V_ERR_UNSPECIFIED
+expr_stmt|;
 name|X509_STORE_CTX_cleanup
 argument_list|(
 operator|&

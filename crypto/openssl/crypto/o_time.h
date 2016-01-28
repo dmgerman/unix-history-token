@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crypto/o_time.h -*- mode:C; c-file-style: "eay" -*- */
+comment|/* crypto/o_time.h */
 end_comment
 
 begin_comment

@@ -2400,17 +2400,11 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
-case|case
-name|BIO_C_FILE_SEEK
-case|:
 name|ret
 operator|=
 literal|0
 expr_stmt|;
 break|break;
-case|case
-name|BIO_C_FILE_TELL
-case|:
 case|case
 name|BIO_CTRL_INFO
 case|:

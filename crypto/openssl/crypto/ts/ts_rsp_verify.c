@@ -862,6 +862,9 @@ name|chain
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|X509_STORE_CTX_init
 argument_list|(
 operator|&
@@ -873,7 +876,10 @@ name|signer
 argument_list|,
 name|untrusted
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|X509_STORE_CTX_set_purpose
 argument_list|(
 operator|&

@@ -1082,7 +1082,10 @@ define|#
 directive|define
 name|X509_V_OK
 value|0
-comment|/* illegal error (for uninitialized values, to avoid X509_V_OK): 1 */
+define|#
+directive|define
+name|X509_V_ERR_UNSPECIFIED
+value|1
 define|#
 directive|define
 name|X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT

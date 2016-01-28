@@ -1537,7 +1537,7 @@ name|BIO_get_conn_int_port
 parameter_list|(
 name|b
 parameter_list|)
-value|BIO_int_ctrl(b,BIO_C_GET_CONNECT,3,0)
+value|BIO_ctrl(b,BIO_C_GET_CONNECT,3,0,NULL)
 define|#
 directive|define
 name|BIO_set_nbio
@@ -1547,7 +1547,7 @@ parameter_list|,
 name|n
 parameter_list|)
 value|BIO_ctrl(b,BIO_C_SET_NBIO,(n),NULL)
-comment|/* BIO_s_accept_socket() */
+comment|/* BIO_s_accept() */
 define|#
 directive|define
 name|BIO_set_accept_port
@@ -1613,6 +1613,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 value|BIO_ctrl(b,BIO_C_GET_BIND_MODE,0,NULL)
+comment|/* BIO_s_accept() and BIO_s_connect() */
 define|#
 directive|define
 name|BIO_do_connect
@@ -1725,6 +1726,7 @@ parameter_list|(
 name|b
 parameter_list|)
 value|BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,5,NULL)
+comment|/* BIO_s_datagram(), BIO_s_fd(), BIO_s_socket(), BIO_s_accept() and BIO_s_connect() */
 define|#
 directive|define
 name|BIO_set_fd
@@ -1745,6 +1747,7 @@ parameter_list|,
 name|c
 parameter_list|)
 value|BIO_ctrl(b,BIO_C_GET_FD,0,(char *)c)
+comment|/* BIO_s_file() */
 define|#
 directive|define
 name|BIO_set_fp
@@ -1765,6 +1768,7 @@ parameter_list|,
 name|fpp
 parameter_list|)
 value|BIO_ctrl(b,BIO_C_GET_FILE_PTR,0,(char *)fpp)
+comment|/* BIO_s_fd() and BIO_s_file() */
 define|#
 directive|define
 name|BIO_seek

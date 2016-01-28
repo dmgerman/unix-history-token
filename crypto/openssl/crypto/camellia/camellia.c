@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crypto/camellia/camellia.c -*- mode:C; c-file-style: "eay" -*- */
+comment|/* crypto/camellia/camellia.c */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* ==================================================================== 
 end_comment
 
 begin_comment
-comment|/*  * Algorithm Specification  * http://info.isl.llia/specicrypt/eng/camellia/specifications.html  */
+comment|/*  * Algorithm Specification  * http://info.isl.ntt.co.jp/crypt/eng/camellia/specifications.html  */
 end_comment
 
 begin_comment

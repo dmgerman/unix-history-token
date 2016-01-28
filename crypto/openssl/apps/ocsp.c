@@ -5256,19 +5256,17 @@ literal|1
 condition|)
 name|nextupd
 operator|=
-name|X509_gmtime_adj
+name|X509_time_adj_ex
 argument_list|(
 name|NULL
+argument_list|,
+name|ndays
 argument_list|,
 name|nmin
 operator|*
 literal|60
-operator|+
-name|ndays
-operator|*
-literal|3600
-operator|*
-literal|24
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Examine each certificate id in the request */

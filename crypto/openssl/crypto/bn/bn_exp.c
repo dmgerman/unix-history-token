@@ -686,6 +686,27 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* x**0 mod 1 is still zero. */
+if|if
+condition|(
+name|BN_is_one
+argument_list|(
+name|m
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ret
 operator|=
 name|BN_one
@@ -693,6 +714,7 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -1403,6 +1425,27 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* x**0 mod 1 is still zero. */
+if|if
+condition|(
+name|BN_is_one
+argument_list|(
+name|m
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|rr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ret
 operator|=
 name|BN_one
@@ -1410,6 +1453,7 @@ argument_list|(
 name|rr
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -2251,7 +2295,7 @@ value|((unsigned char*)(x_) + (MOD_EXP_CTIME_MIN_CACHE_LINE_WIDTH - (((size_t)(x
 end_define
 
 begin_comment
-comment|/*  * This variant of BN_mod_exp_mont() uses fixed windows and the special  * precomputation memory layout to limit data-dependency to a minimum to  * protect secret exponents (cf. the hyper-threading timing attacks pointed  * out by Colin Percival,  * http://www.daemong-consideredperthreading-considered-harmful/)  */
+comment|/*  * This variant of BN_mod_exp_mont() uses fixed windows and the special  * precomputation memory layout to limit data-dependency to a minimum to  * protect secret exponents (cf. the hyper-threading timing attacks pointed  * out by Colin Percival,  * http://www.daemonology.net/hyperthreading-considered-harmful/)  */
 end_comment
 
 begin_function
@@ -2392,6 +2436,27 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* x**0 mod 1 is still zero. */
+if|if
+condition|(
+name|BN_is_one
+argument_list|(
+name|m
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|rr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ret
 operator|=
 name|BN_one
@@ -2399,6 +2464,7 @@ argument_list|(
 name|rr
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -4206,6 +4272,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ret
 operator|=
 name|BN_one
@@ -4213,6 +4280,7 @@ argument_list|(
 name|rr
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -4770,6 +4838,27 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* x**0 mod 1 is still zero. */
+if|if
+condition|(
+name|BN_is_one
+argument_list|(
+name|m
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ret
 operator|=
 name|BN_one
@@ -4777,6 +4866,7 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
