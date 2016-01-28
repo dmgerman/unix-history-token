@@ -41,6 +41,12 @@ directive|include
 file|<machine/metadata.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"framebuffer.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|EFI_GUID

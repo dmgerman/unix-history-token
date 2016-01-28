@@ -96,6 +96,12 @@ directive|define
 name|ACPI_SYSTEM_XFACE
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_INTTYPES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -393,9 +399,6 @@ index|]
 decl_stmt|;
 name|int
 name|revision
-decl_stmt|;
-name|EFI_STATUS
-name|status
 decl_stmt|;
 name|rsdp
 operator|=

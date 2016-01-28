@@ -1081,6 +1081,7 @@ name|preloaded_file
 modifier|*
 name|file_loadraw
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

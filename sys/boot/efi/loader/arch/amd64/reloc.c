@@ -100,6 +100,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|EFI_STATUS
+name|_reloc
+parameter_list|(
+name|unsigned
+name|long
+name|ImageBase
+parameter_list|,
+name|ElfW_Dyn
+modifier|*
+name|dynamic
+parameter_list|,
+name|EFI_HANDLE
+name|image_handle
+name|__unused
+parameter_list|,
+name|EFI_SYSTEM_TABLE
+modifier|*
+name|system_table
+name|__unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * A simple relocator for IA32/AMD64 EFI binaries.  */
 end_comment
@@ -118,10 +142,12 @@ name|dynamic
 parameter_list|,
 name|EFI_HANDLE
 name|image_handle
+name|__unused
 parameter_list|,
 name|EFI_SYSTEM_TABLE
 modifier|*
 name|system_table
+name|__unused
 parameter_list|)
 block|{
 name|unsigned
@@ -311,6 +337,10 @@ name|rel
 operator|=
 operator|(
 name|ElfW_Rel
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(

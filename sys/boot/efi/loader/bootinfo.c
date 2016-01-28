@@ -113,6 +113,25 @@ directive|include
 file|"loader_efi.h"
 end_include
 
+begin_function_decl
+name|int
+name|bi_load
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|modulep
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|kernendp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -422,6 +441,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|archsw
 operator|.
 name|arch_copyin
@@ -481,6 +503,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|archsw
 operator|.
 name|arch_copyin

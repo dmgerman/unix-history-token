@@ -15,6 +15,12 @@ directive|define
 name|_LOADER_EFI_COPY_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stand.h>
+end_include
+
 begin_function_decl
 name|int
 name|efi_autoload

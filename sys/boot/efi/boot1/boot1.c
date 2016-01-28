@@ -106,6 +106,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|EFI_STATUS
+name|efi_main
+parameter_list|(
+name|EFI_HANDLE
+name|Ximage
+parameter_list|,
+name|EFI_SYSTEM_TABLE
+modifier|*
+name|Xsystab
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|int
 name|domount
@@ -138,6 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|EFI_SYSTEM_TABLE
 modifier|*
 name|systab
@@ -145,6 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|EFI_HANDLE
 modifier|*
 name|image
@@ -274,6 +290,7 @@ name|conout
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -749,9 +766,6 @@ name|struct
 name|ufs1_dinode
 name|dp1
 decl_stmt|;
-name|ufs1_daddr_t
-name|addr1
-decl_stmt|;
 endif|#
 directive|endif
 ifndef|#
@@ -784,30 +798,13 @@ decl_stmt|;
 name|size_t
 name|n
 decl_stmt|,
-name|nb
-decl_stmt|,
 name|size
-decl_stmt|,
-name|off
-decl_stmt|,
-name|vboff
-decl_stmt|;
-name|ufs_lbn_t
-name|lbn
-decl_stmt|;
-name|ufs2_daddr_t
-name|addr2
-decl_stmt|,
-name|vbaddr
 decl_stmt|;
 specifier|static
 name|ufs2_daddr_t
 name|blkmap
 decl_stmt|,
 name|indmap
-decl_stmt|;
-name|u_int
-name|u
 decl_stmt|;
 name|blkbuf
 operator|=
@@ -950,6 +947,9 @@ name|fs
 operator|.
 name|fs_bsize
 operator|>=
+operator|(
+name|int32_t
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1124,6 +1124,10 @@ expr|struct
 name|ufs1_dinode
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|blkbuf
 operator|+
 name|n
@@ -1144,6 +1148,10 @@ argument_list|,
 operator|(
 expr|struct
 name|ufs2_dinode
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|blkbuf

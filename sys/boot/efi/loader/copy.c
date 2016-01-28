@@ -47,6 +47,12 @@ directive|include
 file|<efilib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"loader_efi.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef

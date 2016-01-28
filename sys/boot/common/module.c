@@ -1686,7 +1686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We've been asked to load (name) as (type), so just suck it in,  * no arguments or anything.  */
+comment|/*  * We've been asked to load (fname) as (type), so just suck it in,  * no arguments or anything.  */
 end_comment
 
 begin_function
@@ -1695,9 +1695,10 @@ name|preloaded_file
 modifier|*
 name|file_loadraw
 parameter_list|(
+specifier|const
 name|char
 modifier|*
-name|name
+name|fname
 parameter_list|,
 name|char
 modifier|*
@@ -1714,7 +1715,7 @@ name|fp
 decl_stmt|;
 name|char
 modifier|*
-name|cp
+name|name
 decl_stmt|;
 name|int
 name|fd
@@ -1750,18 +1751,18 @@ operator|)
 return|;
 block|}
 comment|/* locate the file on the load path */
-name|cp
+name|name
 operator|=
 name|file_search
 argument_list|(
-name|name
+name|fname
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
+name|name
 operator|==
 name|NULL
 condition|)
@@ -1772,7 +1773,7 @@ name|command_errbuf
 argument_list|,
 literal|"can't find '%s'"
 argument_list|,
-name|name
+name|fname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1781,10 +1782,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|name
-operator|=
-name|cp
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4632,7 +4629,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|int
+name|size_t
 name|cplen
 decl_stmt|;
 name|path

@@ -249,6 +249,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+name|self_reloc
+parameter_list|(
+name|Elf_Addr
+name|baseaddr
+parameter_list|,
+name|ElfW_Dyn
+modifier|*
+name|dynamic
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * A simple elf relocator.  */
 end_comment
@@ -444,6 +458,10 @@ name|rel
 operator|=
 operator|(
 name|ElfW_Rel
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
