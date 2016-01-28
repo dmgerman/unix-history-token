@@ -2545,6 +2545,7 @@ name|p2
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|size_t
