@@ -357,12 +357,10 @@ block|{
 if|if
 condition|(
 name|p
-operator|->
-name|p_pid
 operator|==
 name|filemon
 operator|->
-name|pid
+name|p
 condition|)
 block|{
 name|sx_sunlock
@@ -2169,11 +2167,9 @@ if|if
 condition|(
 name|filemon
 operator|->
-name|pid
+name|p
 operator|==
 name|p
-operator|->
-name|p_pid
 condition|)
 block|{
 name|len
@@ -2221,10 +2217,9 @@ argument_list|)
 expr_stmt|;
 name|filemon
 operator|->
-name|pid
+name|p
 operator|=
-operator|-
-literal|1
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Unlock the found filemon structure. */
