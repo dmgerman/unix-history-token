@@ -877,11 +877,13 @@ name|pmap_pa
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
 
 begin_decl_stmt
 name|vm_offset_t
@@ -2057,9 +2059,11 @@ argument_list|,
 name|pcb
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM_NEW_PMAP
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 name|vector_page_setprot
 argument_list|(
 name|VM_PROT_READ
@@ -6112,11 +6116,13 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
 
 begin_function
 name|void
@@ -6899,11 +6905,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ARM_NEW_PMAP
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
 begin_function
 name|void
@@ -7916,7 +7924,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !ARM_NEW_PMAP */
+comment|/* __ARM_ARCH< 6 */
 end_comment
 
 begin_function
@@ -8521,7 +8529,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !ARM_NEW_PMAP */
+comment|/* __ARM_ARCH< 6 */
 end_comment
 
 begin_endif

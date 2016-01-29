@@ -19,15 +19,23 @@ directive|define
 name|_MACHDEP_BOOT_MACHDEP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_comment
 comment|/* Structs that need to be initialised by initarm */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
 
 begin_decl_stmt
 specifier|extern

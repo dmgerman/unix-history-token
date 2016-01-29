@@ -15,11 +15,19 @@ directive|define
 name|_MACHINE_VM_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
 
 begin_include
 include|#
@@ -80,6 +88,16 @@ begin_comment
 comment|/* misused by DMA */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Don't export aliased VM_MEMATTR to userland */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -101,6 +119,11 @@ end_define
 begin_comment
 comment|/* for DRM */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

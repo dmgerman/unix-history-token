@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/memdev.h>
 end_include
 
@@ -389,9 +395,11 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|pmap_tlb_flush
 argument_list|(
 name|kernel_pmap
