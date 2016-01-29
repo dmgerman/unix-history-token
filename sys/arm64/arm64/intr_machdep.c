@@ -1810,11 +1810,6 @@ operator|&
 name|other_cpus
 argument_list|)
 expr_stmt|;
-comment|/* ARM64TODO: This will be fixed with arm_intrng */
-name|ipi
-operator|+=
-literal|16
-expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_SMP
