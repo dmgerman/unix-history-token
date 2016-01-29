@@ -26077,15 +26077,6 @@ end_comment
 
 begin_function
 name|void
-name|pmap_pte_init_mmu_v6
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|vector_page_setprot
 parameter_list|(
 name|int

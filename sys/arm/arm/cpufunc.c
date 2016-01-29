@@ -2705,9 +2705,6 @@ comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;
-name|pmap_pte_init_mmu_v6
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2805,9 +2802,6 @@ comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;
-name|pmap_pte_init_mmu_v6
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2841,9 +2835,6 @@ operator|=
 name|pj4bv7_cpufuncs
 expr_stmt|;
 name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-name|pmap_pte_init_mmu_v6
 argument_list|()
 expr_stmt|;
 goto|goto

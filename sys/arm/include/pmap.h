@@ -2732,36 +2732,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|(
-name|ARM_MMU_V6
-operator|+
-name|ARM_MMU_V7
-operator|)
-operator|!=
-literal|0
-end_if
-
-begin_function_decl
-name|void
-name|pmap_pte_init_mmu_v6
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (ARM_MMU_V6 + ARM_MMU_V7) != 0 */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
