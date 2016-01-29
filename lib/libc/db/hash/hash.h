@@ -476,7 +476,7 @@ name|PTROF
 parameter_list|(
 name|X
 parameter_list|)
-value|((BUFHEAD *)((ptrdiff_t)(X)&~0x3))
+value|((BUFHEAD *)((intptr_t)(X)&~0x3))
 end_define
 
 begin_define
@@ -486,7 +486,7 @@ name|ISMOD
 parameter_list|(
 name|X
 parameter_list|)
-value|((u_int32_t)(ptrdiff_t)(X)&0x1)
+value|((u_int32_t)(intptr_t)(X)&0x1)
 end_define
 
 begin_define
@@ -496,7 +496,7 @@ name|DOMOD
 parameter_list|(
 name|X
 parameter_list|)
-value|((X) = (char *)((ptrdiff_t)(X)|0x1))
+value|((X) = (char *)((intptr_t)(X)|0x1))
 end_define
 
 begin_define
@@ -506,7 +506,7 @@ name|ISDISK
 parameter_list|(
 name|X
 parameter_list|)
-value|((u_int32_t)(ptrdiff_t)(X)&0x2)
+value|((u_int32_t)(intptr_t)(X)&0x2)
 end_define
 
 begin_define
@@ -516,7 +516,7 @@ name|DODISK
 parameter_list|(
 name|X
 parameter_list|)
-value|((X) = (char *)((ptrdiff_t)(X)|0x2))
+value|((X) = (char *)((intptr_t)(X)|0x2))
 end_define
 
 begin_define
