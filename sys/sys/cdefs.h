@@ -3942,6 +3942,11 @@ name|defined
 argument_list|(
 name|__powerpc64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 end_if
 
 begin_define

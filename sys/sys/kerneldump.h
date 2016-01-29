@@ -190,6 +190,10 @@ name|KERNELDUMP_POWERPC_VERSION
 value|1
 define|#
 directive|define
+name|KERNELDUMP_RISCV_VERSION
+value|1
+define|#
+directive|define
 name|KERNELDUMP_SPARC64_VERSION
 value|1
 define|#
