@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|INSN_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|READ_SPECIALREG
 parameter_list|(
 name|reg
