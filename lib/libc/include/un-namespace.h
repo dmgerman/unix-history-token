@@ -978,6 +978,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|recvmmsg
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|select
 end_undef
 
@@ -1045,6 +1051,12 @@ begin_undef
 undef|#
 directive|undef
 name|sendmsg
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|sendmmsg
 end_undef
 
 begin_undef

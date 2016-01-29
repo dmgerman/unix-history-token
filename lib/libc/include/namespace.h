@@ -1165,6 +1165,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|recvmmsg
+value|_recvmmsg
+end_define
+
+begin_define
+define|#
+directive|define
 name|select
 value|_select
 end_define
@@ -1244,6 +1251,13 @@ define|#
 directive|define
 name|sendmsg
 value|_sendmsg
+end_define
+
+begin_define
+define|#
+directive|define
+name|sendmmsg
+value|_sendmmsg
 end_define
 
 begin_define

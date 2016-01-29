@@ -2430,6 +2430,9 @@ name|l_rt_sigframe
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -3269,6 +3272,9 @@ name|l_sigframe
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk

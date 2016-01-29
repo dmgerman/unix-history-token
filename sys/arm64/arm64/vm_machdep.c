@@ -768,6 +768,9 @@ name|tf_sp
 operator|=
 name|STACKALIGN
 argument_list|(
+operator|(
+name|uintptr_t
+operator|)
 name|stack
 operator|->
 name|ss_sp

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NETINET_TCP_CC_H_
+name|_NETINET_CC_CC_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NETINET_TCP_CC_H_
+name|_NETINET_CC_CC_H_
 end_define
 
 begin_if
@@ -644,7 +644,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NETINET_TCP_CC_H_ */
+comment|/* _NETINET_CC_CC_H_ */
 end_comment
 
 end_unit

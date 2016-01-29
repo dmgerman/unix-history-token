@@ -1772,6 +1772,9 @@ name|ia32_sigframe3
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -2880,6 +2883,9 @@ name|ia32_sigframe4
 operator|*
 operator|)
 operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -3858,6 +3864,10 @@ argument_list|)
 condition|)
 name|sp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|td
 operator|->
 name|td_sigstk

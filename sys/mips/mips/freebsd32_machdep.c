@@ -2140,10 +2140,10 @@ name|sigframe32
 operator|*
 operator|)
 operator|(
-call|(
-name|vm_offset_t
-call|)
-argument_list|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -2161,7 +2161,7 @@ argument_list|(
 expr|struct
 name|sigframe32
 argument_list|)
-argument_list|)
+operator|)
 operator|&
 operator|~
 operator|(

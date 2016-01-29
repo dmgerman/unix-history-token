@@ -157,6 +157,10 @@ condition|(
 name|namelen
 operator|==
 literal|0
+operator|||
+name|name
+operator|==
+name|NULL
 condition|)
 name|namelen
 operator|=
@@ -196,7 +200,9 @@ literal|0
 return|;
 if|if
 condition|(
-name|name
+name|namelen
+operator|>
+literal|0
 operator|&&
 name|name
 index|[

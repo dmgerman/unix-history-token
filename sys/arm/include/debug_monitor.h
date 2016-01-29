@@ -103,6 +103,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|dbg_resume_dbreg
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -179,6 +188,17 @@ specifier|static
 name|__inline
 name|void
 name|dbg_monitor_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|dbg_resume_dbreg
 parameter_list|(
 name|void
 parameter_list|)

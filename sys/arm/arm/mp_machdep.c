@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/armreg.h>
 end_include
 
@@ -129,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/debug_monitor.h>
 end_include
 
 begin_include
@@ -589,9 +601,11 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|uint32_t
 name|actlr_mask
 decl_stmt|,
@@ -634,7 +648,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* ARM_NEW_PMAP */
+comment|/* __ARM_ARCH>= 6 */
 name|cpu_setup
 argument_list|()
 expr_stmt|;
@@ -648,7 +662,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ARM_NEW_PMAP */
+comment|/* __ARM_ARCH>= 6 */
 name|pc
 operator|=
 operator|&
@@ -694,9 +708,11 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM_NEW_PMAP
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 comment|/* Provide stack pointers for other processor modes. */
 name|set_stackptrs
 argument_list|(
@@ -1071,6 +1087,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|dbg_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR0
 argument_list|(
 name|KTR_SMP
@@ -1407,6 +1431,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|dbg_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR0
 argument_list|(
 name|KTR_SMP

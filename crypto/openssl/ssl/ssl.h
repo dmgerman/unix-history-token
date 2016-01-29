@@ -1756,7 +1756,7 @@ define|#
 directive|define
 name|SSL_OP_SINGLE_ECDH_USE
 value|0x00080000L
-comment|/* If set, always create a new key when using tmp_dh parameters */
+comment|/* Does nothing: retained for compatibility */
 define|#
 directive|define
 name|SSL_OP_SINGLE_DH_USE
@@ -6869,7 +6869,7 @@ parameter_list|,
 name|slistlen
 parameter_list|)
 define|\
-value|SSL_ctrl(ctx,SSL_CTRL_SET_SIGALGS,clistlen,(int *)slist)
+value|SSL_ctrl(ctx,SSL_CTRL_SET_SIGALGS,slistlen,(int *)slist)
 define|#
 directive|define
 name|SSL_set1_sigalgs_list
@@ -11049,6 +11049,10 @@ name|SSL_F_SSL3_SETUP_WRITE_BUFFER
 value|291
 define|#
 directive|define
+name|SSL_F_SSL3_SHUTDOWN
+value|396
+define|#
+directive|define
 name|SSL_F_SSL3_WRITE_BYTES
 value|158
 define|#
@@ -12412,6 +12416,10 @@ define|#
 directive|define
 name|SSL_R_SHORT_READ
 value|219
+define|#
+directive|define
+name|SSL_R_SHUTDOWN_WHILE_IN_INIT
+value|407
 define|#
 directive|define
 name|SSL_R_SIGNATURE_ALGORITHMS_ERROR

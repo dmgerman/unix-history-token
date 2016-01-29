@@ -413,6 +413,10 @@ define|#
 directive|define
 name|DH_CHECK_PUBKEY_TOO_LARGE
 value|0x02
+define|#
+directive|define
+name|DH_CHECK_PUBKEY_INVALID
+value|0x03
 comment|/*  * primes p where (p-1)/2 is prime too are called "safe"; we define this for  * backward compatibility:  */
 define|#
 directive|define

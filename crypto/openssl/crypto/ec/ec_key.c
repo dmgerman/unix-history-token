@@ -1652,6 +1652,15 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ty
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC2M

@@ -997,9 +997,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * ARM has a set of unprivileged load and store instructions 	 * (LDRT/LDRBT/STRT/STRBT ...) which are supposed to be used in other 	 * than user mode and OS should recognize their aborts and behave 	 * appropriately. However, there is no way how to do that reasonably 	 * in general unless we restrict the handling somehow. 	 * 	 * For now, these instructions are used only in copyin()/copyout() 	 * like functions where usermode buffers are checked in advance that 	 * they are not from KVA space. Thus, no action is needed here. 	 */
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
 name|rv
 operator|=
 name|pmap_fault
@@ -1034,8 +1031,6 @@ condition|)
 goto|goto
 name|nogo
 goto|;
-endif|#
-directive|endif
 comment|/* 	 * Now, when we handled imprecise and debug aborts, the rest of 	 * aborts should be really related to mapping. 	 */
 name|PCPU_INC
 argument_list|(
@@ -1538,36 +1533,6 @@ name|last_fault_code
 operator|=
 name|fsr
 expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|ARM_NEW_PMAP
-if|if
-condition|(
-name|pmap_fault_fixup
-argument_list|(
-name|vmspace_pmap
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_vmspace
-argument_list|)
-argument_list|,
-name|va
-argument_list|,
-name|ftype
-argument_list|,
-name|usermode
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
 endif|#
 directive|endif
 ifdef|#

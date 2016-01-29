@@ -4265,12 +4265,13 @@ operator|==
 literal|'-'
 condition|)
 block|{
+comment|/* no domain/subdomain starts with '-' */
 if|if
 condition|(
 operator|(
 name|state
 operator|&
-name|LABEL_HYPHEN
+name|LABEL_START
 operator|)
 operator|!=
 literal|0

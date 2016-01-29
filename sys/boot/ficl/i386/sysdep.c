@@ -231,6 +231,10 @@ literal|0
 condition|)
 name|putchar
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|msg

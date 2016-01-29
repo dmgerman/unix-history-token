@@ -38,7 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -731,8 +743,11 @@ specifier|static
 name|void
 name|pdu_read
 parameter_list|(
-name|int
-name|fd
+specifier|const
+name|struct
+name|connection
+modifier|*
+name|conn
 parameter_list|,
 name|char
 modifier|*
@@ -756,7 +771,9 @@ name|ret
 operator|=
 name|read
 argument_list|(
-name|fd
+name|conn
+operator|->
+name|conn_socket
 argument_list|,
 name|data
 argument_list|,
@@ -775,11 +792,30 @@ condition|(
 name|timed_out
 argument_list|()
 condition|)
+block|{
+name|fail
+argument_list|(
+name|conn
+argument_list|,
+literal|"Login Phase timeout"
+argument_list|)
+expr_stmt|;
 name|log_errx
 argument_list|(
 literal|1
 argument_list|,
 literal|"exiting due to timeout"
+argument_list|)
+expr_stmt|;
+block|}
+name|fail
+argument_list|(
+name|conn
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|log_err
@@ -797,6 +833,14 @@ name|ret
 operator|==
 literal|0
 condition|)
+block|{
+name|fail
+argument_list|(
+name|conn
+argument_list|,
+literal|"connection lost"
+argument_list|)
+expr_stmt|;
 name|log_errx
 argument_list|(
 literal|1
@@ -804,6 +848,7 @@ argument_list|,
 literal|"read: connection lost"
 argument_list|)
 expr_stmt|;
+block|}
 name|len
 operator|-=
 name|ret
@@ -880,8 +925,6 @@ argument_list|(
 name|pdu
 operator|->
 name|pdu_connection
-operator|->
-name|conn_socket
 argument_list|,
 operator|(
 name|char
@@ -987,8 +1030,6 @@ argument_list|(
 name|pdu
 operator|->
 name|pdu_connection
-operator|->
-name|conn_socket
 argument_list|,
 operator|(
 name|char
@@ -1032,8 +1073,6 @@ argument_list|(
 name|pdu
 operator|->
 name|pdu_connection
-operator|->
-name|conn_socket
 argument_list|,
 operator|(
 name|char

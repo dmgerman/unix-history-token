@@ -425,7 +425,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|ptrdiff_t
+name|intptr_t
 operator|)
 name|bp
 operator||

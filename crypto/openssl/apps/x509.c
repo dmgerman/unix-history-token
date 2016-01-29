@@ -6845,28 +6845,20 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Lets just make it 12:00am GMT, Jan 1 1970 */
-comment|/* memcpy(x->cert_info->validity->notBefore,"700101120000Z",13); */
-comment|/* 28 days to be certified */
 if|if
 condition|(
-name|X509_gmtime_adj
+name|X509_time_adj_ex
 argument_list|(
 name|X509_get_notAfter
 argument_list|(
 name|x
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
-literal|60
-operator|*
-literal|60
-operator|*
-literal|24
-operator|*
 name|days
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 name|NULL

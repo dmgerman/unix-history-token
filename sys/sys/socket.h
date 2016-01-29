@@ -2421,6 +2421,17 @@ begin_comment
 comment|/* make received fds close-on-exec */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MSG_WAITFORONE
+value|0x80000
+end_define
+
+begin_comment
+comment|/* for recvmmsg() */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -3022,6 +3033,27 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_comment
+comment|/*  * Sendmmsg/recvmmsg specific structure(s)  */
+end_comment
+
+begin_struct
+struct|struct
+name|mmsghdr
+block|{
+name|struct
+name|msghdr
+name|msg_hdr
+decl_stmt|;
+comment|/* message header */
+name|ssize_t
+name|msg_len
+decl_stmt|;
+comment|/* message length */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -3285,6 +3317,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|ssize_t
+name|recvmmsg
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|mmsghdr
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|ssize_t
 name|send
@@ -3366,6 +3439,24 @@ modifier|*
 parameter_list|,
 name|off_t
 modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|sendmmsg
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|mmsghdr
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|int
 parameter_list|)

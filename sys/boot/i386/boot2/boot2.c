@@ -1173,7 +1173,7 @@ condition|)
 block|{
 name|kname
 operator|=
-name|PATH_BOOT3
+name|PATH_LOADER
 expr_stmt|;
 if|if
 condition|(
