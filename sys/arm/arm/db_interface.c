@@ -816,8 +816,7 @@ directive|endif
 condition|)
 name|pmap
 operator|=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 expr_stmt|;
 else|else
 name|pmap

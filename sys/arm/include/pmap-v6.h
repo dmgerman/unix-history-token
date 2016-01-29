@@ -990,18 +990,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * sys/arm/arm/db_interface.c  * sys/arm/arm/machdep.c  * sys/arm/arm/minidump_machdep.c  * sys/arm/arm/pmap.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pmap_kernel
-parameter_list|()
-value|kernel_pmap
-end_define
-
-begin_comment
 comment|/*  * sys/arm/arm/bus_space_generic.c (just comment)  * sys/arm/arm/devmap.c  * sys/arm/arm/pmap.c (just comment)  * sys/arm/at91/at91_machdep.c  * sys/arm/cavium/cns11xx/econa_machdep.c  * sys/arm/freescale/imx/imx6_machdep.c (just comment)  * sys/arm/mv/orion/db88f5xxx.c  * sys/arm/mv/mv_localbus.c  * sys/arm/mv/mv_machdep.c  * sys/arm/mv/mv_pci.c  * sys/arm/s3c2xx0/s3c24x0_machdep.c  * sys/arm/versatile/versatile_machdep.c  * sys/arm/xscale/ixp425/avila_machdep.c  * sys/arm/xscale/i8134x/crb_machdep.c  * sys/arm/xscale/i80321/ep80219_machdep.c  * sys/arm/xscale/i80321/iq31244_machdep.c  * sys/arm/xscale/pxa/pxa_machdep.c  */
 end_comment
 

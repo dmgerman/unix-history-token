@@ -550,14 +550,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_kernel
-parameter_list|()
-value|kernel_pmap
-end_define
-
-begin_define
-define|#
-directive|define
 name|PMAP_ASSERT_LOCKED
 parameter_list|(
 name|pmap
@@ -839,8 +831,7 @@ if|if
 condition|(
 name|pmap_get_pde_pte
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|,

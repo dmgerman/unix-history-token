@@ -2053,8 +2053,7 @@ name|USPACE_SVC_STACK_TOP
 expr_stmt|;
 name|pmap_set_pcb_pagedir
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|pcb
 argument_list|)
