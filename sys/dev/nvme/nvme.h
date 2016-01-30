@@ -1061,6 +1061,137 @@ block|, }
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|nvme_power_state
+block|{
+comment|/** Maximum Power */
+name|uint16_t
+name|mp
+decl_stmt|;
+comment|/* Maximum Power */
+name|uint8_t
+name|ps_rsvd1
+decl_stmt|;
+name|uint8_t
+name|mps
+range|:
+literal|1
+decl_stmt|;
+comment|/* Max Power Scale */
+name|uint8_t
+name|nops
+range|:
+literal|1
+decl_stmt|;
+comment|/* Non-Operational State */
+name|uint8_t
+name|ps_rsvd2
+range|:
+literal|6
+decl_stmt|;
+name|uint32_t
+name|enlat
+decl_stmt|;
+comment|/* Entry Latency */
+name|uint32_t
+name|exlat
+decl_stmt|;
+comment|/* Exit Latency */
+name|uint8_t
+name|rrt
+range|:
+literal|5
+decl_stmt|;
+comment|/* Relative Read Throughput */
+name|uint8_t
+name|ps_rsvd3
+range|:
+literal|3
+decl_stmt|;
+name|uint8_t
+name|rrl
+range|:
+literal|5
+decl_stmt|;
+comment|/* Relative Read Latency */
+name|uint8_t
+name|ps_rsvd4
+range|:
+literal|3
+decl_stmt|;
+name|uint8_t
+name|rwt
+range|:
+literal|5
+decl_stmt|;
+comment|/* Relative Write Throughput */
+name|uint8_t
+name|ps_rsvd5
+range|:
+literal|3
+decl_stmt|;
+name|uint8_t
+name|rwl
+range|:
+literal|5
+decl_stmt|;
+comment|/* Relative Write Latency */
+name|uint8_t
+name|ps_rsvd6
+range|:
+literal|3
+decl_stmt|;
+name|uint16_t
+name|idlp
+decl_stmt|;
+comment|/* Idle Power */
+name|uint8_t
+name|ps_rsvd7
+range|:
+literal|6
+decl_stmt|;
+name|uint8_t
+name|ips
+range|:
+literal|2
+decl_stmt|;
+comment|/* Idle Power Scale */
+name|uint8_t
+name|ps_rsvd8
+decl_stmt|;
+name|uint16_t
+name|actp
+decl_stmt|;
+comment|/* Active Power */
+name|uint8_t
+name|apw
+range|:
+literal|3
+decl_stmt|;
+comment|/* Active Power Workload */
+name|uint8_t
+name|ps_rsvd9
+range|:
+literal|3
+decl_stmt|;
+name|uint8_t
+name|aps
+range|:
+literal|2
+decl_stmt|;
+comment|/* Active Power Scale */
+name|uint8_t
+name|ps_rsvd10
+index|[
+literal|9
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1366,10 +1497,11 @@ literal|1344
 index|]
 decl_stmt|;
 comment|/* bytes 2048-3071: power state descriptors */
-name|uint8_t
-name|reserved6
+name|struct
+name|nvme_power_state
+name|power_state
 index|[
-literal|1024
+literal|32
 index|]
 decl_stmt|;
 comment|/* bytes 3072-4095: vendor specific */
