@@ -198,6 +198,14 @@ name|FIRMWARE_USAGE
 block|}
 block|,
 block|{
+literal|"power"
+block|,
+name|power
+block|,
+name|POWER_USAGE
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
