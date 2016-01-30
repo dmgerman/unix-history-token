@@ -332,7 +332,7 @@ init|=
 block|{
 literal|"CloudABI ELF64"
 block|,
-name|CLOUDABI64
+name|SYSDECODE_ABI_CLOUDABI64
 block|,
 name|aarch64_cloudabi64_fetch_args
 block|,

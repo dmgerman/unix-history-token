@@ -507,7 +507,7 @@ literal|"FreeBSD ELF32"
 block|,
 endif|#
 directive|endif
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 block|,
 name|mips_fetch_args
 block|,

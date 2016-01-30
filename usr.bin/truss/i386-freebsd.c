@@ -383,7 +383,7 @@ init|=
 block|{
 literal|"FreeBSD ELF32"
 block|,
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 block|,
 name|i386_fetch_args
 block|,
@@ -409,7 +409,7 @@ init|=
 block|{
 literal|"FreeBSD a.out"
 block|,
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 block|,
 name|i386_fetch_args
 block|,
