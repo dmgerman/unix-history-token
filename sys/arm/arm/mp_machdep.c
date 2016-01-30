@@ -601,11 +601,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|6
 name|uint32_t
 name|actlr_mask
 decl_stmt|,
@@ -646,23 +641,6 @@ argument_list|(
 name|PSR_A
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* __ARM_ARCH>= 6 */
-name|cpu_setup
-argument_list|()
-expr_stmt|;
-name|setttb
-argument_list|(
-name|pmap_pa
-argument_list|)
-expr_stmt|;
-name|cpu_tlb_flushID
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __ARM_ARCH>= 6 */
 name|pc
 operator|=
 operator|&
@@ -708,19 +686,6 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__ARM_ARCH
-operator|<
-literal|6
-comment|/* Provide stack pointers for other processor modes. */
-name|set_stackptrs
-argument_list|(
-name|cpu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Signal our startup to BSP */
 name|atomic_add_rel_32
 argument_list|(
