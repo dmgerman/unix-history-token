@@ -276,6 +276,11 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
+name|struct
+name|sctp_nets
+modifier|*
+name|net
+parameter_list|,
 name|int
 modifier|*
 name|abort_no_unlock
@@ -888,6 +893,8 @@ argument_list|(
 name|inp
 argument_list|,
 name|stcb
+argument_list|,
+name|net
 argument_list|,
 name|m
 argument_list|,
@@ -24667,6 +24674,9 @@ argument_list|,
 name|inp
 argument_list|,
 name|stcb
+argument_list|,
+operator|*
+name|netp
 argument_list|,
 operator|&
 name|abort_no_unlock
