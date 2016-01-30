@@ -1362,7 +1362,8 @@ name|parent
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|i
 decl_stmt|;
 name|iicdev
