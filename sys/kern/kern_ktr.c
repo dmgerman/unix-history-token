@@ -2139,7 +2139,7 @@ while|while
 condition|(
 name|cncheckc
 argument_list|()
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
