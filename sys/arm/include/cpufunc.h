@@ -61,15 +61,6 @@ struct|struct
 name|cpu_functions
 block|{
 comment|/* CPU functions */
-name|u_int
-function_decl|(
-modifier|*
-name|cf_id
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 name|void
 function_decl|(
 modifier|*
@@ -96,39 +87,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|cf_domains
-function_decl|)
-parameter_list|(
-name|u_int
-name|domains
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
 name|cf_setttb
 function_decl|)
 parameter_list|(
 name|u_int
 name|ttb
-parameter_list|)
-function_decl|;
-name|u_int
-function_decl|(
-modifier|*
-name|cf_faultstatus
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|u_int
-function_decl|(
-modifier|*
-name|cf_faultaddress
-function_decl|)
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 comment|/* TLB functions */
@@ -402,14 +365,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|cpu_ident
-parameter_list|()
-value|cpufuncs.cf_id()
-end_define
-
-begin_define
-define|#
-directive|define
 name|cpu_cpwait
 parameter_list|()
 value|cpufuncs.cf_cpwait()
@@ -430,37 +385,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|cpu_domains
-parameter_list|(
-name|d
-parameter_list|)
-value|cpufuncs.cf_domains(d)
-end_define
-
-begin_define
-define|#
-directive|define
 name|cpu_setttb
 parameter_list|(
 name|t
 parameter_list|)
 value|cpufuncs.cf_setttb(t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_faultstatus
-parameter_list|()
-value|cpufuncs.cf_faultstatus()
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_faultaddress
-parameter_list|()
-value|cpufuncs.cf_faultaddress()
 end_define
 
 begin_define
@@ -737,16 +666,7 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|cpufunc_id
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int
-name|cpufunc_cpuid
+name|cpu_ident
 parameter_list|(
 name|void
 parameter_list|)
@@ -768,7 +688,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpufunc_domains
+name|cpu_domains
 parameter_list|(
 name|u_int
 name|domains
@@ -778,7 +698,7 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|cpufunc_faultstatus
+name|cpu_faultstatus
 parameter_list|(
 name|void
 parameter_list|)
@@ -787,7 +707,7 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|cpufunc_faultaddress
+name|cpu_faultaddress
 parameter_list|(
 name|void
 parameter_list|)

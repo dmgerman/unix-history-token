@@ -291,9 +291,6 @@ name|arm9_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -301,18 +298,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|arm9_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -444,9 +432,6 @@ name|armv5_ec_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -454,18 +439,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|armv5_ec_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -575,9 +551,6 @@ name|sheeva_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -585,18 +558,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|sheeva_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -705,9 +669,6 @@ name|pj4bv7_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|armv7_drain_writebuf
 block|,
 comment|/* cpwait		*/
@@ -715,18 +676,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|armv7_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv7_tlb_flushID
 block|,
@@ -875,9 +827,6 @@ name|xscale_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|xscale_cpwait
 block|,
 comment|/* cpwait		*/
@@ -885,18 +834,9 @@ comment|/* MMU functions */
 name|xscale_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* domain		*/
 name|xscale_setttb
 block|,
 comment|/* setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -1021,9 +961,6 @@ name|xscalec3_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|xscale_cpwait
 block|,
 comment|/* cpwait		*/
@@ -1031,18 +968,9 @@ comment|/* MMU functions */
 name|xscale_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* domain		*/
 name|xscalec3_setttb
 block|,
 comment|/* setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -1158,9 +1086,6 @@ name|fa526_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -1168,18 +1093,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* domain		*/
 name|fa526_setttb
 block|,
 comment|/* setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -1303,9 +1219,6 @@ name|arm1176_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id                   */
 name|cpufunc_nullop
 block|,
 comment|/* cpwait               */
@@ -1313,18 +1226,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control              */
-name|cpufunc_domains
-block|,
-comment|/* Domain               */
 name|arm11x6_setttb
 block|,
 comment|/* Setttb               */
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus          */
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress         */
 comment|/* TLB functions */
 name|arm11_tlb_flushID
 block|,
@@ -1457,9 +1361,6 @@ name|cortexa_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id                   */
 name|cpufunc_nullop
 block|,
 comment|/* cpwait               */
@@ -1467,18 +1368,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control              */
-name|cpufunc_domains
-block|,
-comment|/* Domain               */
 name|armv7_setttb
 block|,
 comment|/* Setttb               */
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus          */
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress         */
 comment|/* 	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
 name|armv7_tlb_flushID
 block|,
@@ -1790,7 +1682,7 @@ end_function
 begin_expr_stmt
 name|cpuid
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -2345,7 +2237,7 @@ begin_block
 block|{
 name|cputype
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|cputype
@@ -3341,7 +3233,7 @@ name|cpuid
 decl_stmt|;
 name|cpuid
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|cpuctrl
