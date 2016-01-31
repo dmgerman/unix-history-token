@@ -266,14 +266,6 @@ name|reset
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ixgbe_mng_present
-argument_list|(
-name|hw
-argument_list|)
-condition|)
 name|phy
 operator|->
 name|ops

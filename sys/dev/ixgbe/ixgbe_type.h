@@ -10596,8 +10596,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_MDIO_GLOBAL_ALM_1_DEV_FAULT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* device fault */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_MDIO_GLOBAL_ALM_1_HI_TMP_FAIL
 value|0x4000
+end_define
+
+begin_comment
+comment|/* high temp failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_FAULT_MSG
+value|0xC850
+end_define
+
+begin_comment
+comment|/* Global Fault Message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_FAULT_MSG_HI_TMP
+value|0x8007
 end_define
 
 begin_comment
