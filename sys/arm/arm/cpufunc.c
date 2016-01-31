@@ -402,16 +402,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 operator|(
 name|void
 operator|*
@@ -561,16 +551,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 operator|(
 name|void
 operator|*
@@ -690,16 +670,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|sheeva_cpu_sleep
 block|,
 comment|/* sleep		*/
@@ -846,16 +816,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 operator|(
 name|void
 operator|*
@@ -1026,16 +986,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|xscale_cpu_sleep
 block|,
 comment|/* sleep		*/
@@ -1170,16 +1120,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|xscale_cpu_sleep
 block|,
 comment|/* sleep		*/
@@ -1325,12 +1265,6 @@ comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-name|fa526_flush_brnchtgt_E
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|fa526_cpu_sleep
 block|,
 comment|/* sleep		*/
@@ -1480,16 +1414,6 @@ comment|/* flush_prefetchbuf    */
 name|arm11_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C     */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E     */
 name|arm11x6_sleep
 block|,
 comment|/* sleep                */
@@ -1641,16 +1565,6 @@ comment|/* flush_prefetchbuf    */
 name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C     */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E     */
 name|armv7_cpu_sleep
 block|,
 comment|/* sleep                */
