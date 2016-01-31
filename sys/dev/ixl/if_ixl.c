@@ -3785,9 +3785,12 @@ name|i40e_aq_set_phy_int_mask
 argument_list|(
 name|hw
 argument_list|,
+operator|~
+operator|(
 name|I40E_AQ_EVENT_LINK_UPDOWN
 operator||
 name|I40E_AQ_EVENT_MODULE_QUAL_FAIL
+operator|)
 argument_list|,
 name|NULL
 argument_list|)
