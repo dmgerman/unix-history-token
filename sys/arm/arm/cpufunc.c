@@ -420,12 +420,6 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|arm9_context_switch
 block|,
 comment|/* context_switch	*/
@@ -585,12 +579,6 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|arm10_context_switch
 block|,
 comment|/* context_switch	*/
@@ -716,12 +704,6 @@ name|sheeva_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|arm10_context_switch
 block|,
 comment|/* context_switch	*/
@@ -882,12 +864,6 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|armv7_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1064,12 +1040,6 @@ name|xscale_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|xscale_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1214,12 +1184,6 @@ name|xscale_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|xscalec3_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1371,12 +1335,6 @@ name|fa526_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|fa526_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1536,12 +1494,6 @@ name|arm11x6_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup        */
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup    */
 name|arm11_context_switch
 block|,
 comment|/* context_switch       */
@@ -1703,12 +1655,6 @@ name|armv7_cpu_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup        */
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup    */
 name|armv7_context_switch
 block|,
 comment|/* context_switch       */
@@ -3105,33 +3051,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Fixup routines for data and prefetch aborts.  *  * Several compile time symbols are used  *  * DEBUG_FAULT_CORRECTION - Print debugging information during the  * correction of registers after a fault.  */
-end_comment
-
-begin_comment
-comment|/*  * Null abort fixup routine.  * For use when no fixup is required.  */
-end_comment
-
-begin_function
-name|int
-name|cpufunc_null_fixup
-parameter_list|(
-name|arg
-parameter_list|)
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|ABORT_FIXUP_OK
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * CPU Setup code  */
