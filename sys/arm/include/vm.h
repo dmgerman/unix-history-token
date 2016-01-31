@@ -66,7 +66,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_WT
+name|VM_MEMATTR_WRITE_THROUGH
 value|((vm_memattr_t)PTE2_ATTR_WT)
 end_define
 
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|VM_MEMATTR_WRITE_COMBINING
-value|VM_MEMATTR_WT
+value|VM_MEMATTR_WRITE_THROUGH
 end_define
 
 begin_comment
