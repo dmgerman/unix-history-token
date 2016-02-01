@@ -308,16 +308,6 @@ comment|/* tlb_flushID		*/
 name|arm9_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-operator|(
-name|void
-operator|*
-operator|)
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -449,12 +439,6 @@ comment|/* tlb_flushID		*/
 name|arm10_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|arm10_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -688,12 +672,6 @@ block|,
 comment|/* tlb_flushID_SE	*/
 name|armv7_tlb_flushID
 block|,
-comment|/* tlb_flushI		*/
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushI_SE	*/
-name|armv7_tlb_flushID
-block|,
 comment|/* tlb_flushD		*/
 name|armv7_tlb_flushID_SE
 block|,
@@ -844,16 +822,6 @@ comment|/* tlb_flushID		*/
 name|xscale_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-operator|(
-name|void
-operator|*
-operator|)
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -978,16 +946,6 @@ comment|/* tlb_flushID		*/
 name|xscale_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-operator|(
-name|void
-operator|*
-operator|)
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -1103,12 +1061,6 @@ comment|/* tlb_flushID		*/
 name|fa526_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|fa526_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -1236,12 +1188,6 @@ comment|/* tlb_flushID          */
 name|arm11_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE       */
-name|arm11_tlb_flushI
-block|,
-comment|/* tlb_flushI           */
-name|arm11_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE        */
 name|arm11_tlb_flushD
 block|,
 comment|/* tlb_flushD           */
@@ -1378,12 +1324,6 @@ comment|/* tlb_flushID          */
 name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE       */
-name|armv7_tlb_flushID
-block|,
-comment|/* tlb_flushI           */
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushI_SE        */
 name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushD           */
