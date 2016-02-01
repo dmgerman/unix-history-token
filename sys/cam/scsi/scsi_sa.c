@@ -21425,15 +21425,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|uint32_t
-name|blk_pointer
-decl_stmt|;
-name|blk_pointer
-operator|=
-name|locate_info
-operator|->
-name|logical_id
-expr_stmt|;
 name|scsi_locate_10
 argument_list|(
 operator|&
