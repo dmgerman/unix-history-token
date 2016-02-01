@@ -269,7 +269,7 @@ struct|struct
 name|fpemu
 block|{
 name|struct
-name|fpreg
+name|fpu
 modifier|*
 name|fe_fpstate
 decl_stmt|;
