@@ -3874,8 +3874,6 @@ decl_stmt|,
 name|enc_idx
 decl_stmt|,
 name|phy_idx
-decl_stmt|,
-name|sata_end_device
 decl_stmt|;
 name|u32
 name|map_idx
@@ -4019,10 +4017,6 @@ name|SASAddress
 operator|.
 name|Low
 expr_stmt|;
-name|sata_end_device
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4038,10 +4032,6 @@ name|MPI2_SAS_DEVICE_INFO_SATA_DEVICE
 operator|)
 condition|)
 block|{
-name|sata_end_device
-operator|=
-literal|1
-expr_stmt|;
 name|rc
 operator|=
 name|mpssas_get_sas_address_for_sata_disk
