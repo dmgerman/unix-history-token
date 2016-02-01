@@ -10163,6 +10163,8 @@ name|vmx
 operator|->
 name|vm
 argument_list|,
+name|vcpu
+argument_list|,
 name|gpa
 argument_list|)
 operator|||

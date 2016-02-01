@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bootrom.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"inout.h"
 end_include
 
@@ -175,6 +181,15 @@ name|lpc_bridge
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|romfile
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -233,7 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * LPC device configuration is in the following form:  *<lpc_device_name>[,<options>]  * For e.g. "com1,stdio"  */
+comment|/*  * LPC device configuration is in the following form:  *<lpc_device_name>[,<options>]  * For e.g. "com1,stdio" or "bootrom,/var/romfile"  */
 end_comment
 
 begin_function
@@ -292,6 +307,30 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|lpcdev
+argument_list|,
+literal|"bootrom"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|romfile
+operator|=
+name|str
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 for|for
 control|(
 name|unit
@@ -354,6 +393,23 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|lpc_bootrom
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|romfile
 operator|)
 return|;
 block|}
@@ -594,7 +650,10 @@ specifier|static
 name|int
 name|lpc_init
 parameter_list|(
-name|void
+name|struct
+name|vmctx
+modifier|*
+name|ctx
 parameter_list|)
 block|{
 name|struct
@@ -616,6 +675,32 @@ name|unit
 decl_stmt|,
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|romfile
+operator|!=
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|bootrom_init
+argument_list|(
+name|ctx
+argument_list|,
+name|romfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* COM1 and COM2 */
 for|for
 control|(
@@ -1651,7 +1736,9 @@ block|}
 if|if
 condition|(
 name|lpc_init
-argument_list|()
+argument_list|(
+name|ctx
+argument_list|)
 operator|!=
 literal|0
 condition|)

@@ -189,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|VTNET_MAXSEGS
-value|32
+value|256
 end_define
 
 begin_comment
@@ -400,7 +400,7 @@ define|#
 directive|define
 name|VTNET_S_HOSTCAPS
 define|\
-value|( VIRTIO_NET_F_MAC | VIRTIO_NET_F_MRG_RXBUF | VIRTIO_NET_F_STATUS | \     VIRTIO_F_NOTIFY_ON_EMPTY)
+value|( VIRTIO_NET_F_MAC | VIRTIO_NET_F_MRG_RXBUF | VIRTIO_NET_F_STATUS | \     VIRTIO_F_NOTIFY_ON_EMPTY | VIRTIO_RING_F_INDIRECT_DESC)
 end_define
 
 begin_comment

@@ -6852,6 +6852,8 @@ name|svm_sc
 operator|->
 name|vm
 argument_list|,
+name|vcpu
+argument_list|,
 name|info2
 argument_list|)
 condition|)
