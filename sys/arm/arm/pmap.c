@@ -1699,7 +1699,7 @@ name|type
 decl_stmt|;
 name|id
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|type

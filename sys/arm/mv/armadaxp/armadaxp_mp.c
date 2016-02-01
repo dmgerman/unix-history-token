@@ -344,7 +344,7 @@ decl_stmt|;
 comment|/* 	 * Initialization procedure depends on core revision, 	 * in this step CHIP ID is checked to choose proper procedure 	 */
 name|cputype
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|cputype

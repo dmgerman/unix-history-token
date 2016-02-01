@@ -665,7 +665,7 @@ name|cputype
 decl_stmt|;
 name|cputype
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|cputype

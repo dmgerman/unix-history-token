@@ -307,7 +307,7 @@ condition|)
 block|{
 name|id_code
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|revision

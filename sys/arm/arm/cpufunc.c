@@ -552,12 +552,6 @@ comment|/* tlb_flushID		*/
 name|arm10_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|arm10_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/

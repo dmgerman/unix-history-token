@@ -136,7 +136,7 @@ begin_function_decl
 specifier|extern
 name|unsigned
 name|int
-name|cpufunc_id
+name|cpu_ident
 parameter_list|(
 name|void
 parameter_list|)
@@ -1252,7 +1252,7 @@ begin_if
 if|if
 condition|(
 operator|(
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 operator|&
 literal|0x0000f000
@@ -1324,7 +1324,7 @@ end_function
 begin_expr_stmt
 name|cpuid
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -3657,7 +3657,7 @@ comment|/* So that idcache_wbinv works; */
 if|if
 condition|(
 operator|(
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 operator|&
 literal|0x0000f000
