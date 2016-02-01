@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/refcount.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/tree.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_include

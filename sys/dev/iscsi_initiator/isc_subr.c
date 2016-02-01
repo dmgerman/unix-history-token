@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iscsi_initiator/iscsi.h>
 end_include
 
