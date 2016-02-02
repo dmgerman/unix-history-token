@@ -138,7 +138,7 @@ name|pos
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
