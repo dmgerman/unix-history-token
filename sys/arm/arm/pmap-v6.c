@@ -2187,7 +2187,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  *  *	PMAP first stage initialization and utility functions  *	for pre-bootstrap epoch.  *  *  After pmap_bootstrap_prepare() is called, the following functions  *  can be used:  *  *  (1) strictly only for this stage functions for physical page allocations,  *      virtual space allocations, and mappings:  *  *  vm_paddr_t pmap_preboot_get_pages(u_int num);  *  void pmap_preboot_map_pages(vm_paddr_t pa, vm_offset_t va, u_int num);  *  vm_offset_t pmap_preboot_reserve_pages(u_int num);  *  vm_offset_t pmap_preboot_get_vpages(u_int num);  *  void pmap_preboot_map_attr(vm_paddr_t pa, vm_offset_t va, vm_size_t size,  *      int prot, int attr);  *  *  (2) for all stages:  *  *  vm_paddr_t pmap_kextract(vm_offset_t va);  *  *  NOTE: This is not SMP coherent stage.  *  *****************************************************************************/
+comment|/*****************************************************************************  *  *	PMAP first stage initialization and utility functions  *	for pre-bootstrap epoch.  *  *  After pmap_bootstrap_prepare() is called, the following functions  *  can be used:  *  *  (1) strictly only for this stage functions for physical page allocations,  *      virtual space allocations, and mappings:  *  *  vm_paddr_t pmap_preboot_get_pages(u_int num);  *  void pmap_preboot_map_pages(vm_paddr_t pa, vm_offset_t va, u_int num);  *  vm_offset_t pmap_preboot_reserve_pages(u_int num);  *  vm_offset_t pmap_preboot_get_vpages(u_int num);  *  void pmap_preboot_map_attr(vm_paddr_t pa, vm_offset_t va, vm_size_t size,  *      vm_prot_t prot, vm_memattr_t attr);  *  *  (2) for all stages:  *  *  vm_paddr_t pmap_kextract(vm_offset_t va);  *  *  NOTE: This is not SMP coherent stage.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -3256,10 +3256,10 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|,
-name|int
+name|vm_prot_t
 name|prot
 parameter_list|,
-name|int
+name|vm_memattr_t
 name|attr
 parameter_list|)
 block|{
@@ -3270,6 +3270,8 @@ name|u_int
 name|l1_attr
 decl_stmt|,
 name|l1_prot
+decl_stmt|,
+name|l2_prot
 decl_stmt|;
 name|pt1_entry_t
 modifier|*
@@ -3279,11 +3281,21 @@ name|pt2_entry_t
 modifier|*
 name|pte2p
 decl_stmt|;
+name|l2_prot
+operator|=
+name|prot
+operator|&
+name|VM_PROT_WRITE
+condition|?
+name|PTE2_AP_KRW
+else|:
+name|PTE2_AP_KR
+expr_stmt|;
 name|l1_prot
 operator|=
 name|ATTR_TO_L1
 argument_list|(
-name|prot
+name|l2_prot
 argument_list|)
 expr_stmt|;
 name|l1_attr
@@ -3382,7 +3394,7 @@ name|PTE2_KERN
 argument_list|(
 name|pa
 argument_list|,
-name|prot
+name|l2_prot
 argument_list|,
 name|attr
 argument_list|)

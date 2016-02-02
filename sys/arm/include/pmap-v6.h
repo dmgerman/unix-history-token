@@ -835,9 +835,9 @@ name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,
-name|int
+name|vm_prot_t
 parameter_list|,
-name|int
+name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl
