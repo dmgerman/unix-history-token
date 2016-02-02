@@ -922,6 +922,12 @@ block|}
 default|default:
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|supported
+condition|)
+block|{
 name|ERROR_REPORT2
 argument_list|(
 name|IXGBE_ERROR_UNSUPPORTED
@@ -933,6 +939,7 @@ operator|->
 name|device_id
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|supported
 return|;

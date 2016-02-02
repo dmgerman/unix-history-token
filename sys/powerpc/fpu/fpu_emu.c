@@ -595,7 +595,7 @@ modifier|*
 name|frame
 parameter_list|,
 name|struct
-name|fpreg
+name|fpu
 modifier|*
 name|fpf
 parameter_list|)

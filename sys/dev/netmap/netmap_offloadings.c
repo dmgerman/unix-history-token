@@ -51,6 +51,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_comment
+comment|/* types used in module initialization */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 

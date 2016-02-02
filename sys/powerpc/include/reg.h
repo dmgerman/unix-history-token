@@ -84,31 +84,16 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Must match pcb.pcb_fpu */
-end_comment
-
 begin_struct
 struct|struct
 name|fpreg
 block|{
-union|union
-block|{
 name|double
-name|fpr
-decl_stmt|;
-name|uint64_t
-name|vsr
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
 name|fpreg
 index|[
 literal|32
 index|]
-union|;
+decl_stmt|;
 name|double
 name|fpscr
 decl_stmt|;

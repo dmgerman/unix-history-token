@@ -724,7 +724,7 @@ operator|==
 name|SYS_RES_MEMORY
 condition|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|start
 decl_stmt|;
 name|void
@@ -734,7 +734,7 @@ decl_stmt|;
 name|start
 operator|=
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 name|rman_get_start
 argument_list|(
@@ -747,8 +747,11 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"nexus mapdev: start %zx, len %ld\n"
+literal|"nexus mapdev: start %jx, len %ld\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|start
 argument_list|,
 name|rman_get_size

@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam.h>
 end_include
 

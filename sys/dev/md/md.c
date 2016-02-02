@@ -414,43 +414,28 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Applications that patch the object with the image can determine  * the size looking at the start and end markers (strings),  * so we want them contiguous.  */
+comment|/*  * We put the mfs_root symbol into the oldmfs section of the kernel object file.  * Applications that patch the object with the image can determine  * the size looking at the oldmfs section size within the kernel.  */
 end_comment
 
-begin_struct
-specifier|static
-struct|struct
-block|{
+begin_decl_stmt
 name|u_char
-name|start
+name|mfs_root
 index|[
 name|MD_ROOT_SIZE
 operator|*
 literal|1024
 index|]
+name|__attribute__
+argument_list|(
+operator|(
+name|section
+argument_list|(
+literal|"oldmfs"
+argument_list|)
+operator|)
+argument_list|)
 decl_stmt|;
-name|u_char
-name|end
-index|[
-literal|128
-index|]
-decl_stmt|;
-block|}
-name|mfs_root
-init|=
-block|{
-operator|.
-name|start
-operator|=
-literal|"MFS Filesystem goes here"
-block|,
-operator|.
-name|end
-operator|=
-literal|"MFS Filesystem had better STOP here"
-block|, }
-struct|;
-end_struct
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -460,8 +445,6 @@ init|=
 sizeof|sizeof
 argument_list|(
 name|mfs_root
-operator|.
-name|start
 argument_list|)
 decl_stmt|;
 end_decl_stmt

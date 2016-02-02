@@ -19,7 +19,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|fpreg
+name|fpu
 struct_decl|;
 end_struct_decl
 
@@ -60,7 +60,7 @@ name|trapframe
 modifier|*
 parameter_list|,
 name|struct
-name|fpreg
+name|fpu
 modifier|*
 parameter_list|)
 function_decl|;

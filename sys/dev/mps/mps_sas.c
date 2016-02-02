@@ -12981,11 +12981,6 @@ name|mps_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|sglist
-modifier|*
-name|sg
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -12994,10 +12989,6 @@ operator|=
 name|sassc
 operator|->
 name|sc
-expr_stmt|;
-name|sg
-operator|=
-name|NULL
 expr_stmt|;
 name|error
 operator|=

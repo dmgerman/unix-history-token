@@ -75,6 +75,14 @@ define|\
 value|"       nvmecontrol logpage<-p page_id> [-x]<controller id|namespace id>\n"  \  #define FIRMWARE_USAGE							       \ "       nvmecontrol firmware [-s slot] [-f path_to_firmware] [-a]<controller id>\n"
 end_define
 
+begin_define
+define|#
+directive|define
+name|POWER_USAGE
+define|\
+value|"       nvmecontrol power [-l] [-p new-state [-w workload-hint]]<controller id>\n"
+end_define
+
 begin_function_decl
 name|void
 name|devlist
@@ -153,6 +161,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|firmware
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|power
 parameter_list|(
 name|int
 name|argc

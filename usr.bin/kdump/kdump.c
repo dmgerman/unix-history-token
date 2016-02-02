@@ -3493,7 +3493,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 operator|)
 return|;
 switch|switch
@@ -3508,7 +3508,7 @@ name|SV_ABI_FREEBSD
 case|:
 return|return
 operator|(
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 operator|)
 return|;
 if|#
@@ -3536,14 +3536,14 @@ name|SV_ILP32
 condition|)
 return|return
 operator|(
-name|LINUX32
+name|SYSDECODE_ABI_LINUX32
 operator|)
 return|;
 endif|#
 directive|endif
 return|return
 operator|(
-name|LINUX
+name|SYSDECODE_ABI_LINUX
 operator|)
 return|;
 endif|#
@@ -3551,7 +3551,7 @@ directive|endif
 default|default:
 return|return
 operator|(
-name|UNKNOWN_ABI
+name|SYSDECODE_ABI_UNKNOWN
 operator|)
 return|;
 block|}

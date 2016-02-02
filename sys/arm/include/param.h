@@ -332,13 +332,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NPTEPG
-value|(PAGE_SIZE/(sizeof (pt_entry_t)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|PDR_SHIFT
 value|20
 end_define

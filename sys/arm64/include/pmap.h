@@ -391,7 +391,7 @@ begin_define
 define|#
 directive|define
 name|PHYS_AVAIL_SIZE
-value|10
+value|32
 end_define
 
 begin_decl_stmt

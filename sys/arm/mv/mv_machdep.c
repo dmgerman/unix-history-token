@@ -1320,7 +1320,7 @@ comment|/*  * XXX: When device entry in devmap has pd_size smaller than section 
 end_comment
 
 begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
+comment|/*  * Construct devmap table with DT-derived config data.  */
 end_comment
 
 begin_function

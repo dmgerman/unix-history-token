@@ -519,6 +519,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXCP_SOFTSTP_EL0
+value|0x32
+end_define
+
+begin_comment
+comment|/* Software Step, from lower EL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXCP_SOFTSTP_EL1
 value|0x33
 end_define

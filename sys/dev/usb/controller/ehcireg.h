@@ -1100,7 +1100,7 @@ begin_define
 define|#
 directive|define
 name|EHCI_USBMODE_LPM
-value|0xA8
+value|0xC8
 end_define
 
 begin_comment

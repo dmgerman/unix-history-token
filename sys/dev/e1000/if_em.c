@@ -6880,6 +6880,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/*  	** There have proven to be problems with TSO when not 	** at full gigabit speed, so disable the assist automatically 	** when at lower speeds.  -jfv 	*/
 if|if
 condition|(
 name|if_getcapenable
@@ -6888,6 +6889,15 @@ name|ifp
 argument_list|)
 operator|&
 name|IFCAP_TSO4
+condition|)
+block|{
+if|if
+condition|(
+name|adapter
+operator|->
+name|link_speed
+operator|==
+name|SPEED_1000
 condition|)
 name|if_sethwassistbits
 argument_list|(
@@ -6898,6 +6908,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Configure for OS presence */
 name|em_init_manageability
 argument_list|(

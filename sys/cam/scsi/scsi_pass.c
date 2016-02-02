@@ -3052,13 +3052,6 @@ decl_stmt|,
 modifier|*
 name|io_req2
 decl_stmt|;
-name|int
-name|need_unlock
-decl_stmt|;
-name|need_unlock
-operator|=
-literal|0
-expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|io_req
