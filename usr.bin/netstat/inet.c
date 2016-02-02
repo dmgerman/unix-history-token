@@ -2516,16 +2516,17 @@ block|{
 name|char
 name|buf1
 index|[
-literal|15
+literal|33
 index|]
 decl_stmt|;
 name|snprintf
 argument_list|(
 name|buf1
 argument_list|,
-literal|15
+sizeof|sizeof
+name|buf1
 argument_list|,
-literal|"%d/%d/%d"
+literal|"%u/%u/%u"
 argument_list|,
 name|so
 operator|->
@@ -2542,7 +2543,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:listen-queue-sizes/%-14.14s} "
+literal|"{:listen-queue-sizes/%-32.32s} "
 argument_list|,
 name|buf1
 argument_list|)

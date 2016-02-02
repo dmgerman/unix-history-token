@@ -548,7 +548,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|somaxconn
 init|=
 name|SOMAXCONN
@@ -601,6 +601,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * The purpose of the UINT_MAX / 3 limit, is so that the formula 	 *   3 * so_qlimit / 2 	 * below, will not overflow.          */
 if|if
 condition|(
 name|val
@@ -609,7 +610,9 @@ literal|1
 operator|||
 name|val
 operator|>
-name|USHRT_MAX
+name|UINT_MAX
+operator|/
+literal|3
 condition|)
 return|return
 operator|(

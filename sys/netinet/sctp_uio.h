@@ -4010,14 +4010,20 @@ name|uint16_t
 name|local_port
 decl_stmt|;
 name|uint16_t
-name|qlen
+name|qlen_old
 decl_stmt|;
 name|uint16_t
-name|maxqlen
+name|maxqlen_old
 decl_stmt|;
 name|void
 modifier|*
 name|socket
+decl_stmt|;
+name|uint32_t
+name|qlen
+decl_stmt|;
+name|uint32_t
+name|maxqlen
 decl_stmt|;
 if|#
 directive|if
@@ -4028,7 +4034,7 @@ argument_list|)
 name|uint32_t
 name|extra_padding
 index|[
-literal|29
+literal|27
 index|]
 decl_stmt|;
 comment|/* future */
@@ -4037,7 +4043,7 @@ directive|else
 name|uint32_t
 name|extra_padding
 index|[
-literal|30
+literal|28
 index|]
 decl_stmt|;
 comment|/* future */
