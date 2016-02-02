@@ -216,7 +216,7 @@ value|(MIPS_IS_KSEG0_ADDR(x) || \ 					    MIPS_IS_KSEG1_ADDR(x))
 end_define
 
 begin_comment
-comment|/*  * Cache Coherency Attributes:  *	UC:	Uncached.  *	UA:	Uncached accelerated.  *	C:	Cacheable, coherency unspecified.  *	CNC:	Cacheable non-coherent.  *	CC:	Cacheable coherent.  *	CCE:	Cacheable coherent, exclusive read.  *	CCEW:	Cacheable coherent, exclusive write.  *	CCUOW:	Cacheable coherent, update on write.  *  * Note that some bits vary in meaning across implementations (and that the  * listing here is no doubt incomplete) and that the optimal cached mode varies  * between implementations.  0x02 is required to be UC and 0x03 is required to  * be a least C.  *  * We define the following logical bits:  * 	UNCACHED:  * 		The optimal uncached mode for the target CPU type.  This must  * 		be suitable for use in accessing memory-mapped devices.  * 	CACHED:	The optional cached mode for the target CPU type.  */
+comment|/*  * Cache Coherency Attributes:  *	UC:	Uncached.  *	UA:	Uncached accelerated.  *	C:	Cacheable, coherency unspecified.  *	CNC:	Cacheable non-coherent.  *	CC:	Cacheable coherent.  *	CCS:	Cacheable coherent, shared read.  *	CCE:	Cacheable coherent, exclusive read.  *	CCEW:	Cacheable coherent, exclusive write.  *	CCUOW:	Cacheable coherent, update on write.  *  * Note that some bits vary in meaning across implementations (and that the  * listing here is no doubt incomplete) and that the optimal cached mode varies  * between implementations.  0x02 is required to be UC and 0x03 is required to  * be a least C.  *  * We define the following logical bits:  * 	UNCACHED:  * 		The optimal uncached mode for the target CPU type.  This must  * 		be suitable for use in accessing memory-mapped devices.  * 	CACHED:	The optional cached mode for the target CPU type.  */
 end_comment
 
 begin_define
@@ -381,6 +381,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * 1004K and 1074K cores, as well as interAptiv and proAptiv cores, support  * Cacheable Coherent CCAs 0x04 and 0x05, as well as Cacheable non-Coherent  * CCA 0x03 and Uncached Accelerated CCA 0x07  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -388,20 +392,61 @@ name|defined
 argument_list|(
 name|CPU_MIPS1004K
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MIPS1074K
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_INTERAPTIV
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_PROAPTIV
+argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|MIPS_CCA_UNCACHED
-value|0x02
+name|MIPS_CCA_CNC
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_CCA_CACHED
+name|MIPS_CCA_CCE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCS
 value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UA
+value|0x07
+end_define
+
+begin_comment
+comment|/* We use shared read CCA for CACHED CCA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_CCS
 end_define
 
 begin_endif
@@ -744,6 +789,17 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|CPU_MIPS24K
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MIPS34K
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
 name|CPU_MIPS74K
 argument_list|)
 operator|||
@@ -751,7 +807,28 @@ name|defined
 argument_list|(
 name|CPU_MIPS1004K
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_MIPS1074K
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_INTERAPTIV
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_PROAPTIV
+argument_list|)
 end_elif
+
+begin_comment
+comment|/*  * According to MIPS32tm Architecture for Programmers, Vol.II, rev. 2.00:  * "As EHB becomes standard in MIPS implementations, the previous SSNOPs can be  *  removed, leaving only the EHB".  * Also, all MIPS32 Release 2 implementations have the EHB instruction, which  * resolves all execution hazards. The same goes for MIPS32 Release 3.  */
+end_comment
 
 begin_define
 define|#
