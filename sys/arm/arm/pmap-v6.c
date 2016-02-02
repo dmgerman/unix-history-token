@@ -4419,7 +4419,7 @@ operator|)
 condition|?
 name|PTE2_AP_KRW
 else|:
-name|PTE1_AP_KR
+name|PTE2_AP_KR
 expr_stmt|;
 name|l2prot
 operator||=
