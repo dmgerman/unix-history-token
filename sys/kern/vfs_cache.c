@@ -2626,6 +2626,15 @@ name|cn_flags
 operator||=
 name|ISWHITEOUT
 expr_stmt|;
+name|cache_out_ts
+argument_list|(
+name|ncp
+argument_list|,
+name|tsp
+argument_list|,
+name|ticksp
+argument_list|)
+expr_stmt|;
 name|CACHE_UNLOCK
 argument_list|()
 expr_stmt|;
