@@ -374,9 +374,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -505,9 +502,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -606,9 +600,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -734,9 +725,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -882,9 +870,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -994,9 +979,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -1121,9 +1103,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|fa526_flush_prefetchbuf
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
@@ -1252,9 +1231,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|arm11x6_flush_prefetchbuf
-block|,
-comment|/* flush_prefetchbuf    */
 name|arm11_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
@@ -1385,9 +1361,6 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf    */
 name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
