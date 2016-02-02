@@ -821,11 +821,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_ARM9
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM9E
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -845,6 +853,29 @@ name|va
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|arm9_context_switch
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM9
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -930,15 +961,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm9_context_switch
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|arm9_setup
 parameter_list|(
 name|void
@@ -987,24 +1009,6 @@ argument_list|(
 name|CPU_ARM9E
 argument_list|)
 end_if
-
-begin_function_decl
-name|void
-name|arm10_tlb_flushID_SE
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|arm10_context_switch
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

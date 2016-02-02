@@ -433,7 +433,7 @@ comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
 comment|/* tlb_flushID		*/
-name|arm10_tlb_flushID_SE
+name|arm9_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
 name|armv4_tlb_flushD
@@ -513,7 +513,7 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|arm10_context_switch
+name|arm9_context_switch
 block|,
 comment|/* context_switch	*/
 name|arm10_setup
@@ -543,7 +543,7 @@ comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
 comment|/* tlb_flushID		*/
-name|arm10_tlb_flushID_SE
+name|arm9_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
 name|armv4_tlb_flushD
@@ -607,7 +607,7 @@ name|sheeva_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|arm10_context_switch
+name|arm9_context_switch
 block|,
 comment|/* context_switch	*/
 name|arm10_setup
