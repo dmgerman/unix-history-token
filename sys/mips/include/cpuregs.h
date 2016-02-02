@@ -358,7 +358,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_MIPS74KC
+name|CPU_MIPS74K
 argument_list|)
 end_if
 
@@ -386,7 +386,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_MIPS1004KC
+name|CPU_MIPS1004K
 argument_list|)
 end_if
 
@@ -744,12 +744,12 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_MIPS74KC
+name|CPU_MIPS74K
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_MIPS1004KC
+name|CPU_MIPS1004K
 argument_list|)
 end_elif
 

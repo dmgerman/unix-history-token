@@ -2959,7 +2959,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_MIPS74KC
+name|CPU_MIPS74K
 argument_list|)
 end_elif
 
