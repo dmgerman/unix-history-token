@@ -61,6 +61,17 @@ comment|/* Fault handler, the error value is passed in x0 */
 name|vm_offset_t
 name|pcb_onfault
 decl_stmt|;
+name|u_int
+name|pcb_flags
+decl_stmt|;
+define|#
+directive|define
+name|PCB_SINGLE_STEP_SHIFT
+value|0
+define|#
+directive|define
+name|PCB_SINGLE_STEP
+value|(1<< PCB_SINGLE_STEP_SHIFT)
 comment|/* Place last to simplify the asm to access the rest if the struct */
 name|__uint128_t
 name|pcb_vfp

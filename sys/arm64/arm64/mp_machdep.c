@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/debug_monitor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr.h>
 end_include
 
@@ -983,6 +989,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|dbg_monitor_init
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Enable interrupts */
