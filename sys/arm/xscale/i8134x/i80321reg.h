@@ -1691,8 +1691,15 @@ begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICU_INT_SSP
+value|25
+end_define
+
 begin_comment
-comment|//#define	ICU_INT_SSP		25	/* SSP serial port */
+comment|/* SSP serial port */
 end_comment
 
 begin_define
@@ -1710,8 +1717,15 @@ begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICU_INT_AAUE
+value|23
+end_define
+
 begin_comment
-comment|//#define	ICU_INT_AAUE		23	/* AAU error */
+comment|/* AAU error */
 end_comment
 
 begin_define
@@ -1879,12 +1893,26 @@ begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_comment
-comment|//#define	ICU_INT_AAU_EOC		7	/* AAU end-of-chain */
-end_comment
+begin_define
+define|#
+directive|define
+name|ICU_INT_AAU_EOC
+value|7
+end_define
 
 begin_comment
-comment|//#define	ICU_INT_AAU_EOT		6	/* AAU end-of-transfer */
+comment|/* AAU end-of-chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_AAU_EOT
+value|6
+end_define
+
+begin_comment
+comment|/* AAU end-of-transfer */
 end_comment
 
 begin_define
@@ -1949,25 +1977,12 @@ begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_comment
-comment|//#define	ICU_INT_HWMASK		(0xffffffff& \
-end_comment
-
-begin_comment
-comment|//					~((1<< ICU_INT_bit26) | \
-end_comment
-
-begin_comment
-comment|//					  (1<< ICU_INT_bit22) | \
-end_comment
-
-begin_comment
-comment|//					  (1<< ICU_INT_bit5)  | \
-end_comment
-
-begin_comment
-comment|//					  (1<< ICU_INT_bit4)))
-end_comment
+begin_define
+define|#
+directive|define
+name|ICU_INT_HWMASK
+value|(0xffffffff& \ 					~((1<< ICU_INT_bit26) | \ 					  (1<< ICU_INT_bit22) | \ 					  (1<< ICU_INT_bit5)  | \ 					  (1<< ICU_INT_bit4)))
+end_define
 
 begin_comment
 comment|/*  * Peripheral Bus Interface Unit  */
