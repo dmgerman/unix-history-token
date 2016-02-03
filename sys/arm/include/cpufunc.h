@@ -2220,20 +2220,6 @@ begin_comment
 comment|/* CPU_XSCALE_81342 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|setttb
-value|cpu_setttb
-end_define
-
-begin_define
-define|#
-directive|define
-name|drain_writebuf
-value|cpu_drain_writebuf
-end_define
-
 begin_comment
 comment|/*  * Macros for manipulating CPU interrupts  */
 end_comment

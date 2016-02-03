@@ -1076,7 +1076,7 @@ operator||
 name|DOMAIN_CLIENT
 argument_list|)
 expr_stmt|;
-name|setttb
+name|cpu_setttb
 argument_list|(
 name|kernel_l1pt
 operator|.
@@ -1103,7 +1103,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
+comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in cpu_setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
