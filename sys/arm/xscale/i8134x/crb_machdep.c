@@ -264,7 +264,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/xscale/i80321/i80321var.h>
+file|<arm/xscale/i8134x/i80321var.h>
 end_include
 
 begin_comment
