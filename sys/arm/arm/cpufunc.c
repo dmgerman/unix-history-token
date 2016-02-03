@@ -274,9 +274,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|arm9_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|arm9_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -402,9 +399,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv5_ec_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|armv5_ec_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -512,9 +506,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv5_ec_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|armv5_ec_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -621,9 +612,6 @@ name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv7_idcache_wbinv_all
-block|,
-comment|/* icache_sync_all	*/
 name|armv7_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -758,9 +746,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|xscale_cache_syncI
-block|,
-comment|/* icache_sync_all	*/
 name|xscale_cache_syncI_rng
 block|,
 comment|/* icache_sync_range	*/
@@ -879,9 +864,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|xscalec3_cache_syncI
-block|,
-comment|/* icache_sync_all	*/
 name|xscalec3_cache_syncI_rng
 block|,
 comment|/* icache_sync_range	*/
@@ -991,9 +973,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|fa526_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|fa526_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -1115,9 +1094,6 @@ name|arm11_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|arm11x6_icache_sync_all
-block|,
-comment|/* icache_sync_all      */
 name|arm11x6_icache_sync_range
 block|,
 comment|/* icache_sync_range    */
@@ -1248,9 +1224,6 @@ name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|armv7_icache_sync_all
-block|,
-comment|/* icache_sync_all      */
 name|armv7_icache_sync_range
 block|,
 comment|/* icache_sync_range    */
