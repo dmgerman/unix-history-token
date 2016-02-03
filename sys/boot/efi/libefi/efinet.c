@@ -1536,12 +1536,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unable to open network interface %d\n"
+literal|"Unable to open network interface %d for "
+literal|"exclusive access\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
 name|dif
 operator|->
