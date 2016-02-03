@@ -253,6 +253,10 @@ name|sctp_tcb
 modifier|*
 parameter_list|,
 name|struct
+name|sctp_nets
+modifier|*
+parameter_list|,
+name|struct
 name|mbuf
 modifier|*
 parameter_list|,
