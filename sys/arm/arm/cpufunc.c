@@ -104,48 +104,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/i80321/i80321reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/i80321/i80321var.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Some definitions in i81342reg.h clash with i80321reg.h.  * This only happens for the LINT kernel. As it happens,  * we don't need anything from i81342reg.h that we already  * got from somewhere else during a LINT compile.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|CPU_XSCALE_81342
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|COMPILING_LINT
 argument_list|)
 end_if
 
@@ -759,24 +718,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
 argument_list|)
 end_if
 
@@ -892,7 +839,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425    CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
 end_comment
 
 begin_ifdef
@@ -1433,11 +1380,6 @@ argument_list|(
 name|CPU_ARM1176
 argument_list|)
 operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
 expr|\
 name|defined
 argument_list|(
@@ -1461,11 +1403,6 @@ name|CPU_MV_PJ4B
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -2542,66 +2479,6 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_FA526 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_80321_400
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80321_600
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80321_400_B0
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80321_600_B0
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80219_400
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80219_600
-condition|)
-block|{
-name|cpufuncs
-operator|=
-name|xscale_cpufuncs
-expr_stmt|;
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XScale needs it */
-name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-name|pmap_pte_init_xscale
-argument_list|()
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-endif|#
-directive|endif
-comment|/* CPU_XSCALE_80321 */
 if|#
 directive|if
 name|defined
@@ -3749,12 +3626,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
@@ -3764,11 +3635,6 @@ name|CPU_XSCALE_IXP425
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -3989,7 +3855,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
 end_comment
 
 end_unit

@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|(defined(CPU_ARM9) +				\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
+value|(defined(CPU_ARM9) +				\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
 end_define
 
 begin_comment
@@ -86,17 +86,6 @@ name|CPU_ARM9E
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -529,12 +518,6 @@ directive|if
 operator|(
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
@@ -544,11 +527,6 @@ name|CPU_XSCALE_IXP425
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -618,24 +596,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Step 4: Define features that may be present on a subset of CPUs  *  *	ARM_XSCALE_PMU		Performance Monitoring Unit on 80200 and 80321  */
+comment|/*  * Step 4: Define features that may be present on a subset of CPUs  *  *	ARM_XSCALE_PMU		Performance Monitoring Unit on 81342  */
 end_comment
 
 begin_if
 if|#
 directive|if
 operator|(
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342

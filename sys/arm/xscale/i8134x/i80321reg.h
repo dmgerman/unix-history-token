@@ -178,34 +178,6 @@ name|VERDE_MCU_SIZE
 value|0x0100
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|VERDE_SSP_BASE
-value|0x0600
-end_define
-
-begin_define
-define|#
-directive|define
-name|VERDE_SSP_SIZE
-value|0x0080
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -219,34 +191,6 @@ directive|define
 name|VERDE_PBIU_SIZE
 value|0x0080
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|VERDE_AAU_BASE
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|VERDE_AAU_SIZE
-value|0x0100
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1743,50 +1687,13 @@ name|ICU_INT_bit26
 value|26
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ICU_INT_bit25
-value|25
-end_define
-
-begin_comment
-comment|/* reserved */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICU_INT_SSP
-value|25
-end_define
-
 begin_comment
-comment|/* SSP serial port */
+comment|//#define	ICU_INT_SSP		25	/* SSP serial port */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1799,50 +1706,13 @@ begin_comment
 comment|/* msg unit error */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ICU_INT_bit23
-value|23
-end_define
-
-begin_comment
-comment|/* reserved */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICU_INT_AAUE
-value|23
-end_define
-
 begin_comment
-comment|/* AAU error */
+comment|//#define	ICU_INT_AAUE		23	/* AAU error */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2005,72 +1875,17 @@ begin_comment
 comment|/* core processor PMU */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ICU_INT_bit7
-value|7
-end_define
-
-begin_comment
-comment|/* reserved */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICU_INT_bit6
-value|6
-end_define
-
-begin_comment
-comment|/* reserved */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICU_INT_AAU_EOC
-value|7
-end_define
-
 begin_comment
-comment|/* AAU end-of-chain */
+comment|//#define	ICU_INT_AAU_EOC		7	/* AAU end-of-chain */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICU_INT_AAU_EOT
-value|6
-end_define
-
 begin_comment
-comment|/* AAU end-of-transfer */
+comment|//#define	ICU_INT_AAU_EOT		6	/* AAU end-of-transfer */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2130,453 +1945,28 @@ begin_comment
 comment|/* DMA0 end-of-transfer */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ICU_INT_HWMASK
-value|(0xffffffff&	 \ 							 ~((1<< ICU_INT_bit26) |	\ 							   (1<< ICU_INT_bit25) |	\ 							   (1<< ICU_INT_bit23) |	\ 							   (1<< ICU_INT_bit22) |	\ 							   (1<< ICU_INT_bit7)  |	\ 							   (1<< ICU_INT_bit6)  |	\ 							   (1<< ICU_INT_bit5)  |	\ 							   (1<< ICU_INT_bit4)))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* CPU_XSCALE_80321 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICU_INT_HWMASK
-value|(0xffffffff& \ 					~((1<< ICU_INT_bit26) | \ 					  (1<< ICU_INT_bit22) | \ 					  (1<< ICU_INT_bit5)  | \ 					  (1<< ICU_INT_bit4)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * SSP Serial Port  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0
-value|0x00
-end_define
-
-begin_comment
-comment|/* SSC control 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1
-value|0x04
-end_define
-
-begin_comment
-comment|/* SSC control 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR
-value|0x08
-end_define
-
-begin_comment
-comment|/* SSP status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSITR
-value|0x0c
-end_define
-
-begin_comment
-comment|/* SSP interrupt test */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSDR
-value|0x10
-end_define
-
-begin_comment
-comment|/* SSP data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_DSIZE
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) - 1)
-end_define
-
-begin_comment
-comment|/* data size: 4..16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_FRF_SPI
-value|(0<< 4)
-end_define
-
-begin_comment
-comment|/* Motorola Serial Periph Iface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_FRF_SSP
-value|(1U<< 4)
-end_define
-
-begin_comment
-comment|/* TI Sync. Serial Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_FRF_UWIRE
-value|(2U<< 4)
-end_define
-
-begin_comment
-comment|/* NatSemi Microwire */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_FRF_rsvd
-value|(3U<< 4)
-end_define
-
-begin_comment
-comment|/* reserved */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_ECS
-value|(1U<< 6)
-end_define
-
-begin_comment
-comment|/* external clock select */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_SSE
-value|(1U<< 7)
-end_define
-
-begin_comment
-comment|/* sync. serial port enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR0_SCR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 8)
-end_define
-
-begin_comment
-comment|/* serial clock rate */
+comment|//#define	ICU_INT_HWMASK		(0xffffffff& \
 end_comment
 
 begin_comment
-comment|/* bit rate = 3.6864 * 10e6 / 					        (2 * (SCR + 1)) */
+comment|//					~((1<< ICU_INT_bit26) | \
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_RIE
-value|(1U<< 0)
-end_define
-
 begin_comment
-comment|/* Rx FIFO interrupt enable */
+comment|//					  (1<< ICU_INT_bit22) | \
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_TIE
-value|(1U<< 1)
-end_define
-
 begin_comment
-comment|/* Tx FIFO interrupt enable */
+comment|//					  (1<< ICU_INT_bit5)  | \
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_LBM
-value|(1U<< 2)
-end_define
-
 begin_comment
-comment|/* loopback mode enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_SPO
-value|(1U<< 3)
-end_define
-
-begin_comment
-comment|/* Moto SPI SSCLK pol. (1 = high) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_SPH
-value|(1U<< 4)
-end_define
-
-begin_comment
-comment|/* Moto SPI SSCLK phase: 					    0 = inactive full at start, 						1/2 at end of frame 					    1 = inactive 1/2 at start, 						full at end of frame */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_MWDS
-value|(1U<< 5)
-end_define
-
-begin_comment
-comment|/* Microwire data size: 					    0 = 8 bit 					    1 = 16 bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_TFT
-value|(((x) - 1)<< 6)
-end_define
-
-begin_comment
-comment|/* Tx FIFO threshold */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_RFT
-value|(((x) - 1)<< 10)
-end_define
-
-begin_comment
-comment|/* Rx FIFO threshold */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_EFWR
-value|(1U<< 14)
-end_define
-
-begin_comment
-comment|/* enab. FIFO write/read */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSCR1_STRF
-value|(1U<< 15)
-end_define
-
-begin_comment
-comment|/* FIFO write/read FIFO select: 					     0 = Tx FIFO 					     1 = Rx FIFO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_TNF
-value|(1U<< 2)
-end_define
-
-begin_comment
-comment|/* Tx FIFO not full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_RNE
-value|(1U<< 3)
-end_define
-
-begin_comment
-comment|/* Rx FIFO not empty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_BSY
-value|(1U<< 4)
-end_define
-
-begin_comment
-comment|/* SSP is busy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_TFS
-value|(1U<< 5)
-end_define
-
-begin_comment
-comment|/* Tx FIFO service request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_RFS
-value|(1U<< 6)
-end_define
-
-begin_comment
-comment|/* Rx FIFO service request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_ROR
-value|(1U<< 7)
-end_define
-
-begin_comment
-comment|/* Rx FIFO overrun */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_TFL
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 8)& 0xf)
-end_define
-
-begin_comment
-comment|/* Tx FIFO level */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSSR_RFL
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 12)& 0xf)
-end_define
-
-begin_comment
-comment|/* Rx FIFO level */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSITR_TTFS
-value|(1U<< 5)
-end_define
-
-begin_comment
-comment|/* Test Tx FIFO service */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSITR_TRFS
-value|(1U<< 6)
-end_define
-
-begin_comment
-comment|/* Test Rx FIFO service */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSP_SSITR_TROR
-value|(1U<< 7)
-end_define
-
-begin_comment
-comment|/* Test Rx overrun */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_XSCALE_80321 */
+comment|//					  (1<< ICU_INT_bit4)))
 end_comment
 
 begin_comment
