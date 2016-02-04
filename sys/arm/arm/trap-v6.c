@@ -852,6 +852,13 @@ name|onfault
 decl_stmt|;
 endif|#
 directive|endif
+name|PCPU_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_trap
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -997,6 +1004,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * ARM has a set of unprivileged load and store instructions 	 * (LDRT/LDRBT/STRT/STRBT ...) which are supposed to be used in other 	 * than user mode and OS should recognize their aborts and behave 	 * appropriately. However, there is no way how to do that reasonably 	 * in general unless we restrict the handling somehow. 	 * 	 * For now, these instructions are used only in copyin()/copyout() 	 * like functions where usermode buffers are checked in advance that 	 * they are not from KVA space. Thus, no action is needed here. 	 */
+comment|/* 	 * (1) Handle access and R/W hardware emulation aborts. 	 * (2) Check that abort is not on pmap essential address ranges. 	 *     There is no way how to fix it, so we don't even try. 	 */
 name|rv
 operator|=
 name|pmap_fault
@@ -1022,23 +1030,6 @@ operator|==
 name|KERN_SUCCESS
 condition|)
 return|return;
-if|if
-condition|(
-name|rv
-operator|==
-name|KERN_INVALID_ADDRESS
-condition|)
-goto|goto
-name|nogo
-goto|;
-comment|/* 	 * Now, when we handled imprecise and debug aborts, the rest of 	 * aborts should be really related to mapping. 	 */
-name|PCPU_INC
-argument_list|(
-name|cnt
-operator|.
-name|v_trap
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
@@ -1056,6 +1047,15 @@ goto|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|rv
+operator|==
+name|KERN_INVALID_ADDRESS
+condition|)
+goto|goto
+name|nogo
+goto|;
 if|if
 condition|(
 name|__predict_false
@@ -1298,6 +1298,7 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * At this point, we're dealing with one of the following aborts: 	 * 	 *  FAULT_ICACHE   - I-cache maintenance 	 *  FAULT_TRAN_xx  - Translation 	 *  FAULT_PERM_xx  - Permission 	 */
 comment|/* 	 * Don't pass faulting cache operation to vm_fault(). We don't want 	 * to handle all vm stuff at this moment. 	 */
 name|pcb
 operator|=
@@ -1372,7 +1373,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * At this point, we're dealing with one of the following aborts: 	 * 	 *  FAULT_TRAN_xx  - Translation 	 *  FAULT_PERM_xx  - Permission 	 * 	 * These are the main virtual memory-related faults signalled by 	 * the MMU. 	 */
 comment|/* fusubailout is used by [fs]uswintr to avoid page faulting. */
 if|if
 condition|(
