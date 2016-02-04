@@ -3281,6 +3281,12 @@ expr_stmt|;
 comment|/* 	 * Wait until debugger is attached to child. 	 */
 while|while
 condition|(
+name|td2
+operator|->
+name|td_proc
+operator|==
+name|p2
+operator|&&
 operator|(
 name|td2
 operator|->
