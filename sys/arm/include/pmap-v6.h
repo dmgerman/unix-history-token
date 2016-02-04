@@ -229,7 +229,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|int
+name|vm_memattr_t
 name|pat_mode
 decl_stmt|;
 block|}
@@ -510,7 +510,7 @@ name|pmap_page_get_memattr
 parameter_list|(
 name|m
 parameter_list|)
-value|((vm_memattr_t)(m)->md.pat_mode)
+value|((m)->md.pat_mode)
 end_define
 
 begin_define

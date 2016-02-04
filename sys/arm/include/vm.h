@@ -39,35 +39,35 @@ begin_define
 define|#
 directive|define
 name|VM_MEMATTR_WB_WA
-value|((vm_memattr_t)PTE2_ATTR_WB_WA)
+value|((vm_memattr_t)0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MEMATTR_NOCACHE
-value|((vm_memattr_t)PTE2_ATTR_NOCACHE)
+value|((vm_memattr_t)1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MEMATTR_DEVICE
-value|((vm_memattr_t)PTE2_ATTR_DEVICE)
+value|((vm_memattr_t)2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MEMATTR_SO
-value|((vm_memattr_t)PTE2_ATTR_SO)
+value|((vm_memattr_t)3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MEMATTR_WRITE_THROUGH
-value|((vm_memattr_t)PTE2_ATTR_WT)
+value|((vm_memattr_t)4)
 end_define
 
 begin_define
