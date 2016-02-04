@@ -6962,6 +6962,7 @@ operator||
 name|CSUM_UDP
 operator|)
 expr_stmt|;
+comment|/*  	** There have proven to be problems with TSO when not 	** at full gigabit speed, so disable the assist automatically 	** when at lower speeds.  -jfv 	*/
 if|if
 condition|(
 name|ifp
@@ -6970,12 +6971,22 @@ name|if_capenable
 operator|&
 name|IFCAP_TSO4
 condition|)
+block|{
+if|if
+condition|(
+name|adapter
+operator|->
+name|link_speed
+operator|==
+name|SPEED_1000
+condition|)
 name|ifp
 operator|->
 name|if_hwassist
 operator||=
 name|CSUM_TSO
 expr_stmt|;
+block|}
 comment|/* Configure for OS presence */
 name|em_init_manageability
 argument_list|(
