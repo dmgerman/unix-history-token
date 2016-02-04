@@ -231,12 +231,6 @@ name|arm_cache_loc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ctrl
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2725,10 +2719,6 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 block|}
 end_function
 
@@ -2835,10 +2825,6 @@ operator||=
 name|CPU_CONTROL_VECRELOC
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 literal|0xffffffff
@@ -3130,10 +3116,6 @@ literal|0x0fffffff
 argument_list|)
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 operator|~
@@ -3274,10 +3256,6 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 literal|0xFFFFFFFF
@@ -3395,10 +3373,6 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 name|cpuctrlmask
@@ -3571,10 +3545,6 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 literal|0xffffffff
@@ -3725,10 +3695,6 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set the control register.  Note that bits 6:3 must always 	 * be set to 1. 	 */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 comment|/*	cpu_control(cpuctrlmask, cpuctrl);*/
 name|cpu_control
 argument_list|(

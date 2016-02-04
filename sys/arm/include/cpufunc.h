@@ -645,6 +645,15 @@ end_function_decl
 
 begin_function_decl
 name|u_int
+name|cpu_get_control
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
 name|cpu_pfr
 parameter_list|(
 name|int
