@@ -3499,6 +3499,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|mps_mapping_dump
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mps_mapping_encl_dump
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|mpssas_evt_handler
 parameter_list|(
