@@ -4675,6 +4675,10 @@ decl_stmt|;
 name|int
 name|fr_pages
 decl_stmt|;
+name|int
+modifier|*
+name|fr_pidp
+decl_stmt|;
 name|struct
 name|proc
 modifier|*

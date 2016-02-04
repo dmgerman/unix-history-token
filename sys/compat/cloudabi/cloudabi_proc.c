@@ -269,11 +269,6 @@ name|fcaps
 init|=
 block|{}
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p2
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -311,13 +306,6 @@ operator||
 name|RFPROC
 operator||
 name|RFPROCDESC
-expr_stmt|;
-name|fr
-operator|.
-name|fr_procp
-operator|=
-operator|&
-name|p2
 expr_stmt|;
 name|fr
 operator|.
