@@ -649,14 +649,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|block_userspace_access
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|arm9_dcache_sets_inc
