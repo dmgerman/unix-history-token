@@ -148,7 +148,7 @@ parameter_list|,
 name|tmp
 parameter_list|)
 define|\
-value|la	tmp, pcpup;						\ 	ld	tmp, 0(tmp);						\ 	ld	tmp, PC_CURTHREAD(tmp);					\ 	ld	tmp, TD_PCB(tmp);
+value|ld	tmp, PC_CURTHREAD(gp);					\ 	ld	tmp, TD_PCB(tmp);
 comment|/* Load the pcb */
 value|\ 	sd	handler, PCB_ONFAULT(tmp)
 end_define
