@@ -795,7 +795,11 @@ decl_stmt|;
 comment|/* 	 * 2 pages - 1st page for parent->child 	 * notification and 2nd is child->parent 	 * notification 	 */
 name|void
 modifier|*
-name|monitor_pages
+name|monitor_page_1
+decl_stmt|;
+name|void
+modifier|*
+name|monitor_page_2
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
