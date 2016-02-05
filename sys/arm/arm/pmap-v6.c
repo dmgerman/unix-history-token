@@ -556,15 +556,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTE2_TEX_DEFAULT
-value|memattr_to_tex2(VM_MEMATTR_DEFAULT)
+name|PTE2_ATTR_DEFAULT
+value|vm_memattr_to_pte2(VM_MEMATTR_DEFAULT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTE2_TEX_PT
-value|memattr_to_tex2(pt_memattr)
+name|PTE2_ATTR_PT
+value|vm_memattr_to_pte2(pt_memattr)
 end_define
 
 begin_define
@@ -574,7 +574,7 @@ name|PTE2_KPT
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_TEX_PT)
+value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_ATTR_PT)
 end_define
 
 begin_define
@@ -584,7 +584,7 @@ name|PTE2_KPT_NG
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN_NG(pa, PTE2_AP_KRW, PTE2_TEX_PT)
+value|PTE2_KERN_NG(pa, PTE2_AP_KRW, PTE2_ATTR_PT)
 end_define
 
 begin_define
@@ -594,7 +594,7 @@ name|PTE2_KRW
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_TEX_DEFAULT)
+value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_ATTR_DEFAULT)
 end_define
 
 begin_define
@@ -604,7 +604,7 @@ name|PTE2_KRO
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KR, PTE2_TEX_DEFAULT)
+value|PTE2_KERN(pa, PTE2_AP_KR, PTE2_ATTR_DEFAULT)
 end_define
 
 begin_define
@@ -1468,7 +1468,7 @@ end_undef
 begin_decl_stmt
 specifier|static
 name|uint32_t
-name|tex_attr2
+name|pte2_attr_tab
 index|[
 literal|8
 index|]
@@ -1555,7 +1555,7 @@ begin_function
 specifier|static
 specifier|inline
 name|uint32_t
-name|memattr_to_tex2
+name|vm_memattr_to_pte2
 parameter_list|(
 name|vm_memattr_t
 name|ma
@@ -1563,6 +1563,9 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|ma
 operator|<
 literal|5
@@ -1578,7 +1581,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|tex_attr2
+name|pte2_attr_tab
 index|[
 operator|(
 name|u_int
@@ -1594,7 +1597,7 @@ begin_function
 specifier|static
 specifier|inline
 name|uint32_t
-name|page_tex2
+name|vm_page_pte2_attr
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1602,7 +1605,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|memattr_to_tex2
+name|vm_memattr_to_pte2
 argument_list|(
 name|m
 operator|->
@@ -2640,7 +2643,7 @@ name|l1_attr
 operator|=
 name|ATTR_TO_L1
 argument_list|(
-name|PTE2_TEX_DEFAULT
+name|PTE2_ATTR_DEFAULT
 argument_list|)
 expr_stmt|;
 name|pte1p
@@ -3441,7 +3444,7 @@ name|PTE2_AP_KR
 expr_stmt|;
 name|l2_attr
 operator|=
-name|memattr_to_tex2
+name|vm_memattr_to_pte2
 argument_list|(
 name|attr
 argument_list|)
@@ -4346,7 +4349,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|PTE2_TEX_DEFAULT
+name|PTE2_ATTR_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4614,7 +4617,7 @@ argument_list|)
 expr_stmt|;
 name|l2attr
 operator|=
-name|PTE2_TEX_DEFAULT
+name|PTE2_ATTR_DEFAULT
 expr_stmt|;
 name|l1attr
 operator|=
@@ -5578,7 +5581,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -6256,7 +6259,7 @@ argument_list|(
 name|pte2
 argument_list|)
 operator|!=
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -6276,7 +6279,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -15251,7 +15254,7 @@ name|pa
 argument_list|,
 name|PTE2_NM
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -18093,7 +18096,7 @@ name|pa
 argument_list|,
 name|l2prot
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -18392,7 +18395,7 @@ name|l1prot
 argument_list|,
 name|ATTR_TO_L1
 argument_list|(
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -18882,7 +18885,7 @@ name|l1attr
 operator|=
 name|ATTR_TO_L1
 argument_list|(
-name|memattr_to_tex2
+name|vm_memattr_to_pte2
 argument_list|(
 name|pat_mode
 argument_list|)
@@ -22699,7 +22702,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|memattr_to_tex2
+name|vm_memattr_to_pte2
 argument_list|(
 name|ma
 argument_list|)
@@ -23099,7 +23102,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -23222,7 +23225,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -23333,7 +23336,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -23459,7 +23462,7 @@ name|PTE2_AP_KR
 operator||
 name|PTE2_NM
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|src
 argument_list|)
@@ -23481,7 +23484,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|dst
 argument_list|)
@@ -23730,7 +23733,7 @@ name|PTE2_AP_KR
 operator||
 name|PTE2_NM
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|a_pg
 argument_list|)
@@ -23762,7 +23765,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|b_pg
 argument_list|)
@@ -23926,7 +23929,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -25128,7 +25131,7 @@ name|va
 expr_stmt|;
 name|l2attr
 operator|=
-name|memattr_to_tex2
+name|vm_memattr_to_pte2
 argument_list|(
 name|VM_MEMATTR_DEVICE
 argument_list|)
@@ -25507,7 +25510,7 @@ name|pa
 argument_list|,
 name|len
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -25639,7 +25642,7 @@ name|pa
 argument_list|,
 name|len
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -26359,7 +26362,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|page_tex2
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
