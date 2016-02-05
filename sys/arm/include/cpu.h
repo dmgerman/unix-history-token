@@ -76,54 +76,16 @@ directive|include
 file|<machine/cpu-v6.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_PMU
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
-file|<sys/pcpu.h>
+file|<machine/cpu-v4.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|PMU_OVSR_C
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Cycle Counter */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|ccnt_hi
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pmu_attched
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEV_PMU */
-end_comment
 
 begin_endif
 endif|#

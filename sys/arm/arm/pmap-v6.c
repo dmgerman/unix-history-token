@@ -295,12 +295,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu-v6.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pcb.h>
 end_include
 

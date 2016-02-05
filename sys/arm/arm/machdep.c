@@ -454,12 +454,6 @@ operator|>=
 literal|6
 end_if
 
-begin_include
-include|#
-directive|include
-file|<machine/cpu-v6.h>
-end_include
-
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
