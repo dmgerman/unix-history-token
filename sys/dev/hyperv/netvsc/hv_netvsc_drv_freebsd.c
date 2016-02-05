@@ -496,7 +496,7 @@ begin_define
 define|#
 directive|define
 name|HN_CSUM_ASSIST
-value|(CSUM_UDP | CSUM_TCP)
+value|(CSUM_IP | CSUM_UDP | CSUM_TCP)
 end_define
 
 begin_comment
@@ -4045,6 +4045,24 @@ operator|->
 name|xmit
 operator|.
 name|is_ipv4
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_IP
+condition|)
+name|csum_info
+operator|->
+name|xmit
+operator|.
+name|ip_header_csum
 operator|=
 literal|1
 expr_stmt|;
