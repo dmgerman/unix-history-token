@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 Regents of the University of California.  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1994 David Greenman  * Copyright (c) 2005-2010 Alan L. Cox<alc@cs.rice.edu>  * Copyright (c) 2014 Svatopluk Kraus<onwahe@gmail.com>  * Copyright (c) 2014 Michal Meloun<meloun@miracle.cz>  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  */
+comment|/*-  * Copyright (c) 1991 Regents of the University of California.  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1994 David Greenman  * Copyright (c) 2005-2010 Alan L. Cox<alc@cs.rice.edu>  * Copyright (c) 2014-2016 Svatopluk Kraus<skra@FreeBSD.org>  * Copyright (c) 2014-2016 Michal Meloun<mmel@FreeBSD.org>  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  */
 end_comment
 
 begin_comment
@@ -563,11 +563,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTE2_TEX_PT
+value|memattr_to_tex2(pt_memattr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE2_KPT
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KRW, pt_memattr)
+value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_TEX_PT)
 end_define
 
 begin_define
@@ -577,7 +584,7 @@ name|PTE2_KPT_NG
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN_NG(pa, PTE2_AP_KRW, pt_memattr)
+value|PTE2_KERN_NG(pa, PTE2_AP_KRW, PTE2_TEX_PT)
 end_define
 
 begin_define
@@ -25277,8 +25284,8 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|,
-name|vm_memattr_t
-name|ma
+name|uint32_t
+name|attr
 parameter_list|)
 block|{
 name|struct
@@ -25355,7 +25362,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|ma
+name|attr
 argument_list|)
 argument_list|)
 expr_stmt|;
