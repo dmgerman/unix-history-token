@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -488,10 +494,7 @@ name|mpentry
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 name|armv7_sev

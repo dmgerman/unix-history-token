@@ -93,6 +93,19 @@ value|0
 end_define
 
 begin_function_decl
+name|void
+name|dcache_wbinv_poc_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* !!! NOT SMP coherent function !!! */
+end_comment
+
+begin_function_decl
 name|vm_offset_t
 name|dcache_wb_pou_checked
 parameter_list|(

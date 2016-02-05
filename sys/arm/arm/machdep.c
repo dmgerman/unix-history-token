@@ -1872,7 +1872,7 @@ index|]
 expr_stmt|;
 block|}
 comment|/* Now sync the vectors. */
-name|cpu_icache_sync_range
+name|icache_sync
 argument_list|(
 name|va
 argument_list|,
@@ -2165,23 +2165,15 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|cpu_dcache_wb_range
+name|dcache_wb_poc
 argument_list|(
 operator|(
-name|uintptr_t
+name|vm_offset_t
 operator|)
 name|ptr
 argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ARM_L2_PIPT
-name|cpu_l2cache_wb_range
-argument_list|(
 operator|(
-name|uintptr_t
+name|vm_paddr_t
 operator|)
 name|vtophys
 argument_list|(
@@ -2191,20 +2183,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|cpu_l2cache_wb_range
-argument_list|(
-operator|(
-name|uintptr_t
-operator|)
-name|ptr
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

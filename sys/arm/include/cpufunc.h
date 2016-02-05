@@ -325,6 +325,14 @@ name|cputype
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_define
 define|#
 directive|define
@@ -332,6 +340,11 @@ name|cpu_cpwait
 parameter_list|()
 value|cpufuncs.cf_cpwait()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -344,6 +357,14 @@ name|e
 parameter_list|)
 value|cpufuncs.cf_control(c, e)
 end_define
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
 begin_define
 define|#
@@ -475,6 +496,11 @@ parameter_list|)
 value|cpufuncs.cf_idcache_wbinv_range((a), (s))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -527,6 +553,14 @@ parameter_list|()
 value|cpufuncs.cf_l2cache_drain_writebuf()
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_define
 define|#
 directive|define
@@ -534,6 +568,11 @@ name|cpu_drain_writebuf
 parameter_list|()
 value|cpufuncs.cf_drain_writebuf()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
