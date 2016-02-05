@@ -229,7 +229,7 @@ comment|/* (c) chars to oob mark */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aiocblist
+argument|kaiocb
 argument_list|)
 name|so_aiojobq
 expr_stmt|;

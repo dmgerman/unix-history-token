@@ -1095,7 +1095,7 @@ name|p_proc
 decl_stmt|;
 comment|/* proc pointer */
 name|struct
-name|aiocblist
+name|kaiocb
 modifier|*
 name|p_aio
 decl_stmt|;
