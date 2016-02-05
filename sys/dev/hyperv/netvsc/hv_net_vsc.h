@@ -2033,10 +2033,11 @@ decl_stmt|;
 name|int
 name|hn_lro_hiwat
 decl_stmt|;
-comment|/* Trust tcp segments verification on host side */
+comment|/* Trust csum verification on host side */
 name|int
-name|hn_trust_hosttcp
+name|hn_trust_hcsum
 decl_stmt|;
+comment|/* HN_TRUST_HCSUM_ */
 name|u_long
 name|hn_csum_ip
 decl_stmt|;
@@ -2074,6 +2075,27 @@ block|}
 name|hn_softc_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HN_TRUST_HCSUM_IP
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_TRUST_HCSUM_TCP
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_TRUST_HCSUM_UDP
+value|0x0004
+end_define
 
 begin_comment
 comment|/*  * Externs  */
