@@ -5184,6 +5184,10 @@ decl_stmt|,
 name|do_lro
 init|=
 literal|0
+decl_stmt|,
+name|do_csum
+init|=
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -5391,6 +5395,25 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+operator|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_RXCSUM
+operator|)
+operator|==
+literal|0
+argument_list|)
+condition|)
+name|do_csum
+operator|=
+literal|0
+expr_stmt|;
 comment|/* receive side checksum offload */
 if|if
 condition|(
@@ -5407,6 +5430,8 @@ operator|->
 name|receive
 operator|.
 name|ip_csum_succeeded
+operator|&&
+name|do_csum
 condition|)
 block|{
 name|m_new
@@ -5430,6 +5455,7 @@ block|}
 comment|/* TCP/UDP csum offload */
 if|if
 condition|(
+operator|(
 name|csum_info
 operator|->
 name|receive
@@ -5441,6 +5467,9 @@ operator|->
 name|receive
 operator|.
 name|udp_csum_succeeded
+operator|)
+operator|&&
+name|do_csum
 condition|)
 block|{
 name|m_new
@@ -5636,11 +5665,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|do_csum
+operator|&&
+operator|(
 name|sc
 operator|->
 name|hn_trust_hcsum
 operator|&
 name|HN_TRUST_HCSUM_TCP
+operator|)
 condition|)
 block|{
 name|sc
@@ -5689,11 +5722,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|do_csum
+operator|&&
+operator|(
 name|sc
 operator|->
 name|hn_trust_hcsum
 operator|&
 name|HN_TRUST_HCSUM_UDP
+operator|)
 condition|)
 block|{
 name|sc
@@ -5733,6 +5770,8 @@ condition|(
 name|pr
 operator|!=
 name|IPPROTO_DONE
+operator|&&
+name|do_csum
 operator|&&
 operator|(
 name|sc
