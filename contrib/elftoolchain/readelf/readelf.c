@@ -8731,6 +8731,10 @@ case|:
 return|return
 literal|"R_RISCV_RVC_JUMP"
 return|;
+default|default:
+return|return
+literal|""
+return|;
 block|}
 case|case
 name|EM_SPARC
