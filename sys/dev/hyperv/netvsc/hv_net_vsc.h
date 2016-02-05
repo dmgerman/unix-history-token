@@ -2064,6 +2064,9 @@ decl_stmt|;
 name|u_long
 name|hn_tx_chimney
 decl_stmt|;
+name|uint64_t
+name|hn_csum_assist
+decl_stmt|;
 block|}
 name|hn_softc_t
 typedef|;
