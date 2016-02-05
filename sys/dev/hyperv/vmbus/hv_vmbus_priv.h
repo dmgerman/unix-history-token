@@ -820,18 +820,11 @@ name|struct
 name|mtx
 name|channel_lock
 decl_stmt|;
-comment|/** 	 * channel table for fast lookup through id. 	 */
+comment|/** 	 * channel table for fast lookup through id. 	*/
 name|hv_vmbus_channel
 modifier|*
 modifier|*
 name|channels
-decl_stmt|;
-name|hv_vmbus_handle
-name|work_queue
-decl_stmt|;
-name|struct
-name|sema
-name|control_sema
 decl_stmt|;
 block|}
 name|hv_vmbus_connection
@@ -1684,10 +1677,6 @@ block|{
 name|hv_vmbus_channel_msg_type
 name|messageType
 decl_stmt|;
-name|bool
-name|handler_no_sleep
-decl_stmt|;
-comment|/* true: the handler doesn't sleep */
 name|vmbus_msg_handler
 name|messageHandler
 decl_stmt|;
@@ -1863,17 +1852,6 @@ parameter_list|(
 name|hv_vmbus_channel
 modifier|*
 name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hv_vmbus_on_channel_message
-parameter_list|(
-name|void
-modifier|*
-name|context
 parameter_list|)
 function_decl|;
 end_function_decl
