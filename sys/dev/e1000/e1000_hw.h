@@ -726,6 +726,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_PCH_SPT_I219_LM
+value|0x156F
+end_define
+
+begin_comment
+comment|/* Sunrise Point PCH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_SPT_I219_V
+value|0x1570
+end_define
+
+begin_comment
+comment|/* Sunrise Point PCH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_SPT_I219_LM2
+value|0x15B7
+end_define
+
+begin_comment
+comment|/* Sunrise Point-H PCH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_SPT_I219_V2
+value|0x15B8
+end_define
+
+begin_comment
+comment|/* Sunrise Point-H PCH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_PCH_LBG_I219_LM3
+value|0x15B9
+end_define
+
+begin_comment
+comment|/* LEWISBURG PCH */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82576
 value|0x10C9
 end_define
@@ -1163,6 +1218,8 @@ block|,
 name|e1000_pch2lan
 block|,
 name|e1000_pch_lpt
+block|,
+name|e1000_pch_spt
 block|,
 name|e1000_82575
 block|,
