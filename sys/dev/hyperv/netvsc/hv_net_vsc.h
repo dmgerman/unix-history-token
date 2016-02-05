@@ -2044,6 +2044,9 @@ name|u_long
 name|hn_csum_tcp
 decl_stmt|;
 name|u_long
+name|hn_csum_udp
+decl_stmt|;
+name|u_long
 name|hn_csum_trusted
 decl_stmt|;
 name|u_long

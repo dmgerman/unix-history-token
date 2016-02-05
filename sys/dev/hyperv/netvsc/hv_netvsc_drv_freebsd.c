@@ -2057,6 +2057,26 @@ name|child
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"csum_udp"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|hn_csum_udp
+argument_list|,
+literal|"RXCSUM UDP"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"csum_trusted"
 argument_list|,
 name|CTLFLAG_RW
@@ -5195,9 +5215,9 @@ expr_stmt|;
 comment|/* receive side checksum offload */
 if|if
 condition|(
-name|NULL
-operator|!=
 name|csum_info
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* IP csum offload */
@@ -5228,7 +5248,7 @@ name|hn_csum_ip
 operator|++
 expr_stmt|;
 block|}
-comment|/* TCP csum offload */
+comment|/* TCP/UDP csum offload */
 if|if
 condition|(
 name|csum_info
@@ -5236,6 +5256,12 @@ operator|->
 name|receive
 operator|.
 name|tcp_csum_succeeded
+operator|||
+name|csum_info
+operator|->
+name|receive
+operator|.
+name|udp_csum_succeeded
 condition|)
 block|{
 name|m_new
@@ -5258,9 +5284,23 @@ name|csum_data
 operator|=
 literal|0xffff
 expr_stmt|;
+if|if
+condition|(
+name|csum_info
+operator|->
+name|receive
+operator|.
+name|tcp_csum_succeeded
+condition|)
 name|sc
 operator|->
 name|hn_csum_tcp
+operator|++
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|hn_csum_udp
 operator|++
 expr_stmt|;
 block|}
