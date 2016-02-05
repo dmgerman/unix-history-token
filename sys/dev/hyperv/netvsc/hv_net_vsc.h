@@ -1990,6 +1990,9 @@ decl_stmt|;
 name|int
 name|hn_tx_chimney_max
 decl_stmt|;
+name|uint64_t
+name|hn_csum_assist
+decl_stmt|;
 name|struct
 name|mtx
 name|hn_txlist_spin
@@ -2063,9 +2066,6 @@ name|hn_tx_collapsed
 decl_stmt|;
 name|u_long
 name|hn_tx_chimney
-decl_stmt|;
-name|uint64_t
-name|hn_csum_assist
 decl_stmt|;
 block|}
 name|hn_softc_t
