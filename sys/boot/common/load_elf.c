@@ -5069,6 +5069,9 @@ name|md
 operator|.
 name|md_data
 operator|+
+operator|(
+name|uintptr_t
+operator|)
 name|ef
 operator|->
 name|off
