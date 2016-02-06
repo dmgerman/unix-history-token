@@ -85,7 +85,7 @@ name|__msan_init
 parameter_list|()
 function_decl|;
 comment|// Print a warning and maybe return.
-comment|// This function can die based on flags()->exit_code.
+comment|// This function can die based on common_flags()->exitcode.
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|__msan_warning
@@ -455,15 +455,6 @@ name|void
 name|__msan_clear_on_return
 parameter_list|()
 function_decl|;
-comment|// Default: -1 (don't exit on error).
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__msan_set_exit_code
-parameter_list|(
-name|int
-name|exit_code
-parameter_list|)
-function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|__msan_set_keep_going
@@ -567,6 +558,21 @@ name|uptr
 name|size
 parameter_list|)
 function_decl|;
+comment|// Tell MSan about newly destroyed memory. Memory will be marked
+comment|// uninitialized.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__sanitizer_dtor_callback
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|u16
 name|__sanitizer_unaligned_load16
@@ -645,6 +651,23 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__msan_copy_shadow
+parameter_list|(
+name|void
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|uptr
+name|size
 parameter_list|)
 function_decl|;
 block|}

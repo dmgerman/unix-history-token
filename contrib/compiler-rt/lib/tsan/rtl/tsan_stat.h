@@ -341,9 +341,11 @@ name|StatMtxAtExit
 block|,
 name|StatMtxMBlock
 block|,
-name|StatMtxJavaMBlock
-block|,
 name|StatMtxDeadlockDetector
+block|,
+name|StatMtxFired
+block|,
+name|StatMtxRacy
 block|,
 name|StatMtxFD
 block|,

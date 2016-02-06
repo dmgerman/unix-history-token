@@ -49,6 +49,15 @@ directive|include
 file|"fp_trunc_impl.inc"
 end_include
 
+begin_macro
+name|ARM_EABI_FNALIAS
+argument_list|(
+argument|f2h
+argument_list|,
+argument|truncsfhf2
+argument_list|)
+end_macro
+
 begin_comment
 comment|// Use a forwarding definition and noinline to implement a poor man's alias,
 end_comment
@@ -57,20 +66,15 @@ begin_comment
 comment|// as there isn't a good cross-platform way of defining one.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|COMPILER_RT_ABI
-name|__attribute__
-argument_list|(
-operator|(
-name|noinline
-operator|)
-argument_list|)
+name|NOINLINE
 name|uint16_t
 name|__truncsfhf2
-argument_list|(
+parameter_list|(
 name|float
 name|a
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__truncXfYf2__
@@ -79,7 +83,7 @@ name|a
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|COMPILER_RT_ABI

@@ -332,6 +332,34 @@ block|}
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
+end_if
+
+begin_comment
+comment|// Alias for libgcc compatibility
+end_comment
+
+begin_expr_stmt
+name|FNALIAS
+argument_list|(
+name|__cmpsf2
+argument_list|,
+name|__lesf2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_enum
 enum|enum
 name|GE_RESULT

@@ -494,12 +494,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__aarch64__
+name|__mips64
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__mips64
+name|__aarch64__
 argument_list|)
 end_if
 
@@ -537,15 +537,11 @@ comment|// The range of addresses which can be returned my mmap.
 end_comment
 
 begin_comment
-comment|// FIXME: this value should be different on different platforms,
+comment|// FIXME: this value should be different on different platforms.  Larger values
 end_comment
 
 begin_comment
-comment|// e.g. on AArch64 it is most likely (1ULL<< 39). Larger values will still work
-end_comment
-
-begin_comment
-comment|// but will consume more memory for TwoLevelByteMap.
+comment|// will still work but will consume more memory for TwoLevelByteMap.
 end_comment
 
 begin_if
@@ -553,25 +549,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__aarch64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_MMAP_RANGE_SIZE
-value|FIRST_32_SECOND_64(1ULL<< 32, 1ULL<< 39)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|__mips__
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -723,11 +703,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__mips__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -784,6 +767,62 @@ begin_define
 define|#
 directive|define
 name|HAVE_TIRPC_RPC_XDR_H
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro MSC_PREREQ
+end_comment
+
+begin_comment
+comment|/// \brief Is the compiler MSVC of at least the specified version?
+end_comment
+
+begin_comment
+comment|/// The common \param version values to check for are:
+end_comment
+
+begin_comment
+comment|///  * 1800: Microsoft Visual Studio 2013 / 12.0
+end_comment
+
+begin_comment
+comment|///  * 1900: Microsoft Visual Studio 2015 / 14.0
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MSC_PREREQ
+parameter_list|(
+name|version
+parameter_list|)
+value|(_MSC_VER>= (version))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MSC_PREREQ
+parameter_list|(
+name|version
+parameter_list|)
 value|0
 end_define
 

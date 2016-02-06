@@ -154,7 +154,7 @@ block|{
 return|return
 name|start_routine_
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool

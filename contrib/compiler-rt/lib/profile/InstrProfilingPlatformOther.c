@@ -17,6 +17,18 @@ name|defined
 argument_list|(
 name|__APPLE__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -93,16 +105,8 @@ begin_comment
 comment|/*!  * \brief Register an instrumented function.  *  * Calls to this are emitted by clang with -fprofile-instr-generate.  Such  * calls are only required (and only emitted) on targets where we haven't  * implemented linker magic to find the bounds of the sections.  */
 end_comment
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 name|void
 name|__llvm_profile_register_function
 parameter_list|(
@@ -143,13 +147,18 @@ name|NamesFirst
 operator|=
 name|Data
 operator|->
-name|Name
+name|NamePtr
 expr_stmt|;
 name|NamesLast
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|Data
 operator|->
-name|Name
+name|NamePtr
 operator|+
 name|Data
 operator|->
@@ -159,13 +168,17 @@ name|CountersFirst
 operator|=
 name|Data
 operator|->
-name|Counters
+name|CounterPtr
 expr_stmt|;
 name|CountersLast
 operator|=
+operator|(
+name|uint64_t
+operator|*
+operator|)
 name|Data
 operator|->
-name|Counters
+name|CounterPtr
 operator|+
 name|Data
 operator|->
@@ -181,7 +194,6 @@ name|First
 parameter_list|,
 name|New
 parameter_list|)
-define|\
 value|First = New< First ? New : First
 name|UPDATE_FIRST
 argument_list|(
@@ -194,18 +206,27 @@ name|UPDATE_FIRST
 argument_list|(
 name|NamesFirst
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|Data
 operator|->
-name|Name
+name|NamePtr
 argument_list|)
 expr_stmt|;
 name|UPDATE_FIRST
 argument_list|(
 name|CountersFirst
 argument_list|,
+operator|(
+name|uint64_t
+operator|*
+operator|)
 name|Data
 operator|->
-name|Counters
+name|CounterPtr
 argument_list|)
 expr_stmt|;
 undef|#
@@ -219,7 +240,6 @@ name|Last
 parameter_list|,
 name|New
 parameter_list|)
-define|\
 value|Last = New> Last ? New : Last
 name|UPDATE_LAST
 argument_list|(
@@ -234,9 +254,14 @@ name|UPDATE_LAST
 argument_list|(
 name|NamesLast
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|Data
 operator|->
-name|Name
+name|NamePtr
 operator|+
 name|Data
 operator|->
@@ -247,9 +272,13 @@ name|UPDATE_LAST
 argument_list|(
 name|CountersLast
 argument_list|,
+operator|(
+name|uint64_t
+operator|*
+operator|)
 name|Data
 operator|->
-name|Counters
+name|CounterPtr
 operator|+
 name|Data
 operator|->
@@ -262,16 +291,8 @@ name|UPDATE_LAST
 block|}
 end_function
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 specifier|const
 name|__llvm_profile_data
 modifier|*
@@ -286,16 +307,8 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 specifier|const
 name|__llvm_profile_data
 modifier|*
@@ -310,16 +323,8 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 specifier|const
 name|char
 modifier|*
@@ -334,16 +339,8 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 specifier|const
 name|char
 modifier|*
@@ -358,16 +355,8 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 name|uint64_t
 modifier|*
 name|__llvm_profile_begin_counters
@@ -381,16 +370,8 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(visibility(
-literal|"hidden"
-argument|))
-argument_list|)
-end_macro
-
 begin_function
+name|COMPILER_RT_VISIBILITY
 name|uint64_t
 modifier|*
 name|__llvm_profile_end_counters

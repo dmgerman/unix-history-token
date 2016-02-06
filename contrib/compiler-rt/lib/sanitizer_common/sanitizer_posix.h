@@ -357,6 +357,14 @@ name|int
 name|internal_fork
 parameter_list|()
 function_decl|;
+name|int
+name|internal_forkpty
+parameter_list|(
+name|int
+modifier|*
+name|amaster
+parameter_list|)
+function_decl|;
 comment|// These functions call appropriate pthread_ functions directly, bypassing
 comment|// the interceptor. They are weak and may not be present in some tools.
 name|SANITIZER_WEAK_ATTRIBUTE
@@ -407,6 +415,23 @@ name|DEFINE_REAL_PTHREAD_FUNCTIONS
 define|\
 value|namespace __sanitizer {                                                      \   int real_pthread_create(void *th, void *attr, void *(*callback)(void *),     \                           void *param) {                                       \     return REAL(pthread_create)(th, attr, callback, param);                    \   }                                                                            \   int real_pthread_join(void *th, void **ret) {                                \     return REAL(pthread_join(th, ret));                                        \   }                                                                            \   }
 comment|// namespace __sanitizer
+name|int
+name|my_pthread_attr_getstack
+parameter_list|(
+name|void
+modifier|*
+name|attr
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|addr
+parameter_list|,
+name|uptr
+modifier|*
+name|size
+parameter_list|)
+function_decl|;
 name|int
 name|internal_sigaction
 parameter_list|(

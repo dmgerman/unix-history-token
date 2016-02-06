@@ -311,6 +311,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_MEMCMP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_MEMCHR
 value|1
 end_define
@@ -717,7 +724,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTRACE
-value|SI_LINUX_NOT_ANDROID&& \   (defined(__i386) || defined(__x86_64) || defined(__mips64) || \     defined(__powerpc64__))
+value|SI_LINUX_NOT_ANDROID&& \   (defined(__i386) || defined(__x86_64) || defined(__mips64) || \     defined(__powerpc64__) || defined(__aarch64__) || defined(__arm__))
 end_define
 
 begin_define
@@ -773,6 +780,14 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_WCSNRTOMBS
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_WCRTOMB
 define|\
 value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
@@ -1223,7 +1238,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT__EXIT
-value|SI_LINUX || SI_FREEBSD
+value|SI_LINUX || SI_FREEBSD || SI_MAC
 end_define
 
 begin_define
@@ -1411,6 +1426,55 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_FOPENCOOKIE
 value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_SEM
+value|SI_LINUX || SI_FREEBSD
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_SETCANCEL
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MINCORE
+value|SI_LINUX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PROCESS_VM_READV
+value|SI_LINUX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_CTERMID
+value|SI_LINUX || SI_MAC || SI_FREEBSD
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_CTERMID_R
+value|SI_MAC || SI_FREEBSD
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPTOR_HOOKS
+value|SI_LINUX
 end_define
 
 begin_endif

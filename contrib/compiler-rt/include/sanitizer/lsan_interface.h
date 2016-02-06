@@ -138,7 +138,7 @@ parameter_list|)
 function_decl|;
 comment|// Check for leaks now. This function behaves identically to the default
 comment|// end-of-process leak check. In particular, it will terminate the process if
-comment|// leaks are found and the exit_code flag is non-zero.
+comment|// leaks are found and the exitcode runtime flag is non-zero.
 comment|// Subsequent calls to this function will have no effect and end-of-process
 comment|// leak check will not run. Effectively, end-of-process leak check is moved to
 comment|// the time of first invocation of this function.

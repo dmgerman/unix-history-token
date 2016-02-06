@@ -308,6 +308,30 @@ modifier|*
 name|end
 parameter_list|)
 function_decl|;
+comment|// Similar to __sanitizer_verify_contiguous_container but returns the address
+comment|// of the first improperly poisoned byte otherwise. Returns null if the area
+comment|// is poisoned properly.
+specifier|const
+name|void
+modifier|*
+name|__sanitizer_contiguous_container_find_bad_address
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|beg
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|mid
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|end
+parameter_list|)
+function_decl|;
 comment|// Print the stack trace leading to this call. Useful for debugging user code.
 name|void
 name|__sanitizer_print_stack_trace
@@ -326,6 +350,81 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+parameter_list|)
+function_decl|;
+comment|// Interceptor hooks.
+comment|// Whenever a libc function interceptor is called it checks if the
+comment|// corresponding weak hook is defined, and it so -- calls it.
+comment|// The primary use case is data-flow-guided fuzzing, where the fuzzer needs
+comment|// to know what is being passed to libc functions, e.g. memcmp.
+comment|// FIXME: implement more hooks.
+name|void
+name|__sanitizer_weak_hook_memcmp
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|s2
+parameter_list|,
+name|size_t
+name|n
+parameter_list|,
+name|int
+name|result
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_weak_hook_strncmp
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|size_t
+name|n
+parameter_list|,
+name|int
+name|result
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_weak_hook_strcmp
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|int
+name|result
 parameter_list|)
 function_decl|;
 ifdef|#

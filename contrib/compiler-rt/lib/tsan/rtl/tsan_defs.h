@@ -168,10 +168,6 @@ name|kTsanOptionsEnv
 init|=
 literal|"GORACE"
 decl_stmt|;
-comment|// Go linker does not support weak symbols.
-define|#
-directive|define
-name|CPP_WEAK
 else|#
 directive|else
 specifier|const
@@ -194,10 +190,6 @@ name|kTsanOptionsEnv
 init|=
 literal|"TSAN_OPTIONS"
 decl_stmt|;
-define|#
-directive|define
-name|CPP_WEAK
-value|WEAK
 endif|#
 directive|endif
 specifier|const
@@ -333,6 +325,16 @@ name|true
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
+name|unsigned
+name|kInvalidTid
+init|=
+operator|(
+name|unsigned
+operator|)
+operator|-
+literal|1
+decl_stmt|;
 comment|// The following "build consistency" machinery ensures that all source files
 comment|// are built in the same configuration. Inconsistent builds lead to
 comment|// hard to debug crashes.

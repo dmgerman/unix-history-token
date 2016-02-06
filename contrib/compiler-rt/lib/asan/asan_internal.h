@@ -99,13 +99,6 @@ directive|include
 file|"sanitizer_common/sanitizer_libc.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ASAN_DEFAULT_FAILURE_EXITCODE
-value|1
-end_define
-
 begin_if
 if|#
 directive|if
@@ -230,7 +223,7 @@ name|AsanCheckIncompatibleRT
 argument_list|()
 block|;
 name|void
-name|AsanOnSIGSEGV
+name|AsanOnDeadlySignal
 argument_list|(
 name|int
 argument_list|,
@@ -242,14 +235,6 @@ name|void
 operator|*
 name|context
 argument_list|)
-block|;
-name|void
-name|DisableReexec
-argument_list|()
-block|;
-name|void
-name|MaybeReexec
-argument_list|()
 block|;
 name|void
 name|ReadContextStack
@@ -266,10 +251,6 @@ name|uptr
 operator|*
 name|ssize
 argument_list|)
-block|;
-name|void
-name|AsanPlatformThreadInit
-argument_list|()
 block|;
 name|void
 name|StopInitOrderChecking

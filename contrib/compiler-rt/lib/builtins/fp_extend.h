@@ -150,7 +150,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|src_rep_t_clz
 parameter_list|(
@@ -416,7 +416,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|src_rep_t
 name|srcToRep
 parameter_list|(
@@ -453,7 +453,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|dst_t
 name|dstFromRep
 parameter_list|(

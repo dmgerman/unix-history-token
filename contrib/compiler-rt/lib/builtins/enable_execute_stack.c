@@ -43,16 +43,16 @@ directive|ifdef
 name|_WIN32
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<windef.h>
-end_include
+begin_define
+define|#
+directive|define
+name|WIN32_LEAN_AND_MEAN
+end_define
 
 begin_include
 include|#
 directive|include
-file|<winbase.h>
+file|<Windows.h>
 end_include
 
 begin_else

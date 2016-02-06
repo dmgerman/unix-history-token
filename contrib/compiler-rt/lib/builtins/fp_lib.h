@@ -235,7 +235,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|rep_clz
 parameter_list|(
@@ -258,7 +258,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|wideMultiply
 parameter_list|(
@@ -361,7 +361,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|rep_clz
 parameter_list|(
@@ -451,7 +451,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|wideMultiply
 parameter_list|(
@@ -684,7 +684,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|rep_clz
 parameter_list|(
@@ -864,7 +864,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|wideMultiply
 parameter_list|(
@@ -1505,7 +1505,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|rep_t
 name|toRep
 parameter_list|(
@@ -1542,7 +1542,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|fp_t
 name|fromRep
 parameter_list|(
@@ -1579,7 +1579,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|normalize
 parameter_list|(
@@ -1618,7 +1618,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|wideLeftShift
 parameter_list|(
@@ -1664,7 +1664,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|wideRightShiftWithSticky
 parameter_list|(
