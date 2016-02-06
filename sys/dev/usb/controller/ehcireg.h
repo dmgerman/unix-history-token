@@ -1073,12 +1073,38 @@ end_define
 begin_define
 define|#
 directive|define
-name|EHCI_USBMODE
+name|EHCI_PORT_RESET_COMPLETE
+value|2
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_comment
+comment|/*  * Registers not covered by EHCI specification  *  *  * EHCI_USBMODE register offset is different for cores with LPM support,  * bits are equal  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_USBMODE_NOLPM
 value|0x68
 end_define
 
 begin_comment
-comment|/* RW USB Device mode register */
+comment|/* RW USB Device mode reg (no LPM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_USBMODE_LPM
+value|0xC8
+end_define
+
+begin_comment
+comment|/* RW USB Device mode reg (LPM) */
 end_comment
 
 begin_define
@@ -1158,16 +1184,72 @@ begin_comment
 comment|/* R/WO Stream Disable Mode */
 end_comment
 
+begin_comment
+comment|/*  * Actual port speed bits depends on EHCI_HOSTC(n) registers presence,  * speed encoding is equal  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|EHCI_PORT_RESET_COMPLETE
-value|2
+name|EHCI_HOSTC
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x80+(4*(n)))
 end_define
 
 begin_comment
-comment|/* ms */
+comment|/* RO, RW Host mode control reg */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_HOSTC_PSPD_SHIFT
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_HOSTC_PSPD_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_PORTSC_PSPD_SHIFT
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_PORTSC_PSPD_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_PORT_SPEED_FULL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_PORT_SPEED_LOW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_PORT_SPEED_HIGH
+value|2
+end_define
 
 begin_endif
 endif|#

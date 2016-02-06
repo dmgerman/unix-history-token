@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012-2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 2012-2016 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -313,6 +319,69 @@ argument_list|,
 argument|nvd_disk
 argument_list|)
 name|disk_head
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nvd
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"nvd driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * The NVMe specification does not define a maximum or optimal delete size, so  *  technically max delete size is min(full size of the namespace, 2^32 - 1  *  LBAs).  A single delete for a multi-TB NVMe namespace though may take much  *  longer to complete than the nvme(4) I/O timeout period.  So choose a sensible  *  default here that is still suitably large to minimize the number of overall  *  delete operations.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|uint64_t
+name|nvd_delete_max
+init|=
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1GB */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_nvd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|delete_max
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|nvd_delete_max
+argument_list|,
+literal|0
+argument_list|,
+literal|"nvd maximum BIO_DELETE size in bytes"
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1249,6 +1318,20 @@ name|nvme_ns_get_size
 argument_list|(
 name|ns
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|disk
+operator|->
+name|d_delmaxsize
+operator|>
+name|nvd_delete_max
+condition|)
+name|disk
+operator|->
+name|d_delmaxsize
+operator|=
+name|nvd_delete_max
 expr_stmt|;
 name|disk
 operator|->

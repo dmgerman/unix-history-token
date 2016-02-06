@@ -594,7 +594,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_MIPS1004KC
+name|CPU_MIPS1004K
 argument_list|)
 end_if
 

@@ -347,10 +347,12 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* Output file pointer. */
-name|pid_t
-name|pid
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
-comment|/* The process ID being monitored. */
+comment|/* The process being monitored. */
 name|char
 name|fname1
 index|[
@@ -578,10 +580,9 @@ name|NULL
 expr_stmt|;
 name|filemon
 operator|->
-name|pid
+name|p
 operator|=
-operator|-
-literal|1
+name|NULL
 expr_stmt|;
 comment|/* Add to the free list. */
 name|TAILQ_INSERT_TAIL
@@ -807,11 +808,9 @@ condition|)
 block|{
 name|filemon
 operator|->
-name|pid
+name|p
 operator|=
 name|p
-operator|->
-name|p_pid
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -937,14 +936,6 @@ literal|"filemon"
 argument_list|)
 expr_stmt|;
 block|}
-name|filemon
-operator|->
-name|pid
-operator|=
-name|curproc
-operator|->
-name|p_pid
-expr_stmt|;
 name|devfs_set_cdevpriv
 argument_list|(
 name|filemon

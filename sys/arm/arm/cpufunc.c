@@ -104,48 +104,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/i80321/i80321reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/i80321/i80321var.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Some definitions in i81342reg.h clash with i80321reg.h.  * This only happens for the LINT kernel. As it happens,  * we don't need anything from i81342reg.h that we already  * got from somewhere else during a LINT compile.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|CPU_XSCALE_81342
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|COMPILING_LINT
 argument_list|)
 end_if
 
@@ -272,12 +231,6 @@ name|arm_cache_loc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ctrl
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -291,9 +244,6 @@ name|arm9_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -301,18 +251,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|arm9_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -320,16 +261,6 @@ comment|/* tlb_flushID		*/
 name|arm9_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-operator|(
-name|void
-operator|*
-operator|)
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -337,9 +268,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|arm9_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|arm9_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -396,22 +324,9 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 operator|(
 name|void
 operator|*
@@ -420,12 +335,6 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|arm9_context_switch
 block|,
 comment|/* context_switch	*/
@@ -460,9 +369,6 @@ name|armv5_ec_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -470,31 +376,16 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|armv5_ec_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
 comment|/* tlb_flushID		*/
-name|arm10_tlb_flushID_SE
+name|arm9_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|arm10_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -502,9 +393,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv5_ec_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|armv5_ec_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -561,22 +449,9 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 operator|(
 name|void
 operator|*
@@ -585,13 +460,7 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
-name|arm10_context_switch
+name|arm9_context_switch
 block|,
 comment|/* context_switch	*/
 name|arm10_setup
@@ -607,9 +476,6 @@ name|sheeva_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -617,31 +483,16 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|sheeva_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
 comment|/* tlb_flushID		*/
-name|arm10_tlb_flushID_SE
+name|arm9_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|arm10_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -649,9 +500,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv5_ec_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|armv5_ec_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -696,33 +544,14 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|sheeva_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
-name|arm10_context_switch
+name|arm9_context_switch
 block|,
 comment|/* context_switch	*/
 name|arm10_setup
@@ -753,9 +582,6 @@ name|pj4bv7_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|armv7_drain_writebuf
 block|,
 comment|/* cpwait		*/
@@ -763,18 +589,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
 name|armv7_setttb
 block|,
 comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
 comment|/* TLB functions */
 name|armv7_tlb_flushID
 block|,
@@ -784,20 +601,11 @@ block|,
 comment|/* tlb_flushID_SE	*/
 name|armv7_tlb_flushID
 block|,
-comment|/* tlb_flushI		*/
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushI_SE	*/
-name|armv7_tlb_flushID
-block|,
 comment|/* tlb_flushD		*/
 name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|armv7_idcache_wbinv_all
-block|,
-comment|/* icache_sync_all	*/
 name|armv7_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -858,22 +666,9 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 operator|(
 name|void
 operator|*
@@ -882,12 +677,6 @@ name|cpufunc_nullop
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|armv7_context_switch
 block|,
 comment|/* context_switch	*/
@@ -911,24 +700,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
 argument_list|)
 end_if
 
@@ -939,9 +716,6 @@ name|xscale_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|xscale_cpwait
 block|,
 comment|/* cpwait		*/
@@ -949,18 +723,9 @@ comment|/* MMU functions */
 name|xscale_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* domain		*/
 name|xscale_setttb
 block|,
 comment|/* setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -968,16 +733,6 @@ comment|/* tlb_flushID		*/
 name|xscale_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-operator|(
-name|void
-operator|*
-operator|)
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -985,9 +740,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|xscale_cache_syncI
-block|,
-comment|/* icache_sync_all	*/
 name|xscale_cache_syncI_rng
 block|,
 comment|/* icache_sync_range	*/
@@ -1044,32 +796,13 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|xscale_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|xscale_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1085,7 +818,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425    CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
 end_comment
 
 begin_ifdef
@@ -1101,9 +834,6 @@ name|xscalec3_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|xscale_cpwait
 block|,
 comment|/* cpwait		*/
@@ -1111,18 +841,9 @@ comment|/* MMU functions */
 name|xscale_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* domain		*/
 name|xscalec3_setttb
 block|,
 comment|/* setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -1130,16 +851,6 @@ comment|/* tlb_flushID		*/
 name|xscale_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-operator|(
-name|void
-operator|*
-operator|)
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -1147,9 +858,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|xscalec3_cache_syncI
-block|,
-comment|/* icache_sync_all	*/
 name|xscalec3_cache_syncI_rng
 block|,
 comment|/* icache_sync_range	*/
@@ -1194,32 +902,13 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|xscale_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|xscalec3_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1254,9 +943,6 @@ name|fa526_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
 name|cpufunc_nullop
 block|,
 comment|/* cpwait		*/
@@ -1264,18 +950,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* domain		*/
 name|fa526_setttb
 block|,
 comment|/* setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* faultaddress		*/
 comment|/* TLB functions */
 name|armv4_tlb_flushID
 block|,
@@ -1283,12 +960,6 @@ comment|/* tlb_flushID		*/
 name|fa526_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|fa526_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
 comment|/* tlb_flushD		*/
@@ -1296,9 +967,6 @@ name|armv4_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-name|fa526_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
 name|fa526_icache_sync_range
 block|,
 comment|/* icache_sync_range	*/
@@ -1355,28 +1023,13 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|fa526_flush_prefetchbuf
-block|,
-comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
 comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-name|fa526_flush_brnchtgt_E
-block|,
-comment|/* flush_brnchtgt_E	*/
 name|fa526_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
 name|fa526_context_switch
 block|,
 comment|/* context_switch	*/
@@ -1411,9 +1064,6 @@ name|arm1176_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id                   */
 name|cpufunc_nullop
 block|,
 comment|/* cpwait               */
@@ -1421,18 +1071,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control              */
-name|cpufunc_domains
-block|,
-comment|/* Domain               */
 name|arm11x6_setttb
 block|,
 comment|/* Setttb               */
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus          */
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress         */
 comment|/* TLB functions */
 name|arm11_tlb_flushID
 block|,
@@ -1440,12 +1081,6 @@ comment|/* tlb_flushID          */
 name|arm11_tlb_flushID_SE
 block|,
 comment|/* tlb_flushID_SE       */
-name|arm11_tlb_flushI
-block|,
-comment|/* tlb_flushI           */
-name|arm11_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE        */
 name|arm11_tlb_flushD
 block|,
 comment|/* tlb_flushD           */
@@ -1453,9 +1088,6 @@ name|arm11_tlb_flushD_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|arm11x6_icache_sync_all
-block|,
-comment|/* icache_sync_all      */
 name|arm11x6_icache_sync_range
 block|,
 comment|/* icache_sync_range    */
@@ -1516,32 +1148,13 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|arm11x6_flush_prefetchbuf
-block|,
-comment|/* flush_prefetchbuf    */
 name|arm11_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C     */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E     */
 name|arm11x6_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup        */
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup    */
 name|arm11_context_switch
 block|,
 comment|/* context_switch       */
@@ -1581,9 +1194,6 @@ name|cortexa_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id                   */
 name|cpufunc_nullop
 block|,
 comment|/* cpwait               */
@@ -1591,18 +1201,9 @@ comment|/* MMU functions */
 name|cpufunc_control
 block|,
 comment|/* control              */
-name|cpufunc_domains
-block|,
-comment|/* Domain               */
 name|armv7_setttb
 block|,
 comment|/* Setttb               */
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus          */
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress         */
 comment|/* 	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
 name|armv7_tlb_flushID
 block|,
@@ -1612,20 +1213,11 @@ block|,
 comment|/* tlb_flushID_SE       */
 name|armv7_tlb_flushID
 block|,
-comment|/* tlb_flushI           */
-name|armv7_tlb_flushID_SE
-block|,
-comment|/* tlb_flushI_SE        */
-name|armv7_tlb_flushID
-block|,
 comment|/* tlb_flushD           */
 name|armv7_tlb_flushID_SE
 block|,
 comment|/* tlb_flushD_SE        */
 comment|/* Cache operations */
-name|armv7_icache_sync_all
-block|,
-comment|/* icache_sync_all      */
 name|armv7_icache_sync_range
 block|,
 comment|/* icache_sync_range    */
@@ -1683,32 +1275,13 @@ name|cpufunc_nullop
 block|,
 comment|/* l2cache_drain_writebuf */
 comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf    */
 name|armv7_drain_writebuf
 block|,
 comment|/* drain_writebuf       */
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C     */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E     */
 name|armv7_cpu_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup        */
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup    */
 name|armv7_context_switch
 block|,
 comment|/* context_switch       */
@@ -1774,11 +1347,6 @@ argument_list|(
 name|CPU_ARM1176
 argument_list|)
 operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
 expr|\
 name|defined
 argument_list|(
@@ -1802,11 +1370,6 @@ name|CPU_MV_PJ4B
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -1930,7 +1493,7 @@ end_function
 begin_expr_stmt
 name|cpuid
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -2485,7 +2048,7 @@ begin_block
 block|{
 name|cputype
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|cputype
@@ -2705,9 +2268,6 @@ comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;
-name|pmap_pte_init_mmu_v6
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2805,9 +2365,6 @@ comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;
-name|pmap_pte_init_mmu_v6
-argument_list|()
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2841,9 +2398,6 @@ operator|=
 name|pj4bv7_cpufuncs
 expr_stmt|;
 name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-name|pmap_pte_init_mmu_v6
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2892,66 +2446,6 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_FA526 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_80321_400
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80321_600
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80321_400_B0
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80321_600_B0
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80219_400
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_80219_600
-condition|)
-block|{
-name|cpufuncs
-operator|=
-name|xscale_cpufuncs
-expr_stmt|;
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XScale needs it */
-name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-name|pmap_pte_init_xscale
-argument_list|()
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-endif|#
-directive|endif
-comment|/* CPU_XSCALE_80321 */
 if|#
 directive|if
 name|defined
@@ -3116,33 +2610,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Fixup routines for data and prefetch aborts.  *  * Several compile time symbols are used  *  * DEBUG_FAULT_CORRECTION - Print debugging information during the  * correction of registers after a fault.  */
-end_comment
-
-begin_comment
-comment|/*  * Null abort fixup routine.  * For use when no fixup is required.  */
-end_comment
-
-begin_function
-name|int
-name|cpufunc_null_fixup
-parameter_list|(
-name|arg
-parameter_list|)
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|ABORT_FIXUP_OK
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * CPU Setup code  */
 end_comment
 
@@ -3252,10 +2719,6 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 block|}
 end_function
 
@@ -3362,10 +2825,6 @@ operator||=
 name|CPU_CONTROL_VECRELOC
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 literal|0xffffffff
@@ -3492,11 +2951,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|cpuctrl
-decl_stmt|,
-name|cpuctrl_wax
-decl_stmt|;
 name|uint32_t
 name|auxctrl
 decl_stmt|,
@@ -3508,109 +2962,12 @@ decl_stmt|,
 name|tmp2
 decl_stmt|;
 name|uint32_t
-name|sbz
-init|=
-literal|0
-decl_stmt|;
-name|uint32_t
 name|cpuid
 decl_stmt|;
 name|cpuid
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
-expr_stmt|;
-name|cpuctrl
-operator|=
-name|CPU_CONTROL_MMU_ENABLE
-operator||
-name|CPU_CONTROL_DC_ENABLE
-operator||
-name|CPU_CONTROL_WBUF_ENABLE
-operator||
-name|CPU_CONTROL_32BP_ENABLE
-operator||
-name|CPU_CONTROL_32BD_ENABLE
-operator||
-name|CPU_CONTROL_LABT_ENABLE
-operator||
-name|CPU_CONTROL_SYST_ENABLE
-operator||
-name|CPU_CONTROL_IC_ENABLE
-operator||
-name|CPU_CONTROL_UNAL_ENABLE
-expr_stmt|;
-comment|/* 	 * "write as existing" bits 	 * inverse of this is mask 	 */
-name|cpuctrl_wax
-operator|=
-operator|(
-literal|3
-operator|<<
-literal|30
-operator|)
-operator||
-comment|/* SBZ */
-operator|(
-literal|1
-operator|<<
-literal|29
-operator|)
-operator||
-comment|/* FA */
-operator|(
-literal|1
-operator|<<
-literal|28
-operator|)
-operator||
-comment|/* TR */
-operator|(
-literal|3
-operator|<<
-literal|26
-operator|)
-operator||
-comment|/* SBZ */
-operator|(
-literal|3
-operator|<<
-literal|19
-operator|)
-operator||
-comment|/* SBZ */
-operator|(
-literal|1
-operator|<<
-literal|17
-operator|)
-expr_stmt|;
-comment|/* SBZ */
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BPRD_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_V6_EXTPAGE
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__ARMEB__
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BEND_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|vector_page
-operator|==
-name|ARM_VECTORS_HIGH
-condition|)
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_VECRELOC
 expr_stmt|;
 name|auxctrl
 operator|=
@@ -3644,31 +3001,6 @@ operator|~
 name|ARM1176_AUXCTL_PHD
 expr_stmt|;
 block|}
-comment|/* Clear out the cache */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-comment|/* Now really make sure they are clean.  */
-asm|__asm volatile ("mcr\tp15, 0, %0, c7, c7, 0" : : "r"(sbz));
-comment|/* Allow detection code to find the VFP if it's fitted.  */
-name|cp15_cpacr_set
-argument_list|(
-literal|0x0fffffff
-argument_list|)
-expr_stmt|;
-comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
-name|cpu_control
-argument_list|(
-operator|~
-name|cpuctrl_wax
-argument_list|,
-name|cpuctrl
-argument_list|)
-expr_stmt|;
 name|tmp
 operator|=
 name|cp15_actlr_get
@@ -3696,10 +3028,6 @@ name|cp15_actlr_set
 argument_list|(
 name|tmp
 argument_list|)
-expr_stmt|;
-comment|/* And again. */
-name|cpu_idcache_wbinv_all
-argument_list|()
 expr_stmt|;
 name|cpu_scc_setup_ccnt
 argument_list|()
@@ -3729,91 +3057,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|cpuctrl
-decl_stmt|;
 name|pj4b_config
-argument_list|()
-expr_stmt|;
-name|cpuctrl
-operator|=
-name|CPU_CONTROL_MMU_ENABLE
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM32_DISABLE_ALIGNMENT_FAULTS
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_AFLT_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_DC_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-operator|(
-literal|0xf
-operator|<<
-literal|3
-operator|)
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BPRD_ENABLE
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_IC_ENABLE
-expr_stmt|;
-if|if
-condition|(
-name|vector_page
-operator|==
-name|ARM_VECTORS_HIGH
-condition|)
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_VECRELOC
-expr_stmt|;
-name|cpuctrl
-operator||=
-operator|(
-literal|0x5
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-literal|1
-operator|<
-literal|22
-operator|)
-expr_stmt|;
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_V6_EXTPAGE
-expr_stmt|;
-comment|/* Clear out the cache */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
-name|cpu_control
-argument_list|(
-literal|0xFFFFFFFF
-argument_list|,
-name|cpuctrl
-argument_list|)
-expr_stmt|;
-comment|/* And again. */
-name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 name|cpu_scc_setup_ccnt
@@ -3852,133 +3096,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|cpuctrl
-decl_stmt|,
-name|cpuctrlmask
-decl_stmt|;
-name|cpuctrlmask
-operator|=
-name|CPU_CONTROL_MMU_ENABLE
-operator||
-comment|/* MMU enable         [0] */
-name|CPU_CONTROL_AFLT_ENABLE
-operator||
-comment|/* Alignment fault    [1] */
-name|CPU_CONTROL_DC_ENABLE
-operator||
-comment|/* DCache enable      [2] */
-name|CPU_CONTROL_BPRD_ENABLE
-operator||
-comment|/* Branch prediction [11] */
-name|CPU_CONTROL_IC_ENABLE
-operator||
-comment|/* ICache enable     [12] */
-name|CPU_CONTROL_VECRELOC
-expr_stmt|;
-comment|/* Vector relocation [13] */
-name|cpuctrl
-operator|=
-name|CPU_CONTROL_MMU_ENABLE
-operator||
-name|CPU_CONTROL_IC_ENABLE
-operator||
-name|CPU_CONTROL_DC_ENABLE
-operator||
-name|CPU_CONTROL_BPRD_ENABLE
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM32_DISABLE_ALIGNMENT_FAULTS
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_AFLT_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Switch to big endian */
-ifdef|#
-directive|ifdef
-name|__ARMEB__
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_BEND_ENABLE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Check if the vector page is at the high address (0xffff0000) */
-if|if
-condition|(
-name|vector_page
-operator|==
-name|ARM_VECTORS_HIGH
-condition|)
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_VECRELOC
-expr_stmt|;
-comment|/* Clear out the cache */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
-name|cpu_control
-argument_list|(
-name|cpuctrlmask
-argument_list|,
-name|cpuctrl
-argument_list|)
-expr_stmt|;
-comment|/* And again. */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ARM_NEW_PMAP
-argument_list|)
-name|armv7_auxctrl
-argument_list|(
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-argument_list|,
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Enable SMP + TLB broadcasting  */
-endif|#
-directive|endif
 name|cpu_scc_setup_ccnt
 argument_list|()
 expr_stmt|;
@@ -4098,10 +3215,6 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* Set the control register */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 name|cpu_control
 argument_list|(
 literal|0xffffffff
@@ -4126,12 +3239,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
@@ -4141,11 +3248,6 @@ name|CPU_XSCALE_IXP425
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -4263,10 +3365,6 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set the control register.  Note that bits 6:3 must always 	 * be set to 1. 	 */
-name|ctrl
-operator|=
-name|cpuctrl
-expr_stmt|;
 comment|/*	cpu_control(cpuctrlmask, cpuctrl);*/
 name|cpu_control
 argument_list|(
@@ -4366,7 +3464,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
 end_comment
 
 end_unit

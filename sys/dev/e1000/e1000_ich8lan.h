@@ -408,8 +408,112 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM6_K1_OFF_ENABLE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* bit for disabling packet buffer read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM7_DISABLE_PB_READ
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM7_SIDE_CLK_UNGATE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_FEXTNVM7_DISABLE_SMB_PERST
 value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM9_IOSFSB_CLKGATE_DIS
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM9_IOSFSB_CLKREQ_DIS
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM11_DISABLE_PB_READ
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM11_DISABLE_MULR_FIX
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* bit24: RXDCTL thresholds granularity: 0 - cache lines, 1 - descriptors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDCTL_THRESH_UNIT_DESC
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_SIZE_MULTIPLIER
+value|4096
+end_define
+
+begin_comment
+comment|/*multiplier for NVMS field*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FLASH_BASE_ADDR
+value|0xE000
+end_define
+
+begin_comment
+comment|/*offset of NVM access regs*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_NVMVS
+value|0x3
+end_define
+
+begin_comment
+comment|/*NVM valid sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TARC0_CB_MULTIQ_3_REQ
+value|(1<< 28 | 1<< 29)
 end_define
 
 begin_define
@@ -878,6 +982,20 @@ begin_comment
 comment|/* NVM Enable K1 bit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|K1_ENTRY_LATENCY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|K1_MIN_TIME
+value|1
+end_define
+
 begin_comment
 comment|/* SMBus Control Phy Register */
 end_comment
@@ -972,6 +1090,28 @@ end_define
 begin_comment
 comment|/* Reset to SMBus mode */
 end_comment
+
+begin_comment
+comment|/* enable ULP even if when phy powered down via lanphypc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_EN_ULP_LANPHYPC
+value|0x0400
+end_define
+
+begin_comment
+comment|/* disable clear of sticky ULP on PERST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_DIS_CLR_STICKY_ON_PERST
+value|0x0800
+end_define
 
 begin_define
 define|#
@@ -1186,6 +1326,20 @@ define|#
 directive|define
 name|HV_PM_CTRL_K1_ENABLE
 value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_PLL_CLOCK_GATE_REG
+value|PHY_REG(772, 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I217_PLL_CLOCK_GATE_MASK
+value|0x07FF
 end_define
 
 begin_define
@@ -1725,37 +1879,6 @@ name|E1000_SVT_OFF_HWM_MASK
 value|0x0000001F
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|QV_RELEASE
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|NO_PCH_LPT_B0_SUPPORT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|E1000_PCI_REVISION_ID_REG
-value|0x08
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(QV_RELEASE) || !defined(NO_PCH_LPT_B0_SUPPORT) */
-end_comment
-
 begin_function_decl
 name|void
 name|e1000_set_kmrn_lock_loss_workaround_ich8lan
@@ -1808,7 +1931,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|u32
 name|e1000_resume_workarounds_pchlan
 parameter_list|(
 name|struct

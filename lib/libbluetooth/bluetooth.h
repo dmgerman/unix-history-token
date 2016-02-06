@@ -830,7 +830,6 @@ name|int
 name|bt_devenum
 parameter_list|(
 name|bt_devenum_cb_t
-modifier|*
 name|cb
 parameter_list|,
 name|void

@@ -448,7 +448,7 @@ init|=
 block|{
 literal|"FreeBSD ELF32"
 block|,
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 block|,
 name|powerpc_fetch_args
 block|,

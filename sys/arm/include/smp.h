@@ -53,8 +53,10 @@ name|IPI_HARDCLOCK
 block|,
 name|IPI_TLB
 block|,
+comment|/* Not used now, but keep it reserved. */
 name|IPI_CACHE
 block|,
+comment|/* Not used now, but keep it reserved. */
 name|INTR_IPI_COUNT
 block|}
 enum|;
@@ -114,12 +116,20 @@ name|IPI_TLB
 value|7
 end_define
 
+begin_comment
+comment|/* Not used now, but keep it reserved. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPI_CACHE
 value|8
 end_define
+
+begin_comment
+comment|/* Not used now, but keep it reserved. */
+end_comment
 
 begin_endif
 endif|#

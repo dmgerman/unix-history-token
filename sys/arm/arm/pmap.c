@@ -1071,7 +1071,7 @@ name|pmap_is_current
 parameter_list|(
 name|pm
 parameter_list|)
-value|((pm) == pmap_kernel() || \             curproc->p_vmspace->vm_map.pmap == (pm))
+value|((pm) == kernel_pmap || \             curproc->p_vmspace->vm_map.pmap == (pm))
 end_define
 
 begin_decl_stmt
@@ -1286,8 +1286,7 @@ if|if
 condition|(
 name|l1pt
 operator|!=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|->
 name|pm_l1
 operator|->
@@ -1297,8 +1296,7 @@ name|memcpy
 argument_list|(
 name|l1pt
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|->
 name|pm_l1
 operator|->
@@ -1316,8 +1314,7 @@ name|l1_physaddr
 operator|=
 name|pmap_extract
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1702,7 +1699,7 @@ name|type
 decl_stmt|;
 name|id
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|type
@@ -2856,8 +2853,7 @@ literal|0
 operator|||
 name|pm
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 condition|)
 return|return;
 comment|/* 	 * There are no more valid mappings in this level 2 page table. 	 * Go ahead and NULL-out the pointer in the bucket, then 	 * free the page table. 	 */
@@ -3054,8 +3050,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -3344,8 +3339,7 @@ name|pm
 argument_list|,
 name|pm
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|,
@@ -3361,8 +3355,7 @@ argument_list|)
 operator|||
 name|pm
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 condition|)
 block|{
 name|rest
@@ -3470,8 +3463,7 @@ name|pm
 argument_list|,
 name|pm
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|,
@@ -4091,8 +4083,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 condition|)
 name|kwritable
 operator|++
@@ -4119,8 +4110,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 condition|)
 name|kentries
 operator|++
@@ -4149,8 +4139,7 @@ condition|(
 operator|(
 name|pm
 operator|!=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|)
 operator|&&
 operator|(
@@ -4189,8 +4178,7 @@ if|if
 condition|(
 name|pm
 operator|!=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|&&
 operator|(
 name|pv
@@ -4203,8 +4191,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|)
 condition|)
 block|{
@@ -4230,8 +4217,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|!=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 condition|)
 name|pv
 operator|->
@@ -4317,8 +4303,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|||
 operator|(
 name|pv
@@ -4378,8 +4363,7 @@ condition|(
 operator|(
 name|pm
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|)
 operator|&&
 operator|!
@@ -4435,8 +4419,7 @@ if|if
 condition|(
 name|pm
 operator|!=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|&&
 operator|(
 name|pv
@@ -4449,8 +4432,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|)
 operator|&&
 operator|!
@@ -5502,8 +5484,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|vector_page
 argument_list|)
@@ -5697,8 +5678,7 @@ operator|(
 operator|(
 name|pm
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|)
 operator|||
 operator|(
@@ -7192,8 +7172,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -7811,8 +7790,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -8837,8 +8815,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -9296,8 +9273,7 @@ block|{
 name|pmap_t
 name|kpm
 init|=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 decl_stmt|;
 if|if
 condition|(
@@ -10031,8 +10007,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -10047,8 +10022,7 @@ name|l2b
 operator|=
 name|pmap_grow_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -10238,8 +10212,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|)
 expr_stmt|;
 name|pmap_enter_pv
@@ -10248,8 +10221,7 @@ name|m
 argument_list|,
 name|pve
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|,
@@ -10262,16 +10234,14 @@ name|pmap_fix_cache
 argument_list|(
 name|m
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -10496,8 +10466,7 @@ expr_stmt|;
 comment|/* 	 * Call pmap_fault_fixup now, to make sure we'll have no exception 	 * at the first use of the new address, or bad things will happen, 	 * as we use one of these addresses in the exception handlers. 	 */
 name|pmap_fault_fixup
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|,
@@ -10570,8 +10539,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -10668,8 +10636,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|)
 expr_stmt|;
 if|if
@@ -10694,8 +10661,7 @@ name|pmap_remove_pv
 argument_list|(
 name|m
 argument_list|,
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -10708,8 +10674,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -11514,8 +11479,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|)
 condition|)
 name|flush
@@ -12415,8 +12379,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 condition|)
 block|{
 name|l2b
@@ -13159,8 +13122,7 @@ if|if
 condition|(
 name|pmap
 operator|!=
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 operator|&&
 name|va
 operator|!=
@@ -14151,13 +14113,12 @@ name|l1pd
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * These should only happen for pmap_kernel() 		 */
+comment|/* 		 * These should only happen for kernel_pmap 		 */
 name|KASSERT
 argument_list|(
 name|pmap
 operator|==
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
 literal|"huh"
@@ -15637,8 +15598,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 name|va
 argument_list|)
@@ -15839,7 +15799,7 @@ comment|/* 	 * Since we flush the cache each time we change to a different 	 * u
 end_comment
 
 begin_comment
-unit|if (curthread) 		pm = vmspace_pmap(curproc->p_vmspace); 	else 		pm = pmap_kernel();  	for (npv = pv; npv; npv = TAILQ_NEXT(npv, pv_list)) { 		if (npv->pv_pmap == pmap_kernel() || npv->pv_pmap == pm) { 			flags |= npv->pv_flags;
+unit|if (curthread) 		pm = vmspace_pmap(curproc->p_vmspace); 	else 		pm = kernel_pmap;  	for (npv = pv; npv; npv = TAILQ_NEXT(npv, pv_list)) { 		if (npv->pv_pmap == kernel_pmap || npv->pv_pmap == pm) { 			flags |= npv->pv_flags;
 comment|/* 			 * The page is mapped non-cacheable in 			 * this map.  No need to flush the cache. 			 */
 end_comment
 

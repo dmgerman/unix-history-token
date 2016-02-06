@@ -42,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -68,6 +80,18 @@ include|#
 directive|include
 file|"thunder_pcie_common.h"
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_THUNDER_PCIE
+argument_list|,
+literal|"Thunder PCIe driver"
+argument_list|,
+literal|"Thunder PCIe driver memory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|uint32_t

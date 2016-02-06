@@ -15,6 +15,14 @@ directive|define
 name|__THUNDER_BGX_VAR_H__
 end_define
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_BGX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|lmac

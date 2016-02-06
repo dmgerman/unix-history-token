@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -431,10 +437,7 @@ block|}
 name|wmb
 argument_list|()
 expr_stmt|;
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* boot secondary CPUs */

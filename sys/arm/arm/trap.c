@@ -171,14 +171,6 @@ parameter_list|)
 value|(*((volatile unsigned int *)(a)))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|fusubailout
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -809,41 +801,6 @@ name|out
 goto|;
 block|}
 comment|/* 	 * At this point, we're dealing with one of the following data aborts: 	 * 	 *  FAULT_TRANS_S  - Translation -- Section 	 *  FAULT_TRANS_P  - Translation -- Page 	 *  FAULT_DOMAIN_S - Domain -- Section 	 *  FAULT_DOMAIN_P - Domain -- Page 	 *  FAULT_PERM_S   - Permission -- Section 	 *  FAULT_PERM_P   - Permission -- Page 	 * 	 * These are the main virtual memory-related faults signalled by 	 * the MMU. 	 */
-comment|/* fusubailout is used by [fs]uswintr to avoid page faulting */
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-name|pcb
-operator|->
-name|pcb_onfault
-operator|==
-name|fusubailout
-argument_list|)
-condition|)
-block|{
-name|tf
-operator|->
-name|tf_r0
-operator|=
-name|EFAULT
-expr_stmt|;
-name|tf
-operator|->
-name|tf_pc
-operator|=
-operator|(
-name|register_t
-operator|)
-operator|(
-name|intptr_t
-operator|)
-name|pcb
-operator|->
-name|pcb_onfault
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Make sure the Program Counter is sane. We could fall foul of 	 * someone executing Thumb code, in which case the PC might not 	 * be word-aligned. This would cause a kernel alignment fault 	 * further down if we have to decode the current instruction. 	 * XXX: It would be nice to be able to support Thumb at some point. 	 */
 if|if
 condition|(

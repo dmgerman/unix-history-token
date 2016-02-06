@@ -1367,13 +1367,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|ctrl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|enum
 name|cpu_class
 name|cpu_class
@@ -1604,10 +1597,17 @@ name|u_int8_t
 name|type
 decl_stmt|,
 name|linesize
+decl_stmt|,
+name|ctrl
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|ctrl
+operator|=
+name|cpu_get_control
+argument_list|()
+expr_stmt|;
 name|cpuid
 operator|=
 name|cpu_ident

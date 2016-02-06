@@ -63,7 +63,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"2.5.2"
+literal|"2.5.3-k"
 decl_stmt|;
 end_decl_stmt
 
@@ -3263,6 +3263,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 else|else
@@ -3272,6 +3276,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -6217,6 +6225,15 @@ name|if_hwassist
 operator||=
 name|CSUM_TSO
 expr_stmt|;
+comment|/* Clear bad data from Rx FIFOs */
+name|e1000_rx_fifo_flush_82575
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 comment|/* Configure for OS presence */
 name|igb_init_manageability
 argument_list|(
@@ -6298,14 +6315,6 @@ block|}
 name|igb_initialize_receive_units
 argument_list|(
 name|adapter
-argument_list|)
-expr_stmt|;
-name|e1000_rx_fifo_flush_82575
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Enable VLAN support */
@@ -6460,6 +6469,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 else|else
@@ -6469,6 +6482,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}

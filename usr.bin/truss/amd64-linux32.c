@@ -669,7 +669,7 @@ init|=
 block|{
 literal|"Linux ELF32"
 block|,
-name|LINUX32
+name|SYSDECODE_ABI_LINUX32
 block|,
 name|amd64_linux32_fetch_args
 block|,

@@ -67,20 +67,12 @@ name|EFI_DP_TYPE_UNPACKED
 value|0x80
 end_define
 
-begin_comment
-comment|//#define END_DEVICE_PATH_TYPE                0xff
-end_comment
-
 begin_define
 define|#
 directive|define
 name|END_DEVICE_PATH_TYPE
 value|0x7f
 end_define
-
-begin_comment
-comment|//#define END_DEVICE_PATH_TYPE_UNPACKED       0x7f
-end_comment
 
 begin_define
 define|#
@@ -162,9 +154,17 @@ parameter_list|)
 value|( (EFI_DEVICE_PATH *) ( ((UINT8 *) (a)) + DevicePathNodeLength(a)))
 end_define
 
-begin_comment
-comment|//#define IsDevicePathEndType(a)      ( DevicePathType(a) == END_DEVICE_PATH_TYPE_UNPACKED )
-end_comment
+begin_define
+define|#
+directive|define
+name|IsDevicePathType
+parameter_list|(
+name|a
+parameter_list|,
+name|t
+parameter_list|)
+value|( DevicePathType(a) == t )
+end_define
 
 begin_define
 define|#
@@ -173,7 +173,7 @@ name|IsDevicePathEndType
 parameter_list|(
 name|a
 parameter_list|)
-value|( DevicePathType(a) == END_DEVICE_PATH_TYPE )
+value|IsDevicePathType(a, END_DEVICE_PATH_TYPE)
 end_define
 
 begin_define
@@ -994,6 +994,35 @@ name|DEVICE_PATH_MESSAGING_VT_UTF8
 define|\
 value|{ 0xad15a0d6, 0x8bec, 0x4acf, {0xa0, 0x73, 0xd0, 0x1d, 0xe7, 0x7e, 0x2d, 0x88} }
 end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_SATA_DP
+value|0x12
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_SATA_DEVICE_PATH
+block|{
+name|EFI_DEVICE_PATH
+name|Header
+decl_stmt|;
+name|UINT16
+name|HBAPortNumber
+decl_stmt|;
+name|UINT16
+name|PortMultiplierPortNumber
+decl_stmt|;
+name|UINT16
+name|Lun
+decl_stmt|;
+block|}
+name|SATA_DEVICE_PATH
+typedef|;
+end_typedef
 
 begin_define
 define|#

@@ -68,7 +68,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	vm_offset_t pc_qmap_addr;					\ 	void *pc_qmap_pte;						\ 	char __pad[133]
+value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	vm_offset_t pc_qmap_addr;					\ 	void *pc_qmap_pte;						\ 	unsigned int pc_dbreg[32];					\ 	int pc_dbreg_cmd;						\ 	char __pad[1]
 end_define
 
 begin_else
@@ -94,6 +94,20 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PC_DBREG_CMD_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC_DBREG_CMD_LOAD
+value|1
+end_define
 
 begin_struct_decl
 struct_decl|struct

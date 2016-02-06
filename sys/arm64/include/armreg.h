@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|INSN_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|READ_SPECIALREG
 parameter_list|(
 name|reg
@@ -507,6 +514,17 @@ end_define
 
 begin_comment
 comment|/* SError interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCP_SOFTSTP_EL0
+value|0x32
+end_define
+
+begin_comment
+comment|/* Software Step, from lower EL */
 end_comment
 
 begin_define

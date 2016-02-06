@@ -4334,6 +4334,13 @@ modifier|*
 name|child
 parameter_list|)
 block|{
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|child
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RCTL
@@ -4343,11 +4350,6 @@ operator|!
 name|racct_enable
 condition|)
 return|return;
-name|PROC_LOCK
-argument_list|(
-name|child
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4376,11 +4378,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|racct_lock
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|child
 argument_list|)
 expr_stmt|;
 endif|#

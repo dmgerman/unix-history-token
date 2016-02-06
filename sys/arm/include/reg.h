@@ -78,14 +78,27 @@ begin_struct
 struct|struct
 name|dbreg
 block|{
+define|#
+directive|define
+name|ARM_WR_MAX
+value|16
+comment|/* Maximum number of watchpoint registers */
 name|unsigned
 name|int
-name|dr
+name|dbg_wcr
 index|[
-literal|8
+name|ARM_WR_MAX
 index|]
 decl_stmt|;
-comment|/* debug registers */
+comment|/* Watchpoint Control Registers */
+name|unsigned
+name|int
+name|dbg_wvr
+index|[
+name|ARM_WR_MAX
+index|]
+decl_stmt|;
+comment|/* Watchpoint Value Registers */
 block|}
 struct|;
 end_struct

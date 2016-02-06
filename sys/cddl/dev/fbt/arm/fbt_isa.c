@@ -268,7 +268,7 @@ name|fbtp_patchpoint
 operator|=
 name|val
 expr_stmt|;
-name|cpu_icache_sync_range
+name|icache_sync
 argument_list|(
 operator|(
 name|vm_offset_t

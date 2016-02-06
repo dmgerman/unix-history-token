@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/armreg.h>
 end_include
 
@@ -134,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/debug_monitor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -147,12 +159,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
 end_include
 
 begin_include
@@ -486,13 +492,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Initialize boot code and start up processors */
@@ -589,9 +589,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
 name|uint32_t
 name|actlr_mask
 decl_stmt|,
@@ -632,23 +629,6 @@ argument_list|(
 name|PSR_A
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* ARM_NEW_PMAP */
-name|cpu_setup
-argument_list|()
-expr_stmt|;
-name|setttb
-argument_list|(
-name|pmap_pa
-argument_list|)
-expr_stmt|;
-name|cpu_tlb_flushID
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ARM_NEW_PMAP */
 name|pc
 operator|=
 operator|&
@@ -694,17 +674,6 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM_NEW_PMAP
-comment|/* Provide stack pointers for other processor modes. */
-name|set_stackptrs
-argument_list|(
-name|cpu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Signal our startup to BSP */
 name|atomic_add_rel_32
 argument_list|(
@@ -1028,7 +997,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * CPUs are stopped when entering the debugger and at 	 * system shutdown, both events which can precede a 	 * panic dump.  For the dump to be correct, all caches 	 * must be flushed and invalidated, but on ARM there's 	 * no way to broadcast a wbinv_all to other cores. 	 * Instead, we have each core do the local wbinv_all as 	 * part of stopping the core.  The core requesting the 	 * stop will do the l2 cache flush after all other cores 	 * have done their l1 flushes and stopped. 	 */
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */
@@ -1071,6 +1040,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|dbg_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR0
 argument_list|(
 name|KTR_SMP
@@ -1239,34 +1216,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|ipi_tlb
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-name|__unused
-parameter_list|)
-block|{
-name|CTR1
-argument_list|(
-name|KTR_SMP
-argument_list|,
-literal|"%s: IPI_TLB"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|cpufuncs
-operator|.
-name|cf_tlb_flushID
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 begin_else
 else|#
 directive|else
@@ -1364,7 +1313,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 			 * CPUs are stopped when entering the debugger and at 			 * system shutdown, both events which can precede a 			 * panic dump.  For the dump to be correct, all caches 			 * must be flushed and invalidated, but on ARM there's 			 * no way to broadcast a wbinv_all to other cores. 			 * Instead, we have each core do the local wbinv_all as 			 * part of stopping the core.  The core requesting the 			 * stop will do the l2 cache flush after all other cores 			 * have done their l1 flushes and stopped. 			 */
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */
@@ -1407,6 +1356,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|dbg_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR0
 argument_list|(
 name|KTR_SMP
@@ -1446,24 +1403,6 @@ name|__func__
 argument_list|)
 expr_stmt|;
 name|hardclockintr
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|IPI_TLB
-case|:
-name|CTR1
-argument_list|(
-name|KTR_SMP
-argument_list|,
-literal|"%s: IPI_TLB"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|cpufuncs
-operator|.
-name|cf_tlb_flushID
 argument_list|()
 expr_stmt|;
 break|break;
@@ -1602,19 +1541,6 @@ argument_list|,
 literal|"hardclock"
 argument_list|,
 name|ipi_hardclock
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|intr_ipi_set_handler
-argument_list|(
-name|IPI_TLB
-argument_list|,
-literal|"tlb"
-argument_list|,
-name|ipi_tlb
 argument_list|,
 name|NULL
 argument_list|,
@@ -1934,26 +1860,6 @@ name|platform_ipi_send
 argument_list|(
 name|cpus
 argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|tlb_broadcast
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-block|{
-if|if
-condition|(
-name|smp_started
-condition|)
-name|ipi_all_but_self
-argument_list|(
 name|ipi
 argument_list|)
 expr_stmt|;

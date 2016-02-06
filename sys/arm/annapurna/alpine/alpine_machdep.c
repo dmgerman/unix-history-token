@@ -394,7 +394,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
+comment|/*  * Construct devmap table with DT-derived config data.  */
 end_comment
 
 begin_function

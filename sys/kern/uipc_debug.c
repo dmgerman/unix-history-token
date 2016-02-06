@@ -2146,7 +2146,7 @@ expr_stmt|;
 comment|/* so_list skipped */
 name|db_printf
 argument_list|(
-literal|"so_qlen: %d   "
+literal|"so_qlen: %u   "
 argument_list|,
 name|so
 operator|->
@@ -2155,7 +2155,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"so_incqlen: %d   "
+literal|"so_incqlen: %u   "
 argument_list|,
 name|so
 operator|->
@@ -2164,7 +2164,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"so_qlimit: %d   "
+literal|"so_qlimit: %u   "
 argument_list|,
 name|so
 operator|->

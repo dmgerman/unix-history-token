@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -344,7 +350,7 @@ decl_stmt|;
 comment|/* 	 * Initialization procedure depends on core revision, 	 * in this step CHIP ID is checked to choose proper procedure 	 */
 name|cputype
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 name|cputype
@@ -697,7 +703,7 @@ name|mpentry
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 for|for

@@ -3486,6 +3486,12 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|point
+operator|->
+name|Z_is_one
+operator|=
+literal|1
+expr_stmt|;
 name|ret
 operator|=
 literal|1

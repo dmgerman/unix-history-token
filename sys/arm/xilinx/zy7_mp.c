@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -284,10 +290,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The SCU is enabled above but I think the second CPU doesn't 	 * turn on filtering until after the wake-up below. I think that's why 	 * things don't work if I don't put these cache ops here.  Also, the 	 * magic location, 0xfffffff0, isn't in the SCU's filtering range so it 	 * needs a write-back too. 	 */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Wake up CPU1. */

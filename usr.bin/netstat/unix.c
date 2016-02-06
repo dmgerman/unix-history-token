@@ -1303,7 +1303,7 @@ decl_stmt|;
 name|char
 name|buf1
 index|[
-literal|15
+literal|33
 index|]
 decl_stmt|;
 specifier|static
@@ -1455,9 +1455,10 @@ name|snprintf
 argument_list|(
 name|buf1
 argument_list|,
-literal|15
+sizeof|sizeof
+name|buf1
 argument_list|,
-literal|"%d/%d/%d"
+literal|"%u/%u/%u"
 argument_list|,
 name|so
 operator|->
@@ -1474,8 +1475,8 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"unix  {d:socket/%-14.14s}{e:queue-length/%d}"
-literal|"{e:incomplete-queue-length/%d}{e:queue-limit/%d}"
+literal|"unix  {d:socket/%-32.32s}{e:queue-length/%u}"
+literal|"{e:incomplete-queue-length/%u}{e:queue-limit/%u}"
 argument_list|,
 name|buf1
 argument_list|,

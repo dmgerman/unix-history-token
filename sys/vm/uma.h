@@ -1006,6 +1006,8 @@ name|uma_maxaction_t
 function_decl|)
 parameter_list|(
 name|uma_zone_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_typedef

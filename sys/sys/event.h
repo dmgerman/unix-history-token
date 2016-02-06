@@ -344,6 +344,17 @@ begin_comment
 comment|/* filter-specific flag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EV_FLAG2
+value|0x4000
+end_define
+
+begin_comment
+comment|/* filter-specific flag */
+end_comment
+
 begin_comment
 comment|/* returned values */
 end_comment
@@ -1084,7 +1095,7 @@ name|p_proc
 decl_stmt|;
 comment|/* proc pointer */
 name|struct
-name|aiocblist
+name|kaiocb
 modifier|*
 name|p_aio
 decl_stmt|;

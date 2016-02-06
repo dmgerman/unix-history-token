@@ -461,7 +461,7 @@ init|=
 block|{
 literal|"FreeBSD ELF64"
 block|,
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 block|,
 name|sparc64_fetch_args
 block|,

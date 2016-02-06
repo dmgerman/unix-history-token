@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_SF_BUF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_function
 specifier|static
 specifier|inline
@@ -30,9 +36,11 @@ name|int
 name|flags
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|pmap_qenter
 argument_list|(
 name|sf
@@ -82,9 +90,11 @@ modifier|*
 name|sf
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|pmap_qremove
 argument_list|(
 name|sf

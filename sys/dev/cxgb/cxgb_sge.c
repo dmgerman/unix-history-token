@@ -3666,7 +3666,7 @@ condition|(
 name|q
 operator|->
 name|zone
-operator|==
+operator|!=
 name|zone_pack
 condition|)
 name|uma_zfree

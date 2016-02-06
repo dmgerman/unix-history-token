@@ -10728,6 +10728,24 @@ name|parent
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Zero ex_data to make sure we're cleanup-safe */
+name|memset
+argument_list|(
+operator|&
+name|ctx
+operator|->
+name|ex_data
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ctx
+operator|->
+name|ex_data
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|->
 name|param
@@ -10796,6 +10814,7 @@ name|store
 operator|->
 name|verify_cb
 expr_stmt|;
+comment|/* Seems to always be 0 in OpenSSL, else must be idempotent */
 name|ctx
 operator|->
 name|cleanup
@@ -10844,9 +10863,9 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 if|if
 condition|(
@@ -11084,11 +11103,8 @@ name|check_policy
 operator|=
 name|check_policy
 expr_stmt|;
-comment|/*      * This memset() can't make any sense anyway, so it's removed. As      * X509_STORE_CTX_cleanup does a proper "free" on the ex_data, we put a      * corresponding "new" here and remove this bogus initialisation.      */
-comment|/* memset(&(ctx->ex_data),0,sizeof(CRYPTO_EX_DATA)); */
 if|if
 condition|(
-operator|!
 name|CRYPTO_new_ex_data
 argument_list|(
 name|CRYPTO_EX_INDEX_X509_STORE_CTX
@@ -11096,19 +11112,14 @@ argument_list|,
 name|ctx
 argument_list|,
 operator|&
-operator|(
 name|ctx
 operator|->
 name|ex_data
-operator|)
 argument_list|)
 condition|)
-block|{
-name|OPENSSL_free
-argument_list|(
-name|ctx
-argument_list|)
-expr_stmt|;
+return|return
+literal|1
+return|;
 name|X509err
 argument_list|(
 name|X509_F_X509_STORE_CTX_INIT
@@ -11116,12 +11127,16 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
+name|err
+label|:
+comment|/*      * On error clean up allocated storage, if the store context was not      * allocated with X509_STORE_CTX_new() this is our last chance to do so.      */
+name|X509_STORE_CTX_cleanup
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
-return|;
-block|}
-return|return
-literal|1
 return|;
 block|}
 end_decl_stmt
@@ -11170,12 +11185,17 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+comment|/*      * We need to be idempotent because, unfortunately, free() also calls      * cleanup(), so the natural call sequence new(), init(), cleanup(), free()      * calls cleanup() for the same object twice!  Thus we must zero the      * pointers below after they're freed!      */
+comment|/* Seems to always be 0 in OpenSSL, do this at most once. */
 if|if
 condition|(
 name|ctx
 operator|->
 name|cleanup
+operator|!=
+name|NULL
 condition|)
+block|{
 name|ctx
 operator|->
 name|cleanup
@@ -11183,6 +11203,13 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|->
+name|cleanup
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ctx

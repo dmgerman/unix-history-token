@@ -134,7 +134,7 @@ name|abi
 condition|)
 block|{
 case|case
-name|FREEBSD
+name|SYSDECODE_ABI_FREEBSD
 case|:
 if|if
 condition|(
@@ -166,7 +166,7 @@ argument_list|(
 name|__powerpc64__
 argument_list|)
 case|case
-name|FREEBSD32
+name|SYSDECODE_ABI_FREEBSD32
 case|:
 if|if
 condition|(
@@ -200,7 +200,7 @@ argument_list|(
 name|__i386__
 argument_list|)
 case|case
-name|LINUX
+name|SYSDECODE_ABI_LINUX
 case|:
 if|if
 condition|(
@@ -226,7 +226,7 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 case|case
-name|LINUX32
+name|SYSDECODE_ABI_LINUX32
 case|:
 if|if
 condition|(
@@ -260,7 +260,7 @@ argument_list|(
 name|__aarch64__
 argument_list|)
 case|case
-name|CLOUDABI64
+name|SYSDECODE_ABI_CLOUDABI64
 case|:
 if|if
 condition|(

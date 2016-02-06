@@ -862,8 +862,8 @@ decl_stmt|;
 name|size_t
 name|rx_buffer_align
 decl_stmt|;
-name|uma_zone_t
-name|rx_buffer_zone
+name|int
+name|rx_cluster_size
 decl_stmt|;
 name|unsigned
 name|int

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -537,7 +543,7 @@ operator||
 name|SCU_CONTROL_ENABLE
 argument_list|)
 expr_stmt|;
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* 	 * For each AP core, set the entry point address and argument registers, 	 * and set the core-enable and core-reset bits in the control register. 	 */

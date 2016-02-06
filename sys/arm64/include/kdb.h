@@ -63,7 +63,18 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|)
-block|{ }
+block|{
+name|cpu_icache_sync_range
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|addr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function

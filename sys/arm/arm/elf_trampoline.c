@@ -136,7 +136,7 @@ begin_function_decl
 specifier|extern
 name|unsigned
 name|int
-name|cpufunc_id
+name|cpu_ident
 parameter_list|(
 name|void
 parameter_list|)
@@ -288,24 +288,12 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
 argument_list|)
 end_elif
 
@@ -657,14 +645,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|arm_dcache_l2_linesize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|block_userspace_access
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,7 +1232,7 @@ begin_if
 if|if
 condition|(
 operator|(
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 operator|&
 literal|0x0000f000
@@ -1324,7 +1304,7 @@ end_function
 begin_expr_stmt
 name|cpuid
 operator|=
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -3657,7 +3637,7 @@ comment|/* So that idcache_wbinv works; */
 if|if
 condition|(
 operator|(
-name|cpufunc_id
+name|cpu_ident
 argument_list|()
 operator|&
 literal|0x0000f000

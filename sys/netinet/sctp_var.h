@@ -256,7 +256,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a> b) ? (a - b) : 0)
+value|(((a)> (b)) ? ((a) - (b)) : 0)
 end_define
 
 begin_comment
