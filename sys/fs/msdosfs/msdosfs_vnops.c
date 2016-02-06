@@ -4184,12 +4184,6 @@ argument_list|)
 expr_stmt|;
 name|pmp
 operator|=
-name|fddep
-operator|->
-name|de_pmp
-expr_stmt|;
-name|pmp
-operator|=
 name|VFSTOMSDOSFS
 argument_list|(
 name|fdvp
