@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_fdpass.c,v 1.19 2010/01/12 00:58:25 djm Exp $ */
+comment|/* $OpenBSD: monitor_fdpass.c,v 1.20 2015/02/25 23:05:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -54,6 +54,18 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -66,22 +78,32 @@ directive|include
 file|<poll.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_POLL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -212,6 +234,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|memset
+argument_list|(
+operator|&
+name|cmsgbuf
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmsgbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|msg
 operator|.
 name|msg_control
@@ -591,6 +626,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|memset
+argument_list|(
+operator|&
+name|cmsgbuf
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmsgbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|msg
 operator|.
 name|msg_control

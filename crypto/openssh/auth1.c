@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.80 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.82 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -12,6 +12,12 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_include
 include|#
@@ -89,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include
@@ -1468,13 +1480,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|packet_disconnect
+name|auth_maxtries_exceeded
 argument_list|(
-name|AUTH_FAIL_MSG
-argument_list|,
 name|authctxt
-operator|->
-name|user
 argument_list|)
 expr_stmt|;
 block|}
@@ -1718,6 +1726,15 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SSH1 */
+end_comment
 
 end_unit
 

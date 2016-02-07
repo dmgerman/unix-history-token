@@ -4,7 +4,7 @@ comment|/* $OpenBSD: auth-krb5.c,v 1.20 2013/07/20 01:55:13 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $FreeBSD$  */
+comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $FreeBSD: src/crypto/openssh/auth-krb5.c,v 1.6 2001/02/13 16:58:04 assar Exp $  */
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include

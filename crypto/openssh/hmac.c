@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hmac.c,v 1.10 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: hmac.c,v 1.12 2015/03/24 20:03:44 markus Exp $ */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"sshbuf.h"
 end_include
 
 begin_include
@@ -483,7 +483,8 @@ modifier|*
 name|ctx
 parameter_list|,
 specifier|const
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|b
 parameter_list|)
@@ -835,7 +836,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"[%zd] %2.2x %2.2x\n"
+literal|"[%zu] %2.2x %2.2x\n"
 argument_list|,
 name|i
 argument_list|,

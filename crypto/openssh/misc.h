@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.50 2013/10/14 23:28:23 djm Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.54 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,78 @@ define|#
 directive|define
 name|_MISC_H
 end_define
+
+begin_comment
+comment|/* Data structure for representing a forwarding request. */
+end_comment
+
+begin_struct
+struct|struct
+name|Forward
+block|{
+name|char
+modifier|*
+name|listen_host
+decl_stmt|;
+comment|/* Host (address) to listen on. */
+name|int
+name|listen_port
+decl_stmt|;
+comment|/* Port to forward. */
+name|char
+modifier|*
+name|listen_path
+decl_stmt|;
+comment|/* Path to bind domain socket. */
+name|char
+modifier|*
+name|connect_host
+decl_stmt|;
+comment|/* Host to connect. */
+name|int
+name|connect_port
+decl_stmt|;
+comment|/* Port to connect on connect_host. */
+name|char
+modifier|*
+name|connect_path
+decl_stmt|;
+comment|/* Path to connect domain socket. */
+name|int
+name|allocated_port
+decl_stmt|;
+comment|/* Dynamically allocated listen port */
+name|int
+name|handle
+decl_stmt|;
+comment|/* Handle for dynamic listen ports */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Common server and client forwarding options. */
+end_comment
+
+begin_struct
+struct|struct
+name|ForwardOptions
+block|{
+name|int
+name|gateway_ports
+decl_stmt|;
+comment|/* Allow remote connects to forwarded ports. */
+name|mode_t
+name|streamlocal_bind_mask
+decl_stmt|;
+comment|/* umask for streamlocal binds */
+name|int
+name|streamlocal_bind_unlink
+decl_stmt|;
+comment|/* unlink socket before bind */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* misc.c */
@@ -263,6 +335,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|unix_listener
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sock_set_v6only
 parameter_list|(
@@ -462,6 +549,17 @@ value|(SSH_TUNID_ANY - 2)
 end_define
 
 begin_comment
+comment|/* Fake port to indicate that host field is really a path. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PORT_STREAMLOCAL
+value|-2
+end_define
+
+begin_comment
 comment|/* Functions to extract or store big-endian words of various sizes */
 end_comment
 
@@ -605,6 +703,59 @@ parameter_list|,
 function_decl|1
 operator|,
 function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* Little-endian store/load, used by umac.c */
+end_comment
+
+begin_function_decl
+name|u_int32_t
+name|get_u32_le
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__bounded__
+parameter_list|(
+name|__minbytes__
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|put_u32_le
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__bounded__
+parameter_list|(
+name|__minbytes__
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|4
 end_function_decl
 
 begin_empty_stmt

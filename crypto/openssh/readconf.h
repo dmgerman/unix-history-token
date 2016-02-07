@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.101 2014/02/23 20:11:36 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.110 2015/07/10 06:21:53 markus Exp $ */
 end_comment
 
 begin_comment
@@ -22,45 +22,6 @@ define|#
 directive|define
 name|READCONF_H
 end_define
-
-begin_comment
-comment|/* Data structure for representing a forwarding request. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-modifier|*
-name|listen_host
-decl_stmt|;
-comment|/* Host (address) to listen on. */
-name|int
-name|listen_port
-decl_stmt|;
-comment|/* Port to forward. */
-name|char
-modifier|*
-name|connect_host
-decl_stmt|;
-comment|/* Host to connect. */
-name|int
-name|connect_port
-decl_stmt|;
-comment|/* Port to connect on connect_host. */
-name|int
-name|allocated_port
-decl_stmt|;
-comment|/* Dynamically allocated listen port */
-name|int
-name|handle
-decl_stmt|;
-comment|/* Handle for dynamic listen ports */
-block|}
-name|Forward
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Data structure for representing option data. */
@@ -85,6 +46,13 @@ define|#
 directive|define
 name|MAX_CANON_DOMAINS
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_MAX_SUN
+value|(sizeof((struct sockaddr_un *)0)->sun_path)
 end_define
 
 begin_struct
@@ -132,10 +100,11 @@ modifier|*
 name|xauth_location
 decl_stmt|;
 comment|/* Location for xauth program */
-name|int
-name|gateway_ports
+name|struct
+name|ForwardOptions
+name|fwd_opts
 decl_stmt|;
-comment|/* Allow remote connects to forwarded ports. */
+comment|/* forwarding options */
 name|int
 name|use_privileged_port
 decl_stmt|;
@@ -345,7 +314,8 @@ index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]
 decl_stmt|;
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|identity_keys
 index|[
@@ -356,6 +326,7 @@ comment|/* Local TCP/IP forward requests. */
 name|int
 name|num_local_forwards
 decl_stmt|;
+name|struct
 name|Forward
 modifier|*
 name|local_forwards
@@ -364,6 +335,7 @@ comment|/* Remote TCP/IP forward requests. */
 name|int
 name|num_remote_forwards
 decl_stmt|;
+name|struct
 name|Forward
 modifier|*
 name|remote_forwards
@@ -479,6 +451,25 @@ name|permitted_cnames
 index|[
 name|MAX_CANON_DOMAINS
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|revoked_host_keys
+decl_stmt|;
+name|int
+name|fingerprint_hash
+decl_stmt|;
+name|int
+name|update_hostkeys
+decl_stmt|;
+comment|/* one of SSH_UPDATE_HOSTKEYS_* */
+name|char
+modifier|*
+name|hostbased_key_types
+decl_stmt|;
+name|char
+modifier|*
+name|pubkey_key_types
 decl_stmt|;
 name|char
 modifier|*
@@ -601,6 +592,38 @@ begin_comment
 comment|/* user provided config file not system */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSHCONF_POSTCANON
+value|4
+end_define
+
+begin_comment
+comment|/* After hostname canonicalisation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_UPDATE_HOSTKEYS_NO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_UPDATE_HOSTKEYS_YES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_UPDATE_HOSTKEYS_ASK
+value|2
+end_define
+
 begin_function_decl
 name|void
 name|initialize_options
@@ -646,6 +669,10 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -679,6 +706,10 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|Options
 modifier|*
 parameter_list|,
@@ -691,6 +722,7 @@ begin_function_decl
 name|int
 name|parse_forward
 parameter_list|(
+name|struct
 name|Forward
 modifier|*
 parameter_list|,
@@ -727,12 +759,29 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|dump_client_config
+parameter_list|(
+name|Options
+modifier|*
+name|o
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|host
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|add_local_forward
 parameter_list|(
 name|Options
 modifier|*
 parameter_list|,
 specifier|const
+name|struct
 name|Forward
 modifier|*
 parameter_list|)
@@ -747,6 +796,7 @@ name|Options
 modifier|*
 parameter_list|,
 specifier|const
+name|struct
 name|Forward
 modifier|*
 parameter_list|)

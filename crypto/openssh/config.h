@@ -139,12 +139,15 @@ comment|/* #undef BROKEN_READ_COMPARISON */
 end_comment
 
 begin_comment
-comment|/* Define if you have a broken realpath. */
+comment|/* realpath does not work with nonexistent files */
 end_comment
 
-begin_comment
-comment|/* #undef BROKEN_REALPATH */
-end_comment
+begin_define
+define|#
+directive|define
+name|BROKEN_REALPATH
+value|1
+end_define
 
 begin_comment
 comment|/* Needed for NeXT */
@@ -866,6 +869,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `AI_NUMERICSERV', and to 0 if    you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_AI_NUMERICSERV
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `authenticate', and to 0 if you    don't. */
 end_comment
 
@@ -1233,6 +1247,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_EVP_MD_CTX_INIT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_ripemd160' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_RIPEMD160
 value|1
 end_define
 
@@ -2351,6 +2376,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `memset_s' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MEMSET_S */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `mkdtemp' function. */
 end_comment
 
@@ -2664,6 +2697,14 @@ directive|define
 name|HAVE_READPASSPHRASE_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `reallocarray' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_REALLOCARRAY */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `realpath' function. */
@@ -3602,13 +3643,13 @@ comment|/* #undef HAVE_SYS_BSDTTY_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<sys/capability.h> header file. */
+comment|/* Define to 1 if you have the<sys/capsicum.h> header file. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_SYS_CAPABILITY_H
+name|HAVE_SYS_CAPSICUM_H
 value|1
 end_define
 
@@ -4215,14 +4256,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `vhangup' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_VHANGUP */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<vis.h> header file. */
 end_comment
 
@@ -4654,7 +4687,7 @@ comment|/* #undef OPENSSL_LOBOTOMISED_AES */
 end_comment
 
 begin_comment
-comment|/* Define if you want OpenSSL's internally seeded PRNG only */
+comment|/* Define if you want the OpenSSL internally seeded PRNG only */
 end_comment
 
 begin_define
@@ -5226,12 +5259,34 @@ comment|/* #undef WITH_IRIX_PROJECT */
 end_comment
 
 begin_comment
+comment|/* use libcrypto for cryptography */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WITH_OPENSSL
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you want SELinux support. */
 end_comment
 
 begin_comment
 comment|/* #undef WITH_SELINUX */
 end_comment
+
+begin_comment
+comment|/* include SSH protocol version 1 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WITH_SSH1
+value|1
+end_define
 
 begin_comment
 comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */

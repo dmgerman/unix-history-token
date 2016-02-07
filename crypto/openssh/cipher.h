@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.44 2014/01/25 10:12:50 dtucker Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.48 2015/07/08 19:09:25 markus Exp $ */
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -29,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"cipher-chachapoly.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher-aesctr.h"
 end_include
 
 begin_comment
@@ -165,31 +177,15 @@ name|CIPHER_DECRYPT
 value|0
 end_define
 
-begin_typedef
-typedef|typedef
-name|struct
-name|Cipher
-name|Cipher
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|CipherContext
-name|CipherContext
-typedef|;
-end_typedef
-
 begin_struct_decl
 struct_decl|struct
-name|Cipher
+name|sshcipher
 struct_decl|;
 end_struct_decl
 
 begin_struct
 struct|struct
-name|CipherContext
+name|sshcipher_ctx
 block|{
 name|int
 name|plaintext
@@ -205,8 +201,14 @@ name|chachapoly_ctx
 name|cp_ctx
 decl_stmt|;
 comment|/* XXX union with evp? */
+name|struct
+name|aesctr_ctx
+name|ac_ctx
+decl_stmt|;
+comment|/* XXX union with evp? */
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 name|cipher
 decl_stmt|;
@@ -225,7 +227,8 @@ end_function_decl
 
 begin_function_decl
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 name|cipher_by_name
 parameter_list|(
@@ -238,7 +241,8 @@ end_function_decl
 
 begin_function_decl
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 name|cipher_by_number
 parameter_list|(
@@ -269,6 +273,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|cipher_warning_message
+parameter_list|(
+specifier|const
+name|struct
+name|sshcipher_ctx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ciphers_valid
 parameter_list|(
@@ -292,14 +310,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cipher_init
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|,
 specifier|const
@@ -323,7 +343,8 @@ begin_function_decl
 name|int
 name|cipher_crypt
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
 name|u_int
@@ -348,7 +369,8 @@ begin_function_decl
 name|int
 name|cipher_get_length
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
 name|u_int
@@ -366,24 +388,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cipher_cleanup
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cipher_set_key_string
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|,
 specifier|const
@@ -400,7 +425,8 @@ name|u_int
 name|cipher_blocksize
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
@@ -411,7 +437,8 @@ name|u_int
 name|cipher_keylen
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
@@ -422,7 +449,8 @@ name|u_int
 name|cipher_seclen
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
@@ -433,7 +461,8 @@ name|u_int
 name|cipher_authlen
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
@@ -444,7 +473,8 @@ name|u_int
 name|cipher_ivlen
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
@@ -455,7 +485,8 @@ name|u_int
 name|cipher_is_cbc
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
@@ -466,17 +497,19 @@ name|u_int
 name|cipher_get_number
 parameter_list|(
 specifier|const
-name|Cipher
+name|struct
+name|sshcipher
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cipher_get_keyiv
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
 name|u_char
@@ -488,12 +521,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cipher_set_keyiv
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|)
@@ -505,7 +540,8 @@ name|int
 name|cipher_get_keyiv_len
 parameter_list|(
 specifier|const
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -516,7 +552,8 @@ name|int
 name|cipher_get_keycontext
 parameter_list|(
 specifier|const
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
 name|u_char
@@ -529,9 +566,11 @@ begin_function_decl
 name|void
 name|cipher_set_keycontext
 parameter_list|(
-name|CipherContext
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|)

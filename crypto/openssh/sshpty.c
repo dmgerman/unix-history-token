@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshpty.c,v 1.28 2007/09/11 23:49:09 stevesk Exp $ */
+comment|/* $OpenBSD: sshpty.c,v 1.30 2015/07/30 23:09:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -326,9 +326,19 @@ modifier|*
 name|tty
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__APPLE_PRIVPTY__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_OPENPTY
+argument_list|)
 if|if
 condition|(
 name|chown
@@ -388,7 +398,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __APPLE_PRIVPTY__ */
+comment|/* !__APPLE_PRIVPTY__&& !HAVE_OPENPTY */
 block|}
 end_function
 
@@ -413,16 +423,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_VHANGUP
-name|void
-modifier|*
-name|old
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* USE_VHANGUP */
 ifdef|#
 directive|ifdef
 name|_UNICOS
@@ -719,31 +719,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NEED_SETPGRP */
-ifdef|#
-directive|ifdef
-name|USE_VHANGUP
-name|old
-operator|=
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|vhangup
-argument_list|()
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|old
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_VHANGUP */
 name|fd
 operator|=
 name|open
@@ -775,31 +750,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|USE_VHANGUP
-name|close
-argument_list|(
-operator|*
-name|ttyfd
-argument_list|)
-expr_stmt|;
-operator|*
-name|ttyfd
-operator|=
-name|fd
-expr_stmt|;
-else|#
-directive|else
-comment|/* USE_VHANGUP */
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_VHANGUP */
 block|}
 comment|/* Verify that we now have a controlling tty. */
 name|fd
@@ -946,45 +901,34 @@ argument_list|(
 literal|"tty"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|grp
-condition|)
-block|{
 name|gid
 operator|=
+operator|(
+name|grp
+operator|!=
+name|NULL
+operator|)
+condition|?
 name|grp
 operator|->
 name|gr_gid
-expr_stmt|;
-name|mode
-operator|=
-name|S_IRUSR
-operator||
-name|S_IWUSR
-operator||
-name|S_IWGRP
-expr_stmt|;
-block|}
-else|else
-block|{
-name|gid
-operator|=
+else|:
 name|pw
 operator|->
 name|pw_gid
 expr_stmt|;
 name|mode
 operator|=
-name|S_IRUSR
-operator||
-name|S_IWUSR
-operator||
-name|S_IWGRP
-operator||
-name|S_IWOTH
+operator|(
+name|grp
+operator|!=
+name|NULL
+operator|)
+condition|?
+literal|0620
+else|:
+literal|0600
 expr_stmt|;
-block|}
 comment|/* 	 * Change owner and mode of the tty as required. 	 * Warn but continue if filesystem is read-only and the uids match/ 	 * tty is owned by root. 	 */
 if|if
 condition|(

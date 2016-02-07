@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: progressmeter.c,v 1.40 2013/09/19 00:24:52 djm Exp $ */
+comment|/* $OpenBSD: progressmeter.c,v 1.41 2015/01/14 13:54:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -255,6 +255,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1209,6 +1210,7 @@ begin_function
 name|void
 name|start_progress_meter
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|f

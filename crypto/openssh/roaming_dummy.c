@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_dummy.c,v 1.3 2009/06/21 09:04:03 dtucker Exp $ */
+comment|/* $OpenBSD: roaming_dummy.c,v 1.4 2015/01/19 19:52:16 markus Exp $ */
 end_comment
 
 begin_comment
@@ -54,6 +54,32 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
+name|u_int64_t
+name|get_sent_bytes
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|roam_set_bytes
+parameter_list|(
+name|u_int64_t
+name|sent
+parameter_list|,
+name|u_int64_t
+name|recvd
+parameter_list|)
+block|{ }
 end_function
 
 begin_function

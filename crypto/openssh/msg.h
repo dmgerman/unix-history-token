@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: msg.h,v 1.4 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: msg.h,v 1.5 2015/01/15 09:40:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ directive|define
 name|SSH_MSG_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|sshbuf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ssh_msg_send
@@ -27,7 +33,8 @@ name|int
 parameter_list|,
 name|u_char
 parameter_list|,
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -39,7 +46,8 @@ name|ssh_msg_recv
 parameter_list|(
 name|int
 parameter_list|,
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 parameter_list|)
 function_decl|;

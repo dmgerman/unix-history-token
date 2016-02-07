@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -75,7 +81,7 @@ file|<limits.h>
 end_include
 
 begin_comment
-comment|/* For PATH_MAX */
+comment|/* For PATH_MAX, _POSIX_HOST_NAME_MAX */
 end_comment
 
 begin_endif
@@ -859,6 +865,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -868,6 +880,11 @@ end_include
 begin_comment
 comment|/* For OPENSSL_VERSION_NUMBER */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

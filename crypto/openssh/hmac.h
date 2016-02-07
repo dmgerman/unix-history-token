@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hmac.h,v 1.6 2014/01/27 18:58:14 markus Exp $ */
+comment|/* $OpenBSD: hmac.h,v 1.9 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -32,6 +32,12 @@ name|alg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sshbuf
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -131,7 +137,8 @@ modifier|*
 name|ctx
 parameter_list|,
 specifier|const
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|b
 parameter_list|)

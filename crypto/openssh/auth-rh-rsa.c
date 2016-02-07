@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rh-rsa.c,v 1.43 2010/03/04 10:36:03 djm Exp $ */
+comment|/* $OpenBSD: auth-rh-rsa.c,v 1.44 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -12,6 +12,12 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_include
 include|#
@@ -53,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include
@@ -364,6 +376,15 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SSH1 */
+end_comment
 
 end_unit
 
