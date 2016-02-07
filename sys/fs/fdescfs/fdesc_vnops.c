@@ -1858,8 +1858,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|file
