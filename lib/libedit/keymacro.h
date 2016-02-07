@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: keymacro.h,v 1.2 2011/07/28 03:44:36 christos Exp $	*/
+comment|/*	$NetBSD: keymacro.h,v 1.3 2016/01/29 19:59:11 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|el_keymacromacro_t
+name|el_keymacro_t
 block|{
 name|Char
 modifier|*

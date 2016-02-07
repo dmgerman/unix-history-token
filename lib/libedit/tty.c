@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tty.c,v 1.47 2015/05/14 10:44:15 christos Exp $	*/
+comment|/*	$NetBSD: tty.c,v 1.49 2015/12/08 16:53:27 gson Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: tty.c,v 1.47 2015/05/14 10:44:15 christos Exp $"
+literal|"$NetBSD: tty.c,v 1.49 2015/12/08 16:53:27 gson Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3107,6 +3107,15 @@ modifier|*
 name|el
 parameter_list|)
 block|{
+if|if
+condition|(
+name|el
+operator|->
+name|el_flags
+operator|&
+name|EDIT_DISABLED
+condition|)
+return|return;
 if|if
 condition|(
 name|tty_setty
