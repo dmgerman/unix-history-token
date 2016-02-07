@@ -3618,16 +3618,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Do not overwrite if already set */
-name|setenv
-argument_list|(
-literal|"vfs.root.mountfrom"
-argument_list|,
-name|currdev
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Forward past zfs: */
 name|currdev
 operator|=
