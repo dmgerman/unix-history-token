@@ -1776,7 +1776,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|__libc_map_stacks_exec
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
