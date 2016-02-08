@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -115,6 +121,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
@@ -122,12 +134,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -164,12 +170,6 @@ begin_include
 include|#
 directive|include
 file|<ddb/db_sym.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cons.h>
 end_include
 
 begin_decl_stmt
@@ -1249,7 +1249,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* make sure the caches and memory are in sync */
-name|cpu_icache_sync_range
+name|icache_sync
 argument_list|(
 name|addr
 argument_list|,
@@ -1257,10 +1257,7 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* In case the current page tables have been modified ... */
-name|cpu_tlb_flushID
-argument_list|()
-expr_stmt|;
-name|cpu_cpwait
+name|tlb_flush_all
 argument_list|()
 expr_stmt|;
 return|return

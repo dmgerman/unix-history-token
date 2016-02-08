@@ -764,10 +764,11 @@ name|timeval
 name|uz_ratecheck
 decl_stmt|;
 comment|/* Warnings rate-limiting */
-name|uma_maxaction_t
+name|struct
+name|task
 name|uz_maxaction
 decl_stmt|;
-comment|/* Function to run when at limit */
+comment|/* Task to run when at limit */
 comment|/* 	 * This HAS to be the last item because we adjust the zone size 	 * based on NCPU and then allocate the space for the zones. 	 */
 name|struct
 name|uma_cache

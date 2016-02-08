@@ -3176,12 +3176,17 @@ condition|(
 name|dbg_model
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|not_yet
 case|case
 name|ID_DFR0_CP_DEBUG_M_V6
 case|:
 case|case
 name|ID_DFR0_CP_DEBUG_M_V6_1
 case|:
+endif|#
+directive|endif
 case|case
 name|ID_DFR0_CP_DEBUG_M_V7
 case|:

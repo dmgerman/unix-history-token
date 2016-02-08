@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu-v6.h>
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -595,6 +595,24 @@ name|args
 parameter_list|)
 block|{
 comment|/* No args. */
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+name|cpu_drain_writebuf
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|dsb
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_drain_writebuf
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_retval
@@ -603,9 +621,6 @@ literal|0
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|cpu_drain_writebuf
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

@@ -160,7 +160,7 @@ name|usec_delay_irq
 parameter_list|(
 name|x
 parameter_list|)
-value|DELAY(x)
+value|usec_delay(x)
 end_define
 
 begin_define
@@ -183,14 +183,15 @@ parameter_list|)
 value|DELAY(1000*(x))
 end_define
 
+begin_comment
+comment|/* Enable/disable debugging statements in shared code */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DEBUGFUNC
-parameter_list|(
-name|F
-parameter_list|)
-value|DEBUGOUT(F);
+name|DBG
+value|0
 end_define
 
 begin_define
@@ -198,9 +199,10 @@ define|#
 directive|define
 name|DEBUGOUT
 parameter_list|(
-name|S
+modifier|...
 parameter_list|)
-value|do {} while (0)
+define|\
+value|do { if (DBG) printf(__VA_ARGS__); } while (0)
 end_define
 
 begin_define
@@ -208,11 +210,9 @@ define|#
 directive|define
 name|DEBUGOUT1
 parameter_list|(
-name|S
-parameter_list|,
-name|A
+modifier|...
 parameter_list|)
-value|do {} while (0)
+value|DEBUGOUT(__VA_ARGS__)
 end_define
 
 begin_define
@@ -220,13 +220,9 @@ define|#
 directive|define
 name|DEBUGOUT2
 parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
+modifier|...
 parameter_list|)
-value|do {} while (0)
+value|DEBUGOUT(__VA_ARGS__)
 end_define
 
 begin_define
@@ -234,15 +230,9 @@ define|#
 directive|define
 name|DEBUGOUT3
 parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|,
-name|C
+modifier|...
 parameter_list|)
-value|do {} while (0)
+value|DEBUGOUT(__VA_ARGS__)
 end_define
 
 begin_define
@@ -250,23 +240,19 @@ define|#
 directive|define
 name|DEBUGOUT7
 parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|,
-name|C
-parameter_list|,
-name|D
-parameter_list|,
-name|E
-parameter_list|,
-name|F
-parameter_list|,
-name|G
+modifier|...
 parameter_list|)
-value|do {} while (0)
+value|DEBUGOUT(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGFUNC
+parameter_list|(
+name|F
+parameter_list|)
+value|DEBUGOUT(F "\n")
 end_define
 
 begin_define
@@ -289,31 +275,6 @@ directive|define
 name|TRUE
 value|1
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__bool_true_false_are_defined
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|false
-value|FALSE
-end_define
-
-begin_define
-define|#
-directive|define
-name|true
-value|TRUE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -449,24 +410,6 @@ name|int8_t
 name|s8
 typedef|;
 end_typedef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__bool_true_false_are_defined
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|boolean_t
-name|bool
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

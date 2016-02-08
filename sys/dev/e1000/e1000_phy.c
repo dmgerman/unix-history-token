@@ -6055,7 +6055,6 @@ condition|)
 return|return
 name|ret_val
 return|;
-block|}
 name|DEBUGOUT1
 argument_list|(
 literal|"M88E1000 PSCR: %X\n"
@@ -6063,6 +6062,7 @@ argument_list|,
 name|phy_data
 argument_list|)
 expr_stmt|;
+block|}
 name|ret_val
 operator|=
 name|phy
@@ -11837,8 +11837,19 @@ name|ret_val
 decl_stmt|;
 name|u16
 name|reg
-decl_stmt|,
+init|=
+name|BM_PHY_REG_NUM
+argument_list|(
+name|offset
+argument_list|)
+decl_stmt|;
+name|u16
 name|page
+init|=
+name|BM_PHY_REG_PAGE
+argument_list|(
+name|offset
+argument_list|)
 decl_stmt|;
 name|u16
 name|phy_reg
@@ -11848,20 +11859,6 @@ decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_access_phy_wakeup_reg_bm"
-argument_list|)
-expr_stmt|;
-name|reg
-operator|=
-name|BM_PHY_REG_NUM
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
-name|page
-operator|=
-name|BM_PHY_REG_PAGE
-argument_list|(
-name|offset
 argument_list|)
 expr_stmt|;
 comment|/* Gig must be disabled for MDIO accesses to Host Wakeup reg page */

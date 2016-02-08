@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 Regents of the University of California.  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1994 David Greenman  * Copyright (c) 2005-2010 Alan L. Cox<alc@cs.rice.edu>  * Copyright (c) 2014 Svatopluk Kraus<onwahe@gmail.com>  * Copyright (c) 2014 Michal Meloun<meloun@miracle.cz>  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  */
+comment|/*-  * Copyright (c) 1991 Regents of the University of California.  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1994 David Greenman  * Copyright (c) 2005-2010 Alan L. Cox<alc@cs.rice.edu>  * Copyright (c) 2014-2016 Svatopluk Kraus<skra@FreeBSD.org>  * Copyright (c) 2014-2016 Michal Meloun<mmel@FreeBSD.org>  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  */
 end_comment
 
 begin_comment
@@ -295,12 +295,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu-v6.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -562,11 +556,25 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PTE2_ATTR_DEFAULT
+value|vm_memattr_to_pte2(VM_MEMATTR_DEFAULT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE2_ATTR_PT
+value|vm_memattr_to_pte2(pt_memattr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE2_KPT
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KRW, pt_memattr)
+value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_ATTR_PT)
 end_define
 
 begin_define
@@ -576,7 +584,7 @@ name|PTE2_KPT_NG
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN_NG(pa, PTE2_AP_KRW, pt_memattr)
+value|PTE2_KERN_NG(pa, PTE2_AP_KRW, PTE2_ATTR_PT)
 end_define
 
 begin_define
@@ -586,7 +594,7 @@ name|PTE2_KRW
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_ATTR_NORMAL)
+value|PTE2_KERN(pa, PTE2_AP_KRW, PTE2_ATTR_DEFAULT)
 end_define
 
 begin_define
@@ -596,7 +604,7 @@ name|PTE2_KRO
 parameter_list|(
 name|pa
 parameter_list|)
-value|PTE2_KERN(pa, PTE2_AP_KR,  PTE2_ATTR_NORMAL)
+value|PTE2_KERN(pa, PTE2_AP_KR, PTE2_ATTR_DEFAULT)
 end_define
 
 begin_define
@@ -699,24 +707,6 @@ name|ttb_entry_t
 name|pmap_kern_ttb
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX use converion function*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE2_ATTR_NORMAL
-value|VM_MEMATTR_DEFAULT
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE1_ATTR_NORMAL
-value|ATTR_TO_L1(PTE2_ATTR_NORMAL)
-end_define
 
 begin_decl_stmt
 name|struct
@@ -1474,6 +1464,159 @@ undef|#
 directive|undef
 name|TEX
 end_undef
+
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|pte2_attr_tab
+index|[
+literal|8
+index|]
+init|=
+block|{
+name|PTE2_ATTR_WB_WA
+block|,
+comment|/* 0 - VM_MEMATTR_WB_WA */
+name|PTE2_ATTR_NOCACHE
+block|,
+comment|/* 1 - VM_MEMATTR_NOCACHE */
+name|PTE2_ATTR_DEVICE
+block|,
+comment|/* 2 - VM_MEMATTR_DEVICE */
+name|PTE2_ATTR_SO
+block|,
+comment|/* 3 - VM_MEMATTR_SO */
+name|PTE2_ATTR_WT
+block|,
+comment|/* 4 - VM_MEMATTR_WRITE_THROUGH */
+literal|0
+block|,
+comment|/* 5 - NOT USED YET */
+literal|0
+block|,
+comment|/* 6 - NOT USED YET */
+literal|0
+comment|/* 7 - NOT USED YET */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_MEMATTR_WB_WA
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_MEMATTR_NOCACHE
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_MEMATTR_DEVICE
+operator|==
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_MEMATTR_SO
+operator|==
+literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_MEMATTR_WRITE_THROUGH
+operator|==
+literal|4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|vm_memattr_to_pte2
+parameter_list|(
+name|vm_memattr_t
+name|ma
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|u_int
+operator|)
+name|ma
+operator|<
+literal|5
+argument_list|,
+operator|(
+literal|"%s: bad vm_memattr_t %d"
+operator|,
+name|__func__
+operator|,
+name|ma
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pte2_attr_tab
+index|[
+operator|(
+name|u_int
+operator|)
+name|ma
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|vm_page_pte2_attr
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm_memattr_to_pte2
+argument_list|(
+name|m
+operator|->
+name|md
+operator|.
+name|pat_mode
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Convert TEX definition entry to TTB flags.  */
@@ -2291,6 +2434,8 @@ name|uint32_t
 name|actlr_mask
 decl_stmt|,
 name|actlr_set
+decl_stmt|,
+name|l1_attr
 decl_stmt|;
 comment|/* 	 * Now, we are going to make real kernel mapping. Note that we are 	 * already running on some mapping made in locore.S and we expect 	 * that it's large enough to ensure nofault access to physical memory 	 * allocated herein before switch. 	 * 	 * As kernel image and everything needed before are and will be mapped 	 * by section mappings, we align last physical address to PTE1_SIZE. 	 */
 name|last_paddr
@@ -2494,6 +2639,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Make section mappings for kernel. */
+name|l1_attr
+operator|=
+name|ATTR_TO_L1
+argument_list|(
+name|PTE2_ATTR_DEFAULT
+argument_list|)
+expr_stmt|;
 name|pte1p
 operator|=
 name|kern_pte1
@@ -2529,10 +2681,7 @@ name|pa
 argument_list|,
 name|PTE1_AP_KRW
 argument_list|,
-name|ATTR_TO_L1
-argument_list|(
-name|PTE2_ATTR_WB_WA
-argument_list|)
+name|l1_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3272,6 +3421,8 @@ decl_stmt|,
 name|l1_prot
 decl_stmt|,
 name|l2_prot
+decl_stmt|,
+name|l2_attr
 decl_stmt|;
 name|pt1_entry_t
 modifier|*
@@ -3291,6 +3442,13 @@ name|PTE2_AP_KRW
 else|:
 name|PTE2_AP_KR
 expr_stmt|;
+name|l2_attr
+operator|=
+name|vm_memattr_to_pte2
+argument_list|(
+name|attr
+argument_list|)
+expr_stmt|;
 name|l1_prot
 operator|=
 name|ATTR_TO_L1
@@ -3302,7 +3460,7 @@ name|l1_attr
 operator|=
 name|ATTR_TO_L1
 argument_list|(
-name|attr
+name|l2_attr
 argument_list|)
 expr_stmt|;
 comment|/* Map all the pages. */
@@ -3396,7 +3554,7 @@ name|pa
 argument_list|,
 name|l2_prot
 argument_list|,
-name|attr
+name|l2_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4191,7 +4349,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|PTE2_ATTR_NORMAL
+name|PTE2_ATTR_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4390,10 +4548,15 @@ decl_stmt|;
 name|pt1_entry_t
 name|npte1
 decl_stmt|;
-name|u_int
+name|uint32_t
 name|l1prot
 decl_stmt|,
 name|l2prot
+decl_stmt|;
+name|uint32_t
+name|l1attr
+decl_stmt|,
+name|l2attr
 decl_stmt|;
 name|PDEBUG
 argument_list|(
@@ -4450,6 +4613,17 @@ operator|=
 name|ATTR_TO_L1
 argument_list|(
 name|l2prot
+argument_list|)
+expr_stmt|;
+name|l2attr
+operator|=
+name|PTE2_ATTR_DEFAULT
+expr_stmt|;
+name|l1attr
+operator|=
+name|ATTR_TO_L1
+argument_list|(
+name|l2attr
 argument_list|)
 expr_stmt|;
 name|va
@@ -4581,7 +4755,7 @@ name|start
 argument_list|,
 name|l1prot
 argument_list|,
-name|PTE1_ATTR_NORMAL
+name|l1attr
 argument_list|)
 expr_stmt|;
 name|pmap_kenter_pte1
@@ -4610,7 +4784,7 @@ name|start
 argument_list|,
 name|l2prot
 argument_list|,
-name|PTE2_ATTR_NORMAL
+name|l2attr
 argument_list|)
 expr_stmt|;
 name|va
@@ -5295,7 +5469,7 @@ name|md
 operator|.
 name|pat_mode
 operator|=
-name|PTE2_ATTR_NORMAL
+name|VM_MEMATTR_DEFAULT
 expr_stmt|;
 block|}
 end_function
@@ -5407,11 +5581,10 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5514,10 +5687,11 @@ decl_stmt|;
 comment|/* Check page attributes. */
 if|if
 condition|(
-name|pmap_page_get_memattr
-argument_list|(
 name|m
-argument_list|)
+operator|->
+name|md
+operator|.
+name|pat_mode
 operator|!=
 name|pt_memattr
 condition|)
@@ -6085,11 +6259,10 @@ argument_list|(
 name|pte2
 argument_list|)
 operator|!=
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -6106,11 +6279,10 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15082,11 +15254,10 @@ name|pa
 argument_list|,
 name|PTE2_NM
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -15184,7 +15355,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. Do it now, before the mapping is stored and made 		 * valid for hardware table walk. If done later, there is a race 		 * for other threads of current process in lazy loading case. 		 * Don't do it for kernel memory which is mapped with exec 		 * permission even if the memory isn't going to hold executable 		 * code. The only time when icache sync is needed is after 		 * kernel module is loaded and the relocation info is processed. 		 * And it's done in elf_cpu_load_file(). 		 * 		 * QQQ: (1) Does it exist any better way where 		 *          or how to sync icache? 		 *      (2) Now, we do it on a page basis. 		 */
+comment|/* 		 * Sync icache if exec permission and attribute VM_MEMATTR_WB_WA 		 * is set. Do it now, before the mapping is stored and made 		 * valid for hardware table walk. If done later, there is a race 		 * for other threads of current process in lazy loading case. 		 * Don't do it for kernel memory which is mapped with exec 		 * permission even if the memory isn't going to hold executable 		 * code. The only time when icache sync is needed is after 		 * kernel module is loaded and the relocation info is processed. 		 * And it's done in elf_cpu_load_file(). 		 * 		 * QQQ: (1) Does it exist any better way where 		 *          or how to sync icache? 		 *      (2) Now, we do it on a page basis. 		 */
 if|if
 condition|(
 operator|(
@@ -15203,7 +15374,7 @@ name|md
 operator|.
 name|pat_mode
 operator|==
-name|PTE2_ATTR_WB_WA
+name|VM_MEMATTR_WB_WA
 operator|&&
 operator|(
 name|opa
@@ -17897,14 +18068,14 @@ name|md
 operator|.
 name|pat_mode
 operator|==
-name|PTE2_ATTR_WB_WA
+name|VM_MEMATTR_WB_WA
 operator|&&
 name|pmap
 operator|!=
 name|kernel_pmap
 condition|)
 block|{
-comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. QQQ: For more info, see comments in pmap_enter(). 		 */
+comment|/* 		 * Sync icache if exec permission and attribute VM_MEMATTR_WB_WA 		 * is set. QQQ: For more info, see comments in pmap_enter(). 		 */
 name|cache_icache_sync_fresh
 argument_list|(
 name|va
@@ -17925,11 +18096,10 @@ name|pa
 argument_list|,
 name|l2prot
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -18195,14 +18365,14 @@ name|md
 operator|.
 name|pat_mode
 operator|==
-name|PTE2_ATTR_WB_WA
+name|VM_MEMATTR_WB_WA
 operator|&&
 name|pmap
 operator|!=
 name|kernel_pmap
 condition|)
 block|{
-comment|/* 		 * Sync icache if exec permission and attribute PTE2_ATTR_WB_WA 		 * is set. QQQ: For more info, see comments in pmap_enter(). 		 */
+comment|/* 		 * Sync icache if exec permission and attribute VM_MEMATTR_WB_WA 		 * is set. QQQ: For more info, see comments in pmap_enter(). 		 */
 name|cache_icache_sync_fresh
 argument_list|(
 name|va
@@ -18225,11 +18395,10 @@ name|l1prot
 argument_list|,
 name|ATTR_TO_L1
 argument_list|(
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 argument_list|)
@@ -18505,7 +18674,7 @@ decl_stmt|;
 name|vm_page_t
 name|p
 decl_stmt|;
-name|int
+name|vm_memattr_t
 name|pat_mode
 decl_stmt|;
 name|u_int
@@ -18716,7 +18885,10 @@ name|l1attr
 operator|=
 name|ATTR_TO_L1
 argument_list|(
+name|vm_memattr_to_pte2
+argument_list|(
 name|pat_mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
@@ -22530,7 +22702,10 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_memattr_to_pte2
+argument_list|(
 name|ma
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -22927,11 +23102,10 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23051,11 +23225,10 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23163,11 +23336,10 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23290,11 +23462,10 @@ name|PTE2_AP_KR
 operator||
 name|PTE2_NM
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|src
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23313,11 +23484,10 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|dst
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23563,11 +23733,10 @@ name|PTE2_AP_KR
 operator||
 name|PTE2_NM
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|a_pg
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23596,11 +23765,10 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|b_pg
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23761,7 +23929,7 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|pmap_page_get_memattr
+name|vm_page_pte2_attr
 argument_list|(
 name|m
 argument_list|)
@@ -24937,6 +25105,9 @@ block|{
 name|vm_offset_t
 name|sva
 decl_stmt|;
+name|uint32_t
+name|l2attr
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -24958,6 +25129,13 @@ name|sva
 operator|=
 name|va
 expr_stmt|;
+name|l2attr
+operator|=
+name|vm_memattr_to_pte2
+argument_list|(
+name|VM_MEMATTR_DEVICE
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|size
@@ -24973,7 +25151,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|PTE2_ATTR_DEVICE
+name|l2attr
 argument_list|)
 expr_stmt|;
 name|va
@@ -25109,8 +25287,8 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|,
-name|vm_memattr_t
-name|ma
+name|uint32_t
+name|attr
 parameter_list|)
 block|{
 name|struct
@@ -25187,7 +25365,7 @@ name|pa
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
-name|ma
+name|attr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -25332,11 +25510,10 @@ name|pa
 argument_list|,
 name|len
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -25465,11 +25642,10 @@ name|pa
 argument_list|,
 name|len
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -26186,11 +26362,10 @@ argument_list|)
 argument_list|,
 name|PTE2_AP_KRW
 argument_list|,
+name|vm_page_pte2_attr
+argument_list|(
 name|m
-operator|->
-name|md
-operator|.
-name|pat_mode
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -57,11 +57,22 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__arm__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/acle-compat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -138,26 +149,6 @@ directive|define
 name|MAX_VADDR
 value|ARM_VECTORS_HIGH
 end_define
-
-begin_if
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|6
-end_if
-
-begin_define
-define|#
-directive|define
-name|PTE_DEVICE
-value|VM_MEMATTR_DEVICE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

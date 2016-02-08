@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -866,11 +872,20 @@ operator|*
 operator|)
 name|STACKALIGN
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|td
 operator|->
 name|td_pcb
 operator|-
-literal|1
+literal|8
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|trapframe
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

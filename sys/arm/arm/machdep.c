@@ -454,12 +454,6 @@ operator|>=
 literal|6
 end_if
 
-begin_include
-include|#
-directive|include
-file|<machine/cpu-v6.h>
-end_include
-
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
@@ -1878,7 +1872,7 @@ index|]
 expr_stmt|;
 block|}
 comment|/* Now sync the vectors. */
-name|cpu_icache_sync_range
+name|icache_sync
 argument_list|(
 name|va
 argument_list|,
@@ -2171,23 +2165,15 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|cpu_dcache_wb_range
+name|dcache_wb_poc
 argument_list|(
 operator|(
-name|uintptr_t
+name|vm_offset_t
 operator|)
 name|ptr
 argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ARM_L2_PIPT
-name|cpu_l2cache_wb_range
-argument_list|(
 operator|(
-name|uintptr_t
+name|vm_paddr_t
 operator|)
 name|vtophys
 argument_list|(
@@ -2197,20 +2183,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|cpu_l2cache_wb_range
-argument_list|(
-operator|(
-name|uintptr_t
-operator|)
-name|ptr
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7677,7 +7649,7 @@ name|kernel_l1pt
 operator|.
 name|pv_pa
 expr_stmt|;
-name|setttb
+name|cpu_setttb
 argument_list|(
 name|kernel_l1pt
 operator|.
@@ -7812,7 +7784,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
+comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in cpu_setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
@@ -8435,7 +8407,7 @@ expr_stmt|;
 name|platform_late_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
+comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in cpu_setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 comment|/* Set stack for exception handlers */
 name|undefined_init
 argument_list|()

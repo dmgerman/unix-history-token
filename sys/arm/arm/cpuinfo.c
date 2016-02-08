@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpuinfo.h>
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpu-v6.h>
+file|<machine/cpuinfo.h>
 end_include
 
 begin_decl_stmt
@@ -299,6 +299,11 @@ operator|=
 name|cp15_tcmtr_get
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|cpuinfo
 operator|.
 name|tlbtr
@@ -320,6 +325,8 @@ operator|=
 name|cp15_revidr_get
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* if CPU is not v7 cpu id scheme */
 if|if
 condition|(
@@ -330,6 +337,11 @@ operator|!=
 literal|0xF
 condition|)
 return|return;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|cpuinfo
 operator|.
 name|id_pfr0
@@ -702,6 +714,8 @@ name|icache_line_size
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

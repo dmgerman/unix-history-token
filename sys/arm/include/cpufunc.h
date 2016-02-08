@@ -133,16 +133,7 @@ name|u_int
 name|va
 parameter_list|)
 function_decl|;
-comment|/* 	 * Cache operations: 	 * 	 * We define the following primitives: 	 * 	 *	icache_sync_all		Synchronize I-cache 	 *	icache_sync_range	Synchronize I-cache range 	 * 	 *	dcache_wbinv_all	Write-back and Invalidate D-cache 	 *	dcache_wbinv_range	Write-back and Invalidate D-cache range 	 *	dcache_inv_range	Invalidate D-cache range 	 *	dcache_wb_range		Write-back D-cache range 	 * 	 *	idcache_wbinv_all	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache 	 *	idcache_wbinv_range	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache range 	 * 	 * Note that the ARM term for "write-back" is "clean".  We use 	 * the term "write-back" since it's a more common way to describe 	 * the operation. 	 * 	 * There are some rules that must be followed: 	 * 	 *	ID-cache Invalidate All: 	 *		Unlike other functions, this one must never write back. 	 *		It is used to intialize the MMU when it is in an unknown 	 *		state (such as when it may have lines tagged as valid 	 *		that belong to a previous set of mappings). 	 * 	 *	I-cache Synch (all or range): 	 *		The goal is to synchronize the instruction stream, 	 *		so you may beed to write-back dirty D-cache blocks 	 *		first.  If a range is requested, and you can't 	 *		synchronize just a range, you have to hit the whole 	 *		thing. 	 * 	 *	D-cache Write-Back and Invalidate range: 	 *		If you can't WB-Inv a range, you must WB-Inv the 	 *		entire D-cache. 	 * 	 *	D-cache Invalidate: 	 *		If you can't Inv the D-cache, you must Write-Back 	 *		and Invalidate.  Code that uses this operation 	 *		MUST NOT assume that the D-cache will not be written 	 *		back to memory. 	 * 	 *	D-cache Write-Back: 	 *		If you can't Write-back without doing an Inv, 	 *		that's fine.  Then treat this as a WB-Inv. 	 *		Skipping the invalidate is merely an optimization. 	 * 	 *	All operations: 	 *		Valid virtual addresses must be passed to each 	 *		cache operation. 	 */
-name|void
-function_decl|(
-modifier|*
-name|cf_icache_sync_all
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+comment|/* 	 * Cache operations: 	 * 	 * We define the following primitives: 	 * 	 *	icache_sync_range	Synchronize I-cache range 	 * 	 *	dcache_wbinv_all	Write-back and Invalidate D-cache 	 *	dcache_wbinv_range	Write-back and Invalidate D-cache range 	 *	dcache_inv_range	Invalidate D-cache range 	 *	dcache_wb_range		Write-back D-cache range 	 * 	 *	idcache_wbinv_all	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache 	 *	idcache_wbinv_range	Write-back and Invalidate D-cache, 	 *				Invalidate I-cache range 	 * 	 * Note that the ARM term for "write-back" is "clean".  We use 	 * the term "write-back" since it's a more common way to describe 	 * the operation. 	 * 	 * There are some rules that must be followed: 	 * 	 *	ID-cache Invalidate All: 	 *		Unlike other functions, this one must never write back. 	 *		It is used to intialize the MMU when it is in an unknown 	 *		state (such as when it may have lines tagged as valid 	 *		that belong to a previous set of mappings). 	 * 	 *	I-cache Sync range: 	 *		The goal is to synchronize the instruction stream, 	 *		so you may beed to write-back dirty D-cache blocks 	 *		first.  If a range is requested, and you can't 	 *		synchronize just a range, you have to hit the whole 	 *		thing. 	 * 	 *	D-cache Write-Back and Invalidate range: 	 *		If you can't WB-Inv a range, you must WB-Inv the 	 *		entire D-cache. 	 * 	 *	D-cache Invalidate: 	 *		If you can't Inv the D-cache, you must Write-Back 	 *		and Invalidate.  Code that uses this operation 	 *		MUST NOT assume that the D-cache will not be written 	 *		back to memory. 	 * 	 *	D-cache Write-Back: 	 *		If you can't Write-back without doing an Inv, 	 *		that's fine.  Then treat this as a WB-Inv. 	 *		Skipping the invalidate is merely an optimization. 	 * 	 *	All operations: 	 *		Valid virtual addresses must be passed to each 	 *		cache operation. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -334,6 +325,14 @@ name|cputype
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_define
 define|#
 directive|define
@@ -341,6 +340,11 @@ name|cpu_cpwait
 parameter_list|()
 value|cpufuncs.cf_cpwait()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -353,6 +357,14 @@ name|e
 parameter_list|)
 value|cpufuncs.cf_control(c, e)
 end_define
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
 begin_define
 define|#
@@ -398,14 +410,6 @@ parameter_list|(
 name|e
 parameter_list|)
 value|cpufuncs.cf_tlb_flushD_SE(e)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_icache_sync_all
-parameter_list|()
-value|cpufuncs.cf_icache_sync_all()
 end_define
 
 begin_define
@@ -492,6 +496,11 @@ parameter_list|)
 value|cpufuncs.cf_idcache_wbinv_range((a), (s))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -544,6 +553,14 @@ parameter_list|()
 value|cpufuncs.cf_l2cache_drain_writebuf()
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_define
 define|#
 directive|define
@@ -551,6 +568,11 @@ name|cpu_drain_writebuf
 parameter_list|()
 value|cpufuncs.cf_drain_writebuf()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -662,6 +684,15 @@ end_function_decl
 
 begin_function_decl
 name|u_int
+name|cpu_get_control
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
 name|cpu_pfr
 parameter_list|(
 name|int
@@ -720,15 +751,6 @@ name|void
 name|fa526_tlb_flushID_SE
 parameter_list|(
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|fa526_icache_sync_all
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -876,15 +898,6 @@ argument_list|(
 name|CPU_ARM9
 argument_list|)
 end_if
-
-begin_function_decl
-name|void
-name|arm9_icache_sync_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1204,15 +1217,6 @@ name|void
 name|armv7_tlb_flushID_SE
 parameter_list|(
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|armv7_icache_sync_all
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1545,15 +1549,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm11x6_icache_sync_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|arm11x6_icache_sync_range
 parameter_list|(
 name|vm_offset_t
@@ -1615,15 +1610,6 @@ name|void
 name|armv5_ec_setttb
 parameter_list|(
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|armv5_ec_icache_sync_all
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1722,12 +1708,6 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_FA526
 argument_list|)
 operator|||
@@ -1743,11 +1723,6 @@ name|CPU_XSCALE_IXP425
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -1810,12 +1785,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80321
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
@@ -1825,11 +1794,6 @@ name|CPU_XSCALE_IXP425
 argument_list|)
 operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80219
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
@@ -2111,7 +2075,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 */
 end_comment
 
 begin_ifdef
@@ -2303,20 +2267,6 @@ end_endif
 begin_comment
 comment|/* CPU_XSCALE_81342 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|setttb
-value|cpu_setttb
-end_define
-
-begin_define
-define|#
-directive|define
-name|drain_writebuf
-value|cpu_drain_writebuf
-end_define
 
 begin_comment
 comment|/*  * Macros for manipulating CPU interrupts  */

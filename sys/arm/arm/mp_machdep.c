@@ -492,13 +492,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Initialize boot code and start up processors */
@@ -1003,7 +997,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * CPUs are stopped when entering the debugger and at 	 * system shutdown, both events which can precede a 	 * panic dump.  For the dump to be correct, all caches 	 * must be flushed and invalidated, but on ARM there's 	 * no way to broadcast a wbinv_all to other cores. 	 * Instead, we have each core do the local wbinv_all as 	 * part of stopping the core.  The core requesting the 	 * stop will do the l2 cache flush after all other cores 	 * have done their l1 flushes and stopped. 	 */
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */
@@ -1319,7 +1313,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 			 * CPUs are stopped when entering the debugger and at 			 * system shutdown, both events which can precede a 			 * panic dump.  For the dump to be correct, all caches 			 * must be flushed and invalidated, but on ARM there's 			 * no way to broadcast a wbinv_all to other cores. 			 * Instead, we have each core do the local wbinv_all as 			 * part of stopping the core.  The core requesting the 			 * stop will do the l2 cache flush after all other cores 			 * have done their l1 flushes and stopped. 			 */
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */

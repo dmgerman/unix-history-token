@@ -4153,12 +4153,6 @@ name|daddr_t
 name|bn
 decl_stmt|;
 name|struct
-name|denode
-modifier|*
-name|fddep
-decl_stmt|;
-comment|/* from file's parent directory	 */
-name|struct
 name|msdosfsmount
 modifier|*
 name|pmp
@@ -4173,21 +4167,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|fddep
-operator|=
-name|VTODE
-argument_list|(
-name|ap
-operator|->
-name|a_fdvp
-argument_list|)
-expr_stmt|;
-name|pmp
-operator|=
-name|fddep
-operator|->
-name|de_pmp
-expr_stmt|;
 name|pmp
 operator|=
 name|VFSTOMSDOSFS

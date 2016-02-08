@@ -250,6 +250,30 @@ block|{
 case|case
 literal|0x00
 case|:
+switch|switch
+condition|(
+name|cmd
+operator|->
+name|features
+condition|)
+block|{
+case|case
+literal|0x00
+case|:
+return|return
+operator|(
+literal|"NOP FLUSHQUEUE"
+operator|)
+return|;
+case|case
+literal|0x01
+case|:
+return|return
+operator|(
+literal|"NOP AUTOPOLL"
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|"NOP"
@@ -470,6 +494,36 @@ literal|"READ_VERIFY48"
 operator|)
 return|;
 case|case
+literal|0x45
+case|:
+switch|switch
+condition|(
+name|cmd
+operator|->
+name|features
+condition|)
+block|{
+case|case
+literal|0x55
+case|:
+return|return
+operator|(
+literal|"WRITE_UNCORRECTABLE48 PSEUDO"
+operator|)
+return|;
+case|case
+literal|0xaa
+case|:
+return|return
+operator|(
+literal|"WRITE_UNCORRECTABLE48 FLAGGED"
+operator|)
+return|;
+block|}
+return|return
+literal|"WRITE_UNCORRECTABLE48"
+return|;
+case|case
 literal|0x51
 case|:
 return|return
@@ -637,6 +691,78 @@ return|;
 case|case
 literal|0xb0
 case|:
+switch|switch
+condition|(
+name|cmd
+operator|->
+name|features
+condition|)
+block|{
+case|case
+literal|0xd0
+case|:
+return|return
+operator|(
+literal|"SMART READ ATTR VALUES"
+operator|)
+return|;
+case|case
+literal|0xd1
+case|:
+return|return
+operator|(
+literal|"SMART READ ATTR THRESHOLDS"
+operator|)
+return|;
+case|case
+literal|0xd3
+case|:
+return|return
+operator|(
+literal|"SMART SAVE ATTR VALUES"
+operator|)
+return|;
+case|case
+literal|0xd4
+case|:
+return|return
+operator|(
+literal|"SMART EXECUTE OFFLINE IMMEDIATE"
+operator|)
+return|;
+case|case
+literal|0xd5
+case|:
+return|return
+operator|(
+literal|"SMART READ LOG DATA"
+operator|)
+return|;
+case|case
+literal|0xd8
+case|:
+return|return
+operator|(
+literal|"SMART ENABLE OPERATION"
+operator|)
+return|;
+case|case
+literal|0xd9
+case|:
+return|return
+operator|(
+literal|"SMART DISABLE OPERATION"
+operator|)
+return|;
+case|case
+literal|0xda
+case|:
+return|return
+operator|(
+literal|"SMART RETURN STATUS"
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|"SMART"
@@ -946,6 +1072,38 @@ case|:
 return|return
 operator|(
 literal|"SETFEATURES DISABLE RCACHE"
+operator|)
+return|;
+case|case
+literal|0x5d
+case|:
+return|return
+operator|(
+literal|"SETFEATURES ENABLE RELIRQ"
+operator|)
+return|;
+case|case
+literal|0xdd
+case|:
+return|return
+operator|(
+literal|"SETFEATURES DISABLE RELIRQ"
+operator|)
+return|;
+case|case
+literal|0x5e
+case|:
+return|return
+operator|(
+literal|"SETFEATURES ENABLE SRVIRQ"
+operator|)
+return|;
+case|case
+literal|0xde
+case|:
+return|return
+operator|(
+literal|"SETFEATURES DISABLE SRVIRQ"
 operator|)
 return|;
 block|}

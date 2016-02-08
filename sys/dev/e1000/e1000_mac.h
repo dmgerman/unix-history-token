@@ -31,12 +31,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|E1000_REMOVED
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -46,15 +40,6 @@ name|a
 parameter_list|)
 value|(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* E1000_REMOVED */
-end_comment
 
 begin_function_decl
 name|void

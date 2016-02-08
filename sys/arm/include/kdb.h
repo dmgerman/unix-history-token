@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/db_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -25,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/db_machdep.h>
 end_include
 
 begin_define
@@ -133,7 +133,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|cpu_icache_sync_range
+name|icache_sync
 argument_list|(
 operator|(
 name|vm_offset_t

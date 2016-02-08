@@ -992,7 +992,7 @@ name|int
 name|cond
 decl_stmt|;
 name|struct
-name|fpreg
+name|fpu
 modifier|*
 name|fs
 decl_stmt|;
@@ -1265,7 +1265,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -1709,7 +1709,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -1769,7 +1769,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -1822,7 +1822,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2079,7 +2079,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2289,7 +2289,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2299,7 +2299,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rb
 index|]
@@ -2321,7 +2321,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2505,7 +2505,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2515,7 +2515,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rb
 index|]
@@ -2618,7 +2618,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2628,7 +2628,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rb
 index|]
@@ -2650,7 +2650,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2689,7 +2689,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2699,7 +2699,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rb
 index|]
@@ -2721,7 +2721,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2761,7 +2761,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -2871,7 +2871,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -3281,7 +3281,7 @@ name|fe
 operator|->
 name|fe_fpstate
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|ra
 index|]
@@ -3327,7 +3327,7 @@ argument_list|(
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -3337,7 +3337,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rc
 index|]
@@ -3401,7 +3401,7 @@ name|fe
 operator|->
 name|fe_fpstate
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -3542,7 +3542,7 @@ name|fe
 operator|->
 name|fe_fpstate
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -3948,7 +3948,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]
@@ -4003,7 +4003,7 @@ operator|)
 operator|&
 name|fs
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|rt
 index|]

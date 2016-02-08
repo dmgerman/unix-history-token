@@ -21,24 +21,6 @@ directive|include
 file|"ah_internal.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ATH_DEFAULT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ATH_DEFAULT
-value|"ath0"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

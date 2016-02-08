@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<machine/pcb.h>
 end_include
 
 begin_include
@@ -570,7 +570,7 @@ name|fe
 operator|->
 name|fe_fpstate
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|reg
 index|]
@@ -595,7 +595,7 @@ name|fe
 operator|->
 name|fe_fpstate
 operator|->
-name|fpreg
+name|fpr
 index|[
 name|reg
 index|]

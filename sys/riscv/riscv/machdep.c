@@ -1057,11 +1057,13 @@ name|struct
 name|trapframe
 modifier|*
 name|tf
-init|=
+decl_stmt|;
+name|tf
+operator|=
 name|td
 operator|->
 name|td_frame
-decl_stmt|;
+expr_stmt|;
 name|memset
 argument_list|(
 name|tf
@@ -3557,13 +3559,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set the pcpu pointer */
-if|#
-directive|if
-literal|0
-comment|/* SMP TODO: try re-use gp for pcpu pointer */
-block|__asm __volatile( 	    "mv gp, %0" :: "r"(pcpup));
-endif|#
-directive|endif
+asm|__asm __volatile("mv gp, %0" :: "r"(pcpup));
 name|PCPU_SET
 argument_list|(
 name|curthread

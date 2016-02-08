@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1666,7 +1672,7 @@ argument_list|(
 name|AML_SCU_CONTROL_REG
 argument_list|)
 expr_stmt|;
-name|cpu_idcache_wbinv_all
+name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Set the boot address and power on each AP. */

@@ -80,9 +80,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+decl_stmt|;
+asm|__asm __volatile("mv %0, gp" : "=&r"(pcpu));
 return|return
 operator|(
-name|pcpup
+name|pcpu
 operator|)
 return|;
 block|}
@@ -104,20 +110,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|td
-operator|=
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-operator|*
-operator|(
-name|uint64_t
-operator|*
-operator|)
-name|pcpup
-expr_stmt|;
+asm|__asm __volatile("ld %0, 0(gp)" : "=&r"(td));
 return|return
 operator|(
 name|td

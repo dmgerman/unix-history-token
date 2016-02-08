@@ -181,7 +181,9 @@ argument_list|(
 name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
-name|cpu_icache_sync_range
+endif|#
+directive|endif
+name|icache_sync
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -191,8 +193,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
