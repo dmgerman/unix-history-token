@@ -17487,7 +17487,7 @@ modifier|*
 name|pVM
 parameter_list|)
 block|{
-name|PUSHINT
+name|PUSHUNS
 argument_list|(
 name|random
 argument_list|()
