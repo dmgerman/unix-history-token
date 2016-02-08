@@ -9709,7 +9709,7 @@ define|#
 directive|define
 name|TTY_FLAG_BITS
 define|\
-value|"\20\1NOPREFIX\2INITLOCK\3CALLOUT\4OPENED_IN\5OPENED_OUT\6GONE" \ 	"\7OPENCLOSE\10ASYNC\11LITERAL\12HIWAT_IN\13HIWAT_OUT\14STOPPED" \ 	"\15EXCLUDE\16BYPASS\17ZOMBIE\20HOOK"
+value|"\20\1NOPREFIX\2INITLOCK\3CALLOUT\4OPENED_IN" \ 	"\5OPENED_OUT\6OPENED_CONS\7GONE\10OPENCLOSE" \ 	"\11ASYNC\12LITERAL\13HIWAT_IN\14HIWAT_OUT" \ 	"\15STOPPED\16EXCLUDE\17BYPASS\20ZOMBIE" \ 	"\21HOOK\22BUSY_IN\23BUSY_OUT"
 end_define
 
 begin_define
@@ -10078,7 +10078,7 @@ name|addr
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"0x%p: %s\n"
+literal|"%p: %s\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -10099,7 +10099,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\tflags: %b\n"
+literal|"\tflags: 0x%b\n"
 argument_list|,
 name|tp
 operator|->
