@@ -6091,7 +6091,9 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-return|return;
+goto|goto
+name|outr
+goto|;
 block|}
 elseif|else
 if|if
