@@ -1573,7 +1573,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|rn_detachhead
+argument_list|(
+name|head
+argument_list|)
 operator|)
 return|;
 block|}
