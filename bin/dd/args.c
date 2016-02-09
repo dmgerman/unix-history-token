@@ -1898,7 +1898,7 @@ end_function
 
 begin_function
 specifier|static
-name|uintmax_t
+name|intmax_t
 name|postfix_to_mult
 parameter_list|(
 specifier|const
@@ -1906,7 +1906,7 @@ name|char
 name|expr
 parameter_list|)
 block|{
-name|uintmax_t
+name|intmax_t
 name|mult
 decl_stmt|;
 name|mult
