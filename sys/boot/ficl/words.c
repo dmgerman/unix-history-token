@@ -17487,9 +17487,9 @@ modifier|*
 name|pVM
 parameter_list|)
 block|{
-name|PUSHINT
+name|PUSHUNS
 argument_list|(
-name|rand
+name|random
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -17510,9 +17510,9 @@ modifier|*
 name|pVM
 parameter_list|)
 block|{
-name|srand
+name|srandom
 argument_list|(
-name|POPINT
+name|POPUNS
 argument_list|()
 argument_list|)
 expr_stmt|;

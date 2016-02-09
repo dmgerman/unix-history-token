@@ -529,6 +529,8 @@ name|INTERPOS_wait6
 block|,
 name|INTERPOS_ppoll
 block|,
+name|INTERPOS_map_stacks_exec
+block|,
 name|INTERPOS_MAX
 block|}
 enum|;
@@ -1765,6 +1767,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|__init_elf_aux_vector
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__libc_map_stacks_exec
 parameter_list|(
 name|void
 parameter_list|)
