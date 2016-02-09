@@ -59,12 +59,11 @@ directive|include
 file|"boot_module.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|_PATH_LOADER
-value|"/boot/loader.efi"
-end_define
+begin_include
+include|#
+directive|include
+file|"paths.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -347,7 +346,7 @@ name|mod
 operator|->
 name|load
 argument_list|(
-name|_PATH_LOADER
+name|PATH_LOADER_EFI
 argument_list|,
 operator|&
 name|dev
@@ -381,7 +380,7 @@ name|mod
 operator|->
 name|name
 argument_list|,
-name|_PATH_LOADER
+name|PATH_LOADER_EFI
 argument_list|,
 name|EFI_ERROR_CODE
 argument_list|(
@@ -747,7 +746,7 @@ name|printf
 argument_list|(
 literal|"   Loader path: %s\n\n"
 argument_list|,
-name|_PATH_LOADER
+name|PATH_LOADER_EFI
 argument_list|)
 expr_stmt|;
 name|printf
