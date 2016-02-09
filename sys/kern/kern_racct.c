@@ -4994,7 +4994,7 @@ operator|&
 operator|(
 name|P_SYSTEM
 operator||
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 operator|)
 operator|!=

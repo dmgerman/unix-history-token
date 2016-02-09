@@ -1048,7 +1048,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|((td)->td_proc->p_flag& P_KTHREAD == FALSE)
+value|((td)->td_proc->p_flag& P_KPROC == FALSE)
 end_define
 
 begin_define

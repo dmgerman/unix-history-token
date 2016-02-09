@@ -3109,12 +3109,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_KTHREAD
+name|P_KPROC
 value|0x00004
 end_define
 
 begin_comment
-comment|/* Kernel thread (*). */
+comment|/* Kernel process. */
 end_comment
 
 begin_define

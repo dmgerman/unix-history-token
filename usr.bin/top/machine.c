@@ -6022,7 +6022,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 condition|?
 literal|"k"
@@ -6061,7 +6061,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 condition|?
 name|pp
@@ -6107,7 +6107,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 condition|)
 return|return
 operator|(
@@ -6145,7 +6145,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 condition|?
 name|pp

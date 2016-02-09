@@ -364,7 +364,7 @@ name|p_flag
 operator||=
 name|P_SYSTEM
 operator||
-name|P_KTHREAD
+name|P_KPROC
 expr_stmt|;
 name|td
 operator|->
@@ -656,7 +656,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 operator|==
 literal|0
@@ -735,7 +735,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 operator|==
 literal|0
@@ -1530,7 +1530,9 @@ end_comment
 begin_function
 name|void
 name|kthread_suspend_check
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|proc
