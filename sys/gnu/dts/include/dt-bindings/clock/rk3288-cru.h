@@ -3,6 +3,18 @@ begin_comment
 comment|/*  * Copyright (c) 2014 MundoReader S.L.  * Author: Heiko Stuebner<heiko@sntech.de>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DT_BINDINGS_CLK_ROCKCHIP_RK3288_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DT_BINDINGS_CLK_ROCKCHIP_RK3288_H
+end_define
+
 begin_comment
 comment|/* core clocks */
 end_comment
@@ -478,6 +490,20 @@ define|#
 directive|define
 name|SCLK_PVTM_GPU
 value|124
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCLK_CRYPTO
+value|125
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCLK_MIPIDSI_24M
+value|126
 end_define
 
 begin_define
@@ -990,6 +1016,20 @@ define|#
 directive|define
 name|PCLK_WDT
 value|368
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCLK_EFUSE256
+value|369
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCLK_EFUSE1024
+value|370
 end_define
 
 begin_comment
@@ -2392,6 +2432,11 @@ directive|define
 name|SRST_TSP_27M
 value|191
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -75,6 +75,13 @@ name|CLK_FOUT_VPLL
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_ARM_CLK
+value|9
+end_define
+
 begin_comment
 comment|/* gate for special clocks (sclk) */
 end_comment
@@ -1102,6 +1109,20 @@ name|CLK_MOUT_GPLL
 value|1025
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_ACLK200_DISP1_SUB
+value|1026
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_ACLK300_DISP1_SUB
+value|1027
+end_define
+
 begin_comment
 comment|/* must be greater than maximal clock id */
 end_comment
@@ -1110,7 +1131,7 @@ begin_define
 define|#
 directive|define
 name|CLK_NR_CLKS
-value|1026
+value|1028
 end_define
 
 begin_endif

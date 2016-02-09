@@ -103,6 +103,20 @@ name|CLK_FOUT_KPLL
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_ARM_CLK
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_KFC_CLK
+value|14
+end_define
+
 begin_comment
 comment|/* gate for special clocks (sclk) */
 end_comment
@@ -1366,6 +1380,20 @@ define|#
 directive|define
 name|CLK_MOUT_SW_ACLK400
 value|651
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_USER_ACLK300_GSCL
+value|652
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_SW_ACLK300_GSCL
+value|653
 end_define
 
 begin_comment

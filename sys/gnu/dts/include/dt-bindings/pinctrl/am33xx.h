@@ -54,8 +54,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SLEWCTRL_FAST
+name|SLEWCTRL_SLOW
 value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLEWCTRL_FAST
+value|0
 end_define
 
 begin_comment

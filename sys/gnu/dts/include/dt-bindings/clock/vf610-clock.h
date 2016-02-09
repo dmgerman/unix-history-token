@@ -1299,8 +1299,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|VF610_CLK_END
+name|VF610_CLK_DAP
 value|183
+end_define
+
+begin_define
+define|#
+directive|define
+name|VF610_CLK_OCOTP
+value|184
+end_define
+
+begin_define
+define|#
+directive|define
+name|VF610_CLK_END
+value|185
 end_define
 
 begin_endif

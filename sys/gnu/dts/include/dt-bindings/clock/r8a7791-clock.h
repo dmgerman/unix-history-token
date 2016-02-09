@@ -82,6 +82,20 @@ name|R8A7791_CLK_Z
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_RCAN
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_ADSP
+value|10
+end_define
+
 begin_comment
 comment|/* MSTP0 */
 end_comment
@@ -372,6 +386,17 @@ value|31
 end_define
 
 begin_comment
+comment|/* MSTP4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_IRQC
+value|7
+end_define
+
+begin_comment
 comment|/* MSTP5 */
 end_comment
 
@@ -387,6 +412,13 @@ define|#
 directive|define
 name|R8A7791_CLK_AUDIO_DMAC0
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_ADSP_MOD
+value|6
 end_define
 
 begin_define
@@ -542,6 +574,13 @@ define|#
 directive|define
 name|R8A7791_CLK_VIN0
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_ETHERAVB
+value|12
 end_define
 
 begin_define
@@ -795,6 +834,20 @@ define|#
 directive|define
 name|R8A7791_CLK_SCU_DVC0
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_SCU_CTU1_MIX1
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7791_CLK_SCU_CTU0_MIX0
+value|21
 end_define
 
 begin_define
