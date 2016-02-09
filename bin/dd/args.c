@@ -2055,7 +2055,7 @@ literal|0
 expr_stmt|;
 name|num
 operator|=
-name|strtouq
+name|strtoumax
 argument_list|(
 name|val
 argument_list|,
@@ -2249,7 +2249,7 @@ literal|0
 expr_stmt|;
 name|num
 operator|=
-name|strtoq
+name|strtoimax
 argument_list|(
 name|val
 argument_list|,
