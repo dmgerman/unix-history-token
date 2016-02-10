@@ -30303,7 +30303,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|ctsio
 operator|->
 name|kern_data_len
@@ -30561,7 +30560,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|ctsio
 operator|->
 name|kern_data_len

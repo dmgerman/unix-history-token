@@ -252,7 +252,6 @@ name|struct
 name|cv
 name|is_login_cv
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|icl_pdu
 modifier|*
