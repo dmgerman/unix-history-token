@@ -105,7 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * random_adaptor's should be registered prior to  * random module (SI_SUB_DRIVERS/SI_ORDER_MIDDLE)  */
+comment|/*  * random_adaptor's should be registered prior to  * random module (SI_SUB_RANDOM/SI_ORDER_MIDDLE)  */
 end_comment
 
 begin_define
@@ -120,7 +120,7 @@ parameter_list|,
 name|ver
 parameter_list|)
 define|\
-value|static moduledata_t name##_mod = {				\ 	#name,							\ 	modevent,						\ 	0							\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS,		\ 		   SI_ORDER_SECOND);				\     MODULE_VERSION(name, ver);					\     MODULE_DEPEND(name, random, 1, 1, 1);
+value|static moduledata_t name##_mod = {				\ 	#name,							\ 	modevent,						\ 	0							\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_RANDOM,		\ 		   SI_ORDER_SECOND);				\     MODULE_VERSION(name, ver);					\     MODULE_DEPEND(name, random, 1, 1, 1);
 end_define
 
 begin_typedef

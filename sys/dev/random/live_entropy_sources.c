@@ -668,7 +668,7 @@ name|SYSINIT
 argument_list|(
 name|random_adaptors
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_RANDOM
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
@@ -684,7 +684,7 @@ name|SYSUNINIT
 argument_list|(
 name|random_adaptors
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_RANDOM
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,

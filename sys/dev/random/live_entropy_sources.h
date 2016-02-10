@@ -93,7 +93,7 @@ parameter_list|,
 name|ver
 parameter_list|)
 define|\
-value|static moduledata_t name##_mod = {				\ 	#name,							\ 	modevent,						\ 	0							\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS,		\ 		   SI_ORDER_SECOND);				\     MODULE_VERSION(name, ver);					\     MODULE_DEPEND(name, random, 1, 1, 1);
+value|static moduledata_t name##_mod = {				\ 	#name,							\ 	modevent,						\ 	0							\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_RANDOM,		\ 		   SI_ORDER_SECOND);				\     MODULE_VERSION(name, ver);					\     MODULE_DEPEND(name, random, 1, 1, 1);
 end_define
 
 begin_endif

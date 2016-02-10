@@ -658,6 +658,32 @@ operator|->
 name|ident
 argument_list|)
 expr_stmt|;
+comment|/* mark random(4) as initialized, to avoid being called again */
+name|random_inited
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|random_makedev
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+block|{
+if|if
+condition|(
+name|random_adaptor
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* Use an appropriately evil mode for those who are concerned 	 * with daemons */
 name|random_dev
 operator|=
@@ -689,13 +715,24 @@ literal|"urandom"
 argument_list|)
 expr_stmt|;
 comment|/* compatibility */
-comment|/* mark random(4) as initialized, to avoid being called again */
-name|random_inited
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|random_makedev
+argument_list|,
+name|SI_SUB_DRIVERS
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|random_makedev
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ARGSUSED */
@@ -838,14 +875,31 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|random_mod
+init|=
+block|{
+literal|"random"
+block|,
+name|random_modevent
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
-name|DEV_MODULE
+name|DECLARE_MODULE
 argument_list|(
 name|random
 argument_list|,
-name|random_modevent
+name|random_mod
 argument_list|,
-name|NULL
+name|SI_SUB_RANDOM
+argument_list|,
+name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
