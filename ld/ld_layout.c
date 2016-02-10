@@ -90,7 +90,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_layout.c 2965 2013-09-10 02:46:29Z kaiwang27 $"
+literal|"$Id: ld_layout.c 3276 2015-12-11 21:39:06Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -502,21 +502,9 @@ name|ld_script_cmd
 modifier|*
 name|ldc
 decl_stmt|;
-name|struct
-name|ld_state
-modifier|*
-name|ls
-decl_stmt|;
 name|int
 name|sections_cmd_exist
 decl_stmt|;
-name|ls
-operator|=
-operator|&
-name|ld
-operator|->
-name|ld_state
-expr_stmt|;
 name|lo
 operator|=
 name|ld
@@ -1266,9 +1254,10 @@ name|printf
 argument_list|(
 literal|" 0x%08jx"
 argument_list|,
-operator|(
+call|(
 name|uintmax_t
-operator|)
+call|)
+argument_list|(
 name|os
 operator|->
 name|os_addr
@@ -1277,15 +1266,17 @@ name|is
 operator|->
 name|is_reloff
 argument_list|)
+argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
 literal|" 0x%016jx"
 argument_list|,
-operator|(
+call|(
 name|uintmax_t
-operator|)
+call|)
+argument_list|(
 name|os
 operator|->
 name|os_addr
@@ -1293,6 +1284,7 @@ operator|+
 name|is
 operator|->
 name|is_reloff
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3859,7 +3851,7 @@ expr_stmt|;
 if|if
 condition|(
 name|_os
-operator|==
+operator|!=
 name|NULL
 operator|&&
 operator|(

@@ -90,7 +90,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: addr2line.c 3264 2015-11-30 05:38:14Z kaiwang27 $"
+literal|"$Id: addr2line.c 3273 2015-12-11 21:38:57Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1670,6 +1670,9 @@ argument_list|)
 else|:
 name|file
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|call_line
 argument_list|)
 expr_stmt|;
@@ -2701,6 +2704,9 @@ argument_list|)
 else|:
 name|file
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lineno
 argument_list|)
 expr_stmt|;

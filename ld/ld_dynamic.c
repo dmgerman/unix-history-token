@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_dynamic.c 2965 2013-09-10 02:46:29Z kaiwang27 $"
+literal|"$Id: ld_dynamic.c 3384 2016-01-31 13:12:41Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1095,6 +1095,10 @@ argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|odb
 operator|->
 name|odb_buf

@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_file.c 2930 2013-03-17 22:54:26Z kaiwang27 $"
+literal|"$Id: ld_file.c 3281 2015-12-11 21:39:23Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -748,6 +748,17 @@ argument_list|,
 name|ehdr
 operator|.
 name|e_machine
+argument_list|,
+name|ehdr
+operator|.
+name|e_ident
+index|[
+name|EI_DATA
+index|]
+argument_list|,
+name|ehdr
+operator|.
+name|e_flags
 argument_list|)
 expr_stmt|;
 block|}

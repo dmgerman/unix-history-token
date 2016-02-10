@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 1. Erase archive symbol table's timestamp from ar archives,  * make it easy to `diff'.  (option -e)  * 2. Check the sanity of timestamp. (option -c)  *  * $Id: teraser.c 3102 2014-10-29 21:09:01Z jkoshy $  */
+comment|/* 1. Erase archive symbol table's timestamp from ar archives,  * make it easy to `diff'.  (option -e)  * 2. Check the sanity of timestamp. (option -c)  *  * $Id: teraser.c 3366 2016-01-24 21:33:06Z jkoshy $  */
 end_comment
 
 begin_include
@@ -121,7 +121,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|char
+name|int
 name|opt
 decl_stmt|;
 name|char
@@ -148,7 +148,7 @@ decl_stmt|;
 name|int
 name|ts
 decl_stmt|;
-name|int
+name|time_t
 name|now
 decl_stmt|;
 name|FILE

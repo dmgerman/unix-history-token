@@ -132,7 +132,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: readelf.c 3271 2015-12-11 18:53:08Z kaiwang27 $"
+literal|"$Id: readelf.c 3395 2016-02-10 16:29:44Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2777,7 +2777,8 @@ specifier|static
 name|void
 name|readelf_usage
 parameter_list|(
-name|void
+name|int
+name|status
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2899,6 +2900,10 @@ name|char
 modifier|*
 name|st_type
 parameter_list|(
+name|unsigned
+name|int
+name|mach
+parameter_list|,
 name|unsigned
 name|int
 name|stype
@@ -5941,6 +5946,12 @@ case|:
 return|return
 literal|"WEAK"
 return|;
+case|case
+name|STB_GNU_UNIQUE
+case|:
+return|return
+literal|"UNIQUE"
+return|;
 default|default:
 if|if
 condition|(
@@ -6000,6 +6011,10 @@ name|char
 modifier|*
 name|st_type
 parameter_list|(
+name|unsigned
+name|int
+name|mach
+parameter_list|,
 name|unsigned
 name|int
 name|stype
@@ -6097,6 +6112,20 @@ name|stype
 operator|<=
 name|STT_HIPROC
 condition|)
+block|{
+if|if
+condition|(
+name|mach
+operator|==
+name|EM_SPARCV9
+operator|&&
+name|stype
+operator|==
+name|STT_SPARC_REGISTER
+condition|)
+return|return
+literal|"REGISTER"
+return|;
 name|snprintf
 argument_list|(
 name|s_stype
@@ -6113,6 +6142,7 @@ operator|-
 name|STT_LOPROC
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|snprintf
 argument_list|(
@@ -6422,17 +6452,18 @@ name|int
 name|type
 parameter_list|)
 block|{
+specifier|static
+name|char
+name|s_type
+index|[
+literal|32
+index|]
+decl_stmt|;
 switch|switch
 condition|(
 name|mach
 condition|)
 block|{
-case|case
-name|EM_NONE
-case|:
-return|return
-literal|""
-return|;
 case|case
 name|EM_386
 case|:
@@ -6490,7 +6521,7 @@ case|case
 literal|7
 case|:
 return|return
-literal|"R_386_JMP_SLOT"
+literal|"R_386_JUMP_SLOT"
 return|;
 case|case
 literal|8
@@ -6630,11 +6661,8 @@ case|:
 return|return
 literal|"R_386_TLS_TPOFF32"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_AARCH64
 case|:
@@ -6956,6 +6984,66 @@ return|return
 literal|"R_AARCH64_LD64_GOTPAGE_LO15"
 return|;
 case|case
+literal|560
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_LD_PREL19"
+return|;
+case|case
+literal|561
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_ADR_PREL21"
+return|;
+case|case
+literal|562
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_ADR_PAGE21"
+return|;
+case|case
+literal|563
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_LD64_LO12"
+return|;
+case|case
+literal|564
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_ADD_LO12"
+return|;
+case|case
+literal|565
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_OFF_G1"
+return|;
+case|case
+literal|566
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_OFF_G0_NC"
+return|;
+case|case
+literal|567
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_LDR"
+return|;
+case|case
+literal|568
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_ADD"
+return|;
+case|case
+literal|569
+case|:
+return|return
+literal|"R_AARCH64_TLSDESC_CALL"
+return|;
+case|case
 literal|1024
 case|:
 return|return
@@ -7009,11 +7097,8 @@ case|:
 return|return
 literal|"R_AARCH64_IRELATIVE"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_ARM
 case|:
@@ -7305,11 +7390,8 @@ case|:
 return|return
 literal|"R_ARM_RBASE"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_IA_64
 case|:
@@ -7798,11 +7880,8 @@ case|:
 return|return
 literal|"R_IA_64_LTOFF_DTPREL22"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_MIPS
 case|:
@@ -7991,11 +8070,8 @@ case|:
 return|return
 literal|"R_MIPS_TLS_TPREL_LO16"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_PPC
 case|:
@@ -8466,11 +8542,8 @@ case|:
 return|return
 literal|"R_PPC_EMB_RELSDA"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_RISCV
 case|:
@@ -8732,6 +8805,7 @@ return|return
 literal|"R_RISCV_RVC_JUMP"
 return|;
 block|}
+break|break;
 case|case
 name|EM_SPARC
 case|:
@@ -9223,11 +9297,8 @@ case|:
 return|return
 literal|"R_SPARC_TLS_TPOFF64"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
+break|break;
 case|case
 name|EM_X86_64
 case|:
@@ -9282,7 +9353,7 @@ case|case
 literal|7
 case|:
 return|return
-literal|"R_X86_64_JMP_SLOT"
+literal|"R_X86_64_JUMP_SLOT"
 return|;
 case|case
 literal|8
@@ -9464,16 +9535,28 @@ case|:
 return|return
 literal|"R_X86_64_IRELATIVE"
 return|;
-default|default:
-return|return
-literal|""
-return|;
 block|}
-default|default:
-return|return
-literal|""
-return|;
+break|break;
 block|}
+name|snprintf
+argument_list|(
+name|s_type
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s_type
+argument_list|)
+argument_list|,
+literal|"<unknown: %#x>"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|s_type
+operator|)
+return|;
 block|}
 end_function
 
@@ -18693,6 +18776,9 @@ name|printf
 argument_list|(
 literal|" %5ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sym
 operator|.
 name|st_size
@@ -18704,6 +18790,12 @@ literal|" %-7s"
 argument_list|,
 name|st_type
 argument_list|(
+name|re
+operator|->
+name|ehdr
+operator|.
+name|e_machine
+argument_list|,
 name|GELF_ST_TYPE
 argument_list|(
 name|sym
@@ -23724,6 +23816,9 @@ name|printf
 argument_list|(
 literal|"flag = %ju, vendor = %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|,
 name|p
@@ -26443,6 +26538,18 @@ name|offset
 operator|+
 name|length
 expr_stmt|;
+name|pe
+operator|=
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|d
+operator|->
+name|d_buf
+operator|+
+name|endoff
+expr_stmt|;
 name|version
 operator|=
 name|re
@@ -26860,18 +26967,6 @@ parameter_list|)
 value|((((x) - opbase) / lrange) * minlen)
 name|p
 operator|++
-expr_stmt|;
-name|pe
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|d
-operator|->
-name|d_buf
-operator|+
-name|endoff
 expr_stmt|;
 name|printf
 argument_list|(
@@ -27318,6 +27413,9 @@ name|printf
 argument_list|(
 literal|"  Set isa to %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|isa
 argument_list|)
 expr_stmt|;
@@ -31465,6 +31563,10 @@ name|printf
 argument_list|(
 literal|"%08jx %08jx\n"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ranges
 index|[
 name|j
@@ -31473,7 +31575,12 @@ operator|.
 name|dwr_addr1
 operator|+
 name|base0
+argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ranges
 index|[
 name|j
@@ -31483,12 +31590,17 @@ name|dwr_addr2
 operator|+
 name|base0
 argument_list|)
+argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
 literal|"%016jx %016jx\n"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ranges
 index|[
 name|j
@@ -31497,7 +31609,12 @@ operator|.
 name|dwr_addr1
 operator|+
 name|base0
+argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ranges
 index|[
 name|j
@@ -31506,6 +31623,7 @@ operator|.
 name|dwr_addr2
 operator|+
 name|base0
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -36620,6 +36738,9 @@ name|printf
 argument_list|(
 literal|"    %8.8jx "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|la
 operator|->
 name|la_off
@@ -37387,6 +37508,21 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|&&
+operator|(
+name|d
+operator|=
+name|elf_rawdata
+argument_list|(
+name|s
+operator|->
+name|scn
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|elferr
@@ -37412,6 +37548,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
+name|elf_errno
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|d
@@ -37732,6 +37874,21 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|&&
+operator|(
+name|d
+operator|=
+name|elf_rawdata
+argument_list|(
+name|s
+operator|->
+name|scn
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|elferr
@@ -37757,6 +37914,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
+name|elf_errno
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|d
@@ -40480,6 +40643,7 @@ operator|)
 operator|<<
 literal|56
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -40509,6 +40673,7 @@ operator|)
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -40526,6 +40691,7 @@ operator|)
 operator|<<
 literal|8
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -40893,6 +41059,7 @@ operator|)
 operator|<<
 literal|56
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -40922,6 +41089,7 @@ operator|)
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -40939,6 +41107,7 @@ operator|)
 operator|<<
 literal|8
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -41232,6 +41401,8 @@ literal|0
 decl_stmt|;
 name|uint8_t
 name|b
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|shift
@@ -41449,7 +41620,7 @@ begin_define
 define|#
 directive|define
 name|USAGE_MESSAGE
-value|"\ Usage: %s [options] file...\n\   Display information about ELF objects and ar(1) archives.\n\n\   Options:\n\   -a | --all               Equivalent to specifying options '-dhIlrsASV'.\n\   -c | --archive-index     Print the archive symbol table for archives.\n\   -d | --dynamic           Print the contents of SHT_DYNAMIC sections.\n\   -e | --headers           Print all headers in the object.\n\   -g | --section-groups    Print the contents of the section groups.\n\   -h | --file-header       Print the file header for the object.\n\   -l | --program-headers   Print the PHDR table for the object.\n\   -n | --notes             Print the contents of SHT_NOTE sections.\n\   -p INDEX | --string-dump=INDEX\n\                            Print the contents of section at index INDEX.\n\   -r | --relocs            Print relocation information.\n\   -s | --syms | --symbols  Print symbol tables.\n\   -t | --section-details   Print additional information about sections.\n\   -v | --version           Print a version identifier and exit.\n\   -x INDEX | --hex-dump=INDEX\n\                            Display contents of a section as hexadecimal.\n\   -A | --arch-specific     (accepted, but ignored)\n\   -D | --use-dynamic       Print the symbol table specified by the DT_SYMTAB\n\                            entry in the \".dynamic\" section.\n\   -H | --help              Print a help message.\n\   -I | --histogram         Print information on bucket list lengths for \n\                            hash sections.\n\   -N | --full-section-name (accepted, but ignored)\n\   -S | --sections | --section-headers\n\                            Print information about section headers.\n\   -V | --version-info      Print symbol versoning information.\n\   -W | --wide              Print information without wrapping long lines.\n"
+value|"\ Usage: %s [options] file...\n\   Display information about ELF objects and ar(1) archives.\n\n\   Options:\n\   -a | --all               Equivalent to specifying options '-dhIlrsASV'.\n\   -c | --archive-index     Print the archive symbol table for archives.\n\   -d | --dynamic           Print the contents of SHT_DYNAMIC sections.\n\   -e | --headers           Print all headers in the object.\n\   -g | --section-groups    Print the contents of the section groups.\n\   -h | --file-header       Print the file header for the object.\n\   -l | --program-headers   Print the PHDR table for the object.\n\   -n | --notes             Print the contents of SHT_NOTE sections.\n\   -p INDEX | --string-dump=INDEX\n\                            Print the contents of section at index INDEX.\n\   -r | --relocs            Print relocation information.\n\   -s | --syms | --symbols  Print symbol tables.\n\   -t | --section-details   Print additional information about sections.\n\   -v | --version           Print a version identifier and exit.\n\   -w[afilmoprsFLR] | --debug-dump={abbrev,aranges,decodedline,frames,\n\                                frames-interp,info,loc,macro,pubnames,\n\                                ranges,Ranges,rawline,str}\n\                            Display DWARF information.\n\   -x INDEX | --hex-dump=INDEX\n\                            Display contents of a section as hexadecimal.\n\   -A | --arch-specific     (accepted, but ignored)\n\   -D | --use-dynamic       Print the symbol table specified by the DT_SYMTAB\n\                            entry in the \".dynamic\" section.\n\   -H | --help              Print a help message.\n\   -I | --histogram         Print information on bucket list lengths for \n\                            hash sections.\n\   -N | --full-section-name (accepted, but ignored)\n\   -S | --sections | --section-headers\n\                            Print information about section headers.\n\   -V | --version-info      Print symbol versoning information.\n\   -W | --wide              Print information without wrapping long lines.\n"
 end_define
 
 begin_function
@@ -41457,7 +41628,8 @@ specifier|static
 name|void
 name|readelf_usage
 parameter_list|(
-name|void
+name|int
+name|status
 parameter_list|)
 block|{
 name|fprintf
@@ -41472,7 +41644,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EXIT_FAILURE
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -41569,7 +41741,9 @@ case|case
 literal|'?'
 case|:
 name|readelf_usage
-argument_list|()
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -41668,7 +41842,9 @@ case|case
 literal|'H'
 case|:
 name|readelf_usage
-argument_list|()
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -41977,7 +42153,9 @@ operator|==
 literal|0
 condition|)
 name|readelf_usage
-argument_list|()
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

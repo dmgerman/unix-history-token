@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_strtab.c 2965 2013-09-10 02:46:29Z kaiwang27 $"
+literal|"$Id: ld_strtab.c 3279 2015-12-11 21:39:16Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -244,18 +244,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|free
-argument_list|(
-name|st
-operator|->
-name|st_buf
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|st
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|st
@@ -301,6 +289,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|st
+operator|->
+name|st_buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|st
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -66,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: amd64.c 2963 2013-08-25 17:29:54Z kaiwang27 $"
+literal|"$Id: amd64.c 3390 2016-02-05 16:15:58Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -853,7 +853,7 @@ case|case
 literal|7
 case|:
 return|return
-literal|"R_X86_64_JMP_SLOT"
+literal|"R_X86_64_JUMP_SLOT"
 return|;
 case|case
 literal|8
@@ -963,6 +963,9 @@ argument_list|)
 argument_list|,
 literal|"<unkown: %ju>"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|r
 argument_list|)
 expr_stmt|;
@@ -1524,9 +1527,6 @@ name|ld_input_section
 modifier|*
 name|is
 decl_stmt|;
-name|uint64_t
-name|off
-decl_stmt|;
 name|is
 operator|=
 name|_find_and_create_gotplt_section
@@ -1537,8 +1537,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Reserve a GOT entry for PLT. */
-name|off
-operator|=
+operator|(
+name|void
+operator|)
 name|ld_input_reserve_ibuf
 argument_list|(
 name|is

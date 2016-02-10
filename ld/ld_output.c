@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_output.c 2965 2013-09-10 02:46:29Z kaiwang27 $"
+literal|"$Id: ld_output.c 3281 2015-12-11 21:39:23Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -680,9 +680,12 @@ name|eh
 operator|.
 name|e_flags
 operator|=
-literal|0
+name|ld
+operator|->
+name|ld_arch
+operator|->
+name|flags
 expr_stmt|;
-comment|/* TODO */
 name|eh
 operator|.
 name|e_machine
@@ -4482,6 +4485,14 @@ name|ld
 argument_list|)
 expr_stmt|;
 comment|/* Finalize PLT and GOT sections. */
+if|if
+condition|(
+name|ld
+operator|->
+name|ld_arch
+operator|->
+name|finalize_got_and_plt
+condition|)
 name|ld
 operator|->
 name|ld_arch

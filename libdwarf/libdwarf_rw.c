@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_rw.c 2952 2013-06-26 19:09:40Z kaiwang27 $"
+literal|"$Id: libdwarf_rw.c 3286 2015-12-31 16:45:46Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,6 +111,7 @@ operator|)
 operator|<<
 literal|56
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -140,6 +141,7 @@ operator|)
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -157,6 +159,7 @@ operator|)
 operator|<<
 literal|8
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -277,6 +280,7 @@ operator|)
 operator|<<
 literal|56
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -306,6 +310,7 @@ operator|)
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -323,6 +328,7 @@ operator|)
 operator|<<
 literal|8
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -922,6 +928,7 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -951,6 +958,7 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -967,6 +975,7 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -1192,6 +1201,7 @@ name|value
 operator|>>=
 literal|32
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -1221,6 +1231,7 @@ name|value
 operator|>>=
 literal|16
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -1237,6 +1248,7 @@ name|value
 operator|>>=
 literal|8
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:

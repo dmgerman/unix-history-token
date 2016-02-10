@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_dem_gnu3.c 3212 2015-05-17 13:40:55Z kaiwang27 $"
+literal|"$Id: libelftc_dem_gnu3.c 3291 2016-01-04 02:36:38Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6960,6 +6960,7 @@ operator|(
 literal|0
 operator|)
 return|;
+break|break;
 case|case
 literal|'t'
 case|:
@@ -6981,6 +6982,7 @@ operator|(
 literal|0
 operator|)
 return|;
+break|break;
 block|}
 operator|++
 name|ddata
@@ -10220,7 +10222,7 @@ name|cpp_demangle_push_str
 argument_list|(
 name|ddata
 argument_list|,
-literal|"std::iostream"
+literal|"std::basic_iostream"
 argument_list|,
 literal|19
 argument_list|)
@@ -10234,7 +10236,7 @@ name|ddata
 operator|->
 name|last_sname
 operator|=
-literal|"iostream"
+literal|"basic_iostream"
 expr_stmt|;
 name|ddata
 operator|->
@@ -10257,7 +10259,7 @@ name|cpp_demangle_read_subst_stdtmpl
 argument_list|(
 name|ddata
 argument_list|,
-literal|"std::iostream"
+literal|"std::basic_iostream"
 argument_list|,
 literal|19
 argument_list|)
@@ -10284,7 +10286,7 @@ name|cpp_demangle_push_str
 argument_list|(
 name|ddata
 argument_list|,
-literal|"std::istream"
+literal|"std::basic_istream"
 argument_list|,
 literal|18
 argument_list|)
@@ -10298,7 +10300,7 @@ name|ddata
 operator|->
 name|last_sname
 operator|=
-literal|"istream"
+literal|"basic_istream"
 expr_stmt|;
 name|ddata
 operator|->
@@ -10321,7 +10323,7 @@ name|cpp_demangle_read_subst_stdtmpl
 argument_list|(
 name|ddata
 argument_list|,
-literal|"std::istream"
+literal|"std::basic_istream"
 argument_list|,
 literal|18
 argument_list|)
@@ -10348,7 +10350,7 @@ name|cpp_demangle_push_str
 argument_list|(
 name|ddata
 argument_list|,
-literal|"std::ostream"
+literal|"std::basic_ostream"
 argument_list|,
 literal|18
 argument_list|)
@@ -10362,7 +10364,7 @@ name|ddata
 operator|->
 name|last_sname
 operator|=
-literal|"istream"
+literal|"basic_ostream"
 expr_stmt|;
 name|ddata
 operator|->
@@ -10385,7 +10387,7 @@ name|cpp_demangle_read_subst_stdtmpl
 argument_list|(
 name|ddata
 argument_list|,
-literal|"std::ostream"
+literal|"std::basic_ostream"
 argument_list|,
 literal|18
 argument_list|)

@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: findtextrel.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: findtextrel.c 3359 2016-01-24 17:06:20Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -218,13 +218,13 @@ name|uintmax_t
 name|off
 parameter_list|)
 block|{
-name|GElf_Sym
-name|sym
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|GElf_Sym
+name|sym
 decl_stmt|;
 name|int
 name|i
@@ -233,6 +233,10 @@ name|len
 decl_stmt|;
 name|len
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|d
 operator|->
 name|d_size
@@ -240,6 +244,7 @@ operator|/
 name|sh
 operator|->
 name|sh_entsize
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -976,6 +981,9 @@ literal|", file: %s, line: %ju"
 argument_list|,
 name|file
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lineno
 argument_list|)
 expr_stmt|;
@@ -1062,9 +1070,6 @@ modifier|*
 name|textrel
 parameter_list|)
 block|{
-name|GElf_Rel
-name|rel
-decl_stmt|;
 name|GElf_Rela
 name|rela
 decl_stmt|;
@@ -1075,8 +1080,15 @@ name|j
 decl_stmt|,
 name|len
 decl_stmt|;
+name|GElf_Rel
+name|rel
+decl_stmt|;
 name|len
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|d
 operator|->
 name|d_size
@@ -1084,6 +1096,7 @@ operator|/
 name|sh
 operator|->
 name|sh_entsize
+argument_list|)
 expr_stmt|;
 for|for
 control|(

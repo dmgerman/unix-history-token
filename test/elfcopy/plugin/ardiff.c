@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Selectively compare two ar archives.  * Usage:  * 	ardiff [-ni] [-t name] ar1 ar2  * Options:  * 	-c compare member content. (This implies -s)  * 	-n compare member name.  * 	-i compare member mtime.  *	-l compare archive length (member count).  *	-s compare member size.  *	-t specify the test name.  *  * By default, it compares nothing and consider the test "not ok"  * iff it encounters errors while reading archive.  *  * $Id: ardiff.c 3102 2014-10-29 21:09:01Z jkoshy $  */
+comment|/* Selectively compare two ar archives.  * Usage:  * 	ardiff [-ni] [-t name] ar1 ar2  * Options:  * 	-c compare member content. (This implies -s)  * 	-n compare member name.  * 	-i compare member mtime.  *	-l compare archive length (member count).  *	-s compare member size.  *	-t specify the test name.  *  * By default, it compares nothing and consider the test "not ok"  * iff it encounters errors while reading archive.  *  * $Id: ardiff.c 3366 2016-01-24 21:33:06Z jkoshy $  */
 end_comment
 
 begin_include
@@ -188,16 +188,15 @@ decl_stmt|;
 name|char
 name|a1end
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|size1
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|size2
 decl_stmt|;
-name|char
-name|opt
-decl_stmt|;
 name|int
+name|opt
+decl_stmt|,
 name|r
 decl_stmt|;
 comment|/* 	 * Parse command line options. 	 */
@@ -666,6 +665,9 @@ condition|)
 block|{
 name|size1
 operator|=
+operator|(
+name|size_t
+operator|)
 name|archive_entry_size
 argument_list|(
 name|e1
@@ -673,6 +675,9 @@ argument_list|)
 expr_stmt|;
 name|size2
 operator|=
+operator|(
+name|size_t
+operator|)
 name|archive_entry_size
 argument_list|(
 name|e2
@@ -749,6 +754,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|archive_read_data
 argument_list|(
 name|a1
@@ -774,6 +782,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|archive_read_data
 argument_list|(
 name|a2

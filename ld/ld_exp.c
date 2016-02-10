@@ -36,7 +36,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_exp.c 2526 2012-07-17 17:43:30Z kaiwang27 $"
+literal|"$Id: ld_exp.c 3278 2015-12-11 21:39:13Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1049,7 +1049,7 @@ name|LEOP_ABS
 case|:
 return|return
 operator|(
-name|abs
+name|llabs
 argument_list|(
 name|_EXP_EVAL
 argument_list|(
@@ -2987,9 +2987,8 @@ name|ls
 decl_stmt|;
 name|uint64_t
 name|maxpagesize
-decl_stmt|,
-name|commonpagesize
 decl_stmt|;
+comment|/* uint64_t commonpagesize; */
 comment|/* 	 * TODO: test if align to common page size use less number 	 * of pages. 	 */
 name|ls
 operator|=
@@ -3007,15 +3006,7 @@ operator|->
 name|le_e1
 argument_list|)
 expr_stmt|;
-name|commonpagesize
-operator|=
-name|_EXP_EVAL
-argument_list|(
-name|le
-operator|->
-name|le_e2
-argument_list|)
-expr_stmt|;
+comment|/* commonpagesize = _EXP_EVAL(le->le_e2); */
 return|return
 operator|(
 name|roundup

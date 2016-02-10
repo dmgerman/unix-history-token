@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: cxxfilt.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: cxxfilt.c 3356 2016-01-22 22:31:38Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -390,7 +390,7 @@ parameter_list|,
 name|int
 name|strict
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|pos
 parameter_list|)
@@ -408,7 +408,7 @@ index|[
 name|STRBUFSZ
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|p
 decl_stmt|,
 name|t
@@ -487,7 +487,7 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|<=
+operator|==
 literal|0
 condition|)
 return|return
@@ -506,6 +506,9 @@ argument_list|(
 name|dem
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|format
 argument_list|)
 operator|<
@@ -586,14 +589,17 @@ index|[
 name|STRBUFSZ
 index|]
 decl_stmt|;
-name|int
-name|c
-decl_stmt|,
+name|size_t
 name|i
 decl_stmt|,
 name|p
 decl_stmt|,
 name|s
+decl_stmt|;
+name|int
+name|c
+decl_stmt|,
+name|n
 decl_stmt|,
 name|opt
 decl_stmt|;
@@ -710,15 +716,15 @@ condition|)
 block|{
 for|for
 control|(
-name|i
+name|n
 operator|=
 literal|0
 init|;
-name|i
+name|n
 operator|<
 name|argc
 condition|;
-name|i
+name|n
 operator|++
 control|)
 block|{
@@ -731,7 +737,7 @@ name|demangle
 argument_list|(
 name|argv
 index|[
-name|i
+name|n
 index|]
 argument_list|,
 literal|1
@@ -750,7 +756,7 @@ literal|"Failed: %s\n"
 argument_list|,
 name|argv
 index|[
-name|i
+name|n
 index|]
 argument_list|)
 expr_stmt|;
@@ -933,6 +939,9 @@ name|p
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 block|}
