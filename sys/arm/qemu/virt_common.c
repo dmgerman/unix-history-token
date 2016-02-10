@@ -63,11 +63,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ARM_INTRNG
-end_ifdef
+end_ifndef
 
 begin_decl_stmt
 name|fdt_pic_decode_t
