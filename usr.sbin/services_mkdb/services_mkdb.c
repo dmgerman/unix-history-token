@@ -634,8 +634,6 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
-operator||
-name|O_SYNC
 argument_list|,
 operator|(
 name|S_IRUSR
