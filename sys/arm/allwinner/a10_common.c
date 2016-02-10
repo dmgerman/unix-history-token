@@ -121,7 +121,7 @@ name|fdt_is_compatible
 argument_list|(
 name|node
 argument_list|,
-literal|"allwinner,sun4i-ic"
+literal|"allwinner,sun4i-a10-ic"
 argument_list|)
 condition|)
 name|offset

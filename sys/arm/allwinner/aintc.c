@@ -289,6 +289,35 @@ parameter_list|)
 value|(0x50 + ((_b) * 4))
 end_define
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"allwinner,sun4i-a10-ic"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"allwinner,sun7i-a20-sc-nmi"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|a10_aintc_softc
@@ -373,13 +402,16 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"allwinner,sun4i-ic"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -623,7 +655,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|aintc
 argument_list|,
@@ -636,6 +668,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_INTERRUPT
+operator|+
+name|BUS_PASS_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt

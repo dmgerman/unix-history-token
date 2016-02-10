@@ -369,7 +369,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"allwinner,sun4i-wdt"
+literal|"allwinner,sun4i-a10-wdt"
 argument_list|)
 condition|)
 block|{
