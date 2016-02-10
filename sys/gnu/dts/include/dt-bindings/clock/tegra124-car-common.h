@@ -1656,7 +1656,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TEGRA124_CLK_PLLD_DSI
+name|TEGRA124_CLK_PLL_D_DSI_OUT
 value|273
 end_define
 

@@ -5986,7 +5986,7 @@ modifier|*
 name|fifo
 decl_stmt|,
 modifier|*
-name|kthread
+name|kproc
 decl_stmt|;
 name|int
 name|rtpri
@@ -6015,14 +6015,14 @@ literal|""
 else|:
 literal|"F"
 expr_stmt|;
-name|kthread
+name|kproc
 operator|=
 operator|(
 name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 condition|?
 literal|"k"
@@ -6061,7 +6061,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 condition|?
 name|pp
@@ -6090,7 +6090,7 @@ argument_list|)
 argument_list|,
 literal|"%sr%d%s"
 argument_list|,
-name|kthread
+name|kproc
 argument_list|,
 name|rtpri
 argument_list|,
@@ -6107,7 +6107,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 condition|)
 return|return
 operator|(
@@ -6145,7 +6145,7 @@ name|pp
 operator|->
 name|ki_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 operator|)
 condition|?
 name|pp
@@ -6174,7 +6174,7 @@ argument_list|)
 argument_list|,
 literal|"%si%d%s"
 argument_list|,
-name|kthread
+name|kproc
 argument_list|,
 name|rtpri
 argument_list|,

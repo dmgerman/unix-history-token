@@ -230,7 +230,7 @@ name|PSKIP
 parameter_list|(
 name|kp
 parameter_list|)
-value|((kp)->ki_pid == mypid ||			\ 			 (!kthreads&& ((kp)->ki_flag& P_KTHREAD) != 0))
+value|((kp)->ki_pid == mypid ||			\ 			 (!kthreads&& ((kp)->ki_flag& P_KPROC) != 0))
 end_define
 
 begin_enum

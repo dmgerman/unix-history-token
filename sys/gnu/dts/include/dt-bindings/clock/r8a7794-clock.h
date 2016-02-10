@@ -309,6 +309,17 @@ value|31
 end_define
 
 begin_comment
+comment|/* MSTP4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R8A7794_CLK_IRQC
+value|7
+end_define
+
+begin_comment
 comment|/* MSTP5 */
 end_comment
 
@@ -405,6 +416,13 @@ define|#
 directive|define
 name|R8A7794_CLK_SCIF0
 value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7794_CLK_DU0
+value|24
 end_define
 
 begin_comment

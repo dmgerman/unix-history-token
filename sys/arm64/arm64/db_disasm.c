@@ -79,12 +79,21 @@ name|disasm_interface
 name|db_disasm_interface
 init|=
 block|{
+operator|.
+name|di_readword
+operator|=
 name|db_disasm_read_word
 block|,
+operator|.
+name|di_printaddr
+operator|=
 name|db_disasm_printaddr
 block|,
+operator|.
+name|di_printf
+operator|=
 name|db_printf
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

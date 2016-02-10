@@ -4410,7 +4410,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 condition|)
 block|{
 name|printf

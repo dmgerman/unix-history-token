@@ -16024,7 +16024,7 @@ operator|->
 name|p_flag
 operator|&
 operator|(
-name|P_KTHREAD
+name|P_KPROC
 operator||
 name|P_SYSTEM
 operator||

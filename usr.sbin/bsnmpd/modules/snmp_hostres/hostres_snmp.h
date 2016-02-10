@@ -200,7 +200,7 @@ name|IS_KERNPROC
 parameter_list|(
 name|kp
 parameter_list|)
-value|(((kp)->ki_flag& P_KTHREAD) == P_KTHREAD)
+value|(((kp)->ki_flag& P_KPROC) == P_KPROC)
 end_define
 
 begin_enum
