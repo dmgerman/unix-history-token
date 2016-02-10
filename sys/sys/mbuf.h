@@ -2678,14 +2678,6 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|uma_zone_t
-name|zone
-name|__unused
-parameter_list|,
-name|int
-name|size
-name|__unused
-parameter_list|,
 name|int
 name|how
 parameter_list|,

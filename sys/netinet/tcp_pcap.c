@@ -1099,10 +1099,6 @@ name|m_init
 argument_list|(
 name|n
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
