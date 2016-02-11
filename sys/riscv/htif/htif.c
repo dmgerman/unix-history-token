@@ -701,9 +701,7 @@ name|len
 operator|<=
 literal|0
 condition|)
-block|{
-continue|continue;
-block|}
+break|break;
 if|if
 condition|(
 name|bootverbose
