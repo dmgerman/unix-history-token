@@ -33,6 +33,31 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MIPS_INTRNG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_IPI_COUNT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR_IPI_COUNT
+value|MIPS_IPI_COUNT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Interprocessor interrupts for SMP.  */
 end_comment
