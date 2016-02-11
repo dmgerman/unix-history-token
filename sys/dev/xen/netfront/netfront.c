@@ -10427,15 +10427,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|np
-operator|->
-name|xn_ifp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|ether_ifdetach
 argument_list|(
 name|np
@@ -10456,7 +10447,6 @@ name|xn_ifp
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|ifmedia_removeall
 argument_list|(
 operator|&
