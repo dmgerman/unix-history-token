@@ -1744,7 +1744,7 @@ operator|(
 name|tlist
 operator|&
 operator|~
-name|GICI_SGI_TLIST_MASK
+name|ICC_SGI1R_EL1_TL_MASK
 operator|)
 operator|==
 literal|0
@@ -1769,7 +1769,7 @@ argument_list|(
 name|aff
 argument_list|)
 operator|<<
-name|GICI_SGI_AFF3_SHIFT
+name|ICC_SGI1R_EL1_AFF3_SHIFT
 expr_stmt|;
 name|val
 operator||=
@@ -1781,7 +1781,7 @@ argument_list|(
 name|aff
 argument_list|)
 operator|<<
-name|GICI_SGI_AFF2_SHIFT
+name|ICC_SGI1R_EL1_AFF2_SHIFT
 expr_stmt|;
 name|val
 operator||=
@@ -1793,7 +1793,7 @@ argument_list|(
 name|aff
 argument_list|)
 operator|<<
-name|GICI_SGI_AFF1_SHIFT
+name|ICC_SGI1R_EL1_AFF1_SHIFT
 expr_stmt|;
 name|val
 operator||=
@@ -1803,10 +1803,10 @@ call|)
 argument_list|(
 name|ipi
 operator|&
-name|GICI_SGI_IPI_MASK
+name|ICC_SGI1R_EL1_SGIID_MASK
 argument_list|)
 operator|<<
-name|GICI_SGI_IPI_SHIFT
+name|ICC_SGI1R_EL1_SGIID_SHIFT
 expr_stmt|;
 name|gic_icc_write
 argument_list|(
