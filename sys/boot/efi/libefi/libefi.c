@@ -104,6 +104,11 @@ operator|*
 name|argp
 operator|==
 literal|'\t'
+operator|||
+operator|*
+name|argp
+operator|==
+literal|'\n'
 condition|)
 name|argp
 operator|++
@@ -141,6 +146,11 @@ operator|*
 name|argp
 operator|!=
 literal|'\t'
+operator|&&
+operator|*
+name|argp
+operator|!=
+literal|'\n'
 condition|)
 name|argp
 operator|++
