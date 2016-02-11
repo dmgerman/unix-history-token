@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|fdtbus_bs_tag
-value|mips_bus_space_fdt
+value|mips_bus_space_generic
 end_define
 
 begin_endif
