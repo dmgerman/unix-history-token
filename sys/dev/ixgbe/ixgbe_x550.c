@@ -4566,7 +4566,7 @@ condition|)
 return|return
 name|status
 return|;
-comment|/* High temperature failure alarm triggered */
+comment|/* Global alarm triggered */
 name|status
 operator|=
 name|hw
@@ -4615,6 +4615,65 @@ expr_stmt|;
 return|return
 name|IXGBE_ERR_OVERTEMP
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|reg
+operator|&
+name|IXGBE_MDIO_GLOBAL_ALM_1_DEV_FAULT
+condition|)
+block|{
+comment|/*  device fault alarm triggered */
+name|status
+operator|=
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_MDIO_GLOBAL_FAULT_MSG
+argument_list|,
+name|IXGBE_MDIO_VENDOR_SPECIFIC_1_DEV_TYPE
+argument_list|,
+operator|&
+name|reg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|IXGBE_SUCCESS
+condition|)
+return|return
+name|status
+return|;
+comment|/* if device fault was due to high temp alarm handle and exit */
+if|if
+condition|(
+name|reg
+operator|==
+name|IXGBE_MDIO_GLOBAL_FAULT_MSG_HI_TMP
+condition|)
+block|{
+comment|/* power down the PHY in case the PHY FW didn't */
+name|ixgbe_set_copper_phy_power
+argument_list|(
+name|hw
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+return|return
+name|IXGBE_ERR_OVERTEMP
+return|;
+block|}
 block|}
 comment|/* Vendor alarm 2 triggered */
 name|status

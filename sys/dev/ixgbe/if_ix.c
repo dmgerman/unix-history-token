@@ -3063,6 +3063,20 @@ condition|)
 goto|goto
 name|err_late
 goto|;
+comment|/* Enable the optics for 82599 SFP+ fiber */
+name|ixgbe_enable_tx_laser
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+comment|/* Enable power to the phy. */
+name|ixgbe_set_phy_power
+argument_list|(
+name|hw
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 comment|/* Setup OS specific network interface */
 if|if
 condition|(
@@ -6018,6 +6032,14 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Enable power to the phy. */
+name|ixgbe_set_phy_power
+argument_list|(
+name|hw
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 comment|/* Config/Enable Link */
 name|ixgbe_config_link
 argument_list|(
@@ -17890,6 +17912,20 @@ operator|->
 name|core_mtx
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hw
+operator|->
+name|wol_enabled
+condition|)
+name|ixgbe_set_phy_power
+argument_list|(
+name|hw
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* Limit power management flow to X550EM baseT */

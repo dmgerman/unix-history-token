@@ -151,6 +151,24 @@ parameter_list|)
 value|printf(W)
 end_define
 
+begin_enum
+enum|enum
+block|{
+name|IXGBE_ERROR_SOFTWARE
+block|,
+name|IXGBE_ERROR_POLLING
+block|,
+name|IXGBE_ERROR_INVALID_STATE
+block|,
+name|IXGBE_ERROR_UNSUPPORTED
+block|,
+name|IXGBE_ERROR_ARGUMENT
+block|,
+name|IXGBE_ERROR_CAUTION
+block|, }
+enum|;
+end_enum
+
 begin_comment
 comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
 end_comment
@@ -352,42 +370,36 @@ begin_define
 define|#
 directive|define
 name|ERROR_REPORT1
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|)
-value|printf(S "\n",A)
+value|ERROR_REPORT
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERROR_REPORT2
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|printf(S "\n",A,B)
+value|ERROR_REPORT
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERROR_REPORT3
+value|ERROR_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERROR_REPORT
 parameter_list|(
-name|S
+name|level
 parameter_list|,
-name|A
+name|format
 parameter_list|,
-name|B
-parameter_list|,
-name|C
+name|arg
+modifier|...
 parameter_list|)
-value|printf(S "\n",A,B,C)
+value|do { \ 		switch (level) { \ 		case IXGBE_ERROR_SOFTWARE: \ 		case IXGBE_ERROR_CAUTION: \ 		case IXGBE_ERROR_POLLING: \ 		case IXGBE_ERROR_INVALID_STATE: \ 		case IXGBE_ERROR_UNSUPPORTED: \ 		case IXGBE_ERROR_ARGUMENT: \ 			device_printf(ixgbe_dev_from_hw(hw), format, ## arg); \ 			break; \ 		default: \ 			break; \ 		} \ 	} while (0)
 end_define
 
 begin_else
