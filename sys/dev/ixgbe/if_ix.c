@@ -2097,7 +2097,8 @@ name|ixgbe_num_queues
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of queues to configure, 0 indicates autoconfigure"
+literal|"Number of queues to configure up to a mximum of 8,"
+literal|"0 indicates autoconfigure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
