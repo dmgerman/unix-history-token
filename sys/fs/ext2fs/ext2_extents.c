@@ -95,7 +95,7 @@ end_include
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|ext4_ext_binsearch_index
 parameter_list|(
 name|struct
@@ -271,11 +271,11 @@ name|path
 operator|->
 name|ep_is_sparse
 operator|=
-literal|1
+name|true
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|true
 operator|)
 return|;
 block|}
@@ -315,7 +315,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 block|}
@@ -497,7 +497,7 @@ name|path
 operator|->
 name|ep_is_sparse
 operator|=
-literal|1
+name|true
 expr_stmt|;
 return|return;
 block|}
@@ -611,7 +611,7 @@ name|path
 operator|->
 name|ep_is_sparse
 operator|=
-literal|1
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -1112,7 +1112,7 @@ name|path
 operator|->
 name|ep_is_sparse
 operator|=
-literal|0
+name|false
 expr_stmt|;
 name|ext4_ext_binsearch
 argument_list|(
