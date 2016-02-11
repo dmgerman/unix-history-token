@@ -816,7 +816,6 @@ name|addr
 parameter_list|,
 name|bus_size_t
 name|size
-name|__unused
 parameter_list|,
 name|int
 name|flags
@@ -830,7 +829,21 @@ block|{
 operator|*
 name|bshp
 operator|=
+operator|(
+name|bus_space_handle_t
+operator|)
+name|pmap_mapdev
+argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|addr
+argument_list|,
+operator|(
+name|vm_size_t
+operator|)
+name|size
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -851,14 +864,24 @@ name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|bh
-name|__unused
 parameter_list|,
 name|bus_size_t
 name|size
-name|__unused
 parameter_list|)
 block|{
-comment|/* Do nothing */
+name|pmap_unmapdev
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|bh
+argument_list|,
+operator|(
+name|vm_size_t
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
