@@ -716,11 +716,11 @@ name|its_lpi_maxid
 decl_stmt|;
 name|struct
 name|mtx
-name|its_mtx
+name|its_dev_lock
 decl_stmt|;
 name|struct
 name|mtx
-name|its_spin_mtx
+name|its_cmd_lock
 decl_stmt|;
 name|uint32_t
 name|its_socket
