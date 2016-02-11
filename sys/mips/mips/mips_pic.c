@@ -1913,7 +1913,7 @@ name|FDT
 end_ifdef
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|cpupic
 argument_list|,
@@ -1926,6 +1926,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_INTERRUPT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1936,7 +1938,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|cpupic
 argument_list|,
@@ -1949,6 +1951,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_INTERRUPT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
