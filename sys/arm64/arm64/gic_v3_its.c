@@ -6198,13 +6198,10 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX ARM64TODO: Currently all interrupts are going 	 * to be bound to the CPU that performs the configuration. 	 */
+comment|/* 	 * Initially all interrupts go to CPU0 but can be moved 	 * to another CPU by bus_bind_intr() or interrupts shuffling. 	 */
 name|cpuid
 operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+literal|0
 expr_stmt|;
 name|newdev
 operator|->

@@ -2311,10 +2311,7 @@ name|aff
 operator|=
 name|CPU_AFFINITY
 argument_list|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
