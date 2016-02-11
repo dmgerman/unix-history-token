@@ -873,24 +873,9 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_struct
-struct|struct
-name|pte
-block|{
-name|vm_offset_t
-name|rpn
-decl_stmt|;
-name|uint32_t
-name|flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
-name|struct
-name|pte
+name|uint64_t
 name|pte_t
 typedef|;
 end_typedef
@@ -927,29 +912,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PTE_MAS2_SHIFT
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE_W
-value|MAS2_W
+value|(MAS2_W<< PTE_MAS2_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTE_I
-value|MAS2_I
+value|(MAS2_I<< PTE_MAS2_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTE_M
-value|MAS2_M
+value|(MAS2_M<< PTE_MAS2_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTE_G
-value|MAS2_G
+value|(MAS2_G<< PTE_MAS2_SHIFT)
 end_define
 
 begin_define
@@ -963,7 +955,7 @@ begin_define
 define|#
 directive|define
 name|PTE_MAS3_SHIFT
-value|8
+value|2
 end_define
 
 begin_define
@@ -1013,6 +1005,20 @@ define|#
 directive|define
 name|PTE_MAS3_MASK
 value|((MAS3_UX | MAS3_SX | MAS3_UW	\ 			| MAS3_SW | MAS3_UR | MAS3_SR)<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_PS_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_PS_4KB
+value|(2<< PTE_PS_SHIFT)
 end_define
 
 begin_elif
@@ -1128,7 +1134,7 @@ begin_define
 define|#
 directive|define
 name|PTE_VALID
-value|0x80000000
+value|0x00000001
 end_define
 
 begin_comment
@@ -1139,7 +1145,7 @@ begin_define
 define|#
 directive|define
 name|PTE_MODIFIED
-value|0x40000000
+value|0x00001000
 end_define
 
 begin_comment
@@ -1150,7 +1156,7 @@ begin_define
 define|#
 directive|define
 name|PTE_WIRED
-value|0x20000000
+value|0x00002000
 end_define
 
 begin_comment
@@ -1161,7 +1167,7 @@ begin_define
 define|#
 directive|define
 name|PTE_MANAGED
-value|0x10000000
+value|0x00000002
 end_define
 
 begin_comment
@@ -1172,7 +1178,7 @@ begin_define
 define|#
 directive|define
 name|PTE_REFERENCED
-value|0x04000000
+value|0x00040000
 end_define
 
 begin_comment
@@ -1186,7 +1192,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTE_PA_SHIFT
+name|PTE_ARPN_SHIFT
 value|12
 end_define
 
@@ -1197,7 +1203,7 @@ name|PTE_RPN_FROM_PA
 parameter_list|(
 name|pa
 parameter_list|)
-value|((pa)>> PTE_PA_SHIFT)
+value|(((pa)& ~PAGE_MASK)<< PTE_ARPN_SHIFT)
 end_define
 
 begin_define
@@ -1207,7 +1213,7 @@ name|PTE_PA
 parameter_list|(
 name|pte
 parameter_list|)
-value|((vm_paddr_t)((pte)->rpn)<< PTE_PA_SHIFT)
+value|((vm_paddr_t)(*pte>> PTE_ARPN_SHIFT)& ~PAGE_MASK)
 end_define
 
 begin_define
@@ -1217,7 +1223,7 @@ name|PTE_ISVALID
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->flags& PTE_VALID)
+value|((*pte)& PTE_VALID)
 end_define
 
 begin_define
@@ -1227,7 +1233,7 @@ name|PTE_ISWIRED
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->flags& PTE_WIRED)
+value|((*pte)& PTE_WIRED)
 end_define
 
 begin_define
@@ -1237,7 +1243,7 @@ name|PTE_ISMANAGED
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->flags& PTE_MANAGED)
+value|((*pte)& PTE_MANAGED)
 end_define
 
 begin_define
@@ -1247,7 +1253,7 @@ name|PTE_ISMODIFIED
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->flags& PTE_MODIFIED)
+value|((*pte)& PTE_MODIFIED)
 end_define
 
 begin_define
@@ -1257,7 +1263,7 @@ name|PTE_ISREFERENCED
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->flags& PTE_REFERENCED)
+value|((*pte)& PTE_REFERENCED)
 end_define
 
 begin_endif

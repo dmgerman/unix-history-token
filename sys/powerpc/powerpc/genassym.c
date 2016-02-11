@@ -930,18 +930,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * With pte_t being a bitfield struct, these fields cannot be addressed via  * offsetof().  */
+end_comment
+
 begin_expr_stmt
 name|ASSYM
 argument_list|(
 name|PTE_RPN
 argument_list|,
-name|offsetof
-argument_list|(
-expr|struct
-name|pte
-argument_list|,
-name|rpn
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -951,12 +949,9 @@ name|ASSYM
 argument_list|(
 name|PTE_FLAGS
 argument_list|,
-name|offsetof
+sizeof|sizeof
 argument_list|(
-expr|struct
-name|pte
-argument_list|,
-name|flags
+name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
