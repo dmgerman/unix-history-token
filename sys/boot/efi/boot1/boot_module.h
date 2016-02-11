@@ -52,9 +52,20 @@ name|DPRINTF
 parameter_list|(
 name|fmt
 parameter_list|,
+name|args
 modifier|...
 parameter_list|)
-value|printf(fmt, __VA_ARGS__)
+value|printf(fmt, ##args)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSTALL
+parameter_list|(
+name|d
+parameter_list|)
+value|bs->Stall(d)
 end_define
 
 begin_else
@@ -70,6 +81,16 @@ parameter_list|(
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+value|{}
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSTALL
+parameter_list|(
+name|d
 parameter_list|)
 value|{}
 end_define
@@ -103,6 +124,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|devdata
+decl_stmt|;
+name|BOOLEAN
+name|preferred
 decl_stmt|;
 name|struct
 name|dev_info
@@ -148,7 +172,7 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
-comment|/* 	 * load should select the best out of a set of devices that probe 	 * indicated were loadable and load it. 	 * 	 * Return codes: 	 * EFI_SUCCESS = The module can handle the device. 	 * EFI_NOT_FOUND = The module can not handle the device. 	 * Other = The module encountered an error. 	 */
+comment|/* 	 * load should select the best out of a set of devices that probe 	 * indicated were loadable and load the specified file. 	 * 	 * Return codes: 	 * EFI_SUCCESS = The module can handle the device. 	 * EFI_NOT_FOUND = The module can not handle the device. 	 * Other = The module encountered an error. 	 */
 name|EFI_STATUS
 function_decl|(
 modifier|*
@@ -158,10 +182,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|loader_path
+name|filepath
 parameter_list|,
 name|dev_info_t
-modifier|*
 modifier|*
 name|devinfo
 parameter_list|,
@@ -180,6 +203,15 @@ name|void
 function_decl|(
 modifier|*
 name|status
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* valid devices as found by probe. */
+name|dev_info_t
+modifier|*
+function_decl|(
+modifier|*
+name|devices
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -320,6 +352,38 @@ modifier|*
 name|bs
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|devpath_strlcat
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|EFI_DEVICE_PATH
+modifier|*
+name|devpath
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|devpath_str
+parameter_list|(
+name|EFI_DEVICE_PATH
+modifier|*
+name|devpath
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
