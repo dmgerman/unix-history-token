@@ -225,6 +225,10 @@ name|u_int
 name|lpi_free
 decl_stmt|;
 comment|/* First free LPI in set */
+name|u_int
+modifier|*
+name|lpi_col_ids
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -259,12 +263,6 @@ decl_stmt|;
 comment|/* Virtual address of ITT */
 name|vm_offset_t
 name|itt
-decl_stmt|;
-comment|/* Interrupt collection */
-name|struct
-name|its_col
-modifier|*
-name|col
 decl_stmt|;
 block|}
 struct|;
@@ -346,6 +344,13 @@ end_struct
 begin_comment
 comment|/* ITS commands encoding */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ITS_CMD_MOVI
+value|(0x01)
+end_define
 
 begin_define
 define|#
@@ -539,6 +544,24 @@ block|{
 struct|struct
 block|{
 name|struct
+name|its_dev
+modifier|*
+name|its_dev
+decl_stmt|;
+name|struct
+name|its_col
+modifier|*
+name|col
+decl_stmt|;
+name|uint32_t
+name|id
+decl_stmt|;
+block|}
+name|cmd_desc_movi
+struct|;
+struct|struct
+block|{
+name|struct
 name|its_col
 modifier|*
 name|col
@@ -566,6 +589,11 @@ name|its_dev
 modifier|*
 name|its_dev
 decl_stmt|;
+name|struct
+name|its_col
+modifier|*
+name|col
+decl_stmt|;
 name|uint32_t
 name|pid
 decl_stmt|;
@@ -582,8 +610,13 @@ name|its_dev
 modifier|*
 name|its_dev
 decl_stmt|;
+name|struct
+name|its_col
+modifier|*
+name|col
+decl_stmt|;
 name|uint32_t
-name|lpinum
+name|pid
 decl_stmt|;
 block|}
 name|cmd_desc_mapi
@@ -608,8 +641,13 @@ name|its_dev
 modifier|*
 name|its_dev
 decl_stmt|;
+name|struct
+name|its_col
+modifier|*
+name|col
+decl_stmt|;
 name|uint32_t
-name|lpinum
+name|pid
 decl_stmt|;
 block|}
 name|cmd_desc_inv
@@ -852,6 +890,19 @@ parameter_list|(
 name|struct
 name|gic_v3_its_softc
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lpi_migrate
+parameter_list|(
+name|device_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
