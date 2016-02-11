@@ -139,12 +139,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"opt_platform.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -154,7 +148,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
