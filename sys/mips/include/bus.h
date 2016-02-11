@@ -3381,13 +3381,6 @@ name|mips_bus_space_generic
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|bus_space_tag_t
-name|mips_bus_space_fdt
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Special bus space for RMI processors */
 end_comment
