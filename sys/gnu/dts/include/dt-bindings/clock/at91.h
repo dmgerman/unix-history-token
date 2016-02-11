@@ -117,6 +117,17 @@ begin_comment
 comment|/* Clock Failure Detector Event */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AT91_PMC_GCKRDY
+value|24
+end_define
+
+begin_comment
+comment|/* Generated Clocks */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -4410,7 +4410,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_KTHREAD
+name|P_KPROC
 condition|)
 block|{
 name|printf
@@ -4426,10 +4426,8 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
+name|kthread_exit
+argument_list|()
 expr_stmt|;
 block|}
 name|mtx_assert

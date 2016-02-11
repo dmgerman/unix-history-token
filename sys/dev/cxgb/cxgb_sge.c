@@ -3970,10 +3970,6 @@ name|d
 operator|->
 name|m
 argument_list|,
-name|zone_pack
-argument_list|,
-name|MCLBYTES
-argument_list|,
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -3998,10 +3994,6 @@ argument_list|(
 name|d
 operator|->
 name|m
-argument_list|,
-name|zone_mbuf
-argument_list|,
-name|MLEN
 argument_list|,
 name|M_NOWAIT
 argument_list|,
@@ -14909,14 +14901,6 @@ expr_stmt|;
 name|m_init
 argument_list|(
 name|m
-argument_list|,
-name|fl
-operator|->
-name|zone
-argument_list|,
-name|fl
-operator|->
-name|buf_size
 argument_list|,
 name|M_NOWAIT
 argument_list|,

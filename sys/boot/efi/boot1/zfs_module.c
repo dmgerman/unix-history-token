@@ -607,7 +607,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Failed to allocate load buffer %zu for pool '%s' for '%s' "
+literal|"Failed to allocate load buffer %zd for pool '%s' for '%s' "
 literal|"(%lu)\n"
 argument_list|,
 name|st

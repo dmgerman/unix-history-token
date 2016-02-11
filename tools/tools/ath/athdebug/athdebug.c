@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All righ
 end_comment
 
 begin_comment
-comment|/*  * athdebug [-i interface] flags  * (default interface is ath0).  */
+comment|/*  * athdebug [-i interface] flags  * (default interface is wlan0).  */
 end_comment
 
 begin_include
@@ -636,7 +636,7 @@ name|NULL
 condition|)
 name|ifname
 operator|=
-literal|"ath0"
+name|ATH_DEFAULT
 expr_stmt|;
 name|progname
 operator|=

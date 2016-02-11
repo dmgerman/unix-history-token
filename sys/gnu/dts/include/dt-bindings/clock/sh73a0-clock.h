@@ -135,6 +135,13 @@ name|SH73A0_CLK_IIC2
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SH73A0_CLK_MSIOF0
+value|0
+end_define
+
 begin_comment
 comment|/* MSTP1 */
 end_comment
@@ -230,6 +237,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|SH73A0_CLK_MSIOF3
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH73A0_CLK_MSIOF1
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|SH73A0_CLK_SCIFA5
 value|7
 end_define
@@ -239,6 +260,13 @@ define|#
 directive|define
 name|SH73A0_CLK_SCIFB
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH73A0_CLK_MSIOF2
+value|5
 end_define
 
 begin_define
@@ -415,6 +443,17 @@ define|#
 directive|define
 name|SH73A0_CLK_KEYSC
 value|3
+end_define
+
+begin_comment
+comment|/* MSTP5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH73A0_CLK_INTCA0
+value|8
 end_define
 
 begin_endif

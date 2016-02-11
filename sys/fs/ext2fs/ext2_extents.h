@@ -178,7 +178,7 @@ name|buf
 modifier|*
 name|ep_bp
 decl_stmt|;
-name|int
+name|bool
 name|ep_is_sparse
 decl_stmt|;
 union|union

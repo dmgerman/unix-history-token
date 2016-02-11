@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hist.h,v 1.14 2014/05/11 01:05:17 christos Exp $	*/
+comment|/*	$NetBSD: hist.h,v 1.15 2016/01/30 15:05:27 christos Exp $	*/
 end_comment
 
 begin_comment

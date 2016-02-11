@@ -1583,7 +1583,13 @@ name|defined
 argument_list|(
 name|__arm__
 argument_list|)
-comment|/* 	 * The elf headers in arm kernels specify virtual addresses in all 	 * header fields, even the ones that should be physical addresses. 	 * We assume the entry point is in the first page, and masking the page 	 * offset will leave us with the virtual address the kernel was linked 	 * at.  We subtract that from the load offset, making 'off' into the 	 * value which, when added to a virtual address in an elf header, 	 * translates it to a physical address.  We do the va->pa conversion on 	 * the entry point address in the header now, so that later we can 	 * launch the kernel by just jumping to that address. 	 */
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EFI
+argument_list|)
+comment|/* 	 * The elf headers in arm kernels specify virtual addresses in all 	 * header fields, even the ones that should be physical addresses. 	 * We assume the entry point is in the first page, and masking the page 	 * offset will leave us with the virtual address the kernel was linked 	 * at.  We subtract that from the load offset, making 'off' into the 	 * value which, when added to a virtual address in an elf header, 	 * translates it to a physical address.  We do the va->pa conversion on 	 * the entry point address in the header now, so that later we can 	 * launch the kernel by just jumping to that address. 	 * 	 * When booting from UEFI the copyin and copyout functions handle 	 * adjusting the location relative to the first virtual address. 	 * Because of this there is no need to adjust the offset or entry 	 * point address as these will both be handled by the efi code. 	 */
 name|off
 operator|-=
 name|ehdr
@@ -5069,6 +5075,9 @@ name|md
 operator|.
 name|md_data
 operator|+
+operator|(
+name|uintptr_t
+operator|)
 name|ef
 operator|->
 name|off

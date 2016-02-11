@@ -2418,6 +2418,11 @@ argument_list|(
 name|ppoll
 argument_list|)
 expr_stmt|;
+name|SLOT
+argument_list|(
+name|map_stacks_exec
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|SLOT

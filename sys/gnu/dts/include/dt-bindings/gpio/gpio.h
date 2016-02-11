@@ -15,6 +15,10 @@ directive|define
 name|_DT_BINDINGS_GPIO_GPIO_H
 end_define
 
+begin_comment
+comment|/* Bit 0 express polarity */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -27,6 +31,42 @@ define|#
 directive|define
 name|GPIO_ACTIVE_LOW
 value|1
+end_define
+
+begin_comment
+comment|/* Bit 1 express single-endedness */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_PUSH_PULL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_SINGLE_ENDED
+value|2
+end_define
+
+begin_comment
+comment|/*  * Open Drain/Collector is the combination of single-ended active low,  * Open Source/Emitter is the combination of single-ended active high.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_OPEN_DRAIN
+value|(GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_OPEN_SOURCE
+value|(GPIO_SINGLE_ENDED | GPIO_ACTIVE_HIGH)
 end_define
 
 begin_endif

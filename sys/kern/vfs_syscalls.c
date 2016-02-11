@@ -4719,7 +4719,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Allocate the file descriptor, but don't install a descriptor yet. 	 */
+comment|/* 	 * Allocate a file structure. The descriptor to reference it 	 * is allocated and set by finstall() below. 	 */
 name|error
 operator|=
 name|falloc_noinstall

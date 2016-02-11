@@ -8826,7 +8826,7 @@ block|{
 name|int
 name|qindex
 decl_stmt|;
-comment|/* 	 * Many function erroneously call brelse with a NULL bp under rare 	 * error conditions. Simply return when called with a NULL bp. 	 */
+comment|/* 	 * Many functions erroneously call brelse with a NULL bp under rare 	 * error conditions. Simply return when called with a NULL bp. 	 */
 if|if
 condition|(
 name|bp

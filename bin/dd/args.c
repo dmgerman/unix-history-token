@@ -1898,7 +1898,7 @@ end_function
 
 begin_function
 specifier|static
-name|uintmax_t
+name|intmax_t
 name|postfix_to_mult
 parameter_list|(
 specifier|const
@@ -1906,7 +1906,7 @@ name|char
 name|expr
 parameter_list|)
 block|{
-name|uintmax_t
+name|intmax_t
 name|mult
 decl_stmt|;
 name|mult
@@ -2024,7 +2024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an expression of the following forms to a uintmax_t.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a 'b' or 'B' (mult by 512).  *	3) A positive decimal number followed by a 'k' or 'K' (mult by 1<< 10).  *	4) A positive decimal number followed by a 'm' or 'M' (mult by 1<< 20).  *	5) A positive decimal number followed by a 'g' or 'G' (mult by 1<< 30).  *	5) A positive decimal number followed by a 'w' or 'W' (mult by sizeof int).  *	6) Two or more positive decimal numbers (with/without [BbKkMmGgWw])  *	   separated by 'x' or 'X' (also '*' for backwards compatibility),  *	   specifying the product of the indicated values.  */
+comment|/*  * Convert an expression of the following forms to a uintmax_t.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a 'b' or 'B' (mult by 512).  *	3) A positive decimal number followed by a 'k' or 'K' (mult by 1<< 10).  *	4) A positive decimal number followed by a 'm' or 'M' (mult by 1<< 20).  *	5) A positive decimal number followed by a 'g' or 'G' (mult by 1<< 30).  *	6) A positive decimal number followed by a 't' or 'T' (mult by 1<< 40).  *	7) A positive decimal number followed by a 'p' or 'P' (mult by 1<< 50).  *	8) A positive decimal number followed by a 'w' or 'W' (mult by sizeof int).  *	9) Two or more positive decimal numbers (with/without [BbKkMmGgWw])  *	   separated by 'x' or 'X' (also '*' for backwards compatibility),  *	   specifying the product of the indicated values.  */
 end_comment
 
 begin_function
@@ -2055,7 +2055,7 @@ literal|0
 expr_stmt|;
 name|num
 operator|=
-name|strtouq
+name|strtoumax
 argument_list|(
 name|val
 argument_list|,
@@ -2249,7 +2249,7 @@ literal|0
 expr_stmt|;
 name|num
 operator|=
-name|strtoq
+name|strtoimax
 argument_list|(
 name|val
 argument_list|,

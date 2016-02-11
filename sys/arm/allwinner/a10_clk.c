@@ -362,7 +362,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|a10_ccm
 argument_list|,
@@ -375,6 +375,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_TIMER
+operator|+
+name|BUS_PASS_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -732,7 +736,7 @@ name|OF_getprop_alloc
 argument_list|(
 name|node
 argument_list|,
-literal|"phy-type"
+literal|"phy-mode"
 argument_list|,
 literal|1
 argument_list|,

@@ -2486,7 +2486,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VF610_PAD_PTC12__ENET_RMII_RXD1
+name|VF610_PAD_PTC12__ENET_RMII1_RXD1
 value|0x0E4 0x000 ALT1 0x0
 end_define
 

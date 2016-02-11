@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: search.c,v 1.30 2011/10/04 15:27:04 christos Exp $	*/
+comment|/*	$NetBSD: search.c,v 1.31 2016/01/30 04:02:51 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: search.c,v 1.30 2011/10/04 15:27:04 christos Exp $"
+literal|"$NetBSD: search.c,v 1.31 2016/01/30 04:02:51 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -552,9 +552,9 @@ argument_list|,
 operator|&
 name|conv
 argument_list|)
+argument_list|)
 operator|==
 literal|1
-argument_list|)
 return|;
 endif|#
 directive|endif

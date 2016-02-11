@@ -343,6 +343,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|DM814X_IOPAD
+parameter_list|(
+name|pa
+parameter_list|,
+name|val
+parameter_list|)
+value|OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DM816X_IOPAD
 parameter_list|(
 name|pa
@@ -362,30 +374,6 @@ parameter_list|,
 name|val
 parameter_list|)
 value|OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AM4372_IOPAD
-parameter_list|(
-name|pa
-parameter_list|,
-name|val
-parameter_list|)
-value|OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRA7XX_CORE_IOPAD
-parameter_list|(
-name|pa
-parameter_list|,
-name|val
-parameter_list|)
-value|OMAP_IOPAD_OFFSET((pa), 0x3400) (val)
 end_define
 
 begin_comment

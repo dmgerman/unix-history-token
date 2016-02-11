@@ -1858,10 +1858,6 @@ name|m_init
 argument_list|(
 name|m
 argument_list|,
-name|NULL
-argument_list|,
-name|size
-argument_list|,
 name|how
 argument_list|,
 name|type
@@ -2810,10 +2806,6 @@ operator|=
 name|m_init
 argument_list|(
 name|m
-argument_list|,
-name|NULL
-argument_list|,
-name|size
 argument_list|,
 name|how
 argument_list|,

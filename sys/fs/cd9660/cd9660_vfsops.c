@@ -3513,12 +3513,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|!=
-literal|0
-condition|)
 name|brelse
 argument_list|(
 name|bp

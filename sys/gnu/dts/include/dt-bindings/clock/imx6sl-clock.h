@@ -1166,8 +1166,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMX6SL_CLK_END
+name|IMX6SL_CLK_SPDIF_GCLK
 value|164
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6SL_CLK_END
+value|165
 end_define
 
 begin_endif

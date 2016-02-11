@@ -6,7 +6,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__DT_BINDINGS_PALMAS_H__
+name|__DT_BINDINGS_PALMAS_H
 end_ifndef
 
 begin_define

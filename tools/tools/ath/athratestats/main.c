@@ -1407,7 +1407,7 @@ name|NULL
 condition|)
 name|ifname
 operator|=
-literal|"ath0"
+name|ATH_DEFAULT
 expr_stmt|;
 while|while
 condition|(

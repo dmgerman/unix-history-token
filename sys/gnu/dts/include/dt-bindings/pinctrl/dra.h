@@ -131,6 +131,129 @@ name|MUX_MODE15
 value|0xf
 end_define
 
+begin_comment
+comment|/* Certain pins need virtual mode, but note: they may glitch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE0
+value|(MODE_SELECT | (0x0<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE1
+value|(MODE_SELECT | (0x1<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE2
+value|(MODE_SELECT | (0x2<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE3
+value|(MODE_SELECT | (0x3<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE4
+value|(MODE_SELECT | (0x4<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE5
+value|(MODE_SELECT | (0x5<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE6
+value|(MODE_SELECT | (0x6<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE7
+value|(MODE_SELECT | (0x7<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE8
+value|(MODE_SELECT | (0x8<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE9
+value|(MODE_SELECT | (0x9<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE10
+value|(MODE_SELECT | (0xa<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE11
+value|(MODE_SELECT | (0xb<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE12
+value|(MODE_SELECT | (0xc<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE13
+value|(MODE_SELECT | (0xd<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE14
+value|(MODE_SELECT | (0xe<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUX_VIRTUAL_MODE15
+value|(MODE_SELECT | (0xf<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODE_SELECT
+value|(1<< 8)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -231,6 +354,22 @@ define|#
 directive|define
 name|PIN_INPUT_PULLDOWN
 value|(PULL_ENA | INPUT_EN)
+end_define
+
+begin_comment
+comment|/*  * Macro to allow using the absolute physical address instead of the  * padconf registers instead of the offset from padconf base.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRA7XX_CORE_IOPAD
+parameter_list|(
+name|pa
+parameter_list|,
+name|val
+parameter_list|)
+value|(((pa)& 0xffff) - 0x3400) (val)
 end_define
 
 begin_endif

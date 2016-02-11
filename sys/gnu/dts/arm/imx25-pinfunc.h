@@ -22,6 +22,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MX25_PAD_TDO__TDO
+value|0x000 0x3e8 0x000 0x00 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A10__A10
 value|0x008 0x000 0x000 0x00 0x000
 end_define
@@ -50,6 +57,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_A13__LCDC_CLS
+value|0x00c 0x22C 0x000 0x07 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A14__A14
 value|0x010 0x230 0x000 0x10 0x000
 end_define
@@ -59,6 +73,20 @@ define|#
 directive|define
 name|MX25_PAD_A14__GPIO_2_0
 value|0x010 0x230 0x000 0x15 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A14__SIM1_CLK1
+value|0x010 0x230 0x000 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A14__LCDC_SPL
+value|0x010 0x230 0x000 0x17 0x000
 end_define
 
 begin_define
@@ -78,6 +106,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_A15__SIM1_RST1
+value|0x014 0x234 0x000 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A15__LCDC_PS
+value|0x014 0x234 0x000 0x17 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A16__A16
 value|0x018 0x000 0x000 0x10 0x000
 end_define
@@ -87,6 +129,20 @@ define|#
 directive|define
 name|MX25_PAD_A16__GPIO_2_2
 value|0x018 0x000 0x000 0x15 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A16__SIM1_VEN1
+value|0x018 0x000 0x000 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A16__LCDC_REV
+value|0x018 0x000 0x000 0x17 0x000
 end_define
 
 begin_define
@@ -106,6 +162,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_A17__SIM1_TX
+value|0x01c 0x238 0x554 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A17__FEC_TX_ERR
+value|0x01c 0x238 0x000 0x17 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A18__A18
 value|0x020 0x23c 0x000 0x10 0x000
 end_define
@@ -115,6 +185,13 @@ define|#
 directive|define
 name|MX25_PAD_A18__GPIO_2_4
 value|0x020 0x23c 0x000 0x15 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A18__SIM1_PD1
+value|0x020 0x23c 0x550 0x16 0x000
 end_define
 
 begin_define
@@ -134,15 +211,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX25_PAD_A19__FEC_RX_ER
-value|0x024 0x240 0x518 0x17 0x000
+name|MX25_PAD_A19__GPIO_2_5
+value|0x024 0x240 0x000 0x15 0x000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX25_PAD_A19__GPIO_2_5
-value|0x024 0x240 0x000 0x15 0x000
+name|MX25_PAD_A19__SIM1_RX1
+value|0x024 0x240 0x54c 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A19__FEC_RX_ERR
+value|0x024 0x240 0x518 0x17 0x000
 end_define
 
 begin_define
@@ -157,6 +241,13 @@ define|#
 directive|define
 name|MX25_PAD_A20__GPIO_2_6
 value|0x028 0x244 0x000 0x15 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A20__SIM2_CLK1
+value|0x028 0x244 0x000 0x16 0x000
 end_define
 
 begin_define
@@ -183,6 +274,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_A21__SIM2_RST1
+value|0x02c 0x248 0x000 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A21__FEC_RDATA3
 value|0x02c 0x248 0x510 0x17 0x000
 end_define
@@ -204,6 +302,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_A22__FEC_TDATA2
+value|0x030 0x000 0x000 0x17 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A22__SIM2_VEN1
+value|0x030 0x000 0x000 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A22__FEC_TDATA2
+value|0x030 0x000 0x000 0x17 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A23__A23
 value|0x034 0x24c 0x000 0x10 0x000
 end_define
@@ -218,6 +337,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_A23__SIM2_TX1
+value|0x034 0x24c 0x560 0x16 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A23__FEC_TDATA3
+value|0x034 0x24c 0x000 0x17 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_A24__A24
 value|0x038 0x250 0x000 0x10 0x000
 end_define
@@ -227,6 +360,13 @@ define|#
 directive|define
 name|MX25_PAD_A24__GPIO_2_10
 value|0x038 0x250 0x000 0x15 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_A24__SIM2_PD1
+value|0x038 0x250 0x55c 0x16 0x000
 end_define
 
 begin_define
@@ -610,6 +750,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_D15__SDHC1_DAT7
+value|0x088 0x280 0x4d8 0x06 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_D14__D14
 value|0x08c 0x284 0x000 0x00 0x000
 end_define
@@ -626,6 +773,13 @@ define|#
 directive|define
 name|MX25_PAD_D14__GPIO_4_6
 value|0x08c 0x284 0x000 0x05 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_D14__SDHC1_DAT6
+value|0x08c 0x284 0x4d4 0x06 0x000
 end_define
 
 begin_define
@@ -652,6 +806,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_D13__SDHC1_DAT5
+value|0x090 0x288 0x4d0 0x06 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_D12__D12
 value|0x094 0x28c 0x000 0x00 0x000
 end_define
@@ -666,6 +827,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_D12__SDHC1_DAT4
+value|0x094 0x28c 0x4cc 0x06 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_D11__D11
 value|0x098 0x290 0x000 0x00 0x000
 end_define
@@ -675,6 +843,13 @@ define|#
 directive|define
 name|MX25_PAD_D11__GPIO_4_9
 value|0x098 0x290 0x000 0x05 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_D11__USBOTG_PWR
+value|0x098 0x290 0x000 0x06 0x000
 end_define
 
 begin_define
@@ -995,6 +1170,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_LD8__SDHC2_CMD
+value|0x0e8 0x2e0 0x4e0 0x06 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_LD9__LD9
 value|0x0ec 0x2e4 0x000 0x10 0x000
 end_define
@@ -1009,6 +1191,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_LD9__SDHC2_CLK
+value|0x0ec 0x2e4 0x4dc 0x06 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_LD10__LD10
 value|0x0f0 0x2e8 0x000 0x10 0x000
 end_define
@@ -1016,7 +1205,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX25_PAD_LD10__FEC_RX_ER
+name|MX25_PAD_LD10__FEC_RX_ERR
 value|0x0f0 0x2e8 0x518 0x15 0x001
 end_define
 
@@ -1037,8 +1226,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_LD11__SDHC2_DAT1
+value|0x0f4 0x2ec 0x4e8 0x06 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_LD12__LD12
 value|0x0f8 0x2f0 0x000 0x10 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_LD12__CSPI2_MOSI
+value|0x0f8 0x2f0 0x4a0 0x02 0x000
 end_define
 
 begin_define
@@ -1058,6 +1261,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_LD13__CSPI2_MISO
+value|0x0fc 0x2f4 0x49c 0x02 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_LD13__FEC_TDATA2
 value|0x0fc 0x2f4 0x000 0x15 0x000
 end_define
@@ -1072,6 +1282,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_LD14__CSPI2_SCLK
+value|0x100 0x2f8 0x494 0x02 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_LD14__FEC_TDATA3
 value|0x100 0x2f8 0x000 0x15 0x000
 end_define
@@ -1081,6 +1298,13 @@ define|#
 directive|define
 name|MX25_PAD_LD15__LD15
 value|0x104 0x2fc 0x000 0x10 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_LD15__CSPI2_RDY
+value|0x104 0x2fc 0x498 0x02 0x000
 end_define
 
 begin_define
@@ -1142,6 +1366,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_OE_ACD__CSPI2_SS0
+value|0x114 0x30c 0x4a4 0x02 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_OE_ACD__GPIO_1_25
 value|0x114 0x30c 0x000 0x15 0x000
 end_define
@@ -1172,6 +1403,13 @@ define|#
 directive|define
 name|MX25_PAD_CONTRAST__FEC_CRS
 value|0x118 0x310 0x508 0x15 0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_CONTRAST__USBH2_PWR
+value|0x118 0x310 0x000 0x16 0x000
 end_define
 
 begin_define
@@ -1212,6 +1450,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_CSI_D2__SIM1_CLK0
+value|0x120 0x318 0x000 0x04 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_CSI_D2__GPIO_1_27
 value|0x120 0x318 0x000 0x15 0x000
 end_define
@@ -1235,6 +1480,13 @@ define|#
 directive|define
 name|MX25_PAD_CSI_D3__UART5_TXD_MUX
 value|0x124 0x31c 0x000 0x11 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_CSI_D3__SIM1_RST0
+value|0x124 0x31c 0x000 0x04 0x000
 end_define
 
 begin_define
@@ -1268,6 +1520,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_CSI_D4__SIM1_VEN0
+value|0x128 0x320 0x000 0x04 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_CSI_D4__GPIO_1_29
 value|0x128 0x320 0x000 0x15 0x000
 end_define
@@ -1290,7 +1549,14 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_D5__UART5_CTS
-value|0x12c 0x324 0x000 0x11 0x001
+value|0x12c 0x324 0x000 0x11 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_CSI_D5__SIM1_TX0
+value|0x12c 0x324 0x000 0x04 0x000
 end_define
 
 begin_define
@@ -1319,6 +1585,13 @@ define|#
 directive|define
 name|MX25_PAD_CSI_D6__SDHC2_CMD
 value|0x130 0x328 0x4e0 0x12 0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_CSI_D6__SIM1_PD0
+value|0x130 0x328 0x000 0x04 0x000
 end_define
 
 begin_define
@@ -1360,7 +1633,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_D8__AUD6_RXC
-value|0x138 0x330 0x000 0x12 0x001
+value|0x138 0x330 0x000 0x12 0x000
 end_define
 
 begin_define
@@ -1388,7 +1661,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_D9__AUD6_RXFS
-value|0x13c 0x334 0x000 0x12 0x001
+value|0x13c 0x334 0x000 0x12 0x000
 end_define
 
 begin_define
@@ -1416,7 +1689,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_MCLK__AUD6_TXD
-value|0x140 0x338 0x000 0x11 0x001
+value|0x140 0x338 0x000 0x11 0x000
 end_define
 
 begin_define
@@ -1444,7 +1717,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_VSYNC__AUD6_RXD
-value|0x144 0x33c 0x000 0x11 0x001
+value|0x144 0x33c 0x000 0x11 0x000
 end_define
 
 begin_define
@@ -1472,7 +1745,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_HSYNC__AUD6_TXC
-value|0x148 0x340 0x000 0x11 0x001
+value|0x148 0x340 0x000 0x11 0x000
 end_define
 
 begin_define
@@ -1500,7 +1773,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_CSI_PIXCLK__AUD6_TXFS
-value|0x14c 0x344 0x000 0x11 0x001
+value|0x14c 0x344 0x000 0x11 0x000
 end_define
 
 begin_define
@@ -1807,15 +2080,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX25_PAD_UART2_CTS__FEC_RX_ER
-value|0x18c 0x384 0x518 0x12 0x002
+name|MX25_PAD_UART2_CTS__UART2_CTS
+value|0x18c 0x384 0x000 0x10 0x000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX25_PAD_UART2_CTS__UART2_CTS
-value|0x18c 0x384 0x000 0x10 0x000
+name|MX25_PAD_UART2_CTS__FEC_RX_ERR
+value|0x18c 0x384 0x518 0x12 0x002
 end_define
 
 begin_define
@@ -1934,7 +2207,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_SD1_DATA2__FEC_RX_CLK
-value|0x1a0 0x398 0x514 0x15 0x002
+value|0x1a0 0x398 0x514 0x12 0x002
 end_define
 
 begin_define
@@ -1955,7 +2228,7 @@ begin_define
 define|#
 directive|define
 name|MX25_PAD_SD1_DATA3__FEC_CRS
-value|0x1a4 0x39c 0x508 0x10 0x002
+value|0x1a4 0x39c 0x508 0x12 0x002
 end_define
 
 begin_define
@@ -1970,6 +2243,13 @@ define|#
 directive|define
 name|MX25_PAD_KPP_ROW0__KPP_ROW0
 value|0x1a8 0x3a0 0x000 0x10 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_KPP_ROW0__UART1_DTR
+value|0x1a8 0x3a0 0x000 0x14 0x000
 end_define
 
 begin_define
@@ -2010,6 +2290,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_KPP_ROW2__UART1_DCD
+value|0x1b0 0x3a8 0x000 0x14 0x000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_KPP_ROW2__GPIO_2_31
 value|0x1b0 0x3a8 0x000 0x15 0x000
 end_define
@@ -2024,7 +2311,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX25_PAD_KPP_ROW3__CSI_LD1
+name|MX25_PAD_KPP_ROW3__CSI_D1
 value|0x1b4 0x3ac 0x48c 0x13 0x002
 end_define
 
@@ -2259,6 +2546,17 @@ name|MX25_PAD_FEC_RDATA1__FEC_RDATA1
 value|0x1e0 0x3d8 0x000 0x10 0x000
 end_define
 
+begin_comment
+comment|/*  * According to the i.MX25 Reference manual (IMX25RM, Rev. 2,  * 01/2011) this is CAN1_TX but that's wrong.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_FEC_RDATA1__CAN2_TX
+value|0x1e0 0x3d8 0x000 0x14 0x000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2272,6 +2570,10 @@ directive|define
 name|MX25_PAD_FEC_RX_DV__FEC_RX_DV
 value|0x1e4 0x3dc 0x000 0x10 0x000
 end_define
+
+begin_comment
+comment|/*  * According to the i.MX25 Reference manual (IMX25RM, Rev. 2,  * 01/2011) this is CAN1_RX but that's wrong.  */
+end_comment
 
 begin_define
 define|#
@@ -2339,13 +2641,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX25_PAD_TDO__TDO
-value|0x000 0x3e8 0x000 0x00 0x000
-end_define
-
-begin_define
-define|#
-directive|define
 name|MX25_PAD_GPIO_A__GPIO_A
 value|0x1f4 0x3f0 0x000 0x10 0x000
 end_define
@@ -2374,13 +2669,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX25_PAD_GPIO_B__CAN1_RX
-value|0x1f8 0x3f4 0x480 0x16 0x001
-end_define
-
-begin_define
-define|#
-directive|define
 name|MX25_PAD_GPIO_B__USBOTG_OC
 value|0x1f8 0x3f4 0x57c 0x12 0x001
 end_define
@@ -2388,8 +2676,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_GPIO_B__CAN1_RX
+value|0x1f8 0x3f4 0x480 0x16 0x001
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_GPIO_C__GPIO_C
 value|0x1fc 0x3f8 0x000 0x10 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_GPIO_C__PWM4_PWMO
+value|0x1fc 0x3f8 0x000 0x11 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_GPIO_C__I2C2_SCL
+value|0x1fc 0x3f8 0x51c 0x12 0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_GPIO_C__KPP_COL4
+value|0x1fc 0x3f8 0x52c 0x13 0x001
 end_define
 
 begin_define
@@ -2404,6 +2720,13 @@ define|#
 directive|define
 name|MX25_PAD_GPIO_D__GPIO_D
 value|0x200 0x3fc 0x000 0x10 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_GPIO_D__I2C2_SDA
+value|0x200 0x3fc 0x520 0x12 0x001
 end_define
 
 begin_define
@@ -2444,6 +2767,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX25_PAD_GPIO_E__UART4_RXD
+value|0x204 0x400 0x570 0x16 0x002
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX25_PAD_GPIO_F__GPIO_F
 value|0x208 0x404 0x000 0x10 0x000
 end_define
@@ -2460,6 +2790,13 @@ define|#
 directive|define
 name|MX25_PAD_GPIO_F__AUD7_TXC
 value|0x208 0x404 0x000 0x14 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_GPIO_F__UART4_TXD
+value|0x208 0x404 0x000 0x16 0x000
 end_define
 
 begin_define
