@@ -1004,10 +1004,12 @@ name|ixgbe_bcopy
 parameter_list|(
 name|void
 modifier|*
+specifier|restrict
 name|_src
 parameter_list|,
 name|void
 modifier|*
+specifier|restrict
 name|_dst
 parameter_list|,
 name|int
@@ -1089,17 +1091,12 @@ decl_stmt|;
 name|bus_space_handle_t
 name|mem_bus_space_handle
 decl_stmt|;
-name|struct
-name|device
-modifier|*
-name|dev
-decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* These routines are needed by the shared code */
+comment|/* These routines need struct ixgbe_hw declared */
 end_comment
 
 begin_struct_decl
@@ -1107,6 +1104,22 @@ struct_decl|struct
 name|ixgbe_hw
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|device_t
+name|ixgbe_dev_from_hw
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* These routines are needed by the shared code */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -1162,6 +1175,20 @@ parameter_list|)
 value|IXGBE_READ_REG(a, IXGBE_STATUS)
 end_define
 
+begin_function_decl
+specifier|extern
+name|u32
+name|ixgbe_read_reg
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1171,8 +1198,24 @@ name|a
 parameter_list|,
 name|reg
 parameter_list|)
-value|(\    bus_space_read_4( ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_handle, \                      reg))
+value|ixgbe_read_reg(a, reg)
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|ixgbe_write_reg
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1183,10 +1226,26 @@ name|a
 parameter_list|,
 name|reg
 parameter_list|,
-name|value
+name|val
 parameter_list|)
-value|(\    bus_space_write_4( ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_handle, \                      reg, value))
+value|ixgbe_write_reg(a, reg, val)
 end_define
+
+begin_function_decl
+specifier|extern
+name|u32
+name|ixgbe_read_reg_array
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1199,8 +1258,27 @@ name|reg
 parameter_list|,
 name|offset
 parameter_list|)
-value|(\    bus_space_read_4( ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_handle, \                      (reg + ((offset)<< 2))))
+define|\
+value|ixgbe_read_reg_array(a, reg, offset)
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|ixgbe_write_reg_array
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|,
+name|u32
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1213,9 +1291,10 @@ name|reg
 parameter_list|,
 name|offset
 parameter_list|,
-name|value
+name|val
 parameter_list|)
-value|(\       bus_space_write_4( ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct ixgbe_osdep *)(a)->back)->mem_bus_space_handle, \                       (reg + ((offset)<< 2)), value))
+define|\
+value|ixgbe_write_reg_array(a, reg, offset, val)
 end_define
 
 begin_endif

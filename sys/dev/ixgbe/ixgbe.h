@@ -468,17 +468,6 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * This parameter controls the maximum no of times the driver will loop in  * the isr. Minimum Value = 1  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_LOOP
-value|10
-end_define
-
-begin_comment
 comment|/*  * This is the max watchdog interval, ie. the time that can  * pass between any two TX clean operations, such only happening  * when the TX hardware is functioning.  */
 end_comment
 
@@ -522,6 +511,13 @@ begin_define
 define|#
 directive|define
 name|IXGBE_MTU_HDR
+value|(ETHER_HDR_LEN + ETHER_CRC_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MTU_HDR_VLAN
 value|(ETHER_HDR_LEN + ETHER_CRC_LEN + \ 				 ETHER_VLAN_ENCAP_LEN)
 end_define
 
@@ -530,6 +526,13 @@ define|#
 directive|define
 name|IXGBE_MAX_MTU
 value|(IXGBE_MAX_FRAME_SIZE - IXGBE_MTU_HDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MAX_MTU_VLAN
+value|(IXGBE_MAX_FRAME_SIZE - IXGBE_MTU_HDR_VLAN)
 end_define
 
 begin_comment
@@ -560,6 +563,26 @@ end_define
 begin_comment
 comment|/*  * Used for optimizing small rx mbufs.  Effort is made to keep the copy  * small and aligned for the CPU L1 cache.  *   * MHLEN is typically 168 bytes, giving us 8-byte alignment.  Getting  * 32 byte alignment needed for the fast bcopy results in 8 bytes being  * wasted.  Getting 64 byte alignment, which _should_ be ideal for  * modern Intel CPUs, results in 40 bytes wasted and a significant drop  * in observed efficiency of the optimization, 97.9% -> 81.8%.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1002000
+end_if
+
+begin_define
+define|#
+directive|define
+name|MPKTHSIZE
+value|(sizeof(struct m_hdr) + sizeof(struct pkthdr))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -786,13 +809,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_BUFFER_SIZE
-value|((u32) 1514)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_RX_HDR
 value|128
 end_define
@@ -840,7 +856,7 @@ value|128
 end_define
 
 begin_comment
-comment|/* Offload bits in mbuf flag */
+comment|/* Supported offload bits in mbuf flag */
 end_comment
 
 begin_if
@@ -848,8 +864,23 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|800000
+literal|1000000
 end_if
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP_TSO|CSUM_IP6_TSO|CSUM_IP| \ 				 CSUM_IP_UDP|CSUM_IP_TCP|CSUM_IP_SCTP| \ 				 CSUM_IP6_UDP|CSUM_IP6_TCP|CSUM_IP6_SCTP)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_elif
 
 begin_define
 define|#
@@ -940,11 +971,22 @@ name|IXGBE_BULK_LATENCY
 value|1200
 end_define
 
+begin_comment
+comment|/* Using 1FF (the max value), the interval is ~1.05ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_LINK_ITR_QUANTA
+value|0x1FF
+end_define
+
 begin_define
 define|#
 directive|define
 name|IXGBE_LINK_ITR
-value|2000
+value|((IXGBE_LINK_ITR_QUANTA<< 3)& \ 				    IXGBE_EITR_ITR_INT_MASK)
 end_define
 
 begin_comment
@@ -1631,11 +1673,6 @@ struct|struct
 name|adapter
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|ixgbe_hw
 name|hw
 decl_stmt|;
@@ -1647,6 +1684,11 @@ name|struct
 name|device
 modifier|*
 name|dev
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|struct
 name|resource
@@ -1860,6 +1902,32 @@ name|ixgbe_vf
 modifier|*
 name|vfs
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|void
+function_decl|(
+modifier|*
+name|init_locked
+function_decl|)
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|stop_locked
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* Misc stats maintained by the driver */

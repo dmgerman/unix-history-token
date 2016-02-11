@@ -2308,7 +2308,11 @@ literal|0
 init|;
 name|i
 operator|<
-name|IXGBE_LINK_UP_TIME
+name|hw
+operator|->
+name|mac
+operator|.
+name|max_link_up_time
 condition|;
 name|i
 operator|++
@@ -2456,7 +2460,11 @@ literal|0
 init|;
 name|i
 operator|<
-name|IXGBE_LINK_UP_TIME
+name|hw
+operator|->
+name|mac
+operator|.
+name|max_link_up_time
 condition|;
 name|i
 operator|++

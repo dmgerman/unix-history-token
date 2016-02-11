@@ -45,7 +45,7 @@ name|char
 name|ixv_driver_version
 index|[]
 init|=
-literal|"1.4.0"
+literal|"1.4.6-k"
 decl_stmt|;
 end_decl_stmt
 
@@ -1318,12 +1318,6 @@ name|adapter
 operator|->
 name|dev
 operator|=
-name|adapter
-operator|->
-name|osdep
-operator|.
-name|dev
-operator|=
 name|dev
 expr_stmt|;
 name|hw
@@ -1333,6 +1327,23 @@ name|adapter
 operator|->
 name|hw
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|adapter
+operator|->
+name|init_locked
+operator|=
+name|ixv_init_locked
+expr_stmt|;
+name|adapter
+operator|->
+name|stop_locked
+operator|=
+name|ixv_stop
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Core Lock Init*/
 name|IXGBE_CORE_LOCK_INIT
 argument_list|(
@@ -1443,7 +1454,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Allocation of PCI resources failed\n"
+literal|"ixv_allocate_pci_resources() failed!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1626,6 +1637,13 @@ name|adapter
 argument_list|)
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ixgbe_allocate_queues() failed!\n"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
@@ -1651,7 +1669,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Shared Code Initialization Failure\n"
+literal|"ixgbe_init_shared_code() failed!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1668,28 +1686,86 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* Reset mbox api to 1.0 */
+name|error
+operator|=
 name|ixgbe_reset_hw
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Get the Mailbox API version */
+if|if
+condition|(
+name|error
+operator|==
+name|IXGBE_ERR_RESET_FAILED
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MBX API %d negotiation: %d\n"
+literal|"ixgbe_reset_hw() failure: Reset Failed!\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|error
+condition|)
+name|device_printf
+argument_list|(
+name|dev
 argument_list|,
-name|ixgbe_mbox_api_11
+literal|"ixgbe_reset_hw() failed with error %d\n"
 argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_late
+goto|;
+block|}
+comment|/* Negotiate mailbox API version */
+name|error
+operator|=
 name|ixgbevf_negotiate_api_version
 argument_list|(
 name|hw
 argument_list|,
 name|ixgbe_mbox_api_11
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"MBX API 1.1 negotiation failed! Error %d\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_late
+goto|;
+block|}
 name|error
 operator|=
 name|ixgbe_init_hw
@@ -1706,7 +1782,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Hardware Initialization Failure\n"
+literal|"ixgbe_init_hw() failed!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1728,9 +1804,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ixv_allocate_msix() failed!\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err_late
 goto|;
+block|}
 comment|/* If no mac address was assigned, make a random one */
 if|if
 condition|(
@@ -2433,7 +2518,7 @@ name|ifr_mtu
 operator|>
 name|IXGBE_MAX_FRAME_SIZE
 operator|-
-name|ETHER_HDR_LEN
+name|IXGBE_MTU_HDR
 condition|)
 block|{
 name|error
@@ -2464,9 +2549,7 @@ name|ifp
 operator|->
 name|if_mtu
 operator|+
-name|ETHER_HDR_LEN
-operator|+
-name|ETHER_CRC_LEN
+name|IXGBE_MTU_HDR
 expr_stmt|;
 name|ixv_init_locked
 argument_list|(
@@ -2803,14 +2886,14 @@ name|adapter
 operator|->
 name|hw
 decl_stmt|;
-name|u32
-name|mhadd
-decl_stmt|,
-name|gpie
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"ixv_init: begin"
+literal|"ixv_init_locked: begin"
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -2927,9 +3010,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Reset VF and renegotiate mailbox API version */
 name|ixgbe_reset_hw
 argument_list|(
 name|hw
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ixgbevf_negotiate_api_version
+argument_list|(
+name|hw
+argument_list|,
+name|ixgbe_mbox_api_11
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"MBX API 1.1 negotiation failed! Error %d\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|ixv_initialize_transmit_units
@@ -2994,40 +3100,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* Enable Enhanced MSIX mode */
-name|gpie
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_GPIE
-argument_list|)
-expr_stmt|;
-name|gpie
-operator||=
-name|IXGBE_GPIE_MSIX_MODE
-operator||
-name|IXGBE_GPIE_EIAME
-expr_stmt|;
-name|gpie
-operator||=
-name|IXGBE_GPIE_PBA_SUPPORT
-operator||
-name|IXGBE_GPIE_OCD
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_GPIE
-argument_list|,
-name|gpie
-argument_list|)
-expr_stmt|;
 comment|/* Set the various hardware offload abilities */
 name|ifp
 operator|->
@@ -3082,65 +3154,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Set MTU size */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_mtu
-operator|>
-name|ETHERMTU
-condition|)
-block|{
-name|mhadd
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_MHADD
-argument_list|)
-expr_stmt|;
-name|mhadd
-operator|&=
-operator|~
-name|IXGBE_MHADD_MFS_MASK
-expr_stmt|;
-name|mhadd
-operator||=
-name|adapter
-operator|->
-name|max_frame_size
-operator|<<
-name|IXGBE_MHADD_MFS_SHIFT
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_MHADD
-argument_list|,
-name|mhadd
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set up VLAN offload and filter */
 name|ixv_setup_vlan_support
 argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|timer
-argument_list|,
-name|hz
-argument_list|,
-name|ixv_local_timer
-argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
@@ -3184,6 +3200,21 @@ expr_stmt|;
 comment|/* Config/Enable Link */
 name|ixv_config_link
 argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+comment|/* Start watchdog */
+name|callout_reset
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|timer
+argument_list|,
+name|hz
+argument_list|,
+name|ixv_local_timer
+argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
@@ -6029,10 +6060,7 @@ name|hw
 operator|.
 name|back
 operator|=
-operator|&
 name|adapter
-operator|->
-name|osdep
 expr_stmt|;
 comment|/* 	** Now setup MSI/X, should 	** return us the number of 	** configured vectors. 	*/
 name|adapter
@@ -6510,9 +6538,7 @@ name|ifp
 operator|->
 name|if_mtu
 operator|+
-name|ETHER_HDR_LEN
-operator|+
-name|ETHER_CRC_LEN
+name|IXGBE_MTU_HDR_VLAN
 expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 name|ifp
@@ -6589,22 +6615,6 @@ name|media
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_FDX
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|ifmedia_add
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|media
-argument_list|,
-name|IFM_ETHER
-operator||
 name|IFM_AUTO
 argument_list|,
 literal|0
@@ -6651,10 +6661,6 @@ name|hw
 decl_stmt|;
 name|u32
 name|autoneg
-decl_stmt|,
-name|err
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -6666,8 +6672,6 @@ name|ops
 operator|.
 name|check_link
 condition|)
-name|err
-operator|=
 name|hw
 operator|->
 name|mac
@@ -6689,45 +6693,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|setup_link
-condition|)
-name|err
-operator|=
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|setup_link
-argument_list|(
-name|hw
-argument_list|,
-name|autoneg
-argument_list|,
-name|adapter
-operator|->
-name|link_up
-argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return;
 block|}
 end_function
 
@@ -7046,9 +7011,6 @@ name|rxcsum
 decl_stmt|,
 name|psrtype
 decl_stmt|;
-name|int
-name|max_frame
-decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -7091,20 +7053,14 @@ argument_list|,
 name|psrtype
 argument_list|)
 expr_stmt|;
-comment|/* Tell PF our expected packet-size */
-name|max_frame
-operator|=
-name|ifp
-operator|->
-name|if_mtu
-operator|+
-name|IXGBE_MTU_HDR
-expr_stmt|;
+comment|/* Tell PF our max_frame size */
 name|ixgbevf_rlpml_set_vf
 argument_list|(
 name|hw
 argument_list|,
-name|max_frame
+name|adapter
+operator|->
+name|max_frame_size
 argument_list|)
 expr_stmt|;
 for|for
@@ -7157,11 +7113,7 @@ expr_stmt|;
 name|rxdctl
 operator|&=
 operator|~
-operator|(
 name|IXGBE_RXDCTL_ENABLE
-operator||
-name|IXGBE_RXDCTL_VME
-operator|)
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -7340,40 +7292,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Setup the HW Rx Head and Tail Descriptor Pointers */
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_VFRDH
-argument_list|(
-name|rxr
-operator|->
-name|me
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_VFRDT
-argument_list|(
-name|rxr
-operator|->
-name|me
-argument_list|)
-argument_list|,
-name|adapter
-operator|->
-name|num_rx_desc
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Set Rx Tail register */
+comment|/* Capture  Rx Tail register */
 name|rxr
 operator|->
 name|tail
@@ -7387,20 +7306,10 @@ argument_list|)
 expr_stmt|;
 comment|/* Do the queue enabling last */
 name|rxdctl
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_VFRXDCTL
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|rxdctl
 operator||=
 name|IXGBE_RXDCTL_ENABLE
+operator||
+name|IXGBE_RXDCTL_VME
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -7622,6 +7531,11 @@ name|vfta
 decl_stmt|,
 name|retry
 decl_stmt|;
+name|struct
+name|rx_ring
+modifier|*
+name|rxr
+decl_stmt|;
 comment|/* 	** We get here thru init_locked, meaning 	** a soft reset, this has already cleared 	** the VFTA and other state, so if there 	** have been no vlan's registered do nothing. 	*/
 if|if
 condition|(
@@ -7677,6 +7591,23 @@ argument_list|)
 argument_list|,
 name|ctrl
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Let Rx path know that it needs to store VLAN tag 		 * as part of extra mbuf info. 		 */
+name|rxr
+operator|=
+operator|&
+name|adapter
+operator|->
+name|rx_rings
+index|[
+name|i
+index|]
+expr_stmt|;
+name|rxr
+operator|->
+name|vtag_strip
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 comment|/* 	** A soft reset zero's out the VFTA, so 	** we need to repopulate it now. 	*/

@@ -1293,7 +1293,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|s32
+name|void
 name|ixgbe_fdir_add_signature_filter_82599
 parameter_list|(
 name|struct
@@ -1561,6 +1561,21 @@ name|dev_addr
 parameter_list|,
 name|u8
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixgbe_set_fdir_drop_queue_82599
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|dropqueue
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -534,18 +534,6 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|ixgbe_setup_kx4_x550em
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
 name|ixgbe_init_ext_t_x550em
 parameter_list|(
 name|struct
