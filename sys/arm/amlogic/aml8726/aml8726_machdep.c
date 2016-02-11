@@ -496,6 +496,12 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|DEV_GIC
 end_ifndef
 
@@ -597,6 +603,15 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ARM_INTRNG */
+end_comment
 
 end_unit
 
