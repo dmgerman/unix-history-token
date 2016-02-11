@@ -8427,10 +8427,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|SIOCSIFCAP
@@ -8606,10 +8602,6 @@ operator|^=
 name|IFCAP_LRO
 expr_stmt|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|SIOCADDMULTI
