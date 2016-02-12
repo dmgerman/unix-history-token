@@ -3907,7 +3907,6 @@ name|r_l3addr
 operator|.
 name|addr6
 expr_stmt|;
-comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety. 			 */
 name|nd6_ifp
 operator|=
 name|lltable_get_ifp
