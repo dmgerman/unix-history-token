@@ -524,22 +524,6 @@ name|iflladdr_event_eh
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* for debugging? */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int nd6_inuse, nd6_allocated;
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
