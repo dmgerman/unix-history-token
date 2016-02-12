@@ -2494,7 +2494,6 @@ name|installed
 operator|=
 literal|1
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3180,7 +3179,6 @@ name|selected_dr
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

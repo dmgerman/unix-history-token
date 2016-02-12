@@ -2803,7 +2803,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4915,7 +4914,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

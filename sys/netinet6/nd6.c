@@ -9332,7 +9332,6 @@ name|la_hold
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
