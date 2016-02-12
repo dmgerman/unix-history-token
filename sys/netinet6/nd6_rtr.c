@@ -3277,6 +3277,9 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
+name|int
+name|oldpref
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3313,21 +3316,19 @@ argument_list|(
 name|dr
 argument_list|)
 expr_stmt|;
-name|dr
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
+operator|)
+return|;
 block|}
-else|else
-block|{
-name|int
 name|oldpref
-init|=
+operator|=
 name|rtpref
 argument_list|(
 name|dr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* override */
 name|dr
 operator|->
@@ -3354,7 +3355,7 @@ name|new
 operator|->
 name|expire
 expr_stmt|;
-comment|/* 			 * If the preference does not change, there's no need 			 * to sort the entries. Also make sure the selected 			 * router is still installed in the kernel. 			 */
+comment|/* 		 * If the preference does not change, there's no need 		 * to sort the entries. Also make sure the selected 		 * router is still installed in the kernel. 		 */
 if|if
 condition|(
 name|dr
@@ -3373,7 +3374,7 @@ operator|(
 name|dr
 operator|)
 return|;
-comment|/* 			 * preferred router may be changed, so relocate 			 * this router. 			 * XXX: calling TAILQ_REMOVE directly is a bad manner. 			 * However, since defrtrlist_del() has many side 			 * effects, we intentionally do so here. 			 * defrouter_select() below will handle routing 			 * changes later. 			 */
+comment|/* 		 * The preferred router may have changed, so relocate this 		 * router. 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3391,12 +3392,6 @@ expr_stmt|;
 goto|goto
 name|insert
 goto|;
-block|}
-return|return
-operator|(
-name|dr
-operator|)
-return|;
 block|}
 comment|/* entry does not exist */
 if|if
