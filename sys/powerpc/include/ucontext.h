@@ -42,7 +42,7 @@ name|int
 name|mc_len
 decl_stmt|;
 comment|/* sizeof(__mcontext) */
-name|uint64_t
+name|__uint64_t
 name|mc_avec
 index|[
 literal|32
@@ -51,25 +51,25 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* vector register file */
-name|uint32_t
+name|__uint32_t
 name|mc_av
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|register_t
+name|__register_t
 name|mc_frame
 index|[
 literal|42
 index|]
 decl_stmt|;
-name|uint64_t
+name|__uint64_t
 name|mc_fpreg
 index|[
 literal|33
 index|]
 decl_stmt|;
-name|uint64_t
+name|__uint64_t
 name|mc_vsxfpreg
 index|[
 literal|32
