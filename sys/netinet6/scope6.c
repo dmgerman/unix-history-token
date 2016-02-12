@@ -1273,7 +1273,7 @@ argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"%s: embedded scope mismatch: %s%%%d. "
-literal|"sin6_scope_id was overridden."
+literal|"sin6_scope_id was overridden\n"
 argument_list|,
 name|__func__
 argument_list|,
