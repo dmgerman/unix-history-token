@@ -1281,11 +1281,6 @@ name|nd
 decl_stmt|;
 name|nd
 operator|=
-operator|(
-expr|struct
-name|nd_ifinfo
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
