@@ -220,6 +220,21 @@ end_function
 
 begin_function
 name|ACPI_STATUS
+name|AcpiEvInstallRegionHandlers
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
 name|AcpiEvQueueNotifyRequest
 parameter_list|(
 name|ACPI_NAMESPACE_NODE

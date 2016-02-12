@@ -1688,8 +1688,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"No outstanding allocations"
 operator|)
 argument_list|)

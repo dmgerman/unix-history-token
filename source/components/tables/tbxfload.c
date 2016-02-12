@@ -37,6 +37,12 @@ directive|include
 file|"actables.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acevents.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -70,6 +76,47 @@ argument_list|(
 name|AcpiLoadTables
 argument_list|)
 expr_stmt|;
+comment|/*      * Install the default operation region handlers. These are the      * handlers that are defined by the ACPI specification to be      * "always accessible" -- namely, SystemMemory, SystemIO, and      * PCI_Config. This also means that no _REG methods need to be      * run for these address spaces. We need to have these handlers      * installed before any AML code can be executed, especially any      * module-level code (11/2015).      * Note that we allow OSPMs to install their own region handlers      * between AcpiInitializeSubsystem() and AcpiLoadTables() to use      * their customized default region handlers.      */
+if|if
+condition|(
+name|AcpiGbl_GroupModuleLevelCode
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiEvInstallRegionHandlers
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_ALREADY_EXISTS
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"During Region initialization"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Load the namespace from the tables */
 name|Status
 operator|=
@@ -505,8 +552,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%u ACPI AML tables successfully acquired and loaded\n"
 operator|,
 name|TablesLoaded
@@ -693,8 +738,6 @@ comment|/* Install the table and load it into the namespace */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Host-directed Dynamic ACPI Table Load:"
 operator|)
 argument_list|)

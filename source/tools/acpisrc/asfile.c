@@ -1522,6 +1522,11 @@ name|Gbl_FileSize
 argument_list|)
 condition|)
 block|{
+name|free
+argument_list|(
+name|Pathname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-

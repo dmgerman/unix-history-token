@@ -1062,7 +1062,7 @@ name|char
 modifier|*
 name|AcpiGbl_GenericNotify
 index|[
-name|ACPI_NOTIFY_MAX
+name|ACPI_GENERIC_NOTIFY_MAX
 operator|+
 literal|1
 index|]
@@ -1107,6 +1107,7 @@ block|,
 comment|/* 0C */
 literal|"Shutdown Request"
 block|,
+comment|/* Reserved in ACPI 6.0 */
 comment|/* 0D */
 literal|"System Resource Affinity Update"
 block|}
@@ -1120,7 +1121,7 @@ name|char
 modifier|*
 name|AcpiGbl_DeviceNotify
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
@@ -1135,6 +1136,9 @@ literal|"Device-Specific Change"
 block|,
 comment|/* 83 */
 literal|"Device-Specific Change"
+block|,
+comment|/* 84 */
+literal|"Reserved"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1146,7 +1150,7 @@ name|char
 modifier|*
 name|AcpiGbl_ProcessorNotify
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
@@ -1160,7 +1164,10 @@ comment|/* 82 */
 literal|"Throttling Capability Change"
 block|,
 comment|/* 83 */
-literal|"Device-Specific Change"
+literal|"Guaranteed Change"
+block|,
+comment|/* 84 */
+literal|"Minimum Excursion"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1172,7 +1179,7 @@ name|char
 modifier|*
 name|AcpiGbl_ThermalNotify
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
@@ -1187,6 +1194,9 @@ literal|"Thermal Device List Change"
 block|,
 comment|/* 83 */
 literal|"Thermal Relationship Change"
+block|,
+comment|/* 84 */
+literal|"Reserved"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1204,12 +1214,12 @@ name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
-comment|/* 00 - 0D are common to all object types */
+comment|/* 00 - 0D are "common to all object types" (from ACPI Spec) */
 if|if
 condition|(
 name|NotifyValue
 operator|<=
-name|ACPI_NOTIFY_MAX
+name|ACPI_GENERIC_NOTIFY_MAX
 condition|)
 block|{
 return|return
@@ -1221,7 +1231,7 @@ index|]
 operator|)
 return|;
 block|}
-comment|/* 0D - 7F are reserved */
+comment|/* 0E - 7F are reserved */
 if|if
 condition|(
 name|NotifyValue
@@ -1235,12 +1245,12 @@ literal|"Reserved"
 operator|)
 return|;
 block|}
-comment|/* 80 - 83 are per-object-type */
+comment|/* 80 - 84 are per-object-type */
 if|if
 condition|(
 name|NotifyValue
 operator|<=
-literal|0x83
+name|ACPI_SPECIFIC_NOTIFY_MAX
 condition|)
 block|{
 switch|switch

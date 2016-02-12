@@ -2407,7 +2407,7 @@ block|,
 comment|/* OBJECTTYPE_BFF */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_BUFFER_FIELD
 argument_list|,
@@ -2419,7 +2419,7 @@ block|,
 comment|/* OBJECTTYPE_BUF */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_BUFFER
 argument_list|,
@@ -2431,7 +2431,7 @@ block|,
 comment|/* OBJECTTYPE_DDB */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_DDB_HANDLE
 argument_list|,
@@ -2443,7 +2443,7 @@ block|,
 comment|/* OBJECTTYPE_DEV */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_DEVICE
 argument_list|,
@@ -2455,7 +2455,7 @@ block|,
 comment|/* OBJECTTYPE_EVT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_EVENT
 argument_list|,
@@ -2467,7 +2467,7 @@ block|,
 comment|/* OBJECTTYPE_FLD */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_FIELD_UNIT
 argument_list|,
@@ -2479,7 +2479,7 @@ block|,
 comment|/* OBJECTTYPE_INT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
@@ -2491,7 +2491,7 @@ block|,
 comment|/* OBJECTTYPE_MTH */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
@@ -2503,7 +2503,7 @@ block|,
 comment|/* OBJECTTYPE_MTX */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_MUTEX
 argument_list|,
@@ -2515,7 +2515,7 @@ block|,
 comment|/* OBJECTTYPE_OPR */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_REGION
 argument_list|,
@@ -2527,7 +2527,7 @@ block|,
 comment|/* OBJECTTYPE_PKG */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_PACKAGE
 argument_list|,
@@ -2539,7 +2539,7 @@ block|,
 comment|/* OBJECTTYPE_POW */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_POWER
 argument_list|,
@@ -2551,7 +2551,7 @@ block|,
 comment|/* OBJECTTYPE_PRO */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_PROCESSOR
 argument_list|,
@@ -2563,7 +2563,7 @@ block|,
 comment|/* OBJECTTYPE_STR */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_STRING
 argument_list|,
@@ -2575,7 +2575,7 @@ block|,
 comment|/* OBJECTTYPE_THZ */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_THERMAL
 argument_list|,
@@ -2587,7 +2587,7 @@ block|,
 comment|/* OBJECTTYPE_UNK */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_ANY
 argument_list|,

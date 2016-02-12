@@ -169,7 +169,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwSetFirmwareWakingVector  *  * PARAMETERS:  Facs                - Pointer to FACS table  *              PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point  *              PhysicalAddress64   - 64-bit physical address of ACPI protected  *                                    entry point  *  * RETURN:      Status  *  * DESCRIPTION: Sets the FirmwareWakingVector fields of the FACS  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwSetFirmwareWakingVector  *  * PARAMETERS:  Facs                - Pointer to FACS table  *              PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point  *              PhysicalAddress64   - 64-bit physical address of ACPI protected  *                                    mode entry point  *  * RETURN:      Status  *  * DESCRIPTION: Sets the FirmwareWakingVector fields of the FACS  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -250,7 +250,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point  *              PhysicalAddress64   - 64-bit physical address of ACPI protected  *                                    entry point  *  * RETURN:      Status  *  * DESCRIPTION: Sets the FirmwareWakingVector fields of the FACS  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point  *              PhysicalAddress64   - 64-bit physical address of ACPI protected  *                                    mode entry point  *  * RETURN:      Status  *  * DESCRIPTION: Sets the FirmwareWakingVector fields of the FACS  *  ******************************************************************************/
 end_comment
 
 begin_function

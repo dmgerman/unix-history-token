@@ -242,13 +242,6 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 decl_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"\nCross referencing namespace\n\n"
-argument_list|)
-expr_stmt|;
 comment|/*      * Create a new walk state for use when looking up names      * within the namespace (Passed as context to the callbacks)      */
 name|WalkState
 operator|=
@@ -278,7 +271,7 @@ block|}
 comment|/* Walk the entire parse tree */
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_TWICE
 argument_list|,
@@ -2275,6 +2268,18 @@ operator|->
 name|Value
 operator|!=
 name|ASL_EXTERNAL_METHOD
+operator|&&
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|!=
+name|PARSEOP_EXTERNAL
 condition|)
 block|{
 comment|/*              * Check the parsed arguments with the number expected by the              * method declaration itself              */

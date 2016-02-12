@@ -205,8 +205,6 @@ comment|/* Example warning and error output */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Example ACPICA info message"
 operator|)
 argument_list|)
@@ -270,10 +268,6 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 comment|/* Initialize the ACPICA subsystem */
-name|AcpiGbl_OverrideDefaultRegionHandlers
-operator|=
-name|TRUE
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -308,8 +302,6 @@ comment|/* Initialize the ACPICA Table Manager and get all ACPI tables */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Loading ACPI tables"
 operator|)
 argument_list|)
@@ -560,10 +552,6 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 comment|/* Initialize the ACPICA subsystem */
-name|AcpiGbl_OverrideDefaultRegionHandlers
-operator|=
-name|TRUE
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -729,8 +717,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Received a notify 0x%X"
 operator|,
 name|Value
@@ -820,8 +806,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Received a region access"
 operator|)
 argument_list|)
@@ -966,8 +950,6 @@ decl_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Executing _OSI reserved method"
 operator|)
 argument_list|)
@@ -1124,8 +1106,6 @@ block|}
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"_OSI returned 0x%8.8X"
 operator|,
 operator|(
@@ -1186,8 +1166,6 @@ decl_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Executing MAIN method"
 operator|)
 argument_list|)

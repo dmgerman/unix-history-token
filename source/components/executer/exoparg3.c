@@ -245,7 +245,16 @@ goto|;
 case|case
 name|AML_EXTERNAL_OP
 case|:
-comment|/*          * If the interpreter sees this opcode, just ignore it. The External          * op is intended for use by disassemblers in order to properly          * disassemble control method invocations. The opcode or group of          * opcodes should be surrounded by an "if (0)" clause to ensure that          * AML interpreters never see the opcode.          */
+comment|/*          * If the interpreter sees this opcode, just ignore it. The External          * op is intended for use by disassemblers in order to properly          * disassemble control method invocations. The opcode or group of          * opcodes should be surrounded by an "if (0)" clause to ensure that          * AML interpreters never see the opcode. Thus, something is          * wrong if an external opcode ever gets here.          */
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Executed External Op"
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_OK

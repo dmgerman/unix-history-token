@@ -538,14 +538,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|GET_CURRENT_ARG_TYPE
-argument_list|(
 name|WalkState
 operator|->
-name|ArgTypes
-argument_list|)
+name|Opcode
 operator|==
-name|ARGP_SUPERNAME
+name|AML_UNLOAD_OP
 condition|)
 block|{
 comment|/*              * AcpiPsGetNextNamestring has increased the AML pointer,              * so we need to restore the saved AML pointer for method call.              */
@@ -1718,7 +1715,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextArg  *  * PARAMETERS:  WalkState           - Current state  *              ParserState         - Current parser state object  *              ArgType             - The parser argument type (ARGP_*)  *              ReturnArg           - Where the next arg is returned  *  * RETURN:      Status, and an op object containing the next argument.  *  * DESCRIPTION: Get next argument (including complex list arguments that require  *              pushing the parser stack)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextArg  *  * PARAMETERS:  WalkState           - Current state  *              ParserState         - Current parser state object  *              ArgType             - The argument type (AML_*_ARG)  *              ReturnArg           - Where the next arg is returned  *  * RETURN:      Status, and an op object containing the next argument.  *  * DESCRIPTION: Get next argument (including complex list arguments that require  *              pushing the parser stack)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2073,12 +2070,14 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* SuperName allows argument to be a method call */
+comment|/* To support SuperName arg of Unload */
 if|if
 condition|(
-name|ArgType
+name|WalkState
+operator|->
+name|Opcode
 operator|==
-name|ARGP_SUPERNAME
+name|AML_UNLOAD_OP
 condition|)
 block|{
 name|Status

@@ -2098,9 +2098,22 @@ case|:
 case|case
 name|PARSEOP_INDEX
 case|:
+return|return;
 case|case
 name|PARSEOP_METHODCALL
 case|:
+comment|/*          * A target is not allowed to be a method call.          * It is not supported by the ACPICA interpreter, nor is it          * supported by the MS ASL compiler or the MS interpreter.          * Although legal syntax up until ACPI 6.1, support for this          * will be removed for ACPI 6.2 (02/2016)          */
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_SYNTAX
+argument_list|,
+name|TargetOperandOp
+argument_list|,
+literal|"Illegal method invocation as a target operand"
+argument_list|)
+expr_stmt|;
 return|return;
 default|default:
 break|break;

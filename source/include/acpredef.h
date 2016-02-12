@@ -1993,6 +1993,20 @@ argument_list|)
 block|,
 block|{
 block|{
+literal|"_FIT"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_BUFFER
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* ACPI 6.0 */
+block|{
+block|{
 literal|"_FIX"
 block|,
 name|METHOD_0ARGS
@@ -4662,6 +4676,34 @@ argument_list|)
 block|}
 block|}
 block|,
+block|{
+block|{
+literal|"_WPC"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* ACPI 6.1 */
+block|{
+block|{
+literal|"_WPP"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* ACPI 6.1 */
 name|PACKAGE_INFO
 argument_list|(
 literal|0
@@ -5290,7 +5332,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|ACPI_PREDEFINED_INFO
 name|AcpiGbl_ScopeNames

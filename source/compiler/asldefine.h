@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 6.0"
+value|"Supports ACPI Specification Revision 6.1"
 end_define
 
 begin_comment
@@ -389,14 +389,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_WITHIN_COMMENT
-value|(ACPI_UINT32_MAX -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_BLANK_LINE
+name|ASL_IGNORE_LINE
 value|(ACPI_UINT32_MAX -1)
 end_define
 
@@ -537,6 +530,78 @@ name|ByteOffset
 parameter_list|)
 define|\
 value|RsCreateResourceField (Op, Name, ByteOffset, 0, 64);
+end_define
+
+begin_comment
+comment|/*  * Macros for debug output  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG_MAX_LINE_LENGTH
+value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_SPACES_PER_INDENT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_FULL_LINE_LENGTH
+value|71
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_FULL_LINE
+value|"\n%71.71s"
+end_define
+
+begin_comment
+comment|/* Header/Trailer for original parse tree directly from the parser */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_HEADER1
+define|\
+value|"%*s Value P_Op Flags     Line#  End# LogL# EndL#\n", 65, " "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_DEBUG1
+define|\
+value|" %4.4X %8.8X %5d %5d %5d %5d"
+end_define
+
+begin_comment
+comment|/* Header/Trailer for processed parse tree used for AML generation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_HEADER2
+define|\
+value|"%*s NameString Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"\     "    Parent   Child    Next     Flags    AcTyp    Final Col"\     " Line#  End# LogL# EndL#\n", 60, " "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_DEBUG2
+define|\
+value|" %08X %04X %04X %01X     %04X  %04X %05X  %05X   "\     "%08X %08X %08X %08X %08X %08X %04X  %02d  %5d %5d %5d %5d\n"
 end_define
 
 begin_endif

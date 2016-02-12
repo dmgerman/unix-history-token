@@ -2467,6 +2467,10 @@ name|Op
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|AML_EXTERNAL_OP
+case|:
+break|break;
 default|default:
 comment|/* Just get the opcode name and print it */
 name|AcpiOsPrintf

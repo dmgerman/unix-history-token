@@ -547,8 +547,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Ignoring installation of %4.4s at %8.8X%8.8X"
 operator|,
 name|NewTableDesc
@@ -939,8 +937,6 @@ block|}
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%4.4s 0x%8.8X%8.8X"
 literal|" %s table override, new table: 0x%8.8X%8.8X"
 operator|,

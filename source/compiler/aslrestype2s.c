@@ -780,36 +780,6 @@ argument_list|,
 name|Descriptor
 argument_list|)
 expr_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
-literal|"%.2X, VendLen: %.2X, IntLen: %.2X\n"
-argument_list|,
-literal|"GpioInt"
-argument_list|,
-name|Descriptor
-operator|->
-name|Gpio
-operator|.
-name|ResourceLength
-argument_list|,
-operator|(
-name|UINT16
-operator|)
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_GPIO
-argument_list|)
-argument_list|,
-name|ResSourceLength
-argument_list|,
-name|VendorLength
-argument_list|,
-name|InterruptLength
-argument_list|)
-expr_stmt|;
 comment|/* Process all child initialization nodes */
 for|for
 control|(
@@ -1533,36 +1503,6 @@ argument_list|,
 name|Descriptor
 argument_list|)
 expr_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
-literal|"%.2X, VendLen: %.2X, IntLen: %.2X\n"
-argument_list|,
-literal|"GpioIo"
-argument_list|,
-name|Descriptor
-operator|->
-name|Gpio
-operator|.
-name|ResourceLength
-argument_list|,
-operator|(
-name|UINT16
-operator|)
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_GPIO
-argument_list|)
-argument_list|,
-name|ResSourceLength
-argument_list|,
-name|VendorLength
-argument_list|,
-name|InterruptLength
-argument_list|)
-expr_stmt|;
 comment|/* Process all child initialization nodes */
 for|for
 control|(
@@ -2220,40 +2160,6 @@ argument_list|,
 name|VendorLength
 argument_list|)
 expr_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
-literal|"%.2X, VendLen: %.2X, TypLen: %.2X\n"
-argument_list|,
-literal|"I2cSerialBus"
-argument_list|,
-name|Descriptor
-operator|->
-name|I2cSerialBus
-operator|.
-name|ResourceLength
-argument_list|,
-operator|(
-name|UINT16
-operator|)
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_I2C_SERIALBUS
-argument_list|)
-argument_list|,
-name|ResSourceLength
-argument_list|,
-name|VendorLength
-argument_list|,
-name|Descriptor
-operator|->
-name|I2cSerialBus
-operator|.
-name|TypeDataLength
-argument_list|)
-expr_stmt|;
 comment|/* Process all child initialization nodes */
 for|for
 control|(
@@ -2758,40 +2664,6 @@ argument_list|,
 name|VendorData
 argument_list|,
 name|VendorLength
-argument_list|)
-expr_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
-literal|"%.2X, VendLen: %.2X, TypLen: %.2X\n"
-argument_list|,
-literal|"SpiSerialBus"
-argument_list|,
-name|Descriptor
-operator|->
-name|SpiSerialBus
-operator|.
-name|ResourceLength
-argument_list|,
-operator|(
-name|UINT16
-operator|)
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_SPI_SERIALBUS
-argument_list|)
-argument_list|,
-name|ResSourceLength
-argument_list|,
-name|VendorLength
-argument_list|,
-name|Descriptor
-operator|->
-name|SpiSerialBus
-operator|.
-name|TypeDataLength
 argument_list|)
 expr_stmt|;
 comment|/* Process all child initialization nodes */
@@ -3451,40 +3323,6 @@ argument_list|,
 name|VendorData
 argument_list|,
 name|VendorLength
-argument_list|)
-expr_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"%16s - Actual: %.2X, Base: %.2X, ResLen: "
-literal|"%.2X, VendLen: %.2X, TypLen: %.2X\n"
-argument_list|,
-literal|"UartSerialBus"
-argument_list|,
-name|Descriptor
-operator|->
-name|UartSerialBus
-operator|.
-name|ResourceLength
-argument_list|,
-operator|(
-name|UINT16
-operator|)
-sizeof|sizeof
-argument_list|(
-name|AML_RESOURCE_UART_SERIALBUS
-argument_list|)
-argument_list|,
-name|ResSourceLength
-argument_list|,
-name|VendorLength
-argument_list|,
-name|Descriptor
-operator|->
-name|UartSerialBus
-operator|.
-name|TypeDataLength
 argument_list|)
 expr_stmt|;
 comment|/* Process all child initialization nodes */

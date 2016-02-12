@@ -2408,6 +2408,12 @@ name|SRC_TYPE_SIMPLE
 block|}
 block|,
 block|{
+literal|"ASL_XREF_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"UINT64_OVERLAY"
 block|,
 name|SRC_TYPE_UNION
@@ -3004,6 +3010,12 @@ block|}
 block|,
 block|{
 literal|"ACPI_HEST_GENERIC"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
+literal|"ACPI_HEST_GENERIC_V2"
 block|,
 name|SRC_TYPE_STRUCT
 block|}

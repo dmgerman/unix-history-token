@@ -292,6 +292,16 @@ literal|"Device Map:   "
 block|,
 literal|"Device Map Output"
 block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Cross Ref:    "
+block|,
+literal|"Cross-reference Output"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -711,6 +721,18 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_DebugFlag
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_CrossReferenceOutput
 parameter_list|,
 name|FALSE
 parameter_list|)
@@ -1532,7 +1554,20 @@ name|ACPI_PARSE_OBJECT
 name|ASL_INIT_GLOBAL
 argument_list|(
 operator|*
-name|RootNode
+name|Gbl_ParseTreeRoot
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|ACPI_PARSE_OBJECT
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_ExternalsListHead
 argument_list|,
 name|NULL
 argument_list|)
@@ -1578,14 +1613,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ASL_EXTERN
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Gbl_FirstLevelInsertionNode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ASL_EXTERN
 name|UINT8
 name|ASL_INIT_GLOBAL
 argument_list|(
@@ -1606,6 +1633,14 @@ name|Gbl_Signature
 argument_list|,
 name|NULL
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Gbl_FirstLevelInsertionNode
 decl_stmt|;
 end_decl_stmt
 
@@ -1769,7 +1804,7 @@ begin_define
 define|#
 directive|define
 name|ASL_NUM_EVENTS
-value|20
+value|24
 end_define
 
 begin_decl_stmt

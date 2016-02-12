@@ -1125,6 +1125,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest10
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoHestNotify
 index|[]
 decl_stmt|;

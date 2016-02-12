@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20160108
+value|0x20160212
 end_define
 
 begin_include
@@ -403,7 +403,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Optionally allow default region handlers to be overridden.  */
+comment|/*  * Optionally support group module level code.  */
 end_comment
 
 begin_expr_stmt
@@ -411,7 +411,7 @@ name|ACPI_INIT_GLOBAL
 argument_list|(
 name|UINT8
 argument_list|,
-name|AcpiGbl_OverrideDefaultRegionHandlers
+name|AcpiGbl_GroupModuleLevelCode
 argument_list|,
 name|FALSE
 argument_list|)
@@ -1876,8 +1876,8 @@ begin_macro
 name|ACPI_MSG_DEPENDENT_RETURN_VOID
 argument_list|(
 argument|ACPI_PRINTF_LIKE(
-literal|3
-argument|) void ACPI_INTERNAL_VAR_XFACE AcpiInfo (     const char              *ModuleName,     UINT32                  LineNumber,     const char              *Format,     ...)
+literal|1
+argument|) void ACPI_INTERNAL_VAR_XFACE AcpiInfo (     const char              *Format,     ...)
 argument_list|)
 end_macro
 

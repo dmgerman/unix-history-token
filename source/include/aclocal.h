@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_NUM_MUTEX
-value|ACPI_MAX_MUTEX+1
+value|(ACPI_MAX_MUTEX+1)
 end_define
 
 begin_comment
@@ -217,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_NUM_LOCK
-value|ACPI_MAX_LOCK+1
+value|(ACPI_MAX_LOCK+1)
 end_define
 
 begin_comment
@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MUTEX_NOT_ACQUIRED
-value|(ACPI_THREAD_ID) -1
+value|((ACPI_THREAD_ID) -1)
 end_define
 
 begin_comment

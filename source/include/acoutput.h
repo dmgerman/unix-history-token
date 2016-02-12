@@ -1028,7 +1028,7 @@ value|_AcpiFunctionName
 end_define
 
 begin_comment
-comment|/*  * The Name parameter should be the procedure name as a quoted string.  * The function name is also used by the function exit macros below.  * Note: (const char) is used to be compatible with the debug interfaces  * and macros such as __FUNCTION__.  */
+comment|/*  * The Name parameter should be the procedure name as a non-quoted string.  * The function name is also used by the function exit macros below.  * Note: (const char) is used to be compatible with the debug interfaces  * and macros such as __FUNCTION__.  */
 end_comment
 
 begin_define

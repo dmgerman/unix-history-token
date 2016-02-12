@@ -4420,6 +4420,21 @@ name|ACPI_HEST_GENERIC
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_HEST_TYPE_GENERIC_ERROR_V2
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoHest10
+expr_stmt|;
+name|SubTableLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_HEST_GENERIC_V2
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Cannot continue on unknown type - no length */
 name|AcpiOsPrintf

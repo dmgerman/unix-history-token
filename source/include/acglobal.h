@@ -217,18 +217,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ACPI_INIT_GLOBAL
-argument_list|(
-name|UINT8
-argument_list|,
-name|AcpiGbl_GroupModuleLevelCode
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*****************************************************************************  *  * Mutual exclusion within ACPICA subsystem  *  ****************************************************************************/
 end_comment
@@ -623,7 +611,7 @@ name|ACPI_INIT_GLOBAL
 argument_list|(
 name|BOOLEAN
 argument_list|,
-name|AcpiGbl_RegMethodsEnabled
+name|AcpiGbl_NamespaceInitialized
 argument_list|,
 name|FALSE
 argument_list|)

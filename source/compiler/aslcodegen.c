@@ -138,13 +138,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"\nWriting AML\n\n"
-argument_list|)
-expr_stmt|;
 comment|/* Generate the AML output file */
 name|FlSeekFile
 argument_list|(
@@ -163,7 +156,7 @@ name|Gbl_ErrorLog
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,
@@ -178,12 +171,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
-literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L#  EL#  LL#  ELL#\n"
-argument_list|,
-literal|76
-argument_list|,
-literal|" "
+name|ASL_PARSE_TREE_HEADER2
 argument_list|)
 expr_stmt|;
 name|CgCloseTable
@@ -213,7 +201,25 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
-comment|/*      * Print header at level 0. Alignment assumes 32-bit pointers      */
+comment|/* Generate the AML for this node */
+name|CgWriteNode
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_DebugFlag
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Print header at level 0. Alignment assumes 32-bit pointers */
 if|if
 condition|(
 operator|!
@@ -224,106 +230,62 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"Final parse tree used for AML output:\n"
+literal|"\nFinal parse tree used for AML output:\n"
 argument_list|)
 expr_stmt|;
 name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
-literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L#  EL#  LL#  ELL#\n"
-argument_list|,
-literal|76
-argument_list|,
-literal|" "
+name|ASL_PARSE_TREE_HEADER2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Debug output */
-name|DbgPrint
-argument_list|(
-name|ASL_TREE_OUTPUT
-argument_list|,
-literal|"%5.5d [%2d]"
-argument_list|,
-name|Op
-operator|->
-name|Asl
-operator|.
-name|LogicalLineNumber
-argument_list|,
-name|Level
-argument_list|)
-expr_stmt|;
-name|UtPrintFormattedName
-argument_list|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-argument_list|,
-name|Level
-argument_list|)
-expr_stmt|;
-if|if
+comment|/* Dump ParseOp name and possible value */
+switch|switch
 condition|(
 name|Op
 operator|->
 name|Asl
 operator|.
 name|ParseOpcode
-operator|==
-name|PARSEOP_NAMESEG
-operator|||
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
-name|PARSEOP_NAMESTRING
-operator|||
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
-name|PARSEOP_METHODCALL
 condition|)
 block|{
-name|DbgPrint
+case|case
+name|PARSEOP_NAMESEG
+case|:
+case|case
+name|PARSEOP_NAMESTRING
+case|:
+case|case
+name|PARSEOP_METHODCALL
+case|:
+case|case
+name|PARSEOP_STRING_LITERAL
+case|:
+name|UtDumpStringOp
 argument_list|(
-name|ASL_TREE_OUTPUT
-argument_list|,
-literal|"%10.32s      "
-argument_list|,
 name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|DbgPrint
-argument_list|(
-name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"                "
+name|Level
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|UtDumpBasicOp
+argument_list|(
+name|Op
+argument_list|,
+name|Level
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    "
-literal|"%08X %08X %08X %08X %08X %08X %04X  %02d  %02d   %02d   %02d   %02d\n"
+name|ASL_PARSE_TREE_DEBUG2
 argument_list|,
 comment|/* 1  */
 operator|(
@@ -477,12 +439,6 @@ operator|->
 name|Asl
 operator|.
 name|EndLogicalLine
-argument_list|)
-expr_stmt|;
-comment|/* Generate the AML for this node */
-name|CgWriteNode
-argument_list|(
-name|Op
 argument_list|)
 expr_stmt|;
 return|return
@@ -1450,7 +1406,7 @@ decl_stmt|;
 comment|/* Process all definition blocks */
 name|Op
 operator|=
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|->
 name|Asl
 operator|.
@@ -1508,16 +1464,6 @@ operator|.
 name|ParseOpcode
 operator|==
 name|PARSEOP_DEFAULT_ARG
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
-name|PARSEOP_EXTERNAL
 operator|)
 operator|||
 operator|(

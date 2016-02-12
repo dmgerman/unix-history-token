@@ -201,7 +201,8 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiNsInitializeDevices
 parameter_list|(
-name|void
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

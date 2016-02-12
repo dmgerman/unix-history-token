@@ -892,9 +892,6 @@ case|case
 name|PARSEOP_DEFAULT_ARG
 case|:
 case|case
-name|PARSEOP_EXTERNAL
-case|:
-case|case
 name|PARSEOP_INCLUDE
 case|:
 case|case

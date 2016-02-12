@@ -187,6 +187,10 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|CurrentOp
+decl_stmt|;
 name|struct
 name|asl_method_info
 modifier|*
@@ -406,7 +410,10 @@ name|ASL_FILE_C_OFFSET_OUTPUT
 block|,
 comment|/* .offset.h */
 name|ASL_FILE_MAP_OUTPUT
+block|,
 comment|/* .map */
+name|ASL_FILE_XREF_OUTPUT
+comment|/* .xrf */
 block|}
 name|ASL_FILE_TYPES
 typedef|;
@@ -416,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|ASL_MAX_FILE_TYPE
-value|16
+value|17
 end_define
 
 begin_define
@@ -533,6 +540,13 @@ define|#
 directive|define
 name|FILE_SUFFIX_MAP
 value|"map"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_XREF
+value|"xrf"
 end_define
 
 begin_comment
@@ -870,6 +884,49 @@ directive|define
 name|ASL_ARG_REFERENCED
 value|(1<<4)
 end_define
+
+begin_comment
+comment|/* Info used to track method counts for cross reference output file */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_xref_info
+block|{
+name|UINT32
+name|ThisMethodInvocations
+decl_stmt|;
+name|UINT32
+name|TotalPredefinedMethods
+decl_stmt|;
+name|UINT32
+name|TotalUserMethods
+decl_stmt|;
+name|UINT32
+name|TotalUnreferenceUserMethods
+decl_stmt|;
+name|UINT32
+name|ThisObjectReferences
+decl_stmt|;
+name|UINT32
+name|TotalObjects
+decl_stmt|;
+name|UINT32
+name|TotalUnreferencedObjects
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|MethodOp
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|CurrentMethodOp
+decl_stmt|;
+block|}
+name|ASL_XREF_INFO
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

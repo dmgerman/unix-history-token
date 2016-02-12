@@ -37,6 +37,12 @@ directive|include
 file|"acinterp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acevents.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -298,11 +304,14 @@ begin_function
 name|ACPI_STATUS
 name|AcpiNsInitializeDevices
 parameter_list|(
-name|void
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_DEVICE_WALK_INFO
 name|Info
@@ -310,6 +319,25 @@ decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|NsInitializeDevices
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_DEVICE_INIT
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"[Init] Initializing ACPI Devices\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Init counters */
@@ -405,7 +433,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-comment|/*      * Execute the "global" _INI method that may appear at the root. This      * support is provided for Windows compatibility (Vista+) and is not      * part of the ACPI specification.      */
+comment|/*          * Execute the "global" _INI method that may appear at the root.          * This support is provided for Windows compatibility (Vista+) and          * is not part of the ACPI specification.          */
 name|Info
 operator|.
 name|EvaluateInfo
@@ -461,6 +489,55 @@ name|Num_INI
 operator|++
 expr_stmt|;
 block|}
+block|}
+comment|/*      * Run all _REG methods      *      * Note: Any objects accessed by the _REG methods will be automatically      * initialized, even if they contain executable AML (see the call to      * AcpiNsInitializeObjects below).      */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_ADDRESS_SPACE_INIT
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"[Init] Executing _REG OpRegion methods\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiEvInitializeOpRegions
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_DEVICE_INIT
+operator|)
+condition|)
+block|{
 comment|/* Walk namespace to execute all _INIs on present devices */
 name|Status
 operator|=
@@ -484,7 +561,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      * Any _OSI requests should be completed by now. If the BIOS has      * requested any Windows OSI strings, we will always truncate      * I/O addresses to 16 bits -- for Windows compatibility.      */
+comment|/*          * Any _OSI requests should be completed by now. If the BIOS has          * requested any Windows OSI strings, we will always truncate          * I/O addresses to 16 bits -- for Windows compatibility.          */
 if|if
 condition|(
 name|AcpiGbl_OsiData
@@ -538,6 +615,7 @@ name|DeviceCount
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

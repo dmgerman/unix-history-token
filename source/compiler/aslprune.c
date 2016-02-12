@@ -199,7 +199,7 @@ argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,

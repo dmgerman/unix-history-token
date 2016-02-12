@@ -1162,10 +1162,6 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 comment|/* Init ACPICA and start debugger thread */
-name|AcpiGbl_OverrideDefaultRegionHandlers
-operator|=
-name|TRUE
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiInitializeSubsystem

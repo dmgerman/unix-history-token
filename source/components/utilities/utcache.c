@@ -488,7 +488,7 @@ name|void
 modifier|*
 name|Object
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|OsAcquireObject
 argument_list|)

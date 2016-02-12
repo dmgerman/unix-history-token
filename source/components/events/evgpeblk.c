@@ -1402,8 +1402,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Enabled %u GPEs in block %02X to %02X"
 operator|,
 name|GpeEnabledCount

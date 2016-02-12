@@ -1298,7 +1298,9 @@ operator|!
 name|NewBuffer
 condition|)
 block|{
-return|return;
+goto|goto
+name|Exit
+goto|;
 block|}
 comment|/* The two bit-packed buffers should match */
 if|if
@@ -1658,12 +1660,14 @@ expr_stmt|;
 block|}
 name|ACPI_FREE
 argument_list|(
-name|PldInfo
+name|NewBuffer
 argument_list|)
 expr_stmt|;
+name|Exit
+label|:
 name|ACPI_FREE
 argument_list|(
-name|NewBuffer
+name|PldInfo
 argument_list|)
 expr_stmt|;
 block|}

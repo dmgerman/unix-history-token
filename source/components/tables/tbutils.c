@@ -367,8 +367,6 @@ expr_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Forced DSDT copy: length 0x%05X copied locally, original unmapped"
 operator|,
 name|NewTable

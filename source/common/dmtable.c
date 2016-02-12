@@ -417,6 +417,8 @@ literal|"PCI Express/PCI-X Bridge AER"
 block|,
 literal|"Generic Hardware Error Source"
 block|,
+literal|"Generic Hardware Error Source V2"
+block|,
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}

@@ -694,8 +694,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Dynamic OEM Table Load:"
 operator|)
 argument_list|)
@@ -1244,8 +1242,6 @@ comment|/* Install the new table into the local data structures */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Dynamic OEM Table Load:"
 operator|)
 argument_list|)

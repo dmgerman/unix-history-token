@@ -1340,8 +1340,6 @@ block|}
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Actual Package length (%u) is larger than "
 literal|"NumElements field (%u), truncated"
 operator|,

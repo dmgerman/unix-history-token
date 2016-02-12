@@ -787,6 +787,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_FIT"
+argument_list|,
+literal|"Firmware Interface Table"
+argument_list|,
+literal|"Returns a list of NFIT structures"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_FIX"
 argument_list|,
 literal|"Fixed Register Resource Provider"
@@ -2515,6 +2524,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_Wxx"
+argument_list|,
+literal|"Wake Event"
+argument_list|,
+literal|"Method executed as a result of a wake event"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_WAK"
 argument_list|,
 literal|"Wake"
@@ -2524,11 +2542,20 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
-literal|"_Wxx"
+literal|"_WPC"
 argument_list|,
-literal|"Wake Event"
+literal|"Wireless Power Calibration"
 argument_list|,
-literal|"Method executed as a result of a wake event"
+literal|"Calibrate power and notify wireless device"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_WPP"
+argument_list|,
+literal|"Wireless Power Polling"
+argument_list|,
+literal|"Get recommended polling interval"
 argument_list|)
 block|,
 name|AH_PREDEF

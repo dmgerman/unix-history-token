@@ -695,6 +695,15 @@ name|Asl
 operator|.
 name|Node
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+comment|/* No error message, this can happen and is OK */
+return|return;
+block|}
 comment|/* Examine the parent op of this method */
 name|OwningOp
 operator|=

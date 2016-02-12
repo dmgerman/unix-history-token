@@ -239,6 +239,15 @@ decl_stmt|;
 name|UINT8
 name|Checksum
 decl_stmt|;
+comment|/* Reset globals for External statements */
+name|AcpiGbl_NumExternalMethods
+operator|=
+literal|0
+expr_stmt|;
+name|AcpiGbl_ResolvedExternalMethods
+operator|=
+literal|0
+expr_stmt|;
 comment|/*      * Print file header and dump original table header      */
 name|AdDisassemblerHeader
 argument_list|(

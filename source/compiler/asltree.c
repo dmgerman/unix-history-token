@@ -2105,7 +2105,7 @@ block|{
 case|case
 name|PARSEOP_ASL_CODE
 case|:
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|=
 name|Op
 expr_stmt|;
@@ -2408,7 +2408,7 @@ block|{
 case|case
 name|PARSEOP_ASL_CODE
 case|:
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|=
 name|Op
 expr_stmt|;
@@ -3184,7 +3184,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|RootNode
+name|Gbl_ParseTreeRoot
 condition|)
 block|{
 return|return

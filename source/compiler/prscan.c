@@ -636,17 +636,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|Status
 operator|==
-name|ASL_WITHIN_COMMENT
-operator|)
-operator|||
-operator|(
-name|Status
-operator|==
-name|ASL_BLANK_LINE
-operator|)
+name|ASL_IGNORE_LINE
 condition|)
 block|{
 goto|goto
@@ -2032,7 +2024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    PrGetNextLine, PrGetNextLineInit  *  * PARAMETERS:  Handle              - Open file handle for the source file  *  * RETURN:      Status of the GetLine operation:  *              AE_OK               - Normal line, OK status  *              ASL_WITHIN_COMMENT  - Line is part of a multi-line comment  *              ASL_EOF             - End-of-file reached  *  * DESCRIPTION: Get the next text line from the input file. Does not strip  *              comments.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    PrGetNextLine, PrGetNextLineInit  *  * PARAMETERS:  Handle              - Open file handle for the source file  *  * RETURN:      Status of the GetLine operation:  *              AE_OK               - Normal line, OK status  *              ASL_IGNORE_LINE     - Line is blank or part of a multi-line  *                                      comment  *              ASL_EOF             - End-of-file reached  *  * DESCRIPTION: Get the next text line from the input file. Does not strip  *              comments.  *  ******************************************************************************/
 end_comment
 
 begin_define
@@ -2310,7 +2302,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|ASL_WITHIN_COMMENT
+name|ASL_IGNORE_LINE
 operator|)
 return|;
 block|}
@@ -2342,7 +2334,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|ASL_BLANK_LINE
+name|ASL_IGNORE_LINE
 operator|)
 return|;
 block|}

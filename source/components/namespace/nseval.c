@@ -825,8 +825,6 @@ block|}
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Executed %u blocks of module-level executable AML code"
 operator|,
 name|MethodCount

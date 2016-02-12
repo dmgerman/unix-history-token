@@ -592,8 +592,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Enabled %u new GPEs"
 operator|,
 name|WalkInfo

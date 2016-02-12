@@ -296,14 +296,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ModuleName
-parameter_list|,
-name|UINT32
-name|LineNumber
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 name|Format
 parameter_list|,
 modifier|...

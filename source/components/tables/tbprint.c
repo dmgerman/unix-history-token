@@ -232,8 +232,6 @@ comment|/* FACS only has signature and length fields */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%-4.4s 0x%8.8X%8.8X %06X"
 operator|,
 name|Header
@@ -294,8 +292,6 @@ expr_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"RSDP 0x%8.8X%8.8X %06X (v%.2d %-6.6s)"
 operator|,
 name|ACPI_FORMAT_UINT64
@@ -357,8 +353,6 @@ expr_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%-4.4s 0x%8.8X%8.8X"
 literal|" %06X (v%.2d %-6.6s %-8.8s %08X %-4.4s %08X)"
 operator|,

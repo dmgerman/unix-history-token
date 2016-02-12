@@ -877,8 +877,6 @@ comment|/* If the pointer is null, the table has been unloaded */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%4.4s - Table has been unloaded"
 operator|,
 name|TableDesc

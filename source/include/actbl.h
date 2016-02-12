@@ -567,7 +567,7 @@ comment|/* 00: 64-bit wake environment is required (ACPI 4.0) */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FADT - Fixed ACPI Description Table (Signature "FACP")  *        Version 4  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FADT - Fixed ACPI Description Table (Signature "FACP")  *        Version 6  *  ******************************************************************************/
 end_comment
 
 begin_comment

@@ -1953,8 +1953,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Marking method %4.4s as Serialized "
 literal|"because of AE_ALREADY_EXISTS error"
 operator|,

@@ -50,6 +50,7 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|MtCheckNamedObjectInMethod
 parameter_list|(
@@ -141,6 +142,22 @@ name|ActualArgs
 init|=
 literal|0
 decl_stmt|;
+comment|/* Build cross-reference output file if requested */
+if|if
+condition|(
+name|Gbl_CrossReferenceOutput
+condition|)
+block|{
+name|OtXrefWalkPart1
+argument_list|(
+name|Op
+argument_list|,
+name|Level
+argument_list|,
+name|MethodInfo
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|Op
@@ -1460,6 +1477,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|MtCheckNamedObjectInMethod
 parameter_list|(

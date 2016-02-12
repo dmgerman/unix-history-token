@@ -142,10 +142,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Run the _REG methods for OpRegions in each default address space */
-name|AcpiGbl_RegMethodsEnabled
-operator|=
-name|TRUE
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1492,7 +1488,7 @@ operator|==
 name|NULL
 operator|||
 operator|!
-name|AcpiGbl_RegMethodsEnabled
+name|AcpiGbl_NamespaceInitialized
 condition|)
 block|{
 name|return_ACPI_STATUS

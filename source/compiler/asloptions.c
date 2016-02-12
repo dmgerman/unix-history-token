@@ -1034,6 +1034,15 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'x'
+case|:
+comment|/* Produce cross-reference file */
+name|Gbl_CrossReferenceOutput
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(

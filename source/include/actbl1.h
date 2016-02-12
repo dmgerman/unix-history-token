@@ -573,11 +573,15 @@ name|ACPI_EINJ_SET_ERROR_TYPE_WITH_ADDRESS
 init|=
 literal|8
 block|,
-name|ACPI_EINJ_ACTION_RESERVED
+name|ACPI_EINJ_GET_EXECUTE_TIMINGS
 init|=
 literal|9
 block|,
-comment|/* 9 and greater are reserved */
+name|ACPI_EINJ_ACTION_RESERVED
+init|=
+literal|10
+block|,
+comment|/* 10 and greater are reserved */
 name|ACPI_EINJ_TRIGGER_ERROR
 init|=
 literal|0xFF
@@ -965,10 +969,14 @@ name|ACPI_ERST_GET_ERROR_ATTRIBUTES
 init|=
 literal|15
 block|,
-name|ACPI_ERST_ACTION_RESERVED
+name|ACPI_ERST_EXECUTE_TIMINGS
 init|=
 literal|16
-comment|/* 16 and greater are reserved */
+block|,
+name|ACPI_ERST_ACTION_RESERVED
+init|=
+literal|17
+comment|/* 17 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1218,10 +1226,14 @@ name|ACPI_HEST_TYPE_GENERIC_ERROR
 init|=
 literal|9
 block|,
-name|ACPI_HEST_TYPE_RESERVED
+name|ACPI_HEST_TYPE_GENERIC_ERROR_V2
 init|=
 literal|10
-comment|/* 10 and greater are reserved */
+block|,
+name|ACPI_HEST_TYPE_RESERVED
+init|=
+literal|11
+comment|/* 11 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1748,6 +1760,59 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* 10: Generic Hardware Error Source, version 2 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_hest_generic_v2
+block|{
+name|ACPI_HEST_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|RelatedSourceId
+decl_stmt|;
+name|UINT8
+name|Reserved
+decl_stmt|;
+name|UINT8
+name|Enabled
+decl_stmt|;
+name|UINT32
+name|RecordsToPreallocate
+decl_stmt|;
+name|UINT32
+name|MaxSectionsPerRecord
+decl_stmt|;
+name|UINT32
+name|MaxRawDataLength
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ErrorStatusAddress
+decl_stmt|;
+name|ACPI_HEST_NOTIFY
+name|Notify
+decl_stmt|;
+name|UINT32
+name|ErrorBlockLength
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ReadAckRegister
+decl_stmt|;
+name|UINT64
+name|ReadAckPreserve
+decl_stmt|;
+name|UINT64
+name|ReadAckWrite
+decl_stmt|;
+block|}
+name|ACPI_HEST_GENERIC_V2
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Generic Error Status block */
 end_comment
 
@@ -1860,6 +1925,9 @@ name|FruText
 index|[
 literal|20
 index|]
+decl_stmt|;
+name|UINT64
+name|TimeStamp
 decl_stmt|;
 block|}
 name|ACPI_HEST_GENERIC_DATA
@@ -3120,6 +3188,17 @@ end_define
 
 begin_comment
 comment|/* 05: SMART/health events enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_MAP_FAILED
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/* 06: Mapping to SPA failed */
 end_comment
 
 begin_comment

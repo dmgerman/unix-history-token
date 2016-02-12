@@ -232,7 +232,7 @@ comment|/* Did the parse tree get successfully constructed? */
 if|if
 condition|(
 operator|!
-name|RootNode
+name|Gbl_ParseTreeRoot
 condition|)
 block|{
 comment|/*          * If there are no errors, then we have some sort of          * internal problem.          */
@@ -282,7 +282,7 @@ argument_list|()
 expr_stmt|;
 name|OpcGetIntegerWidth
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|->
 name|Asl
 operator|.
@@ -311,13 +311,13 @@ argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
-name|ASL_WALK_VISIT_DOWNWARD
+name|ASL_WALK_VISIT_TWICE
 argument_list|,
-name|TrAmlTransformWalk
+name|TrAmlTransformWalkBegin
 argument_list|,
-name|NULL
+name|TrAmlTransformWalkEnd
 argument_list|,
 name|NULL
 argument_list|)
@@ -339,12 +339,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nGenerating AML opcodes\n\n"
+literal|"Generating AML opcodes\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -412,7 +412,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nInterpreting compile-time constant expressions\n\n"
+literal|"Interpreting compile-time constant expressions\n\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -422,7 +422,7 @@ condition|)
 block|{
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,
@@ -461,12 +461,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nUpdating AML opcodes after constant folding\n\n"
+literal|"Updating AML opcodes after constant folding\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -494,12 +494,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nGenerating Package lengths\n\n"
+literal|"Generating Package lengths\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -567,11 +567,18 @@ argument_list|(
 literal|"Create ACPI Namespace"
 argument_list|)
 expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Creating ACPI Namespace\n\n"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|LdLoadNamespace
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|)
 expr_stmt|;
 name|UtEndEvent
@@ -597,6 +604,13 @@ operator|=
 name|UtBeginEvent
 argument_list|(
 literal|"Cross reference parse tree and Namespace"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Cross referencing namespace\n\n"
 argument_list|)
 expr_stmt|;
 name|Status
@@ -625,6 +639,39 @@ argument_list|(
 name|AslGbl_NamespaceEvent
 argument_list|)
 expr_stmt|;
+comment|/* Resolve External Declarations */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Resolve all Externals"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\nResolve Externals\n\n"
+argument_list|)
+expr_stmt|;
+name|TrWalkParseTree
+argument_list|(
+name|Gbl_ParseTreeRoot
+argument_list|,
+name|ASL_WALK_VISIT_TWICE
+argument_list|,
+name|ExAmlExternalWalkBegin
+argument_list|,
+name|ExAmlExternalWalkEnd
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 comment|/*      * Semantic analysis. This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
 name|Event
 operator|=
@@ -643,12 +690,24 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Method analysis\n\n"
+literal|"Semantic analysis - Method analysis\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_CrossReferenceOutput
+condition|)
+block|{
+name|OtPrintHeaders
+argument_list|(
+literal|"Part 1: Object Reference Map "
+literal|"(Object references from within each control method)"
+argument_list|)
+expr_stmt|;
+block|}
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_TWICE
 argument_list|,
@@ -659,6 +718,22 @@ argument_list|,
 operator|&
 name|AnalysisWalkInfo
 argument_list|)
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+comment|/* Generate the object cross-reference file if requested */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Generate cross-reference file"
+argument_list|)
+expr_stmt|;
+name|OtCreateXrefFile
+argument_list|()
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
@@ -677,12 +752,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Method typing\n\n"
+literal|"Semantic analysis - Method typing\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -710,7 +785,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Operand type checking\n\n"
+literal|"Semantic analysis - Operand type checking\n\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -720,7 +795,7 @@ condition|)
 block|{
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -750,12 +825,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - miscellaneous\n\n"
+literal|"Semantic analysis - miscellaneous\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,
@@ -784,12 +859,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nGenerating Package lengths\n\n"
+literal|"Generating Package lengths\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -802,7 +877,7 @@ argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -824,6 +899,13 @@ operator|=
 name|UtBeginEvent
 argument_list|(
 literal|"Generate AML code and write output files"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Writing AML byte code\n\n"
 argument_list|)
 expr_stmt|;
 name|CgGenerateAmlOutput
@@ -1839,7 +1921,7 @@ name|Gbl_ParseOpCacheLast
 operator|=
 name|NULL
 expr_stmt|;
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|=
 name|NULL
 expr_stmt|;

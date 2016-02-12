@@ -2110,8 +2110,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_NOTIFY_MAX
+name|ACPI_GENERIC_NOTIFY_MAX
 value|0x0D
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SPECIFIC_NOTIFY_MAX
+value|0x84
 end_define
 
 begin_comment

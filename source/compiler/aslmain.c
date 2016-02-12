@@ -81,58 +81,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|UINT8
-name|AcpiIsBigEndianMachine
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsBigEndianMachine  *  * PARAMETERS:  None  *  * RETURN:      TRUE if machine is big endian  *              FALSE if machine is little endian  *  * DESCRIPTION: Detect whether machine is little endian or big endian.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|UINT8
-name|AcpiIsBigEndianMachine
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-union|union
-block|{
-name|UINT32
-name|Integer
-decl_stmt|;
-name|UINT8
-name|Bytes
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|Overlay
-init|=
-block|{
-literal|0xFF000000
-block|}
-union|;
-return|return
-operator|(
-name|Overlay
-operator|.
-name|Bytes
-index|[
-literal|0
-index|]
-operator|)
-return|;
-comment|/* Returns 0xFF (TRUE) for big endian */
-block|}
-end_function
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    Usage  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display option help message.  *              Optional items in square brackets.  *  ******************************************************************************/
 end_comment
@@ -469,6 +417,13 @@ argument_list|(
 literal|"-ls"
 argument_list|,
 literal|"Create combined source file (expanded includes) (*.src)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-lx"
+argument_list|,
+literal|"Create cross-reference file (*.xrf)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -826,6 +781,19 @@ name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* Default integer width is 64 bits */
+name|AcpiGbl_IntegerBitWidth
+operator|=
+literal|64
+expr_stmt|;
+name|AcpiGbl_IntegerNybbleWidth
+operator|=
+literal|16
+expr_stmt|;
+name|AcpiGbl_IntegerByteWidth
+operator|=
+literal|8
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -933,7 +901,7 @@ decl_stmt|;
 comment|/*      * Big-endian machines are not currently supported. ACPI tables must      * be little-endian, and support for big-endian machines needs to      * be implemented.      */
 if|if
 condition|(
-name|AcpiIsBigEndianMachine
+name|UtIsBigEndianMachine
 argument_list|()
 condition|)
 block|{

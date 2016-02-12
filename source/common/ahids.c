@@ -177,6 +177,30 @@ literal|"User Presence Detection Device"
 block|}
 block|,
 block|{
+literal|"ACPI0010"
+block|,
+literal|"Processor Container Device"
+block|}
+block|,
+block|{
+literal|"ACPI0011"
+block|,
+literal|"Generic Buttons Device"
+block|}
+block|,
+block|{
+literal|"ACPI0012"
+block|,
+literal|"NVDIMM Root Device"
+block|}
+block|,
+block|{
+literal|"ACPI0013"
+block|,
+literal|"Generic Event Device"
+block|}
+block|,
+block|{
 literal|"ADMA0F28"
 block|,
 literal|"Intel Audio DMA"
@@ -834,6 +858,12 @@ block|{
 literal|"PNP0C15"
 block|,
 literal|"Docking Station"
+block|}
+block|,
+block|{
+literal|"PNP0C33"
+block|,
+literal|"Error Device"
 block|}
 block|,
 block|{

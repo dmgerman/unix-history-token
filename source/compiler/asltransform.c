@@ -505,12 +505,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrAmlTransformWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to generate both the AML opcodes and the AML  *              operands.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrAmlTransformWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to generate both the AML opcodes and the AML  *              operands.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|TrAmlTransformWalk
+name|TrAmlTransformWalkBegin
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -529,6 +529,61 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrAmlTransformWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to generate both the AML opcodes and the AML  *              operands.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|TrAmlTransformWalkEnd
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+comment|/* Save possible Externals list in the DefintionBlock Op */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_DEFINITION_BLOCK
+condition|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Arg
+operator|=
+name|Gbl_ExternalsListHead
+expr_stmt|;
+name|Gbl_ExternalsListHead
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK
@@ -600,6 +655,15 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+name|PARSEOP_EXTERNAL
+case|:
+name|ExDoExternal
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Nothing to do here for other opcodes */
 break|break;
@@ -628,6 +692,11 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+comment|/* Reset external list when starting a definition block */
+name|Gbl_ExternalsListHead
+operator|=
+name|NULL
+expr_stmt|;
 name|Next
 operator|=
 name|Op

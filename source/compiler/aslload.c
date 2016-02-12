@@ -161,13 +161,6 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 decl_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"\nCreating namespace\n\n"
-argument_list|)
-expr_stmt|;
 comment|/* Create a new walk state */
 name|WalkState
 operator|=
