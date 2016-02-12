@@ -9578,7 +9578,7 @@ name|flags
 operator|=
 name|dr
 operator|->
-name|flags
+name|raflags
 expr_stmt|;
 name|d
 operator|.

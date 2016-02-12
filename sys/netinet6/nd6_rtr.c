@@ -1312,7 +1312,7 @@ name|saddr6
 expr_stmt|;
 name|dr0
 operator|.
-name|flags
+name|raflags
 operator|=
 name|nd_ra
 operator|->
@@ -3201,7 +3201,7 @@ switch|switch
 condition|(
 name|dr
 operator|->
-name|flags
+name|raflags
 operator|&
 name|ND_RA_FLAG_RTPREF_MASK
 condition|)
@@ -3243,7 +3243,7 @@ literal|"rtpref: impossible RA flag %x\n"
 argument_list|,
 name|dr
 operator|->
-name|flags
+name|raflags
 argument_list|)
 expr_stmt|;
 return|return
@@ -3332,13 +3332,13 @@ expr_stmt|;
 comment|/* override */
 name|dr
 operator|->
-name|flags
+name|raflags
 operator|=
 name|new
 operator|->
-name|flags
+name|raflags
 expr_stmt|;
-comment|/* xxx flag check */
+comment|/* XXX flag check */
 name|dr
 operator|->
 name|rtlifetime
