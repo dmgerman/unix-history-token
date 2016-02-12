@@ -48,13 +48,14 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elftc_demangle.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: elftc_demangle.c 3296 2016-01-09 14:17:28Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 specifier|static
+name|unsigned
 name|int
 name|is_mangled
 parameter_list|(
@@ -63,6 +64,7 @@ name|char
 modifier|*
 name|s
 parameter_list|,
+name|unsigned
 name|int
 name|style
 parameter_list|)
@@ -175,9 +177,11 @@ name|char
 modifier|*
 name|s
 parameter_list|,
+name|unsigned
 name|int
 name|style
 parameter_list|,
+name|unsigned
 name|int
 name|rc
 parameter_list|)
@@ -262,6 +266,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|style
 decl_stmt|,

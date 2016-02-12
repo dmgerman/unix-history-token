@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: main.c 3268 2015-12-07 20:30:55Z emaste $"
+literal|"$Id: main.c 3399 2016-02-12 18:07:56Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1750,6 +1750,19 @@ operator|=
 name|ieh
 operator|.
 name|e_version
+expr_stmt|;
+name|ecp
+operator|->
+name|flags
+operator|&=
+operator|~
+operator|(
+name|EXECUTABLE
+operator||
+name|DYNAMIC
+operator||
+name|RELOCATABLE
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3473,6 +3486,37 @@ else|:
 name|src
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ETF_PE
+case|:
+case|case
+name|ETF_EFI
+case|:
+if|#
+directive|if
+name|WITH_PE
+name|create_pe
+argument_list|(
+name|ecp
+argument_list|,
+name|ofd
+argument_list|,
+name|ofd0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"PE/EFI support not enabled"
+literal|" at compile time"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|errx
@@ -6490,6 +6534,29 @@ name|tgt
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ecp
+operator|->
+name|otf
+operator|==
+name|ETF_EFI
+operator|||
+name|ecp
+operator|->
+name|otf
+operator|==
+name|ETF_PE
+condition|)
+name|ecp
+operator|->
+name|oem
+operator|=
+name|elftc_bfd_target_machine
+argument_list|(
+name|tgt
+argument_list|)
+expr_stmt|;
 name|ecp
 operator|->
 name|otgt
@@ -6597,7 +6664,7 @@ begin_define
 define|#
 directive|define
 name|ELFCOPY_USAGE_MESSAGE
-value|"\ Usage: %s [options] infile [outfile]\n\   Transform an ELF object.\n\n\   Options:\n\   -d | -g | --strip-debug      Remove debugging information from the output.\n\   -j SECTION | --only-section=SECTION\n\                                Copy only the named section to the output.\n\   -p | --preserve-dates        Preserve access and modification times.\n\   -w | --wildcard              Use shell-style patterns to name symbols.\n\   -x | --discard-all           Do not copy non-globals to the output.\n\   -I FORMAT | --input-target=FORMAT\n\                                Specify object format for the input file.\n\   -K SYM | --keep-symbol=SYM   Copy symbol SYM to the output.\n\   -L SYM | --localize-symbol=SYM\n\                                Make symbol SYM local to the output file.\n\   -N SYM | --strip-symbol=SYM  Do not copy symbol SYM to the output.\n\   -O FORMAT | --output-target=FORMAT\n\                                Specify object format for the output file.\n\   -R NAME | --remove-section=NAME\n\                                Remove the named section.\n\   -S | --strip-all             Remove all symbol and relocation information\n\                                from the output.\n\   -V | --version               Print a version identifier and exit.\n\   -W SYM | --weaken-symbol=SYM Mark symbol SYM as weak in the output.\n\   -X | --discard-locals        Do not copy compiler generated symbols to\n\                                the output.\n\   --add-section NAME=FILE      Add the contents of FILE to the ELF object as\n\                                a new section named NAME.\n\   --adjust-section-vma SECTION{=,+,-}VAL | \\\n\     --change-section-address SECTION{=,+,-}VAL\n\                                Set or adjust the VMA and the LMA of the\n\                                named section by VAL.\n\   --adjust-start=INCR | --change-start=INCR\n\                                Add INCR to the start address for the ELF\n\                                object.\n\   --adjust-vma=INCR | --change-addresses=INCR\n\                                Increase the VMA and LMA of all sections by\n\                                INCR.\n\   --adjust-warning | --change-warnings\n\                                Issue warnings for non-existent sections.\n\   --change-section-lma SECTION{=,+,-}VAL\n\                                Set or adjust the LMA address of the named\n\                                section by VAL.\n\   --change-section-vma SECTION{=,+,-}VAL\n\                                Set or adjust the VMA address of the named\n\                                section by VAL.\n\   --gap-fill=VAL               Fill the gaps between sections with bytes\n\                                of value VAL.\n\   --localize-hidden            Make all hidden symbols local to the output\n\                                file.\n\   --no-adjust-warning| --no-change-warnings\n\                                Do not issue warnings for non-existent\n\                                sections.\n\   --only-keep-debug            Copy only debugging information.\n\   --output-target=FORMAT       Use the specified format for the output.\n\   --pad-to=ADDRESS             Pad the output object upto the given address.\n\   --prefix-alloc-sections=STRING\n\                                Prefix the section names of all the allocated\n\                                sections with STRING.\n\   --prefix-sections=STRING     Prefix the section names of all the sections\n\                                with STRING.\n\   --prefix-symbols=STRING      Prefix the symbol names of all the symbols\n\                                with STRING.\n\   --rename-section OLDNAME=NEWNAME[,FLAGS]\n\                                Rename and optionally change section flags.\n\   --set-section-flags SECTION=FLAGS\n\                                Set section flags for the named section.\n\                                Supported flags are: 'alloc', 'code',\n\                                'contents', 'data', 'debug', 'load',\n\                                'noload', 'readonly', 'rom', and 'shared'.\n\   --set-start=ADDRESS          Set the start address of the ELF object.\n\   --srec-forceS3               Only generate S3 S-Records.\n\   --srec-len=LEN               Set the maximum length of a S-Record line.\n\   --strip-unneeded             Do not copy relocation information.\n"
+value|"\ Usage: %s [options] infile [outfile]\n\   Transform object files.\n\n\   Options:\n\   -d | -g | --strip-debug      Remove debugging information from the output.\n\   -j SECTION | --only-section=SECTION\n\                                Copy only the named section to the output.\n\   -p | --preserve-dates        Preserve access and modification times.\n\   -w | --wildcard              Use shell-style patterns to name symbols.\n\   -x | --discard-all           Do not copy non-globals to the output.\n\   -I FORMAT | --input-target=FORMAT\n\                                Specify object format for the input file.\n\   -K SYM | --keep-symbol=SYM   Copy symbol SYM to the output.\n\   -L SYM | --localize-symbol=SYM\n\                                Make symbol SYM local to the output file.\n\   -N SYM | --strip-symbol=SYM  Do not copy symbol SYM to the output.\n\   -O FORMAT | --output-target=FORMAT\n\                                Specify object format for the output file.\n\                                FORMAT should be a target name understood by\n\                                elftc_bfd_find_target(3).\n\   -R NAME | --remove-section=NAME\n\                                Remove the named section.\n\   -S | --strip-all             Remove all symbol and relocation information\n\                                from the output.\n\   -V | --version               Print a version identifier and exit.\n\   -W SYM | --weaken-symbol=SYM Mark symbol SYM as weak in the output.\n\   -X | --discard-locals        Do not copy compiler generated symbols to\n\                                the output.\n\   --add-section NAME=FILE      Add the contents of FILE to the ELF object as\n\                                a new section named NAME.\n\   --adjust-section-vma SECTION{=,+,-}VAL | \\\n\     --change-section-address SECTION{=,+,-}VAL\n\                                Set or adjust the VMA and the LMA of the\n\                                named section by VAL.\n\   --adjust-start=INCR | --change-start=INCR\n\                                Add INCR to the start address for the ELF\n\                                object.\n\   --adjust-vma=INCR | --change-addresses=INCR\n\                                Increase the VMA and LMA of all sections by\n\                                INCR.\n\   --adjust-warning | --change-warnings\n\                                Issue warnings for non-existent sections.\n\   --change-section-lma SECTION{=,+,-}VAL\n\                                Set or adjust the LMA address of the named\n\                                section by VAL.\n\   --change-section-vma SECTION{=,+,-}VAL\n\                                Set or adjust the VMA address of the named\n\                                section by VAL.\n\   --gap-fill=VAL               Fill the gaps between sections with bytes\n\                                of value VAL.\n\   --localize-hidden            Make all hidden symbols local to the output\n\                                file.\n\   --no-adjust-warning| --no-change-warnings\n\                                Do not issue warnings for non-existent\n\                                sections.\n\   --only-keep-debug            Copy only debugging information.\n\   --output-target=FORMAT       Use the specified format for the output.\n\   --pad-to=ADDRESS             Pad the output object upto the given address.\n\   --prefix-alloc-sections=STRING\n\                                Prefix the section names of all the allocated\n\                                sections with STRING.\n\   --prefix-sections=STRING     Prefix the section names of all the sections\n\                                with STRING.\n\   --prefix-symbols=STRING      Prefix the symbol names of all the symbols\n\                                with STRING.\n\   --rename-section OLDNAME=NEWNAME[,FLAGS]\n\                                Rename and optionally change section flags.\n\   --set-section-flags SECTION=FLAGS\n\                                Set section flags for the named section.\n\                                Supported flags are: 'alloc', 'code',\n\                                'contents', 'data', 'debug', 'load',\n\                                'noload', 'readonly', 'rom', and 'shared'.\n\   --set-start=ADDRESS          Set the start address of the ELF object.\n\   --srec-forceS3               Only generate S3 S-Records.\n\   --srec-len=LEN               Set the maximum length of a S-Record line.\n\   --strip-unneeded             Do not copy relocation information.\n"
 end_define
 
 begin_function
@@ -6669,7 +6736,7 @@ begin_define
 define|#
 directive|define
 name|STRIP_USAGE_MESSAGE
-value|"\ Usage: %s [options] file...\n\   Discard information from ELF objects.\n\n\   Options:\n\   -d | -g | -S | --strip-debug    Remove debugging symbols.\n\   -h | --help                     Print a help message.\n\   --only-keep-debug               Keep debugging information only.\n\   -p | --preserve-dates           Preserve access and modification times.\n\   -s | --strip-all                Remove all symbols.\n\   --strip-unneeded                Remove symbols not needed for relocation\n\                                   processing.\n\   -w | --wildcard                 Use shell-style patterns to name symbols.\n\   -x | --discard-all              Discard all non-global symbols.\n\   -I TGT| --input-target=TGT      (Accepted, but ignored).\n\   -K SYM | --keep-symbol=SYM      Keep symbol 'SYM' in the output.\n\   -N SYM | --strip-symbol=SYM     Remove symbol 'SYM' from the output.\n\   -O TGT | --output-target=TGT    Set the output file format to 'TGT'.\n\   -R SEC | --remove-section=SEC   Remove the section named 'SEC'.\n\   -V | --version                  Print a version identifier and exit.\n\   -X | --discard-locals           Remove compiler-generated local symbols.\n"
+value|"\ Usage: %s [options] file...\n\   Discard information from ELF objects.\n\n\   Options:\n\   -d | -g | -S | --strip-debug    Remove debugging symbols.\n\   -h | --help                     Print a help message.\n\   -o FILE | --output-file FILE    Write output to FILE.\n\   --only-keep-debug               Keep debugging information only.\n\   -p | --preserve-dates           Preserve access and modification times.\n\   -s | --strip-all                Remove all symbols.\n\   --strip-unneeded                Remove symbols not needed for relocation\n\                                   processing.\n\   -w | --wildcard                 Use shell-style patterns to name symbols.\n\   -x | --discard-all              Discard all non-global symbols.\n\   -I TGT| --input-target=TGT      (Accepted, but ignored).\n\   -K SYM | --keep-symbol=SYM      Keep symbol 'SYM' in the output.\n\   -N SYM | --strip-symbol=SYM     Remove symbol 'SYM' from the output.\n\   -O TGT | --output-target=TGT    Set the output file format to 'TGT'.\n\   -R SEC | --remove-section=SEC   Remove the section named 'SEC'.\n\   -V | --version                  Print a version identifier and exit.\n\   -X | --discard-locals           Remove compiler-generated local symbols.\n"
 end_define
 
 begin_function

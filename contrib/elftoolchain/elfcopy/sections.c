@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 3272 2015-12-11 20:00:54Z kaiwang27 $"
+literal|"$Id: sections.c 3346 2016-01-17 20:09:15Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1292,6 +1292,8 @@ name|dbg_sec
 index|[]
 init|=
 block|{
+literal|".apple_"
+block|,
 literal|".debug"
 block|,
 literal|".gnu.linkonce.wi."
@@ -1999,7 +2001,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"219 gelf_getshdr failed: %s"
+literal|"gelf_getshdr failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(
@@ -2203,7 +2205,7 @@ name|ish
 operator|.
 name|sh_addr
 expr_stmt|;
-comment|/* 			 * Search program headers to determine whether section 			 * is loadable, but if user explicitly set section flags 			 * while neither "load" nor "alloc" is set, we make the 			 * section unloadable. 			 */
+comment|/* 			 * Search program headers to determine whether section 			 * is loadable, but if user explicitly set section flags 			 * while neither "load" nor "alloc" is set, we make the 			 * section unloadable. 			 * 			 * Sections in relocatable object is loadable if 			 * section flag SHF_ALLOC is set. 			 */
 if|if
 condition|(
 name|sec_flags
@@ -2227,6 +2229,7 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
+block|{
 name|s
 operator|->
 name|loadable
@@ -2238,6 +2241,31 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ecp
+operator|->
+name|flags
+operator|&
+name|RELOCATABLE
+operator|)
+operator|&&
+operator|(
+name|ish
+operator|.
+name|sh_flags
+operator|&
+name|SHF_ALLOC
+operator|)
+condition|)
+name|s
+operator|->
+name|loadable
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -4394,6 +4422,14 @@ operator|!
 name|s
 operator|->
 name|loadable
+operator|||
+operator|(
+name|ecp
+operator|->
+name|flags
+operator|&
+name|RELOCATABLE
+operator|)
 condition|)
 name|s
 operator|->
@@ -4416,6 +4452,16 @@ condition|(
 name|s
 operator|->
 name|loadable
+operator|&&
+operator|(
+name|ecp
+operator|->
+name|flags
+operator|&
+name|RELOCATABLE
+operator|)
+operator|==
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -5238,7 +5284,29 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|||
+operator|(
+name|id
+operator|=
+name|elf_rawdata
+argument_list|(
+name|s
+operator|->
+name|is
+argument_list|,
+name|id
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|elf_errno
+argument_list|()
+expr_stmt|;
 name|print_data
 argument_list|(
 name|id
@@ -5250,6 +5318,7 @@ operator|->
 name|d_size
 argument_list|)
 expr_stmt|;
+block|}
 name|elferr
 operator|=
 name|elf_errno
@@ -5340,8 +5409,29 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|||
+operator|(
+name|id
+operator|=
+name|elf_rawdata
+argument_list|(
+name|s
+operator|->
+name|is
+argument_list|,
+name|id
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|elf_errno
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|b
@@ -5491,7 +5581,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"526 gelf_getshdr() failed: %s"
+literal|"gelf_getshdr() failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(
@@ -5518,7 +5608,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"529 gelf_getshdr() failed: %s"
+literal|"gelf_getshdr() failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(
@@ -5631,31 +5721,12 @@ name|sec_flags
 operator|&
 name|SF_ALLOC
 condition|)
-block|{
 name|osh
 operator|.
 name|sh_flags
 operator||=
 name|SHF_ALLOC
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|s
-operator|->
-name|loadable
-condition|)
-name|warnx
-argument_list|(
-literal|"set SHF_ALLOC flag for "
-literal|"unloadable section %s"
-argument_list|,
-name|s
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5684,6 +5755,71 @@ name|sh_flags
 operator||=
 name|SHF_EXECINSTR
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sec_flags
+operator|&
+name|SF_CONTENTS
+operator|)
+operator|&&
+name|s
+operator|->
+name|type
+operator|==
+name|SHT_NOBITS
+operator|&&
+name|s
+operator|->
+name|sz
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 				 * Convert SHT_NOBITS section to section with 				 * (zero'ed) content on file. 				 */
+name|osh
+operator|.
+name|sh_type
+operator|=
+name|s
+operator|->
+name|type
+operator|=
+name|SHT_PROGBITS
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|->
+name|buf
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+name|s
+operator|->
+name|sz
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|nocopy
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5695,6 +5831,7 @@ name|ish
 operator|.
 name|sh_flags
 expr_stmt|;
+comment|/* 			 * Newer binutils as(1) emits the section flag 			 * SHF_INFO_LINK for relocation sections. elfcopy 			 * emits this flag in the output section if it's 			 * missing in the input section, to remain compatible 			 * with binutils. 			 */
 if|if
 condition|(
 name|ish
@@ -5820,6 +5957,30 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|elf_errno
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|id
+operator|=
+name|elf_rawdata
+argument_list|(
+name|s
+operator|->
+name|is
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|elferr
 operator|=
 name|elf_errno
@@ -5835,15 +5996,16 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"elf_getdata() failed: %s"
+literal|"failed to read section:"
+literal|" %s"
 argument_list|,
-name|elf_errmsg
-argument_list|(
-name|elferr
-argument_list|)
+name|s
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 if|if
 condition|(
@@ -6396,6 +6558,9 @@ decl_stmt|;
 name|size_t
 name|off
 decl_stmt|;
+name|uint64_t
+name|stype
+decl_stmt|;
 comment|/* Put these sections in the end of current list. */
 name|off
 operator|=
@@ -6452,6 +6617,44 @@ argument|sadd_list
 argument_list|)
 block|{
 comment|/* TODO: Add section header vma/lma, flag changes here */
+comment|/* 		 * The default section type for user added section is 		 * SHT_PROGBITS. If the section name match certain patterns, 		 * elfcopy will try to set a more appropriate section type. 		 * However, data type is always set to ELF_T_BYTE and no 		 * translation is performed by libelf. 		 */
+name|stype
+operator|=
+name|SHT_PROGBITS
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sa
+operator|->
+name|name
+argument_list|,
+literal|".note"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|sa
+operator|->
+name|name
+argument_list|,
+literal|".note."
+argument_list|,
+name|strlen
+argument_list|(
+literal|".note."
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|stype
+operator|=
+name|SHT_NOTE
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -6475,7 +6678,7 @@ name|size
 argument_list|,
 name|off
 argument_list|,
-name|SHT_PROGBITS
+name|stype
 argument_list|,
 name|ELF_T_BYTE
 argument_list|,
@@ -6586,7 +6789,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"668 gelf_getshdr failed: %s"
+literal|"gelf_getshdr failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(
@@ -6984,7 +7187,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"692 gelf_getshdr() failed: %s"
+literal|"gelf_getshdr() failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(
@@ -7396,6 +7599,15 @@ name|st_size
 expr_stmt|;
 if|if
 condition|(
+name|sa
+operator|->
+name|size
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|sa
 operator|->
@@ -7477,6 +7689,14 @@ name|fclose
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|sa
+operator|->
+name|content
+operator|=
+name|NULL
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
