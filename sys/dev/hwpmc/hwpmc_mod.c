@@ -5999,9 +5999,6 @@ expr_stmt|;
 comment|/* 				 * For counting process-virtual PMCs, 				 * we expect the count to be 				 * increasing monotonically, modulo a 64 				 * bit wraparound. 				 */
 name|KASSERT
 argument_list|(
-operator|(
-name|int64_t
-operator|)
 name|tmp
 operator|>=
 literal|0
