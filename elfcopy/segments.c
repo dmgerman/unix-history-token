@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3340 2016-01-17 15:00:56Z kaiwang27 $"
+literal|"$Id: segments.c 3397 2016-02-12 14:35:19Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2246,11 +2246,11 @@ operator|&
 name|ophdr
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"gelf_update_phdr failed :%s"
+literal|"gelf_update_phdr failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(

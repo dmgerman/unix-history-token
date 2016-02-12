@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: main.c 3381 2016-01-30 19:39:47Z jkoshy $"
+literal|"$Id: main.c 3399 2016-02-12 18:07:56Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1750,6 +1750,19 @@ operator|=
 name|ieh
 operator|.
 name|e_version
+expr_stmt|;
+name|ecp
+operator|->
+name|flags
+operator|&=
+operator|~
+operator|(
+name|EXECUTABLE
+operator||
+name|DYNAMIC
+operator||
+name|RELOCATABLE
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6723,7 +6736,7 @@ begin_define
 define|#
 directive|define
 name|STRIP_USAGE_MESSAGE
-value|"\ Usage: %s [options] file...\n\   Discard information from ELF objects.\n\n\   Options:\n\   -d | -g | -S | --strip-debug    Remove debugging symbols.\n\   -h | --help                     Print a help message.\n\   --only-keep-debug               Keep debugging information only.\n\   -p | --preserve-dates           Preserve access and modification times.\n\   -s | --strip-all                Remove all symbols.\n\   --strip-unneeded                Remove symbols not needed for relocation\n\                                   processing.\n\   -w | --wildcard                 Use shell-style patterns to name symbols.\n\   -x | --discard-all              Discard all non-global symbols.\n\   -I TGT| --input-target=TGT      (Accepted, but ignored).\n\   -K SYM | --keep-symbol=SYM      Keep symbol 'SYM' in the output.\n\   -N SYM | --strip-symbol=SYM     Remove symbol 'SYM' from the output.\n\   -O TGT | --output-target=TGT    Set the output file format to 'TGT'.\n\   -R SEC | --remove-section=SEC   Remove the section named 'SEC'.\n\   -V | --version                  Print a version identifier and exit.\n\   -X | --discard-locals           Remove compiler-generated local symbols.\n"
+value|"\ Usage: %s [options] file...\n\   Discard information from ELF objects.\n\n\   Options:\n\   -d | -g | -S | --strip-debug    Remove debugging symbols.\n\   -h | --help                     Print a help message.\n\   -o FILE | --output-file FILE    Write output to FILE.\n\   --only-keep-debug               Keep debugging information only.\n\   -p | --preserve-dates           Preserve access and modification times.\n\   -s | --strip-all                Remove all symbols.\n\   --strip-unneeded                Remove symbols not needed for relocation\n\                                   processing.\n\   -w | --wildcard                 Use shell-style patterns to name symbols.\n\   -x | --discard-all              Discard all non-global symbols.\n\   -I TGT| --input-target=TGT      (Accepted, but ignored).\n\   -K SYM | --keep-symbol=SYM      Keep symbol 'SYM' in the output.\n\   -N SYM | --strip-symbol=SYM     Remove symbol 'SYM' from the output.\n\   -O TGT | --output-target=TGT    Set the output file format to 'TGT'.\n\   -R SEC | --remove-section=SEC   Remove the section named 'SEC'.\n\   -V | --version                  Print a version identifier and exit.\n\   -X | --discard-locals           Remove compiler-generated local symbols.\n"
 end_define
 
 begin_function
