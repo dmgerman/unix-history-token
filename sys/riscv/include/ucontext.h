@@ -63,11 +63,15 @@ begin_struct
 struct|struct
 name|fpregs
 block|{
-name|__uint128_t
+name|__uint64_t
 name|fp_x
 index|[
-literal|32
+literal|64
 index|]
+name|__aligned
+argument_list|(
+literal|16
+argument_list|)
 decl_stmt|;
 name|__uint64_t
 name|fp_fcsr
