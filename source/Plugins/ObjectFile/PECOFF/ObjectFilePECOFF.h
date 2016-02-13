@@ -366,6 +366,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
+name|lldb
+operator|::
+name|SymbolType
+name|MapSymbolType
+argument_list|(
+argument|uint16_t coff_symbol_type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|ParseHeader
 argument_list|()
