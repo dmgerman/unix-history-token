@@ -63,22 +63,22 @@ name|int
 name|mc_onstack
 decl_stmt|;
 comment|/* sigstack state to restore */
-name|register_t
+name|__register_t
 name|mc_pc
 decl_stmt|;
 comment|/* pc at time of signal */
-name|register_t
+name|__register_t
 name|mc_regs
 index|[
 literal|32
 index|]
 decl_stmt|;
 comment|/* processor regs 0 to 31 */
-name|register_t
+name|__register_t
 name|sr
 decl_stmt|;
 comment|/* status register */
-name|register_t
+name|__register_t
 name|mullo
 decl_stmt|,
 name|mulhi
@@ -95,7 +95,7 @@ literal|33
 index|]
 decl_stmt|;
 comment|/* fp regs 0 to 31 and csr */
-name|register_t
+name|__register_t
 name|mc_fpc_eir
 decl_stmt|;
 comment|/* fp exception instruction reg */

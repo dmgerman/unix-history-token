@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_bfdtarget.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: libelftc_bfdtarget.c 3309 2016-01-10 09:10:51Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1181,6 +1181,74 @@ operator|.
 name|bt_type
 operator|=
 name|ETF_SREC
+block|, 	}
+block|,
+block|{
+operator|.
+name|bt_name
+operator|=
+literal|"efi-app-ia32"
+block|,
+operator|.
+name|bt_type
+operator|=
+name|ETF_EFI
+block|,
+operator|.
+name|bt_machine
+operator|=
+name|EM_386
+block|, 	}
+block|,
+block|{
+operator|.
+name|bt_name
+operator|=
+literal|"efi-app-x86_64"
+block|,
+operator|.
+name|bt_type
+operator|=
+name|ETF_EFI
+block|,
+operator|.
+name|bt_machine
+operator|=
+name|EM_X86_64
+block|, 	}
+block|,
+block|{
+operator|.
+name|bt_name
+operator|=
+literal|"pei-i386"
+block|,
+operator|.
+name|bt_type
+operator|=
+name|ETF_PE
+block|,
+operator|.
+name|bt_machine
+operator|=
+name|EM_386
+block|, 	}
+block|,
+block|{
+operator|.
+name|bt_name
+operator|=
+literal|"pei-x86-64"
+block|,
+operator|.
+name|bt_type
+operator|=
+name|ETF_PE
+block|,
+operator|.
+name|bt_machine
+operator|=
+name|EM_X86_64
 block|, 	}
 block|,
 block|{

@@ -446,6 +446,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|initial
+operator|==
+name|false
+operator|&&
 name|ISCSI_SNLT
 argument_list|(
 name|ntohl
@@ -467,7 +471,7 @@ name|request
 argument_list|,
 literal|0x02
 argument_list|,
-literal|0x05
+literal|0x00
 argument_list|)
 expr_stmt|;
 name|log_errx
@@ -514,7 +518,7 @@ name|request
 argument_list|,
 literal|0x02
 argument_list|,
-literal|0x05
+literal|0x00
 argument_list|)
 expr_stmt|;
 name|log_errx

@@ -75,7 +75,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: archive.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: archive.c 3287 2015-12-31 16:58:48Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2067,12 +2067,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"%s"
-argument_list|,
-name|archive_error_string
-argument_list|(
-name|a
-argument_list|)
+literal|"archive_read_new failed"
 argument_list|)
 expr_stmt|;
 name|archive_read_support_format_ar
@@ -2468,12 +2463,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"%s"
-argument_list|,
-name|archive_error_string
-argument_list|(
-name|a
-argument_list|)
+literal|"archive_write_new failed"
 argument_list|)
 expr_stmt|;
 name|archive_write_set_format_ar_svr4

@@ -4374,7 +4374,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((((uint8_t *)&(a)->s_addr)[0] == 127)&& \      (((uint8_t *)&(a)->s_addr)[1] == 0)&& \      (((uint8_t *)&(a)->s_addr)[2] == 0)&& \      (((uint8_t *)&(a)->s_addr)[3] == 1))
+value|(((uint8_t *)&(a)->s_addr)[0] == 127)
 end_define
 
 begin_define

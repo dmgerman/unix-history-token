@@ -370,10 +370,6 @@ name|CPL_TRACE_PKT
 init|=
 literal|0xB0
 block|,
-name|CPL_TRACE_PKT_T5
-init|=
-literal|0x48
-block|,
 name|CPL_RX2TX_DATA
 init|=
 literal|0xB1

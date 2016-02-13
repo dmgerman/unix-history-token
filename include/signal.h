@@ -33,6 +33,18 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_ucontext.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -646,16 +658,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|__ucontext
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* XXX spec requires a complete declaration. */
-end_comment
 
 begin_function_decl
 name|int

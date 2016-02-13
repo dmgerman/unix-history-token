@@ -3299,9 +3299,19 @@ name|ioat
 operator|->
 name|last_seen
 condition|)
+block|{
+comment|/* 		 * If we landed in process_events and nothing has been 		 * completed, check for a timeout due to channel halt. 		 */
+name|comp_update
+operator|=
+name|ioat_get_chansts
+argument_list|(
+name|ioat
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 while|while
 condition|(
 literal|1
@@ -3438,6 +3448,13 @@ operator|->
 name|cleanup_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|completed
+operator|!=
+literal|0
+condition|)
+block|{
 name|ioat_putn
 argument_list|(
 name|ioat
@@ -3455,6 +3472,7 @@ operator|->
 name|tail
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

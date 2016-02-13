@@ -90,7 +90,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: brandelf.c 3234 2015-07-31 12:35:09Z emaste $"
+literal|"$Id: brandelf.c 3354 2016-01-18 21:50:15Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -890,6 +890,10 @@ index|[
 name|EI_OSABI
 index|]
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|type
 expr_stmt|;
 if|if

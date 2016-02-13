@@ -1492,6 +1492,8 @@ block|}
 if|if
 condition|(
 name|bp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|brelse
@@ -1510,6 +1512,8 @@ label|:
 if|if
 condition|(
 name|bp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|brelse
@@ -2340,6 +2344,8 @@ label|:
 if|if
 condition|(
 name|bp
+operator|!=
+name|NULL
 condition|)
 name|brelse
 argument_list|(
@@ -2349,6 +2355,8 @@ expr_stmt|;
 if|if
 condition|(
 name|pribp
+operator|!=
+name|NULL
 condition|)
 name|brelse
 argument_list|(
@@ -2358,6 +2366,8 @@ expr_stmt|;
 if|if
 condition|(
 name|supbp
+operator|!=
+name|NULL
 condition|)
 name|brelse
 argument_list|(
@@ -3550,7 +3560,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (isonum_733(isodir->extent) + 		    isonum_711(isodir->ext_attr_length) != ifhp->ifid_start) { 			if (bp != 0) 				brelse(bp); 			printf("fhtovp: file start miss %d vs %d\n", 			       isonum_733(isodir->extent) + isonum_711(isodir->ext_attr_length), 			       ifhp->ifid_start); 			return (ESTALE); 		}
+block|if (isonum_733(isodir->extent) + 		    isonum_711(isodir->ext_attr_length) != ifhp->ifid_start) { 			brelse(bp); 			printf("fhtovp: file start miss %d vs %d\n", 			       isonum_733(isodir->extent) + isonum_711(isodir->ext_attr_length), 			       ifhp->ifid_start); 			return (ESTALE); 		}
 endif|#
 directive|endif
 block|}
@@ -3585,7 +3595,7 @@ if|if
 condition|(
 name|bp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|brelse
 argument_list|(
@@ -3796,12 +3806,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|bp
-operator|!=
-literal|0
-condition|)
 name|brelse
 argument_list|(
 name|bp

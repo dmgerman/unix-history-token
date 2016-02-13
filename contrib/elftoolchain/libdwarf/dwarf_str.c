@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_str.c 2075 2011-10-27 03:47:28Z jkoshy $"
+literal|"$Id: dwarf_str.c 3295 2016-01-08 22:08:10Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -50,10 +50,6 @@ condition|(
 name|dbg
 operator|==
 name|NULL
-operator|||
-name|offset
-operator|<
-literal|0
 operator|||
 name|string
 operator|==
@@ -112,9 +108,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|Dwarf_Unsigned
-operator|)
 name|offset
 operator|>
 name|ds
@@ -139,9 +132,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|Dwarf_Unsigned
-operator|)
 name|offset
 operator|==
 name|ds

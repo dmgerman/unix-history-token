@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3269 2015-12-11 18:38:43Z kaiwang27 $"
+literal|"$Id: segments.c 3397 2016-02-12 14:35:19Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -331,12 +331,6 @@ operator|!
 name|s
 operator|->
 name|loadable
-operator|||
-name|s
-operator|->
-name|seg
-operator|==
-name|NULL
 condition|)
 continue|continue;
 comment|/* Apply global LMA adjustment. */
@@ -347,6 +341,12 @@ operator|->
 name|change_addr
 operator|!=
 literal|0
+operator|&&
+name|s
+operator|->
+name|seg
+operator|!=
+name|NULL
 condition|)
 name|s
 operator|->
@@ -444,7 +444,7 @@ argument_list|,
 argument|sec_list
 argument_list|)
 block|{
-comment|/* Only adjust loadable section's LMA. */
+comment|/* 		 * Only loadable section that's inside a segment can have 		 * LMA adjusted. 		 */
 if|if
 condition|(
 operator|!
@@ -578,6 +578,9 @@ name|s
 operator|->
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|s
 operator|->
 name|align
@@ -835,10 +838,17 @@ name|s
 operator|->
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|seg
 operator|->
 name|addr
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|seg
 operator|->
 name|addr
@@ -846,6 +856,7 @@ operator|+
 name|seg
 operator|->
 name|msz
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2235,11 +2246,11 @@ operator|&
 name|ophdr
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"gelf_update_phdr failed :%s"
+literal|"gelf_update_phdr failed: %s"
 argument_list|,
 name|elf_errmsg
 argument_list|(
