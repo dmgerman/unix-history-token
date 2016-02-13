@@ -3480,6 +3480,12 @@ name|is_ioat_halted
 argument_list|(
 name|comp_update
 argument_list|)
+operator|&&
+operator|!
+name|is_ioat_suspended
+argument_list|(
+name|comp_update
+argument_list|)
 condition|)
 return|return;
 name|ioat
