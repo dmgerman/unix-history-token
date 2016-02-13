@@ -174,6 +174,8 @@ block|,
 name|ISAVersion8_0_0
 block|,
 name|ISAVersion8_0_1
+block|,
+name|ISAVersion8_0_3
 block|}
 block|;
 name|private

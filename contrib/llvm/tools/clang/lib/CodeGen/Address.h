@@ -439,10 +439,6 @@ return|;
 block|}
 expr|}
 block|;  }
-block|}
-name|namespace
-name|llvm
-block|{
 comment|// Present a minimal LLVM-like casting interface.
 name|template
 operator|<
@@ -453,7 +449,7 @@ specifier|inline
 name|U
 name|cast
 argument_list|(
-argument|clang::CodeGen::Address addr
+argument|CodeGen::Address addr
 argument_list|)
 block|{
 return|return
@@ -474,7 +470,7 @@ specifier|inline
 name|bool
 name|isa
 argument_list|(
-argument|clang::CodeGen::Address addr
+argument|CodeGen::Address addr
 argument_list|)
 block|{
 return|return
@@ -486,22 +482,6 @@ name|addr
 argument_list|)
 return|;
 block|}
-block|}
-name|namespace
-name|clang
-block|{
-comment|// Make our custom isa and cast available in namespace clang, to mirror
-comment|// what we do for LLVM's versions in Basic/LLVM.h.
-name|using
-name|llvm
-operator|::
-name|isa
-expr_stmt|;
-name|using
-name|llvm
-operator|::
-name|cast
-expr_stmt|;
 block|}
 end_decl_stmt
 

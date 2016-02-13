@@ -959,23 +959,11 @@ comment|// currently known given which functions are materialized. Be very caref
 comment|// when using them since you might not get all uses.
 comment|// The methods that don't start with materialized_ assert that modules is
 comment|// fully materialized.
-ifdef|#
-directive|ifdef
-name|NDEBUG
-name|void
-name|assertModuleIsMaterialized
-argument_list|()
-specifier|const
-block|{}
-else|#
-directive|else
 name|void
 name|assertModuleIsMaterialized
 argument_list|()
 specifier|const
 expr_stmt|;
-endif|#
-directive|endif
 name|bool
 name|use_empty
 argument_list|()
