@@ -23,6 +23,12 @@ directive|define
 name|__IOAT_INTERNAL_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1452,6 +1458,10 @@ decl_stmt|;
 name|struct
 name|callout
 name|timer
+decl_stmt|;
+name|struct
+name|task
+name|reset_task
 decl_stmt|;
 name|boolean_t
 name|quiescing
