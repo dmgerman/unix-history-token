@@ -348,7 +348,7 @@ comment|// RUN: | FileCheck -check-prefix=S-ARM-6 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target sparc--netbsd -static \
+comment|// RUN: %clang -no-canonical-prefixes -target sparc--netbsd7.0.0 -static \
 end_comment
 
 begin_comment
@@ -356,11 +356,11 @@ comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN: | FileCheck -check-prefix=S-SPARC %s
+comment|// RUN: | FileCheck -check-prefix=S-SPARC-7 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target sparc64--netbsd -static \
+comment|// RUN: %clang -no-canonical-prefixes -target sparc--netbsd6.0.0 -static \
 end_comment
 
 begin_comment
@@ -368,7 +368,31 @@ comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN: | FileCheck -check-prefix=S-SPARC64 %s
+comment|// RUN: | FileCheck -check-prefix=S-SPARC-6 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target sparc64--netbsd7.0.0 -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-SPARC64-7 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target sparc64--netbsd6.0.0 -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-SPARC64-6 %s
 end_comment
 
 begin_comment
@@ -1100,63 +1124,115 @@ comment|// S-ARM-6: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}
 end_comment
 
 begin_comment
-comment|// S-SPARC: clang{{.*}}" "-cc1" "-triple" "sparc--netbsd"
+comment|// S-SPARC-6: clang{{.*}}" "-cc1" "-triple" "sparc--netbsd6.0.0"
 end_comment
 
 begin_comment
-comment|// S-SPARC: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+comment|// S-SPARC-6: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
 end_comment
 
 begin_comment
-comment|// S-SPARC: "-m" "elf32_sparc"
+comment|// S-SPARC-6: "-m" "elf32_sparc"
 end_comment
 
 begin_comment
-comment|// S-SPARC: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+comment|// S-SPARC-6: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
 end_comment
 
 begin_comment
-comment|// S-SPARC: "{{.*}}/usr/lib{{/|\\\\}}sparc{{/|\\\\}}crti.o"
+comment|// S-SPARC-6: "{{.*}}/usr/lib{{/|\\\\}}sparc{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// S-SPARC: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+comment|// S-SPARC-6: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
 end_comment
 
 begin_comment
-comment|// S-SPARC: "-lgcc_eh" "-lc" "-lgcc"
+comment|// S-SPARC-6: "-lgcc_eh" "-lc" "-lgcc"
 end_comment
 
 begin_comment
-comment|// S-SPARC: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+comment|// S-SPARC-6: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: clang{{.*}}" "-cc1" "-triple" "sparc64--netbsd"
+comment|// S-SPARC-7: clang{{.*}}" "-cc1" "-triple" "sparc--netbsd7.0.0"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+comment|// S-SPARC-7: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: "-m" "elf64_sparc"
+comment|// S-SPARC-7: "-m" "elf32_sparc"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+comment|// S-SPARC-7: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+comment|// S-SPARC-7: "{{.*}}/usr/lib{{/|\\\\}}sparc{{/|\\\\}}crti.o"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: "-lgcc_eh" "-lc" "-lgcc"
+comment|// S-SPARC-7: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
 end_comment
 
 begin_comment
-comment|// S-SPARC64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+comment|// S-SPARC-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: clang{{.*}}" "-cc1" "-triple" "sparc64--netbsd6.0.0"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: "-m" "elf64_sparc"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: "-lgcc_eh" "-lc" "-lgcc"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-6: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-7: clang{{.*}}" "-cc1" "-triple" "sparc64--netbsd7.0.0"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-7: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-7: "-m" "elf64_sparc"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-7: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-7: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-SPARC64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment

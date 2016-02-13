@@ -7128,6 +7128,22 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+end_comment
+
+begin_comment
 comment|// CHECK_SYSTEMZ_Z10: #define __LONG_DOUBLE_128__ 1
 end_comment
 
@@ -7161,6 +7177,22 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
 end_comment
 
 begin_comment
