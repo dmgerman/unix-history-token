@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|RT2573_ADDR_MAX
-value|64
+value|(32 / RT2573_SKEY_MAX)
 end_define
 
 begin_define
