@@ -839,7 +839,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* Destroy associated buffers already. */
+comment|/* Free i/o queues now since they might be large. */
 name|ttyinq_free
 argument_list|(
 operator|&
@@ -4535,31 +4535,21 @@ name|tp
 init|=
 name|arg
 decl_stmt|;
-comment|/* Make sure we haven't leaked buffers. */
-name|MPASS
-argument_list|(
-name|ttyinq_getsize
+comment|/* 	 * ttyydev_leave() usually frees the i/o queues earlier, but it is 	 * not always called between queue allocation and here.  The queues 	 * may be allocated by ioctls on a pty control device without the 	 * corresponding pty slave device ever being open, or after it is 	 * closed. 	 */
+name|ttyinq_free
 argument_list|(
 operator|&
 name|tp
 operator|->
 name|t_inq
 argument_list|)
-operator|==
-literal|0
-argument_list|)
 expr_stmt|;
-name|MPASS
-argument_list|(
-name|ttyoutq_getsize
+name|ttyoutq_free
 argument_list|(
 operator|&
 name|tp
 operator|->
 name|t_outq
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|seldrain
