@@ -524,22 +524,6 @@ name|iflladdr_event_eh
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* for debugging? */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int nd6_inuse, nd6_allocated;
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -1297,11 +1281,6 @@ name|nd
 decl_stmt|;
 name|nd
 operator|=
-operator|(
-expr|struct
-name|nd_ifinfo
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -9353,7 +9332,6 @@ name|la_hold
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9600,7 +9578,7 @@ name|flags
 operator|=
 name|dr
 operator|->
-name|flags
+name|raflags
 expr_stmt|;
 name|d
 operator|.

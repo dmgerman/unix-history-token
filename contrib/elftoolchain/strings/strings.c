@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -108,7 +114,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: strings.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: strings.c 3360 2016-01-24 18:34:06Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -176,8 +182,6 @@ name|encoding_size
 decl_stmt|,
 name|entire_file
 decl_stmt|,
-name|min_len
-decl_stmt|,
 name|show_filename
 decl_stmt|,
 name|show_loc
@@ -197,6 +201,13 @@ specifier|static
 name|enum
 name|radix_style
 name|radix
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|intmax_t
+name|min_len
 decl_stmt|;
 end_decl_stmt
 
@@ -585,9 +596,6 @@ literal|'n'
 case|:
 name|min_len
 operator|=
-operator|(
-name|int
-operator|)
 name|strtoimax
 argument_list|(
 name|optarg
@@ -600,6 +608,20 @@ operator|)
 name|NULL
 argument_list|,
 literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|min_len
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"option -n should specify a "
+literal|"positive decimal integer."
 argument_list|)
 expr_stmt|;
 break|break;

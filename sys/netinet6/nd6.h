@@ -890,7 +890,7 @@ name|in6_addr
 name|rtaddr
 decl_stmt|;
 name|u_char
-name|flags
+name|raflags
 decl_stmt|;
 comment|/* flags on RA message */
 name|u_short

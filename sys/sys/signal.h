@@ -1944,28 +1944,89 @@ directive|if
 name|__XSI_VISIBLE
 end_if
 
-begin_comment
-comment|/*  * Structure used in sigaltstack call.  */
-end_comment
-
 begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|sigaltstack
-block|{
-else|#
-directive|else
-typedef|typedef
-struct|struct
-block|{
+begin_define
+define|#
+directive|define
+name|__stack_t
+value|sigaltstack
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__stack_t
+name|stack_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SS_ONSTACK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* take signal on alternate stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_DISABLE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* disable taking signals on alternate stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINSIGSTKSZ
+value|__MINSIGSTKSZ
+end_define
+
+begin_comment
+comment|/* minimum stack size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGSTKSZ
+value|(MINSIGSTKSZ + 32768)
+end_define
+
+begin_comment
+comment|/* recommended stack size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Structure used in sigaltstack call.  Its definition is always  * needed for __ucontext.  If __BSD_VISIBLE is defined, the structure  * tag is actually sigaltstack.  */
+end_comment
+
+begin_struct
+struct|struct
+name|__stack_t
+block|{
 name|void
 modifier|*
 name|ss_sp
@@ -1980,34 +2041,20 @@ name|ss_flags
 decl_stmt|;
 comment|/* SS_DISABLE and/or SS_ONSTACK */
 block|}
-name|stack_t
-typedef|;
-define|#
-directive|define
-name|SS_ONSTACK
-value|0x0001
-comment|/* take signal on alternate stack */
-define|#
-directive|define
-name|SS_DISABLE
-value|0x0004
-comment|/* disable taking signals on alternate stack */
-define|#
-directive|define
-name|MINSIGSTKSZ
-value|__MINSIGSTKSZ
-comment|/* minimum stack size */
-define|#
-directive|define
-name|SIGSTKSZ
-value|(MINSIGSTKSZ + 32768)
-comment|/* recommended stack size */
-endif|#
-directive|endif
+struct|;
+end_struct
+
+begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
+end_if
+
+begin_comment
 comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */
+end_comment
+
+begin_struct
 struct|struct
 name|sigvec
 block|{
@@ -2026,39 +2073,75 @@ decl_stmt|;
 comment|/* see signal options below */
 block|}
 struct|;
+end_struct
+
+begin_define
 define|#
 directive|define
 name|SV_ONSTACK
 value|SA_ONSTACK
+end_define
+
+begin_define
 define|#
 directive|define
 name|SV_INTERRUPT
 value|SA_RESTART
+end_define
+
+begin_comment
 comment|/* same bit, opposite sense */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SV_RESETHAND
 value|SA_RESETHAND
+end_define
+
+begin_define
 define|#
 directive|define
 name|SV_NODEFER
 value|SA_NODEFER
+end_define
+
+begin_define
 define|#
 directive|define
 name|SV_NOCLDSTOP
 value|SA_NOCLDSTOP
+end_define
+
+begin_define
 define|#
 directive|define
 name|SV_SIGINFO
 value|SA_SIGINFO
+end_define
+
+begin_define
 define|#
 directive|define
 name|sv_onstack
 value|sv_flags
+end_define
+
+begin_comment
 comment|/* isn't compatibility wonderful! */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Keep this in one place only */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2077,6 +2160,9 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+end_if
+
+begin_struct
 struct|struct
 name|osigcontext
 block|{
@@ -2085,12 +2171,24 @@ name|_not_used
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|__XSI_VISIBLE
+end_if
+
+begin_comment
 comment|/*  * Structure used in sigstack call.  */
+end_comment
+
+begin_struct
 struct|struct
 name|sigstack
 block|{
@@ -2105,8 +2203,14 @@ decl_stmt|;
 comment|/* current status */
 block|}
 struct|;
+end_struct
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
@@ -2118,7 +2222,13 @@ operator|&&
 name|__POSIX_VISIBLE
 operator|<=
 literal|200112
+end_if
+
+begin_comment
 comment|/*  * Macro for converting signal number to a mask suitable for  * sigblock().  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|sigmask
@@ -2126,41 +2236,86 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(1<< ((m)-1))
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
+end_if
+
+begin_define
 define|#
 directive|define
 name|BADSIG
 value|SIG_ERR
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|__POSIX_VISIBLE
 operator|||
 name|__XSI_VISIBLE
+end_if
+
+begin_comment
 comment|/*  * Flags for sigprocmask:  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SIG_BLOCK
 value|1
+end_define
+
+begin_comment
 comment|/* block specified signal set */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SIG_UNBLOCK
 value|2
+end_define
+
+begin_comment
 comment|/* unblock specified signal set */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SIG_SETMASK
 value|3
+end_define
+
+begin_comment
 comment|/* set specified signal set */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * For historical reasons; programs expect signal's return value to be  * defined by<sys/signal.h>.  */
+end_comment
+
+begin_function_decl
 name|__BEGIN_DECLS
 name|__sighandler_t
 modifier|*
@@ -2172,8 +2327,11 @@ name|__sighandler_t
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_macro
 name|__END_DECLS
-end_typedef
+end_macro
 
 begin_endif
 endif|#

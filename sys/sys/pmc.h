@@ -2540,7 +2540,7 @@ begin_define
 define|#
 directive|define
 name|PMC_DEBUG_DEFAULT_FLAGS
-value|{ 0, 0, 0, 0, 0, 0, 0, 0 }
+value|{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 end_define
 
 begin_define

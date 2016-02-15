@@ -605,6 +605,59 @@ value|(0xFFUL)
 end_define
 
 begin_comment
+comment|/* ICC_SGI1R_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_TL_MASK
+value|0xffffUL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_AFF1_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_SGIID_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_AFF2_SHIFT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_AFF3_SHIFT
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_SGIID_MASK
+value|0xfUL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_SGI1R_EL1_IRM
+value|(0x1UL<< 40)
+end_define
+
+begin_comment
 comment|/* ICC_SRE_EL1 */
 end_comment
 

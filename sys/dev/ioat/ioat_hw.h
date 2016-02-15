@@ -143,6 +143,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOAT_DMACAP_CRC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_MARKER_SKIP
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_OLD_XOR
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOAT_DMACAP_DCA
 value|(1<< 4)
 end_define
@@ -150,8 +171,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOAT_DMACAP_MOVECRC
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOAT_DMACAP_BFILL
 value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_EXT_APIC
+value|(1<< 7)
 end_define
 
 begin_define
@@ -208,7 +243,7 @@ define|#
 directive|define
 name|IOAT_DMACAP_STR
 define|\
-value|"\20\24Completion_Timeout_Support\23DMA_with_Multicasting_Support" \     "\22RAID_Super_descriptors\16Descriptor_Write_Back_Error_Support" \     "\13DMA_with_DIF\12PQ\11XOR\07Block_Fill\05DCA\01Page_Break"
+value|"\20\24Completion_Timeout_Support\23DMA_with_Multicasting_Support" \     "\22RAID_Super_descriptors\16Descriptor_Write_Back_Error_Support" \     "\13DMA_with_DIF\12PQ\11XOR\10Extended_APIC_ID\07Block_Fill\06Move_CRC" \     "\05DCA\04Old_XOR\03Marker_Skipping\02CRC\01Page_Break"
 end_define
 
 begin_comment

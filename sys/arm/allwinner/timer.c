@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"a20/a20_cpu_cfg.h"
+file|<arm/allwinner/allwinner_machdep.h>
 end_include
 
 begin_comment
@@ -291,10 +291,6 @@ name|struct
 name|eventtimer
 name|et
 decl_stmt|;
-name|uint8_t
-name|sc_timer_type
-decl_stmt|;
-comment|/* 0 for A10, 1 for A20 */
 block|}
 struct|;
 end_struct
@@ -523,19 +519,6 @@ name|lo
 decl_stmt|,
 name|hi
 decl_stmt|;
-comment|/* In case of A20 get appropriate counter info */
-if|if
-condition|(
-name|a10_timer_sc
-operator|->
-name|sc_timer_type
-condition|)
-return|return
-operator|(
-name|a20_read_counter64
-argument_list|()
-operator|)
-return|;
 comment|/* Latch counter, wait for it to be ready to read. */
 name|timer_write_4
 argument_list|(
@@ -607,6 +590,9 @@ name|a10_timer_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|u_int
+name|soc_family
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -616,36 +602,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"allwinner,sun4i-timer"
+literal|"allwinner,sun4i-a10-timer"
 argument_list|)
 condition|)
-name|sc
-operator|->
-name|sc_timer_type
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+name|soc_family
 operator|=
-literal|0
+name|allwinner_soc_family
+argument_list|()
 expr_stmt|;
-elseif|else
 if|if
 condition|(
-name|ofw_bus_is_compatible
-argument_list|(
-name|dev
-argument_list|,
-literal|"allwinner,sun7i-timer"
-argument_list|)
+name|soc_family
+operator|!=
+name|ALLWINNERSOC_SUN4I
+operator|&&
+name|soc_family
+operator|!=
+name|ALLWINNERSOC_SUN5I
 condition|)
-name|sc
-operator|->
-name|sc_timer_type
-operator|=
-literal|1
-expr_stmt|;
-else|else
 return|return
 operator|(
 name|ENXIO
@@ -1535,7 +1519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|a10_timer
 argument_list|,
@@ -1548,6 +1532,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_TIMER
+operator|+
+name|BUS_PASS_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

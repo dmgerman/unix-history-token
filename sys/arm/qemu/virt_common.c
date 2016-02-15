@@ -63,6 +63,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_decl_stmt
 name|fdt_pic_decode_t
 name|fdt_pic_table
@@ -76,6 +82,11 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

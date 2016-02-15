@@ -254,6 +254,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|arm_intr_bind
+parameter_list|(
+name|u_int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|arm_setup_ipihandler
 parameter_list|(

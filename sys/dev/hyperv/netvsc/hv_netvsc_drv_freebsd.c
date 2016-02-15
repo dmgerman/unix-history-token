@@ -3781,7 +3781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NOTE:  * This this function fails, then both txd and m_head0 will be freed  */
+comment|/*  * NOTE:  * If this function fails, then both txd and m_head0 will be freed.  */
 end_comment
 
 begin_function

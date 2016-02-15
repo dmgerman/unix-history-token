@@ -2888,11 +2888,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xb%d: not found"
+literal|"xbd%d: not found"
 argument_list|,
-name|sc
+name|dp
 operator|->
-name|xbd_unit
+name|d_unit
 argument_list|)
 expr_stmt|;
 return|return

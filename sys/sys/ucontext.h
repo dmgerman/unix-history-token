@@ -27,44 +27,22 @@ directive|include
 file|<machine/ucontext.h>
 end_include
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|__ucontext
-block|{
-comment|/* 	 * Keep the order of the first two fields. Also, 	 * keep them the first two fields in the structure. 	 * This way we can have a union with struct 	 * sigcontext and ucontext_t. This allows us to 	 * support them both at the same time. 	 * note: the union is not defined, though. 	 */
-name|sigset_t
-name|uc_sigmask
-decl_stmt|;
-name|mcontext_t
-name|uc_mcontext
-decl_stmt|;
-name|struct
-name|__ucontext
-modifier|*
-name|uc_link
-decl_stmt|;
-name|stack_t
-name|uc_stack
-decl_stmt|;
-name|int
-name|uc_flags
-decl_stmt|;
+begin_include
+include|#
+directive|include
+file|<sys/_ucontext.h>
+end_include
+
+begin_define
 define|#
 directive|define
 name|UCF_SWAPPED
 value|0x00000001
+end_define
+
+begin_comment
 comment|/* Used by swapcontext(3). */
-name|int
-name|__spare__
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|ucontext_t
-typedef|;
-end_typedef
+end_comment
 
 begin_if
 if|#

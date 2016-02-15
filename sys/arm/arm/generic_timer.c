@@ -1504,7 +1504,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1525,17 +1525,12 @@ name|error
 operator|>
 literal|0
 condition|)
-block|{
 name|sc
 operator|->
 name|clkfreq
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|clock
-argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif

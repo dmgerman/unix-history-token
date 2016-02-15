@@ -2447,9 +2447,9 @@ name|VM_MEMATTR_UNCACHEABLE
 case|:
 return|return
 operator|(
-name|PTE_I
+name|MAS2_I
 operator||
-name|PTE_G
+name|MAS2_G
 operator|)
 return|;
 case|case
@@ -2463,7 +2463,7 @@ name|VM_MEMATTR_PREFETCHABLE
 case|:
 return|return
 operator|(
-name|PTE_I
+name|MAS2_I
 operator|)
 return|;
 case|case
@@ -2471,9 +2471,9 @@ name|VM_MEMATTR_WRITE_THROUGH
 case|:
 return|return
 operator|(
-name|PTE_W
+name|MAS2_W
 operator||
-name|PTE_M
+name|MAS2_M
 operator|)
 return|;
 block|}
@@ -4461,15 +4461,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|pte
-operator|->
-name|rpn
 operator|=
 literal|0
 expr_stmt|;
@@ -4787,9 +4780,8 @@ name|ptbl_idx
 index|]
 operator|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|rpn
 operator|=
 name|PTE_RPN_FROM_PA
 argument_list|(
@@ -4799,16 +4791,18 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
 operator||=
 operator|(
 name|PTE_VALID
 operator||
 name|flags
+operator||
+name|PTE_PS_4KB
 operator|)
 expr_stmt|;
+comment|/* 4KB pages only */
 name|tlb_miss_unlock
 argument_list|()
 expr_stmt|;
@@ -5090,10 +5084,11 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|rpn
 operator|=
+name|PTE_RPN_FROM_PA
+argument_list|(
 name|kernload
 operator|+
 operator|(
@@ -5101,11 +5096,11 @@ name|va
 operator|-
 name|kernstart
 operator|)
+argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
-operator|=
+operator||=
 name|PTE_M
 operator||
 name|PTE_SR
@@ -5117,6 +5112,8 @@ operator||
 name|PTE_WIRED
 operator||
 name|PTE_VALID
+operator||
+name|PTE_PS_4KB
 expr_stmt|;
 block|}
 block|}
@@ -7180,6 +7177,12 @@ name|pa
 argument_list|,
 name|ma
 argument_list|)
+operator|<<
+name|PTE_MAS2_SHIFT
+expr_stmt|;
+name|flags
+operator||=
+name|PTE_PS_4KB
 expr_stmt|;
 name|pte
 operator|=
@@ -7225,19 +7228,14 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
 name|pte
-operator|->
-name|rpn
 operator|=
 name|PTE_RPN_FROM_PA
 argument_list|(
 name|pa
 argument_list|)
-expr_stmt|;
-name|pte
-operator|->
-name|flags
-operator|=
+operator||
 name|flags
 expr_stmt|;
 comment|//debugf("mmu_booke_kenter: pdir_idx = %d ptbl_idx = %d va=0x%08x "
@@ -7258,7 +7256,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|__syncicache
 argument_list|(
 operator|(
@@ -7270,7 +7267,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-block|}
 name|tlb_miss_unlock
 argument_list|()
 expr_stmt|;
@@ -7381,15 +7377,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|pte
-operator|->
-name|rpn
 operator|=
 literal|0
 expr_stmt|;
@@ -7876,9 +7865,8 @@ block|{
 comment|/* 		 * Before actually updating pte->flags we calculate and 		 * prepare its new value in a helper var. 		 */
 name|flags
 operator|=
+operator|*
 name|pte
-operator|->
-name|flags
 expr_stmt|;
 name|flags
 operator|&=
@@ -8033,9 +8021,8 @@ comment|/* 			 * Check existing flags for execute permissions: if we 			 * are t
 if|if
 condition|(
 operator|(
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&
 operator|(
 name|PTE_UX
@@ -8070,9 +8057,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
 operator|=
 name|flags
 expr_stmt|;
@@ -9328,9 +9314,8 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&=
 operator|~
 operator|(
@@ -9515,9 +9500,8 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Flush mapping from TLB0. */
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&=
 operator|~
 operator|(
@@ -9902,9 +9886,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&
 name|pte_wbit
 operator|)
@@ -10550,6 +10533,12 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|)
+operator|<<
+name|PTE_MAS2_SHIFT
+expr_stmt|;
+name|flags
+operator||=
+name|PTE_PS_4KB
 expr_stmt|;
 name|critical_enter
 argument_list|()
@@ -10574,9 +10563,8 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+operator|*
 name|pte
-operator|->
-name|flags
 operator|==
 literal|0
 argument_list|,
@@ -10588,19 +10576,14 @@ expr_stmt|;
 comment|/*  	 * XXX: tlbivax is broadcast to other cores, but qaddr should  	 * not be present in other TLBs.  Is there a better instruction 	 * sequence to use? Or just forget it& use mmu_booke_kenter()...  	 */
 asm|__asm __volatile("tlbivax 0, %0" :: "r"(qaddr& MAS2_EPN_MASK));
 asm|__asm __volatile("isync; msync");
+operator|*
 name|pte
-operator|->
-name|rpn
 operator|=
+name|PTE_RPN_FROM_PA
+argument_list|(
 name|paddr
-operator|&
-operator|~
-name|PTE_PA_MASK
-expr_stmt|;
-name|pte
-operator|->
-name|flags
-operator|=
+argument_list|)
+operator||
 name|flags
 expr_stmt|;
 comment|/* Flush the real memory from the instruction cache. */
@@ -10680,9 +10663,8 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+operator|*
 name|pte
-operator|->
-name|flags
 operator|!=
 literal|0
 argument_list|,
@@ -10691,15 +10673,8 @@ literal|"mmu_booke_quick_remove_page: PTE not in use"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|pte
-operator|->
-name|rpn
 operator|=
 literal|0
 expr_stmt|;
@@ -11179,9 +11154,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&
 operator|(
 name|PTE_SW
@@ -11199,9 +11173,8 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&=
 operator|~
 operator|(
@@ -11364,9 +11337,8 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&=
 operator|~
 name|PTE_REFERENCED
@@ -11508,9 +11480,8 @@ argument_list|,
 name|pte
 argument_list|)
 expr_stmt|;
+operator|*
 name|pte
-operator|->
-name|flags
 operator|&=
 operator|~
 name|PTE_WIRED

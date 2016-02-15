@@ -109,6 +109,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_NONLINK_DB_MSIX_BITS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_SPCICMD_OFFSET
 value|0x0504
 end_define

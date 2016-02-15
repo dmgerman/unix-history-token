@@ -4322,7 +4322,7 @@ name|t4_register_cpl_handler
 argument_list|(
 name|sc
 argument_list|,
-name|CPL_TRACE_PKT_T5
+name|CPL_T5_TRACE_PKT
 argument_list|,
 name|t5_trace_pkt
 argument_list|)

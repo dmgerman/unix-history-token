@@ -3541,7 +3541,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"allwinner,sun4i-emac"
+literal|"allwinner,sun4i-a10-emac"
 argument_list|)
 condition|)
 return|return

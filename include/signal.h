@@ -36,6 +36,33 @@ end_include
 begin_if
 if|#
 directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_ucontext.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|__BSD_VISIBLE
 end_if
 
@@ -646,16 +673,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|__ucontext
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* XXX spec requires a complete declaration. */
-end_comment
 
 begin_function_decl
 name|int
