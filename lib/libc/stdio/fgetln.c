@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -136,6 +148,24 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|newsize
+operator|>
+name|INT_MAX
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -553,7 +583,7 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
@@ -583,6 +613,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* ??? */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 name|FUNLOCKFILE
 argument_list|(
 name|fp
