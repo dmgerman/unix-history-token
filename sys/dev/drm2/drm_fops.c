@@ -370,7 +370,7 @@ operator|&
 name|drm_global_mutex
 argument_list|)
 expr_stmt|;
-comment|/* 	 * FIXME Linux<->FreeBSD: On Linux, counter updated outisde 	 * global mutex. 	 */
+comment|/* 	 * FIXME Linux<->FreeBSD: On Linux, counter updated outside 	 * global mutex. 	 */
 if|if
 condition|(
 operator|!

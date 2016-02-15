@@ -2029,7 +2029,7 @@ directive|else
 end_else
 
 begin_function
-name|int
+name|void
 name|intel_opregion_init
 parameter_list|(
 name|struct
@@ -2037,13 +2037,7 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+block|{ }
 end_function
 
 begin_function

@@ -6654,6 +6654,13 @@ name|out_gem_unload
 goto|;
 block|}
 block|}
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|intel_opregion_init
 argument_list|(
 name|dev
