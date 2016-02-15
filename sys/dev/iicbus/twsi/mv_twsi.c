@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -1050,7 +1044,7 @@ block|{
 comment|/* Get slave address. */
 name|error
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -1074,7 +1068,7 @@ literal|1
 condition|)
 name|error
 operator|=
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -1145,10 +1139,7 @@ literal|"adding a device %s at %d.\n"
 argument_list|,
 name|dname
 argument_list|,
-name|fdt32_to_cpu
-argument_list|(
 name|paddr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|childdev
@@ -1178,10 +1169,7 @@ name|devi
 operator|->
 name|addr
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|paddr
-argument_list|)
 expr_stmt|;
 block|}
 name|attach_end
