@@ -210,9 +210,9 @@ name|INT_MAX
 condition|?
 name|INT_MAX
 else|:
-name|uio
+name|iov
 operator|.
-name|uio_resid
+name|iov_len
 operator|)
 return|;
 return|return
