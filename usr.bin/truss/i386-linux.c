@@ -663,7 +663,7 @@ name|procabi
 name|i386_linux
 init|=
 block|{
-literal|"Linux ELF32"
+literal|"Linux ELF"
 block|,
 name|SYSDECODE_ABI_LINUX
 block|,
