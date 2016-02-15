@@ -141,6 +141,12 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -164,6 +170,11 @@ include|#
 directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
