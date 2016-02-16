@@ -1199,6 +1199,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTE_FLAGS_MASK
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE_RPN_FROM_PA
 parameter_list|(
 name|pa
