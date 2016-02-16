@@ -150,8 +150,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|AXP209_PSR_ACIN_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|AXP209_PSR_VBUS
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_PSR_VBUS_SHIFT
+value|5
 end_define
 
 begin_comment
@@ -528,20 +542,11 @@ name|axp209_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint8_t
-name|data
-decl_stmt|;
-name|uint8_t
-name|pwr_src
-decl_stmt|;
+specifier|const
 name|char
+modifier|*
 name|pwr_name
-index|[
-literal|4
-index|]
-index|[
-literal|11
-index|]
+index|[]
 init|=
 block|{
 literal|"Battery"
@@ -552,6 +557,12 @@ literal|"USB"
 block|,
 literal|"AC and USB"
 block|}
+decl_stmt|;
+name|uint8_t
+name|data
+decl_stmt|;
+name|uint8_t
+name|pwr_src
 decl_stmt|;
 name|sc
 operator|=
@@ -569,7 +580,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read the Power State register 	 * bit 7 is AC presence, bit 5 is VBUS presence. 	 * If none are set then we are running from battery (obviously). 	 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+comment|/* 		 * Read the Power State register. 		 * Shift the AC presence into bit 0. 		 * Shift the Battery presence into bit 1. 		 */
 name|axp209_read
 argument_list|(
 name|dev
@@ -591,7 +607,7 @@ operator|&
 name|AXP209_PSR_ACIN
 operator|)
 operator|>>
-literal|7
+name|AXP209_PSR_ACIN_SHIFT
 operator|)
 operator||
 operator|(
@@ -601,13 +617,13 @@ operator|&
 name|AXP209_PSR_VBUS
 operator|)
 operator|>>
-literal|4
+operator|(
+name|AXP209_PSR_VBUS_SHIFT
+operator|-
+literal|1
+operator|)
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -620,6 +636,7 @@ name|pwr_src
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_final
