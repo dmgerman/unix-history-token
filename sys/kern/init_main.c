@@ -1997,6 +1997,8 @@ operator|=
 name|P_SYSTEM
 operator||
 name|P_INMEM
+operator||
+name|P_KTHREAD
 expr_stmt|;
 name|p
 operator|->
