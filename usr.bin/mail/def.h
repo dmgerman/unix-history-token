@@ -1172,7 +1172,7 @@ name|trunc
 parameter_list|(
 name|stream
 parameter_list|)
-value|{							\ 	(void)fflush(stream); 						\ 	(void)ftruncate(fileno(stream), (off_t)ftell(stream));		\ }
+value|{							\ 	(void)fflush(stream); 						\ 	(void)ftruncate(fileno(stream), ftello(stream));		\ }
 end_define
 
 end_unit
