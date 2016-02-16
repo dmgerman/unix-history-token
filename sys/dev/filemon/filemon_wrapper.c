@@ -341,8 +341,10 @@ expr_stmt|;
 while|while
 condition|(
 name|p
+operator|->
+name|p_pid
 operator|!=
-name|initproc
+literal|0
 condition|)
 block|{
 name|TAILQ_FOREACH
