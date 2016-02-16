@@ -1481,7 +1481,7 @@ operator|)
 condition|)
 block|{
 specifier|static
-name|long
+name|rman_res_t
 name|start
 init|=
 literal|0
