@@ -16882,9 +16882,6 @@ name|syscall
 modifier|*
 name|sc
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|t
 operator|=
 name|trussinfo
