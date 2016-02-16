@@ -786,6 +786,10 @@ parameter_list|,
 name|bus_space_handle_t
 modifier|*
 name|phandle
+parameter_list|,
+name|bus_size_t
+modifier|*
+name|sz
 parameter_list|)
 function_decl|;
 end_function_decl

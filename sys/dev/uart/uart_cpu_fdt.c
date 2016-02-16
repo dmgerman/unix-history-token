@@ -950,6 +950,8 @@ operator|->
 name|bas
 operator|.
 name|bsh
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;

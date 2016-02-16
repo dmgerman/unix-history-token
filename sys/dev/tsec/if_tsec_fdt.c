@@ -758,6 +758,8 @@ operator|&
 name|sc
 operator|->
 name|phy_bsh
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|OF_getencprop
