@@ -8357,7 +8357,7 @@ argument_list|(
 literal|"Failed to initiate iterator for handle_addr_wq\n"
 argument_list|)
 expr_stmt|;
-comment|/* Freeing if we are stopping or put back on the addr_wq. */
+comment|/* 			 * Freeing if we are stopping or put back on the 			 * addr_wq. 			 */
 if|if
 condition|(
 name|SCTP_BASE_VAR
