@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/armreg.h>
 end_include
 
@@ -138,6 +144,10 @@ argument_list|)
 decl_stmt|;
 if|#
 directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -171,6 +181,10 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+operator|&&
 operator|!
 name|defined
 argument_list|(

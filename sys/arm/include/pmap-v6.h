@@ -876,19 +876,6 @@ begin_comment
 comment|/* The kernel uses domain #0 */
 end_comment
 
-begin_comment
-comment|/*  * sys/arm/arm/cpufunc.c  */
-end_comment
-
-begin_function_decl
-name|void
-name|vector_page_setprot
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

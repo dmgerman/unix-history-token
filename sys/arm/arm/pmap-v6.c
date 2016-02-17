@@ -26271,20 +26271,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* !!!! REMOVE !!!! */
-end_comment
-
-begin_function
-name|void
-name|vector_page_setprot
-parameter_list|(
-name|int
-name|p
-parameter_list|)
-block|{ }
-end_function
-
 begin_if
 if|#
 directive|if
