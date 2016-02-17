@@ -2969,6 +2969,13 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * The number of qpairs are determined during controller initialization, 	 *  including using NVMe SET_FEATURES/NUMBER_OF_QUEUES to determine the 	 *  HW limit.  We call SET_FEATURES again here so that it gets called 	 *  after any reset for controllers that depend on the driver to 	 *  explicit specify how many queues it will use.  This value should 	 *  never change between resets, so panic if somehow that does happen. 	 */
+if|if
+condition|(
+name|ctrlr
+operator|->
+name|is_resetting
+condition|)
+block|{
 name|old_num_io_queues
 operator|=
 name|ctrlr
@@ -3012,6 +3019,7 @@ operator|->
 name|num_io_queues
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
