@@ -323,7 +323,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|0
 index|]
@@ -337,7 +337,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|1
 index|]
@@ -603,7 +603,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|0
 index|]
@@ -617,7 +617,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|1
 index|]
@@ -941,7 +941,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|0
 index|]
@@ -955,7 +955,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|1
 index|]
