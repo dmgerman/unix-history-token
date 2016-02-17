@@ -145,7 +145,7 @@ name|void
 modifier|*
 name|va
 decl_stmt|;
-comment|/* 	 * We don't even examine the passed-in flags.  For ARM, the CACHEABLE 	 * flag doesn't make sense (we create PTE_DEVICE mappings), and the 	 * LINEAR flag is just implied because we use kva_alloc(size). 	 */
+comment|/* 	 * We don't even examine the passed-in flags.  For ARM, the CACHEABLE 	 * flag doesn't make sense (we create VM_MEMATTR_DEVICE mappings), and 	 * the LINEAR flag is just implied because we use kva_alloc(size). 	 */
 if|if
 condition|(
 operator|(

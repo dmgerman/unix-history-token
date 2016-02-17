@@ -895,13 +895,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|PTE_DEVICE
-value|VM_MEMATTR_DEVICE
-end_define
-
 begin_endif
 endif|#
 directive|endif

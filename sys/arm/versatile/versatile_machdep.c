@@ -175,17 +175,9 @@ block|,
 literal|0
 block|,
 literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|, }
 block|,
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0
@@ -240,26 +232,6 @@ operator|=
 literal|0x01000000
 expr_stmt|;
 comment|/* 1 MB */
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_DEVICE
-expr_stmt|;
 name|arm_devmap_register_table
 argument_list|(
 operator|&

@@ -397,12 +397,7 @@ comment|/*physical*/
 name|ECONA_SDRAM_SIZE
 block|,
 comment|/*size*/
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
-block|, 	}
+block|}
 block|,
 comment|/* 	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
 block|{
@@ -416,12 +411,7 @@ comment|/*physical*/
 name|ECONA_IO_SIZE
 block|,
 comment|/*size*/
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
-block|, 	}
+block|}
 block|,
 block|{
 comment|/* 		 * OHCI + EHCI 		 */
@@ -434,12 +424,7 @@ comment|/*physical*/
 name|ECONA_USB_SIZE
 block|,
 comment|/*size*/
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
-block|, 	}
+block|}
 block|,
 block|{
 comment|/* 		 * CFI 		 */
@@ -450,19 +435,9 @@ name|ECONA_CFI_PBASE
 block|,
 comment|/*physical*/
 name|ECONA_CFI_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0

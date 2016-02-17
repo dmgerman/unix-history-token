@@ -438,19 +438,9 @@ block|,
 name|PXA250_PERIPH_END
 operator|-
 name|PXA2X0_PERIPH_START
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0
