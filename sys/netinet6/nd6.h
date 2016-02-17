@@ -2250,17 +2250,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|prelist_del
-parameter_list|(
-name|struct
-name|nd_prefix
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|defrouter_reset
 parameter_list|(
 name|void
