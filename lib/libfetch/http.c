@@ -6821,11 +6821,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fetch_close
-argument_list|(
-name|conn
-argument_list|)
-expr_stmt|;
 comment|/* grrr */
 name|errno
 operator|=
