@@ -29,12 +29,6 @@ operator|>=
 literal|6
 end_if
 
-begin_include
-include|#
-directive|include
-file|<machine/pte-v6.h>
-end_include
-
 begin_define
 define|#
 directive|define

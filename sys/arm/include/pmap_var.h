@@ -21,6 +21,12 @@ directive|include
 file|<machine/cpu-v6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pte-v6.h>
+end_include
+
 begin_comment
 comment|/*  *  Various PMAP defines, exports, and inline functions  *  definitions also usable in other MD code.  */
 end_comment

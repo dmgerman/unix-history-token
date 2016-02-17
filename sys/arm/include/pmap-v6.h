@@ -855,12 +855,6 @@ begin_comment
 comment|// ----------------- TO BE DELETED ---------------------------------------------
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/pte-v6.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
