@@ -150,9 +150,6 @@ name|trapframe
 modifier|*
 name|tf
 decl_stmt|;
-name|uint64_t
-name|val
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -164,23 +161,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
-name|td1
-operator|==
-name|curthread
-condition|)
-block|{
-asm|__asm __volatile("mv	%0, tp" : "=&r"(val));
-name|td1
-operator|->
-name|td_pcb
-operator|->
-name|pcb_tp
-operator|=
-name|val
-expr_stmt|;
-block|}
 name|pcb2
 operator|=
 operator|(
