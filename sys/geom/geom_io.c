@@ -1055,6 +1055,7 @@ name|bp
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|bp
 argument_list|)
 argument_list|)
