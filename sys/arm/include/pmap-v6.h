@@ -851,44 +851,6 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_comment
-comment|// ----------------- TO BE DELETED ---------------------------------------------
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * sys/arm/arm/elf_trampoline.c  * sys/arm/arm/genassym.c  * sys/arm/arm/machdep.c  * sys/arm/arm/mp_machdep.c  * sys/arm/arm/locore.S  * sys/arm/arm/pmap.c  * sys/arm/arm/swtch.S  * sys/arm/at91/at91_machdep.c  * sys/arm/cavium/cns11xx/econa_machdep.c  * sys/arm/s3c2xx0/s3c24x0_machdep.c  * sys/arm/xscale/ixp425/avila_machdep.c  * sys/arm/xscale/i8134x/crb_machdep.c  * sys/arm/xscale/i80321/ep80219_machdep.c  * sys/arm/xscale/i80321/iq31244_machdep.c  * sys/arm/xscale/pxa/pxa_machdep.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMAP_DOMAIN_KERNEL
-value|0
-end_define
-
-begin_comment
-comment|/* The kernel uses domain #0 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
 begin_endif
 endif|#
 directive|endif
