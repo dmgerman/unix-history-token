@@ -4704,6 +4704,13 @@ return|return;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|stcb
+operator|->
+name|sctp_socket
+condition|)
+block|{
 name|sctp_sorwakeup
 argument_list|(
 name|stcb
@@ -4715,6 +4722,7 @@ operator|->
 name|sctp_socket
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -24764,9 +24772,17 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
+name|locked_tcb
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|locked_tcb
 operator|!=
 name|stcb
+operator|)
 condition|)
 block|{
 comment|/* Very unlikely */
