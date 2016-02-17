@@ -5186,15 +5186,10 @@ name|vol
 operator|->
 name|v_softc
 expr_stmt|;
-name|bzero
+name|g_reset_bio
 argument_list|(
 operator|&
 name|bp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bp

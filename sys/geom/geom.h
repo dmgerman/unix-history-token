@@ -1987,6 +1987,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|g_reset_bio
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|g_read_data
 parameter_list|(

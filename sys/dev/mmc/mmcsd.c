@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom_disk.h>
 end_include
 
@@ -2441,16 +2447,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|bzero
+name|g_reset_bio
 argument_list|(
 operator|&
 name|bp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bio
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bp
