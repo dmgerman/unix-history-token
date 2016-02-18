@@ -1606,7 +1606,7 @@ name|sc
 operator|->
 name|hn_tx_taskq
 operator|=
-name|taskqueue_create_fast
+name|taskqueue_create
 argument_list|(
 literal|"hn_tx"
 argument_list|,
@@ -9941,7 +9941,7 @@ condition|)
 return|return;
 name|hn_tx_taskq
 operator|=
-name|taskqueue_create_fast
+name|taskqueue_create
 argument_list|(
 literal|"hn_tx"
 argument_list|,
