@@ -1159,8 +1159,28 @@ modifier|*
 name|rle
 decl_stmt|;
 name|int
+name|passthrough
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
+name|passthrough
+operator|=
+operator|(
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+operator|!=
+name|bus
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|passthrough
+condition|)
+block|{
 comment|/* Clean resource list entry */
 name|rle
 operator|=
@@ -1190,6 +1210,7 @@ name|res
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
