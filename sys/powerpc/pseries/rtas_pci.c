@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_pci.h>
 end_include
 
 begin_include
@@ -141,12 +141,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<powerpc/ofw/ofw_pci.h>
 end_include
 
 begin_include

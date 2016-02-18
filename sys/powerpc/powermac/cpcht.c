@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -146,7 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<powerpc/ofw/ofw_pci.h>
+file|<dev/ofw/ofw_pci.h>
 end_include
 
 begin_include
