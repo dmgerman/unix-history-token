@@ -221,17 +221,6 @@ comment|/* L2 invalid type */
 end_comment
 
 begin_comment
-comment|/* L1 and L2 address masks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L2_ADDR_MASK
-value|0xfffff000
-end_define
-
-begin_comment
 comment|/*  * The ARM MMU architecture was introduced with ARM v3 (previous ARM  * architecture versions used an optional off-CPU memory controller  * to perform address translation).  *  * The ARM MMU consists of a TLB and translation table walking logic.  * There is typically one TLB per memory interface (or, put another  * way, one TLB per software-visible cache).  *  * The ARM MMU is capable of mapping memory in the following chunks:  *  *	1M	Sections (L1 table)  *  *	64K	Large Pages (L2 table)  *  *	4K	Small Pages (L2 table)  *  *	1K	Tiny Pages (L2 table)  *  * There are two types of L2 tables: Coarse Tables and Fine Tables.  * Coarse Tables can map Large and Small Pages.  Fine Tables can  * map Tiny Pages.  *  * Coarse Tables can define 4 Subpages within Large and Small pages.  * Subpages define different permissions for each Subpage within  * a Page.  *  * Coarse Tables are 1K in length.  Fine tables are 4K in length.  *  * The Translation Table Base register holds the pointer to the  * L1 Table.  The L1 Table is a 16K contiguous chunk of memory  * aligned to a 16K boundary.  Each entry in the L1 Table maps  * 1M of virtual address space, either via a Section mapping or  * via an L2 Table.  *  * In addition, the Fast Context Switching Extension (FCSE) is available  * on some ARM v4 and ARM v5 processors.  FCSE is a way of eliminating  * TLB/cache flushes on context switch by use of a smaller address space  * and a "process ID" that modifies the virtual address before being  * presented to the translation logic.  */
 end_comment
 
