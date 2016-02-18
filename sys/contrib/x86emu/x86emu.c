@@ -30765,6 +30765,7 @@ name|F_OF
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|s
@@ -30908,6 +30909,7 @@ name|F_OF
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|s
@@ -31050,6 +31052,7 @@ name|F_OF
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|s
