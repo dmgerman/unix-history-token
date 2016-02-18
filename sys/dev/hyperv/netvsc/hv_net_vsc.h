@@ -2033,9 +2033,6 @@ name|struct
 name|lro_ctrl
 name|hn_lro
 decl_stmt|;
-name|int
-name|hn_lro_hiwat
-decl_stmt|;
 comment|/* Trust csum verification on host side */
 name|int
 name|hn_trust_hcsum
