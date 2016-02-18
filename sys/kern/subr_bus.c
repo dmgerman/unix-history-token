@@ -14344,7 +14344,10 @@ operator|)
 return|;
 return|return
 operator|(
-name|NULL
+operator|(
+name|bus_space_tag_t
+operator|)
+literal|0
 operator|)
 return|;
 block|}
@@ -16256,7 +16259,10 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NULL
+operator|(
+name|bus_space_tag_t
+operator|)
+literal|0
 operator|)
 return|;
 return|return
