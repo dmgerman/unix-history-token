@@ -6874,7 +6874,7 @@ return|return;
 block|}
 name|do_sched
 label|:
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -6959,8 +6959,7 @@ if|if
 condition|(
 name|sched
 condition|)
-block|{
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -6972,7 +6971,6 @@ operator|->
 name|hn_start_task
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -6989,7 +6987,7 @@ argument_list|,
 name|IFF_DRV_OACTIVE
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
