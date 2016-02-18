@@ -1662,17 +1662,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L1_ADDR_MASK
-value|0xfffffc00
-end_define
-
-begin_comment
-comment|/*  * lib/libkvm/kvm_arm.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|L2_ADDR_BITS
 value|0x000ff000
 end_define
@@ -1680,47 +1669,6 @@ end_define
 begin_comment
 comment|/* L2 PTE address bits */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * sys/arm/arm/minidump_machdep.c  * sys/arm/arm/pmap.c  * sys/arm/arm/pmap.h (hack for our hack in pmap.h )  * lib/libkvm/kvm_arm.c  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pd_entry_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* page directory entry */
-end_comment
-
-begin_comment
-comment|/*  * sys/arm/arm/minidump_machdep.c  * sys/arm/arm/pmap.c  * sys/arm/arm/pmap.h (hack for our hack in pmap.h )  * sys/arm/include/param.h  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pt_entry_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* page table entry */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|// -----------------------------------------------------------------------------

@@ -227,13 +227,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L1_ADDR_MASK
-value|0xfffffc00
-end_define
-
-begin_define
-define|#
-directive|define
 name|L2_ADDR_MASK
 value|0xfffff000
 end_define
@@ -408,17 +401,6 @@ end_define
 
 begin_comment
 comment|/*  * The NetBSD VM implementation only works on whole pages (4K),  * whereas the ARM MMU's Coarse tables are sized in terms of 1K  * (16K L1 table, 1K L2 table).  *  * So, we allocate L2 tables 4 at a time, thus yielding a 4K L2  * table.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L1_ADDR_BITS
-value|0xfff00000
-end_define
-
-begin_comment
-comment|/* L1 PTE address bits */
 end_comment
 
 begin_define
