@@ -471,34 +471,19 @@ name|cap_vpd
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|struct
 name|pci_conf
 modifier|*
 name|p
+name|__unused
 parameter_list|,
 name|uint8_t
 name|ptr
+name|__unused
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fd
-expr_stmt|;
-comment|/* UNUSED */
-operator|(
-name|void
-operator|)
-name|p
-expr_stmt|;
-comment|/* UNUSED */
-operator|(
-name|void
-operator|)
-name|ptr
-expr_stmt|;
-comment|/* UNUSED */
 name|printf
 argument_list|(
 literal|"VPD"
@@ -2587,34 +2572,19 @@ name|cap_sata
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|struct
 name|pci_conf
 modifier|*
 name|p
+name|__unused
 parameter_list|,
 name|uint8_t
 name|ptr
+name|__unused
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fd
-expr_stmt|;
-comment|/* UNUSED */
-operator|(
-name|void
-operator|)
-name|p
-expr_stmt|;
-comment|/* UNUSED */
-operator|(
-name|void
-operator|)
-name|ptr
-expr_stmt|;
-comment|/* UNUSED */
 name|printf
 argument_list|(
 literal|"SATA Index-Data Pair"
