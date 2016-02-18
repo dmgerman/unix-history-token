@@ -109,6 +109,12 @@ directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|HN_USE_TXDESC_BUFRING
+end_define
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -1907,6 +1913,12 @@ name|netvsc_device_info
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HN_USE_TXDESC_BUFRING
+end_ifndef
+
 begin_struct_decl
 struct_decl|struct
 name|hn_txdesc
@@ -1922,6 +1934,22 @@ name|hn_txdesc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct_decl
+struct_decl|struct
+name|buf_ring
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -1987,6 +2015,9 @@ begin_struct
 struct|struct
 name|hn_tx_ring
 block|{
+ifndef|#
+directive|ifndef
+name|HN_USE_TXDESC_BUFRING
 name|struct
 name|mtx
 name|hn_txlist_spin
@@ -1995,6 +2026,15 @@ name|struct
 name|hn_txdesc_list
 name|hn_txlist
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|buf_ring
+modifier|*
+name|hn_txdesc_br
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|hn_txdesc_cnt
 decl_stmt|;
