@@ -481,6 +481,24 @@ name|uint8_t
 name|ptr
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|fd
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|p
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|ptr
+expr_stmt|;
+comment|/* UNUSED */
 name|printf
 argument_list|(
 literal|"VPD"
@@ -818,6 +836,10 @@ operator|==
 literal|1
 condition|)
 return|return;
+name|max_burst_read
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|status
@@ -858,6 +880,10 @@ literal|4096
 expr_stmt|;
 break|break;
 block|}
+name|max_splits
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|status
@@ -2571,6 +2597,24 @@ name|uint8_t
 name|ptr
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|fd
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|p
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|ptr
+expr_stmt|;
+comment|/* UNUSED */
 name|printf
 argument_list|(
 literal|"SATA Index-Data Pair"
@@ -3963,6 +4007,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|uint16_t
