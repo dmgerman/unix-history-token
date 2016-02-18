@@ -7002,6 +7002,12 @@ operator|->
 name|b_lblkno
 operator|>=
 name|endn
+operator|||
+name|bp
+operator|->
+name|b_lblkno
+operator|<
+name|startn
 condition|)
 break|break;
 name|error

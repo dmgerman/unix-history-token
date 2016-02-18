@@ -66,12 +66,11 @@ block|{
 name|__uint64_t
 name|fp_x
 index|[
-literal|64
+literal|32
 index|]
-name|__aligned
-argument_list|(
-literal|16
-argument_list|)
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|__uint64_t
 name|fp_fcsr

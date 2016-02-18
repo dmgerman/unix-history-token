@@ -272,7 +272,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Variables for socket buffering.  */
+comment|/*  * Variables for socket buffering.  *  * Locking key to struct sockbuf:  * (a) locked by SOCKBUF_LOCK().  */
 end_comment
 
 begin_struct
@@ -297,7 +297,7 @@ comment|/* prevent I/O interlacing */
 name|short
 name|sb_state
 decl_stmt|;
-comment|/* (c/d) socket state on sockbuf */
+comment|/* (a) socket state on sockbuf */
 define|#
 directive|define
 name|sb_startzero
@@ -307,79 +307,79 @@ name|mbuf
 modifier|*
 name|sb_mb
 decl_stmt|;
-comment|/* (c/d) the mbuf chain */
+comment|/* (a) the mbuf chain */
 name|struct
 name|mbuf
 modifier|*
 name|sb_mbtail
 decl_stmt|;
-comment|/* (c/d) the last mbuf in the chain */
+comment|/* (a) the last mbuf in the chain */
 name|struct
 name|mbuf
 modifier|*
 name|sb_lastrecord
 decl_stmt|;
-comment|/* (c/d) first mbuf of last 					 * record in socket buffer */
+comment|/* (a) first mbuf of last 					 * record in socket buffer */
 name|struct
 name|mbuf
 modifier|*
 name|sb_sndptr
 decl_stmt|;
-comment|/* (c/d) pointer into mbuf chain */
+comment|/* (a) pointer into mbuf chain */
 name|struct
 name|mbuf
 modifier|*
 name|sb_fnrdy
 decl_stmt|;
-comment|/* (c/d) pointer to first not ready buffer */
+comment|/* (a) pointer to first not ready buffer */
 name|u_int
 name|sb_sndptroff
 decl_stmt|;
-comment|/* (c/d) byte offset of ptr into chain */
+comment|/* (a) byte offset of ptr into chain */
 name|u_int
 name|sb_acc
 decl_stmt|;
-comment|/* (c/d) available chars in buffer */
+comment|/* (a) available chars in buffer */
 name|u_int
 name|sb_ccc
 decl_stmt|;
-comment|/* (c/d) claimed chars in buffer */
+comment|/* (a) claimed chars in buffer */
 name|u_int
 name|sb_hiwat
 decl_stmt|;
-comment|/* (c/d) max actual char count */
+comment|/* (a) max actual char count */
 name|u_int
 name|sb_mbcnt
 decl_stmt|;
-comment|/* (c/d) chars of mbufs used */
+comment|/* (a) chars of mbufs used */
 name|u_int
 name|sb_mcnt
 decl_stmt|;
-comment|/* (c/d) number of mbufs in buffer */
+comment|/* (a) number of mbufs in buffer */
 name|u_int
 name|sb_ccnt
 decl_stmt|;
-comment|/* (c/d) number of clusters in buffer */
+comment|/* (a) number of clusters in buffer */
 name|u_int
 name|sb_mbmax
 decl_stmt|;
-comment|/* (c/d) max chars of mbufs to use */
+comment|/* (a) max chars of mbufs to use */
 name|u_int
 name|sb_ctl
 decl_stmt|;
-comment|/* (c/d) non-data chars in buffer */
+comment|/* (a) non-data chars in buffer */
 name|int
 name|sb_lowat
 decl_stmt|;
-comment|/* (c/d) low water mark */
+comment|/* (a) low water mark */
 name|sbintime_t
 name|sb_timeo
 decl_stmt|;
-comment|/* (c/d) timeout for read/write */
+comment|/* (a) timeout for read/write */
 name|short
 name|sb_flags
 decl_stmt|;
-comment|/* (c/d) flags, see below */
+comment|/* (a) flags, see below */
 name|int
 function_decl|(
 modifier|*
@@ -396,12 +396,12 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/* (c/d) */
+comment|/* (a) */
 name|void
 modifier|*
 name|sb_upcallarg
 decl_stmt|;
-comment|/* (c/d) */
+comment|/* (a) */
 block|}
 struct|;
 end_struct

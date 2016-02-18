@@ -52424,7 +52424,7 @@ name|tsn_map
 operator|&=
 operator|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|1
@@ -52773,7 +52773,7 @@ name|tsn_map
 operator|&=
 operator|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|1

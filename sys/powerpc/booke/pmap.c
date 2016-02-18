@@ -8059,7 +8059,13 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|pte
-operator|=
+operator|&=
+operator|~
+name|PTE_FLAGS_MASK
+expr_stmt|;
+operator|*
+name|pte
+operator||=
 name|flags
 expr_stmt|;
 name|tlb_miss_unlock

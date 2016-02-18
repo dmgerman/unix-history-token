@@ -338,7 +338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up static device mappings.  *  * This attempts to cover the most-used devices with 1MB section mappings, which  * is good for performance (uses fewer TLB entries for device access).  *  * ARMMP covers the interrupt controller, MPCore timers, global timer, and the  * L2 cache controller.  Most of the 1MB range is unused reserved space.  *  * AIPS1/AIPS2 cover most of the on-chip devices such as uart, spi, i2c, etc.  *  * Notably not mapped right now are HDMI, GPU, and other devices below ARMMP in  * the memory map.  When we get support for graphics it might make sense to  * static map some of that area.  Be careful with other things in that area such  * as OCRAM that probably shouldn't be mapped as PTE_DEVICE memory.  */
+comment|/*  * Set up static device mappings.  *  * This attempts to cover the most-used devices with 1MB section mappings, which  * is good for performance (uses fewer TLB entries for device access).  *  * ARMMP covers the interrupt controller, MPCore timers, global timer, and the  * L2 cache controller.  Most of the 1MB range is unused reserved space.  *  * AIPS1/AIPS2 cover most of the on-chip devices such as uart, spi, i2c, etc.  *  * Notably not mapped right now are HDMI, GPU, and other devices below ARMMP in  * the memory map.  When we get support for graphics it might make sense to  * static map some of that area.  Be careful with other things in that area such  * as OCRAM that probably shouldn't be mapped as VM_MEMATTR_DEVICE memory.  */
 end_comment
 
 begin_function

@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/gpio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -93,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<arm/allwinner/a10_clk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gpio_if.h"
 end_include
 
 begin_comment
@@ -464,17 +452,6 @@ define|#
 directive|define
 name|AHCI_P0PHYSR
 value|0x007C
-end_define
-
-begin_comment
-comment|/* Kludge for CUBIEBOARD (and Banana PI too) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GPIO_AHCI_PWR
-value|40
 end_define
 
 begin_function
@@ -1073,9 +1050,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|device_t
-name|gpio
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1158,77 +1132,6 @@ return|;
 comment|/* Turn on the PLL for SATA */
 name|a10_clk_ahci_activate
 argument_list|()
-expr_stmt|;
-comment|/* Apply power to the drive, if any */
-name|gpio
-operator|=
-name|devclass_get_device
-argument_list|(
-name|devclass_find
-argument_list|(
-literal|"gpio"
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|gpio
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"GPIO device not yet present (SATA won't work).\n"
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-name|ctlr
-operator|->
-name|r_rid
-argument_list|,
-name|ctlr
-operator|->
-name|r_mem
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-name|GPIO_PIN_SETFLAGS
-argument_list|(
-name|gpio
-argument_list|,
-name|GPIO_AHCI_PWR
-argument_list|,
-name|GPIO_PIN_OUTPUT
-argument_list|)
-expr_stmt|;
-name|GPIO_PIN_SET
-argument_list|(
-name|gpio
-argument_list|,
-name|GPIO_AHCI_PWR
-argument_list|,
-name|GPIO_PIN_HIGH
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
 expr_stmt|;
 comment|/* Reset controller */
 if|if

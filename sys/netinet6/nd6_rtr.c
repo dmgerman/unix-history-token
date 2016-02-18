@@ -4141,7 +4141,7 @@ argument_list|,
 name|ndpr_entry
 argument_list|)
 expr_stmt|;
-comment|/* free list of routers that adversed the prefix */
+comment|/* free list of routers that advertised the prefix */
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|pfr
@@ -4153,11 +4153,9 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
-name|free
+name|pfxrtr_del
 argument_list|(
 name|pfr
-argument_list|,
-name|M_IP6NDP
 argument_list|)
 expr_stmt|;
 block|}

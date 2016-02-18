@@ -79,27 +79,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sctp_threshold_management
-parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-parameter_list|,
-name|struct
-name|sctp_tcb
-modifier|*
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-parameter_list|,
-name|uint16_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|sctp_t3rxt_timer
 parameter_list|(
 name|struct

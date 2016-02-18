@@ -460,6 +460,7 @@ name|via_feature_rng
 operator|&
 name|VIA_HAS_RNG
 condition|)
+block|{
 name|random_nehemiah_deinit
 argument_list|()
 expr_stmt|;
@@ -469,6 +470,7 @@ operator|&
 name|random_nehemiah
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MOD_SHUTDOWN

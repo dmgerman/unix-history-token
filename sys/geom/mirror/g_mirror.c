@@ -6904,15 +6904,9 @@ name|bp
 operator|->
 name|bio_data
 expr_stmt|;
-name|bzero
+name|g_reset_bio
 argument_list|(
 name|bp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bp

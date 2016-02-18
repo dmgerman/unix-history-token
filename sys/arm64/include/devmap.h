@@ -35,14 +35,6 @@ name|vm_size_t
 name|pd_size
 decl_stmt|;
 comment|/* size of region */
-name|vm_prot_t
-name|pd_prot
-decl_stmt|;
-comment|/* protection code */
-name|int
-name|pd_cache
-decl_stmt|;
-comment|/* cache attributes */
 block|}
 struct|;
 end_struct

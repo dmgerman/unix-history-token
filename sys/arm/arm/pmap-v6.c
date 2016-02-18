@@ -3442,6 +3442,18 @@ name|PTE2_AP_KRW
 else|:
 name|PTE2_AP_KR
 expr_stmt|;
+name|l2_prot
+operator||=
+operator|(
+name|prot
+operator|&
+name|VM_PROT_EXECUTE
+operator|)
+condition|?
+name|PTE2_X
+else|:
+name|PTE2_NX
+expr_stmt|;
 name|l2_attr
 operator|=
 name|vm_memattr_to_pte2
@@ -26257,20 +26269,6 @@ name|KERN_FAILURE
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/* !!!! REMOVE !!!! */
-end_comment
-
-begin_function
-name|void
-name|vector_page_setprot
-parameter_list|(
-name|int
-name|p
-parameter_list|)
-block|{ }
 end_function
 
 begin_if

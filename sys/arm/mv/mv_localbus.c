@@ -2099,26 +2099,6 @@ name|pd_size
 operator|=
 name|size
 expr_stmt|;
-name|fdt_devmap
-index|[
-name|j
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|j
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_DEVICE
-expr_stmt|;
 comment|/* Copy data to structure used by localbus driver */
 name|localbus_banks
 index|[

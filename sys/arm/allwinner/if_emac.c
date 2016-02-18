@@ -278,12 +278,6 @@ directive|include
 file|"a10_sramc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"a10_gpio.h"
-end_include
-
 begin_struct
 struct|struct
 name|emac_softc
@@ -661,12 +655,6 @@ block|{
 comment|/* Activate EMAC clock. */
 name|a10_clk_emac_activate
 argument_list|()
-expr_stmt|;
-comment|/* Set the pin mux to EMAC (mii). */
-name|a10_gpio_ethernet_activate
-argument_list|(
-name|A10_GPIO_FUNC_MII
-argument_list|)
 expr_stmt|;
 comment|/* Map sram. */
 name|a10_map_to_emac
