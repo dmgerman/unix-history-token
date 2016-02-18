@@ -8547,7 +8547,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8566,6 +8565,7 @@ argument_list|,
 literal|0x0000000
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
