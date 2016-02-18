@@ -15498,6 +15498,11 @@ directive|ifdef
 name|INET
 if|if
 condition|(
+name|stcb
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|retried
 operator|==
@@ -15553,6 +15558,7 @@ name|ipv4_local_scope
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
