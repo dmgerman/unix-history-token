@@ -13031,7 +13031,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-elseif|else
 comment|/* 				 * Attach to anything that claims to be a 				 * direct access or optical disk device, 				 * as long as it doesn't return a "Logical 				 * unit not supported" (0x25) error. 				 */
 if|if
 condition|(
