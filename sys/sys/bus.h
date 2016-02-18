@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_bus_dma.h>
 end_include
 
@@ -1508,6 +1514,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bus_space_tag_t
+name|bus_generic_get_bus_tag
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|bus_generic_get_domain
 parameter_list|(
@@ -2052,6 +2071,16 @@ end_function_decl
 begin_function_decl
 name|bus_dma_tag_t
 name|bus_get_dma_tag
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bus_space_tag_t
+name|bus_get_bus_tag
 parameter_list|(
 name|device_t
 name|dev

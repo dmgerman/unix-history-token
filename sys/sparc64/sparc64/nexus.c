@@ -286,6 +286,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|bus_get_bus_tag_t
+name|nexus_get_bus_tag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ofw_bus_get_devinfo_t
 name|nexus_get_devinfo
 decl_stmt|;
@@ -527,6 +534,13 @@ argument_list|(
 name|bus_get_dma_tag
 argument_list|,
 name|nexus_get_dma_tag
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_bus_tag
+argument_list|,
+name|nexus_get_bus_tag
 argument_list|)
 block|,
 comment|/* ofw_bus interface */
@@ -2342,6 +2356,29 @@ return|return
 operator|(
 operator|&
 name|nexus_dmatag
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bus_space_tag_t
+name|nexus_get_bus_tag
+parameter_list|(
+name|device_t
+name|bus
+name|__unused
+parameter_list|,
+name|device_t
+name|child
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|&
+name|nexus_bustag
 operator|)
 return|;
 block|}
