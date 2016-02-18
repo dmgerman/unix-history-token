@@ -2086,6 +2086,13 @@ name|hn_tx_chimney_size
 operator|=
 name|hn_tx_chimney_size
 expr_stmt|;
+comment|/* 	 * Always schedule transmission instead of trying 	 * to do direct transmission.  This one gives the 	 * best performance so far. 	 */
+name|sc
+operator|->
+name|hn_sched_tx
+operator|=
+literal|1
+expr_stmt|;
 name|ctx
 operator|=
 name|device_get_sysctl_ctx
