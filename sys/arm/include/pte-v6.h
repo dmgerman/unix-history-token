@@ -1656,21 +1656,6 @@ comment|/* kernel read/write */
 end_comment
 
 begin_comment
-comment|/*  * lib/libkvm/kvm_arm.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L2_ADDR_BITS
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* L2 PTE address bits */
-end_comment
-
-begin_comment
 comment|// -----------------------------------------------------------------------------
 end_comment
 

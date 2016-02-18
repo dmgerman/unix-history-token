@@ -2055,7 +2055,7 @@ name|l2pte_index
 parameter_list|(
 name|v
 parameter_list|)
-value|(((v)& L2_ADDR_BITS)>> L2_S_SHIFT)
+value|(((v)& L1_S_OFFSET)>> L2_S_SHIFT)
 end_define
 
 begin_define

@@ -395,17 +395,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L2_ADDR_BITS
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* L2 PTE address bits */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|L1_TABLE_SIZE
 value|0x4000
 end_define

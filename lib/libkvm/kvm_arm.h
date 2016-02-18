@@ -302,17 +302,6 @@ name|ARM_L2_TYPE_MASK
 value|0x03
 end_define
 
-begin_define
-define|#
-directive|define
-name|ARM_L2_ADDR_BITS
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* L2 PTE address bits */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -658,18 +647,6 @@ operator|==
 name|ARM_L2_TYPE_MASK
 argument_list|,
 literal|"L2_TYPE_MASK mismatch"
-argument_list|)
-assert|;
-end_assert
-
-begin_assert
-assert|_Static_assert
-argument_list|(
-name|L2_ADDR_BITS
-operator|==
-name|ARM_L2_ADDR_BITS
-argument_list|,
-literal|"L2_ADDR_BITS mismatch"
 argument_list|)
 assert|;
 end_assert
