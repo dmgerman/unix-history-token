@@ -617,6 +617,24 @@ begin_comment
 comment|/* normal mode by default */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|hn
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Hyper-V network interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Trust tcp segements verification on host side. */
 end_comment
@@ -631,12 +649,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.trust_hosttcp"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trust_hosttcp
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_trust_hosttcp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Trust tcp segement verification on host side, "
+literal|"when csum info is missing (global setting)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -655,12 +684,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.trust_hostudp"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trust_hostudp
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_trust_hostudp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Trust udp datagram verification on host side, "
+literal|"when csum info is missing (global setting)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -679,12 +719,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.trust_hostip"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trust_hostip
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_trust_hostip
+argument_list|,
+literal|0
+argument_list|,
+literal|"Trust ip packet verification on host side, "
+literal|"when csum info is missing (global setting)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -711,12 +762,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.tso_maxlen"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tso_maxlen
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_tso_maxlen
+argument_list|,
+literal|0
+argument_list|,
+literal|"TSO burst limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -740,12 +801,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.tx_chimney_size"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tx_chimney_size
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_tx_chimney_size
+argument_list|,
+literal|0
+argument_list|,
+literal|"Chimney send packet size limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -764,12 +835,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.direct_tx_size"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|direct_tx_size
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_direct_tx_size
+argument_list|,
+literal|0
+argument_list|,
+literal|"Size of the packet for direct transmission"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -806,12 +887,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"dev.hn.lro_entry_count"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lro_entry_count
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_lro_entry_count
+argument_list|,
+literal|0
+argument_list|,
+literal|"LRO entry count"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -836,12 +927,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"hw.hn.share_tx_taskq"
+name|_hw_hn
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|share_tx_taskq
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|hn_share_tx_taskq
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable shared TX taskqueue"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2642,222 +2743,6 @@ literal|"Always schedule transmission "
 literal|"instead of doing direct transmission"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|==
-literal|0
-condition|)
-block|{
-name|struct
-name|sysctl_ctx_list
-modifier|*
-name|dc_ctx
-decl_stmt|;
-name|struct
-name|sysctl_oid_list
-modifier|*
-name|dc_child
-decl_stmt|;
-name|devclass_t
-name|dc
-decl_stmt|;
-comment|/* 		 * Add sysctl nodes for devclass 		 */
-name|dc
-operator|=
-name|device_get_devclass
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|dc_ctx
-operator|=
-name|devclass_get_sysctl_ctx
-argument_list|(
-name|dc
-argument_list|)
-expr_stmt|;
-name|dc_child
-operator|=
-name|SYSCTL_CHILDREN
-argument_list|(
-name|devclass_get_sysctl_tree
-argument_list|(
-name|dc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"trust_hosttcp"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_trust_hosttcp
-argument_list|,
-literal|0
-argument_list|,
-literal|"Trust tcp segement verification on host side, "
-literal|"when csum info is missing (global setting)"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"trust_hostudp"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_trust_hostudp
-argument_list|,
-literal|0
-argument_list|,
-literal|"Trust udp datagram verification on host side, "
-literal|"when csum info is missing (global setting)"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"trust_hostip"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_trust_hostip
-argument_list|,
-literal|0
-argument_list|,
-literal|"Trust ip packet verification on host side, "
-literal|"when csum info is missing (global setting)"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tx_chimney_size"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_tx_chimney_size
-argument_list|,
-literal|0
-argument_list|,
-literal|"Chimney send packet size limit"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100045
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tso_maxlen"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_tso_maxlen
-argument_list|,
-literal|0
-argument_list|,
-literal|"TSO burst limit"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"direct_tx_size"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_direct_tx_size
-argument_list|,
-literal|0
-argument_list|,
-literal|"Size of the packet for direct transmission"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100095
-name|SYSCTL_ADD_INT
-argument_list|(
-name|dc_ctx
-argument_list|,
-name|dc_child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"lro_entry_count"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|hn_lro_entry_count
-argument_list|,
-literal|0
-argument_list|,
-literal|"LRO entry count"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-block|}
 return|return
 operator|(
 literal|0
