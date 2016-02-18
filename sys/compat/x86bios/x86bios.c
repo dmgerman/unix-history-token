@@ -2830,6 +2830,11 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
+operator|(
+expr|struct
+name|x86regs
+operator|*
+operator|)
 operator|&
 name|x86bios_emu
 operator|.
@@ -3034,6 +3039,11 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
+operator|(
+expr|struct
+name|x86regs
+operator|*
+operator|)
 operator|&
 name|x86bios_emu
 operator|.
