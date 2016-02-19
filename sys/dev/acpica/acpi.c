@@ -3002,7 +3002,7 @@ name|acpi_supported_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"List supported ACPI sleep states."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -3038,7 +3038,7 @@ name|acpi_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Power button ACPI sleep state."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -3074,7 +3074,7 @@ name|acpi_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Sleep button ACPI sleep state."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -3110,7 +3110,7 @@ name|acpi_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Lid ACPI sleep state. Set to S3 if you want to suspend your laptop when close the Lid."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
