@@ -493,6 +493,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_FC0_SUBTYPE_TIMING_ADV
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC0_SUBTYPE_BEACON
 value|0x80
 end_define
@@ -542,6 +549,13 @@ end_define
 begin_comment
 comment|/* for TYPE_CTL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FC0_SUBTYPE_CONTROL_WRAP
+value|0x70
+end_define
 
 begin_define
 define|#
