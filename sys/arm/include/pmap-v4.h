@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/pte.h>
+file|<machine/pte-v4.h>
 end_include
 
 begin_include
