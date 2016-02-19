@@ -126,13 +126,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_pci.h>
+file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_bus_subr.h>
+file|<dev/ofw/ofw_pci.h>
 end_include
 
 begin_include
