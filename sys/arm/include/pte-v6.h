@@ -1636,29 +1636,6 @@ parameter_list|)
 value|PTE2(pa, (ap) |	PTE2_A | PTE2_NG, attr)
 end_define
 
-begin_comment
-comment|// ----------------- TO BE DELETED ---------------------------------------------
-end_comment
-
-begin_comment
-comment|/*  * sys/arm/arm/elf_trampoline.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AP_KRW
-value|0x01
-end_define
-
-begin_comment
-comment|/* kernel read/write */
-end_comment
-
-begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
 begin_endif
 endif|#
 directive|endif
