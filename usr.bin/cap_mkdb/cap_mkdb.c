@@ -392,8 +392,6 @@ operator||
 name|O_TRUNC
 operator||
 name|O_RDWR
-operator||
-name|O_SYNC
 argument_list|,
 name|DEFFILEMODE
 argument_list|,
