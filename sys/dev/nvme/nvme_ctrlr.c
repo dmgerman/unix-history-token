@@ -144,7 +144,7 @@ name|ctrlr
 operator|->
 name|resource
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|ctrlr
 operator|->
@@ -156,13 +156,6 @@ operator|&
 name|ctrlr
 operator|->
 name|resource_id
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -238,7 +231,7 @@ name|ctrlr
 operator|->
 name|bar4_resource
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|ctrlr
 operator|->
@@ -250,13 +243,6 @@ operator|&
 name|ctrlr
 operator|->
 name|bar4_resource_id
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)

@@ -20484,13 +20484,7 @@ argument|, unit); 		arcmsr_mutex_destroy(acb); 		return ENXIO; 	}
 comment|/* After setting up the adapter, map our interrupt */
 argument|rid =
 literal|0
-argument|; 	irqres = bus_alloc_resource(dev, SYS_RES_IRQ,&rid,
-literal|0ul
-argument|, ~
-literal|0ul
-argument|,
-literal|1
-argument|, RF_SHAREABLE | RF_ACTIVE); 	if(irqres == NULL ||
+argument|; 	irqres = bus_alloc_resource_any(dev, SYS_RES_IRQ,&rid, RF_SHAREABLE | RF_ACTIVE); 	if(irqres == NULL ||
 if|#
 directive|if
 name|__FreeBSD_version
