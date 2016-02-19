@@ -125,38 +125,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Pmap stuff  */
-end_comment
-
-begin_comment
-comment|/*  * This structure is used to hold a virtual<->physical address  * association and is used mostly by bootstrap code  */
-end_comment
-
-begin_struct
-struct|struct
-name|pv_addr
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|pv_addr
-argument_list|)
-name|pv_list
-expr_stmt|;
-name|vm_offset_t
-name|pv_va
-decl_stmt|;
-name|vm_paddr_t
-name|pv_pa
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * Pmap stuff  */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -541,19 +521,6 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_dcache_wb_range
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl
