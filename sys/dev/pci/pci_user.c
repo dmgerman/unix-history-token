@@ -3408,13 +3408,8 @@ name|i
 operator|<
 name|pci_numdevs
 operator|)
-operator|&&
-operator|(
-name|dinfo
-operator|!=
-name|NULL
-operator|)
-condition|;
+control|)
+empty_stmt|;
 name|dinfo
 operator|=
 name|STAILQ_NEXT
@@ -3426,7 +3421,7 @@ argument_list|)
 operator|,
 name|i
 operator|++
-control|)
+block|)
 block|{
 if|if
 condition|(
