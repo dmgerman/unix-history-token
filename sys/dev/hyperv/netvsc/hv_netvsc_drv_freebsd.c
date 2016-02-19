@@ -507,7 +507,7 @@ begin_define
 define|#
 directive|define
 name|HN_CSUM_ASSIST_WIN8
-value|(CSUM_TCP)
+value|(CSUM_IP | CSUM_TCP)
 end_define
 
 begin_define
