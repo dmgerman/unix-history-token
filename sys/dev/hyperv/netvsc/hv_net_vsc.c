@@ -2342,6 +2342,33 @@ block|}
 comment|/* 	 * TODO:  BUGBUG - We have to wait for the above msg since the netvsp 	 * uses KMCL which acknowledges packet (completion packet)  	 * since our Vmbus always set the 	 * HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED flag 	 */
 comment|/* sema_wait(&NetVscChannel->channel_init_sema); */
 comment|/* Post the big receive buffer to NetVSP */
+if|if
+condition|(
+name|net_dev
+operator|->
+name|nvsp_version
+operator|<=
+name|NVSP_PROTOCOL_VERSION_2
+condition|)
+name|net_dev
+operator|->
+name|rx_buf_size
+operator|=
+name|NETVSC_RECEIVE_BUFFER_SIZE_LEGACY
+expr_stmt|;
+else|else
+name|net_dev
+operator|->
+name|rx_buf_size
+operator|=
+name|NETVSC_RECEIVE_BUFFER_SIZE
+expr_stmt|;
+name|net_dev
+operator|->
+name|send_buf_size
+operator|=
+name|NETVSC_SEND_BUFFER_SIZE
+expr_stmt|;
 name|ret
 operator|=
 name|hv_nv_init_rx_buffer_with_net_vsp
@@ -2443,18 +2470,6 @@ goto|goto
 name|cleanup
 goto|;
 comment|/* Initialize the NetVSC channel extension */
-name|net_dev
-operator|->
-name|rx_buf_size
-operator|=
-name|NETVSC_RECEIVE_BUFFER_SIZE
-expr_stmt|;
-name|net_dev
-operator|->
-name|send_buf_size
-operator|=
-name|NETVSC_SEND_BUFFER_SIZE
-expr_stmt|;
 name|sema_init
 argument_list|(
 operator|&
@@ -3373,6 +3388,11 @@ operator|.
 name|transaction_id
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+name|hv_rf_receive_rollup
+argument_list|(
+name|net_dev
 argument_list|)
 expr_stmt|;
 block|}
