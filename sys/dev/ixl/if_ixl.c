@@ -31503,11 +31503,13 @@ block|}
 if|if
 condition|(
 operator|!
+operator|(
 name|vf
 operator|->
 name|vf_flags
 operator|&
 name|VF_FLAG_PROMISC_CAP
+operator|)
 condition|)
 block|{
 name|i40e_send_vf_nack
