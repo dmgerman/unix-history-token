@@ -46,6 +46,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALLWINNERSOC_A31
+value|0x31000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLWINNERSOC_A31S
+value|0x31000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALLWINNERSOC_SUN4I
 value|0x40000000
 end_define
@@ -55,6 +69,13 @@ define|#
 directive|define
 name|ALLWINNERSOC_SUN5I
 value|0x50000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLWINNERSOC_SUN6I
+value|0x60000000
 end_define
 
 begin_define
