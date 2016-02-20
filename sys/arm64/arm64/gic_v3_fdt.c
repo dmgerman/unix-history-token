@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -637,18 +643,12 @@ name|ranges_len
 decl_stmt|;
 if|if
 condition|(
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|)
-operator|&&
-operator|(
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 condition|)
 block|{
 if|if

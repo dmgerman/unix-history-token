@@ -1460,18 +1460,12 @@ expr_stmt|;
 comment|/* 	 * Request for the default allocation with a given rid: use resource 	 * list stored in the local device info. 	 */
 if|if
 condition|(
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|)
-operator|&&
-operator|(
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 condition|)
 block|{
 if|if

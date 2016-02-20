@@ -1033,14 +1033,12 @@ expr_stmt|;
 comment|/* 	 * If this is a "default" allocation against this rid, we can't work 	 * out where it's coming from (we should actually never see these) so 	 * we just have to punt. 	 */
 if|if
 condition|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0
-operator|&&
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0
+argument_list|)
 condition|)
 block|{
 name|device_printf

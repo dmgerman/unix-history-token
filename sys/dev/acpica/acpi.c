@@ -6439,16 +6439,12 @@ decl_stmt|;
 name|int
 name|isdefault
 init|=
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|&&
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 decl_stmt|;
 comment|/*      * First attempt at allocating the resource.  For direct children,      * use resource_list_alloc() to handle reserved resources.  For      * other devices, pass the request up to our parent.      */
 if|if
