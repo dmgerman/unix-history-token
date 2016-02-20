@@ -3059,9 +3059,9 @@ if|if
 condition|(
 name|getenv
 argument_list|(
-literal|"SSL_NO_SSL3"
+literal|"SSL_ALLOW_SSL3"
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|ssl_ctx_options
@@ -3193,6 +3193,15 @@ condition|(
 name|ca_cert_file
 operator|==
 name|NULL
+operator|&&
+name|access
+argument_list|(
+name|BASE_CERT_FILE
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|ca_cert_file
 operator|=
@@ -3241,6 +3250,22 @@ argument_list|,
 name|ca_cert_path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ca_cert_file
+operator|==
+name|NULL
+operator|&&
+name|ca_cert_path
+operator|==
+name|NULL
+condition|)
+name|fetch_info
+argument_list|(
+literal|"Using OpenSSL default "
+literal|"CA cert file and path"
+argument_list|)
+expr_stmt|;
 block|}
 name|SSL_CTX_set_verify
 argument_list|(
@@ -3251,6 +3276,16 @@ argument_list|,
 name|fetch_ssl_cb_verify_crt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ca_cert_file
+operator|!=
+name|NULL
+operator|||
+name|ca_cert_path
+operator|!=
+name|NULL
+condition|)
 name|SSL_CTX_load_verify_locations
 argument_list|(
 name|ctx
@@ -3258,6 +3293,12 @@ argument_list|,
 name|ca_cert_file
 argument_list|,
 name|ca_cert_path
+argument_list|)
+expr_stmt|;
+else|else
+name|SSL_CTX_set_default_verify_paths
+argument_list|(
+name|ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -3979,7 +4020,14 @@ condition|)
 block|{
 name|fetch_info
 argument_list|(
-literal|"SSL connection established using %s"
+literal|"%s connection established using %s"
+argument_list|,
+name|SSL_get_version
+argument_list|(
+name|conn
+operator|->
+name|ssl
+argument_list|)
 argument_list|,
 name|SSL_get_cipher
 argument_list|(
