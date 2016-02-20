@@ -27,6 +27,12 @@ directive|include
 file|<dev/ofw/ofw_pci.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<powerpc/ofw/ofw_pci.h>
+end_include
+
 begin_struct
 struct|struct
 name|uninorth_softc
