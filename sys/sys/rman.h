@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|RM_MAX_END
-value|((rman_res_t)~0)
+value|(~(rman_res_t)0)
 end_define
 
 begin_define
