@@ -529,6 +529,9 @@ operator|(
 name|err
 operator|)
 return|;
+name|dev_cleanup
+argument_list|()
+expr_stmt|;
 comment|/* Clean D-cache under kernel area and invalidate whole I-cache */
 name|clean_addr
 operator|=
