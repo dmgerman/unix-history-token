@@ -2153,6 +2153,20 @@ return|return
 name|true
 return|;
 block|}
+comment|// Returns true if any segment in the live range contains any of the
+comment|// provided slot indexes.  Slots which occur in holes between
+comment|// segments will not cause the function to return true.
+name|bool
+name|isLiveAtIndexes
+argument_list|(
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Slots
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|operator
 operator|<
