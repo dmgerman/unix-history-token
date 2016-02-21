@@ -155,16 +155,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|time_t
-name|efi_time
-parameter_list|(
-name|EFI_TIME
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|EFI_STATUS
 name|main
 parameter_list|(
