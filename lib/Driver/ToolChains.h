@@ -2847,6 +2847,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|AddCXXStdlibLibArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|UseSjLjExceptions
 argument_list|(
