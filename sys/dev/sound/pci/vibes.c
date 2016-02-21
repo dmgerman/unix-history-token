@@ -3941,7 +3941,7 @@ name|sc
 operator|->
 name|irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -3951,13 +3951,6 @@ operator|&
 name|sc
 operator|->
 name|irqid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 operator||

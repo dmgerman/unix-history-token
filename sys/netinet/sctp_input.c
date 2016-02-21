@@ -1768,6 +1768,13 @@ name|asoc
 operator|->
 name|pre_open_streams
 expr_stmt|;
+if|if
+condition|(
+name|asoc
+operator|->
+name|strmout
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -1795,6 +1802,7 @@ name|state
 operator|=
 name|SCTP_STREAM_OPEN
 expr_stmt|;
+block|}
 block|}
 comment|/* EY - nr_sack: initialize highest tsn in nr_mapping_array */
 name|asoc
@@ -4704,6 +4712,13 @@ return|return;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|stcb
+operator|->
+name|sctp_socket
+condition|)
+block|{
 name|sctp_sorwakeup
 argument_list|(
 name|stcb
@@ -4715,6 +4730,7 @@ operator|->
 name|sctp_socket
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -24764,9 +24780,17 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
+name|locked_tcb
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|locked_tcb
 operator|!=
 name|stcb
+operator|)
 condition|)
 block|{
 comment|/* Very unlikely */

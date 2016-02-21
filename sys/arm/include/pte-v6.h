@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PTE_H_
+name|_MACHINE_PTE_V6_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PTE_H_
+name|_MACHINE_PTE_V6_H_
 end_define
 
 begin_comment
@@ -1636,103 +1636,13 @@ parameter_list|)
 value|PTE2(pa, (ap) |	PTE2_A | PTE2_NG, attr)
 end_define
 
-begin_comment
-comment|// ----------------- TO BE DELETED ---------------------------------------------
-end_comment
-
-begin_comment
-comment|/*  * sys/arm/arm/elf_trampoline.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AP_KRW
-value|0x01
-end_define
-
-begin_comment
-comment|/* kernel read/write */
-end_comment
-
-begin_comment
-comment|/*  * lib/libkvm/kvm_arm.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L1_ADDR_MASK
-value|0xfffffc00
-end_define
-
-begin_comment
-comment|/*  * lib/libkvm/kvm_arm.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L2_ADDR_BITS
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* L2 PTE address bits */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * sys/arm/arm/minidump_machdep.c  * sys/arm/arm/pmap.c  * sys/arm/arm/pmap.h (hack for our hack in pmap.h )  * lib/libkvm/kvm_arm.c  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pd_entry_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* page directory entry */
-end_comment
-
-begin_comment
-comment|/*  * sys/arm/arm/minidump_machdep.c  * sys/arm/arm/pmap.c  * sys/arm/arm/pmap.h (hack for our hack in pmap.h )  * sys/arm/include/param.h  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pt_entry_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* page table entry */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_MACHINE_PTE_H_ */
+comment|/* !_MACHINE_PTE_V6_H_ */
 end_comment
 
 end_unit

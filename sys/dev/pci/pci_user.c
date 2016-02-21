@@ -3408,12 +3408,6 @@ name|i
 operator|<
 name|pci_numdevs
 operator|)
-operator|&&
-operator|(
-name|dinfo
-operator|!=
-name|NULL
-operator|)
 condition|;
 name|dinfo
 operator|=

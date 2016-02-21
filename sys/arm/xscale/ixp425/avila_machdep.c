@@ -417,12 +417,6 @@ block|,
 name|IXP425_IO_HWBASE
 block|,
 name|IXP425_IO_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* Expansion Bus */
@@ -432,12 +426,6 @@ block|,
 name|IXP425_EXP_HWBASE
 block|,
 name|IXP425_EXP_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* CFI Flash on the Expansion Bus */
@@ -447,12 +435,6 @@ block|,
 name|IXP425_EXP_BUS_CS0_HWBASE
 block|,
 name|IXP425_EXP_BUS_CS0_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* IXP425 PCI Configuration */
@@ -462,12 +444,6 @@ block|,
 name|IXP425_PCI_HWBASE
 block|,
 name|IXP425_PCI_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* SDRAM Controller */
@@ -477,12 +453,6 @@ block|,
 name|IXP425_MCU_HWBASE
 block|,
 name|IXP425_MCU_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* PCI Memory Space */
@@ -492,12 +462,6 @@ block|,
 name|IXP425_PCI_MEM_HWBASE
 block|,
 name|IXP425_PCI_MEM_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* Q-Mgr Memory Space */
@@ -507,12 +471,6 @@ block|,
 name|IXP425_QMGR_HWBASE
 block|,
 name|IXP425_QMGR_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 block|{
@@ -542,12 +500,6 @@ block|,
 name|IXP425_IO_HWBASE
 block|,
 name|IXP425_IO_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 block|{
@@ -556,12 +508,6 @@ block|,
 name|IXP425_EXP_HWBASE
 block|,
 name|IXP425_EXP_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* IXP425 PCI Configuration */
@@ -571,12 +517,6 @@ block|,
 name|IXP425_PCI_HWBASE
 block|,
 name|IXP425_PCI_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* DDRII Controller NB: mapped same place as IXP425 */
@@ -586,12 +526,6 @@ block|,
 name|IXP435_MCU_HWBASE
 block|,
 name|IXP425_MCU_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* PCI Memory Space */
@@ -601,12 +535,6 @@ block|,
 name|IXP425_PCI_MEM_HWBASE
 block|,
 name|IXP425_PCI_MEM_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* Q-Mgr Memory Space */
@@ -616,12 +544,6 @@ block|,
 name|IXP425_QMGR_HWBASE
 block|,
 name|IXP425_QMGR_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* CFI Flash on the Expansion Bus */
@@ -631,12 +553,6 @@ block|,
 name|IXP425_EXP_BUS_CS0_HWBASE
 block|,
 name|IXP425_EXP_BUS_CS0_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* USB1 Memory Space */
@@ -646,12 +562,6 @@ block|,
 name|IXP435_USB1_HWBASE
 block|,
 name|IXP435_USB1_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* USB2 Memory Space */
@@ -661,12 +571,6 @@ block|,
 name|IXP435_USB2_HWBASE
 block|,
 name|IXP435_USB2_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* GPS Memory Space */
@@ -676,12 +580,6 @@ block|,
 name|CAMBRIA_GPS_HWBASE
 block|,
 name|CAMBRIA_GPS_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 comment|/* RS485 Memory Space */
@@ -691,12 +589,6 @@ block|,
 name|CAMBRIA_RS485_HWBASE
 block|,
 name|CAMBRIA_RS485_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, }
 block|,
 block|{

@@ -2958,7 +2958,7 @@ function_decl|;
 name|fw_msg_handler_t
 name|fw_msg_handler
 index|[
-literal|5
+literal|7
 index|]
 decl_stmt|;
 comment|/* NUM_FW6_TYPES */

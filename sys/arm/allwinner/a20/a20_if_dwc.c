@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/allwinner/a10_gpio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"if_dwc_if.h"
 end_include
 
@@ -168,11 +162,6 @@ argument_list|)
 argument_list|)
 operator|!=
 literal|0
-operator|||
-name|a10_gpio_ethernet_activate
-argument_list|(
-name|A10_GPIO_FUNC_RGMII
-argument_list|)
 condition|)
 block|{
 name|device_printf

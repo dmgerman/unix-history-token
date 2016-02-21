@@ -5725,7 +5725,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * DAD already in progress.  Let the existing entry 		 * to finish it. 		 */
+comment|/* 		 * DAD is already in progress.  Let the existing entry 		 * finish it. 		 */
+name|nd6_dad_rele
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|dp

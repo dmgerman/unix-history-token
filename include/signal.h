@@ -33,6 +33,16 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+end_if
+
 begin_include
 include|#
 directive|include
@@ -44,6 +54,11 @@ include|#
 directive|include
 file|<sys/_ucontext.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

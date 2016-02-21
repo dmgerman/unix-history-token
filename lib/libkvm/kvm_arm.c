@@ -860,7 +860,7 @@ name|l2pte_index
 parameter_list|(
 name|v
 parameter_list|)
-value|(((v)& ARM_L2_ADDR_BITS)>> ARM_L2_S_SHIFT)
+value|(((v)& ARM_L1_S_OFFSET)>> ARM_L2_S_SHIFT)
 end_define
 
 begin_function

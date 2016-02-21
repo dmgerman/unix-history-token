@@ -252,6 +252,15 @@ decl_stmt|;
 name|unsigned
 name|lro_mbuf_max
 decl_stmt|;
+name|unsigned
+name|short
+name|lro_ackcnt_lim
+decl_stmt|;
+comment|/* max # of aggregated ACKs */
+name|unsigned
+name|lro_length_lim
+decl_stmt|;
+comment|/* max len of aggregated data */
 name|struct
 name|lro_head
 name|lro_active
@@ -263,6 +272,24 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TCP_LRO_LENGTH_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_LRO_ACKCNT_MAX
+value|65535
+end_define
+
+begin_comment
+comment|/* unlimited */
+end_comment
 
 begin_function_decl
 name|int

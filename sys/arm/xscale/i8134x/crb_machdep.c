@@ -418,12 +418,6 @@ block|,
 name|IOP34X_HWADDR
 block|,
 name|IOP34X_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	    }
 block|,
 block|{
@@ -447,12 +441,6 @@ literal|1
 operator|)
 block|,
 literal|0x100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	    }
 block|,
 block|{
@@ -461,19 +449,9 @@ block|,
 name|IOP34X_PCE1
 block|,
 name|IOP34X_PCE1_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	    }
 block|,
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0

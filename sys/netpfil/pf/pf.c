@@ -9899,8 +9899,6 @@ name|printf
 argument_list|(
 literal|"%u"
 argument_list|,
-name|skw
-operator|->
 name|proto
 argument_list|)
 expr_stmt|;

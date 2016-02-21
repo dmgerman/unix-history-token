@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PMAP_H_
+name|_MACHINE_PMAP_V6_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PMAP_H_
+name|_MACHINE_PMAP_V6_H_
 end_define
 
 begin_include
@@ -125,80 +125,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|vm_paddr_t
-name|phys_avail
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_paddr_t
-name|dump_avail
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_tmppt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* poor name! */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|virtual_avail
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|virtual_end
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Pmap stuff  */
-end_comment
-
-begin_comment
-comment|/*  * This structure is used to hold a virtual<->physical address  * association and is used mostly by bootstrap code  */
-end_comment
-
-begin_struct
-struct|struct
-name|pv_addr
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|pv_addr
-argument_list|)
-name|pv_list
-expr_stmt|;
-name|vm_offset_t
-name|pv_va
-decl_stmt|;
-name|vm_paddr_t
-name|pv_pa
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * Pmap stuff  */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -486,12 +424,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|pcb
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 specifier|extern
 name|ttb_entry_t
@@ -511,16 +443,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|((m)->md.pat_mode)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_page_is_write_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(((m)->aflags& PGA_WRITEABLE) != 0)
 end_define
 
 begin_comment
@@ -549,33 +471,9 @@ end_function_decl
 
 begin_function_decl
 name|void
-modifier|*
-name|pmap_kenter_temporary
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_kremove
 parameter_list|(
 name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|pmap_mapdev
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -605,65 +503,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_page_set_memattr
-parameter_list|(
-name|vm_page_t
-parameter_list|,
-name|vm_memattr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_unmapdev
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_kenter_device
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_kremove_device
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_set_pcb_pagedir
-parameter_list|(
-name|pmap_t
-parameter_list|,
-name|struct
-name|pcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_tlb_flush
 parameter_list|(
 name|pmap_t
@@ -682,28 +521,6 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_dcache_wb_range
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|vm_memattr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_paddr_t
-name|pmap_kextract
-parameter_list|(
-name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -736,16 +553,6 @@ name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|pmap_kextract((vm_offset_t)(va))
-end_define
 
 begin_function_decl
 name|void
@@ -851,77 +658,13 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_comment
-comment|// ----------------- TO BE DELETED ---------------------------------------------
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/pte-v6.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * sys/arm/arm/elf_trampoline.c  * sys/arm/arm/genassym.c  * sys/arm/arm/machdep.c  * sys/arm/arm/mp_machdep.c  * sys/arm/arm/locore.S  * sys/arm/arm/pmap.c  * sys/arm/arm/swtch.S  * sys/arm/at91/at91_machdep.c  * sys/arm/cavium/cns11xx/econa_machdep.c  * sys/arm/s3c2xx0/s3c24x0_machdep.c  * sys/arm/xscale/ixp425/avila_machdep.c  * sys/arm/xscale/i8134x/crb_machdep.c  * sys/arm/xscale/i80321/ep80219_machdep.c  * sys/arm/xscale/i80321/iq31244_machdep.c  * sys/arm/xscale/pxa/pxa_machdep.c  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMAP_DOMAIN_KERNEL
-value|0
-end_define
-
-begin_comment
-comment|/* The kernel uses domain #0 */
-end_comment
-
-begin_comment
-comment|/*  * sys/arm/arm/cpufunc.c  */
-end_comment
-
-begin_function_decl
-name|void
-name|vector_page_setprot
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|PTE_DEVICE
-value|VM_MEMATTR_DEVICE
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|// -----------------------------------------------------------------------------
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_MACHINE_PMAP_H_ */
+comment|/* !_MACHINE_PMAP_V6_H_ */
 end_comment
 
 end_unit

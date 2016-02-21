@@ -118,7 +118,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (d) locked by SOCKBUF_LOCK(&so->so_snd).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  * (h) locked by global mutex so_global_mtx.  */
+comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  * (h) locked by global mutex so_global_mtx.  */
 end_comment
 
 begin_struct

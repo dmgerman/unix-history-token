@@ -570,7 +570,7 @@ name|ifr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we get a different name back than we put in, print it. 	 */
+comment|/* 	 * If we get a different name back than we put in, update record and 	 * indicate it should be printed later. 	 */
 if|if
 condition|(
 name|strncmp
@@ -604,12 +604,9 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|name
-argument_list|)
+name|printifname
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}

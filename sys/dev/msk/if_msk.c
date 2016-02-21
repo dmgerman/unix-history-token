@@ -8810,9 +8810,9 @@ name|msk_txrx_dma_alloc
 argument_list|(
 name|sc_if
 argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 goto|goto
 name|fail

@@ -1998,7 +1998,7 @@ condition|(
 name|max_address
 operator|!=
 operator|(
-name|u_long
+name|rman_res_t
 operator|)
 name|max_address
 condition|)
@@ -6312,7 +6312,10 @@ block|}
 name|wmask
 operator|=
 operator|(
-literal|1ul
+operator|(
+name|rman_res_t
+operator|)
+literal|1
 operator|<<
 name|w
 operator|->
@@ -6363,7 +6366,10 @@ name|roundup2
 argument_list|(
 name|count
 argument_list|,
-literal|1ul
+operator|(
+name|rman_res_t
+operator|)
+literal|1
 operator|<<
 name|w
 operator|->
@@ -7049,7 +7055,10 @@ return|;
 name|wmask
 operator|=
 operator|(
-literal|1ul
+operator|(
+name|rman_res_t
+operator|)
+literal|1
 operator|<<
 name|w
 operator|->
@@ -7182,7 +7191,10 @@ argument_list|)
 expr_stmt|;
 name|align
 operator|=
-literal|1ul
+operator|(
+name|rman_res_t
+operator|)
+literal|1
 operator|<<
 name|RF_ALIGNMENT
 argument_list|(

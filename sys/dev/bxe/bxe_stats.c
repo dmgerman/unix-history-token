@@ -7974,15 +7974,6 @@ name|cur_data_offset
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/**** FCoE FW statistics data ****/
-block|if (!NO_FCOE(sc)) {         cur_data_offset = (sc->fw_stats_data_mapping +                            offsetof(struct bxe_fw_stats_data, fcoe));          cur_query_entry =&sc->fw_stats_req->query[BXE_FCOE_QUERY_IDX];          cur_query_entry->kind = STATS_TYPE_FCOE;
-comment|/* For FCoE query index is a DONT CARE */
-block|cur_query_entry->index = SC_PORT(sc);         cur_query_entry->funcID = cpu_to_le16(SC_FUNC(sc));         cur_query_entry->address.hi = htole32(U64_HI(cur_data_offset));         cur_query_entry->address.lo = htole32(U64_LO(cur_data_offset));     }
-endif|#
-directive|endif
 comment|/**** Clients' queries ****/
 name|cur_data_offset
 operator|=
@@ -8001,12 +7992,6 @@ argument_list|)
 operator|)
 expr_stmt|;
 comment|/*      * First queue query index depends whether FCoE offloaded request will      * be included in the ramrod      */
-if|#
-directive|if
-literal|0
-block|if (!NO_FCOE(sc))         first_queue_query_index = BXE_FIRST_QUEUE_QUERY_IDX;     else
-endif|#
-directive|endif
 name|first_queue_query_index
 operator|=
 operator|(
@@ -8115,13 +8100,6 @@ name|per_queue_stats
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* add FCoE queue query if needed */
-block|if (!NO_FCOE(sc)) {         cur_query_entry =&sc->fw_stats_req->query[first_queue_query_index + i];          cur_query_entry->kind = STATS_TYPE_QUEUE;         cur_query_entry->index = bxe_stats_id(&sc->fp[FCOE_IDX(sc)]);         cur_query_entry->funcID = htole16(SC_FUNC(sc));         cur_query_entry->address.hi = htole32(U64_HI(cur_data_offset));         cur_query_entry->address.lo = htole32(U64_LO(cur_data_offset));     }
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -9029,12 +9007,6 @@ name|sc
 operator|->
 name|eth_stats
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct per_queue_stats *fcoe_q_stats =&sc->fw_stats_data->queue_stats[FCOE_IDX(sc)];      struct tstorm_per_queue_stats *fcoe_q_tstorm_stats =&fcoe_q_stats->tstorm_queue_statistics;      struct ustorm_per_queue_stats *fcoe_q_ustorm_stats =&fcoe_q_stats->ustorm_queue_statistics;      struct xstorm_per_queue_stats *fcoe_q_xstorm_stats =&fcoe_q_stats->xstorm_queue_statistics;      struct fcoe_statistics_params *fw_fcoe_stat =&sc->fw_stats_data->fcoe;
-endif|#
-directive|endif
 name|memset
 argument_list|(
 name|afex_stats
@@ -9404,13 +9376,6 @@ name|total_transmitted_dropped_packets_error_lo
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/*      * Now add FCoE statistics which are collected separately      * (both offloaded and non offloaded)      */
-block|if (!NO_FCOE(sc)) {         ADD_64_LE(afex_stats->rx_unicast_bytes_hi,                   LE32_0,                   afex_stats->rx_unicast_bytes_lo,                   fw_fcoe_stat->rx_stat0.fcoe_rx_byte_cnt);          ADD_64_LE(afex_stats->rx_unicast_bytes_hi,                   fcoe_q_tstorm_stats->rcv_ucast_bytes.hi,                   afex_stats->rx_unicast_bytes_lo,                   fcoe_q_tstorm_stats->rcv_ucast_bytes.lo);          ADD_64_LE(afex_stats->rx_broadcast_bytes_hi,                   fcoe_q_tstorm_stats->rcv_bcast_bytes.hi,                   afex_stats->rx_broadcast_bytes_lo,                   fcoe_q_tstorm_stats->rcv_bcast_bytes.lo);          ADD_64_LE(afex_stats->rx_multicast_bytes_hi,                   fcoe_q_tstorm_stats->rcv_mcast_bytes.hi,                   afex_stats->rx_multicast_bytes_lo,                   fcoe_q_tstorm_stats->rcv_mcast_bytes.lo);          ADD_64_LE(afex_stats->rx_unicast_frames_hi,                   LE32_0,                   afex_stats->rx_unicast_frames_lo,                   fw_fcoe_stat->rx_stat0.fcoe_rx_pkt_cnt);          ADD_64_LE(afex_stats->rx_unicast_frames_hi,                   LE32_0,                   afex_stats->rx_unicast_frames_lo,                   fcoe_q_tstorm_stats->rcv_ucast_pkts);          ADD_64_LE(afex_stats->rx_broadcast_frames_hi,                   LE32_0,                   afex_stats->rx_broadcast_frames_lo,                   fcoe_q_tstorm_stats->rcv_bcast_pkts);          ADD_64_LE(afex_stats->rx_multicast_frames_hi,                   LE32_0,                   afex_stats->rx_multicast_frames_lo,                   fcoe_q_tstorm_stats->rcv_ucast_pkts);          ADD_64_LE(afex_stats->rx_frames_discarded_hi,                   LE32_0,                   afex_stats->rx_frames_discarded_lo,                   fcoe_q_tstorm_stats->checksum_discard);          ADD_64_LE(afex_stats->rx_frames_discarded_hi,                   LE32_0,                   afex_stats->rx_frames_discarded_lo,                   fcoe_q_tstorm_stats->pkts_too_big_discard);          ADD_64_LE(afex_stats->rx_frames_discarded_hi,                   LE32_0,                   afex_stats->rx_frames_discarded_lo,                   fcoe_q_tstorm_stats->ttl0_discard);          ADD_64_LE16(afex_stats->rx_frames_dropped_hi,                     LE16_0,                     afex_stats->rx_frames_dropped_lo,                     fcoe_q_tstorm_stats->no_buff_discard);          ADD_64_LE(afex_stats->rx_frames_dropped_hi,                   LE32_0,                   afex_stats->rx_frames_dropped_lo,                   fcoe_q_ustorm_stats->ucast_no_buff_pkts);          ADD_64_LE(afex_stats->rx_frames_dropped_hi,                   LE32_0,                   afex_stats->rx_frames_dropped_lo,                   fcoe_q_ustorm_stats->mcast_no_buff_pkts);          ADD_64_LE(afex_stats->rx_frames_dropped_hi,                   LE32_0,                   afex_stats->rx_frames_dropped_lo,                   fcoe_q_ustorm_stats->bcast_no_buff_pkts);          ADD_64_LE(afex_stats->rx_frames_dropped_hi,                   LE32_0,                   afex_stats->rx_frames_dropped_lo,                   fw_fcoe_stat->rx_stat1.fcoe_rx_drop_pkt_cnt);          ADD_64_LE(afex_stats->rx_frames_dropped_hi,                   LE32_0,                   afex_stats->rx_frames_dropped_lo,                   fw_fcoe_stat->rx_stat2.fcoe_rx_drop_pkt_cnt);          ADD_64_LE(afex_stats->tx_unicast_bytes_hi,                   LE32_0,                   afex_stats->tx_unicast_bytes_lo,                   fw_fcoe_stat->tx_stat.fcoe_tx_byte_cnt);          ADD_64_LE(afex_stats->tx_unicast_bytes_hi,                   fcoe_q_xstorm_stats->ucast_bytes_sent.hi,                   afex_stats->tx_unicast_bytes_lo,                   fcoe_q_xstorm_stats->ucast_bytes_sent.lo);          ADD_64_LE(afex_stats->tx_broadcast_bytes_hi,                   fcoe_q_xstorm_stats->bcast_bytes_sent.hi,                   afex_stats->tx_broadcast_bytes_lo,                   fcoe_q_xstorm_stats->bcast_bytes_sent.lo);          ADD_64_LE(afex_stats->tx_multicast_bytes_hi,                   fcoe_q_xstorm_stats->mcast_bytes_sent.hi,                   afex_stats->tx_multicast_bytes_lo,                   fcoe_q_xstorm_stats->mcast_bytes_sent.lo);          ADD_64_LE(afex_stats->tx_unicast_frames_hi,                   LE32_0,                   afex_stats->tx_unicast_frames_lo,                   fw_fcoe_stat->tx_stat.fcoe_tx_pkt_cnt);          ADD_64_LE(afex_stats->tx_unicast_frames_hi,                   LE32_0,                   afex_stats->tx_unicast_frames_lo,                   fcoe_q_xstorm_stats->ucast_pkts_sent);          ADD_64_LE(afex_stats->tx_broadcast_frames_hi,                   LE32_0,                   afex_stats->tx_broadcast_frames_lo,                   fcoe_q_xstorm_stats->bcast_pkts_sent);          ADD_64_LE(afex_stats->tx_multicast_frames_hi,                   LE32_0,                   afex_stats->tx_multicast_frames_lo,                   fcoe_q_xstorm_stats->mcast_pkts_sent);          ADD_64_LE(afex_stats->tx_frames_dropped_hi,                   LE32_0,                   afex_stats->tx_frames_dropped_lo,                   fcoe_q_xstorm_stats->error_drop_pkts);     }
-endif|#
-directive|endif
 comment|/*      * If port stats are requested, add them to the PMF      * stats, as anyway they will be accumulated by the      * MCP before sent to the switch      */
 if|if
 condition|(

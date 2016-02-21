@@ -1857,7 +1857,7 @@ name|st_mode
 argument_list|)
 operator|&&
 name|skip
-operator|>=
+operator|>
 name|sb
 operator|.
 name|st_size

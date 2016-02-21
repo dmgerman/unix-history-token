@@ -134,6 +134,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nlist
 name|namelist
@@ -145,7 +146,30 @@ directive|define
 name|X_TTY_NIN
 value|0
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_tty_nin"
+block|,
+operator|.
+name|n_type
+operator|=
+literal|0
+block|,
+operator|.
+name|n_other
+operator|=
+literal|0
+block|,
+operator|.
+name|n_desc
+operator|=
+literal|0
+block|,
+operator|.
+name|n_value
+operator|=
+literal|0
 block|}
 block|,
 define|#
@@ -153,7 +177,30 @@ directive|define
 name|X_TTY_NOUT
 value|1
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_tty_nout"
+block|,
+operator|.
+name|n_type
+operator|=
+literal|0
+block|,
+operator|.
+name|n_other
+operator|=
+literal|0
+block|,
+operator|.
+name|n_desc
+operator|=
+literal|0
+block|,
+operator|.
+name|n_value
+operator|=
+literal|0
 block|}
 block|,
 define|#
@@ -161,7 +208,30 @@ directive|define
 name|X_BOOTTIME
 value|2
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_boottime"
+block|,
+operator|.
+name|n_type
+operator|=
+literal|0
+block|,
+operator|.
+name|n_other
+operator|=
+literal|0
+block|,
+operator|.
+name|n_desc
+operator|=
+literal|0
+block|,
+operator|.
+name|n_value
+operator|=
+literal|0
 block|}
 block|,
 define|#
@@ -169,7 +239,30 @@ directive|define
 name|X_END
 value|2
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
+block|,
+operator|.
+name|n_type
+operator|=
+literal|0
+block|,
+operator|.
+name|n_other
+operator|=
+literal|0
+block|,
+operator|.
+name|n_desc
+operator|=
+literal|0
+block|,
+operator|.
+name|n_value
+operator|=
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -187,6 +280,7 @@ comment|/* Traditional default `wrows' */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|statinfo
 name|cur
@@ -196,12 +290,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|num_devices
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|device_selection
 modifier|*
@@ -210,12 +306,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxshowdevs
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|headercount
@@ -223,6 +321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|wresized
@@ -234,6 +333,7 @@ comment|/* Tty resized, when non-zero. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|alarm_rang
@@ -241,6 +341,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|return_requested
@@ -248,6 +349,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|short
 name|wrows
@@ -259,6 +361,7 @@ comment|/* Current number of tty rows. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 init|=
@@ -287,6 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xflag
 init|=
@@ -2396,6 +2500,7 @@ name|needhdr
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|headercount
@@ -2415,6 +2520,7 @@ name|needresize
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|wresized
@@ -2438,6 +2544,7 @@ name|alarm_clock
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|alarm_rang
@@ -2457,6 +2564,7 @@ name|needreturn
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|return_requested
@@ -3977,8 +4085,12 @@ literal|1
 operator|)
 return|;
 block|}
+elseif|else
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|nbytes
 operator|!=
 name|len

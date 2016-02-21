@@ -15411,7 +15411,7 @@ name|keys_bmap
 operator|&=
 operator|~
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|k
 operator|->
@@ -15547,7 +15547,7 @@ operator|->
 name|keys_bmap
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|i
 operator|)
@@ -15560,9 +15560,11 @@ name|sc
 operator|->
 name|keys_bmap
 operator||=
-literal|1
+operator|(
+literal|1ULL
 operator|<<
 name|i
+operator|)
 expr_stmt|;
 operator|*
 name|keyix

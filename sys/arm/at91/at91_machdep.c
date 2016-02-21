@@ -412,12 +412,6 @@ block|,
 literal|0xfff00000
 block|,
 literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* There's a notion that we should do the rest of these lazily. */
@@ -430,12 +424,6 @@ block|,
 name|AT91RM92_OHCI_BASE
 block|,
 literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -445,12 +433,6 @@ block|,
 name|AT91RM92_CF_BASE
 block|,
 literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* 	 * The next two should be good for the 9260, 9261 and 9G20 since 	 * addresses mapping is the same. 	 */
@@ -461,12 +443,6 @@ block|,
 name|AT91SAM9G20_OHCI_BASE
 block|,
 literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -476,12 +452,6 @@ block|,
 name|AT91SAM9G20_NAND_BASE
 block|,
 name|AT91SAM9G20_NAND_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 comment|/* 	 * The next should be good for the 9G45. 	 */
@@ -492,19 +462,9 @@ block|,
 name|AT91SAM9G45_OHCI_BASE
 block|,
 literal|0x00100000
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0

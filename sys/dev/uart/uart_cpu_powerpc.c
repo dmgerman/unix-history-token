@@ -917,6 +917,8 @@ operator|->
 name|bas
 operator|.
 name|bsh
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

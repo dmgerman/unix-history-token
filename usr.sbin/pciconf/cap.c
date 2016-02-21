@@ -471,14 +471,17 @@ name|cap_vpd
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|struct
 name|pci_conf
 modifier|*
 name|p
+name|__unused
 parameter_list|,
 name|uint8_t
 name|ptr
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -818,6 +821,10 @@ operator|==
 literal|1
 condition|)
 return|return;
+name|max_burst_read
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|status
@@ -858,6 +865,10 @@ literal|4096
 expr_stmt|;
 break|break;
 block|}
+name|max_splits
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|status
@@ -2561,14 +2572,17 @@ name|cap_sata
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|struct
 name|pci_conf
 modifier|*
 name|p
+name|__unused
 parameter_list|,
 name|uint8_t
 name|ptr
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -3963,6 +3977,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|uint16_t

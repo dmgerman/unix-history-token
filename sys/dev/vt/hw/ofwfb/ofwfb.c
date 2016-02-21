@@ -2541,6 +2541,8 @@ operator|->
 name|fb
 operator|.
 name|fb_vbase
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sc

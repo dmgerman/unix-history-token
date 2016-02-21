@@ -2334,9 +2334,9 @@ name|vte_dma_alloc
 argument_list|(
 name|sc
 argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 goto|goto
 name|fail

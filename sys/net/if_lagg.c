@@ -6323,12 +6323,6 @@ condition|(
 name|ra
 operator|->
 name|ra_proto
-operator|<
-literal|1
-operator|||
-name|ra
-operator|->
-name|ra_proto
 operator|>=
 name|LAGG_PROTO_MAX
 condition|)

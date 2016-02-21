@@ -127,13 +127,6 @@ name|MAX_VADDR
 value|VM_MAX_KERNEL_ADDRESS
 end_define
 
-begin_define
-define|#
-directive|define
-name|PTE_DEVICE
-value|VM_MEMATTR_DEVICE
-end_define
-
 begin_elif
 elif|#
 directive|elif
@@ -533,20 +526,6 @@ name|pd_size
 operator|=
 name|sz
 expr_stmt|;
-name|m
-operator|->
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|m
-operator|->
-name|pd_cache
-operator|=
-name|PTE_DEVICE
-expr_stmt|;
 block|}
 end_function
 
@@ -660,13 +639,11 @@ name|pd
 operator|->
 name|pd_size
 argument_list|,
-name|pd
-operator|->
-name|pd_prot
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
 argument_list|,
-name|pd
-operator|->
-name|pd_cache
+name|VM_MEMATTR_DEVICE
 argument_list|)
 expr_stmt|;
 else|#
@@ -687,13 +664,11 @@ name|pd
 operator|->
 name|pd_size
 argument_list|,
-name|pd
-operator|->
-name|pd_prot
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
 argument_list|,
-name|pd
-operator|->
-name|pd_cache
+name|PTE_DEVICE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -933,7 +908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a set of physical memory pages into the kernel virtual address space.  * Return a pointer to where it is mapped.  *  * This uses a pre-established static mapping if one exists for the requested  * range, otherwise it allocates kva space and maps the physical pages into it.  *  * This routine is intended to be used for mapping device memory, NOT real  * memory; the mapping type is inherently PTE_DEVICE in pmap_kenter_device().  */
+comment|/*  * Map a set of physical memory pages into the kernel virtual address space.  * Return a pointer to where it is mapped.  *  * This uses a pre-established static mapping if one exists for the requested  * range, otherwise it allocates kva space and maps the physical pages into it.  *  * This routine is intended to be used for mapping device memory, NOT real  * memory; the mapping type is inherently VM_MEMATTR_DEVICE in  * pmap_kenter_device().  */
 end_comment
 
 begin_function

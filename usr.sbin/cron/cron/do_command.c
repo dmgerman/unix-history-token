@@ -1254,7 +1254,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|e
 operator|->
@@ -1263,7 +1263,7 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"execl: couldn't exec `%s'"
+literal|"execle: couldn't exec `%s'"
 argument_list|,
 name|shell
 argument_list|)

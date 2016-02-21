@@ -9471,7 +9471,7 @@ argument_list|(
 operator|*
 name|pt
 operator|&
-name|L2_ADDR_MASK
+name|L2_S_FRAME
 argument_list|)
 expr_stmt|;
 name|KASSERT

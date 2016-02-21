@@ -150,9 +150,6 @@ name|trapframe
 modifier|*
 name|tf
 decl_stmt|;
-name|uint64_t
-name|val
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -164,23 +161,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
-name|td1
-operator|==
-name|curthread
-condition|)
-block|{
-asm|__asm __volatile("mv	%0, tp" : "=&r"(val));
-name|td1
-operator|->
-name|td_pcb
-operator|->
-name|pcb_tp
-operator|=
-name|val
-expr_stmt|;
-block|}
 name|pcb2
 operator|=
 operator|(
@@ -323,7 +303,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|0
 index|]
@@ -337,7 +317,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|1
 index|]
@@ -603,7 +583,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|0
 index|]
@@ -617,7 +597,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|1
 index|]
@@ -941,7 +921,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|0
 index|]
@@ -955,7 +935,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_t
+name|pcb_s
 index|[
 literal|1
 index|]

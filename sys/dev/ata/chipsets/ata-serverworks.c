@@ -872,6 +872,7 @@ literal|0x40
 operator|)
 operator||
 operator|(
+operator|(
 name|ctlr
 operator|->
 name|chip
@@ -884,6 +885,7 @@ condition|?
 literal|0x03
 else|:
 literal|0x02
+operator|)
 argument_list|,
 literal|1
 argument_list|)

@@ -615,6 +615,17 @@ name|CCM_AHB_GATING_GMAC
 value|(1<< 17)
 end_define
 
+begin_comment
+comment|/* APB1_GATING_REG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCM_APB1_GATING_TWI
+value|(1<< 0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -892,6 +903,15 @@ name|a10_clk_mmc_cfg
 parameter_list|(
 name|int
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_i2c_activate
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

@@ -5507,11 +5507,11 @@ operator|.
 name|sin6_family
 operator|==
 name|AF_INET6
-operator|)
 condition|?
 name|RTF_HOST
 else|:
 literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
