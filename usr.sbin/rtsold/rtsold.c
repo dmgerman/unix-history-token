@@ -2570,6 +2570,9 @@ name|struct
 name|ra_opt
 modifier|*
 name|rao
+decl_stmt|,
+modifier|*
+name|raotmp
 decl_stmt|;
 name|int
 name|flags
@@ -2986,13 +2989,15 @@ argument_list|,
 argument|rai_next
 argument_list|)
 block|{
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|rao
 argument_list|,
 argument|&rai->rai_ra_opt
 argument_list|,
 argument|rao_next
+argument_list|,
+argument|raotmp
 argument_list|)
 block|{
 name|warnmsg
