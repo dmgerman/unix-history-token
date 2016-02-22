@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_urtwn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2177,6 +2183,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|URTWN_WITHOUT_UCODE
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2232,6 +2244,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -7893,6 +7910,38 @@ decl_stmt|;
 name|int
 name|ntries
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|URTWN_FW_LOADED
+operator|)
+condition|)
+block|{
+name|URTWN_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_FIRMWARE
+argument_list|,
+literal|"%s: firmware "
+literal|"was not loaded; command (id %d) will be discarded\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Wait for current FW box to be empty. */
 for|for
 control|(
@@ -17740,6 +17789,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|URTWN_WITHOUT_UCODE
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -18689,6 +18744,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -26127,6 +26187,9 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|URTWN_WITHOUT_UCODE
 comment|/* Load 8051 microcode. */
 name|error
 operator|=
@@ -26138,12 +26201,17 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
+operator|==
 literal|0
 condition|)
-goto|goto
-name|fail
-goto|;
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|URTWN_FW_LOADED
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Initialize MAC/BB/RF blocks. */
 name|error
 operator|=
@@ -26553,6 +26621,8 @@ operator|&=
 operator|~
 operator|(
 name|URTWN_RUNNING
+operator||
+name|URTWN_FW_LOADED
 operator||
 name|URTWN_TEMP_MEASURED
 operator|)
@@ -26977,6 +27047,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|URTWN_WITHOUT_UCODE
+end_ifndef
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -26992,6 +27068,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MODULE_VERSION
