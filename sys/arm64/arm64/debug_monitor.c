@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ddb/ddb.h>
 end_include
 
