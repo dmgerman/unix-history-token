@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/acle-compat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -978,28 +972,7 @@ operator|->
 name|vm_map
 expr_stmt|;
 block|}
-comment|/* 	 * We need to know whether the page should be mapped as R or R/W.  On 	 * armv6 and later the fault status register indicates whether the 	 * access was a read or write.  Prior to armv6, we know that a 	 * permission fault can only be the result of a write to a read-only 	 * location, so we can deal with those quickly.  Otherwise we need to 	 * disassemble the faulting instruction to determine if it was a write. 	 */
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|6
-name|ftype
-operator|=
-operator|(
-name|fsr
-operator|&
-name|FAULT_WNR
-operator|)
-condition|?
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-else|:
-name|VM_PROT_READ
-expr_stmt|;
-else|#
-directive|else
+comment|/* 	 * We need to know whether the page should be mapped as R or R/W. 	 * On armv4, the fault status register does not indicate whether 	 * the access was a read or write.  We know that a permission fault 	 * can only be the result of a write to a read-only location, so we 	 * can deal with those quickly.  Otherwise we need to disassemble 	 * the faulting instruction to determine if it was a write. 	 */
 if|if
 condition|(
 name|IS_PERMISSION_FAULT
@@ -1090,8 +1063,6 @@ name|VM_PROT_READ
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * See if the fault is as a result of ref/mod emulation, 	 * or domain mismatch. 	 */
 ifdef|#
 directive|ifdef
