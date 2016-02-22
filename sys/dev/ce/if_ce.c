@@ -349,12 +349,6 @@ directive|include
 file|<machine/resource.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
-end_include
-
 begin_comment
 comment|/* If we don't have Cronyx's sppp version, we don't have fr support via sppp */
 end_comment
