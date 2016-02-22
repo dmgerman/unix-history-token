@@ -1741,7 +1741,7 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|ip_tryforward
+name|ip_fastforward
 parameter_list|(
 name|struct
 name|mbuf

@@ -269,18 +269,6 @@ directive|include
 file|<netinet/ip_ipsec.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/key.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -2278,41 +2266,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Try to forward the packet, but if we fail continue */
 ifdef|#
 directive|ifdef
 name|IPSEC
-comment|/* For now we do not handle IPSEC in tryforward. */
-if|if
-condition|(
-operator|!
-name|key_havesp
-argument_list|(
-name|IPSEC_DIR_INBOUND
-argument_list|)
-operator|&&
-operator|!
-name|key_havesp
-argument_list|(
-name|IPSEC_DIR_OUTBOUND
-argument_list|)
-operator|&&
-operator|(
-name|V_ipforwarding
-operator|==
-literal|1
-operator|)
-condition|)
-if|if
-condition|(
-name|ip_tryforward
-argument_list|(
-name|m
-argument_list|)
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
@@ -2324,24 +2280,6 @@ condition|)
 goto|goto
 name|passin
 goto|;
-else|#
-directive|else
-if|if
-condition|(
-name|V_ipforwarding
-operator|==
-literal|1
-condition|)
-if|if
-condition|(
-name|ip_tryforward
-argument_list|(
-name|m
-argument_list|)
-operator|==
-name|NULL
-condition|)
-return|return;
 endif|#
 directive|endif
 comment|/* IPSEC */
