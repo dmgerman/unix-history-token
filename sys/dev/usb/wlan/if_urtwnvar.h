@@ -592,6 +592,17 @@ name|urtwn_softc
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_power_off
+function_decl|)
+parameter_list|(
+name|struct
+name|urtwn_softc
+modifier|*
+parameter_list|)
+function_decl|;
 name|struct
 name|ieee80211_node
 modifier|*
