@@ -3045,24 +3045,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Send completion processing  *  * Note:  It looks like offset 0 of buf is reserved to hold the softc  * pointer.  The sc pointer is not currently needed in this function, and  * it is not presently populated by the TX function.  */
-end_comment
-
 begin_function
+specifier|static
 name|void
-name|netvsc_xmit_completion
+name|hn_tx_done
 parameter_list|(
 name|void
 modifier|*
-name|context
+name|xpkt
 parameter_list|)
 block|{
 name|netvsc_packet
 modifier|*
 name|packet
 init|=
-name|context
+name|xpkt
 decl_stmt|;
 name|struct
 name|hn_txdesc
@@ -4272,7 +4269,7 @@ name|send
 operator|.
 name|on_send_completion
 operator|=
-name|netvsc_xmit_completion
+name|hn_tx_done
 expr_stmt|;
 name|packet
 operator|->

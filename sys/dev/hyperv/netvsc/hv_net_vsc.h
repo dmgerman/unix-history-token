@@ -2230,17 +2230,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netvsc_xmit_completion
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|hv_nv_on_receive_completion
 parameter_list|(
 name|struct
