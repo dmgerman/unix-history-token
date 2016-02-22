@@ -2054,7 +2054,7 @@ name|hn_tx_taskq
 decl_stmt|;
 name|struct
 name|task
-name|hn_start_task
+name|hn_tx_task
 decl_stmt|;
 name|struct
 name|task

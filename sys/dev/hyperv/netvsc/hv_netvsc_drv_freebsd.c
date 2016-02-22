@@ -1326,10 +1326,8 @@ name|hn_start_taskfunc
 parameter_list|(
 name|void
 modifier|*
-name|xsc
 parameter_list|,
 name|int
-name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1337,14 +1335,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|hn_txeof_taskfunc
+name|hn_start_txeof_taskfunc
 parameter_list|(
 name|void
 modifier|*
-name|xsc
 parameter_list|,
 name|int
-name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6924,7 +6920,7 @@ argument_list|,
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|)
 expr_stmt|;
 block|}
@@ -7042,7 +7038,7 @@ argument_list|,
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|)
 expr_stmt|;
 block|}
@@ -9738,7 +9734,7 @@ argument_list|(
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|,
 literal|0
 argument_list|,
@@ -9756,7 +9752,7 @@ name|hn_txeof_task
 argument_list|,
 literal|0
 argument_list|,
-name|hn_txeof_taskfunc
+name|hn_start_txeof_taskfunc
 argument_list|,
 name|txr
 argument_list|)
@@ -11183,7 +11179,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hn_txeof_taskfunc
+name|hn_start_txeof_taskfunc
 parameter_list|(
 name|void
 modifier|*
@@ -11293,7 +11289,7 @@ argument_list|,
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|)
 expr_stmt|;
 name|taskqueue_drain
