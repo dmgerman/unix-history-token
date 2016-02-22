@@ -447,7 +447,7 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-comment|/* 	 * Clear interrupt pending bit. 	 * Note sip register is unimplemented in Spike simulator, 	 * so use machine command to clear in mip. 	 */
+comment|/* 	 * Clear interrupt pending bit. 	 * Note: SIP_STIP bit is not implemented in sip register 	 * in Spike simulator, so use machine command to clear 	 * interrupt pending bit in mip. 	 */
 name|machine_command
 argument_list|(
 name|ECALL_CLEAR_PENDING
