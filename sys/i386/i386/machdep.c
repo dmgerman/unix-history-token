@@ -11658,11 +11658,14 @@ condition|(
 name|bootinfo
 operator|.
 name|bi_envp
+operator|!=
+literal|0
 condition|)
 name|init_static_kenv
 argument_list|(
 operator|(
-name|caddr_t
+name|char
+operator|*
 operator|)
 name|bootinfo
 operator|.

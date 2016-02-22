@@ -9138,6 +9138,13 @@ name|whichprompt
 operator|=
 name|which
 expr_stmt|;
+if|if
+condition|(
+name|which
+operator|==
+literal|0
+condition|)
+return|return;
 ifndef|#
 directive|ifndef
 name|NO_HISTORY

@@ -1034,7 +1034,6 @@ name|sense_data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|csio
 operator|->
 name|sense_data

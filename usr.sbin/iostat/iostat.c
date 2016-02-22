@@ -3097,7 +3097,7 @@ literal|1
 decl_stmt|;
 name|char
 modifier|*
-name|devname
+name|devicename
 decl_stmt|;
 if|if
 condition|(
@@ -3501,7 +3501,7 @@ condition|(
 name|asprintf
 argument_list|(
 operator|&
-name|devname
+name|devicename
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -3596,7 +3596,7 @@ literal|"%4"
 name|PRIu64
 literal|" %3.0Lf "
 argument_list|,
-name|devname
+name|devicename
 argument_list|,
 operator|(
 name|int
@@ -3649,7 +3649,7 @@ literal|"%12.1Lf %12.1Lf %4"
 name|PRIu64
 literal|" %10.1Lf %9.1Lf "
 argument_list|,
-name|devname
+name|devicename
 argument_list|,
 operator|(
 name|long
@@ -3737,7 +3737,7 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|devname
+name|devicename
 argument_list|)
 expr_stmt|;
 block|}
@@ -3933,9 +3933,9 @@ name|int
 name|state
 decl_stmt|;
 name|double
-name|time
+name|cptime
 decl_stmt|;
-name|time
+name|cptime
 operator|=
 literal|0.0
 expr_stmt|;
@@ -3952,7 +3952,7 @@ condition|;
 operator|++
 name|state
 control|)
-name|time
+name|cptime
 operator|+=
 name|cur
 operator|.
@@ -3990,9 +3990,9 @@ name|state
 index|]
 operator|/
 operator|(
-name|time
+name|cptime
 condition|?
-name|time
+name|cptime
 else|:
 literal|1
 operator|)

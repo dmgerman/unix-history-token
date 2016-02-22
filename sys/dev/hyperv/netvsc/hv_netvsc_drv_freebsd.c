@@ -252,12 +252,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -1326,10 +1320,8 @@ name|hn_start_taskfunc
 parameter_list|(
 name|void
 modifier|*
-name|xsc
 parameter_list|,
 name|int
-name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1337,14 +1329,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|hn_txeof_taskfunc
+name|hn_start_txeof_taskfunc
 parameter_list|(
 name|void
 modifier|*
-name|xsc
 parameter_list|,
 name|int
-name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3049,24 +3039,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Send completion processing  *  * Note:  It looks like offset 0 of buf is reserved to hold the softc  * pointer.  The sc pointer is not currently needed in this function, and  * it is not presently populated by the TX function.  */
-end_comment
-
 begin_function
+specifier|static
 name|void
-name|netvsc_xmit_completion
+name|hn_tx_done
 parameter_list|(
 name|void
 modifier|*
-name|context
+name|xpkt
 parameter_list|)
 block|{
 name|netvsc_packet
 modifier|*
 name|packet
 init|=
-name|context
+name|xpkt
 decl_stmt|;
 name|struct
 name|hn_txdesc
@@ -3104,7 +3091,7 @@ name|txr
 expr_stmt|;
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 operator|=
 literal|1
 expr_stmt|;
@@ -3236,16 +3223,18 @@ condition|(
 operator|!
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 condition|)
 return|return;
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 operator|=
 literal|0
 expr_stmt|;
-name|hn_start_txeof
+name|txr
+operator|->
+name|hn_txeof
 argument_list|(
 name|txr
 argument_list|)
@@ -4276,7 +4265,7 @@ name|send
 operator|.
 name|on_send_completion
 operator|=
-name|netvsc_xmit_completion
+name|hn_tx_done
 expr_stmt|;
 name|packet
 operator|->
@@ -4605,7 +4594,7 @@ decl_stmt|;
 comment|/* 			 * This should "really rarely" happen. 			 * 			 * XXX Too many RX to be acked or too many sideband 			 * commands to run?  Ask netvsc_channel_rollup() 			 * to kick start later. 			 */
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 operator|=
 literal|1
 expr_stmt|;
@@ -4624,7 +4613,7 @@ name|send_failed
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * Try sending again after set hn_txeof; 				 * in case that we missed the last 				 * netvsc_channel_rollup(). 				 */
+comment|/* 				 * Try sending again after set hn_has_txeof; 				 * in case that we missed the last 				 * netvsc_channel_rollup(). 				 */
 goto|goto
 name|again
 goto|;
@@ -6924,7 +6913,7 @@ argument_list|,
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|)
 expr_stmt|;
 block|}
@@ -7042,7 +7031,7 @@ argument_list|,
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|)
 expr_stmt|;
 block|}
@@ -9738,7 +9727,7 @@ argument_list|(
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|,
 literal|0
 argument_list|,
@@ -9756,7 +9745,7 @@ name|hn_txeof_task
 argument_list|,
 literal|0
 argument_list|,
-name|hn_txeof_taskfunc
+name|hn_start_txeof_taskfunc
 argument_list|,
 name|txr
 argument_list|)
@@ -9793,6 +9782,13 @@ name|hn_sched_tx
 operator|=
 literal|1
 expr_stmt|;
+name|txr
+operator|->
+name|hn_txeof
+operator|=
+name|hn_start_txeof
+expr_stmt|;
+comment|/* TODO: if_transmit */
 name|parent_dtag
 operator|=
 name|bus_get_dma_tag
@@ -11183,7 +11179,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hn_txeof_taskfunc
+name|hn_start_txeof_taskfunc
 parameter_list|(
 name|void
 modifier|*
@@ -11293,7 +11289,7 @@ argument_list|,
 operator|&
 name|txr
 operator|->
-name|hn_start_task
+name|hn_tx_task
 argument_list|)
 expr_stmt|;
 name|taskqueue_drain
