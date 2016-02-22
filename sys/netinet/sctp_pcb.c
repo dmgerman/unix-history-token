@@ -24655,7 +24655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete the address from the endpoint local address list There is nothing  * to be done if we are bound to all addresses  */
+comment|/*  * Delete the address from the endpoint local address list. There is nothing  * to be done if we are bound to all addresses  */
 end_comment
 
 begin_function
@@ -24821,20 +24821,10 @@ operator|->
 name|ro
 operator|.
 name|_s_addr
-operator|&&
-operator|(
-name|net
-operator|->
-name|ro
-operator|.
-name|_s_addr
-operator|->
-name|ifa
 operator|==
 name|laddr
 operator|->
 name|ifa
-operator|)
 condition|)
 block|{
 comment|/* Yep, purge src address selected */

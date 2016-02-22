@@ -30725,16 +30725,6 @@ operator|)
 operator|&
 name|mask
 expr_stmt|;
-comment|/* set the new carry flag, Note that it is the low order bit 		 * of the result!!!                               */
-name|CONDITIONAL_SET_FLAG
-argument_list|(
-name|res
-operator|&
-literal|0x1
-argument_list|,
-name|F_CF
-argument_list|)
-expr_stmt|;
 comment|/* OVERFLOW is set *IFF* s==1, then it is the xor of CF and 		 * the most significant bit.  Blecck. */
 name|CONDITIONAL_SET_FLAG
 argument_list|(
@@ -30872,15 +30862,6 @@ name|mask
 expr_stmt|;
 name|CONDITIONAL_SET_FLAG
 argument_list|(
-name|res
-operator|&
-literal|0x1
-argument_list|,
-name|F_CF
-argument_list|)
-expr_stmt|;
-name|CONDITIONAL_SET_FLAG
-argument_list|(
 name|s
 operator|==
 literal|1
@@ -31011,15 +30992,6 @@ operator|)
 operator|)
 operator|&
 name|mask
-expr_stmt|;
-name|CONDITIONAL_SET_FLAG
-argument_list|(
-name|res
-operator|&
-literal|0x1
-argument_list|,
-name|F_CF
-argument_list|)
 expr_stmt|;
 name|CONDITIONAL_SET_FLAG
 argument_list|(
@@ -31163,16 +31135,6 @@ operator|)
 operator|&
 name|mask
 expr_stmt|;
-comment|/* set the new carry flag, Note that it is the low order bit 		 * of the result!!!                               */
-name|CONDITIONAL_SET_FLAG
-argument_list|(
-name|res
-operator|&
-literal|0x80
-argument_list|,
-name|F_CF
-argument_list|)
-expr_stmt|;
 comment|/* OVERFLOW is set *IFF* s==1, then it is the xor of the two 		 * most significant bits.  Blecck. */
 name|CONDITIONAL_SET_FLAG
 argument_list|(
@@ -31191,7 +31153,6 @@ name|F_OF
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|s
@@ -31199,7 +31160,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* set the new carry flag, Note that it is the low order bit 		 * of the result!!!                               */
+comment|/* set the new carry flag, Note that it is the high order bit 		 * of the result!!!                               */
 name|CONDITIONAL_SET_FLAG
 argument_list|(
 name|res
@@ -31305,15 +31266,6 @@ name|mask
 expr_stmt|;
 name|CONDITIONAL_SET_FLAG
 argument_list|(
-name|res
-operator|&
-literal|0x8000
-argument_list|,
-name|F_CF
-argument_list|)
-expr_stmt|;
-name|CONDITIONAL_SET_FLAG
-argument_list|(
 name|s
 operator|==
 literal|1
@@ -31329,7 +31281,6 @@ name|F_OF
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|s
@@ -31337,7 +31288,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* set the new carry flag, Note that it is the low order bit 		 * of the result!!!                               */
+comment|/* set the new carry flag, Note that it is the high order bit 		 * of the result!!!                               */
 name|CONDITIONAL_SET_FLAG
 argument_list|(
 name|res
@@ -31442,15 +31393,6 @@ name|mask
 expr_stmt|;
 name|CONDITIONAL_SET_FLAG
 argument_list|(
-name|res
-operator|&
-literal|0x80000000
-argument_list|,
-name|F_CF
-argument_list|)
-expr_stmt|;
-name|CONDITIONAL_SET_FLAG
-argument_list|(
 name|s
 operator|==
 literal|1
@@ -31466,7 +31408,6 @@ name|F_OF
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|s
@@ -31474,7 +31415,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* set the new carry flag, Note that it is the low order bit 		 * of the result!!!                               */
+comment|/* set the new carry flag, Note that it is the high order bit 		 * of the result!!!                               */
 name|CONDITIONAL_SET_FLAG
 argument_list|(
 name|res

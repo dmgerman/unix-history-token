@@ -3002,7 +3002,7 @@ name|acpi_supported_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"List supported ACPI sleep states."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -3038,7 +3038,7 @@ name|acpi_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Power button ACPI sleep state."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -3074,7 +3074,7 @@ name|acpi_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Sleep button ACPI sleep state."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -3110,7 +3110,7 @@ name|acpi_sleep_state_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Lid ACPI sleep state. Set to S3 if you want to suspend your laptop when close the Lid."
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -6439,16 +6439,12 @@ decl_stmt|;
 name|int
 name|isdefault
 init|=
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|&&
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 decl_stmt|;
 comment|/*      * First attempt at allocating the resource.  For direct children,      * use resource_list_alloc() to handle reserved resources.  For      * other devices, pass the request up to our parent.      */
 if|if

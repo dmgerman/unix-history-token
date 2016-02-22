@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -1434,14 +1428,12 @@ expr_stmt|;
 name|isdefault
 operator|=
 operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|&&
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
+argument_list|)
 operator|&&
 name|count
 operator|==

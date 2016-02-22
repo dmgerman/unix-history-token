@@ -81,6 +81,10 @@ name|off_t
 name|offset
 decl_stmt|;
 comment|/* # of blocks to skip */
+name|off_t
+name|seek_offset
+decl_stmt|;
+comment|/* offset of last seek past output hole */
 block|}
 name|IO
 typedef|;

@@ -9992,6 +9992,9 @@ case|case
 name|IEEE80211_FC0_SUBTYPE_REASSOC_RESP
 case|:
 case|case
+name|IEEE80211_FC0_SUBTYPE_TIMING_ADV
+case|:
+case|case
 name|IEEE80211_FC0_SUBTYPE_ATIM
 case|:
 case|case

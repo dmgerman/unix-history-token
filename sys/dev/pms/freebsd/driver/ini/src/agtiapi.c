@@ -171,16 +171,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_comment
-comment|// 3. for vtophys (yes, three)
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcivar.h>
 end_include
 

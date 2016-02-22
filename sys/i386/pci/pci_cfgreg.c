@@ -131,12 +131,6 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

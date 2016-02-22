@@ -1305,18 +1305,12 @@ block|}
 empty_stmt|;
 if|if
 condition|(
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|)
-operator|&&
-operator|(
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* Read BAR manually to get resource address and size */

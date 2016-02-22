@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -869,16 +863,12 @@ condition|)
 block|{
 name|isdefault
 operator|=
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|&&
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

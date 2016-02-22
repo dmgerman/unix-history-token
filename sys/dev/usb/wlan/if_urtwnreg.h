@@ -295,6 +295,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92C_GPIO_IN
+value|0x044
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_GPIO_OUT
+value|0x045
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_GPIO_IOSEL
+value|0x046
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_GPIO_MOD
+value|0x047
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92C_GPIO_INTM
 value|0x048
 end_define
@@ -353,6 +381,13 @@ define|#
 directive|define
 name|R92C_HSISR
 value|0x05c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R88E_BB_PAD_CTRL
+value|0x064
 end_define
 
 begin_define
@@ -622,6 +657,13 @@ define|#
 directive|define
 name|R92C_MBIST_FAIL
 value|0x17c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R88E_32K_CTRL
+value|0x194
 end_define
 
 begin_define
@@ -1231,6 +1273,13 @@ define|#
 directive|define
 name|R92C_SCH_TXCMD
 value|0x5d0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R88E_SCH_TXCMD
+value|0x5f8
 end_define
 
 begin_comment
@@ -1867,6 +1916,38 @@ value|0x04
 end_define
 
 begin_comment
+comment|/* Bits for R92C_LDOA15_CTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_LDOA15_CTRL_EN
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_LDOA15_CTRL_STBY
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_LDOA15_CTRL_OBUF
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_LDOA15_CTRL_REG_VOS
+value|0x08
+end_define
+
+begin_comment
 comment|/* Bits for R92C_LDOV12D_CTRL. */
 end_comment
 
@@ -1875,6 +1956,17 @@ define|#
 directive|define
 name|R92C_LDOV12D_CTRL_LDV12_EN
 value|0x01
+end_define
+
+begin_comment
+comment|/* Bits for R92C_LPLDO_CTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_LPLDO_CTRL_SLEEP
+value|0x10
 end_define
 
 begin_comment
@@ -1893,6 +1985,52 @@ define|#
 directive|define
 name|R92C_AFE_XTAL_CTRL_ADDR_S
 value|11
+end_define
+
+begin_comment
+comment|/* Bits for R92C_AFE_PLL_CTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_AFE_PLL_CTRL_EN
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_AFE_PLL_CTRL_320_EN
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_AFE_PLL_CTRL_FREF_SEL
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_AFE_PLL_CTRL_EDGE_SEL
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_AFE_PLL_CTRL_WDOGB
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_AFE_PLL_CTRL_LPFEN
+value|0x0020
 end_define
 
 begin_comment
@@ -4415,6 +4553,13 @@ end_define
 begin_comment
 comment|/*  * USB registers.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_USB_SUSPEND
+value|0xfe10
+end_define
 
 begin_define
 define|#

@@ -1768,6 +1768,13 @@ name|asoc
 operator|->
 name|pre_open_streams
 expr_stmt|;
+if|if
+condition|(
+name|asoc
+operator|->
+name|strmout
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -1795,6 +1802,7 @@ name|state
 operator|=
 name|SCTP_STREAM_OPEN
 expr_stmt|;
+block|}
 block|}
 comment|/* EY - nr_sack: initialize highest tsn in nr_mapping_array */
 name|asoc

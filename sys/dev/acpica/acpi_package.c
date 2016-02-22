@@ -250,16 +250,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|dst
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dst
-argument_list|)
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|obj

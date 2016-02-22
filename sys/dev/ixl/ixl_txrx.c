@@ -1184,14 +1184,12 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|m_collapse
+name|m_defrag
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
-argument_list|,
-name|maxsegs
 argument_list|)
 expr_stmt|;
 if|if

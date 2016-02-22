@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ddb/db_sym.h>
 end_include
 

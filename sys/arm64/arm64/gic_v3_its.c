@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|GIC_V3_ITS_QUIRK_THUNDERX_PEM_BUS_OFFSET
-value|144
+value|88
 end_define
 
 begin_include

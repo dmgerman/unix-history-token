@@ -2067,22 +2067,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errno
-operator|!=
-literal|0
-condition|)
-comment|/* Overflow or underflow. */
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|oper
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|expr
 operator|==
 name|val
@@ -2092,7 +2076,22 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: illegal numeric value"
+literal|"%s: invalid numeric value"
+argument_list|,
+name|oper
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|oper
 argument_list|)
@@ -2261,22 +2260,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errno
-operator|!=
-literal|0
-condition|)
-comment|/* Overflow or underflow. */
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|oper
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|expr
 operator|==
 name|val
@@ -2286,7 +2269,22 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: illegal numeric value"
+literal|"%s: invalid numeric value"
+argument_list|,
+name|oper
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|oper
 argument_list|)

@@ -202,7 +202,19 @@ begin_define
 define|#
 directive|define
 name|RM_MAX_END
-value|((rman_res_t)~0)
+value|(~(rman_res_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RMAN_IS_DEFAULT_RANGE
+parameter_list|(
+name|s
+parameter_list|,
+name|e
+parameter_list|)
+value|((s) == 0&& (e) == RM_MAX_END)
 end_define
 
 begin_comment

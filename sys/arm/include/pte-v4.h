@@ -7,45 +7,16 @@ begin_comment
 comment|/*-  * Copyright (c) 1994 Mark Brinicombe.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the RiscBSD team.  * 4. The name "RiscBSD" nor the name of the author may be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RISCBSD ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RISCBSD OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|6
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/pte-v6.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __ARM_ARCH>= 6 */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PTE_H_
+name|_MACHINE_PTE_V4_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PTE_H_
+name|_MACHINE_PTE_V4_H_
 end_define
 
 begin_ifndef
@@ -221,24 +192,6 @@ comment|/* L2 invalid type */
 end_comment
 
 begin_comment
-comment|/* L1 and L2 address masks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L1_ADDR_MASK
-value|0xfffffc00
-end_define
-
-begin_define
-define|#
-directive|define
-name|L2_ADDR_MASK
-value|0xfffff000
-end_define
-
-begin_comment
 comment|/*  * The ARM MMU architecture was introduced with ARM v3 (previous ARM  * architecture versions used an optional off-CPU memory controller  * to perform address translation).  *  * The ARM MMU consists of a TLB and translation table walking logic.  * There is typically one TLB per memory interface (or, put another  * way, one TLB per software-visible cache).  *  * The ARM MMU is capable of mapping memory in the following chunks:  *  *	1M	Sections (L1 table)  *  *	64K	Large Pages (L2 table)  *  *	4K	Small Pages (L2 table)  *  *	1K	Tiny Pages (L2 table)  *  * There are two types of L2 tables: Coarse Tables and Fine Tables.  * Coarse Tables can map Large and Small Pages.  Fine Tables can  * map Tiny Pages.  *  * Coarse Tables can define 4 Subpages within Large and Small pages.  * Subpages define different permissions for each Subpage within  * a Page.  *  * Coarse Tables are 1K in length.  Fine tables are 4K in length.  *  * The Translation Table Base register holds the pointer to the  * L1 Table.  The L1 Table is a 16K contiguous chunk of memory  * aligned to a 16K boundary.  Each entry in the L1 Table maps  * 1M of virtual address space, either via a Section mapping or  * via an L2 Table.  *  * In addition, the Fast Context Switching Extension (FCSE) is available  * on some ARM v4 and ARM v5 processors.  FCSE is a way of eliminating  * TLB/cache flushes on context switch by use of a smaller address space  * and a "process ID" that modifies the virtual address before being  * presented to the translation logic.  */
 end_comment
 
@@ -408,28 +361,6 @@ end_define
 
 begin_comment
 comment|/*  * The NetBSD VM implementation only works on whole pages (4K),  * whereas the ARM MMU's Coarse tables are sized in terms of 1K  * (16K L1 table, 1K L2 table).  *  * So, we allocate L2 tables 4 at a time, thus yielding a 4K L2  * table.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L1_ADDR_BITS
-value|0xfff00000
-end_define
-
-begin_comment
-comment|/* L1 PTE address bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L2_ADDR_BITS
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* L2 PTE address bits */
 end_comment
 
 begin_define
@@ -1301,16 +1232,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PTE_H_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ARM_ARCH>= 6 */
+comment|/* !_MACHINE_PTE_V4_H_ */
 end_comment
 
 begin_comment

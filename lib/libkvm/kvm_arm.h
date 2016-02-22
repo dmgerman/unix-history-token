@@ -15,23 +15,6 @@ directive|define
 name|__KVM_ARM_H__
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__arm__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|uint32_t
@@ -302,17 +285,6 @@ name|ARM_L2_TYPE_MASK
 value|0x03
 end_define
 
-begin_define
-define|#
-directive|define
-name|ARM_L2_ADDR_BITS
-value|0x000ff000
-end_define
-
-begin_comment
-comment|/* L2 PTE address bits */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -324,6 +296,36 @@ include|#
 directive|include
 file|<machine/acle-compat.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/pte-v6.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/pte-v4.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_assert
 assert|_Static_assert
@@ -658,18 +660,6 @@ operator|==
 name|ARM_L2_TYPE_MASK
 argument_list|,
 literal|"L2_TYPE_MASK mismatch"
-argument_list|)
-assert|;
-end_assert
-
-begin_assert
-assert|_Static_assert
-argument_list|(
-name|L2_ADDR_BITS
-operator|==
-name|ARM_L2_ADDR_BITS
-argument_list|,
-literal|"L2_ADDR_BITS mismatch"
 argument_list|)
 assert|;
 end_assert

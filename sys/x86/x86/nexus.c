@@ -142,12 +142,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/metadata.h>
 end_include
 
@@ -1751,18 +1745,12 @@ decl_stmt|;
 comment|/* 	 * If this is an allocation of the "default" range for a given 	 * RID, and we know what the resources for this device are 	 * (ie. they aren't maintained by a child bus), then work out 	 * the start/end values. 	 */
 if|if
 condition|(
-operator|(
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|==
-literal|0UL
-operator|)
-operator|&&
-operator|(
+argument_list|,
 name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|count

@@ -315,12 +315,6 @@ block|,
 literal|"QLogic NetXtreme II BCM57712 MF 10GbE"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57712_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57712 VF 10GbE"     },
-endif|#
-directive|endif
 block|{
 name|BRCM_VENDORID
 block|,
@@ -345,12 +339,6 @@ block|,
 literal|"QLogic NetXtreme II BCM57800 MF 10GbE"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57800_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57800 VF 10GbE"     },
-endif|#
-directive|endif
 block|{
 name|BRCM_VENDORID
 block|,
@@ -375,12 +363,6 @@ block|,
 literal|"QLogic NetXtreme II BCM57810 MF 10GbE"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57810_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57810 VF 10GbE"     },
-endif|#
-directive|endif
 block|{
 name|BRCM_VENDORID
 block|,
@@ -405,12 +387,6 @@ block|,
 literal|"QLogic NetXtreme II BCM57811 MF 10GbE"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57811_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57811 VF 10GbE"     },
-endif|#
-directive|endif
 block|{
 name|BRCM_VENDORID
 block|,
@@ -423,12 +399,6 @@ block|,
 literal|"QLogic NetXtreme II BCM57840 4x10GbE"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57840_2_20,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57840 2x20GbE"     },
-endif|#
-directive|endif
 block|{
 name|BRCM_VENDORID
 block|,
@@ -441,12 +411,6 @@ block|,
 literal|"QLogic NetXtreme II BCM57840 MF 10GbE"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{         BRCM_VENDORID,         CHIP_NUM_57840_VF,         PCI_ANY_ID, PCI_ANY_ID,         "QLogic NetXtreme II BCM57840 VF 10GbE"     },
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
@@ -566,12 +530,6 @@ argument_list|,
 name|bxe_shutdown
 argument_list|)
 block|,
-if|#
-directive|if
-literal|0
-block|DEVMETHOD(device_suspend,   bxe_suspend),     DEVMETHOD(device_resume,    bxe_resume),
-endif|#
-directive|endif
 comment|/* Bus interface (bus_if.h) */
 name|DEVMETHOD
 argument_list|(
@@ -1834,12 +1792,6 @@ block|,
 literal|"tpa_bytes"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ STATS_OFFSET32(recoverable_error),                 4, STATS_FLAGS_FUNC, "recoverable_errors" },     { STATS_OFFSET32(unrecoverable_error),                 4, STATS_FLAGS_FUNC, "unrecoverable_errors" },
-endif|#
-directive|endif
 block|{
 name|STATS_OFFSET32
 argument_list|(
@@ -2178,12 +2130,6 @@ block|,
 literal|"tx_window_violation_tso"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ STATS_OFFSET32(tx_unsupported_tso_request_ipv6),                 4, STATS_FLAGS_FUNC, "tx_unsupported_tso_request_ipv6"},     { STATS_OFFSET32(tx_unsupported_tso_request_not_tcp),                 4, STATS_FLAGS_FUNC, "tx_unsupported_tso_request_not_tcp"},
-endif|#
-directive|endif
 block|{
 name|STATS_OFFSET32
 argument_list|(
@@ -2811,12 +2757,6 @@ block|,
 literal|"tx_window_violation_tso"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ Q_STATS_OFFSET32(tx_unsupported_tso_request_ipv6),                 4, "tx_unsupported_tso_request_ipv6"},     { Q_STATS_OFFSET32(tx_unsupported_tso_request_not_tcp),                 4, "tx_unsupported_tso_request_not_tcp"},
-endif|#
-directive|endif
 block|{
 name|Q_STATS_OFFSET32
 argument_list|(
@@ -3598,6 +3538,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|bxe_grc_dump
+parameter_list|(
+name|struct
+name|bxe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* calculate crc32 on a buffer (NOTE: crc32_length MUST be aligned to 8) */
 end_comment
@@ -4265,12 +4218,6 @@ name|nseg
 operator|=
 name|nseg
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|BLOGD(dma->sc, DBG_LOAD,               "DMA alloc '%s': vaddr=%p paddr=%p nseg=%d size=%lu\n",               dma->msg, dma->vaddr, (void *)dma->paddr,               dma->nseg, dma->size);
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -4661,12 +4608,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|BLOGD(sc, DBG_LOAD,               "DMA free '%s': vaddr=%p paddr=%p nseg=%d size=%lu\n",               dma->msg, dma->vaddr, (void *)dma->paddr,               dma->nseg, dma->size);
-endif|#
-directive|endif
 name|DBASSERT
 argument_list|(
 name|sc
@@ -4876,18 +4817,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void bxe_dp_dmae(struct bxe_softc *sc, struct dmae_command *dmae, int msglvl) {     uint32_t src_type = dmae->opcode& DMAE_COMMAND_SRC;      switch (dmae->opcode& DMAE_COMMAND_DST) {     case DMAE_CMD_DST_PCI:         if (src_type == DMAE_CMD_SRC_PCI)             DP(msglvl, "DMAE: opcode 0x%08x\n"                "src [%x:%08x], len [%d*4], dst [%x:%08x]\n"                "comp_addr [%x:%08x], comp_val 0x%08x\n",                dmae->opcode, dmae->src_addr_hi, dmae->src_addr_lo,                dmae->len, dmae->dst_addr_hi, dmae->dst_addr_lo,                dmae->comp_addr_hi, dmae->comp_addr_lo,                dmae->comp_val);         else             DP(msglvl, "DMAE: opcode 0x%08x\n"                "src [%08x], len [%d*4], dst [%x:%08x]\n"                "comp_addr [%x:%08x], comp_val 0x%08x\n",                dmae->opcode, dmae->src_addr_lo>> 2,                dmae->len, dmae->dst_addr_hi, dmae->dst_addr_lo,                dmae->comp_addr_hi, dmae->comp_addr_lo,                dmae->comp_val);         break;     case DMAE_CMD_DST_GRC:         if (src_type == DMAE_CMD_SRC_PCI)             DP(msglvl, "DMAE: opcode 0x%08x\n"                "src [%x:%08x], len [%d*4], dst_addr [%08x]\n"                "comp_addr [%x:%08x], comp_val 0x%08x\n",                dmae->opcode, dmae->src_addr_hi, dmae->src_addr_lo,                dmae->len, dmae->dst_addr_lo>> 2,                dmae->comp_addr_hi, dmae->comp_addr_lo,                dmae->comp_val);         else             DP(msglvl, "DMAE: opcode 0x%08x\n"                "src [%08x], len [%d*4], dst [%08x]\n"                "comp_addr [%x:%08x], comp_val 0x%08x\n",                dmae->opcode, dmae->src_addr_lo>> 2,                dmae->len, dmae->dst_addr_lo>> 2,                dmae->comp_addr_hi, dmae->comp_addr_lo,                dmae->comp_val);         break;     default:         if (src_type == DMAE_CMD_SRC_PCI)             DP(msglvl, "DMAE: opcode 0x%08x\n"                "src_addr [%x:%08x]  len [%d * 4]  dst_addr [none]\n"                "comp_addr [%x:%08x]  comp_val 0x%08x\n",                dmae->opcode, dmae->src_addr_hi, dmae->src_addr_lo,                dmae->len, dmae->comp_addr_hi, dmae->comp_addr_lo,                dmae->comp_val);         else             DP(msglvl, "DMAE: opcode 0x%08x\n"                "src_addr [%08x]  len [%d * 4]  dst_addr [none]\n"                "comp_addr [%x:%08x]  comp_val 0x%08x\n",                dmae->opcode, dmae->src_addr_lo>> 2,                dmae->len, dmae->comp_addr_hi, dmae->comp_addr_lo,                dmae->comp_val);         break;     }  }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -4940,9 +4869,12 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"resource 0x%x> HW_LOCK_MAX_RESOURCE_VALUE\n"
+literal|"(resource 0x%x> HW_LOCK_MAX_RESOURCE_VALUE)"
+literal|" resource_bit 0x%x\n"
 argument_list|,
 name|resource
+argument_list|,
+name|resource_bit
 argument_list|)
 expr_stmt|;
 return|return
@@ -5012,7 +4944,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"resource in use (status 0x%x bit 0x%x)\n"
+literal|"resource (0x%x) in use (status 0x%x bit 0x%x)\n"
+argument_list|,
+name|resource
 argument_list|,
 name|lock_status
 argument_list|,
@@ -5086,7 +5020,11 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Resource lock timeout!\n"
+literal|"Resource 0x%x resource_bit 0x%x lock timeout!\n"
+argument_list|,
+name|resource
+argument_list|,
+name|resource_bit
 argument_list|)
 expr_stmt|;
 return|return
@@ -5147,9 +5085,12 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"resource 0x%x> HW_LOCK_MAX_RESOURCE_VALUE\n"
+literal|"(resource 0x%x> HW_LOCK_MAX_RESOURCE_VALUE)"
+literal|" resource_bit 0x%x\n"
 argument_list|,
 name|resource
+argument_list|,
+name|resource_bit
 argument_list|)
 expr_stmt|;
 return|return
@@ -5222,7 +5163,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"resource not in use (status 0x%x bit 0x%x)\n"
+literal|"resource (0x%x) not in use (status 0x%x bit 0x%x)\n"
+argument_list|,
+name|resource
 argument_list|,
 name|lock_status
 argument_list|,
@@ -5440,7 +5383,12 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Cannot get access to nvram interface\n"
+literal|"Cannot get access to nvram interface "
+literal|"port %d val 0x%x (MCPR_NVM_SW_ARB_ARB_ARB1<< port)\n"
+argument_list|,
+name|port
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -5581,7 +5529,12 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Cannot free access to nvram interface\n"
+literal|"Cannot free access to nvram interface "
+literal|"port %d val 0x%x (MCPR_NVM_SW_ARB_ARB_ARB1<< port)\n"
+argument_list|,
+name|port
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -5865,7 +5818,14 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"nvram read timeout expired\n"
+literal|"nvram read timeout expired "
+literal|"(offset 0x%x cmd_flags 0x%x val 0x%x)\n"
+argument_list|,
+name|offset
+argument_list|,
+name|cmd_flags
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -6298,7 +6258,14 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"nvram write timeout expired\n"
+literal|"nvram write timeout expired "
+literal|"(offset 0x%x cmd_flags 0x%x val 0x%x)\n"
+argument_list|,
+name|offset
+argument_list|,
+name|cmd_flags
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -7331,7 +7298,14 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"DMAE timeout!\n"
+literal|"DMAE timeout! *wb_comp 0x%x recovery_state 0x%x\n"
+argument_list|,
+operator|*
+name|wb_comp
+argument_list|,
+name|sc
+operator|->
+name|recovery_state
 argument_list|)
 expr_stmt|;
 name|BXE_DMAE_UNLOCK
@@ -7366,7 +7340,14 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"DMAE PCI error!\n"
+literal|"DMAE PCI error! *wb_comp 0x%x recovery_state 0x%x\n"
+argument_list|,
+operator|*
+name|wb_comp
+argument_list|,
+name|sc
+operator|->
+name|recovery_state
 argument_list|)
 expr_stmt|;
 name|BXE_DMAE_UNLOCK
@@ -8405,13 +8386,6 @@ modifier|...
 parameter_list|)
 block|{
 comment|/* XXX */
-if|#
-directive|if
-literal|0
-comment|//va_list ap;
-block|va_start(ap, elink_log_id);     _XXX_(sc, lm_log_id, ap);     va_end(ap);
-endif|#
-directive|endif
 name|BLOGI
 argument_list|(
 name|sc
@@ -8464,9 +8438,11 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Invalid SPIO 0x%x\n"
+literal|"Invalid SPIO 0x%x mode 0x%x\n"
 argument_list|,
 name|spio
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 return|return
@@ -8698,9 +8674,18 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Invalid GPIO %d\n"
+literal|"Invalid GPIO %d port 0x%x gpio_port %d gpio_shift %d"
+literal|" gpio_mask 0x%x\n"
 argument_list|,
 name|gpio_num
+argument_list|,
+name|port
+argument_list|,
+name|gpio_port
+argument_list|,
+name|gpio_shift
+argument_list|,
+name|gpio_mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -8821,9 +8806,20 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Invalid GPIO %d\n"
+literal|"Invalid GPIO %d mode 0x%x port 0x%x gpio_port %d"
+literal|" gpio_shift %d gpio_mask 0x%x\n"
 argument_list|,
 name|gpio_num
+argument_list|,
+name|mode
+argument_list|,
+name|port
+argument_list|,
+name|gpio_port
+argument_list|,
+name|gpio_shift
+argument_list|,
+name|gpio_mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -9129,9 +9125,14 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Invalid GPIO mode assignment %d\n"
+literal|"Invalid GPIO mode assignment pins 0x%x mode 0x%x"
+literal|" gpio_reg 0x%x\n"
+argument_list|,
+name|pins
 argument_list|,
 name|mode
+argument_list|,
+name|gpio_reg
 argument_list|)
 expr_stmt|;
 name|bxe_release_hw_lock
@@ -9254,9 +9255,20 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Invalid GPIO %d\n"
+literal|"Invalid GPIO %d mode 0x%x port 0x%x gpio_port %d"
+literal|" gpio_shift %d gpio_mask 0x%x\n"
 argument_list|,
 name|gpio_num
+argument_list|,
+name|mode
+argument_list|,
+name|port
+argument_list|,
+name|gpio_port
+argument_list|,
+name|gpio_shift
+argument_list|,
+name|gpio_mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -10808,23 +10820,6 @@ begin_comment
 comment|/**  * bxe_debug_print_ind_table - prints the indirection table configuration.  *  * @sc: driver hanlde  * @p:  pointer to rss configuration  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static void bxe_debug_print_ind_table(struct bxe_softc               *sc,                           struct ecore_config_rss_params *p) {     int i;      BLOGD(sc, DBG_LOAD, "Setting indirection table to:\n");     BLOGD(sc, DBG_LOAD, "    0x0000: ");     for (i = 0; i< T_ETH_INDIRECTION_TABLE_SIZE; i++) {         BLOGD(sc, DBG_LOAD, "0x%02x ", p->ind_table[i]);
-comment|/* Print 4 bytes in a line */
-end_comment
-
-begin_endif
-unit|if ((i + 1< T_ETH_INDIRECTION_TABLE_SIZE)&&             (((i + 1)& 0x3) == 0)) {             BLOGD(sc, DBG_LOAD, "\n");             BLOGD(sc, DBG_LOAD, "0x%04x: ", i + 1);         }     }      BLOGD(sc, DBG_LOAD, "\n"); }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * FreeBSD Device probe function.  *  * Compares the device found to the driver's list of supported devices and  * reports back to the bsd loader whether this is the right driver for the device.  * This is the driver entry function called from the "kldload" command.  *  * Returns:  *   BUS_PROBE_DEFAULT on success, positive value on failure.  */
 end_comment
@@ -11762,12 +11757,6 @@ argument_list|,
 name|cons
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|KASSERT((used< 0), ("used tx bds< 0"));     KASSERT((used> sc->tx_ring_size), ("used tx bds> tx_ring_size"));     KASSERT(((sc->tx_ring_size - used)> MAX_TX_AVAIL),             ("invalid number of tx bds used"));
-endif|#
-directive|endif
 return|return
 call|(
 name|int16_t
@@ -11999,13 +11988,6 @@ operator|.
 name|ramrod_type
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*      * If cid is within VF range, replace the slowpath object with the      * one corresponding to this VF      */
-block|if ((cid>= BXE_FIRST_VF_CID)&& (cid< BXE_FIRST_VF_CID + BXE_VF_CIDS)) {         bxe_iov_set_queue_sp_obj(sc, cid,&q_obj);     }
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|command
@@ -12179,13 +12161,6 @@ comment|/*          * q_obj->complete_cmd() failure means that this was         
 comment|// bxe_panic(sc, ("Unexpected SP completion\n"));
 return|return;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* SRIOV: reschedule any 'in_progress' operations */
-block|bxe_iov_sp_event(sc, cid, TRUE);
-endif|#
-directive|endif
 name|atomic_add_acq_long
 argument_list|(
 operator|&
@@ -12213,16 +12188,6 @@ name|cq_spq_left
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((drv_cmd == ECORE_Q_CMD_UPDATE)&& (IS_FCOE_FP(fp))&&         (!!bxe_test_bit(ECORE_AFEX_FCOE_Q_UPDATE_PENDING,&sc->sp_state))) {
-comment|/*          * If Queue update ramrod is completed for last Queue in AFEX VIF set          * flow, then ACK MCP at the end. Mark pending ACK to MCP bit to          * prevent case that both bits are cleared. At the end of load/unload          * driver checks that sp_state is cleared and this order prevents          * races.          */
-block|bxe_set_bit(ECORE_AFEX_PENDING_VIFSET_MCP_ACK,&sc->sp_state);         wmb();         bxe_clear_bit(ECORE_AFEX_FCOE_Q_UPDATE_PENDING,&sc->sp_state);
-comment|/* schedule the sp task as MCP ack is required */
-block|bxe_schedule_sp_task(sc);     }
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -12378,17 +12343,92 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|uint32_t
+modifier|*
+name|tmp
+decl_stmt|;
+name|tmp
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|cqe
+expr_stmt|;
 name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"fp[%02d].tpa[%02d] mbuf not allocated!\n"
+literal|"fp[%02d].tpa[%02d] cons[%d] prod[%d]mbuf not allocated!\n"
 argument_list|,
 name|fp
 operator|->
 name|index
 argument_list|,
 name|queue
+argument_list|,
+name|cons
+argument_list|,
+name|prod
+argument_list|)
+expr_stmt|;
+name|BLOGE
+argument_list|(
+name|sc
+argument_list|,
+literal|"cqe [0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x]\n"
+argument_list|,
+operator|*
+name|tmp
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|1
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|2
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|3
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|4
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|5
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|6
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|7
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX Error handling? */
@@ -12715,6 +12755,16 @@ operator|*
 name|PAGES_PER_SGE
 condition|)
 block|{
+name|uint32_t
+modifier|*
+name|tmp
+init|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|cqe
+decl_stmt|;
 name|BLOGE
 argument_list|(
 name|sc
@@ -12742,6 +12792,65 @@ operator|->
 name|len_on_bd
 argument_list|,
 name|frag_size
+argument_list|)
+expr_stmt|;
+name|BLOGE
+argument_list|(
+name|sc
+argument_list|,
+literal|"cqe [0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x]\n"
+argument_list|,
+operator|*
+name|tmp
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|1
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|2
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|3
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|4
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|5
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|6
+operator|)
+argument_list|,
+operator|*
+operator|(
+name|tmp
+operator|+
+literal|7
+operator|)
 argument_list|)
 expr_stmt|;
 name|bxe_panic
@@ -14252,13 +14361,6 @@ decl_stmt|;
 name|uint8_t
 name|queue
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* sanity check */
-block|if (!fp->tpa_enable&&                 (CQE_TYPE_START(cqe_fp_type) || CQE_TYPE_STOP(cqe_fp_type))) {                 BLOGE(sc, "START/STOP packet while !tpa_enable type (0x%x)\n",                       CQE_TYPE(cqe_fp_type));             }
-endif|#
-directive|endif
 if|if
 condition|(
 name|CQE_TYPE_START
@@ -15160,12 +15262,6 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((nbd - 1)> (MAX_MBUF_FRAGS + 2)) {         bxe_panic(sc, ("BAD nbd!\n"));     }
-endif|#
-directive|endif
 name|new_cons
 operator|=
 operator|(
@@ -15176,21 +15272,6 @@ operator|+
 name|nbd
 operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|struct eth_tx_bd *tx_data_bd;
-comment|/*      * The following code doesn't do anything but is left here      * for clarity on what the new value of new_cons skipped.      */
-comment|/* get the next bd */
-block|bd_idx = TX_BD(TX_BD_NEXT(bd_idx));
-comment|/* skip the parse bd */
-block|--nbd;     bd_idx = TX_BD(TX_BD_NEXT(bd_idx));
-comment|/* skip the TSO split header bd since they have no mapping */
-block|if (tx_buf->flags& BXE_TSO_SPLIT_BD) {         --nbd;         bd_idx = TX_BD(TX_BD_NEXT(bd_idx));     }
-comment|/* now free frags */
-block|while (nbd> 0) {         tx_data_bd =&fp->tx_chain[bd_idx].reg_bd;         if (--nbd) {             bd_idx = TX_BD(TX_BD_NEXT(bd_idx));         }     }
-endif|#
-directive|endif
 comment|/* free the mbuf */
 if|if
 condition|(
@@ -15791,9 +15872,13 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Failed to delete MACs (%d)\n"
+literal|"Failed to delete MACs (%d) mac_type %d wait_for_comp 0x%x\n"
 argument_list|,
 name|rc
+argument_list|,
+name|mac_type
+argument_list|,
+name|wait_for_comp
 argument_list|)
 expr_stmt|;
 block|}
@@ -16023,7 +16108,7 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Unknown rx_mode (%d)\n"
+literal|"Unknown rx_mode (0x%x)\n"
 argument_list|,
 name|rx_mode
 argument_list|)
@@ -16239,11 +16324,37 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Set rx_mode %d failed\n"
+literal|"Set rx_mode %d cli_id 0x%x rx_mode_flags 0x%x "
+literal|"rx_accept_flags 0x%x tx_accept_flags 0x%x "
+literal|"ramrod_flags 0x%x rc %d failed\n"
 argument_list|,
 name|sc
 operator|->
 name|rx_mode
+argument_list|,
+name|cl_id
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|rx_mode_flags
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|rx_accept_flags
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|tx_accept_flags
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|ramrod_flags
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 return|return
@@ -16728,12 +16839,6 @@ name|reset_code
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int port = SC_PORT(sc);     int path = SC_PATH(sc);
-endif|#
-directive|endif
 comment|/* Select the UNLOAD request mode */
 if|if
 condition|(
@@ -16747,16 +16852,6 @@ operator|=
 name|DRV_MSG_CODE_UNLOAD_REQ_WOL_DIS
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-if|else if (sc->flags& BXE_NO_WOL_FLAG) {         reset_code = DRV_MSG_CODE_UNLOAD_REQ_WOL_MCP;     } else if (sc->wol) {         uint32_t emac_base = port ? GRCBASE_EMAC1 : GRCBASE_EMAC0;         uint8_t *mac_addr = sc->dev->dev_addr;         uint32_t val;         uint16_t pmc;
-comment|/*          * The mac address is written to entries 1-4 to          * preserve entry 0 which is used by the PMF          */
-if|uint8_t entry = (SC_VN(sc) + 1)*8;          val = (mac_addr[0]<< 8) | mac_addr[1];         EMAC_WR(sc, EMAC_REG_EMAC_MAC_MATCH + entry, val);          val = (mac_addr[2]<< 24) | (mac_addr[3]<< 16) |               (mac_addr[4]<< 8) | mac_addr[5];         EMAC_WR(sc, EMAC_REG_EMAC_MAC_MATCH + entry + 4, val);
-comment|/* Enable the PME and clear the status */
-if|pmc = pci_read_config(sc->dev,                               (sc->devinfo.pcie_pm_cap_reg +                                PCIR_POWER_STATUS),                               2);         pmc |= PCIM_PSTAT_PMEENABLE | PCIM_PSTAT_PME;         pci_write_config(sc->dev,                          (sc->devinfo.pcie_pm_cap_reg +                           PCIR_POWER_STATUS),                          pmc, 4);          reset_code = DRV_MSG_CODE_UNLOAD_REQ_WOL_EN;     }
-endif|#
-directive|endif
 else|else
 block|{
 name|reset_code
@@ -17409,7 +17504,9 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"FUNC_STOP ramrod failed. "
-literal|"Running a dry transaction\n"
+literal|"Running a dry transaction (%d)\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|bxe_set_bit
@@ -17814,7 +17911,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"bxe_func_wait_started failed\n"
+literal|"bxe_func_wait_started failed (%d)\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
@@ -17867,7 +17966,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Common slow path ramrods got stuck!\n"
+literal|"Common slow path ramrods got stuck!(%d)\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
@@ -17889,7 +17990,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Function stop failed!\n"
+literal|"Function stop failed!(%d)\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
@@ -17926,7 +18029,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Hardware reset failed\n"
+literal|"Hardware reset failed(%d)\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
@@ -18470,7 +18575,16 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Can't unload in closed or error state\n"
+literal|"Can't unload in closed or error state recover_state 0x%x"
+literal|" state = 0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|recovery_state
+argument_list|,
+name|sc
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 return|return
@@ -19165,7 +19279,12 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"BXE_IOC_RD_NVRAM malloc failed\n"
+literal|"BXE_IOC_RD_NVRAM malloc failed priv_op 0x%x "
+literal|" len = 0x%x\n"
+argument_list|,
+name|priv_op
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -22277,12 +22396,6 @@ name|ETH_TX_PARSE_BD_E2_LSO_MSS
 operator|)
 expr_stmt|;
 comment|/* XXX test for IPv6 with extension header... */
-if|#
-directive|if
-literal|0
-block|struct ip6_hdr *ip6;     if (ip6&& ip6->ip6_nxt == 'some ipv6 extension header')         *parsing_data |= ETH_TX_PARSE_BD_E2_IPV6_WITH_EXT_HDR;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -23490,13 +23603,6 @@ operator|->
 name|tx_pkt_prod
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*              * If NPAR-SD is active then FW should do the tagging regardless              * of value of priority. Otherwise, if priority indicates this is              * a control packet we need to indicate to FW to avoid tagging.              */
-block|if (!IS_MF_AFEX(sc)&& (mbuf priority == PRIO_CONTROL)) {                 SET_FLAG(tx_start_bd->general_data,                          ETH_TX_START_BD_FORCE_VLAN_MODE, 1);             }
-endif|#
-directive|endif
 block|}
 block|}
 comment|/*      * add a parsing BD from the chain. The parsing BD is always added      * though it is only used for TSO and chksum      */
@@ -23712,13 +23818,6 @@ name|pbd_e2_parsing_data
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/*          * Add the MACs to the parsing BD if the module param was          * explicitly set, if this is a vf, or in switch independent          * mode.          */
-block|if (sc->flags& BXE_TX_SWITCHING || IS_VF(sc) || IS_MF_SI(sc)) {             eh = mtod(m0, struct ether_vlan_header *);             bxe_set_fw_mac_addr(&pbd_e2->data.mac_addr.src_hi,&pbd_e2->data.mac_addr.src_mid,&pbd_e2->data.mac_addr.src_lo,                                 eh->evl_shost);             bxe_set_fw_mac_addr(&pbd_e2->data.mac_addr.dst_hi,&pbd_e2->data.mac_addr.dst_mid,&pbd_e2->data.mac_addr.dst_lo,                                 eh->evl_dhost);         }
-endif|#
-directive|endif
 name|SET_FLAG
 argument_list|(
 name|pbd_e2_parsing_data
@@ -26560,14 +26659,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!CONFIGURE_NIC_MODE(sc)) {
-comment|/* free searcher T2 table */
-block|bxe_dma_free(sc,&sc->t2);     }
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -26635,12 +26726,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|bxe_iov_free_mem(sc);
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -26664,14 +26749,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!CONFIGURE_NIC_MODE(sc)) {
-comment|/* allocate searcher T2 table */
-block|if (bxe_dma_alloc(sc, SRC_T2_SZ,&sc->t2, "searcher t2 table") != 0) {             return (-1);         }     }
-endif|#
-directive|endif
 comment|/*      * Allocate memory for CDU context:      * This memory is allocated separately and not in the generic ILT      * functions because CDU differs in few aspects:      * 1. There can be multiple entities allocating memory for context -      * regular L2, CNIC, and SRIOV drivers. Each separately controls      * its own ILT lines.      * 2. Since CDU page-size is not a single 4KB page (which is the case      * for the other ILT clients), to be efficient we want to support      * allocation of sub-page-size in the last entry.      * 3. Context pointers are used by the driver to pass to FW / update      * the context (for the other ILT clients the pointers are used just to      * free the memory during unload).      */
 name|context_size
 operator|=
@@ -26948,12 +27025,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (bxe_iov_alloc_mem(sc)) {         BLOGE(sc, "Failed to allocate memory for SRIOV\n");         bxe_free_mem(sc);         return (-1);     }
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -33547,6 +33618,37 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/*      * Since MCP attentions can't be disabled inside the block, we need to      * read AEU registers to see whether they're currently disabled      */
+name|attn
+operator|.
+name|sig
+index|[
+literal|3
+index|]
+operator|&=
+operator|(
+operator|(
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+operator|!
+name|port
+condition|?
+name|MISC_REG_AEU_ENABLE4_FUNC_0_OUT_0
+else|:
+name|MISC_REG_AEU_ENABLE4_FUNC_1_OUT_0
+operator|)
+argument_list|)
+operator|&
+name|MISC_AEU_ENABLE_MCP_PRTY_BITS
+operator|)
+operator||
+operator|~
+name|MISC_AEU_ENABLE_MCP_PRTY_BITS
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -35408,12 +35510,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (val& DRV_STATUS_VF_DISABLED)                 bxe_vf_handle_flr_event(sc);
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -35437,20 +35533,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (sc->port.pmf&&                 (val& DRV_STATUS_DCBX_NEGOTIATION_RESULTS)&&                 (sc->dcbx_enabled> 0))
-comment|/* start dcbx state machine */
-block|bxe_dcbx_set_params(sc, BXE_DCBX_STATE_NEG_RECEIVED);
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|if (val& DRV_STATUS_AFEX_EVENT_MASK)                 bxe_handle_afex_cmd(sc, val& DRV_STATUS_AFEX_EVENT_MASK);
-endif|#
-directive|endif
 if|if
 condition|(
 name|val
@@ -37679,12 +37761,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else if (bxe_test_and_clear_bit(ECORE_FILTER_ISCSI_ETH_START_SCHED,&sc->sp_state)) {         bxe_set_iscsi_eth_rx_mode(sc, TRUE);     }     else if (bxe_test_and_clear_bit(ECORE_FILTER_ISCSI_ETH_STOP_SCHED,&sc->sp_state)) {         bxe_set_iscsi_eth_rx_mode(sc, FALSE);     }
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -37880,12 +37956,6 @@ name|sw_cons
 argument_list|)
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|int rc;         rc = bxe_iov_eq_sp_event(sc, elem);         if (!rc) {             BLOGE(sc, "bxe_iov_eq_sp_event returned %d\n", rc);             goto next_spqe;         }
-endif|#
-directive|endif
 comment|/* elem CID originates from FW, actually LE */
 name|cid
 operator|=
@@ -37916,12 +37986,6 @@ condition|(
 name|opcode
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|case EVENT_RING_OPCODE_VF_PF_CHANNEL:             BLOGD(sc, DBG_SP, "vf/pf channel element on eq\n");             bxe_vf_mbx(sc,&elem->message.data.vf_pf_event);             continue;
-endif|#
-directive|endif
 case|case
 name|EVENT_RING_OPCODE_STAT_QUERY
 case|:
@@ -38110,24 +38174,10 @@ argument_list|,
 literal|"AFEX: ramrod completed FUNCTION_UPDATE\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|f_obj->complete_cmd(sc, f_obj, ECORE_F_CMD_AFEX_UPDATE);
-comment|/*                  * We will perform the queues update from the sp_core_task as                  * all queue SP operations should run with CORE_LOCK.                  */
-block|bxe_set_bit(BXE_SP_CORE_AFEX_F_UPDATE,&sc->sp_core_state);                 taskqueue_enqueue(sc->sp_tq,&sc->sp_tq_task);
-endif|#
-directive|endif
 block|}
 goto|goto
 name|next_spqe
 goto|;
-if|#
-directive|if
-literal|0
-block|case EVENT_RING_OPCODE_AFEX_VIF_LISTS:             f_obj->complete_cmd(sc, f_obj, ECORE_F_CMD_AFEX_VIFLISTS);             bxe_after_afex_vif_lists(sc, elem);             goto next_spqe;
-endif|#
-directive|endif
 case|case
 name|EVENT_RING_OPCODE_FORWARD_SETUP
 case|:
@@ -38660,13 +38710,6 @@ argument_list|)
 expr_stmt|;
 comment|/*      * Must be called after the EQ processing (since eq leads to sriov      * ramrod completion flows).      * This flow may have been scheduled by the arrival of a ramrod      * completion, or by the sriov code rescheduling itself.      */
 comment|// XXX bxe_iov_sp_task(sc);
-if|#
-directive|if
-literal|0
-comment|/* AFEX - poll to check if VIFSET_ACK should be sent to MFW */
-block|if (bxe_test_and_clear_bit(ECORE_AFEX_PENDING_VIFSET_MCP_ACK,&sc->sp_state)) {         bxe_link_report(sc);         bxe_fw_command(sc, DRV_MSG_CODE_AFEX_VIFSET_ACK, 0);     }
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -39026,13 +39069,6 @@ argument_list|,
 literal|"---> BXE INTx<---\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Don't handle any interrupts if we're not ready. */
-block|if (__predict_false(sc->intr_sem != 0)) {         return;     }
-endif|#
-directive|endif
 comment|/*      * 0 for ustorm, 1 for cstorm      * the bits returned from ack_int() are 0-15      * bit 0 = attention status block      * bit 1 = fast path status block      * a mask of 0x2 or more = tx/rx event      * a mask of 1 = slow path event      */
 name|status
 operator|=
@@ -39145,12 +39181,6 @@ name|mask
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|if (CNIC_SUPPORT(sc)) {         mask = 0x2;         if (status& (mask | 0x1)) {             ...             status&= ~mask;         }     }
-endif|#
-directive|endif
 if|if
 condition|(
 name|__predict_false
@@ -39363,13 +39393,6 @@ operator|->
 name|igu_sb_id
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Don't handle any interrupts if we're not ready. */
-block|if (__predict_false(sc->intr_sem != 0)) {         return;     }
-endif|#
-directive|endif
 comment|/* acknowledge and disable further fastpath interrupts */
 name|bxe_ack_sb
 argument_list|(
@@ -43030,12 +43053,6 @@ name|offset
 init|=
 name|BAR_USTRORM_INTMEM
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (IS_VF(sc)) {         return (PXP_VF_ADDR_USDM_QUEUES_START +                 (sc->acquire_resp.resc.hw_qid[fp->index] *                  sizeof(struct ustorm_queue_zone_data)));     } else
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -44000,12 +44017,6 @@ name|i
 operator|++
 control|)
 block|{
-if|#
-directive|if
-literal|0
-block|uint8_t cos;         for (cos = 0; cos< sc->max_cos; cos++) {             bxe_init_tx_ring_one(&sc->fp[i].txdata[cos]);         }
-else|#
-directive|else
 name|bxe_init_tx_ring_one
 argument_list|(
 operator|&
@@ -44017,8 +44028,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -47889,9 +47898,11 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Can't support PCI power state = %d\n"
+literal|"Can't support PCI power state = 0x%x pmcsr 0x%x\n"
 argument_list|,
 name|state
+argument_list|,
+name|pmcsr
 argument_list|)
 expr_stmt|;
 return|return
@@ -48061,9 +48072,16 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Failed to get a resource lock 0x%x\n"
+literal|"Failed to get a resource lock 0x%x func %d "
+literal|"lock_status 0x%x resource_bit 0x%x\n"
 argument_list|,
 name|resource
+argument_list|,
+name|func
+argument_list|,
+name|lock_status
+argument_list|,
+name|resource_bit
 argument_list|)
 expr_stmt|;
 return|return
@@ -50194,12 +50212,6 @@ operator|&
 name|flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (fp->mode == TPA_MODE_GRO)             __set_bit(ECORE_Q_FLG_TPA_GRO,&flags);
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -50231,13 +50243,6 @@ operator|&
 name|flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* configure silent vlan removal */
-block|if (IS_MF_AFEX(sc)) {         bxe_set_bit(ECORE_Q_FLG_SILENT_VLAN_REM,&flags);     }
-endif|#
-directive|endif
 comment|/* merge with common flags */
 return|return
 operator|(
@@ -50860,12 +50865,6 @@ name|params
 operator|.
 name|setup
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct ecore_queue_setup_tx_only_params *tx_only_params =&q_params.params.tx_only;     uint8_t tx_index;
-endif|#
-directive|endif
 name|int
 name|rc
 decl_stmt|;
@@ -50966,11 +50965,13 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Queue(%d) INIT failed\n"
+literal|"Queue(%d) INIT failed rc = %d\n"
 argument_list|,
 name|fp
 operator|->
 name|index
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 return|return
@@ -51089,11 +51090,13 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Queue(%d) SETUP failed\n"
+literal|"Queue(%d) SETUP failed (rc = %d)\n"
 argument_list|,
 name|fp
 operator|->
 name|index
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 return|return
@@ -51102,15 +51105,6 @@ name|rc
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* loop through the relevant tx-only indices */
-block|for (tx_index = FIRST_TX_ONLY_COS_INDEX;          tx_index< sc->max_cos;          tx_index++) {
-comment|/* prepare and send tx-only ramrod*/
-block|rc = bxe_setup_tx_only(sc, fp,&q_params,                                tx_only_params, tx_index, leading);         if (rc) {             BLOGE(sc, "Queue(%d.%d) TX_ONLY_SETUP failed\n",                   fp->index, tx_index);             return (rc);         }     }
-endif|#
-directive|endif
 return|return
 operator|(
 name|rc
@@ -51775,33 +51769,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static void bxe_update_max_mf_config(struct bxe_softc *sc,                          uint32_t         value) {
-comment|/* load old values */
-end_comment
-
-begin_comment
-unit|uint32_t mf_cfg = sc->devinfo.mf_info.mf_config[SC_VN(sc)];      if (value != bxe_extract_max_cfg(sc, mf_cfg)) {
-comment|/* leave all but MAX value */
-end_comment
-
-begin_comment
-unit|mf_cfg&= ~FUNC_MF_CFG_MAX_BW_MASK;
-comment|/* set new MAX value */
-end_comment
-
-begin_endif
-unit|mf_cfg |= ((value<< FUNC_MF_CFG_MAX_BW_SHIFT)&                    FUNC_MF_CFG_MAX_BW_MASK);          bxe_fw_command(sc, DRV_MSG_CODE_SET_MF_BW, mf_cfg);     } }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -52758,13 +52725,6 @@ condition|)
 block|{
 return|return;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* read updated dcb configuration */
-block|if (IS_PF(sc))         bxe_dcbx_pmf_update(sc);
-endif|#
-directive|endif
 if|if
 condition|(
 name|IS_PF
@@ -54361,14 +54321,6 @@ name|BXE_RX_MODE_PROMISC
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|else {
-comment|/*              * Configuring mcast to a VF involves sleeping (when we              * wait for the PF's response). Since this function is              * called from a non sleepable context we must schedule              * a work item for this purpose              */
-block|bxe_set_bit(BXE_SP_RTNL_VFPF_MCAST,&sc->sp_rtnl_state);             schedule_delayed_work(&sc->sp_rtnl_task, 0);         }
-endif|#
-directive|endif
 block|}
 name|sc
 operator|->
@@ -54425,14 +54377,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else {
-comment|/*          * Configuring mcast to a VF involves sleeping (when we          * wait for the PF's response). Since this function is          * called from a non sleepable context we must schedule          * a work item for this purpose          */
-block|bxe_set_bit(BXE_SP_RTNL_VFPF_STORM_RX_MODE,&sc->sp_rtnl_state);         schedule_delayed_work(&sc->sp_rtnl_task, 0);     }
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -54855,13 +54799,6 @@ argument_list|,
 name|STATS_EVENT_UPDATE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* sample VF bulletin board for new posts from PF */
-block|if (IS_VF(sc)) {         bxe_sample_bulletin(sc);     }
-endif|#
-directive|endif
 name|BXE_CORE_UNLOCK
 argument_list|(
 name|sc
@@ -55402,7 +55339,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Function start failed!\n"
+literal|"Function start failed! rc = %d\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|bxe_fw_command
@@ -55489,7 +55428,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Setup leading failed!\n"
+literal|"Setup leading failed! rc = %d\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -55535,9 +55476,11 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Queue(%d) setup failed\n"
+literal|"Queue(%d) setup failed rc = %d\n"
 argument_list|,
 name|i
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -55582,14 +55525,6 @@ goto|;
 block|}
 block|}
 comment|/* XXX VF */
-if|#
-directive|if
-literal|0
-block|else {
-comment|/* VF */
-block|FOR_EACH_ETH_QUEUE(sc, i) {             rc = bxe_vfpf_setup_q(sc, i);             if (rc) {                 BLOGE(sc, "Queue(%d) setup failed\n", i);                 sc->state = BXE_STATE_ERROR;                 goto bxe_nic_load_error3;             }         }     }
-endif|#
-directive|endif
 comment|/* now when Clients are configured we are ready to work */
 name|sc
 operator|->
@@ -55616,14 +55551,6 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else {
-comment|/* IS_VF(sc) */
-block|rc = bxe_vfpf_set_mac(sc);     }
-endif|#
-directive|endif
 if|if
 condition|(
 name|rc
@@ -55633,7 +55560,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Setting Ethernet MAC failed\n"
+literal|"Setting Ethernet MAC failed rc = %d\n"
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -55646,14 +55575,6 @@ goto|goto
 name|bxe_nic_load_error3
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (IS_PF(sc)&& sc->pending_max) {
-comment|/* for AFEX */
-block|bxe_update_max_mf_config(sc, sc->pending_max);         sc->pending_max = 0;     }
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -55868,13 +55789,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* If PMF - send ADMIN DCBX msg to MFW to initiate DCBX FSM */
-block|if (sc->port.pmf&& (sc->state != BXE_STATE_DIAG)) {         bxe_dcbx_init(sc, FALSE);     }
-endif|#
-directive|endif
 comment|/* Tell the stack the driver is running! */
 name|if_setdrvflags
 argument_list|(
@@ -56955,13 +56869,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* BAR4 doesn't exist for E1 */
-block|BLOGE(sc, "PCI BAR%d [%02x] memory allocation failed\n",                   i, PCIR_BAR(i));
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -60255,12 +60162,6 @@ name|mac_addr_str
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (!IS_MF(sc)&&         ((sc->port.config& PORT_FEAT_CFG_STORAGE_PERSONALITY_MASK) ==          PORT_FEAT_CFG_STORAGE_PERSONALITY_FCOE)) {         sc->flags |= BXE_NO_ISCSI;     }     if (!IS_MF(sc)&&         ((sc->port.config& PORT_FEAT_CFG_STORAGE_PERSONALITY_MASK) ==          PORT_FEAT_CFG_STORAGE_PERSONALITY_ISCSI)) {         sc->flags |= BXE_NO_FCOE_FLAG;     }
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -69676,7 +69577,12 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"Failed to unload previous driver!\n"
+literal|"Failed to unload previous driver!"
+literal|" time_counter %d rc %d\n"
+argument_list|,
+name|time_counter
+argument_list|,
+name|rc
 argument_list|)
 expr_stmt|;
 name|rc
@@ -70065,6 +69971,102 @@ name|temp
 operator|/
 literal|2
 operator|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|bxe_sysctl_trigger_grcdump
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|struct
+name|bxe_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|result
+decl_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|!
+name|req
+operator|->
+name|newptr
+condition|)
+block|{
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|result
+operator|==
+literal|1
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bxe_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"... grcdump start ...\n"
+argument_list|)
+expr_stmt|;
+name|bxe_grc_dump
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"... grcdump done ...\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -70855,9 +70857,34 @@ argument_list|,
 literal|"debug logging mode"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"trigger_grcdump"
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|bxe_sysctl_trigger_grcdump
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"set by driver when a grcdump is needed"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
-name|trigger_grcdump
+name|grcdump_done
 operator|=
 literal|0
 expr_stmt|;
@@ -70869,18 +70896,18 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"trigger_grcdump"
+literal|"grcdump_done"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|trigger_grcdump
+name|grcdump_done
 argument_list|,
 literal|0
 argument_list|,
-literal|"set by driver when a grcdump is needed"
+literal|"set by driver when grcdump is done"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -73085,49 +73112,8 @@ name|sc
 parameter_list|)
 block|{
 return|return;
-if|#
-directive|if
-literal|0
-block|BLOGD(sc, DBG_LOAD, "SRIOV is %s\n", IS_SRIOV(sc) ? "ON" : "OFF");      if (!IS_SRIOV(sc)) {         return;     }      REG_WR(sc, DMAE_REG_BACKWARD_COMP_EN, 0);
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-unit|static int bxe_iov_init_ilt(struct bxe_softc *sc,                  uint16_t         line) {     return (line);
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|int i;     struct ecore_ilt* ilt = sc->ilt;      if (!IS_SRIOV(sc)) {         return (line);     }
-comment|/* set vfs ilt lines */
-end_comment
-
-begin_comment
-unit|for (i = 0; i< BXE_VF_CIDS/ILT_PAGE_CIDS ; i++) {         struct hw_dma *hw_cxt = SC_VF_CXT_PAGE(sc,i);         ilt->lines[line+i].page = hw_cxt->addr;         ilt->lines[line+i].page_mapping = hw_cxt->mapping;         ilt->lines[line+i].size = hw_cxt->size;
-comment|/* doesn't matter */
-end_comment
-
-begin_endif
-unit|}     return (line+i);
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -73141,26 +73127,6 @@ name|sc
 parameter_list|)
 block|{
 return|return;
-if|#
-directive|if
-literal|0
-block|if (!IS_SRIOV(sc)) {         return;     }
-comment|/* Set the DQ such that the CID reflect the abs_vfid */
-block|REG_WR(sc, DORQ_REG_VF_NORM_VF_BASE, 0);     REG_WR(sc, DORQ_REG_MAX_RVFID_SIZE, ilog2(BNX2X_MAX_NUM_OF_VFS));
-comment|/*      * Set VFs starting CID. If its> 0 the preceding CIDs are belong to      * the PF L2 queues      */
-block|REG_WR(sc, DORQ_REG_VF_NORM_CID_BASE, BNX2X_FIRST_VF_CID);
-comment|/* The VF window size is the log2 of the max number of CIDs per VF */
-block|REG_WR(sc, DORQ_REG_VF_NORM_CID_WND_SIZE, BNX2X_VF_CID_WND);
-comment|/*      * The VF doorbell size  0 - *B, 4 - 128B. We set it here to match      * the Pf doorbell size although the 2 are independent.      */
-block|REG_WR(sc, DORQ_REG_VF_NORM_CID_OFST,            BNX2X_DB_SHIFT - BNX2X_DB_MIN_SHIFT);
-comment|/*      * No security checks for now -      * configure single rule (out of 16) mask = 0x1, value = 0x0,      * CID range 0 - 0x1ffff      */
-block|REG_WR(sc, DORQ_REG_VF_TYPE_MASK_0, 1);     REG_WR(sc, DORQ_REG_VF_TYPE_VALUE_0, 0);     REG_WR(sc, DORQ_REG_VF_TYPE_MIN_MCID_0, 0);     REG_WR(sc, DORQ_REG_VF_TYPE_MAX_MCID_0, 0x1ffff);
-comment|/* set the number of VF alllowed doorbells to the full DQ range */
-block|REG_WR(sc, DORQ_REG_VF_NORM_MAX_CID_COUNT, 0x20000);
-comment|/* set the VF doorbell threshold */
-block|REG_WR(sc, DORQ_REG_VF_USAGE_CT_LIMIT, 4);
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -73822,7 +73788,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"clear of NIG failed\n"
+literal|"clear of NIG failed val=0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -74848,7 +74816,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"PXP2 CFG failed\n"
+literal|"PXP2 CFG failed PXP2_REG_RQ_CFG_DONE val = 0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -74878,7 +74848,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"PXP2 RD_INIT failed\n"
+literal|"PXP2 RD_INIT failed val = 0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -75138,7 +75110,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"ATC_INIT failed\n"
+literal|"ATC_INIT failed val = 0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -76214,7 +76188,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"CFC LL_INIT failed\n"
+literal|"CFC LL_INIT failed val=0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -76250,7 +76226,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"CFC AC_INIT failed\n"
+literal|"CFC AC_INIT failed val=0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -76286,7 +76264,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"CFC CAM_INIT failed\n"
+literal|"CFC CAM_INIT failed val=0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -76355,7 +76335,9 @@ name|BLOGE
 argument_list|(
 name|sc
 argument_list|,
-literal|"internal mem self test failed\n"
+literal|"internal mem self test failed val=0x%x\n"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -76459,6 +76441,15 @@ condition|(
 name|rc
 condition|)
 block|{
+name|BLOGE
+argument_list|(
+name|sc
+argument_list|,
+literal|"bxe_init_hw_common failed rc=%d\n"
+argument_list|,
+name|rc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rc
@@ -79324,23 +79315,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static void bxe_init_searcher(struct bxe_softc *sc) {     int port = SC_PORT(sc);     ecore_src_init_t2(sc, sc->t2, sc->t2_mapping, SRC_CONN_NUM);
-comment|/* T1 hash bits value determines the T1 number of entries */
-end_comment
-
-begin_endif
-unit|REG_WR(sc, SRC_REG_NUMBER_HASH_BITS0 + port*4, SRC_HASH_BITS); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -79535,23 +79509,6 @@ index|]
 operator|.
 name|start
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (IS_SRIOV(sc)) {         cdu_ilt_start += BXE_FIRST_VF_CID/ILT_PAGE_CIDS;     }     cdu_ilt_start = bxe_iov_init_ilt(sc, cdu_ilt_start);
-if|#
-directive|if
-operator|(
-name|BXE_FIRST_VF_CID
-operator|>
-literal|0
-operator|)
-comment|/*      * If BXE_FIRST_VF_CID> 0 then the PF L2 cids precedes      * those of the VFs, so start line should be reset      */
-block|cdu_ilt_start = ilt->clients[ILT_CLIENT_CDU].start;
-endif|#
-directive|endif
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -79639,13 +79596,6 @@ argument_list|,
 name|INITOP_SET
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!CONFIGURE_NIC_MODE(sc)) {         bxe_init_searcher(sc);         REG_WR(sc, PRS_REG_NIC_MODE, 0);         BLOGD(sc, DBG_LOAD, "NIC MODE disabled\n");     } else
-endif|#
-directive|endif
-block|{
 comment|/* Set NIC mode */
 name|REG_WR
 argument_list|(
@@ -79665,7 +79615,6 @@ argument_list|,
 literal|"NIC MODE configured\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -81389,14 +81338,6 @@ name|SB_DISABLED
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (CNIC_LOADED(sc)) {
-comment|/* CNIC SB */
-block|REG_WR8(sc, BAR_CSTRORM_INTMEM +                 CSTORM_STATUS_BLOCK_DATA_STATE_OFFSET                 (bxe_cnic_fw_sb_id(sc)), SB_DISABLED);     }
-endif|#
-directive|endif
 comment|/* SP SB */
 name|REG_WR8
 argument_list|(
@@ -82245,75 +82186,6 @@ return|;
 else|else
 return|return
 literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|bxe_get_max_regs_len
-parameter_list|(
-name|struct
-name|bxe_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|uint32_t
-name|preset_idx
-decl_stmt|;
-name|int
-name|regdump_len32
-decl_stmt|,
-name|len32
-decl_stmt|;
-name|regdump_len32
-operator|=
-name|bxe_get_preset_regs_len
-argument_list|(
-name|sc
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Calculate the total preset regs length */
-for|for
-control|(
-name|preset_idx
-operator|=
-literal|2
-init|;
-name|preset_idx
-operator|<=
-name|DUMP_MAX_PRESETS
-condition|;
-name|preset_idx
-operator|++
-control|)
-block|{
-name|len32
-operator|=
-name|bxe_get_preset_regs_len
-argument_list|(
-name|sc
-argument_list|,
-name|preset_idx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|regdump_len32
-operator|<
-name|len32
-condition|)
-name|regdump_len32
-operator|=
-name|len32
-expr_stmt|;
-block|}
-return|return
-name|regdump_len32
 return|;
 block|}
 end_function
@@ -83443,10 +83315,6 @@ name|struct
 name|bxe_softc
 modifier|*
 name|sc
-parameter_list|,
-name|bxe_grcdump_t
-modifier|*
-name|dump
 parameter_list|)
 block|{
 name|int
@@ -83469,6 +83337,17 @@ name|dump_header
 modifier|*
 name|d_hdr
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|grcdump_done
+condition|)
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 name|ecore_disable_blocks_parity
 argument_list|(
 name|sc
@@ -83476,15 +83355,15 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|=
-name|dump
+name|sc
 operator|->
-name|grcdump
+name|grc_dump
 expr_stmt|;
 name|d_hdr
 operator|=
-name|dump
+name|sc
 operator|->
-name|grcdump
+name|grc_dump
 expr_stmt|;
 name|d_hdr
 operator|->
@@ -83626,18 +83505,6 @@ name|DUMP_PATH_0
 operator|)
 expr_stmt|;
 block|}
-name|dump
-operator|->
-name|grcdump_dwords
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dump_header
-argument_list|)
-operator|>>
-literal|2
-expr_stmt|;
 name|buf
 operator|+=
 sizeof|sizeof
@@ -83722,39 +83589,6 @@ name|uint32_t
 argument_list|)
 operator|)
 expr_stmt|;
-name|rval
-operator|=
-name|copyout
-argument_list|(
-name|sc
-operator|->
-name|grc_dump
-argument_list|,
-name|buf
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rval
-condition|)
-break|break;
-name|dump
-operator|->
-name|grcdump_dwords
-operator|+=
-operator|(
-name|size
-operator|/
-operator|(
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
-operator|)
-operator|)
-expr_stmt|;
 name|buf
 operator|+=
 name|size
@@ -83796,21 +83630,27 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|max_preset_size
+name|grc_dump_size
 decl_stmt|;
-name|max_preset_size
+name|grc_dump_size
 operator|=
-name|bxe_get_max_regs_len
+operator|(
+name|bxe_get_total_regs_len32
 argument_list|(
 name|sc
 argument_list|)
 operator|*
-operator|(
 sizeof|sizeof
 argument_list|(
 name|uint32_t
 argument_list|)
 operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dump_header
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -83818,7 +83658,7 @@ name|grc_dump
 operator|=
 name|malloc
 argument_list|(
-name|max_preset_size
+name|grc_dump_size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -84126,6 +83966,13 @@ name|grcdump_size
 operator|<
 name|grc_dump_size
 operator|)
+operator|||
+operator|(
+operator|!
+name|sc
+operator|->
+name|grcdump_done
+operator|)
 condition|)
 block|{
 name|rval
@@ -84134,14 +83981,34 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|dump
+operator|->
+name|grcdump_dwords
+operator|=
+name|grc_dump_size
+operator|>>
+literal|2
+expr_stmt|;
 name|rval
 operator|=
-name|bxe_grc_dump
+name|copyout
 argument_list|(
 name|sc
+operator|->
+name|grc_dump
 argument_list|,
 name|dump
+operator|->
+name|grcdump
+argument_list|,
+name|grc_dump_size
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|grcdump_done
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
