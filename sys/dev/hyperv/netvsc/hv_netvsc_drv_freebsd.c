@@ -3097,7 +3097,7 @@ name|txr
 expr_stmt|;
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 operator|=
 literal|1
 expr_stmt|;
@@ -3229,16 +3229,18 @@ condition|(
 operator|!
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 condition|)
 return|return;
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 operator|=
 literal|0
 expr_stmt|;
-name|hn_start_txeof
+name|txr
+operator|->
+name|hn_txeof
 argument_list|(
 name|txr
 argument_list|)
@@ -4598,7 +4600,7 @@ decl_stmt|;
 comment|/* 			 * This should "really rarely" happen. 			 * 			 * XXX Too many RX to be acked or too many sideband 			 * commands to run?  Ask netvsc_channel_rollup() 			 * to kick start later. 			 */
 name|txr
 operator|->
-name|hn_txeof
+name|hn_has_txeof
 operator|=
 literal|1
 expr_stmt|;
@@ -4617,7 +4619,7 @@ name|send_failed
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * Try sending again after set hn_txeof; 				 * in case that we missed the last 				 * netvsc_channel_rollup(). 				 */
+comment|/* 				 * Try sending again after set hn_has_txeof; 				 * in case that we missed the last 				 * netvsc_channel_rollup(). 				 */
 goto|goto
 name|again
 goto|;
@@ -9786,6 +9788,13 @@ name|hn_sched_tx
 operator|=
 literal|1
 expr_stmt|;
+name|txr
+operator|->
+name|hn_txeof
+operator|=
+name|hn_start_txeof
+expr_stmt|;
+comment|/* TODO: if_transmit */
 name|parent_dtag
 operator|=
 name|bus_get_dma_tag
