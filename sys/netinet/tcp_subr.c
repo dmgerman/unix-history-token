@@ -1336,7 +1336,9 @@ begin_function
 specifier|static
 name|void
 name|init_tcp_functions
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
