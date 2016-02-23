@@ -4624,7 +4624,7 @@ name|len
 condition|)
 block|{
 comment|/* 			 * This sending could be time consuming; let callers 			 * dispatch this packet sending (and sending of any 			 * following up packets) to tx taskqueue. 			 */
-name|IF_PREPEND
+name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
 name|ifp
@@ -4657,7 +4657,7 @@ operator|->
 name|hn_no_txdescs
 operator|++
 expr_stmt|;
-name|IF_PREPEND
+name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
 name|ifp
@@ -4721,7 +4721,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* txd is freed, but m_head is not */
-name|IF_PREPEND
+name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
 name|ifp
