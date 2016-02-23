@@ -1668,6 +1668,8 @@ decl_stmt|,
 name|bid
 decl_stmt|,
 name|best_bid
+decl_stmt|,
+name|n
 decl_stmt|;
 name|struct
 name|archive_read_filter_bidder
@@ -1690,8 +1692,16 @@ name|r
 decl_stmt|;
 for|for
 control|(
+name|n
+operator|=
+literal|0
 init|;
+name|n
+operator|<
+literal|25
 condition|;
+operator|++
+name|n
 control|)
 block|{
 name|number_bidders
@@ -1942,6 +1952,23 @@ operator|)
 return|;
 block|}
 block|}
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"Input requires too many filters for decoding"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 block|}
 end_function
 
