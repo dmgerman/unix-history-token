@@ -15205,11 +15205,14 @@ name|if_hw_tsomax
 operator|=
 name|IP_MAXPACKET
 expr_stmt|;
+comment|/* Take m_pullup(9)'s in em_xmit() w/ TSO into acount. */
 name|ifp
 operator|->
 name|if_hw_tsomaxsegcount
 operator|=
 name|EM_MAX_SCATTER
+operator|-
+literal|5
 expr_stmt|;
 name|ifp
 operator|->

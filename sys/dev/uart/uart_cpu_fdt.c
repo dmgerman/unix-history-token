@@ -130,24 +130,6 @@ directive|include
 file|<dev/uart/uart_cpu_fdt.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__aarch64__
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|bus_space_tag_t
-name|fdtbus_bs_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * UART console routines.  */
 end_comment
@@ -578,14 +560,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|uart_bus_space_mem
-operator|=
-name|fdtbus_bs_tag
-expr_stmt|;
-name|uart_bus_space_io
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Allow overriding the FDT using the environment. */
 name|class
 operator|=
@@ -836,7 +810,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -856,14 +830,6 @@ condition|)
 name|br
 operator|=
 literal|0
-expr_stmt|;
-else|else
-name|br
-operator|=
-name|fdt32_to_cpu
-argument_list|(
-name|br
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Finalize configuration. 	 */
 name|di
@@ -929,8 +895,8 @@ name|parity
 operator|=
 name|UART_PARITY_NONE
 expr_stmt|;
-return|return
-operator|(
+name|err
+operator|=
 name|OF_decode_addr
 argument_list|(
 name|node
@@ -953,6 +919,22 @@ name|bsh
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|uart_bus_space_mem
+operator|=
+name|di
+operator|->
+name|bas
+operator|.
+name|bst
+expr_stmt|;
+name|uart_bus_space_io
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|err
 operator|)
 return|;
 block|}
