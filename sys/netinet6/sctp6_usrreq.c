@@ -4858,6 +4858,11 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|SCTP_FREE_SONAME
+argument_list|(
+name|sin6
+argument_list|)
+expr_stmt|;
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -4950,6 +4955,11 @@ comment|/* punt */
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|SCTP_FREE_SONAME
+argument_list|(
+name|sin6
 argument_list|)
 expr_stmt|;
 name|SCTP_LTRACE_ERR_RET
