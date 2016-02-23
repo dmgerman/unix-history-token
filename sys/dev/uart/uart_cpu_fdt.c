@@ -130,24 +130,6 @@ directive|include
 file|<dev/uart/uart_cpu_fdt.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__aarch64__
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|bus_space_tag_t
-name|fdtbus_bs_tag
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * UART console routines.  */
 end_comment
