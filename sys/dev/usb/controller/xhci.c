@@ -10689,6 +10689,18 @@ name|trb_ep_mode
 operator|=
 name|ep_mode
 expr_stmt|;
+comment|/* store bMaxPacketSize for control endpoints */
+name|pepext
+operator|->
+name|trb_ep_maxp
+operator|=
+name|edesc
+operator|->
+name|wMaxPacketSize
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|usb_pc_cpu_flush
 argument_list|(
 name|pepext
@@ -13084,6 +13096,54 @@ operator|(
 name|USB_ERR_NOMEM
 operator|)
 return|;
+block|}
+comment|/* check if bMaxPacketSize changed */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_xfr
+operator|!=
+literal|0
+operator|&&
+name|pepext
+operator|->
+name|trb_ep_maxp
+operator|!=
+name|xfer
+operator|->
+name|endpoint
+operator|->
+name|edesc
+operator|->
+name|wMaxPacketSize
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|8
+argument_list|,
+literal|"Reconfigure control endpoint\n"
+argument_list|)
+expr_stmt|;
+comment|/* force driver to reconfigure endpoint */
+name|pepext
+operator|->
+name|trb_halted
+operator|=
+literal|1
+expr_stmt|;
+name|pepext
+operator|->
+name|trb_running
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* check for stopped condition, after putting transfer on interrupt queue */
 if|if
