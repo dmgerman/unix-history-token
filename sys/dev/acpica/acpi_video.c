@@ -2983,6 +2983,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 comment|/* XXX - can't deal with rebinding... */
 name|vo
 operator|->
@@ -2995,6 +2996,7 @@ index|[
 name|BCL_FULLPOWER
 index|]
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vo
@@ -3015,6 +3017,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 comment|/* XXX - see above. */
 name|vo
 operator|->
@@ -3027,6 +3030,7 @@ index|[
 name|BCL_ECONOMY
 index|]
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
