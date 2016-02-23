@@ -3050,15 +3050,6 @@ name|BCL_ECONOMY
 index|]
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|vo
-operator|->
-name|vo_levels
-operator|!=
-name|NULL
-condition|)
 name|AcpiInstallNotifyHandler
 argument_list|(
 name|handle
@@ -3070,6 +3061,7 @@ argument_list|,
 name|vo
 argument_list|)
 expr_stmt|;
+block|}
 name|ACPI_SERIAL_END
 argument_list|(
 name|video_output
