@@ -2269,7 +2269,7 @@ name|CTLFLAG_PRISON
 operator||
 name|CTLFLAG_MPSAFE
 operator||
-name|CTFLAG_CAPRD
+name|CTLFLAG_CAPRD
 argument_list|,
 name|NULL
 argument_list|,
