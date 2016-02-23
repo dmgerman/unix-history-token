@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/uart/uart.h>
 end_include
 
@@ -119,7 +113,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|bus_space_read_4(fdtbus_bs_tag, bsh_clkpwr, (_reg))
+value|bus_space_read_4((_bas)->bst, bsh_clkpwr, (_reg))
 end_define
 
 begin_define
@@ -134,7 +128,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(fdtbus_bs_tag, bsh_clkpwr, (_reg), (_val))
+value|bus_space_write_4((_bas)->bst, bsh_clkpwr, (_reg), (_val))
 end_define
 
 begin_comment
@@ -1099,7 +1093,9 @@ decl_stmt|;
 comment|/* Enable UART clock */
 name|bus_space_map
 argument_list|(
-name|fdtbus_bs_tag
+name|bas
+operator|->
+name|bst
 argument_list|,
 name|LPC_CLKPWR_PHYS_BASE
 argument_list|,
