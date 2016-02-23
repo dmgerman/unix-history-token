@@ -2994,8 +2994,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unable to create path for rescan, pathid: %d,"
-literal|"targetid: %d\n"
+literal|"unable to create path for rescan, pathid: %u,"
+literal|"targetid: %u\n"
 argument_list|,
 name|pathid
 argument_list|,
