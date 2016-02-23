@@ -9523,7 +9523,7 @@ name|kern_tcpfastpaths
 argument_list|,
 name|new_tcp_fastpaths
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
