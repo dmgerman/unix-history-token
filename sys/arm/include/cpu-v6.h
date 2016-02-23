@@ -898,10 +898,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARMv6+ and XScale */
-end_comment
-
 begin_macro
 name|_RF0
 argument_list|(
@@ -923,14 +919,6 @@ literal|0
 argument|)
 argument_list|)
 end_macro
-
-begin_if
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|6
-end_if
 
 begin_macro
 name|_WF1
@@ -975,11 +963,6 @@ literal|0
 argument|)
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*CPU id registers */
