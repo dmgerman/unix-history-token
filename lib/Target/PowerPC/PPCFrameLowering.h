@@ -117,7 +117,7 @@ specifier|const
 name|unsigned
 name|BasePointerSaveOffset
 block|;
-comment|/**    * \brief Find a register that can be used in function prologue and epilogue    *    * Find a register that can be use as the scratch register in function    * prologue and epilogue to save various registers (Link Register, Base    * Pointer, etc.). Prefer R0, if it is available. If it is not available,    * then choose a different register.    *    * This method will return true if an available register was found (including    * R0). If no available registers are found, the method returns false and sets    * ScratchRegister to R0, as per the recommendation in the ABI.    *    * \param[in] MBB The machine basic block to find an available register for    * \param[in] UseAtEnd Specify whether the scratch register will be used at    *                     the end of the basic block (i.e., will the scratch    *                     register kill a register defined in the basic block)    * \param[out] ScratchRegister The scratch register to use    * \return true if a scratch register was found. false of a scratch register    *         was not found and R0 is being used as the default.    */
+comment|/**    * \brief Find register[s] that can be used in function prologue and epilogue    *    * Find register[s] that can be use as scratch register[s] in function    * prologue and epilogue to save various registers (Link Register, Base    * Pointer, etc.). Prefer R0/R12, if available. Otherwise choose whatever    * register[s] are available.    *    * This method will return true if it is able to find enough unique scratch    * registers (1 or 2 depending on the requirement). If it is unable to find    * enough available registers in the block, it will return false and set    * any passed output parameter that corresponds to a required unique register    * to PPC::NoRegister.    *    * \param[in] MBB The machine basic block to find an available register for    * \param[in] UseAtEnd Specify whether the scratch register will be used at    *                     the end of the basic block (i.e., will the scratch    *                     register kill a register defined in the basic block)    * \param[in] TwoUniqueRegsRequired Specify whether this basic block will    *                                  require two unique scratch registers.    * \param[out] SR1 The scratch register to use    * \param[out] SR2 The second scratch register. If this pointer is not null    *                 the function will attempt to set it to an available    *                 register regardless of whether there is a hard requirement    *                 for two unique scratch registers.    * \return true if the required number of registers was found.    *         false if the required number of scratch register weren't available.    *         If either output parameter refers to a required scratch register    *         that isn't available, it will be set to an invalid value.    */
 name|bool
 name|findScratchRegister
 argument_list|(
@@ -125,7 +125,18 @@ argument|MachineBasicBlock *MBB
 argument_list|,
 argument|bool UseAtEnd
 argument_list|,
-argument|unsigned *ScratchRegister
+argument|bool TwoUniqueRegsRequired = false
+argument_list|,
+argument|unsigned *SR1 = nullptr
+argument_list|,
+argument|unsigned *SR2 = nullptr
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|twoUniqueScratchRegsRequired
+argument_list|(
+argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
