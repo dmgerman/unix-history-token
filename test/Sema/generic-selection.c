@@ -456,6 +456,33 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// This is expected to not trigger any diagnostics because the controlling
+end_comment
+
+begin_comment
+comment|// expression is not evaluated.
+end_comment
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+generic_selection|_Generic(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+generic_selection|,
+name|int
+association|:
+literal|1
+generic_selection|)
+expr_stmt|;
+end_expr_stmt
+
 unit|}
 end_unit
 

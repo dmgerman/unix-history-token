@@ -81,6 +81,7 @@ comment|// CHECK-PPC-NEXT:  store i8 [[USED_GPR]], i8* [[GPRPTR]], align 4
 comment|// CHECK-PPC-NEXT:  br label %[[CONT:[a-z0-9]+]]
 comment|//
 comment|// CHECK-PPC:[[USING_OVERFLOW]]
+comment|// CHECK-PPC-NEXT:  store i8 8, i8* [[GPRPTR]], align 4
 comment|// CHECK-PPC-NEXT:  [[OVERFLOW_AREA_P:%[0-9]+]] = getelementptr inbounds %struct.__va_list_tag, %struct.__va_list_tag* [[ARRAYDECAY]], i32 0, i32 3
 comment|// CHECK-PPC-NEXT:  [[OVERFLOW_AREA:%.+]] = load i8*, i8** [[OVERFLOW_AREA_P]], align 4
 comment|// CHECK-PPC-NEXT:  %{{[0-9]+}} =  ptrtoint i8* %argp.cur to i32
@@ -127,6 +128,7 @@ comment|// CHECK-PPC-NEXT:  store i8 [[USED_GPR]], i8* [[GPRPTR]], align 4
 comment|// CHECK-PPC-NEXT:  br label %[[CONT:[a-z0-9]+]]
 comment|//
 comment|// CHECK-PPC:[[USING_OVERFLOW]]
+comment|// CHECK-PPC-NEXT:  store i8 8, i8* [[GPRPTR]], align 4
 comment|// CHECK-PPC-NEXT:  [[OVERFLOW_AREA_P:%[0-9]+]] = getelementptr inbounds %struct.__va_list_tag, %struct.__va_list_tag* [[ARRAYDECAY]], i32 0, i32 3
 comment|// CHECK-PPC-NEXT:  [[OVERFLOW_AREA:%.+]] = load i8*, i8** [[OVERFLOW_AREA_P]], align 4
 comment|// CHECK-PPC-NEXT:  [[MEMADDR:%.+]] = bitcast i8* [[OVERFLOW_AREA]] to i32*
