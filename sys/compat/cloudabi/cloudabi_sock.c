@@ -955,9 +955,9 @@ operator|&
 name|rights
 argument_list|,
 name|CAP_GETSOCKOPT
-operator||
+argument_list|,
 name|CAP_GETPEERNAME
-operator||
+argument_list|,
 name|CAP_GETSOCKNAME
 argument_list|)
 argument_list|,

@@ -535,7 +535,7 @@ name|trgt
 parameter_list|,
 name|size
 parameter_list|)
-value|(0x80000000 | (trgt<< 20) | (ffsl(size) - 2))
+value|(0x80000000 | (trgt<< 20) | \ 				(flsl(size + (size - 1)) - 2))
 end_define
 
 begin_function

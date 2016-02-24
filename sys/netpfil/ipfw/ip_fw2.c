@@ -7465,7 +7465,7 @@ comment|/* DSCP bitmask is stored as low_u32 high_u32 */
 if|if
 condition|(
 name|x
-operator|>
+operator|>=
 literal|32
 condition|)
 name|match

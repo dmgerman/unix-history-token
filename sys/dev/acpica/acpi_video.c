@@ -2927,6 +2927,18 @@ name|vo_levels
 operator|!=
 name|NULL
 condition|)
+block|{
+name|AcpiRemoveNotifyHandler
+argument_list|(
+name|vo
+operator|->
+name|handle
+argument_list|,
+name|ACPI_DEVICE_NOTIFY
+argument_list|,
+name|acpi_video_vo_notify_handler
+argument_list|)
+expr_stmt|;
 name|AcpiOsFree
 argument_list|(
 name|vo
@@ -2934,6 +2946,13 @@ operator|->
 name|vo_levels
 argument_list|)
 expr_stmt|;
+name|vo
+operator|->
+name|vo_levels
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|vo
 operator|->
 name|handle
@@ -2983,6 +3002,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 comment|/* XXX - can't deal with rebinding... */
 name|vo
 operator|->
@@ -2995,6 +3015,7 @@ index|[
 name|BCL_FULLPOWER
 index|]
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vo
@@ -3015,6 +3036,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 comment|/* XXX - see above. */
 name|vo
 operator|->
@@ -3028,14 +3050,6 @@ name|BCL_ECONOMY
 index|]
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|vo
-operator|->
-name|vo_levels
-operator|!=
-name|NULL
-condition|)
 name|AcpiInstallNotifyHandler
 argument_list|(
 name|handle
@@ -3047,6 +3061,7 @@ argument_list|,
 name|vo
 argument_list|)
 expr_stmt|;
+block|}
 name|ACPI_SERIAL_END
 argument_list|(
 name|video_output

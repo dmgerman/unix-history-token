@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -23,42 +23,70 @@ begin_define
 define|#
 directive|define
 name|ECALL_MTIMECMP
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ECALL_CLEAR_PENDING
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ECALL_HTIF_CMD
-value|0x3
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|ECALL_HTIF_GET_ENTRY
-value|0x4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|ECALL_MCPUID_GET
-value|0x5
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
 name|ECALL_MIMPID_GET
-value|0x6
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECALL_SEND_IPI
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECALL_CLEAR_IPI
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECALL_HTIF_LOWPUTC
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECALL_MIE_SET
+value|0x10
 end_define
 
 begin_define
@@ -470,14 +498,42 @@ value|(1<< 5)
 end_define
 
 begin_comment
-comment|/* Note: sip register is not yet implement in Spike simulator */
+comment|/* Note: sip register has no SIP_STIP bit in Spike simulator */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIP_SSIP
+value|(1<< 1)
+end_define
 
 begin_define
 define|#
 directive|define
 name|SIP_STIP
 value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCSRS
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_IPI
+value|0x783
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLEN
+value|8
 end_define
 
 begin_define

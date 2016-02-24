@@ -1376,6 +1376,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|ncsizefactor
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Convert between vnode types and inode formats (since POSIX.1  * defines mode word of stat structure in terms of inode formats).  */
 end_comment

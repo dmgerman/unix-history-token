@@ -889,6 +889,13 @@ block|,
 comment|/* URTWN_RTL8188E */
 name|URTWN_RTL8188E_DEV
 argument_list|(
+name|ABOCOM
+argument_list|,
+name|RTL8188EU
+argument_list|)
+block|,
+name|URTWN_RTL8188E_DEV
+argument_list|(
 name|DLINK
 argument_list|,
 name|DWA123D1

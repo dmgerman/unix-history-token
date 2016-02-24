@@ -810,7 +810,7 @@ begin_define
 define|#
 directive|define
 name|IGB_MAX_SCATTER
-value|64
+value|40
 end_define
 
 begin_define

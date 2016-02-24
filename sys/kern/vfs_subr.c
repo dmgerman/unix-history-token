@@ -1734,6 +1734,54 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Provide the size of NFS nclnode and NFS fh for calculation of the  * vnode memory consumption.  The size is specified directly to  * eliminate dependency on NFS-private header.  *  * Other filesystems may use bigger or smaller (like UFS and ZFS)  * private inode data, but the NFS-based estimation is ample enough.  * Still, we care about differences in the size between 64- and 32-bit  * platforms.  *  * Namecache structure size is heuristically  * sizeof(struct namecache_ts) + CACHE_PATH_CUTOFF + 1.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LP64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NFS_NCLNODE_SZ
+value|(528 + 64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NC_SZ
+value|148
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NFS_NCLNODE_SZ
+value|(360 + 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NC_SZ
+value|92
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -1753,7 +1801,7 @@ name|physvnodes
 decl_stmt|,
 name|virtvnodes
 decl_stmt|;
-comment|/* 	 * Desiredvnodes is a function of the physical memory size and the 	 * kernel's heap size.  Generally speaking, it scales with the 	 * physical memory size.  The ratio of desiredvnodes to the physical 	 * memory size is 1:16 until desiredvnodes exceeds 98,304. 	 * Thereafter, the 	 * marginal ratio of desiredvnodes to the physical memory size is 	 * 1:64.  However, desiredvnodes is limited by the kernel's heap 	 * size.  The memory required by desiredvnodes vnodes and vm objects 	 * must not exceed 1/7th of the kernel's heap size. 	 */
+comment|/* 	 * Desiredvnodes is a function of the physical memory size and the 	 * kernel's heap size.  Generally speaking, it scales with the 	 * physical memory size.  The ratio of desiredvnodes to the physical 	 * memory size is 1:16 until desiredvnodes exceeds 98,304. 	 * Thereafter, the 	 * marginal ratio of desiredvnodes to the physical memory size is 	 * 1:64.  However, desiredvnodes is limited by the kernel's heap 	 * size.  The memory required by desiredvnodes vnodes and vm objects 	 * must not exceed 1/10th of the kernel's heap size. 	 */
 name|physvnodes
 operator|=
 name|maxproc
@@ -1790,7 +1838,7 @@ operator|=
 name|vm_kmem_size
 operator|/
 operator|(
-literal|7
+literal|10
 operator|*
 operator|(
 sizeof|sizeof
@@ -1804,6 +1852,12 @@ argument_list|(
 expr|struct
 name|vnode
 argument_list|)
+operator|+
+name|NC_SZ
+operator|*
+name|ncsizefactor
+operator|+
+name|NFS_NCLNODE_SZ
 operator|)
 operator|)
 expr_stmt|;

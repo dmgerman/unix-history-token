@@ -11549,12 +11549,6 @@ operator|->
 name|ni_associd
 argument_list|)
 expr_stmt|;
-name|ni
-operator|->
-name|ni_associd
-operator|=
-literal|0
-expr_stmt|;
 name|vap
 operator|->
 name|iv_sta_assoc
