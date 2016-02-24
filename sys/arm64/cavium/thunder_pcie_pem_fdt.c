@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -99,6 +105,30 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcib_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pci_host_generic.h>
 end_include
 
 begin_include
