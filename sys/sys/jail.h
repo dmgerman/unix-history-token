@@ -992,8 +992,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_LINPROCFS
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT_LINSYSFS
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x1fff
+value|0x7fff
 end_define
 
 begin_comment

@@ -6871,7 +6871,7 @@ name|linprocfs
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|PR_ALLOW_MOUNT_LINPROCFS
 argument_list|)
 expr_stmt|;
 end_expr_stmt
