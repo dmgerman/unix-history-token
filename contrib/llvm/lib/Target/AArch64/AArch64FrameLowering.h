@@ -140,6 +140,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|canUseAsPrologue
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
 name|int
 name|getFrameIndexReference
 argument_list|(
