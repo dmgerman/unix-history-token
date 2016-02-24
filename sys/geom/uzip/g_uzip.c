@@ -89,18 +89,6 @@ directive|include
 file|<geom/geom.h>
 end_include
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_GEOM_UZIP
-argument_list|,
-literal|"geom_uzip"
-argument_list|,
-literal|"GEOM UZIP data structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -142,6 +130,18 @@ include|#
 directive|include
 file|<geom/uzip/g_uzip_wrkthr.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_GEOM_UZIP
+argument_list|,
+literal|"geom_uzip"
+argument_list|,
+literal|"GEOM UZIP data structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|FEATURE
