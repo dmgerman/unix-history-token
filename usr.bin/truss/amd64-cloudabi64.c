@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -51,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sysdecode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cloudabi.h"
 end_include
 
 begin_include
@@ -357,24 +345,6 @@ name|PSL_C
 operator|)
 operator|!=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|errorp
-condition|)
-name|retval
-index|[
-literal|0
-index|]
-operator|=
-name|cloudabi_convert_errno
-argument_list|(
-name|retval
-index|[
-literal|0
-index|]
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

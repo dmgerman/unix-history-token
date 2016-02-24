@@ -5,6 +5,18 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|int
+name|print_line_prefix
+parameter_list|(
+name|struct
+name|trussinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|setup_and_wait
 parameter_list|(

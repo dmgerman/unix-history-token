@@ -1706,11 +1706,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ixl_flush
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
 comment|/* Mark outstanding work */
 if|if
 condition|(

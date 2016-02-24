@@ -665,8 +665,6 @@ block|}
 if|if
 condition|(
 name|sc
-operator|&&
-name|sc
 operator|->
 name|et
 operator|.

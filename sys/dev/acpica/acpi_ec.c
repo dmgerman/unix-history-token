@@ -1782,14 +1782,7 @@ name|desc
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ret
-operator|>
-literal|0
-operator|&&
-name|params
-condition|)
+else|else
 name|free
 argument_list|(
 name|params

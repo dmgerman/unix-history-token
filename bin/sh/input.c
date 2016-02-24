@@ -948,13 +948,14 @@ block|}
 else|else
 comment|/* *q == '\n' */
 block|{
+name|q
+operator|++
+expr_stmt|;
 name|parsenleft
 operator|=
 name|q
 operator|-
 name|parsenextc
-operator|+
-literal|1
 expr_stmt|;
 name|parselleft
 operator|-=
