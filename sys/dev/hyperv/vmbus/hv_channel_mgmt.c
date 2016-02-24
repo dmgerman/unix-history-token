@@ -944,6 +944,9 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|uint32_t
+name|relid
+decl_stmt|;
 name|f_new
 operator|=
 name|TRUE
@@ -951,6 +954,14 @@ expr_stmt|;
 name|channel
 operator|=
 name|NULL
+expr_stmt|;
+name|relid
+operator|=
+name|new_channel
+operator|->
+name|offer_msg
+operator|.
+name|child_rel_id
 expr_stmt|;
 comment|/* 	 * Make sure this is a new offer 	 */
 name|mtx_lock
@@ -960,6 +971,15 @@ name|hv_vmbus_g_connection
 operator|.
 name|channel_lock
 argument_list|)
+expr_stmt|;
+name|hv_vmbus_g_connection
+operator|.
+name|channels
+index|[
+name|relid
+index|]
+operator|=
+name|new_channel
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -1122,13 +1142,21 @@ expr_stmt|;
 comment|/* Insert new channel into channel_anchor. */
 name|printf
 argument_list|(
-literal|"Storvsc get multi-channel offer, rel=%u.\n"
+literal|"VMBUS get multi-channel offer, rel=%u,sub=%u\n"
 argument_list|,
 name|new_channel
 operator|->
 name|offer_msg
 operator|.
 name|child_rel_id
+argument_list|,
+name|new_channel
+operator|->
+name|offer_msg
+operator|.
+name|offer
+operator|.
+name|sub_channel_index
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1165,9 +1193,14 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"VMBUS: new multi-channel offer<%p>.\n"
+literal|"VMBUS: new multi-channel offer<%p>, "
+literal|"its primary channel is<%p>.\n"
 argument_list|,
 name|new_channel
+argument_list|,
+name|new_channel
+operator|->
+name|primary_channel
 argument_list|)
 expr_stmt|;
 comment|/*XXX add it to percpu_list */
@@ -1769,12 +1802,14 @@ name|hdr
 expr_stmt|;
 name|channel
 operator|=
-name|hv_vmbus_get_channel_from_rel_id
-argument_list|(
+name|hv_vmbus_g_connection
+operator|.
+name|channels
+index|[
 name|rescind
 operator|->
 name|child_rel_id
-argument_list|)
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -1788,6 +1823,33 @@ argument_list|(
 name|channel
 operator|->
 name|device
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|hv_vmbus_g_connection
+operator|.
+name|channel_lock
+argument_list|)
+expr_stmt|;
+name|hv_vmbus_g_connection
+operator|.
+name|channels
+index|[
+name|rescind
+operator|->
+name|child_rel_id
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hv_vmbus_g_connection
+operator|.
+name|channel_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2643,6 +2705,21 @@ name|channel
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+name|hv_vmbus_g_connection
+operator|.
+name|channels
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hv_vmbus_channel
+operator|*
+argument_list|)
+operator|*
+name|HV_CHANNEL_MAX_COUNT
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
