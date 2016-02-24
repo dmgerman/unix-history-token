@@ -1560,7 +1560,7 @@ name|unp_drop
 argument_list|(
 name|unp2
 argument_list|,
-name|ECONNABORTED
+name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|UNP_PCB_UNLOCK
