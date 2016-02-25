@@ -1061,6 +1061,18 @@ name|ifa_flags
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|SCTP_BASE_VAR
+argument_list|(
+name|sctp_pcb_initialized
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return;
+block|}
 comment|/* 	 * BSD only has one VRF, if this changes we will need to hook in the 	 * right things here to get the id to pass to the address managment 	 * routine. 	 */
 if|if
 condition|(
