@@ -2774,16 +2774,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Reset NIC, in case the driver is repeatedly inserted and removed */
-name|nic_reg_write
-argument_list|(
-name|nic
-argument_list|,
-name|NIC_PF_SOFT_RESET
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Enable NIC HW block */
 name|nic_reg_write
 argument_list|(
