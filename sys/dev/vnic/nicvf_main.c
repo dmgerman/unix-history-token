@@ -1632,19 +1632,6 @@ argument_list|,
 name|nicvf_if_getcounter
 argument_list|)
 expr_stmt|;
-comment|/* Set send queue len to number to default maximum */
-name|if_setsendqlen
-argument_list|(
-name|ifp
-argument_list|,
-name|IFQ_MAXLEN
-argument_list|)
-expr_stmt|;
-name|if_setsendqready
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|if_setmtu
 argument_list|(
 name|ifp
@@ -1652,11 +1639,22 @@ argument_list|,
 name|ETHERMTU
 argument_list|)
 expr_stmt|;
+comment|/* Reset caps */
 name|if_setcapabilities
 argument_list|(
 name|ifp
 argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Set the default values */
+name|if_setcapabilitiesbit
+argument_list|(
+name|ifp
+argument_list|,
 name|IFCAP_VLAN_MTU
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|if_setcapabilitiesbit
@@ -1668,7 +1666,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * HW offload capabilities 	 */
 comment|/* IP/TCP/UDP HW checksums */
 name|if_setcapabilitiesbit
 argument_list|(
@@ -1688,6 +1685,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * HW offload enable 	 */
+name|if_clearhwassist
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|if_sethwassistbits
 argument_list|(
 name|ifp
@@ -1698,28 +1701,13 @@ operator||
 name|CSUM_TCP
 operator||
 name|CSUM_UDP
+operator||
+name|CSUM_SCTP
 operator|)
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-error|#
-directive|error
-literal|"DEVICE_POLLING not supported in VNIC driver yet"
-name|if_setcapabilitiesbit
-argument_list|(
-name|ifp
-argument_list|,
-name|IFCAP_POLLING
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|if_setcapenable
 argument_list|(
 name|ifp
@@ -1728,13 +1716,6 @@ name|if_getcapabilities
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|if_setmtu
-argument_list|(
-name|ifp
-argument_list|,
-name|ETHERMTU
 argument_list|)
 expr_stmt|;
 return|return
