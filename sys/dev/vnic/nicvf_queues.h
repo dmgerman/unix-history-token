@@ -1136,6 +1136,13 @@ name|struct
 name|rx_tx_queue_stats
 name|stats
 decl_stmt|;
+name|boolean_t
+name|lro_enabled
+decl_stmt|;
+name|struct
+name|lro_ctrl
+name|lro
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
