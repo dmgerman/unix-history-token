@@ -1643,6 +1643,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|nicvf_tx_mbuf_locked
+parameter_list|(
+name|struct
+name|snd_queue
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Register access APIs */
 end_comment

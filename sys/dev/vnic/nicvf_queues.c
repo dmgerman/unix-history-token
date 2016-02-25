@@ -392,22 +392,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|nicvf_tx_mbuf_locked
-parameter_list|(
-name|struct
-name|snd_queue
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -9019,7 +9003,6 @@ comment|/* Put an mbuf to a SQ for packet transfer. */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|nicvf_tx_mbuf_locked
 parameter_list|(
