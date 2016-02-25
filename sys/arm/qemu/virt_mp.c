@@ -295,13 +295,6 @@ block|{
 name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
-name|pic_ipi_send
-argument_list|(
-name|cpus
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
