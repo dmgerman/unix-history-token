@@ -29161,6 +29161,28 @@ argument_list|,
 literal|"PAUSE settings (bit 0 = rx_pause, bit 1 = tx_pause)"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"max_speed"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|port_top_speed
+argument_list|(
+name|pi
+argument_list|)
+argument_list|,
+literal|"max speed (in Gbps)"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * dev.cxgbe.X.stats. 	 */
 name|oid
 operator|=
