@@ -1767,7 +1767,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|platform_ipi_send
+name|pic_ipi_send
 argument_list|(
 name|other_cpus
 argument_list|,
@@ -1818,7 +1818,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|platform_ipi_send
+name|pic_ipi_send
 argument_list|(
 name|cpus
 argument_list|,
@@ -1850,7 +1850,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|platform_ipi_send
+name|pic_ipi_send
 argument_list|(
 name|cpus
 argument_list|,

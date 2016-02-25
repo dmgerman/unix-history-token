@@ -283,19 +283,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|platform_ipi_send
-parameter_list|(
-name|cpuset_t
-name|cpus
-parameter_list|,
-name|u_int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* global data in mp_machdep.c */
 end_comment
