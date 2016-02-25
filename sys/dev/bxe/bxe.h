@@ -1518,45 +1518,6 @@ name|RX_BD_MAX
 value|(RX_BD_TOTAL - 1)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|NUM_RX_RINGS
-value|RX_BD_NUM_PAGES
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_RX_BD
-value|RX_BD_TOTAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_RX_BD
-value|RX_BD_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_RX_AVAIL
-value|RX_BD_USABLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1813,45 +1774,6 @@ name|x
 parameter_list|)
 value|((x)& RCQ_USABLE_PER_PAGE)
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|NUM_RCQ_RINGS
-value|RCQ_NUM_PAGES
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_RCQ_BD
-value|RCQ_TOTAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_RCQ_BD
-value|RCQ_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_RCQ_AVAIL
-value|RCQ_USABLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * dropless fc calculations for RCQs  * Number of RCQs should be as number of buffers in BRB:  * Low threshold takes into account RCQ_NEXT_PAGE_DESC_CNT  * "next" elements on each page  */
@@ -2679,12 +2601,6 @@ decl_stmt|;
 name|uint64_t
 name|rx_tpa_queue_used
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|bus_dmamap_t      rx_tpa_mbuf_map[ETH_MAX_AGGREGATION_QUEUES_E1H_E2];     bus_dmamap_t      rx_tpa_mbuf_spare_map;     struct mbuf       *rx_tpa_mbuf_ptr[ETH_MAX_AGGREGATION_QUEUES_E1H_E2];     bus_dma_segment_t rx_tpa_mbuf_segs[ETH_MAX_AGGREGATION_QUEUES_E1H_E2];      uint8_t tpa_state[ETH_MAX_AGGREGATION_QUEUES_E1H_E2];
-endif|#
-directive|endif
 name|uint16_t
 modifier|*
 name|sb_index_values
@@ -2814,22 +2730,6 @@ decl_stmt|;
 name|uint16_t
 name|tx_bd_cons
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* status block number in hardware */
-block|uint8_t sb_id;
-define|#
-directive|define
-name|FP_SB_ID
-parameter_list|(
-name|fp
-parameter_list|)
-value|(fp->sb_id)
-comment|/* driver copy of the fastpath CSTORM/USTORM indices */
-block|uint16_t fp_c_idx;     uint16_t fp_u_idx;
-endif|#
-directive|endif
 name|uint64_t
 name|sge_mask
 index|[
@@ -3943,15 +3843,6 @@ begin_struct
 struct|struct
 name|bxe_slowpath
 block|{
-if|#
-directive|if
-literal|0
-comment|/*      * The cdu_context array MUST be the first element in this      * structure. It is used during the leading edge ramrod      * operation.      */
-block|union cdu_context context[MAX_CONTEXT];
-comment|/* Used as a DMA source for MAC configuration. */
-block|struct mac_configuration_cmd    mac_config;     struct mac_configuration_cmd    mcast_config;
-endif|#
-directive|endif
 comment|/* used by the DMAE command executer */
 name|struct
 name|dmae_command
@@ -6449,12 +6340,6 @@ decl_stmt|;
 name|uint8_t
 name|dropless_fc
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct bxe_dma *t2;
-endif|#
-directive|endif
 comment|/* total number of FW statistics requests */
 name|uint8_t
 name|fw_stats_num
@@ -7256,67 +7141,6 @@ name|fp
 parameter_list|)
 value|((sc)->sp_objs[(fp)->index])
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|bxe_fp
-parameter_list|(
-name|sc
-parameter_list|,
-name|nr
-parameter_list|,
-name|var
-parameter_list|)
-value|((sc)->fp[nr].var)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bxe_sp_obj
-parameter_list|(
-name|sc
-parameter_list|,
-name|fp
-parameter_list|)
-value|((sc)->sp_objs[(fp)->index])
-end_define
-
-begin_define
-define|#
-directive|define
-name|bxe_fp_stats
-parameter_list|(
-name|sc
-parameter_list|,
-name|fp
-parameter_list|)
-value|(&(sc)->fp_stats[(fp)->index])
-end_define
-
-begin_define
-define|#
-directive|define
-name|bxe_fp_qstats
-parameter_list|(
-name|sc
-parameter_list|,
-name|fp
-parameter_list|)
-value|(&(sc)->fp_stats[(fp)->index].eth_q_stats)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -9854,13 +9678,6 @@ name|sc
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* there are special statistics counters for FCoE 136..140 */
-block|if (IS_FCOE_FP(fp)) {             return (sc->cnic_base_cl_id + (sc->pf_num>> 1));         }
-endif|#
-directive|endif
 return|return
 operator|(
 name|fp
