@@ -6,18 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__A10_WDOG_H__
+name|__AW_WDOG_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__A10_WDOG_H__
+name|__AW_WDOG_H__
 end_define
 
 begin_function_decl
 name|void
-name|a10wd_watchdog_reset
+name|aw_wdog_watchdog_reset
 parameter_list|(
 name|void
 parameter_list|)
@@ -30,7 +30,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*__A10_WDOG_H__*/
+comment|/*__AW_WDOG_H__*/
 end_comment
 
 end_unit

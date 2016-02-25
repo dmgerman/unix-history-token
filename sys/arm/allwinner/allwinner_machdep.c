@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/allwinner/a10_wdog.h>
+file|<arm/allwinner/aw_wdog.h>
 end_include
 
 begin_include
@@ -311,7 +311,7 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
-name|a10wd_watchdog_reset
+name|aw_wdog_watchdog_reset
 argument_list|()
 expr_stmt|;
 name|printf
