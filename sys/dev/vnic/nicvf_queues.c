@@ -4260,6 +4260,15 @@ name|cq
 operator|->
 name|thresh
 operator|=
+name|pass1_silicon
+argument_list|(
+name|nic
+operator|->
+name|dev
+argument_list|)
+condition|?
+literal|0
+else|:
 name|CMP_QUEUE_CQE_THRESH
 expr_stmt|;
 name|cq

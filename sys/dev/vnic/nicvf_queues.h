@@ -463,7 +463,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_CQE_THRESH
-value|0
+value|32
 end_define
 
 begin_define
