@@ -5567,8 +5567,8 @@ condition|(
 name|proto
 operator|->
 name|ti_proto
-operator|==
-name|LAGG_PROTO_NONE
+operator|>=
+name|LAGG_PROTO_MAX
 condition|)
 block|{
 name|error
@@ -5707,6 +5707,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|proto
+operator|->
+name|ti_proto
+operator|!=
+name|LAGG_PROTO_NONE
+condition|)
 name|proto
 operator|->
 name|ti_attach
