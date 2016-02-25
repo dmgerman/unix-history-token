@@ -194,7 +194,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_include
@@ -243,41 +243,6 @@ include|#
 directive|include
 file|<inttypes.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LIBCAPSICUM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<libcapsicum.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libcapsicum_grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libcapsicum_pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libcapsicum_service.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -362,6 +327,35 @@ include|#
 directive|include
 file|"kdump_subr.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBCASPER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libcasper.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<casper/cap_grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<casper/cap_pwd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|u_int
@@ -813,7 +807,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_decl_stmt
@@ -890,7 +884,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_function
@@ -945,17 +939,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|err
 argument_list|(
-literal|"unable to contact casperd"
+literal|1
+argument_list|,
+literal|"unable to create casper process"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
+name|exit
+argument_list|(
 literal|1
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|cappwdloc
 operator|=
@@ -1154,7 +1149,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_LIBCAPSICUM */
+comment|/* HAVE_LIBCASPER */
 end_comment
 
 begin_function
@@ -1445,7 +1440,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 if|if
 condition|(
 name|resolv
@@ -7663,7 +7658,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 if|if
 condition|(
 name|cappwd
@@ -7738,7 +7733,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 if|if
 condition|(
 name|capgrp
