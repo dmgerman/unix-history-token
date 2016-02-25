@@ -1048,6 +1048,9 @@ decl_stmt|;
 name|boolean_t
 name|link_up
 decl_stmt|;
+name|boolean_t
+name|hw_tso
+decl_stmt|;
 name|uint8_t
 name|duplex
 decl_stmt|;

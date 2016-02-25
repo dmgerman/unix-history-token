@@ -635,7 +635,7 @@ begin_define
 define|#
 directive|define
 name|NICVF_TXBUF_MAXSIZE
-value|9212
+value|NIC_HW_MAX_FRS
 end_define
 
 begin_comment
@@ -652,6 +652,31 @@ end_define
 begin_comment
 comment|/* Single command is at most 256 buffers 					   (hdr + 255 subcmds) */
 end_comment
+
+begin_comment
+comment|/* TSO-related definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NICVF_TSO_MAXSIZE
+value|IP_MAXPACKET
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TSO_NSEGS
+value|NICVF_TXBUF_NSEGS
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TSO_HEADER_SIZE
+value|128
+end_define
 
 begin_comment
 comment|/* Queue enable/disable */
