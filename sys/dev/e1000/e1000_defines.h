@@ -1229,6 +1229,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_RCTL_RDMTS_HEX
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RCTL_RDMTS1_HEX
+value|E1000_RCTL_RDMTS_HEX
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RCTL_MO_SHIFT
 value|12
 end_define
@@ -5206,6 +5220,54 @@ begin_comment
 comment|/* enable Tx timestamping */
 end_comment
 
+begin_comment
+comment|/* HH Time Sync */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL_MAX_ALLOWED_DLY_MASK
+value|0x0000F000
+end_define
+
+begin_comment
+comment|/* max delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL_SYNC_COMP_ERR
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* sync err */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL_SYNC_COMP
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* sync complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL_START_SYNC
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* initiate sync */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5928,6 +5990,17 @@ end_define
 
 begin_comment
 comment|/* EEE Master/Slave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1543_FIBER_CTRL
+value|0x0
+end_define
+
+begin_comment
+comment|/* Fiber Control Register */
 end_comment
 
 begin_define
@@ -7337,12 +7410,6 @@ begin_comment
 comment|/* NVM Type (1-SPI, 0-Microwire) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|E1000_NVM_GRANT_ATTEMPTS
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -7353,11 +7420,6 @@ end_define
 begin_comment
 comment|/* NVM # attempts to gain grant */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -19,22 +19,6 @@ directive|define
 name|_E1000_NVM_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_READ_PBA_RAW
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|NO_WRITE_PBA_RAW
-argument_list|)
-end_if
-
 begin_struct
 struct|struct
 name|e1000_pba
@@ -52,11 +36,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void

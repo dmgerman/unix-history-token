@@ -409,6 +409,20 @@ name|EM_TX_MAXTRIES
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCICFG_DESC_RING_STATUS
+value|0xe4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLUSH_DESC_REQUIRED
+value|0x100
+end_define
+
 begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
 end_comment
