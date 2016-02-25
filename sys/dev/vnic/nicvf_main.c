@@ -1679,6 +1679,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|if_setcapabilitiesbit
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCAP_HWSTATS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|if_sethwassistbits
 argument_list|(
 name|ifp
