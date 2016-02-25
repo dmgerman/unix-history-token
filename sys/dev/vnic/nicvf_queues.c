@@ -3490,6 +3490,22 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* Prefetch next CQ descriptor */
+name|__builtin_prefetch
+argument_list|(
+operator|(
+expr|struct
+name|cqe_rx_t
+operator|*
+operator|)
+name|GET_CQ_DESC
+argument_list|(
+name|cq
+argument_list|,
+name|cqe_head
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dprintf
 argument_list|(
 name|nic
