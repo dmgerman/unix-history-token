@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2014 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2017 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1042,6 +1042,23 @@ define|#
 directive|define
 name|SHARED_HW_CFG_PF_MSIX_MAX_NUM_SHIFT
 value|0
+comment|/*  This field extends the mf mode chosen in nvm cfg #73 (as we ran           out of bits) */
+define|#
+directive|define
+name|SHARED_HW_CFG_EXTENDED_MF_MODE_MASK
+value|0x00000F00
+define|#
+directive|define
+name|SHARED_HW_CFG_EXTENDED_MF_MODE_SHIFT
+value|8
+define|#
+directive|define
+name|SHARED_HW_CFG_EXTENDED_MF_MODE_NPAR1_DOT_5
+value|0x00000000
+define|#
+directive|define
+name|SHARED_HW_CFG_EXTENDED_MF_MODE_NPAR2_DOT_0
+value|0x00000100
 name|uint32_t
 name|ump_nc_si_config
 decl_stmt|;
@@ -1236,6 +1253,10 @@ define|#
 directive|define
 name|SHARED_HW_CFG_E3_PORT_LAYOUT_4P_3210
 value|0x05000000
+define|#
+directive|define
+name|SHARED_HW_CFG_E3_PORT_LAYOUT_2P_01_SIG
+value|0x06000000
 block|}
 struct|;
 end_struct
@@ -1631,6 +1652,33 @@ define|#
 directive|define
 name|PORT_HW_CFG_TX_DRV_BROADCAST_SHIFT
 value|16
+comment|/*  Set non-default values for TXFIR in SFP mode. */
+define|#
+directive|define
+name|PORT_HW_CFG_TX_DRV_IFIR_MASK
+value|0x00F00000
+define|#
+directive|define
+name|PORT_HW_CFG_TX_DRV_IFIR_SHIFT
+value|20
+comment|/*  Set non-default values for IPREDRIVER in SFP mode. */
+define|#
+directive|define
+name|PORT_HW_CFG_TX_DRV_IPREDRIVER_MASK
+value|0x0F000000
+define|#
+directive|define
+name|PORT_HW_CFG_TX_DRV_IPREDRIVER_SHIFT
+value|24
+comment|/*  Set non-default values for POST2 in SFP mode. */
+define|#
+directive|define
+name|PORT_HW_CFG_TX_DRV_POST2_MASK
+value|0xF0000000
+define|#
+directive|define
+name|PORT_HW_CFG_TX_DRV_POST2_SHIFT
+value|28
 name|uint32_t
 name|reserved0
 index|[
@@ -2310,6 +2358,10 @@ name|PORT_HW_CFG_XGXS_EXT_PHY2_TYPE_BCM84834
 value|0x00001100
 define|#
 directive|define
+name|PORT_HW_CFG_XGXS_EXT_PHY2_TYPE_BCM84858
+value|0x00001200
+define|#
+directive|define
 name|PORT_HW_CFG_XGXS_EXT_PHY2_TYPE_FAILURE
 value|0x0000fd00
 define|#
@@ -2490,6 +2542,10 @@ define|#
 directive|define
 name|PORT_HW_CFG_XGXS_EXT_PHY_TYPE_BCM84834
 value|0x00001100
+define|#
+directive|define
+name|PORT_HW_CFG_XGXS_EXT_PHY_TYPE_BCM84858
+value|0x00001200
 define|#
 directive|define
 name|PORT_HW_CFG_XGXS_EXT_PHY_TYPE_DIRECT_WC
@@ -2720,6 +2776,18 @@ define|#
 directive|define
 name|SHARED_FEAT_CFG_FORCE_SF_MODE_AFEX_MODE
 value|0x00000400
+define|#
+directive|define
+name|SHARED_FEAT_CFG_FORCE_SF_MODE_BD_MODE
+value|0x00000500
+define|#
+directive|define
+name|SHARED_FEAT_CFG_FORCE_SF_MODE_UFP_MODE
+value|0x00000600
+define|#
+directive|define
+name|SHARED_FEAT_CFG_FORCE_SF_MODE_EXTENDED_MODE
+value|0x00000700
 comment|/*  Act as if the FCoE license is invalid */
 define|#
 directive|define
@@ -3535,7 +3603,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 0x488 */
+comment|/* 0x48C */
 block|}
 struct|;
 end_struct
@@ -3906,6 +3974,32 @@ define|#
 directive|define
 name|EXTENDED_DEV_INFO_SHARED_CFG_TEMP_PERIOD_SHIFT
 value|0
+comment|/*  Sensor interface - Disabled / BSC / In the future - SMBUS */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_SENSOR_INTERFACE_MASK
+value|0x00030000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_SENSOR_INTERFACE_SHIFT
+value|16
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_SENSOR_INTERFACE_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_SENSOR_INTERFACE_BSC
+value|0x00010000
+comment|/*  On Board Sensor Address */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_SENSOR_ADDR_MASK
+value|0x03FC0000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_SENSOR_ADDR_SHIFT
+value|18
 comment|/*  MFW flavor to be used */
 name|uint32_t
 name|mfw_cfg
@@ -3944,6 +4038,41 @@ define|#
 directive|define
 name|EXTENDED_DEV_INFO_SHARED_CFG_OCBB_EN_LAST_DRV_ENABLED
 value|0x00000100
+comment|/*  Prevent OCBB feature */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OCBB_PREVENT_MASK
+value|0x00000200
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OCBB_PREVENT_SHIFT
+value|9
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OCBB_PREVENT_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OCBB_PREVENT_ENABLED
+value|0x00000200
+comment|/*  Enable DCi support */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_DCI_SUPPORT_MASK
+value|0x00000400
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_DCI_SUPPORT_SHIFT
+value|10
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_DCI_SUPPORT_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_DCI_SUPPORT_ENABLED
+value|0x00000400
+comment|/*  Reserved bits: 75-76 */
 comment|/*  Hide DCBX feature in CCM/BACS menus */
 define|#
 directive|define
@@ -4073,6 +4202,48 @@ define|#
 directive|define
 name|EXTENDED_DEV_INFO_SHARED_CFG_OVR_REV_ID_ENABLED
 value|0x00000400
+comment|/*  Bypass slicer offset tuning */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_BYPASS_SLICER_MASK
+value|0x00000800
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_BYPASS_SLICER_SHIFT
+value|11
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_BYPASS_SLICER_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_BYPASS_SLICER_ENABLED
+value|0x00000800
+comment|/*  Control Revision ID */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_REV_ID_CTRL_MASK
+value|0x00003000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_REV_ID_CTRL_SHIFT
+value|12
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_REV_ID_CTRL_PRESERVE
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_REV_ID_CTRL_ACTUAL
+value|0x00001000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_REV_ID_CTRL_FORCE_B0
+value|0x00002000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_REV_ID_CTRL_FORCE_B1
+value|0x00003000
 comment|/*  Threshold in celcius for max continuous operation */
 name|uint32_t
 name|temperature_report
@@ -4227,6 +4398,23 @@ define|#
 directive|define
 name|EXTENDED_DEV_INFO_SHARED_CFG_DBG_GEN3_COMPLI_ENA
 value|0x00080000
+comment|/*  Override Rx signal detect threshold when enabled the threshold 	 * will be set staticaly 	 */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVERRIDE_RX_SIG_MASK
+value|0x00100000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVERRIDE_RX_SIG_SHIFT
+value|20
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVERRIDE_RX_SIG_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_OVERRIDE_RX_SIG_ENABLED
+value|0x00100000
 comment|/*  Debug signet rx threshold */
 name|uint32_t
 name|dbg_rx_sigdet_threshold
@@ -4492,6 +4680,63 @@ define|#
 directive|define
 name|EXTENDED_DEV_INFO_SHARED_CFG_VPD_CACHE_COMP_SHIFT
 value|24
+comment|/*  Manufacture kit version */
+name|uint32_t
+name|manufacture_ver
+decl_stmt|;
+comment|/* 0x403C */
+comment|/*  Manufacture timestamp */
+name|uint32_t
+name|manufacture_data
+decl_stmt|;
+comment|/* 0x4040 */
+comment|/*  Number of ISCSI/FCOE cfg images */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_NUM_ISCSI_FCOE_CFGS_MASK
+value|0x00040000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_NUM_ISCSI_FCOE_CFGS_SHIFT18
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_NUM_ISCSI_FCOE_CFGS_2
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_NUM_ISCSI_FCOE_CFGS_4
+value|0x00040000
+comment|/*  MCP crash dump trigger */
+name|uint32_t
+name|mcp_crash_dump
+decl_stmt|;
+comment|/* 0x4044 */
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_CRASH_DUMP_MASK
+value|0x7FFFFFFF
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_CRASH_DUMP_SHIFT
+value|0
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_CRASH_DUMP_DISABLED
+value|0x00000000
+define|#
+directive|define
+name|EXTENDED_DEV_INFO_SHARED_CFG_CRASH_DUMP_ENABLED
+value|0x00000001
+comment|/*  MBI version */
+name|uint32_t
+name|mbi_version
+decl_stmt|;
+comment|/* 0x4048 */
+comment|/*  MBI date */
+name|uint32_t
+name|mbi_date
+decl_stmt|;
+comment|/* 0x404C */
 block|}
 struct|;
 end_struct
@@ -4993,6 +5238,22 @@ define|#
 directive|define
 name|DRV_MSG_CODE_LOAD_L2B_PRAM
 value|0x90000000
+define|#
+directive|define
+name|DRV_MSG_CODE_OEM_OK
+value|0x00010000
+define|#
+directive|define
+name|DRV_MSG_CODE_OEM_FAILURE
+value|0x00020000
+define|#
+directive|define
+name|DRV_MSG_CODE_OEM_UPDATE_SVID_OK
+value|0x00030000
+define|#
+directive|define
+name|DRV_MSG_CODE_OEM_UPDATE_SVID_FAILURE
+value|0x00040000
 comment|/* 	 * The optic module verification command requires bootcode 	 * v5.0.6 or later, te specific optic module verification command 	 * requires bootcode v5.2.12 or later 	 */
 define|#
 directive|define
@@ -5140,8 +5401,16 @@ name|DRV_MSG_CODE_IMG_SIZE_REQ
 value|0xe3000000
 define|#
 directive|define
+name|DRV_MSG_CODE_UFP_CONFIG_ACK
+value|0xe4000000
+define|#
+directive|define
 name|DRV_MSG_SEQ_NUMBER_MASK
 value|0x0000ffff
+define|#
+directive|define
+name|DRV_MSG_CODE_CONFIG_CHANGE
+value|0xC1000000
 name|uint32_t
 name|drv_mb_param
 decl_stmt|;
@@ -5177,6 +5446,30 @@ define|#
 directive|define
 name|DRV_MSG_CODE_ISCSI_PERS_IMAGE_REQ
 value|0x00000002
+define|#
+directive|define
+name|DRV_MSG_CODE_VPD_IMAGE_REQ
+value|0x00000003
+define|#
+directive|define
+name|DRV_MSG_CODE_CONFIG_CHANGE_MTU_SIZE
+value|0x00000001
+define|#
+directive|define
+name|DRV_MSG_CODE_CONFIG_CHANGE_MAC_ADD
+value|0x00000002
+define|#
+directive|define
+name|DRV_MSG_CODE_CONFIG_CHANGE_WOL_ENA
+value|0x00000003
+define|#
+directive|define
+name|DRV_MSG_CODE_CONFIG_CHANGE_ISCI_BOOT
+value|0x00000004
+define|#
+directive|define
+name|DRV_MSG_CODE_CONFIG_CHANGE_FCOE_BOOT
+value|0x00000005
 name|uint32_t
 name|fw_mb_header
 decl_stmt|;
@@ -5391,6 +5684,18 @@ name|FW_MSG_CODE_IMG_SIZE_RESPONSE
 value|0xe3100000
 define|#
 directive|define
+name|FW_MSG_CODE_OEM_ACK
+value|0x00010000
+define|#
+directive|define
+name|DRV_MSG_CODE_OEM_UPDATE_SVID_ACK
+value|0x00020000
+define|#
+directive|define
+name|FW_MSG_CODE_CONFIG_CHANGE_DONE
+value|0xC2000000
+define|#
+directive|define
 name|FW_MSG_SEQ_NUMBER_MASK
 value|0x0000ffff
 name|uint32_t
@@ -5462,6 +5767,26 @@ define|#
 directive|define
 name|DRV_STATUS_LINK_EVENT
 value|0x00000008
+define|#
+directive|define
+name|DRV_STATUS_OEM_EVENT_MASK
+value|0x00000070
+define|#
+directive|define
+name|DRV_STATUS_OEM_DISABLE_ENABLE_PF
+value|0x00000010
+define|#
+directive|define
+name|DRV_STATUS_OEM_BANDWIDTH_ALLOCATION
+value|0x00000020
+define|#
+directive|define
+name|DRV_STATUS_OEM_FC_NPIV_UPDATE
+value|0x00000040
+define|#
+directive|define
+name|DRV_STATUS_OEM_UPDATE_SVID
+value|0x00000080
 define|#
 directive|define
 name|DRV_STATUS_DCC_EVENT_MASK
@@ -6191,9 +6516,6 @@ name|pf_ack
 decl_stmt|;
 name|uint32_t
 name|vf_ack
-index|[
-literal|1
-index|]
 decl_stmt|;
 name|uint32_t
 name|iov_dis_ack
@@ -6631,6 +6953,38 @@ define|#
 directive|define
 name|DCBX_APP_SF_PORT
 value|0x20
+define|#
+directive|define
+name|DCBX_APP_PRI_0
+value|0x01
+define|#
+directive|define
+name|DCBX_APP_PRI_1
+value|0x02
+define|#
+directive|define
+name|DCBX_APP_PRI_2
+value|0x04
+define|#
+directive|define
+name|DCBX_APP_PRI_3
+value|0x08
+define|#
+directive|define
+name|DCBX_APP_PRI_4
+value|0x10
+define|#
+directive|define
+name|DCBX_APP_PRI_5
+value|0x20
+define|#
+directive|define
+name|DCBX_APP_PRI_6
+value|0x40
+define|#
+directive|define
+name|DCBX_APP_PRI_7
+value|0x80
 elif|#
 directive|elif
 name|defined
@@ -7333,6 +7687,305 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Used to suppoert NSCI get OS driver version On driver load the version value will be set On driver unload driver value of 0x0 will be set */
+end_comment
+
+begin_struct
+struct|struct
+name|os_drv_ver
+block|{
+define|#
+directive|define
+name|DRV_VER_NOT_LOADED
+value|0
+comment|/*personalites orrder is importent */
+define|#
+directive|define
+name|DRV_PERS_ETHERNET
+value|0
+define|#
+directive|define
+name|DRV_PERS_ISCSI
+value|1
+define|#
+directive|define
+name|DRV_PERS_FCOE
+value|2
+comment|/*shmem2 struct is constatnt can't add more personalites here*/
+define|#
+directive|define
+name|MAX_DRV_PERS
+value|3
+name|uint32_t
+name|versions
+index|[
+name|MAX_DRV_PERS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_UUID_STR_ADDR
+value|0x9f
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_SKU_STR_ADDR
+value|0x3c
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_FN_STR_ADDR
+value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_NAME_STR_ADDR
+value|0x10e
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_UUID_STR_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_SKU_STR_LEN
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_FN_STR_LEN
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_NAME_STR_LEN
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|OEM_I2C_CARD_VERSION_STR_LEN
+value|36
+end_define
+
+begin_struct
+struct|struct
+name|oem_i2c_data_t
+block|{
+name|uint32_t
+name|size
+decl_stmt|;
+name|uint8_t
+name|uuid
+index|[
+name|OEM_I2C_UUID_STR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|card_sku
+index|[
+name|OEM_I2C_CARD_SKU_STR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|card_name
+index|[
+name|OEM_I2C_CARD_NAME_STR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|card_ver
+index|[
+name|OEM_I2C_CARD_VERSION_STR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|card_fn
+index|[
+name|OEM_I2C_CARD_FN_STR_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|curr_cfg_method_e
+block|{
+name|CURR_CFG_MET_NONE
+init|=
+literal|0
+block|,
+comment|/* default config */
+name|CURR_CFG_MET_OS
+init|=
+literal|1
+block|,
+name|CURR_CFG_MET_VENDOR_SPEC
+init|=
+literal|2
+block|,
+comment|/* e.g. Option ROM, NPAR, O/S Cfg Utils */
+name|CURR_CFG_MET_HP_OTHER
+init|=
+literal|3
+block|,
+name|CURR_CFG_MET_VC_CLP
+init|=
+literal|4
+block|,
+comment|/* C-Class SM-CLP */
+name|CURR_CFG_MET_HP_CNU
+init|=
+literal|5
+block|,
+comment|/*  Converged Network Utility */
+name|CURR_CFG_MET_HP_DCI
+init|=
+literal|6
+block|,
+comment|/* DCi (BD) changes */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|FC_NPIV_WWPN_SIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_NPIV_WWNN_SIZE
+value|8
+end_define
+
+begin_struct
+struct|struct
+name|bdn_npiv_settings
+block|{
+name|uint8_t
+name|npiv_wwpn
+index|[
+name|FC_NPIV_WWPN_SIZE
+index|]
+decl_stmt|;
+name|uint8_t
+name|npiv_wwnn
+index|[
+name|FC_NPIV_WWNN_SIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bdn_fc_npiv_cfg
+block|{
+comment|/* hdr used internally by the MFW */
+name|uint32_t
+name|hdr
+decl_stmt|;
+name|uint32_t
+name|num_of_npiv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MAX_NUMBER_NPIV
+value|64
+end_define
+
+begin_struct
+struct|struct
+name|bdn_fc_npiv_tbl
+block|{
+name|struct
+name|bdn_fc_npiv_cfg
+name|fc_npiv_cfg
+decl_stmt|;
+name|struct
+name|bdn_npiv_settings
+name|settings
+index|[
+name|MAX_NUMBER_NPIV
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mdump_driver_info
+block|{
+name|uint32_t
+name|epoc
+decl_stmt|;
+name|uint32_t
+name|drv_ver
+decl_stmt|;
+name|uint32_t
+name|fw_ver
+decl_stmt|;
+name|uint32_t
+name|valid_dump
+decl_stmt|;
+define|#
+directive|define
+name|FIRST_DUMP_VALID
+value|(1<< 0)
+define|#
+directive|define
+name|SECOND_DUMP_VALID
+value|(1<< 1)
+name|uint32_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ENABLE_ALL_TRIGGERS
+value|(0x7fffffff)
+define|#
+directive|define
+name|TRIGGER_MDUMP_ONCE
+value|(1<< 31)
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|shmem2_region
@@ -7520,13 +8173,15 @@ comment|/* 0x0098 */
 name|uint32_t
 name|swim_base_addr
 decl_stmt|;
-comment|/* 0x0108 */
+comment|/* 0x00a8 */
 name|uint32_t
 name|swim_funcs
 decl_stmt|;
+comment|/* 0x00ac */
 name|uint32_t
 name|swim_main_cb
 decl_stmt|;
+comment|/* 0x00b0 */
 comment|/* 	 * bitmap notifying which VIF profiles stored in nvram are enabled by 	 * switch 	 */
 name|uint32_t
 name|afex_profiles_enabled
@@ -7534,10 +8189,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* 0x00b4 */
 comment|/* generic flags controlled by the driver */
 name|uint32_t
 name|drv_flags
 decl_stmt|;
+comment|/* 0x00bc */
 define|#
 directive|define
 name|DRV_FLAGS_DCB_CONFIGURED
@@ -7590,27 +8247,35 @@ comment|/* pointer to extended dev_info shared data copied from nvm image */
 name|uint32_t
 name|extended_dev_info_shared_addr
 decl_stmt|;
+comment|/* 0x00c0 */
 name|uint32_t
 name|ncsi_oem_data_addr
 decl_stmt|;
+comment|/* 0x00c4 */
 name|uint32_t
 name|sensor_data_addr
 decl_stmt|;
+comment|/* 0x00c8 */
 name|uint32_t
 name|buffer_block_addr
 decl_stmt|;
+comment|/* 0x00cc */
 name|uint32_t
 name|sensor_data_req_update_interval
 decl_stmt|;
+comment|/* 0x00d0 */
 name|uint32_t
 name|temperature_in_half_celsius
 decl_stmt|;
+comment|/* 0x00d4 */
 name|uint32_t
 name|glob_struct_in_host
 decl_stmt|;
+comment|/* 0x00d8 */
 name|uint32_t
 name|dcbx_neg_res_ext_offset
 decl_stmt|;
+comment|/* 0x00dc */
 define|#
 directive|define
 name|SHMEM_DCBX_NEG_RES_EXT_NONE
@@ -7621,6 +8286,7 @@ index|[
 name|E2_FUNC_MAX
 index|]
 decl_stmt|;
+comment|/* 0x00e0 */
 define|#
 directive|define
 name|DRV_FLAGS_CAPABILITIES_LOADED_SUPPORTED
@@ -7637,30 +8303,44 @@ define|#
 directive|define
 name|DRV_FLAGS_CAPABILITIES_LOADED_ISCSI
 value|0x00000008
+define|#
+directive|define
+name|DRV_FLAGS_MTU_MASK
+value|0xffff0000
+define|#
+directive|define
+name|DRV_FLAGS_MTU_SHIFT
+value|16
 name|uint32_t
 name|extended_dev_info_shared_cfg_size
 decl_stmt|;
+comment|/* 0x00f0 */
 name|uint32_t
 name|dcbx_en
 index|[
 name|PORT_MAX
 index|]
 decl_stmt|;
+comment|/* 0x00f4 */
 comment|/* The offset points to the multi threaded meta structure */
 name|uint32_t
 name|multi_thread_data_offset
 decl_stmt|;
+comment|/* 0x00fc */
 comment|/* address of DMAable host address holding values from the drivers */
 name|uint32_t
 name|drv_info_host_addr_lo
 decl_stmt|;
+comment|/* 0x0100 */
 name|uint32_t
 name|drv_info_host_addr_hi
 decl_stmt|;
+comment|/* 0x0104 */
 comment|/* general values written by the MFW (such as current version) */
 name|uint32_t
 name|drv_info_control
 decl_stmt|;
+comment|/* 0x0108 */
 define|#
 directive|define
 name|DRV_INFO_CONTROL_VER_MASK
@@ -7681,6 +8361,7 @@ name|uint32_t
 name|ibft_host_addr
 decl_stmt|;
 comment|/* initialized by option ROM */
+comment|/* 0x010c */
 name|struct
 name|eee_remote_vals
 name|eee_remote_vals
@@ -7688,12 +8369,14 @@ index|[
 name|PORT_MAX
 index|]
 decl_stmt|;
+comment|/* 0x0110 */
 name|uint32_t
 name|pf_allocation
 index|[
 name|E2_FUNC_MAX
 index|]
 decl_stmt|;
+comment|/* 0x0120 */
 define|#
 directive|define
 name|PF_ALLOACTION_MSIX_VECTORS_MASK
@@ -7710,6 +8393,7 @@ index|[
 name|PORT_MAX
 index|]
 decl_stmt|;
+comment|/* 0x0130 */
 define|#
 directive|define
 name|SHMEM_EEE_TIMER_MASK
@@ -7729,15 +8413,15 @@ value|0x00f00000
 define|#
 directive|define
 name|SHMEM_EEE_100M_ADV
-value|(1U<<0)
+value|(1<<0)
 define|#
 directive|define
 name|SHMEM_EEE_1G_ADV
-value|(1U<<1)
+value|(1<<1)
 define|#
 directive|define
 name|SHMEM_EEE_10G_ADV
-value|(1U<<2)
+value|(1<<2)
 define|#
 directive|define
 name|SHMEM_EEE_ADV_STATUS_SHIFT
@@ -7769,6 +8453,7 @@ value|0x80000000
 name|uint32_t
 name|sizeof_port_stats
 decl_stmt|;
+comment|/* 0x0138 */
 comment|/* Link Flap Avoidance */
 name|uint32_t
 name|lfa_host_addr
@@ -7776,10 +8461,12 @@ index|[
 name|PORT_MAX
 index|]
 decl_stmt|;
+comment|/* 0x013c */
 comment|/* External PHY temperature in deg C. */
 name|uint32_t
 name|extphy_temps_in_celsius
 decl_stmt|;
+comment|/* 0x0144 */
 define|#
 directive|define
 name|EXTPHY1_TEMP_MASK
@@ -7788,6 +8475,14 @@ define|#
 directive|define
 name|EXTPHY1_TEMP_SHIFT
 value|0
+define|#
+directive|define
+name|ON_BOARD_TEMP_MASK
+value|0xffff0000
+define|#
+directive|define
+name|ON_BOARD_TEMP_SHIFT
+value|16
 name|uint32_t
 name|ocdata_info_addr
 decl_stmt|;
@@ -7810,11 +8505,257 @@ comment|/* Offset 0x154 */
 define|#
 directive|define
 name|LINK_ATTR_SYNC_KR2_ENABLE
-value|(1<<0)
+value|0x00000001
+define|#
+directive|define
+name|LINK_ATTR_84858
+value|0x00000002
+define|#
+directive|define
+name|LINK_SFP_EEPROM_COMP_CODE_MASK
+value|0x0000ff00
+define|#
+directive|define
+name|LINK_SFP_EEPROM_COMP_CODE_SHIFT
+value|8
+define|#
+directive|define
+name|LINK_SFP_EEPROM_COMP_CODE_SR
+value|0x00001000
+define|#
+directive|define
+name|LINK_SFP_EEPROM_COMP_CODE_LR
+value|0x00002000
+define|#
+directive|define
+name|LINK_SFP_EEPROM_COMP_CODE_LRM
+value|0x00004000
 name|uint32_t
 name|ibft_host_addr_hi
 decl_stmt|;
-comment|/* Initialize by uEFI ROM */
+comment|/* Initialize by uEFI ROM Offset 0x158 */
+name|uint32_t
+name|fcode_ver
+decl_stmt|;
+comment|/* Offset 0x15c */
+name|uint32_t
+name|link_change_count
+index|[
+name|PORT_MAX
+index|]
+decl_stmt|;
+comment|/* Offset 0x160-0x164 */
+define|#
+directive|define
+name|LINK_CHANGE_COUNT_MASK
+value|0xff
+comment|/* Offset 0x168 */
+comment|/* driver version for each personality*/
+name|struct
+name|os_drv_ver
+name|func_os_drv_ver
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* Offset 0x16c */
+comment|/* Flag to the driver that PF's drv_info_host_addr buffer was read  */
+name|uint32_t
+name|mfw_drv_indication
+decl_stmt|;
+comment|/* Offset 0x19c */
+comment|/* We use inidcation for each PF (0..3) */
+define|#
+directive|define
+name|MFW_DRV_IND_READ_DONE_OFFSET
+parameter_list|(
+name|_pf_
+parameter_list|)
+value|(1<< _pf_)
+union|union
+block|{
+comment|/* For various OEMs */
+comment|/* Offset 0x1a0 */
+name|uint8_t
+name|storage_boot_prog
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_MASK
+value|0x000000FF
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_NONE
+value|0x00000000
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_ISCSI_IP_ACQUIRED
+value|0x00000002
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_FCOE_FABRIC_LOGIN_SUCCESS
+value|0x00000002
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_TARGET_FOUND
+value|0x00000004
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_ISCSI_CHAP_SUCCESS
+value|0x00000008
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_FCOE_LUN_FOUND
+value|0x00000008
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_LOGGED_INTO_TGT
+value|0x00000010
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_IMG_DOWNLOADED
+value|0x00000020
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_OS_HANDOFF
+value|0x00000040
+define|#
+directive|define
+name|STORAGE_BOOT_PROG_COMPLETED
+value|0x00000080
+name|uint32_t
+name|oem_i2c_data_addr
+decl_stmt|;
+block|}
+name|u
+union|;
+comment|/* 9 entires for the C2S PCP map for each inner VLAN PCP + 1 default */
+comment|/* For PCP values 0-3 use the map lower */
+comment|/* 0xFF000000 - PCP 0, 0x00FF0000 - PCP 1, 	 * 0x0000FF00 - PCP 2, 0x000000FF PCP 3 	 */
+name|uint32_t
+name|c2s_pcp_map_lower
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* 0x1a4 */
+comment|/* For PCP values 4-7 use the map upper */
+comment|/* 0xFF000000 - PCP 4, 0x00FF0000 - PCP 5, 	 * 0x0000FF00 - PCP 6, 0x000000FF PCP 7 	 */
+name|uint32_t
+name|c2s_pcp_map_upper
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* 0x1b4 */
+comment|/* For PCP default value get the MSB byte of the map default */
+name|uint32_t
+name|c2s_pcp_map_default
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* 0x1c4 */
+comment|/* FC_NPIV table offset in NVRAM */
+name|uint32_t
+name|fc_npiv_nvram_tbl_addr
+index|[
+name|PORT_MAX
+index|]
+decl_stmt|;
+comment|/* 0x1d4 */
+comment|/* Shows last method that changed configuration of this device */
+name|enum
+name|curr_cfg_method_e
+name|curr_cfg
+decl_stmt|;
+comment|/* 0x1dc */
+comment|/* Storm FW version, shold be kept in the format 0xMMmmbbdd: 	 * MM - Major, mm - Minor, bb - Build ,dd - Drop 	 */
+name|uint32_t
+name|netproc_fw_ver
+decl_stmt|;
+comment|/* 0x1e0 */
+comment|/* Option ROM SMASH CLP version */
+name|uint32_t
+name|clp_ver
+decl_stmt|;
+comment|/* 0x1e4 */
+name|uint32_t
+name|pcie_bus_num
+decl_stmt|;
+comment|/* 0x1e8 */
+name|uint32_t
+name|sriov_switch_mode
+decl_stmt|;
+comment|/* 0x1ec */
+define|#
+directive|define
+name|SRIOV_SWITCH_MODE_NONE
+value|0x0
+define|#
+directive|define
+name|SRIOV_SWITCH_MODE_VEB
+value|0x1
+define|#
+directive|define
+name|SRIOV_SWITCH_MODE_VEPA
+value|0x2
+name|uint8_t
+name|rsrv2
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* 0x1f0 */
+name|uint32_t
+name|img_inv_table_addr
+decl_stmt|;
+comment|/* Address to INV_TABLE_P */
+comment|/* 0x1f4 */
+name|uint32_t
+name|mtu_size
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* 0x1f8 */
+name|uint32_t
+name|os_driver_state
+index|[
+name|E2_FUNC_MAX
+index|]
+decl_stmt|;
+comment|/* 0x208 */
+define|#
+directive|define
+name|OS_DRIVER_STATE_NOT_LOADED
+value|0
+comment|/* not installed */
+define|#
+directive|define
+name|OS_DRIVER_STATE_LOADING
+value|1
+comment|/* transition state */
+define|#
+directive|define
+name|OS_DRIVER_STATE_DISABLED
+value|2
+comment|/* installed but disabled */
+define|#
+directive|define
+name|OS_DRIVER_STATE_ACTIVE
+value|3
+comment|/* installed and active */
+comment|/* mini dump driver info */
+name|struct
+name|mdump_driver_info
+name|drv_info
+decl_stmt|;
+comment|/* 0x218 */
+comment|/* 0x22c */
 block|}
 struct|;
 end_struct
@@ -9701,14 +10642,14 @@ begin_define
 define|#
 directive|define
 name|BCM_5710_FW_MINOR_VERSION
-value|8
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCM_5710_FW_REVISION_VERSION
-value|51
+value|1
 end_define
 
 begin_define
@@ -9780,159 +10721,784 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The iscsi aggregative context of Cstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|cstorm_iscsi_ag_context
+block|{
+name|uint32_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|CSTORM_ISCSI_AG_CONTEXT_STATE
+value|(0xFF<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The state of the connection */
+define|#
+directive|define
+name|CSTORM_ISCSI_AG_CONTEXT_STATE_SHIFT
+value|0
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<8)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|8
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<9)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|9
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<10)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|10
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<11)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|11
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED_ULP_RX_SE_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars1Various aggregative variables	ULP Rx SE counter flag enable */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED_ULP_RX_SE_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED_ULP_RX_INV_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars1Various aggregative variables	ULP Rx invalidate counter flag enable */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED_ULP_RX_INV_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX4_CF
+value|(0x3<<14)
+comment|/* BitField agg_vars1Various aggregative variables	Aux 4 counter flag */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX4_CF_SHIFT
+value|14
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED66
+value|(0x3<<16)
+comment|/* BitField agg_vars1Various aggregative variables	The connection QOS */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED66_SHIFT
+value|16
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_FIN_RECEIVED_CF_EN
+value|(0x1<<18)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rule for fin_received_cf */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_FIN_RECEIVED_CF_EN_SHIFT
+value|18
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<19)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rule for auxiliary counter flag 1 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|19
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX2_CF_EN
+value|(0x1<<20)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rule for auxiliary counter flag 2 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX2_CF_EN_SHIFT
+value|20
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX3_CF_EN
+value|(0x1<<21)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rule for auxiliary counter flag 3 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX3_CF_EN_SHIFT
+value|21
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX4_CF_EN
+value|(0x1<<22)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rule for auxiliary counter flag 4 */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_AUX4_CF_EN_SHIFT
+value|22
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_REL_SEQ_RULE
+value|(0x7<<23)
+comment|/* BitField agg_vars1Various aggregative variables	0-NOP, 1-EQ, 2-NEQ, 3-GT, 4-GE, 5-LS, 6-LE */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_REL_SEQ_RULE_SHIFT
+value|23
+define|#
+directive|define
+name|CSTORM_ISCSI_AG_CONTEXT_HQ_PROD_RULE
+value|(0x3<<26)
+comment|/* BitField agg_vars1Various aggregative variables	0-NOP, 1-EQ, 2-NEQ */
+define|#
+directive|define
+name|CSTORM_ISCSI_AG_CONTEXT_HQ_PROD_RULE_SHIFT
+value|26
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED52
+value|(0x3<<28)
+comment|/* BitField agg_vars1Various aggregative variables	0-NOP, 1-EQ, 2-NEQ */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED52_SHIFT
+value|28
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED53
+value|(0x3<<30)
+comment|/* BitField agg_vars1Various aggregative variables	0-NOP, 1-EQ, 2-NEQ */
+define|#
+directive|define
+name|__CSTORM_ISCSI_AG_CONTEXT_RESERVED53_SHIFT
+value|30
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__aux1_th
+comment|/* Aux1 threhsold for the decision */
+decl_stmt|;
+name|uint8_t
+name|__aux1_val
+comment|/* Aux1 aggregation value */
+decl_stmt|;
+name|uint16_t
+name|__agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__aux1_val
+comment|/* Aux1 aggregation value */
+decl_stmt|;
+name|uint8_t
+name|__aux1_th
+comment|/* Aux1 threhsold for the decision */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|rel_seq
+comment|/* The sequence to release */
+decl_stmt|;
+name|uint32_t
+name|rel_seq_th
+comment|/* The threshold for the released sequence */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_cons
+comment|/* The HQ Consumer */
+decl_stmt|;
+name|uint16_t
+name|hq_prod
+comment|/* The HQ producer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_prod
+comment|/* The HQ producer */
+decl_stmt|;
+name|uint16_t
+name|hq_cons
+comment|/* The HQ Consumer */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved62
+comment|/* Mask value for the decision algorithm of the general flags */
+decl_stmt|;
+name|uint8_t
+name|__reserved61
+comment|/* General flags */
+decl_stmt|;
+name|uint8_t
+name|__reserved60
+comment|/* ORQ consumer updated by the completor */
+decl_stmt|;
+name|uint8_t
+name|__reserved59
+comment|/* ORQ ULP Rx consumer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved59
+comment|/* ORQ ULP Rx consumer */
+decl_stmt|;
+name|uint8_t
+name|__reserved60
+comment|/* ORQ consumer updated by the completor */
+decl_stmt|;
+name|uint8_t
+name|__reserved61
+comment|/* General flags */
+decl_stmt|;
+name|uint8_t
+name|__reserved62
+comment|/* Mask value for the decision algorithm of the general flags */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved64
+comment|/* RQ consumer kept by the completor */
+decl_stmt|;
+name|uint16_t
+name|cq_u_prod
+comment|/* Ustorm producer of CQ */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_u_prod
+comment|/* Ustorm producer of CQ */
+decl_stmt|;
+name|uint16_t
+name|__reserved64
+comment|/* RQ consumer kept by the completor */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__cq_u_prod1
+comment|/* Ustorm producer of CQ 1 */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint16_t
+name|cq_u_pend
+comment|/* Ustorm pending completions of CQ */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_u_pend
+comment|/* Ustorm pending completions of CQ */
+decl_stmt|;
+name|uint16_t
+name|__agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__aux2_th
+comment|/* Aux2 threhsold for the decision */
+decl_stmt|;
+name|uint16_t
+name|aux2_val
+comment|/* Aux2 aggregation value */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|aux2_val
+comment|/* Aux2 aggregation value */
+decl_stmt|;
+name|uint16_t
+name|__aux2_th
+comment|/* Aux2 threhsold for the decision */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe aggregative context of Cstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|cstorm_toe_ag_context
+block|{
+name|uint32_t
+name|__agg_vars1
+comment|/* Various aggregative variables*/
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__aux1_th
+comment|/* Aux1 threhsold for the decision */
+decl_stmt|;
+name|uint8_t
+name|__aux1_val
+comment|/* Aux1 aggregation value */
+decl_stmt|;
+name|uint16_t
+name|__agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__aux1_val
+comment|/* Aux1 aggregation value */
+decl_stmt|;
+name|uint8_t
+name|__aux1_th
+comment|/* Aux1 threhsold for the decision */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|rel_seq
+comment|/* The sequence to release */
+decl_stmt|;
+name|uint32_t
+name|__rel_seq_threshold
+comment|/* The threshold for the released sequence */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved58
+comment|/* The HQ Consumer */
+decl_stmt|;
+name|uint16_t
+name|bd_prod
+comment|/* The HQ producer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|bd_prod
+comment|/* The HQ producer */
+decl_stmt|;
+name|uint16_t
+name|__reserved58
+comment|/* The HQ Consumer */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved62
+comment|/* Mask value for the decision algorithm of the general flags */
+decl_stmt|;
+name|uint8_t
+name|__reserved61
+comment|/* General flags */
+decl_stmt|;
+name|uint8_t
+name|__reserved60
+comment|/* ORQ consumer updated by the completor */
+decl_stmt|;
+name|uint8_t
+name|__completion_opcode
+comment|/* ORQ ULP Rx consumer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__completion_opcode
+comment|/* ORQ ULP Rx consumer */
+decl_stmt|;
+name|uint8_t
+name|__reserved60
+comment|/* ORQ consumer updated by the completor */
+decl_stmt|;
+name|uint8_t
+name|__reserved61
+comment|/* General flags */
+decl_stmt|;
+name|uint8_t
+name|__reserved62
+comment|/* Mask value for the decision algorithm of the general flags */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved64
+comment|/* RQ consumer kept by the completor */
+decl_stmt|;
+name|uint16_t
+name|__reserved63
+comment|/* RQ consumer updated by the ULP RX */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved63
+comment|/* RQ consumer updated by the ULP RX */
+decl_stmt|;
+name|uint16_t
+name|__reserved64
+comment|/* RQ consumer kept by the completor */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|snd_max
+comment|/* The ACK sequence number received in the last completed DDP */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint16_t
+name|__reserved67
+comment|/* A counter for the number of RQ WQEs with invalidate the the USTORM encountered */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved67
+comment|/* A counter for the number of RQ WQEs with invalidate the the USTORM encountered */
+decl_stmt|;
+name|uint16_t
+name|__agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__aux2_th
+comment|/* Aux2 threhsold for the decision */
+decl_stmt|;
+name|uint16_t
+name|__aux2_val
+comment|/* Aux2 aggregation value */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__aux2_val
+comment|/* Aux2 aggregation value */
+decl_stmt|;
+name|uint16_t
+name|__aux2_th
+comment|/* Aux2 threhsold for the decision */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * dmae command structure  */
 end_comment
 
 begin_struct
 struct|struct
-name|dmae_command
+name|dmae_cmd
 block|{
 name|uint32_t
 name|opcode
 decl_stmt|;
 define|#
 directive|define
-name|DMAE_COMMAND_SRC
+name|DMAE_CMD_SRC
 value|(0x1<<0)
 comment|/* BitField opcode	Whether the source is the PCIe or the GRC. 0- The source is the PCIe 1- The source is the GRC. */
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_SHIFT
+name|DMAE_CMD_SRC_SHIFT
 value|0
 define|#
 directive|define
-name|DMAE_COMMAND_DST
+name|DMAE_CMD_DST
 value|(0x3<<1)
 comment|/* BitField opcode	The destination of the DMA can be: 0-None 1-PCIe 2-GRC 3-None  */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_SHIFT
+name|DMAE_CMD_DST_SHIFT
 value|1
 define|#
 directive|define
-name|DMAE_COMMAND_C_DST
+name|DMAE_CMD_C_DST
 value|(0x1<<3)
 comment|/* BitField opcode	The destination of the completion: 0-PCIe 1-GRC */
 define|#
 directive|define
-name|DMAE_COMMAND_C_DST_SHIFT
+name|DMAE_CMD_C_DST_SHIFT
 value|3
 define|#
 directive|define
-name|DMAE_COMMAND_C_TYPE_ENABLE
+name|DMAE_CMD_C_TYPE_ENABLE
 value|(0x1<<4)
 comment|/* BitField opcode	Whether to write a completion word to the completion destination: 0-Do not write a completion word 1-Write the completion word  */
 define|#
 directive|define
-name|DMAE_COMMAND_C_TYPE_ENABLE_SHIFT
+name|DMAE_CMD_C_TYPE_ENABLE_SHIFT
 value|4
 define|#
 directive|define
-name|DMAE_COMMAND_C_TYPE_CRC_ENABLE
+name|DMAE_CMD_C_TYPE_CRC_ENABLE
 value|(0x1<<5)
 comment|/* BitField opcode	Whether to write a CRC word to the completion destination 0-Do not write a CRC word 1-Write a CRC word  */
 define|#
 directive|define
-name|DMAE_COMMAND_C_TYPE_CRC_ENABLE_SHIFT
+name|DMAE_CMD_C_TYPE_CRC_ENABLE_SHIFT
 value|5
 define|#
 directive|define
-name|DMAE_COMMAND_C_TYPE_CRC_OFFSET
+name|DMAE_CMD_C_TYPE_CRC_OFFSET
 value|(0x7<<6)
 comment|/* BitField opcode	The CRC word should be taken from the DMAE GRC space from address 9+X, where X is the value in these bits. */
 define|#
 directive|define
-name|DMAE_COMMAND_C_TYPE_CRC_OFFSET_SHIFT
+name|DMAE_CMD_C_TYPE_CRC_OFFSET_SHIFT
 value|6
 define|#
 directive|define
-name|DMAE_COMMAND_ENDIANITY
+name|DMAE_CMD_ENDIANITY
 value|(0x3<<9)
 comment|/* BitField opcode	swapping mode. */
 define|#
 directive|define
-name|DMAE_COMMAND_ENDIANITY_SHIFT
+name|DMAE_CMD_ENDIANITY_SHIFT
 value|9
 define|#
 directive|define
-name|DMAE_COMMAND_PORT
+name|DMAE_CMD_PORT
 value|(0x1<<11)
 comment|/* BitField opcode	Which network port ID to present to the PCI request interface */
 define|#
 directive|define
-name|DMAE_COMMAND_PORT_SHIFT
+name|DMAE_CMD_PORT_SHIFT
 value|11
 define|#
 directive|define
-name|DMAE_COMMAND_CRC_RESET
+name|DMAE_CMD_CRC_RESET
 value|(0x1<<12)
 comment|/* BitField opcode	reset crc result */
 define|#
 directive|define
-name|DMAE_COMMAND_CRC_RESET_SHIFT
+name|DMAE_CMD_CRC_RESET_SHIFT
 value|12
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_RESET
+name|DMAE_CMD_SRC_RESET
 value|(0x1<<13)
 comment|/* BitField opcode	reset source address in next go */
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_RESET_SHIFT
+name|DMAE_CMD_SRC_RESET_SHIFT
 value|13
 define|#
 directive|define
-name|DMAE_COMMAND_DST_RESET
+name|DMAE_CMD_DST_RESET
 value|(0x1<<14)
 comment|/* BitField opcode	reset dest address in next go */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_RESET_SHIFT
+name|DMAE_CMD_DST_RESET_SHIFT
 value|14
 define|#
 directive|define
-name|DMAE_COMMAND_E1HVN
+name|DMAE_CMD_E1HVN
 value|(0x3<<15)
 comment|/* BitField opcode	vnic number E2 and onwards source vnic */
 define|#
 directive|define
-name|DMAE_COMMAND_E1HVN_SHIFT
+name|DMAE_CMD_E1HVN_SHIFT
 value|15
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VN
+name|DMAE_CMD_DST_VN
 value|(0x3<<17)
 comment|/* BitField opcode	E2 and onwards dest vnic */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VN_SHIFT
+name|DMAE_CMD_DST_VN_SHIFT
 value|17
 define|#
 directive|define
-name|DMAE_COMMAND_C_FUNC
+name|DMAE_CMD_C_FUNC
 value|(0x1<<19)
 comment|/* BitField opcode	E2 and onwards which function gets the completion src_vn(e1hvn)-0 dst_vn-1 */
 define|#
 directive|define
-name|DMAE_COMMAND_C_FUNC_SHIFT
+name|DMAE_CMD_C_FUNC_SHIFT
 value|19
 define|#
 directive|define
-name|DMAE_COMMAND_ERR_POLICY
+name|DMAE_CMD_ERR_POLICY
 value|(0x3<<20)
 comment|/* BitField opcode	E2 and onwards what to do when theres a completion and a PCI error regular-0 error indication-1 no completion-2 */
 define|#
 directive|define
-name|DMAE_COMMAND_ERR_POLICY_SHIFT
+name|DMAE_CMD_ERR_POLICY_SHIFT
 value|20
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED0
+name|DMAE_CMD_RESERVED0
 value|(0x3FF<<22)
 comment|/* BitField opcode	 */
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED0_SHIFT
+name|DMAE_CMD_RESERVED0_SHIFT
 value|22
 name|uint32_t
 name|src_addr_lo
@@ -9961,57 +11527,57 @@ name|opcode_iov
 decl_stmt|;
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFID
+name|DMAE_CMD_SRC_VFID
 value|(0x3F<<0)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	source VF id */
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFID_SHIFT
+name|DMAE_CMD_SRC_VFID_SHIFT
 value|0
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFPF
+name|DMAE_CMD_SRC_VFPF
 value|(0x1<<6)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	selects the source function PF-0, VF-1 */
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFPF_SHIFT
+name|DMAE_CMD_SRC_VFPF_SHIFT
 value|6
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED1
+name|DMAE_CMD_RESERVED1
 value|(0x1<<7)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	 */
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED1_SHIFT
+name|DMAE_CMD_RESERVED1_SHIFT
 value|7
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFID
+name|DMAE_CMD_DST_VFID
 value|(0x3F<<8)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	destination VF id */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFID_SHIFT
+name|DMAE_CMD_DST_VFID_SHIFT
 value|8
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFPF
+name|DMAE_CMD_DST_VFPF
 value|(0x1<<14)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	selects the destination function PF-0, VF-1 */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFPF_SHIFT
+name|DMAE_CMD_DST_VFPF_SHIFT
 value|14
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED2
+name|DMAE_CMD_RESERVED2
 value|(0x1<<15)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	 */
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED2_SHIFT
+name|DMAE_CMD_RESERVED2_SHIFT
 value|15
 name|uint16_t
 name|len
@@ -10032,57 +11598,57 @@ name|opcode_iov
 decl_stmt|;
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFID
+name|DMAE_CMD_SRC_VFID
 value|(0x3F<<0)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	source VF id */
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFID_SHIFT
+name|DMAE_CMD_SRC_VFID_SHIFT
 value|0
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFPF
+name|DMAE_CMD_SRC_VFPF
 value|(0x1<<6)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	selects the source function PF-0, VF-1 */
 define|#
 directive|define
-name|DMAE_COMMAND_SRC_VFPF_SHIFT
+name|DMAE_CMD_SRC_VFPF_SHIFT
 value|6
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED1
+name|DMAE_CMD_RESERVED1
 value|(0x1<<7)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	 */
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED1_SHIFT
+name|DMAE_CMD_RESERVED1_SHIFT
 value|7
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFID
+name|DMAE_CMD_DST_VFID
 value|(0x3F<<8)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	destination VF id */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFID_SHIFT
+name|DMAE_CMD_DST_VFID_SHIFT
 value|8
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFPF
+name|DMAE_CMD_DST_VFPF
 value|(0x1<<14)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	selects the destination function PF-0, VF-1 */
 define|#
 directive|define
-name|DMAE_COMMAND_DST_VFPF_SHIFT
+name|DMAE_CMD_DST_VFPF_SHIFT
 value|14
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED2
+name|DMAE_CMD_RESERVED2
 value|(0x1<<15)
 comment|/* BitField opcode_iovE2 and onward, set to 0 for backward compatibility	 */
 define|#
 directive|define
-name|DMAE_COMMAND_RESERVED2_SHIFT
+name|DMAE_CMD_RESERVED2_SHIFT
 value|15
 endif|#
 directive|endif
@@ -10204,46 +11770,46 @@ end_comment
 
 begin_struct
 struct|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 block|{
 name|uint8_t
-name|header
+name|data
 decl_stmt|;
 define|#
 directive|define
-name|DOORBELL_HDR_RX
+name|DOORBELL_HDR_T_RX
 value|(0x1<<0)
-comment|/* BitField header	1 for rx doorbell, 0 for tx doorbell */
+comment|/* BitField data	1 for rx doorbell, 0 for tx doorbell */
 define|#
 directive|define
-name|DOORBELL_HDR_RX_SHIFT
+name|DOORBELL_HDR_T_RX_SHIFT
 value|0
 define|#
 directive|define
-name|DOORBELL_HDR_DB_TYPE
+name|DOORBELL_HDR_T_DB_TYPE
 value|(0x1<<1)
-comment|/* BitField header	0 for normal doorbell, 1 for advertise wnd doorbell */
+comment|/* BitField data	0 for normal doorbell, 1 for advertise wnd doorbell */
 define|#
 directive|define
-name|DOORBELL_HDR_DB_TYPE_SHIFT
+name|DOORBELL_HDR_T_DB_TYPE_SHIFT
 value|1
 define|#
 directive|define
-name|DOORBELL_HDR_DPM_SIZE
+name|DOORBELL_HDR_T_DPM_SIZE
 value|(0x3<<2)
-comment|/* BitField header	rdma tx only: DPM transaction size specifier (64/128/256/512 bytes) */
+comment|/* BitField data	rdma tx only: DPM transaction size specifier (64/128/256/512 bytes) */
 define|#
 directive|define
-name|DOORBELL_HDR_DPM_SIZE_SHIFT
+name|DOORBELL_HDR_T_DPM_SIZE_SHIFT
 value|2
 define|#
 directive|define
-name|DOORBELL_HDR_CONN_TYPE
+name|DOORBELL_HDR_T_CONN_TYPE
 value|(0xF<<4)
-comment|/* BitField header	connection type */
+comment|/* BitField data	connection type */
 define|#
 directive|define
-name|DOORBELL_HDR_CONN_TYPE_SHIFT
+name|DOORBELL_HDR_T_CONN_TYPE_SHIFT
 value|4
 block|}
 struct|;
@@ -10298,7 +11864,7 @@ directive|define
 name|ETH_TX_DOORBELL_SPARE_SHIFT
 value|7
 name|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 name|hdr
 decl_stmt|;
 elif|#
@@ -10308,7 +11874,7 @@ argument_list|(
 name|__LITTLE_ENDIAN
 argument_list|)
 name|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 name|hdr
 decl_stmt|;
 name|uint8_t
@@ -10939,6 +12505,108 @@ enum|;
 end_enum
 
 begin_comment
+comment|/*  * iscsi doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_tx_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved
+comment|/* number of data bytes that were added in the doorbell */
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_NUM_WQES
+value|(0x3F<<0)
+comment|/* BitField params	number of buffer descriptors that were added in the doorbell */
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_NUM_WQES_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_RESERVED_TX_FIN_FLAG
+value|(0x1<<6)
+comment|/* BitField params	tx fin command flag */
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_RESERVED_TX_FIN_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_SPARE
+value|(0x1<<7)
+comment|/* BitField params	doorbell queue spare flag */
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_SPARE_SHIFT
+value|7
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_NUM_WQES
+value|(0x3F<<0)
+comment|/* BitField params	number of buffer descriptors that were added in the doorbell */
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_NUM_WQES_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_RESERVED_TX_FIN_FLAG
+value|(0x1<<6)
+comment|/* BitField params	tx fin command flag */
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_RESERVED_TX_FIN_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_SPARE
+value|(0x1<<7)
+comment|/* BitField params	doorbell queue spare flag */
+define|#
+directive|define
+name|ISCSI_TX_DOORBELL_SPARE_SHIFT
+value|7
+name|uint16_t
+name|reserved
+comment|/* number of data bytes that were added in the doorbell */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Parser parsing flags field  */
 end_comment
 
@@ -10960,21 +12628,21 @@ name|PARSING_FLAGS_ETHERNET_ADDRESS_TYPE_SHIFT
 value|0
 define|#
 directive|define
-name|PARSING_FLAGS_VLAN
+name|PARSING_FLAGS_INNER_VLAN_EXIST
 value|(0x1<<1)
 comment|/* BitField flagscontext flags	0 or 1 */
 define|#
 directive|define
-name|PARSING_FLAGS_VLAN_SHIFT
+name|PARSING_FLAGS_INNER_VLAN_EXIST_SHIFT
 value|1
 define|#
 directive|define
-name|PARSING_FLAGS_EXTRA_VLAN
+name|PARSING_FLAGS_OUTER_VLAN_EXIST
 value|(0x1<<2)
 comment|/* BitField flagscontext flags	0 or 1 */
 define|#
 directive|define
-name|PARSING_FLAGS_EXTRA_VLAN_SHIFT
+name|PARSING_FLAGS_OUTER_VLAN_EXIST_SHIFT
 value|2
 define|#
 directive|define
@@ -11213,15 +12881,15 @@ struct|struct
 name|timers_block_context
 block|{
 name|uint32_t
-name|__reserved_0
+name|__client0
 comment|/* data of client 0 of the timers block*/
 decl_stmt|;
 name|uint32_t
-name|__reserved_1
+name|__client1
 comment|/* data of client 1 of the timers block*/
 decl_stmt|;
 name|uint32_t
-name|__reserved_2
+name|__client2
 comment|/* data of client 2 of the timers block*/
 decl_stmt|;
 name|uint32_t
@@ -11259,6 +12927,496 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * advertise window doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_adv_wnd_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|wnd_sz_lsb
+comment|/* Less significant bits of advertise window update value */
+decl_stmt|;
+name|uint8_t
+name|wnd_sz_msb
+comment|/* Most significant bits of advertise window update value */
+decl_stmt|;
+name|struct
+name|doorbell_hdr_t
+name|hdr
+comment|/* See description of the appropriate type */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+comment|/* See description of the appropriate type */
+decl_stmt|;
+name|uint8_t
+name|wnd_sz_msb
+comment|/* Most significant bits of advertise window update value */
+decl_stmt|;
+name|uint16_t
+name|wnd_sz_lsb
+comment|/* Less significant bits of advertise window update value */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe rx BDs update doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_bds_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|nbds
+comment|/* BDs update value */
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_RESERVED
+value|(0x1F<<0)
+comment|/* BitField params	reserved */
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_RESERVED_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	BDs update doorbell opcode (2) */
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_OPCODE_SHIFT
+value|5
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_RESERVED
+value|(0x1F<<0)
+comment|/* BitField params	reserved */
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_RESERVED_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	BDs update doorbell opcode (2) */
+define|#
+directive|define
+name|TOE_RX_BDS_DOORBELL_OPCODE_SHIFT
+value|5
+name|uint16_t
+name|nbds
+comment|/* BDs update value */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe rx bytes and BDs update doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_bytes_and_bds_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|nbytes
+comment|/* nbytes */
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_NBDS
+value|(0x1F<<0)
+comment|/* BitField params	producer delta from the last doorbell */
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_NBDS_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	rx bytes and BDs update doorbell opcode (1) */
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_OPCODE_SHIFT
+value|5
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_NBDS
+value|(0x1F<<0)
+comment|/* BitField params	producer delta from the last doorbell */
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_NBDS_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	rx bytes and BDs update doorbell opcode (1) */
+define|#
+directive|define
+name|TOE_RX_BYTES_AND_BDS_DOORBELL_OPCODE_SHIFT
+value|5
+name|uint16_t
+name|nbytes
+comment|/* nbytes */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe rx bytes doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_byte_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|nbytes_lsb
+comment|/* bits [0:15] of nbytes */
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_NBYTES_MSB
+value|(0x1F<<0)
+comment|/* BitField params	bits [20:16] of nbytes */
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_NBYTES_MSB_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	rx bytes doorbell opcode (0) */
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_OPCODE_SHIFT
+value|5
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_NBYTES_MSB
+value|(0x1F<<0)
+comment|/* BitField params	bits [20:16] of nbytes */
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_NBYTES_MSB_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	rx bytes doorbell opcode (0) */
+define|#
+directive|define
+name|TOE_RX_BYTE_DOORBELL_OPCODE_SHIFT
+value|5
+name|uint16_t
+name|nbytes_lsb
+comment|/* bits [0:15] of nbytes */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe rx consume GRQ doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_grq_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|nbytes_lsb
+comment|/* bits [0:15] of nbytes */
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_NBYTES_MSB
+value|(0x1F<<0)
+comment|/* BitField params	bits [20:16] of nbytes */
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_NBYTES_MSB_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	rx GRQ doorbell opcode (4) */
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_OPCODE_SHIFT
+value|5
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_NBYTES_MSB
+value|(0x1F<<0)
+comment|/* BitField params	bits [20:16] of nbytes */
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_NBYTES_MSB_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_OPCODE
+value|(0x7<<5)
+comment|/* BitField params	rx GRQ doorbell opcode (4) */
+define|#
+directive|define
+name|TOE_RX_GRQ_DOORBELL_OPCODE_SHIFT
+value|5
+name|uint16_t
+name|nbytes_lsb
+comment|/* bits [0:15] of nbytes */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe doorbell  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_tx_doorbell
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|nbytes
+comment|/* number of data bytes that were added in the doorbell */
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_DOORBELL_NUM_BDS
+value|(0x3F<<0)
+comment|/* BitField params	number of buffer descriptors that were added in the doorbell */
+define|#
+directive|define
+name|TOE_TX_DOORBELL_NUM_BDS_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_DOORBELL_TX_FIN_FLAG
+value|(0x1<<6)
+comment|/* BitField params	tx fin command flag */
+define|#
+directive|define
+name|TOE_TX_DOORBELL_TX_FIN_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|TOE_TX_DOORBELL_FLUSH
+value|(0x1<<7)
+comment|/* BitField params	doorbell queue spare flag */
+define|#
+directive|define
+name|TOE_TX_DOORBELL_FLUSH_SHIFT
+value|7
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|doorbell_hdr_t
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_DOORBELL_NUM_BDS
+value|(0x3F<<0)
+comment|/* BitField params	number of buffer descriptors that were added in the doorbell */
+define|#
+directive|define
+name|TOE_TX_DOORBELL_NUM_BDS_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_DOORBELL_TX_FIN_FLAG
+value|(0x1<<6)
+comment|/* BitField params	tx fin command flag */
+define|#
+directive|define
+name|TOE_TX_DOORBELL_TX_FIN_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|TOE_TX_DOORBELL_FLUSH
+value|(0x1<<7)
+comment|/* BitField params	doorbell queue spare flag */
+define|#
+directive|define
+name|TOE_TX_DOORBELL_FLUSH_SHIFT
+value|7
+name|uint16_t
+name|nbytes
+comment|/* number of data bytes that were added in the doorbell */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The eth aggregative context of Tstorm  */
 end_comment
 
@@ -11271,6 +13429,2503 @@ name|__reserved0
 index|[
 literal|14
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The fcoe extra aggregative context section of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_fcoe_extra_ag_context_section
+block|{
+name|uint32_t
+name|__agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__lcq_prod
+comment|/* Next sequence number to transmit, given by Tx */
+decl_stmt|;
+name|uint32_t
+name|rtt_seq
+comment|/* Rtt recording   sequence number */
+decl_stmt|;
+name|uint32_t
+name|rtt_time
+comment|/* Rtt recording   real time clock */
+decl_stmt|;
+name|uint32_t
+name|__reserved66
+decl_stmt|;
+name|uint32_t
+name|wnd_right_edge
+comment|/* The right edge of the receive window. Updated by the XSTORM when a segment with ACK is transmitted */
+decl_stmt|;
+name|uint32_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_FIN_SENT_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Sticky bit that is set when FIN is sent and remains set */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_FIN_SENT_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The Tx indicates that it sent a FIN packet */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_WND_UPD_CF
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag to indicate a window update */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_WND_UPD_CF_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TIMEOUT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that a timeout expired */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TIMEOUT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_WND_UPD_CF_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the WndUpd counter flag */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_WND_UPD_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TIMEOUT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the Timeout counter flag */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TIMEOUT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If 1 then the Rxmit sequence decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_LCQ_SND_EN
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set then the SendNext decision rule is enabled */
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_LCQ_SND_EN_SHIFT
+value|9
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<10)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX2_FLAG
+value|(0x1<<11)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX2_FLAG_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_CF_EN
+value|(0x1<<12)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX2_CF_EN
+value|(0x1<<13)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX2_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_CF_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX2_CF
+value|(0x3<<16)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX2_CF_SHIFT
+value|16
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TX_BLOCKED
+value|(0x1<<18)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that Tx has more to send, but has not enough window to send it */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TX_BLOCKED_SHIFT
+value|18
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX10_CF_EN
+value|(0x1<<19)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX10_CF_EN_SHIFT
+value|19
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX11_CF_EN
+value|(0x1<<20)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX11_CF_EN_SHIFT
+value|20
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX12_CF_EN
+value|(0x1<<21)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX12_CF_EN_SHIFT
+value|21
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED1
+value|(0x3<<22)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED1_SHIFT
+value|22
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ
+value|(0xF<<24)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or goto SS comand sent */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ_SHIFT
+value|24
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ
+value|(0xF<<28)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or Goto SS command performed by the XSTORM */
+define|#
+directive|define
+name|TSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ_SHIFT
+value|28
+name|uint32_t
+name|snd_max
+comment|/* Maximum sequence number that was ever transmitted */
+decl_stmt|;
+name|uint32_t
+name|__lcq_cons
+comment|/* Last ACK sequence number sent by the Tx */
+decl_stmt|;
+name|uint32_t
+name|__reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The fcoe aggregative context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_fcoe_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|ulp_credit
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX3_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX3_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_FLAG
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_FLAG_SHIFT
+value|7
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX3_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX3_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_FLAG
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_FLAG_SHIFT
+value|7
+name|uint16_t
+name|ulp_credit
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val4
+decl_stmt|;
+name|uint16_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_FLAG
+value|(0x1<<0)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_FLAG
+value|(0x1<<1)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_CF_SHIFT
+value|2
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_FLAG
+value|(0x1<<10)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX4_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX4_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX5_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX5_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX6_CF_EN
+value|(0x1<<14)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX6_CF_EN_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX7_CF_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX7_CF_EN_SHIFT
+value|15
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_FLAG
+value|(0x1<<0)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_FLAG
+value|(0x1<<1)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX4_CF_SHIFT
+value|2
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX5_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX6_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_FLAG
+value|(0x1<<10)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_AUX7_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_FCOE_AG_CONTEXT_QUEUE0_FLUSH_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX4_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX4_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX5_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX5_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX6_CF_EN
+value|(0x1<<14)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX6_CF_EN_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX7_CF_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_FCOE_AG_CONTEXT_AUX7_CF_EN_SHIFT
+value|15
+name|uint16_t
+name|__agg_val4
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|tstorm_fcoe_extra_ag_context_section
+name|__extra_section
+comment|/* Extra context section */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The iscsi aggregative context section of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_iscsi_tcp_ag_context_section
+block|{
+name|uint32_t
+name|__agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|snd_nxt
+comment|/* Next sequence number to transmit, given by Tx */
+decl_stmt|;
+name|uint32_t
+name|rtt_seq
+comment|/* Rtt recording   sequence number */
+decl_stmt|;
+name|uint32_t
+name|rtt_time
+comment|/* Rtt recording   real time clock */
+decl_stmt|;
+name|uint32_t
+name|wnd_right_edge_local
+decl_stmt|;
+name|uint32_t
+name|wnd_right_edge
+comment|/* The right edge of the receive window. Updated by the XSTORM when a segment with ACK is transmitted */
+decl_stmt|;
+name|uint32_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_FIN_SENT_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Sticky bit that is set when FIN is sent and remains set */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_FIN_SENT_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The Tx indicates that it sent a FIN packet */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_WND_UPD_CF
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag to indicate a window update */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_WND_UPD_CF_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that a timeout expired */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_WND_UPD_CF_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the WndUpd counter flag */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_WND_UPD_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the Timeout counter flag */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If 1 then the Rxmit sequence decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN_SHIFT
+value|8
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_SND_NXT_EN
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set then the SendNext decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_SND_NXT_EN_SHIFT
+value|9
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<10)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX2_FLAG
+value|(0x1<<11)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX2_FLAG_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX1_CF_EN
+value|(0x1<<12)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX1_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX2_CF_EN
+value|(0x1<<13)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX2_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX1_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX1_CF_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX2_CF
+value|(0x3<<16)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX2_CF_SHIFT
+value|16
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_TX_BLOCKED
+value|(0x1<<18)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that Tx has more to send, but has not enough window to send it */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_TX_BLOCKED_SHIFT
+value|18
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN
+value|(0x1<<19)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN_SHIFT
+value|19
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX11_CF_EN
+value|(0x1<<20)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX11_CF_EN_SHIFT
+value|20
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX12_CF_EN
+value|(0x1<<21)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_AUX12_CF_EN_SHIFT
+value|21
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RESERVED1
+value|(0x3<<22)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RESERVED1_SHIFT
+value|22
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ
+value|(0xF<<24)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or goto SS comand sent */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ_SHIFT
+value|24
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ
+value|(0xF<<28)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or Goto SS command performed by the XSTORM */
+define|#
+directive|define
+name|TSTORM_ISCSI_TCP_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ_SHIFT
+value|28
+name|uint32_t
+name|snd_max
+comment|/* Maximum sequence number that was ever transmitted */
+decl_stmt|;
+name|uint32_t
+name|snd_una
+comment|/* Last ACK sequence number sent by the Tx */
+decl_stmt|;
+name|uint32_t
+name|__reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The iscsi aggregative context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_iscsi_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|ulp_credit
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX3_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX3_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_ACK_ON_FIN_SENT_FLAG
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_ACK_ON_FIN_SENT_FLAG_SHIFT
+value|7
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX3_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX3_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_ACK_ON_FIN_SENT_FLAG
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_ACK_ON_FIN_SENT_FLAG_SHIFT
+value|7
+name|uint16_t
+name|ulp_credit
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val4
+decl_stmt|;
+name|uint16_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_MSL_TIMER_SET_FLAG
+value|(0x1<<0)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_MSL_TIMER_SET_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_FIN_SENT_FIRST_FLAG
+value|(0x1<<1)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_FIN_SENT_FIRST_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF_SHIFT
+value|2
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX6_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX6_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_FLAG
+value|(0x1<<10)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX6_CF_EN
+value|(0x1<<14)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX6_CF_EN_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX7_CF_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX7_CF_EN_SHIFT
+value|15
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_MSL_TIMER_SET_FLAG
+value|(0x1<<0)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_MSL_TIMER_SET_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_FIN_SENT_FIRST_FLAG
+value|(0x1<<1)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_FIN_SENT_FIRST_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF_SHIFT
+value|2
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX6_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX6_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_FLAG
+value|(0x1<<10)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_AUX7_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_RST_SENT_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_ISCSI_AG_CONTEXT_WAKEUP_CALL_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX6_CF_EN
+value|(0x1<<14)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX6_CF_EN_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX7_CF_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_AG_CONTEXT_AUX7_CF_EN_SHIFT
+value|15
+name|uint16_t
+name|__agg_val4
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|tstorm_iscsi_tcp_ag_context_section
+name|tcp
+comment|/* TCP context section, shared in TOE and iSCSI */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The tcp aggregative context section of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_tcp_tcp_ag_context_section
+block|{
+name|uint32_t
+name|__agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|snd_nxt
+comment|/* Next sequence number to transmit, given by Tx */
+decl_stmt|;
+name|uint32_t
+name|rtt_seq
+comment|/* Rtt recording   sequence number */
+decl_stmt|;
+name|uint32_t
+name|rtt_time
+comment|/* Rtt recording   real time clock */
+decl_stmt|;
+name|uint32_t
+name|__reserved66
+decl_stmt|;
+name|uint32_t
+name|wnd_right_edge
+comment|/* The right edge of the receive window. Updated by the XSTORM when a segment with ACK is transmitted */
+decl_stmt|;
+name|uint32_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_FIN_SENT_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Sticky bit that is set when FIN is sent and remains set */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_FIN_SENT_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The Tx indicates that it sent a FIN packet */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_WND_UPD_CF
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag to indicate a window update */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_WND_UPD_CF_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that a timeout expired */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_WND_UPD_CF_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the WndUpd counter flag */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_WND_UPD_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the Timeout counter flag */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If 1 then the Rxmit sequence decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN_SHIFT
+value|8
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_SND_NXT_EN
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set then the SendNext decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_SND_NXT_EN_SHIFT
+value|9
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<10)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX2_FLAG
+value|(0x1<<11)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX2_FLAG_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_CF_EN
+value|(0x1<<12)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX2_CF_EN
+value|(0x1<<13)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX2_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_CF_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX2_CF
+value|(0x3<<16)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX2_CF_SHIFT
+value|16
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_BLOCKED
+value|(0x1<<18)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that Tx has more to send, but has not enough window to send it */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_BLOCKED_SHIFT
+value|18
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN
+value|(0x1<<19)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN_SHIFT
+value|19
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX11_CF_EN
+value|(0x1<<20)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX11_CF_EN_SHIFT
+value|20
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX12_CF_EN
+value|(0x1<<21)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX12_CF_EN_SHIFT
+value|21
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RESERVED1
+value|(0x3<<22)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RESERVED1_SHIFT
+value|22
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ
+value|(0xF<<24)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or goto SS comand sent */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ_SHIFT
+value|24
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ
+value|(0xF<<28)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or Goto SS command performed by the XSTORM */
+define|#
+directive|define
+name|TSTORM_TCP_TCP_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ_SHIFT
+value|28
+name|uint32_t
+name|snd_max
+comment|/* Maximum sequence number that was ever transmitted */
+decl_stmt|;
+name|uint32_t
+name|snd_una
+comment|/* Last ACK sequence number sent by the Tx */
+decl_stmt|;
+name|uint32_t
+name|__reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe aggregative context section of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_tcp_ag_context_section
+block|{
+name|uint32_t
+name|__agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val2
+comment|/* aggregated value 2 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars2
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+decl_stmt|;
+name|uint16_t
+name|__agg_val5
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|snd_nxt
+comment|/* Next sequence number to transmit, given by Tx */
+decl_stmt|;
+name|uint32_t
+name|rtt_seq
+comment|/* Rtt recording   sequence number */
+decl_stmt|;
+name|uint32_t
+name|rtt_time
+comment|/* Rtt recording   real time clock */
+decl_stmt|;
+name|uint32_t
+name|__reserved66
+decl_stmt|;
+name|uint32_t
+name|wnd_right_edge
+comment|/* The right edge of the receive window. Updated by the XSTORM when a segment with ACK is transmitted */
+decl_stmt|;
+name|uint32_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_FIN_SENT_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Sticky bit that is set when FIN is sent and remains set */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_FIN_SENT_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The Tx indicates that it sent a FIN packet */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_LAST_PACKET_FIN_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED52
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag to indicate a window update */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED52_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that a timeout expired */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED_WND_UPD_CF_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the WndUpd counter flag */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED_WND_UPD_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Enable the decision rule that considers the Timeout counter flag */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_TIMEOUT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If 1 then the Rxmit sequence decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RETRANSMIT_SEQ_EN_SHIFT
+value|8
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_SND_NXT_EN
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set then the SendNext decision rule is enabled */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_SND_NXT_EN_SHIFT
+value|9
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_NEWRTTSAMPLE
+value|(0x1<<10)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_NEWRTTSAMPLE_SHIFT
+value|10
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED55
+value|(0x1<<11)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED55_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED_AUX1_CF_EN
+value|(0x1<<12)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED_AUX1_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED_AUX2_CF_EN
+value|(0x1<<13)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED_AUX2_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED56
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED56_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED57
+value|(0x3<<16)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED57_SHIFT
+value|16
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_BLOCKED
+value|(0x1<<18)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that Tx has more to send, but has not enough window to send it */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_BLOCKED_SHIFT
+value|18
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN
+value|(0x1<<19)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN_SHIFT
+value|19
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX11_CF_EN
+value|(0x1<<20)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX11_CF_EN_SHIFT
+value|20
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX12_CF_EN
+value|(0x1<<21)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX12_CF_EN_SHIFT
+value|21
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED1
+value|(0x3<<22)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED1_SHIFT
+value|22
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ
+value|(0xF<<24)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or goto SS comand sent */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RETRANSMIT_PEND_SEQ_SHIFT
+value|24
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ
+value|(0xF<<28)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	The sequence of the last fast retransmit or Goto SS command performed by the XSTORM */
+define|#
+directive|define
+name|TSTORM_TOE_TCP_AG_CONTEXT_SECTION_RETRANSMIT_DONE_SEQ_SHIFT
+value|28
+name|uint32_t
+name|snd_max
+comment|/* Maximum sequence number that was ever transmitted */
+decl_stmt|;
+name|uint32_t
+name|snd_una
+comment|/* Last ACK sequence number sent by the Tx */
+decl_stmt|;
+name|uint32_t
+name|__reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe aggregative context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved54
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED51
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED51_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED52
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED52_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED53
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED53_SHIFT
+value|3
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX3_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX3_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_FLAG
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_FLAG_SHIFT
+value|7
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED51
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED51_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED52
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED52_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED53
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED53_SHIFT
+value|3
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX3_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX3_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_FLAG
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_FLAG_SHIFT
+value|7
+name|uint16_t
+name|reserved54
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val4
+decl_stmt|;
+name|uint16_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_FLAG
+value|(0x1<<0)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_FLAG
+value|(0x1<<1)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_CF_SHIFT
+value|2
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_FLAG
+value|(0x1<<10)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX4_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX4_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX5_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX5_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX6_CF_EN
+value|(0x1<<14)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX6_CF_EN_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX7_CF_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX7_CF_EN_SHIFT
+value|15
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_FLAG
+value|(0x1<<0)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_FLAG
+value|(0x1<<1)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX4_CF_SHIFT
+value|2
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX5_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX6_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_FLAG
+value|(0x1<<10)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_AUX7_FLAG_SHIFT
+value|10
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|__TSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX4_CF_EN
+value|(0x1<<12)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX4_CF_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX5_CF_EN
+value|(0x1<<13)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX5_CF_EN_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX6_CF_EN
+value|(0x1<<14)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX6_CF_EN_SHIFT
+value|14
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX7_CF_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars2Various aggregative variables	 */
+define|#
+directive|define
+name|TSTORM_TOE_AG_CONTEXT_RESERVED_AUX7_CF_EN_SHIFT
+value|15
+name|uint16_t
+name|__agg_val4
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|tstorm_toe_tcp_ag_context_section
+name|tcp
+comment|/* TCP context section, shared in TOE and iSCSI */
 decl_stmt|;
 block|}
 struct|;
@@ -11332,6 +15987,1450 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The fcoe aggregative context of Ustorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__aux_counter_flags
+comment|/* auxiliary counter flags*/
+decl_stmt|;
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Tx STORM. For future use. */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Timer. */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_AGG_MISC4_RULE
+value|(0x7<<4)
+comment|/* BitField agg_vars2various aggregation variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_AGG_MISC4_RULE_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL2_MASK
+value|(0x1<<7)
+comment|/* BitField agg_vars2various aggregation variables	Used to mask the decision rule of AggVal2. Used in iSCSI. Should be 0 in all other protocols */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL2_MASK_SHIFT
+value|7
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_INV_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1various aggregation variables	Indicates a valid invalidate request. Set by the CMP STORM. */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_INV_CF_SHIFT
+value|4
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars1various aggregation variables	Set when a message was received from the CMP STORM. For future use. */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF_SHIFT
+value|6
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_INV_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1various aggregation variables	Indicates a valid invalidate request. Set by the CMP STORM. */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_INV_CF_SHIFT
+value|4
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars1various aggregation variables	Set when a message was received from the CMP STORM. For future use. */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF_SHIFT
+value|6
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Tx STORM. For future use. */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Timer. */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_AGG_MISC4_RULE
+value|(0x7<<4)
+comment|/* BitField agg_vars2various aggregation variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_AGG_MISC4_RULE_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL2_MASK
+value|(0x1<<7)
+comment|/* BitField agg_vars2various aggregation variables	Used to mask the decision rule of AggVal2. Used in iSCSI. Should be 0 in all other protocols */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL2_MASK_SHIFT
+value|7
+name|uint8_t
+name|__aux_counter_flags
+comment|/* auxiliary counter flags*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cdu_usage
+comment|/* Will be used by the CDU for validation of the CID/connection type on doorbells. */
+decl_stmt|;
+name|uint8_t
+name|agg_misc2
+decl_stmt|;
+name|uint16_t
+name|pbf_tx_seq_ack
+comment|/* Sequence number of the last sequence transmitted by PBF. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|pbf_tx_seq_ack
+comment|/* Sequence number of the last sequence transmitted by PBF. */
+decl_stmt|;
+name|uint8_t
+name|agg_misc2
+decl_stmt|;
+name|uint8_t
+name|cdu_usage
+comment|/* Will be used by the CDU for validation of the CID/connection type on doorbells. */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|agg_misc4
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_val3_th
+decl_stmt|;
+name|uint8_t
+name|agg_val3
+decl_stmt|;
+name|uint16_t
+name|agg_misc3
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_misc3
+decl_stmt|;
+name|uint8_t
+name|agg_val3
+decl_stmt|;
+name|uint8_t
+name|agg_val3_th
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|expired_task_id
+comment|/* Timer expiration task id */
+decl_stmt|;
+name|uint32_t
+name|agg_misc4_th
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_prod
+comment|/* CQ producer updated by FW */
+decl_stmt|;
+name|uint16_t
+name|cq_cons
+comment|/* CQ consumer updated by driver via doorbell */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_cons
+comment|/* CQ consumer updated by driver via doorbell */
+decl_stmt|;
+name|uint16_t
+name|cq_prod
+comment|/* CQ producer updated by FW */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved2
+decl_stmt|;
+name|uint8_t
+name|decision_rules
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_DEC_RULE
+value|(0x7<<0)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_DEC_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL3_RULE
+value|(0x7<<3)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL3_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_ARM_N_FLAG
+value|(0x1<<6)
+comment|/* BitField decision_rulesVarious decision rules	CQ negative arm indication updated via doorbell */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_ARM_N_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED1
+value|(0x1<<7)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED1_SHIFT
+value|7
+name|uint8_t
+name|decision_rule_enable_bits
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED_INV_CF_EN
+value|(0x1<<0)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED_INV_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF_EN
+value|(0x1<<1)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF_EN
+value|(0x1<<2)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF_EN
+value|(0x1<<3)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF_EN_SHIFT
+value|3
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<4)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_QUEUE0_CF_EN
+value|(0x1<<5)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	The flush queues counter flag en.  */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_QUEUE0_CF_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX3_CF_EN
+value|(0x1<<6)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX3_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|decision_rule_enable_bits
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED_INV_CF_EN
+value|(0x1<<0)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED_INV_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF_EN
+value|(0x1<<1)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_COMPLETION_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF_EN
+value|(0x1<<2)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_TX_CF_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF_EN
+value|(0x1<<3)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_TIMER_CF_EN_SHIFT
+value|3
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<4)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_QUEUE0_CF_EN
+value|(0x1<<5)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	The flush queues counter flag en.  */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_QUEUE0_CF_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX3_CF_EN
+value|(0x1<<6)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AUX3_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+name|uint8_t
+name|decision_rules
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_DEC_RULE
+value|(0x7<<0)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_DEC_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL3_RULE
+value|(0x7<<3)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_AGG_VAL3_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_ARM_N_FLAG
+value|(0x1<<6)
+comment|/* BitField decision_rulesVarious decision rules	CQ negative arm indication updated via doorbell */
+define|#
+directive|define
+name|USTORM_FCOE_AG_CONTEXT_CQ_ARM_N_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED1
+value|(0x1<<7)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_FCOE_AG_CONTEXT_RESERVED1_SHIFT
+value|7
+name|uint16_t
+name|__reserved2
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The iscsi aggregative context of Ustorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_iscsi_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__aux_counter_flags
+comment|/* auxiliary counter flags*/
+decl_stmt|;
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Tx STORM. For future use. */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Timer. */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_MISC4_RULE
+value|(0x7<<4)
+comment|/* BitField agg_vars2various aggregation variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_MISC4_RULE_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_MASK
+value|(0x1<<7)
+comment|/* BitField agg_vars2various aggregation variables	Used to mask the decision rule of AggVal2. Used in iSCSI. Should be 0 in all other protocols */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_MASK_SHIFT
+value|7
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1various aggregation variables	Indicates a valid invalidate request. Set by the CMP STORM. */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF_SHIFT
+value|4
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars1various aggregation variables	Set when a message was received from the CMP STORM. For future use. */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF_SHIFT
+value|6
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1various aggregation variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars1various aggregation variables	Indicates a valid invalidate request. Set by the CMP STORM. */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF_SHIFT
+value|4
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars1various aggregation variables	Set when a message was received from the CMP STORM. For future use. */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF_SHIFT
+value|6
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Tx STORM. For future use. */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF
+value|(0x3<<2)
+comment|/* BitField agg_vars2various aggregation variables	Set when a message was received from the Timer. */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_MISC4_RULE
+value|(0x7<<4)
+comment|/* BitField agg_vars2various aggregation variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_MISC4_RULE_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_MASK
+value|(0x1<<7)
+comment|/* BitField agg_vars2various aggregation variables	Used to mask the decision rule of AggVal2. Used in iSCSI. Should be 0 in all other protocols */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_MASK_SHIFT
+value|7
+name|uint8_t
+name|__aux_counter_flags
+comment|/* auxiliary counter flags*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cdu_usage
+comment|/* Will be used by the CDU for validation of the CID/connection type on doorbells. */
+decl_stmt|;
+name|uint8_t
+name|agg_misc2
+decl_stmt|;
+name|uint16_t
+name|__cq_local_comp_itt_val
+comment|/* The local completion ITT to complete. Set by the CMP STORM RO for USTORM. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__cq_local_comp_itt_val
+comment|/* The local completion ITT to complete. Set by the CMP STORM RO for USTORM. */
+decl_stmt|;
+name|uint8_t
+name|agg_misc2
+decl_stmt|;
+name|uint8_t
+name|cdu_usage
+comment|/* Will be used by the CDU for validation of the CID/connection type on doorbells. */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|agg_misc4
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_val3_th
+decl_stmt|;
+name|uint8_t
+name|agg_val3
+decl_stmt|;
+name|uint16_t
+name|agg_misc3
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_misc3
+decl_stmt|;
+name|uint8_t
+name|agg_val3
+decl_stmt|;
+name|uint8_t
+name|agg_val3_th
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|agg_val1
+decl_stmt|;
+name|uint32_t
+name|agg_misc4_th
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_val2_th
+decl_stmt|;
+name|uint16_t
+name|agg_val2
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_val2
+decl_stmt|;
+name|uint16_t
+name|agg_val2_th
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved2
+decl_stmt|;
+name|uint8_t
+name|decision_rules
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_RULE
+value|(0x7<<0)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL3_RULE
+value|(0x7<<3)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL3_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG
+value|(0x1<<6)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_RESERVED1
+value|(0x1<<7)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_RESERVED1_SHIFT
+value|7
+name|uint8_t
+name|decision_rule_enable_bits
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF_EN
+value|(0x1<<0)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF_EN
+value|(0x1<<1)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF_EN
+value|(0x1<<2)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF_EN
+value|(0x1<<3)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF_EN_SHIFT
+value|3
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_CQ_LOCAL_COMP_CF_EN
+value|(0x1<<4)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	The local completion counter flag enable. Enabled by USTORM at the beginning. */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_CQ_LOCAL_COMP_CF_EN_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN
+value|(0x1<<5)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	The flush queues counter flag en.  */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AUX3_CF_EN
+value|(0x1<<6)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AUX3_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|decision_rule_enable_bits
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF_EN
+value|(0x1<<0)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_INV_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF_EN
+value|(0x1<<1)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_COMPLETION_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF_EN
+value|(0x1<<2)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_TX_CF_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF_EN
+value|(0x1<<3)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_TIMER_CF_EN_SHIFT
+value|3
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_CQ_LOCAL_COMP_CF_EN
+value|(0x1<<4)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	The local completion counter flag enable. Enabled by USTORM at the beginning. */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_CQ_LOCAL_COMP_CF_EN_SHIFT
+value|4
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN
+value|(0x1<<5)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	The flush queues counter flag en.  */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_QUEUES_FLUSH_Q0_CF_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AUX3_CF_EN
+value|(0x1<<6)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AUX3_CF_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField decision_rule_enable_bitsEnable bits for various decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+name|uint8_t
+name|decision_rules
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_RULE
+value|(0x7<<0)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL3_RULE
+value|(0x7<<3)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_AGG_VAL3_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG
+value|(0x1<<6)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_ISCSI_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_RESERVED1
+value|(0x1<<7)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_ISCSI_AG_CONTEXT_RESERVED1_SHIFT
+value|7
+name|uint16_t
+name|__reserved2
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe aggregative context of Ustorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__aux_counter_flags
+comment|/* auxiliary counter flags*/
+decl_stmt|;
+name|uint8_t
+name|__agg_vars2
+comment|/* various aggregation variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_vars1
+comment|/* various aggregation variables*/
+decl_stmt|;
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|__agg_vars1
+comment|/* various aggregation variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_vars2
+comment|/* various aggregation variables*/
+decl_stmt|;
+name|uint8_t
+name|__aux_counter_flags
+comment|/* auxiliary counter flags*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cdu_usage
+comment|/* Will be used by the CDU for validation of the CID/connection type on doorbells. */
+decl_stmt|;
+name|uint8_t
+name|__agg_misc2
+decl_stmt|;
+name|uint16_t
+name|__agg_misc1
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc1
+decl_stmt|;
+name|uint8_t
+name|__agg_misc2
+decl_stmt|;
+name|uint8_t
+name|cdu_usage
+comment|/* Will be used by the CDU for validation of the CID/connection type on doorbells. */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__agg_misc4
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_val3_th
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+decl_stmt|;
+name|uint16_t
+name|__agg_misc3
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc3
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+decl_stmt|;
+name|uint8_t
+name|__agg_val3_th
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|driver_doorbell_info_ptr_lo
+comment|/* the host pointer that consist the struct of info updated */
+decl_stmt|;
+name|uint32_t
+name|driver_doorbell_info_ptr_hi
+comment|/* the host pointer that consist the struct of info updated */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val2_th
+decl_stmt|;
+name|uint16_t
+name|rq_prod
+comment|/* The RQ producer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_prod
+comment|/* The RQ producer */
+decl_stmt|;
+name|uint16_t
+name|__agg_val2_th
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved2
+decl_stmt|;
+name|uint8_t
+name|decision_rules
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL2_RULE
+value|(0x7<<0)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL2_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL3_RULE
+value|(0x7<<3)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL3_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_TOE_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG
+value|(0x1<<6)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_TOE_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_RESERVED1
+value|(0x1<<7)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_RESERVED1_SHIFT
+value|7
+name|uint8_t
+name|__decision_rule_enable_bits
+comment|/* Enable bits for various decision rules*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__decision_rule_enable_bits
+comment|/* Enable bits for various decision rules*/
+decl_stmt|;
+name|uint8_t
+name|decision_rules
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL2_RULE
+value|(0x7<<0)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL2_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL3_RULE
+value|(0x7<<3)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_AGG_VAL3_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_TOE_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG
+value|(0x1<<6)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|USTORM_TOE_AG_CONTEXT_AGG_VAL2_ARM_N_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_RESERVED1
+value|(0x1<<7)
+comment|/* BitField decision_rulesVarious decision rules	 */
+define|#
+directive|define
+name|__USTORM_TOE_AG_CONTEXT_RESERVED1_SHIFT
+value|7
+name|uint16_t
+name|__reserved2
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The eth aggregative context of Xstorm  */
 end_comment
 
@@ -11387,6 +17486,4935 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The fcoe aggregative context section of Xstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_extra_ag_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED51
+value|(0x3<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag used to rewind the DA timer */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED51_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 2 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 3 */
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_CLEAR_DA_TIMER_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set enables sending clear commands as port of the DA decision rules */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_CLEAR_DA_TIMER_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_DA_EXPIRATION_FLAG
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that there was a delayed ack timer expiration */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_DA_EXPIRATION_FLAG_SHIFT
+value|7
+name|uint8_t
+name|__reserved_da_cnt
+comment|/* Counts the number of ACK requests received from the TSTORM with no registration to QM. */
+decl_stmt|;
+name|uint16_t
+name|__mtu
+comment|/* MSS used for nagle algorithm and for transmission */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__mtu
+comment|/* MSS used for nagle algorithm and for transmission */
+decl_stmt|;
+name|uint8_t
+name|__reserved_da_cnt
+comment|/* Counts the number of ACK requests received from the TSTORM with no registration to QM. */
+decl_stmt|;
+name|uint8_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED51
+value|(0x3<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag used to rewind the DA timer */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED51_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 2 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 3 */
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_CLEAR_DA_TIMER_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set enables sending clear commands as port of the DA decision rules */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_CLEAR_DA_TIMER_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_DA_EXPIRATION_FLAG
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that there was a delayed ack timer expiration */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_DA_EXPIRATION_FLAG_SHIFT
+value|7
+endif|#
+directive|endif
+name|uint32_t
+name|snd_nxt
+comment|/* The current sequence number to send */
+decl_stmt|;
+name|uint32_t
+name|__xfrqe_bd_addr_lo
+comment|/* The Current transmission window in bytes */
+decl_stmt|;
+name|uint32_t
+name|__xfrqe_bd_addr_hi
+comment|/* The current Send UNA sequence number */
+decl_stmt|;
+name|uint32_t
+name|__xfrqe_data1
+comment|/* The current local advertised window to FE. */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_val8_th
+comment|/* aggregated value 8 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__tx_dest
+comment|/* aggregated value 8 */
+decl_stmt|;
+name|uint16_t
+name|tcp_agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED57
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Used in TOE to indicate that FIN is sent on a BD to bypass the naggle rule */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED57_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED58
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enables the tx window based decision */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED58_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED59
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	The DA Timer status. If set indicates that the delayed ACK timer is active. */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED59_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX3_FLAG
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 3 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX3_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX4_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 4 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX4_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED60
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable DA for the specific connection */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED60_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_ACK_TO_FE_UPDATED_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux2_cf */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_ACK_TO_FE_UPDATED_EN_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux3_cf */
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_TX_FIN_FLAG_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable Decision rule based on tx_fin_flag */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_TX_FIN_FLAG_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 1 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|9
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SET_RTO_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	counter flag for setting the rto timer */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SET_RTO_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	timestamp was updated counter flag */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary counter flag 8 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_SHIFT
+value|14
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tcp_agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED57
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Used in TOE to indicate that FIN is sent on a BD to bypass the naggle rule */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED57_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED58
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enables the tx window based decision */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED58_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED59
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	The DA Timer status. If set indicates that the delayed ACK timer is active. */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED59_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX3_FLAG
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 3 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX3_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX4_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 4 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX4_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED60
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable DA for the specific connection */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED60_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_ACK_TO_FE_UPDATED_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux2_cf */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_ACK_TO_FE_UPDATED_EN_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux3_cf */
+define|#
+directive|define
+name|XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_TX_FIN_FLAG_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable Decision rule based on tx_fin_flag */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_RESERVED_TX_FIN_FLAG_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 1 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|9
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SET_RTO_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	counter flag for setting the rto timer */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_SET_RTO_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	timestamp was updated counter flag */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary counter flag 8 */
+define|#
+directive|define
+name|__XSTORM_FCOE_EXTRA_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_SHIFT
+value|14
+name|uint8_t
+name|__tx_dest
+comment|/* aggregated value 8 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val8_th
+comment|/* aggregated value 8 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__sq_base_addr_lo
+comment|/* The low page address which the SQ resides in host memory */
+decl_stmt|;
+name|uint32_t
+name|__sq_base_addr_hi
+comment|/* The high page address which the SQ resides in host memory */
+decl_stmt|;
+name|uint32_t
+name|__xfrq_base_addr_lo
+comment|/* The low page address which the XFRQ resides in host memory */
+decl_stmt|;
+name|uint32_t
+name|__xfrq_base_addr_hi
+comment|/* The high page address which the XFRQ resides in host memory */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__xfrq_cons
+comment|/* The XFRQ consumer */
+decl_stmt|;
+name|uint16_t
+name|__xfrq_prod
+comment|/* The XFRQ producer, updated by Ustorm */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__xfrq_prod
+comment|/* The XFRQ producer, updated by Ustorm */
+decl_stmt|;
+name|uint16_t
+name|__xfrq_cons
+comment|/* The XFRQ consumer */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars5
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__reserved_force_pure_ack_cnt
+comment|/* The number of force ACK commands arrived from the TSTORM */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved_force_pure_ack_cnt
+comment|/* The number of force ACK commands arrived from the TSTORM */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars5
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__tcp_agg_vars6
+comment|/* Various aggregative variables*/
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__xfrqe_mng
+comment|/* Misc aggregated variable 6 */
+decl_stmt|;
+name|uint16_t
+name|__tcp_agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__tcp_agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint16_t
+name|__xfrqe_mng
+comment|/* Misc aggregated variable 6 */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__xfrqe_data0
+comment|/* aggregated value 10 */
+decl_stmt|;
+name|uint32_t
+name|__agg_val10_th
+comment|/* aggregated value 10 - threshold */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved3
+decl_stmt|;
+name|uint8_t
+name|__reserved2
+decl_stmt|;
+name|uint8_t
+name|__da_only_cnt
+comment|/* counts delayed acks and not window updates */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__da_only_cnt
+comment|/* counts delayed acks and not window updates */
+decl_stmt|;
+name|uint8_t
+name|__reserved2
+decl_stmt|;
+name|uint16_t
+name|__reserved3
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The fcoe aggregative context of Xstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED51
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED51_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED52
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED52_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_MORE_TO_SEND_EN
+value|(0x1<<4)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the decision rule of more_to_Send> 0 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_MORE_TO_SEND_EN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_NAGLE_EN
+value|(0x1<<5)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the nagle decision */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_NAGLE_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	Used for future indication by the Driver on a doorbell */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED_UNA_GT_NXT_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rules based on equality between snd_una and snd_nxt */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED_UNA_GT_NXT_EN_SHIFT
+value|7
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED51
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED51_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED52
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED52_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_MORE_TO_SEND_EN
+value|(0x1<<4)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the decision rule of more_to_Send> 0 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_MORE_TO_SEND_EN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_NAGLE_EN
+value|(0x1<<5)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the nagle decision */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_NAGLE_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	Used for future indication by the Driver on a doorbell */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED_UNA_GT_NXT_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rules based on equality between snd_una and snd_nxt */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED_UNA_GT_NXT_EN_SHIFT
+value|7
+name|uint16_t
+name|agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cdu_reserved
+comment|/* Used by the CDU for validation and debugging */
+decl_stmt|;
+name|uint8_t
+name|__agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|agg_vars3
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2
+value|(0x3F<<0)
+comment|/* BitField agg_vars3Various aggregative variables	The physical queue number of queue index 2 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX19_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars3Various aggregative variables	auxiliary counter flag 19 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX19_CF_SHIFT
+value|6
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary counter flag 4 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG_EN
+value|(0x1<<2)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rule based on dq_spare_flag */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX8_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 8 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX8_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX9_FLAG
+value|(0x1<<4)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 9 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX9_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE1
+value|(0x3<<5)
+comment|/* BitField agg_vars2Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE1_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rules based on aux4_cf */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary counter flag 4 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG_EN
+value|(0x1<<2)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rule based on dq_spare_flag */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_SPARE_FLAG_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX8_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 8 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX8_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX9_FLAG
+value|(0x1<<4)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 9 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX9_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE1
+value|(0x3<<5)
+comment|/* BitField agg_vars2Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE1_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rules based on aux4_cf */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+name|uint8_t
+name|agg_vars3
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2
+value|(0x3F<<0)
+comment|/* BitField agg_vars3Various aggregative variables	The physical queue number of queue index 2 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX19_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars3Various aggregative variables	auxiliary counter flag 19 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX19_CF_SHIFT
+value|6
+name|uint8_t
+name|__agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|cdu_reserved
+comment|/* Used by the CDU for validation and debugging */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|more_to_send
+comment|/* The number of bytes left to send */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars5
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE5
+value|(0x3<<0)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE5_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0
+value|(0x3F<<2)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 0 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1
+value|(0x3F<<8)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 1 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_CONFQ_DEC_RULE
+value|(0x3<<14)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_CONFQ_DEC_RULE_SHIFT
+value|14
+name|uint16_t
+name|sq_cons
+comment|/* The SQ consumer updated by Xstorm after consuming aother WQE */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_cons
+comment|/* The SQ consumer updated by Xstorm after consuming aother WQE */
+decl_stmt|;
+name|uint16_t
+name|agg_vars5
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE5
+value|(0x3<<0)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE5_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0
+value|(0x3F<<2)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 0 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1
+value|(0x3F<<8)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 1 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_CONFQ_DEC_RULE
+value|(0x3<<14)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_CONFQ_DEC_RULE_SHIFT
+value|14
+endif|#
+directive|endif
+name|struct
+name|xstorm_fcoe_extra_ag_context_section
+name|__extra_section
+comment|/* Extra context section */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars7
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AGG_VAL11_DECISION_RULE
+value|(0x7<<0)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AGG_VAL11_DECISION_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX13_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 13 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX13_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_QUEUE0_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary counter flag 18 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_QUEUE0_CF_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE3
+value|(0x3<<6)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE3_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AUX1_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary counter flag 1 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AUX1_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED62
+value|(0x1<<10)
+comment|/* BitField agg_vars7Various aggregative variables	Mask the check of the completion sequence on retransmit */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED62_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars7Various aggregative variables	Enable decision rules based on aux1_cf */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX10_FLAG
+value|(0x1<<12)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 10 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX10_FLAG_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX11_FLAG
+value|(0x1<<13)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 11 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX11_FLAG_SHIFT
+value|13
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX12_FLAG
+value|(0x1<<14)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 12 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX12_FLAG_SHIFT
+value|14
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX2_FLAG
+value|(0x1<<15)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 2 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX2_FLAG_SHIFT
+value|15
+name|uint8_t
+name|agg_val3_th
+comment|/* Aggregated value 3 - threshold */
+decl_stmt|;
+name|uint8_t
+name|agg_vars6
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE6
+value|(0x7<<0)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE6_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_XFRQ_DEC_RULE
+value|(0x7<<3)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_XFRQ_DEC_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_SQ_DEC_RULE
+value|(0x3<<6)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_SQ_DEC_RULE_SHIFT
+value|6
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_vars6
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE6
+value|(0x7<<0)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE6_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_XFRQ_DEC_RULE
+value|(0x7<<3)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_XFRQ_DEC_RULE_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_SQ_DEC_RULE
+value|(0x3<<6)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_SQ_DEC_RULE_SHIFT
+value|6
+name|uint8_t
+name|agg_val3_th
+comment|/* Aggregated value 3 - threshold */
+decl_stmt|;
+name|uint16_t
+name|agg_vars7
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AGG_VAL11_DECISION_RULE
+value|(0x7<<0)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AGG_VAL11_DECISION_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX13_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 13 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX13_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_QUEUE0_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary counter flag 18 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_QUEUE0_CF_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE3
+value|(0x3<<6)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_DECISION_RULE3_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AUX1_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary counter flag 1 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AUX1_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED62
+value|(0x1<<10)
+comment|/* BitField agg_vars7Various aggregative variables	Mask the check of the completion sequence on retransmit */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_RESERVED62_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars7Various aggregative variables	Enable decision rules based on aux1_cf */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX10_FLAG
+value|(0x1<<12)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 10 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX10_FLAG_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX11_FLAG
+value|(0x1<<13)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 11 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX11_FLAG_SHIFT
+value|13
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX12_FLAG
+value|(0x1<<14)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 12 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX12_FLAG_SHIFT
+value|14
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX2_FLAG
+value|(0x1<<15)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 2 */
+define|#
+directive|define
+name|__XSTORM_FCOE_AG_CONTEXT_AUX2_FLAG_SHIFT
+value|15
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val11_th
+comment|/* aggregated value 11 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val11
+comment|/* aggregated value 11 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val11
+comment|/* aggregated value 11 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val11_th
+comment|/* aggregated value 11 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved1
+decl_stmt|;
+name|uint8_t
+name|__agg_val6_th
+comment|/* aggregated value 6 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val9
+comment|/* aggregated value 9 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val9
+comment|/* aggregated value 9 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val6_th
+comment|/* aggregated value 6 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__reserved1
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|confq_cons
+comment|/* CONFQ Consumer */
+decl_stmt|;
+name|uint16_t
+name|confq_prod
+comment|/* CONFQ Producer, updated by Ustorm - AggVal2 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|confq_prod
+comment|/* CONFQ Producer, updated by Ustorm - AggVal2 */
+decl_stmt|;
+name|uint16_t
+name|confq_cons
+comment|/* CONFQ Consumer */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|agg_varint8_t
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AGG_MISC2
+value|(0xFFFFFF<<0)
+comment|/* BitField agg_varint8_tVarious aggregative variables	Misc aggregated variable 2 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AGG_MISC2_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AGG_MISC3
+value|(0xFF<<24)
+comment|/* BitField agg_varint8_tVarious aggregative variables	Misc aggregated variable 3 */
+define|#
+directive|define
+name|XSTORM_FCOE_AG_CONTEXT_AGG_MISC3_SHIFT
+value|24
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__cache_wqe_db
+comment|/* Misc aggregated variable 0 */
+decl_stmt|;
+name|uint16_t
+name|sq_prod
+comment|/* The SQ Producer updated by Xstorm after reading a bunch of WQEs into the context */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_prod
+comment|/* The SQ Producer updated by Xstorm after reading a bunch of WQEs into the context */
+decl_stmt|;
+name|uint16_t
+name|__cache_wqe_db
+comment|/* Misc aggregated variable 0 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_val3
+comment|/* Aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|agg_val6
+comment|/* Aggregated value 6 */
+decl_stmt|;
+name|uint8_t
+name|agg_val5_th
+comment|/* Aggregated value 5 - threshold */
+decl_stmt|;
+name|uint8_t
+name|agg_val5
+comment|/* Aggregated value 5 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_val5
+comment|/* Aggregated value 5 */
+decl_stmt|;
+name|uint8_t
+name|agg_val5_th
+comment|/* Aggregated value 5 - threshold */
+decl_stmt|;
+name|uint8_t
+name|agg_val6
+comment|/* Aggregated value 6 */
+decl_stmt|;
+name|uint8_t
+name|agg_val3
+comment|/* Aggregated value 3 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc1
+comment|/* Spare value for aggregation. NOTE: this value is used in the retransmit decision rule if CmpSeqDecMask is 0. In that case it is intended to be CmpBdSize. */
+decl_stmt|;
+name|uint16_t
+name|agg_limit1
+comment|/* aggregated limit 1 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_limit1
+comment|/* aggregated limit 1 */
+decl_stmt|;
+name|uint16_t
+name|__agg_misc1
+comment|/* Spare value for aggregation. NOTE: this value is used in the retransmit decision rule if CmpSeqDecMask is 0. In that case it is intended to be CmpBdSize. */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|completion_seq
+comment|/* The sequence number of the start completion point (BD) */
+decl_stmt|;
+name|uint32_t
+name|confq_pbl_base_lo
+comment|/* The CONFQ PBL base low address resides in host memory */
+decl_stmt|;
+name|uint32_t
+name|confq_pbl_base_hi
+comment|/* The CONFQ PBL base hihj address resides in host memory */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The tcp aggregative context section of Xstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_tcp_tcp_ag_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF
+value|(0x3<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag used to rewind the DA timer */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 2 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 3 */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set enables sending clear commands as port of the DA decision rules */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that there was a delayed ack timer expiration */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG_SHIFT
+value|7
+name|uint8_t
+name|__da_cnt
+comment|/* Counts the number of ACK requests received from the TSTORM with no registration to QM. */
+decl_stmt|;
+name|uint16_t
+name|mss
+comment|/* MSS used for nagle algorithm and for transmission */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|mss
+comment|/* MSS used for nagle algorithm and for transmission */
+decl_stmt|;
+name|uint8_t
+name|__da_cnt
+comment|/* Counts the number of ACK requests received from the TSTORM with no registration to QM. */
+decl_stmt|;
+name|uint8_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF
+value|(0x3<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag used to rewind the DA timer */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 2 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 3 */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set enables sending clear commands as port of the DA decision rules */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that there was a delayed ack timer expiration */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG_SHIFT
+value|7
+endif|#
+directive|endif
+name|uint32_t
+name|snd_nxt
+comment|/* The current sequence number to send */
+decl_stmt|;
+name|uint32_t
+name|tx_wnd
+comment|/* The Current transmission window in bytes */
+decl_stmt|;
+name|uint32_t
+name|snd_una
+comment|/* The current Send UNA sequence number */
+decl_stmt|;
+name|uint32_t
+name|local_adv_wnd
+comment|/* The current local advertised window to FE. */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_val8_th
+comment|/* aggregated value 8 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__tx_dest
+comment|/* aggregated value 8 */
+decl_stmt|;
+name|uint16_t
+name|tcp_agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Used in TOE to indicate that FIN is sent on a BD to bypass the naggle rule */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enables the tx window based decision */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	The DA Timer status. If set indicates that the delayed ACK timer is active. */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX3_FLAG
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 3 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX3_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX4_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 4 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX4_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_ENABLE
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable DA for the specific connection */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux2_cf */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux3_cf */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable Decision rule based on tx_fin_flag */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 1 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|9
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_RTO_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	counter flag for setting the rto timer */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_RTO_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	timestamp was updated counter flag */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary counter flag 8 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_SHIFT
+value|14
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tcp_agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Used in TOE to indicate that FIN is sent on a BD to bypass the naggle rule */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enables the tx window based decision */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	The DA Timer status. If set indicates that the delayed ACK timer is active. */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX3_FLAG
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 3 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX3_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX4_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 4 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX4_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_ENABLE
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable DA for the specific connection */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DA_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux2_cf */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux3_cf */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable Decision rule based on tx_fin_flag */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 1 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|9
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_RTO_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	counter flag for setting the rto timer */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_SET_RTO_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	timestamp was updated counter flag */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary counter flag 8 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_SHIFT
+value|14
+name|uint8_t
+name|__tx_dest
+comment|/* aggregated value 8 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val8_th
+comment|/* aggregated value 8 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|ack_to_far_end
+comment|/* The ACK sequence to send to far end */
+decl_stmt|;
+name|uint32_t
+name|rto_timer
+comment|/* The RTO timer value */
+decl_stmt|;
+name|uint32_t
+name|ka_timer
+comment|/* The KA timer value */
+decl_stmt|;
+name|uint32_t
+name|ts_to_echo
+comment|/* The time stamp value to echo to far end */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val7_th
+comment|/* aggregated value 7 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val7
+comment|/* aggregated value 7 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val7
+comment|/* aggregated value 7 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val7_th
+comment|/* aggregated value 7 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars5
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__force_pure_ack_cnt
+comment|/* The number of force ACK commands arrived from the TSTORM */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__force_pure_ack_cnt
+comment|/* The number of force ACK commands arrived from the TSTORM */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars5
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|tcp_agg_vars6
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_CF_EN
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux7_cf */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_EN
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux8_cf */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX9_CF_EN
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux9_cf */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX9_CF_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux10_cf */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX6_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary flag 6 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX6_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX7_FLAG
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary flag 7 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX7_FLAG_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX5_CF
+value|(0x3<<6)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 5 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX5_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX9_CF
+value|(0x3<<8)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 9 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX9_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX10_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 10 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX10_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX11_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 11 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX11_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX12_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 12 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX12_CF_SHIFT
+value|14
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX13_CF
+value|(0x3<<16)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 13 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX13_CF_SHIFT
+value|16
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX14_CF
+value|(0x3<<18)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 14 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX14_CF_SHIFT
+value|18
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX15_CF
+value|(0x3<<20)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 15 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX15_CF_SHIFT
+value|20
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX16_CF
+value|(0x3<<22)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 16 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX16_CF_SHIFT
+value|22
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX17_CF
+value|(0x3<<24)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 17 */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_AUX17_CF_SHIFT
+value|24
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ECE_FLAG
+value|(0x1<<26)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Can be also used as general purpose if ECN is not used */
+define|#
+directive|define
+name|XSTORM_TCP_TCP_AG_CONTEXT_SECTION_ECE_FLAG_SHIFT
+value|26
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_RESERVED71
+value|(0x1<<27)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Can be also used as general purpose if ECN is not used */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_RESERVED71_SHIFT
+value|27
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_FORCE_PURE_ACK_CNT_DIRTY
+value|(0x1<<28)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	This flag is set if the Force ACK count is set by the TSTORM. On QM output it is cleared. */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_FORCE_PURE_ACK_CNT_DIRTY_SHIFT
+value|28
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TCP_AUTO_STOP_FLAG
+value|(0x1<<29)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Indicates that the connection is in autostop mode */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_TCP_AUTO_STOP_FLAG_SHIFT
+value|29
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DO_TS_UPDATE_FLAG
+value|(0x1<<30)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	This bit uses like a one shot that the TSTORM fires and the XSTORM arms. Used to allow a single TS update for each transmission */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_DO_TS_UPDATE_FLAG_SHIFT
+value|30
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_CANCEL_RETRANSMIT_FLAG
+value|(0x1<<31)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	This bit is set by the TSTORM when need to cancel precious fast retransmit */
+define|#
+directive|define
+name|__XSTORM_TCP_TCP_AG_CONTEXT_SECTION_CANCEL_RETRANSMIT_FLAG_SHIFT
+value|31
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc6
+comment|/* Misc aggregated variable 6 */
+decl_stmt|;
+name|uint16_t
+name|__tcp_agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__tcp_agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint16_t
+name|__agg_misc6
+comment|/* Misc aggregated variable 6 */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__agg_val10
+comment|/* aggregated value 10 */
+decl_stmt|;
+name|uint32_t
+name|__agg_val10_th
+comment|/* aggregated value 10 - threshold */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved3
+decl_stmt|;
+name|uint8_t
+name|__reserved2
+decl_stmt|;
+name|uint8_t
+name|__da_only_cnt
+comment|/* counts delayed acks and not window updates */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__da_only_cnt
+comment|/* counts delayed acks and not window updates */
+decl_stmt|;
+name|uint8_t
+name|__reserved2
+decl_stmt|;
+name|uint16_t
+name|__reserved3
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The iscsi aggregative context of Xstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_iscsi_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_MORE_TO_SEND_EN
+value|(0x1<<4)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the decision rule of more_to_Send> 0 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_MORE_TO_SEND_EN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_NAGLE_EN
+value|(0x1<<5)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the nagle decision */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_NAGLE_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	Used for future indication by the Driver on a doorbell */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_UNA_GT_NXT_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rules based on equality between snd_una and snd_nxt */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_UNA_GT_NXT_EN_SHIFT
+value|7
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM1_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM2_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_EXISTS_IN_QM3_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_MORE_TO_SEND_EN
+value|(0x1<<4)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the decision rule of more_to_Send> 0 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_MORE_TO_SEND_EN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_NAGLE_EN
+value|(0x1<<5)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the nagle decision */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_NAGLE_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	Used for future indication by the Driver on a doorbell */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_UNA_GT_NXT_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rules based on equality between snd_una and snd_nxt */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_UNA_GT_NXT_EN_SHIFT
+value|7
+name|uint16_t
+name|agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cdu_reserved
+comment|/* Used by the CDU for validation and debugging */
+decl_stmt|;
+name|uint8_t
+name|__agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|agg_vars3
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM2
+value|(0x3F<<0)
+comment|/* BitField agg_vars3Various aggregative variables	The physical queue number of queue index 2 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM2_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_TS_EN_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars3Various aggregative variables	auxiliary counter flag 19 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_TS_EN_CF_SHIFT
+value|6
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary counter flag 4 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG_EN
+value|(0x1<<2)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rule based on dq_spare_flag */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX8_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 8 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX8_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX9_FLAG
+value|(0x1<<4)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 9 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX9_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE1
+value|(0x3<<5)
+comment|/* BitField agg_vars2Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE1_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rules based on aux4_cf */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary counter flag 4 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG_EN
+value|(0x1<<2)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rule based on dq_spare_flag */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_SPARE_FLAG_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX8_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 8 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX8_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX9_FLAG
+value|(0x1<<4)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 9 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX9_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE1
+value|(0x3<<5)
+comment|/* BitField agg_vars2Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE1_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rules based on aux4_cf */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+name|uint8_t
+name|agg_vars3
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM2
+value|(0x3F<<0)
+comment|/* BitField agg_vars3Various aggregative variables	The physical queue number of queue index 2 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM2_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_TS_EN_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars3Various aggregative variables	auxiliary counter flag 19 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_TS_EN_CF_SHIFT
+value|6
+name|uint8_t
+name|__agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|cdu_reserved
+comment|/* Used by the CDU for validation and debugging */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|more_to_send
+comment|/* The number of bytes left to send */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars5
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE5
+value|(0x3<<0)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE5_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM0
+value|(0x3F<<2)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 0 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM0_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM1
+value|(0x3F<<8)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 1 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM1_SHIFT
+value|8
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE2
+value|(0x3<<14)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE2_SHIFT
+value|14
+name|uint16_t
+name|sq_cons
+comment|/* aggregated value 4 - threshold */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_cons
+comment|/* aggregated value 4 - threshold */
+decl_stmt|;
+name|uint16_t
+name|agg_vars5
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE5
+value|(0x3<<0)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE5_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM0
+value|(0x3F<<2)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 0 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM0_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM1
+value|(0x3F<<8)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 1 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_PHYSICAL_QUEUE_NUM1_SHIFT
+value|8
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE2
+value|(0x3<<14)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE2_SHIFT
+value|14
+endif|#
+directive|endif
+name|struct
+name|xstorm_tcp_tcp_ag_context_section
+name|tcp
+comment|/* TCP context section, shared in TOE and ISCSI */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars7
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AGG_VAL11_DECISION_RULE
+value|(0x7<<0)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AGG_VAL11_DECISION_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX13_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 13 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX13_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_STORMS_SYNC_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars7Various aggregative variables	Sync Tstorm and Xstorm */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_STORMS_SYNC_CF_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE3
+value|(0x3<<6)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE3_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AUX1_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary counter flag 1 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AUX1_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_COMPLETION_SEQ_DECISION_MASK
+value|(0x1<<10)
+comment|/* BitField agg_vars7Various aggregative variables	Mask the check of the completion sequence on retransmit */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_COMPLETION_SEQ_DECISION_MASK_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars7Various aggregative variables	Enable decision rules based on aux1_cf */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX10_FLAG
+value|(0x1<<12)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 10 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX10_FLAG_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX11_FLAG
+value|(0x1<<13)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 11 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX11_FLAG_SHIFT
+value|13
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX12_FLAG
+value|(0x1<<14)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 12 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX12_FLAG_SHIFT
+value|14
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_WND_SCL_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 2 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_WND_SCL_EN_SHIFT
+value|15
+name|uint8_t
+name|agg_val3_th
+comment|/* Aggregated value 3 - threshold */
+decl_stmt|;
+name|uint8_t
+name|agg_vars6
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE6
+value|(0x7<<0)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE6_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE7
+value|(0x7<<3)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE7_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE4
+value|(0x3<<6)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE4_SHIFT
+value|6
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_vars6
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE6
+value|(0x7<<0)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE6_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE7
+value|(0x7<<3)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE7_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE4
+value|(0x3<<6)
+comment|/* BitField agg_vars6Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE4_SHIFT
+value|6
+name|uint8_t
+name|agg_val3_th
+comment|/* Aggregated value 3 - threshold */
+decl_stmt|;
+name|uint16_t
+name|agg_vars7
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AGG_VAL11_DECISION_RULE
+value|(0x7<<0)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ,3-GT_CYC,4-GT_ABS,5-LT_CYC,6-LT_ABS */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AGG_VAL11_DECISION_RULE_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX13_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 13 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX13_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_STORMS_SYNC_CF
+value|(0x3<<4)
+comment|/* BitField agg_vars7Various aggregative variables	Sync Tstorm and Xstorm */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_STORMS_SYNC_CF_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE3
+value|(0x3<<6)
+comment|/* BitField agg_vars7Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_DECISION_RULE3_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AUX1_CF
+value|(0x3<<8)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary counter flag 1 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AUX1_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_COMPLETION_SEQ_DECISION_MASK
+value|(0x1<<10)
+comment|/* BitField agg_vars7Various aggregative variables	Mask the check of the completion sequence on retransmit */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_COMPLETION_SEQ_DECISION_MASK_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX1_CF_EN
+value|(0x1<<11)
+comment|/* BitField agg_vars7Various aggregative variables	Enable decision rules based on aux1_cf */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX1_CF_EN_SHIFT
+value|11
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX10_FLAG
+value|(0x1<<12)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 10 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX10_FLAG_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX11_FLAG
+value|(0x1<<13)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 11 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX11_FLAG_SHIFT
+value|13
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX12_FLAG
+value|(0x1<<14)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 12 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_AUX12_FLAG_SHIFT
+value|14
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_WND_SCL_EN
+value|(0x1<<15)
+comment|/* BitField agg_vars7Various aggregative variables	auxiliary flag 2 */
+define|#
+directive|define
+name|__XSTORM_ISCSI_AG_CONTEXT_RX_WND_SCL_EN_SHIFT
+value|15
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val11_th
+comment|/* aggregated value 11 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__gen_data
+comment|/* Used for Iscsi. In connection establishment, it uses as rxMss, and in connection termination, it uses as command Id: 1=L5CM_TX_ACK_ON_FIN_CMD 2=L5CM_SET_MSL_TIMER_CMD 3=L5CM_TX_RST_CMD */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__gen_data
+comment|/* Used for Iscsi. In connection establishment, it uses as rxMss, and in connection termination, it uses as command Id: 1=L5CM_TX_ACK_ON_FIN_CMD 2=L5CM_SET_MSL_TIMER_CMD 3=L5CM_TX_RST_CMD */
+decl_stmt|;
+name|uint16_t
+name|__agg_val11_th
+comment|/* aggregated value 11 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved1
+decl_stmt|;
+name|uint8_t
+name|__agg_val6_th
+comment|/* aggregated value 6 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val9
+comment|/* aggregated value 9 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val9
+comment|/* aggregated value 9 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val6_th
+comment|/* aggregated value 6 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__reserved1
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_prod
+comment|/* The HQ producer threashold to compare the HQ consumer, which is the current HQ producer +1 - AggVal2Th */
+decl_stmt|;
+name|uint16_t
+name|hq_cons
+comment|/* HQ Consumer, updated by Cstorm - AggVal2 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_cons
+comment|/* HQ Consumer, updated by Cstorm - AggVal2 */
+decl_stmt|;
+name|uint16_t
+name|hq_prod
+comment|/* The HQ producer threashold to compare the HQ consumer, which is the current HQ producer +1 - AggVal2Th */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|agg_varint8_t
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AGG_MISC2
+value|(0xFFFFFF<<0)
+comment|/* BitField agg_varint8_tVarious aggregative variables	Misc aggregated variable 2 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AGG_MISC2_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AGG_MISC3
+value|(0xFF<<24)
+comment|/* BitField agg_varint8_tVarious aggregative variables	Misc aggregated variable 3 */
+define|#
+directive|define
+name|XSTORM_ISCSI_AG_CONTEXT_AGG_MISC3_SHIFT
+value|24
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|r2tq_prod
+comment|/* Misc aggregated variable 0 */
+decl_stmt|;
+name|uint16_t
+name|sq_prod
+comment|/* SQ Producer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_prod
+comment|/* SQ Producer */
+decl_stmt|;
+name|uint16_t
+name|r2tq_prod
+comment|/* Misc aggregated variable 0 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_val3
+comment|/* Aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|agg_val6
+comment|/* Aggregated value 6 */
+decl_stmt|;
+name|uint8_t
+name|agg_val5_th
+comment|/* Aggregated value 5 - threshold */
+decl_stmt|;
+name|uint8_t
+name|agg_val5
+comment|/* Aggregated value 5 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_val5
+comment|/* Aggregated value 5 */
+decl_stmt|;
+name|uint8_t
+name|agg_val5_th
+comment|/* Aggregated value 5 - threshold */
+decl_stmt|;
+name|uint8_t
+name|agg_val6
+comment|/* Aggregated value 6 */
+decl_stmt|;
+name|uint8_t
+name|agg_val3
+comment|/* Aggregated value 3 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc1
+comment|/* Spare value for aggregation. NOTE: this value is used in the retransmit decision rule if CmpSeqDecMask is 0. In that case it is intended to be CmpBdSize. */
+decl_stmt|;
+name|uint16_t
+name|agg_limit1
+comment|/* aggregated limit 1 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_limit1
+comment|/* aggregated limit 1 */
+decl_stmt|;
+name|uint16_t
+name|__agg_misc1
+comment|/* Spare value for aggregation. NOTE: this value is used in the retransmit decision rule if CmpSeqDecMask is 0. In that case it is intended to be CmpBdSize. */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|hq_cons_tcp_seq
+comment|/* TCP sequence of the HQ BD pointed by hq_cons */
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+comment|/* expected status SN, updated by Ustorm */
+decl_stmt|;
+name|uint32_t
+name|rst_seq_num
+comment|/* spare aggregated variable 5 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe aggregative context section of Xstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_tcp_ag_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF
+value|(0x3<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag used to rewind the DA timer */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 2 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 3 */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set enables sending clear commands as port of the DA decision rules */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that there was a delayed ack timer expiration */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG_SHIFT
+value|7
+name|uint8_t
+name|__da_cnt
+comment|/* Counts the number of ACK requests received from the TSTORM with no registration to QM. */
+decl_stmt|;
+name|uint16_t
+name|mss
+comment|/* MSS used for nagle algorithm and for transmission */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|mss
+comment|/* MSS used for nagle algorithm and for transmission */
+decl_stmt|;
+name|uint8_t
+name|__da_cnt
+comment|/* Counts the number of ACK requests received from the TSTORM with no registration to QM. */
+decl_stmt|;
+name|uint8_t
+name|tcp_agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF
+value|(0x3<<0)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Counter flag used to rewind the DA timer */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_DA_TIMER_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED
+value|(0x3<<2)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 2 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF
+value|(0x3<<4)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	auxiliary counter flag 3 */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	If set enables sending clear commands as port of the DA decision rules */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_CLEAR_DA_TIMER_EN_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars1Various aggregative variables	Indicates that there was a delayed ack timer expiration */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_EXPIRATION_FLAG_SHIFT
+value|7
+endif|#
+directive|endif
+name|uint32_t
+name|snd_nxt
+comment|/* The current sequence number to send */
+decl_stmt|;
+name|uint32_t
+name|tx_wnd
+comment|/* The Current transmission window in bytes */
+decl_stmt|;
+name|uint32_t
+name|snd_una
+comment|/* The current Send UNA sequence number */
+decl_stmt|;
+name|uint32_t
+name|local_adv_wnd
+comment|/* The current local advertised window to FE. */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_val8_th
+comment|/* aggregated value 8 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__tx_dest
+comment|/* aggregated value 8 */
+decl_stmt|;
+name|uint16_t
+name|tcp_agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Used in TOE to indicate that FIN is sent on a BD to bypass the naggle rule */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enables the tx window based decision */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	The DA Timer status. If set indicates that the delayed ACK timer is active. */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX3_FLAG
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 3 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX3_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX4_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 4 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX4_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_ENABLE
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable DA for the specific connection */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux2_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux3_cf */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable Decision rule based on tx_fin_flag */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 1 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|9
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_RTO_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	counter flag for setting the rto timer */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_RTO_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	timestamp was updated counter flag */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary counter flag 8 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_SHIFT
+value|14
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tcp_agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Used in TOE to indicate that FIN is sent on a BD to bypass the naggle rule */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enables the tx window based decision */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_UNBLOCKED_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	The DA Timer status. If set indicates that the delayed ACK timer is active. */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_TIMER_ACTIVE_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX3_FLAG
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 3 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX3_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX4_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 4 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX4_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_ENABLE
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable DA for the specific connection */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DA_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN
+value|(0x1<<6)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux2_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ACK_TO_FE_UPDATED_EN_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN
+value|(0x1<<7)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable decision rules based on aux3_cf */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SIDEBAND_SENT_CF_EN_SHIFT
+value|7
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN
+value|(0x1<<8)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	Enable Decision rule based on tx_fin_flag */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_FIN_FLAG_EN_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX1_FLAG
+value|(0x1<<9)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary flag 1 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX1_FLAG_SHIFT
+value|9
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_RTO_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	counter flag for setting the rto timer */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_SET_RTO_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	timestamp was updated counter flag */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_UPDATED_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars2Various aggregative variables	auxiliary counter flag 8 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_SHIFT
+value|14
+name|uint8_t
+name|__tx_dest
+comment|/* aggregated value 8 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val8_th
+comment|/* aggregated value 8 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|ack_to_far_end
+comment|/* The ACK sequence to send to far end */
+decl_stmt|;
+name|uint32_t
+name|rto_timer
+comment|/* The RTO timer value */
+decl_stmt|;
+name|uint32_t
+name|ka_timer
+comment|/* The KA timer value */
+decl_stmt|;
+name|uint32_t
+name|ts_to_echo
+comment|/* The time stamp value to echo to far end */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val7_th
+comment|/* aggregated value 7 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val7
+comment|/* aggregated value 7 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val7
+comment|/* aggregated value 7 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val7_th
+comment|/* aggregated value 7 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__tcp_agg_vars5
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__force_pure_ack_cnt
+comment|/* The number of force ACK commands arrived from the TSTORM */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__force_pure_ack_cnt
+comment|/* The number of force ACK commands arrived from the TSTORM */
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars3
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__tcp_agg_vars5
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|tcp_agg_vars6
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_CF_EN
+value|(0x1<<0)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux7_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TS_TO_ECHO_CF_EN_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_EN
+value|(0x1<<1)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux8_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TX_DEST_UPDATED_CF_EN_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX9_CF_EN
+value|(0x1<<2)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux9_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX9_CF_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN
+value|(0x1<<3)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Enable decision rules based on aux10_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX10_CF_EN_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX6_FLAG
+value|(0x1<<4)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary flag 6 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX6_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX7_FLAG
+value|(0x1<<5)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary flag 7 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX7_FLAG_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX5_CF
+value|(0x3<<6)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 5 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX5_CF_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX9_CF
+value|(0x3<<8)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 9 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX9_CF_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX10_CF
+value|(0x3<<10)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 10 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX10_CF_SHIFT
+value|10
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX11_CF
+value|(0x3<<12)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 11 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX11_CF_SHIFT
+value|12
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX12_CF
+value|(0x3<<14)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 12 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX12_CF_SHIFT
+value|14
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX13_CF
+value|(0x3<<16)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 13 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX13_CF_SHIFT
+value|16
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX14_CF
+value|(0x3<<18)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 14 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX14_CF_SHIFT
+value|18
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX15_CF
+value|(0x3<<20)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 15 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX15_CF_SHIFT
+value|20
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX16_CF
+value|(0x3<<22)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 16 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX16_CF_SHIFT
+value|22
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX17_CF
+value|(0x3<<24)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	auxiliary counter flag 17 */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_AUX17_CF_SHIFT
+value|24
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ECE_FLAG
+value|(0x1<<26)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Can be also used as general purpose if ECN is not used */
+define|#
+directive|define
+name|XSTORM_TOE_TCP_AG_CONTEXT_SECTION_ECE_FLAG_SHIFT
+value|26
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED71
+value|(0x1<<27)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Can be also used as general purpose if ECN is not used */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_RESERVED71_SHIFT
+value|27
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_FORCE_PURE_ACK_CNT_DIRTY
+value|(0x1<<28)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	This flag is set if the Force ACK count is set by the TSTORM. On QM output it is cleared. */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_FORCE_PURE_ACK_CNT_DIRTY_SHIFT
+value|28
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TCP_AUTO_STOP_FLAG
+value|(0x1<<29)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	Indicates that the connection is in autostop mode */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_TCP_AUTO_STOP_FLAG_SHIFT
+value|29
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DO_TS_UPDATE_FLAG
+value|(0x1<<30)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	This bit uses like a one shot that the TSTORM fires and the XSTORM arms. Used to allow a single TS update for each transmission */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_DO_TS_UPDATE_FLAG_SHIFT
+value|30
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_CANCEL_RETRANSMIT_FLAG
+value|(0x1<<31)
+comment|/* BitField tcp_agg_vars6Various aggregative variables	This bit is set by the TSTORM when need to cancel precious fast retransmit */
+define|#
+directive|define
+name|__XSTORM_TOE_TCP_AG_CONTEXT_SECTION_CANCEL_RETRANSMIT_FLAG_SHIFT
+value|31
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc6
+comment|/* Misc aggregated variable 6 */
+decl_stmt|;
+name|uint16_t
+name|__tcp_agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__tcp_agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint16_t
+name|__agg_misc6
+comment|/* Misc aggregated variable 6 */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__agg_val10
+comment|/* aggregated value 10 */
+decl_stmt|;
+name|uint32_t
+name|__agg_val10_th
+comment|/* aggregated value 10 - threshold */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__reserved3
+decl_stmt|;
+name|uint8_t
+name|__reserved2
+decl_stmt|;
+name|uint8_t
+name|__da_only_cnt
+comment|/* counts delayed acks and not window updates */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__da_only_cnt
+comment|/* counts delayed acks and not window updates */
+decl_stmt|;
+name|uint8_t
+name|__reserved2
+decl_stmt|;
+name|uint16_t
+name|__reserved3
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe aggregative context of Xstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_ag_context
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED50
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED50_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED51
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED51_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED52
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED52_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_MORE_TO_SEND_EN
+value|(0x1<<4)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the decision rule of more_to_Send> 0 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_MORE_TO_SEND_EN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_NAGLE_EN
+value|(0x1<<5)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the nagle decision */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_NAGLE_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	used to indicate last doorbell for specific connection */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_UNA_GT_NXT_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rules based on equality between snd_una and snd_nxt */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_UNA_GT_NXT_EN_SHIFT
+value|7
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__state
+comment|/* The state of the connection */
+decl_stmt|;
+name|uint8_t
+name|agg_vars1
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0
+value|(0x1<<0)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 0 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_EXISTS_IN_QM0_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED50
+value|(0x1<<1)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 1 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED50_SHIFT
+value|1
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED51
+value|(0x1<<2)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 2 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED51_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED52
+value|(0x1<<3)
+comment|/* BitField agg_vars1Various aggregative variables	The connection is currently registered to the QM with queue index 3 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED52_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_MORE_TO_SEND_EN
+value|(0x1<<4)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the decision rule of more_to_Send> 0 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_MORE_TO_SEND_EN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_NAGLE_EN
+value|(0x1<<5)
+comment|/* BitField agg_vars1Various aggregative variables	Enables the nagle decision */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_NAGLE_EN_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG
+value|(0x1<<6)
+comment|/* BitField agg_vars1Various aggregative variables	used to indicate last doorbell for specific connection */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_UNA_GT_NXT_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars1Various aggregative variables	Enable decision rules based on equality between snd_una and snd_nxt */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_UNA_GT_NXT_EN_SHIFT
+value|7
+name|uint16_t
+name|agg_val1
+comment|/* aggregated value 1 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cdu_reserved
+comment|/* Used by the CDU for validation and debugging */
+decl_stmt|;
+name|uint8_t
+name|__agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|agg_vars3
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2
+value|(0x3F<<0)
+comment|/* BitField agg_vars3Various aggregative variables	The physical queue number of queue index 2 */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q1_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars3Various aggregative variables	auxiliary counter flag 19 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q1_CF_SHIFT
+value|6
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary counter flag 4 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG_EN
+value|(0x1<<2)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rule based on dq_spare_flag */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX8_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 8 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX8_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX9_FLAG
+value|(0x1<<4)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 9 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX9_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_RESERVED53
+value|(0x3<<5)
+comment|/* BitField agg_vars2Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_RESERVED53_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rules based on aux4_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|agg_vars2
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF
+value|(0x3<<0)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary counter flag 4 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG_EN
+value|(0x1<<2)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rule based on dq_spare_flag */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_FLUSH_FLAG_EN_SHIFT
+value|2
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX8_FLAG
+value|(0x1<<3)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 8 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX8_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX9_FLAG
+value|(0x1<<4)
+comment|/* BitField agg_vars2Various aggregative variables	auxiliary flag 9 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_AUX9_FLAG_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_RESERVED53
+value|(0x3<<5)
+comment|/* BitField agg_vars2Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_RESERVED53_SHIFT
+value|5
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF_EN
+value|(0x1<<7)
+comment|/* BitField agg_vars2Various aggregative variables	Enable decision rules based on aux4_cf */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_DQ_CF_EN_SHIFT
+value|7
+name|uint8_t
+name|agg_vars3
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2
+value|(0x3F<<0)
+comment|/* BitField agg_vars3Various aggregative variables	The physical queue number of queue index 2 */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM2_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q1_CF
+value|(0x3<<6)
+comment|/* BitField agg_vars3Various aggregative variables	auxiliary counter flag 19 */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_QUEUES_FLUSH_Q1_CF_SHIFT
+value|6
+name|uint8_t
+name|__agg_vars4
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|cdu_reserved
+comment|/* Used by the CDU for validation and debugging */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|more_to_send
+comment|/* The number of bytes left to send */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|agg_vars5
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED54
+value|(0x3<<0)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED54_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0
+value|(0x3F<<2)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 0 */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1
+value|(0x3F<<8)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 1 */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED56
+value|(0x3<<14)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED56_SHIFT
+value|14
+name|uint16_t
+name|__agg_val4_th
+comment|/* aggregated value 4 - threshold */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val4_th
+comment|/* aggregated value 4 - threshold */
+decl_stmt|;
+name|uint16_t
+name|agg_vars5
+decl_stmt|;
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED54
+value|(0x3<<0)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED54_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0
+value|(0x3F<<2)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 0 */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM0_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1
+value|(0x3F<<8)
+comment|/* BitField agg_vars5Various aggregative variables	The physical queue number of queue index 1 */
+define|#
+directive|define
+name|XSTORM_TOE_AG_CONTEXT_PHYSICAL_QUEUE_NUM1_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED56
+value|(0x3<<14)
+comment|/* BitField agg_vars5Various aggregative variables	0-NOP,1-EQ,2-NEQ */
+define|#
+directive|define
+name|__XSTORM_TOE_AG_CONTEXT_RESERVED56_SHIFT
+value|14
+endif|#
+directive|endif
+name|struct
+name|xstorm_toe_tcp_ag_context_section
+name|tcp
+comment|/* TCP context section, shared in TOE and ISCSI */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val3_th
+comment|/* Aggregated value 3 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__agg_vars6
+comment|/* Various aggregative variables*/
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_vars6
+comment|/* Various aggregative variables*/
+decl_stmt|;
+name|uint8_t
+name|__agg_val3_th
+comment|/* Aggregated value 3 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_vars7
+comment|/* Various aggregative variables*/
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val11_th
+comment|/* aggregated value 11 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val11
+comment|/* aggregated value 11 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val11
+comment|/* aggregated value 11 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val11_th
+comment|/* aggregated value 11 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved1
+decl_stmt|;
+name|uint8_t
+name|__agg_val6_th
+comment|/* aggregated value 6 - threshold */
+decl_stmt|;
+name|uint16_t
+name|__agg_val9
+comment|/* aggregated value 9 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val9
+comment|/* aggregated value 9 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val6_th
+comment|/* aggregated value 6 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__reserved1
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val2_th
+comment|/* Aggregated value 2 - threshold */
+decl_stmt|;
+name|uint16_t
+name|cmp_bd_cons
+comment|/* BD Consumer from the Completor */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cmp_bd_cons
+comment|/* BD Consumer from the Completor */
+decl_stmt|;
+name|uint16_t
+name|__agg_val2_th
+comment|/* Aggregated value 2 - threshold */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__agg_varint8_t
+comment|/* Various aggregative variables*/
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc0
+comment|/* Misc aggregated variable 0 */
+decl_stmt|;
+name|uint16_t
+name|__agg_val4
+comment|/* aggregated value 4 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_val4
+comment|/* aggregated value 4 */
+decl_stmt|;
+name|uint16_t
+name|__agg_misc0
+comment|/* Misc aggregated variable 0 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_val3
+comment|/* Aggregated value 3 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+comment|/* Aggregated value 6 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val5_th
+comment|/* Aggregated value 5 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__agg_val5
+comment|/* Aggregated value 5 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|__agg_val5
+comment|/* Aggregated value 5 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val5_th
+comment|/* Aggregated value 5 - threshold */
+decl_stmt|;
+name|uint8_t
+name|__agg_val6
+comment|/* Aggregated value 6 */
+decl_stmt|;
+name|uint8_t
+name|__agg_val3
+comment|/* Aggregated value 3 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__agg_misc1
+comment|/* Spare value for aggregation. NOTE: this value is used in the retransmit decision rule if CmpSeqDecMask is 0. In that case it is intended to be CmpBdSize. */
+decl_stmt|;
+name|uint16_t
+name|__bd_ind_max_val
+comment|/* modulo value for bd_prod */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__bd_ind_max_val
+comment|/* modulo value for bd_prod */
+decl_stmt|;
+name|uint16_t
+name|__agg_misc1
+comment|/* Spare value for aggregation. NOTE: this value is used in the retransmit decision rule if CmpSeqDecMask is 0. In that case it is intended to be CmpBdSize. */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|cmp_bd_start_seq
+comment|/* The sequence number of the start completion point (BD) */
+decl_stmt|;
+name|uint32_t
+name|cmp_bd_page_0_to_31
+comment|/* Misc aggregated variable 4 */
+decl_stmt|;
+name|uint32_t
+name|cmp_bd_page_32_to_63
+comment|/* spare aggregated variable 5 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * doorbell message sent to the chip  */
 end_comment
 
@@ -11409,7 +22437,7 @@ name|zero_fill1
 comment|/* driver must zero this field! */
 decl_stmt|;
 name|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 name|header
 decl_stmt|;
 elif|#
@@ -11419,7 +22447,7 @@ argument_list|(
 name|__LITTLE_ENDIAN
 argument_list|)
 name|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 name|header
 decl_stmt|;
 name|uint8_t
@@ -11459,7 +22487,7 @@ name|zero_fill1
 comment|/* driver must zero this field! */
 decl_stmt|;
 name|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 name|header
 decl_stmt|;
 elif|#
@@ -11469,7 +22497,7 @@ argument_list|(
 name|__LITTLE_ENDIAN
 argument_list|)
 name|struct
-name|doorbell_hdr
+name|doorbell_hdr_t
 name|header
 decl_stmt|;
 name|uint8_t
@@ -11488,7 +22516,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|regpair
+name|regpair_native_t
 block|{
 name|uint32_t
 name|lo
@@ -11504,7 +22532,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|regpair_native
+name|regpair_t
 block|{
 name|uint32_t
 name|lo
@@ -11534,6 +22562,9 @@ comment|/* Add/remove a VLAN */
 block|,
 name|CLASSIFY_RULE_OPCODE_PAIR
 comment|/* Add/remove a MAC-VLAN pair */
+block|,
+name|CLASSIFY_RULE_OPCODE_IMAC_VNI
+comment|/* Add/remove an Inner MAC-VNI pair entry */
 block|,
 name|MAX_CLASSIFY_RULE
 block|}
@@ -11608,8 +22639,15 @@ decl_stmt|;
 name|uint8_t
 name|traffic_type
 decl_stmt|;
-name|uint32_t
+name|uint8_t
+name|fp_hsi_ver
+comment|/* Hsi version */
+decl_stmt|;
+name|uint8_t
 name|reserved0
+index|[
+literal|3
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -11747,17 +22785,17 @@ name|rss_engine_id
 comment|/* In Everest2, if rss_mode is set, this field specified which RSS engine is associate with this client */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|bd_page_base
 comment|/* BD page base address at the host */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|sge_page_base
 comment|/* SGE page base address at the host */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|cqe_page_base
 comment|/* Completion queue base address */
 decl_stmt|;
@@ -11882,11 +22920,18 @@ name|uint16_t
 name|silent_vlan_mask
 comment|/* The vlan mask, in case, silent vlan is set */
 decl_stmt|;
-name|uint32_t
+name|uint8_t
+name|handle_ptp_pkts_flg
+comment|/* If set, this client handles PTP Packets */
+decl_stmt|;
+name|uint8_t
 name|reserved6
 index|[
-literal|2
+literal|3
 index|]
+decl_stmt|;
+name|uint32_t
+name|reserved7
 decl_stmt|;
 block|}
 struct|;
@@ -11929,7 +22974,7 @@ name|default_vlan
 comment|/* default vlan tag (id+pri). (valid if default_vlan_flg is set) */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|tx_bd_page_base
 comment|/* BD page base address at the host for TxBdCons */
 decl_stmt|;
@@ -12125,7 +23170,15 @@ name|uint8_t
 name|tx_switching_change_flg
 comment|/* If set, tx_switching_flg will be updated. */
 decl_stmt|;
-name|uint32_t
+name|uint8_t
+name|handle_ptp_pkts_flg
+comment|/* If set, this client handles PTP Packets */
+decl_stmt|;
+name|uint8_t
+name|handle_ptp_pkts_change_flg
+comment|/* If set, handle_ptp_pkts_flg will be updated. */
+decl_stmt|;
+name|uint16_t
 name|reserved1
 decl_stmt|;
 name|uint32_t
@@ -12177,6 +23230,21 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * 2nd parse bd type used in ethernet tx BDs  */
+end_comment
+
+begin_enum
+enum|enum
+name|eth_2nd_parse_bd_type
+block|{
+name|ETH_2ND_PARSE_BD_TYPE_LSO_TUNNEL
+block|,
+name|MAX_ETH_2ND_PARSE_BD_TYPE
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Ethernet address typesm used in ethernet tx BDs  */
@@ -12232,7 +23300,7 @@ define|#
 directive|define
 name|ETH_CLASSIFY_CMD_HEADER_OPCODE
 value|(0x3<<2)
-comment|/* BitField cmd_general_data	command opcode for MAC/VLAN/PAIR (use enum classify_rule) */
+comment|/* BitField cmd_general_data	command opcode for MAC/VLAN/PAIR/IMAC_VNI (use enum classify_rule) */
 define|#
 directive|define
 name|ETH_CLASSIFY_CMD_HEADER_OPCODE_SHIFT
@@ -12290,6 +23358,37 @@ decl_stmt|;
 name|uint32_t
 name|echo
 comment|/* echo value to be sent to driver on event ring */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Command for adding/removing a Inner-MAC/VNI classification rule $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|eth_classify_imac_vni_cmd
+block|{
+name|struct
+name|eth_classify_cmd_header
+name|header
+decl_stmt|;
+name|uint32_t
+name|vni
+decl_stmt|;
+name|uint16_t
+name|imac_lsb
+decl_stmt|;
+name|uint16_t
+name|imac_mid
+decl_stmt|;
+name|uint16_t
+name|imac_msb
+decl_stmt|;
+name|uint16_t
+name|reserved1
 decl_stmt|;
 block|}
 struct|;
@@ -12410,6 +23509,10 @@ decl_stmt|;
 name|struct
 name|eth_classify_pair_cmd
 name|pair
+decl_stmt|;
+name|struct
+name|eth_classify_imac_vni_cmd
+name|imac_vni
 decl_stmt|;
 block|}
 union|;
@@ -12670,7 +23773,7 @@ name|sgl_or_raw_data
 comment|/* union for sgl and raw data. */
 decl_stmt|;
 name|uint32_t
-name|reserved5
+name|padding
 index|[
 literal|8
 index|]
@@ -12737,13 +23840,22 @@ name|ETH_FAST_PATH_RX_CQE_L4_BAD_XSUM_FLG_SHIFT
 value|5
 define|#
 directive|define
+name|ETH_FAST_PATH_RX_CQE_PTP_PKT
+value|(0x1<<6)
+comment|/* BitField type_error_flags	Is a PTP Timesync Packet */
+define|#
+directive|define
+name|ETH_FAST_PATH_RX_CQE_PTP_PKT_SHIFT
+value|6
+define|#
+directive|define
 name|ETH_FAST_PATH_RX_CQE_RESERVED0
-value|(0x3<<6)
+value|(0x1<<7)
 comment|/* BitField type_error_flags	 */
 define|#
 directive|define
 name|ETH_FAST_PATH_RX_CQE_RESERVED0_SHIFT
-value|6
+value|7
 name|uint8_t
 name|status_flags
 decl_stmt|;
@@ -12834,11 +23946,30 @@ name|eth_sgl_or_raw_data
 name|sgl_or_raw_data
 comment|/* union for sgl and raw data. */
 decl_stmt|;
-name|uint32_t
+name|uint8_t
+name|tunn_type
+comment|/* packet tunneling type */
+decl_stmt|;
+name|uint8_t
+name|tunn_inner_hdrs_offset
+comment|/* Offset to Inner Headers (for tunn_type != TUNN_TYPE_NONE) */
+decl_stmt|;
+name|uint16_t
 name|reserved1
+decl_stmt|;
+name|uint32_t
+name|tunn_tenant_id
+comment|/* Tenant ID (for tunn_type != TUNN_TYPE_NONE */
+decl_stmt|;
+name|uint32_t
+name|padding
 index|[
-literal|8
+literal|5
 index|]
+decl_stmt|;
+name|uint32_t
+name|marker
+comment|/* Used internally by the driver */
 decl_stmt|;
 block|}
 struct|;
@@ -12972,7 +24103,7 @@ name|uint16_t
 name|reserved3
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|reserved4
 decl_stmt|;
 block|}
@@ -13001,6 +24132,28 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Hsi version  */
+end_comment
+
+begin_enum
+enum|enum
+name|eth_fp_hsi_ver
+block|{
+name|ETH_FP_HSI_VER_0
+comment|/* Hsi which does not support tunnelling */
+block|,
+name|ETH_FP_HSI_VER_1
+comment|/* Hsi does support tunnelling */
+block|,
+name|ETH_FP_HSI_VER_2
+comment|/* Hsi which supports tunneling and UFP */
+block|,
+name|MAX_ETH_FP_HSI_VER
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * parameters for eth classification configuration ramrod $$KEEP_ENDIANNESS$$  */
@@ -13147,33 +24300,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * tunneling related data.  */
+comment|/*  * tunneling related data. $$KEEP_ENDIANNESS$$  */
 end_comment
 
 begin_struct
 struct|struct
 name|eth_tunnel_data
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BIG_ENDIAN
-argument_list|)
-name|uint16_t
-name|dst_mid
-comment|/* destination mac address 16 middle bits */
-decl_stmt|;
-name|uint16_t
-name|dst_lo
-comment|/* destination mac address 16 low bits */
-decl_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__LITTLE_ENDIAN
-argument_list|)
 name|uint16_t
 name|dst_lo
 comment|/* destination mac address 16 low bits */
@@ -13182,28 +24315,6 @@ name|uint16_t
 name|dst_mid
 comment|/* destination mac address 16 middle bits */
 decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BIG_ENDIAN
-argument_list|)
-name|uint16_t
-name|fw_ip_hdr_csum
-comment|/* Fw Ip header checksum (with ALL ip header fields) for the outer IP header */
-decl_stmt|;
-name|uint16_t
-name|dst_hi
-comment|/* destination mac address 16 high bits */
-decl_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__LITTLE_ENDIAN
-argument_list|)
 name|uint16_t
 name|dst_hi
 comment|/* destination mac address 16 high bits */
@@ -13212,49 +24323,6 @@ name|uint16_t
 name|fw_ip_hdr_csum
 comment|/* Fw Ip header checksum (with ALL ip header fields) for the outer IP header */
 decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BIG_ENDIAN
-argument_list|)
-name|uint8_t
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|ETH_TUNNEL_DATA_IP_HDR_TYPE_OUTER
-value|(0x1<<0)
-comment|/* BitField flags	Set in case outer IP header is ipV6 */
-define|#
-directive|define
-name|ETH_TUNNEL_DATA_IP_HDR_TYPE_OUTER_SHIFT
-value|0
-define|#
-directive|define
-name|ETH_TUNNEL_DATA_RESERVED
-value|(0x7F<<1)
-comment|/* BitField flags	Should be set with 0 */
-define|#
-directive|define
-name|ETH_TUNNEL_DATA_RESERVED_SHIFT
-value|1
-name|uint8_t
-name|ip_hdr_start_inner_w
-comment|/* Inner IP header offset in WORDs (16-bit) from start of packet */
-decl_stmt|;
-name|uint16_t
-name|pseudo_csum
-comment|/* Pseudo checksum with  length  field=0 */
-decl_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__LITTLE_ENDIAN
-argument_list|)
 name|uint16_t
 name|pseudo_csum
 comment|/* Pseudo checksum with  length  field=0 */
@@ -13268,12 +24336,12 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|ETH_TUNNEL_DATA_IP_HDR_TYPE_OUTER
+name|ETH_TUNNEL_DATA_IPV6_OUTER
 value|(0x1<<0)
 comment|/* BitField flags	Set in case outer IP header is ipV6 */
 define|#
 directive|define
-name|ETH_TUNNEL_DATA_IP_HDR_TYPE_OUTER_SHIFT
+name|ETH_TUNNEL_DATA_IPV6_OUTER_SHIFT
 value|0
 define|#
 directive|define
@@ -13284,8 +24352,6 @@ define|#
 directive|define
 name|ETH_TUNNEL_DATA_RESERVED_SHIFT
 value|1
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -13375,7 +24441,7 @@ name|uint32_t
 name|reserved2
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|reserved3
 decl_stmt|;
 block|}
@@ -13478,20 +24544,20 @@ name|eth_rss_mode
 block|{
 name|ETH_RSS_MODE_DISABLED
 block|,
-name|ETH_RSS_MODE_ESX51
-comment|/* RSS mode for Vmware ESX 5.1 (Only do RSS if packet is UDP with dst port that matches the UDP 4-tuble Destination Port mask and value) */
-block|,
 name|ETH_RSS_MODE_REGULAR
 comment|/* Regular (ndis-like) RSS */
 block|,
+name|ETH_RSS_MODE_ESX51
+comment|/* RSS mode for Vmware ESX 5.1 (Only do RSS for VXLAN packets) */
+block|,
 name|ETH_RSS_MODE_VLAN_PRI
-comment|/* RSS based on inner-vlan priority field */
+comment|/* RSS based on inner-vlan priority field (E1/E1h Only) */
 block|,
 name|ETH_RSS_MODE_E1HOV_PRI
-comment|/* RSS based on outer-vlan priority field */
+comment|/* RSS based on outer-vlan priority field (E1/E1h Only) */
 block|,
 name|ETH_RSS_MODE_IP_DSCP
-comment|/* RSS based on IPv4 DSCP field */
+comment|/* RSS based on IPv4 DSCP field (E1/E1h Only) */
 block|,
 name|MAX_ETH_RSS_MODE
 block|}
@@ -13510,13 +24576,17 @@ name|uint8_t
 name|rss_engine_id
 decl_stmt|;
 name|uint8_t
+name|rss_mode
+comment|/* The RSS mode for this function */
+decl_stmt|;
+name|uint16_t
 name|capabilities
 decl_stmt|;
 define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_CAPABILITY
 value|(0x1<<0)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 2-tupple capability */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 2-tuple capability */
 define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_CAPABILITY_SHIFT
@@ -13525,7 +24595,7 @@ define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_TCP_CAPABILITY
 value|(0x1<<1)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 4-tupple capability for TCP */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 4-tuple capability for TCP */
 define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_TCP_CAPABILITY_SHIFT
@@ -13534,71 +24604,92 @@ define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_UDP_CAPABILITY
 value|(0x1<<2)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 4-tupple capability for UDP */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 4-tuple capability for UDP */
 define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_UDP_CAPABILITY_SHIFT
 value|2
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_CAPABILITY
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_VXLAN_CAPABILITY
 value|(0x1<<3)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 2-tupple capability */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV4 4-tuple capability for VXLAN Tunnels */
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_CAPABILITY_SHIFT
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV4_VXLAN_CAPABILITY_SHIFT
 value|3
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_TCP_CAPABILITY
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_CAPABILITY
 value|(0x1<<4)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 4-tupple capability for TCP */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 2-tuple capability */
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_TCP_CAPABILITY_SHIFT
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_CAPABILITY_SHIFT
 value|4
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_UDP_CAPABILITY
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_TCP_CAPABILITY
 value|(0x1<<5)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 4-tupple capability for UDP */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 4-tuple capability for TCP */
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_UDP_CAPABILITY_SHIFT
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_TCP_CAPABILITY_SHIFT
 value|5
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_EN_5_TUPLE_CAPABILITY
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_UDP_CAPABILITY
 value|(0x1<<6)
-comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the 5-tupple capability */
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 4-tuple capability for UDP */
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_EN_5_TUPLE_CAPABILITY_SHIFT
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_UDP_CAPABILITY_SHIFT
 value|6
 define|#
 directive|define
-name|ETH_RSS_UPDATE_RAMROD_DATA_UPDATE_RSS_KEY
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_VXLAN_CAPABILITY
 value|(0x1<<7)
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of the IpV6 4-tuple capability for VXLAN Tunnels */
+define|#
+directive|define
+name|ETH_RSS_UPDATE_RAMROD_DATA_IPV6_VXLAN_CAPABILITY_SHIFT
+value|7
+define|#
+directive|define
+name|ETH_RSS_UPDATE_RAMROD_DATA_TUNN_INNER_HDRS_CAPABILITY
+value|(0x1<<8)
+comment|/* BitField capabilitiesFunction RSS capabilities	configuration of Tunnel Inner Headers capability. */
+define|#
+directive|define
+name|ETH_RSS_UPDATE_RAMROD_DATA_TUNN_INNER_HDRS_CAPABILITY_SHIFT
+value|8
+define|#
+directive|define
+name|ETH_RSS_UPDATE_RAMROD_DATA_UPDATE_RSS_KEY
+value|(0x1<<9)
 comment|/* BitField capabilitiesFunction RSS capabilities	if set update the rss keys */
 define|#
 directive|define
 name|ETH_RSS_UPDATE_RAMROD_DATA_UPDATE_RSS_KEY_SHIFT
-value|7
+value|9
+define|#
+directive|define
+name|ETH_RSS_UPDATE_RAMROD_DATA_RESERVED
+value|(0x3F<<10)
+comment|/* BitField capabilitiesFunction RSS capabilities	 */
+define|#
+directive|define
+name|ETH_RSS_UPDATE_RAMROD_DATA_RESERVED_SHIFT
+value|10
 name|uint8_t
 name|rss_result_mask
 comment|/* The mask for the lower byte of RSS result - defines which section of the indirection table will be used. To enable all table put here 0x7F */
 decl_stmt|;
 name|uint8_t
-name|rss_mode
-comment|/* The RSS mode for this function */
+name|reserved3
 decl_stmt|;
 name|uint16_t
-name|udp_4tuple_dst_port_mask
-comment|/* If UDP 4-tuple enabled, packets that match the mask and value are 4-tupled, the rest are 2-tupled. (Set to 0 to match all) */
-decl_stmt|;
-name|uint16_t
-name|udp_4tuple_dst_port_value
-comment|/* If UDP 4-tuple enabled, packets that match the mask and value are 4-tupled, the rest are 2-tupled. (Set to 0 to match all) */
+name|reserved4
 decl_stmt|;
 name|uint8_t
 name|indirection_table
@@ -13618,7 +24709,7 @@ name|uint32_t
 name|echo
 decl_stmt|;
 name|uint32_t
-name|reserved3
+name|reserved5
 decl_stmt|;
 block|}
 struct|;
@@ -13639,6 +24730,28 @@ decl_stmt|;
 name|uint32_t
 name|addr_hi
 comment|/* Single continuous buffer high pointer */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|eth_rx_bd_next_page
+block|{
+name|uint32_t
+name|addr_lo
+comment|/* Next page low pointer */
+decl_stmt|;
+name|uint32_t
+name|addr_hi
+comment|/* Next page high pointer */
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -13853,49 +24966,49 @@ end_comment
 
 begin_struct
 struct|struct
-name|spe_hdr
+name|spe_hdr_t
 block|{
 name|uint32_t
 name|conn_and_cmd_data
 decl_stmt|;
 define|#
 directive|define
-name|SPE_HDR_CID
+name|SPE_HDR_T_CID
 value|(0xFFFFFF<<0)
 comment|/* BitField conn_and_cmd_data	 */
 define|#
 directive|define
-name|SPE_HDR_CID_SHIFT
+name|SPE_HDR_T_CID_SHIFT
 value|0
 define|#
 directive|define
-name|SPE_HDR_CMD_ID
-value|(0xFF<<24)
+name|SPE_HDR_T_CMD_ID
+value|(0xFFUL<<24)
 comment|/* BitField conn_and_cmd_data	command id of the ramrod- use enum common_spqe_cmd_id/eth_spqe_cmd_id/toe_spqe_cmd_id  */
 define|#
 directive|define
-name|SPE_HDR_CMD_ID_SHIFT
+name|SPE_HDR_T_CMD_ID_SHIFT
 value|24
 name|uint16_t
 name|type
 decl_stmt|;
 define|#
 directive|define
-name|SPE_HDR_CONN_TYPE
+name|SPE_HDR_T_CONN_TYPE
 value|(0xFF<<0)
 comment|/* BitField type	connection type. (3 bits are used) (use enum connection_type) */
 define|#
 directive|define
-name|SPE_HDR_CONN_TYPE_SHIFT
+name|SPE_HDR_T_CONN_TYPE_SHIFT
 value|0
 define|#
 directive|define
-name|SPE_HDR_FUNCTION_ID
+name|SPE_HDR_T_FUNCTION_ID
 value|(0xFF<<8)
 comment|/* BitField type	 */
 define|#
 directive|define
-name|SPE_HDR_FUNCTION_ID_SHIFT
+name|SPE_HDR_T_FUNCTION_ID_SHIFT
 value|8
 name|uint16_t
 name|reserved1
@@ -13920,12 +25033,12 @@ index|]
 comment|/* to fix this structure size to 8 bytes */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|client_update_ramrod_data
 comment|/* The address of the data for client update ramrod */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|client_init_ramrod_init_data
 comment|/* The data for client setup ramrod */
 decl_stmt|;
@@ -13935,7 +25048,7 @@ name|halt_ramrod_data
 comment|/* Includes the client id to be deleted */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|update_data_addr
 comment|/* physical address of the eth_rss_update_ramrod_data struct, as allocated by the driver */
 decl_stmt|;
@@ -13945,17 +25058,17 @@ name|common_ramrod_data
 comment|/* The data contain client ID need to the ramrod */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|classify_cfg_addr
 comment|/* physical address of the eth_classify_rules_ramrod_data struct, as allocated by the driver */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|filter_cfg_addr
 comment|/* physical address of the eth_filter_cfg_ramrod_data struct, as allocated by the driver */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|mcast_cfg_addr
 comment|/* physical address of the eth_mcast_cfg_ramrod_data struct, as allocated by the driver */
 decl_stmt|;
@@ -13972,7 +25085,7 @@ struct|struct
 name|eth_spe
 block|{
 name|struct
-name|spe_hdr
+name|spe_hdr_t
 name|hdr
 comment|/* common data for all protocols */
 decl_stmt|;
@@ -14095,6 +25208,41 @@ name|CSUM_ON_BD
 comment|/* checksum is on the BD. */
 block|,
 name|MAX_ETH_TUNNEL_NON_LSO_CSUM_LOCATION
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Packet Tunneling Type  */
+end_comment
+
+begin_enum
+enum|enum
+name|eth_tunn_type
+block|{
+name|TUNN_TYPE_NONE
+block|,
+name|TUNN_TYPE_VXLAN
+block|,
+name|TUNN_TYPE_L2_GRE
+comment|/* Ethernet over GRE */
+block|,
+name|TUNN_TYPE_IPV4_GRE
+comment|/* IPv4 over GRE */
+block|,
+name|TUNN_TYPE_IPV6_GRE
+comment|/* IPv6 over GRE */
+block|,
+name|TUNN_TYPE_L2_GENEVE
+comment|/* Ethernet over GENEVE */
+block|,
+name|TUNN_TYPE_IPV4_GENEVE
+comment|/* IPv4 over GENEVE */
+block|,
+name|TUNN_TYPE_IPV6_GENEVE
+comment|/* IPv6 over GENEVE */
+block|,
+name|MAX_ETH_TUNN_TYPE
 block|}
 enum|;
 end_enum
@@ -14250,12 +25398,21 @@ decl_stmt|;
 define|#
 directive|define
 name|ETH_TX_START_BD_HDR_NBDS
-value|(0xF<<0)
+value|(0x7<<0)
 comment|/* BitField general_data	contains the number of BDs that contain Ethernet/IP/TCP headers, for full/partial LSO modes */
 define|#
 directive|define
 name|ETH_TX_START_BD_HDR_NBDS_SHIFT
 value|0
+define|#
+directive|define
+name|ETH_TX_START_BD_NO_ADDED_TAGS
+value|(0x1<<3)
+comment|/* BitField general_data	If set, do not add any additional tags to the packet including MF Tags, Default VLAN or VLAN for the sake of DCB */
+define|#
+directive|define
+name|ETH_TX_START_BD_NO_ADDED_TAGS_SHIFT
+value|3
 define|#
 directive|define
 name|ETH_TX_START_BD_FORCE_VLAN_MODE
@@ -14594,8 +25751,29 @@ define|#
 directive|define
 name|ETH_TX_PARSE_2ND_BD_RESERVED1_SHIFT
 value|13
-name|uint16_t
-name|reserved2
+name|uint8_t
+name|bd_type
+decl_stmt|;
+define|#
+directive|define
+name|ETH_TX_PARSE_2ND_BD_TYPE
+value|(0xF<<0)
+comment|/* BitField bd_type	Type of bd (use enum eth_2nd_parse_bd_type) */
+define|#
+directive|define
+name|ETH_TX_PARSE_2ND_BD_TYPE_SHIFT
+value|0
+define|#
+directive|define
+name|ETH_TX_PARSE_2ND_BD_RESERVED2
+value|(0xF<<4)
+comment|/* BitField bd_type	 */
+define|#
+directive|define
+name|ETH_TX_PARSE_2ND_BD_RESERVED2_SHIFT
+value|4
+name|uint8_t
+name|reserved3
 decl_stmt|;
 name|uint8_t
 name|tcp_flags
@@ -14673,7 +25851,7 @@ directive|define
 name|ETH_TX_PARSE_2ND_BD_CWR_FLG_SHIFT
 value|7
 name|uint8_t
-name|reserved3
+name|reserved4
 decl_stmt|;
 name|uint8_t
 name|tunnel_udp_hdr_start_w
@@ -15331,6 +26509,10927 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * ABTS info $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_abts_info
+block|{
+name|uint16_t
+name|aborted_task_id
+comment|/* Task ID to be aborted */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|uint32_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fixed size structure in order to plant it in Union structure $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_abts_rsp_union
+block|{
+name|uint8_t
+name|r_ctl
+comment|/* Only R_CTL part of the FC header in ABTS ACC or BA_RJT messages is placed */
+decl_stmt|;
+name|uint8_t
+name|rsrv
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint32_t
+name|abts_rsp_payload
+index|[
+literal|7
+index|]
+comment|/* The payload of  the ABTS ACC (12B) or the BA_RJT (4B) */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * 4 regs size $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_bd_ctx
+block|{
+name|uint32_t
+name|buf_addr_hi
+comment|/* Higher buffer host address */
+decl_stmt|;
+name|uint32_t
+name|buf_addr_lo
+comment|/* Lower buffer host address */
+decl_stmt|;
+name|uint16_t
+name|buf_len
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint16_t
+name|flags
+comment|/* BD flags */
+decl_stmt|;
+name|uint16_t
+name|rsrv1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE cached sges context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_cached_sge_ctx
+block|{
+name|struct
+name|regpair_t
+name|cur_buf_addr
+comment|/* Current buffer address (in initialization it is the first cached buffer) */
+decl_stmt|;
+name|uint16_t
+name|cur_buf_rem
+comment|/* Remaining data in current buffer (in bytes) */
+decl_stmt|;
+name|uint16_t
+name|second_buf_rem
+comment|/* Remaining data in second buffer (in bytes) */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|second_buf_addr
+comment|/* Second cached buffer address */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Cleanup info $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_cleanup_info
+block|{
+name|uint16_t
+name|cleaned_task_id
+comment|/* Task ID to be cleaned */
+decl_stmt|;
+name|uint16_t
+name|rolled_tx_seq_cnt
+comment|/* Tx sequence count */
+decl_stmt|;
+name|uint32_t
+name|rolled_tx_data_offset
+comment|/* Tx data offset */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcp RSP flags $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fcp_rsp_flags
+block|{
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_RSP_LEN_VALID
+value|(0x1<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_RSP_LEN_VALID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_SNS_LEN_VALID
+value|(0x1<<1)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_SNS_LEN_VALID_SHIFT
+value|1
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_RESID_OVER
+value|(0x1<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_RESID_OVER_SHIFT
+value|2
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_RESID_UNDER
+value|(0x1<<3)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_RESID_UNDER_SHIFT
+value|3
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_CONF_REQ
+value|(0x1<<4)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_CONF_REQ_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_BIDI_FLAGS
+value|(0x7<<5)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_FCP_RSP_FLAGS_FCP_BIDI_FLAGS_SHIFT
+value|5
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcp RSP payload $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fcp_rsp_payload
+block|{
+name|struct
+name|regpair_t
+name|reserved0
+decl_stmt|;
+name|uint32_t
+name|fcp_resid
+decl_stmt|;
+name|uint8_t
+name|scsi_status_code
+decl_stmt|;
+name|struct
+name|fcoe_fcp_rsp_flags
+name|fcp_flags
+decl_stmt|;
+name|uint16_t
+name|retry_delay_timer
+decl_stmt|;
+name|uint32_t
+name|fcp_rsp_len
+decl_stmt|;
+name|uint32_t
+name|fcp_sns_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fixed size structure in order to plant it in Union structure $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fcp_rsp_union
+block|{
+name|struct
+name|fcoe_fcp_rsp_payload
+name|payload
+decl_stmt|;
+name|struct
+name|regpair_t
+name|reserved0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FC header $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fc_hdr
+block|{
+name|uint8_t
+name|s_id
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|cs_ctl
+decl_stmt|;
+name|uint8_t
+name|d_id
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|r_ctl
+decl_stmt|;
+name|uint16_t
+name|seq_cnt
+decl_stmt|;
+name|uint8_t
+name|df_ctl
+decl_stmt|;
+name|uint8_t
+name|seq_id
+decl_stmt|;
+name|uint8_t
+name|f_ctl
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|type
+decl_stmt|;
+name|uint32_t
+name|parameters
+decl_stmt|;
+name|uint16_t
+name|rx_id
+decl_stmt|;
+name|uint16_t
+name|ox_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FC header union $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_mp_rsp_union
+block|{
+name|struct
+name|fcoe_fc_hdr
+name|fc_hdr
+comment|/* FC header copied into task context (middle path flows) */
+decl_stmt|;
+name|uint32_t
+name|mp_payload_len
+comment|/* Length of the MP payload that was placed */
+decl_stmt|;
+name|uint32_t
+name|rsrv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Completion information $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_comp_flow_info
+block|{
+name|struct
+name|fcoe_fcp_rsp_union
+name|fcp_rsp
+comment|/* FCP_RSP payload */
+decl_stmt|;
+name|struct
+name|fcoe_abts_rsp_union
+name|abts_rsp
+comment|/* ABTS ACC R_CTL part of the FC header ABTS ACC or BA_RJT payload frame */
+decl_stmt|;
+name|struct
+name|fcoe_mp_rsp_union
+name|mp_rsp
+comment|/* FC header copied into task context (middle path flows) */
+decl_stmt|;
+name|uint32_t
+name|opaque
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * External ABTS info $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_ext_abts_info
+block|{
+name|uint32_t
+name|rsrv0
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|struct
+name|fcoe_abts_info
+name|ctx
+comment|/* ABTS information. Initialized by Xstorm */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * External cleanup info $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_ext_cleanup_info
+block|{
+name|uint32_t
+name|rsrv0
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|struct
+name|fcoe_cleanup_info
+name|ctx
+comment|/* Cleanup information */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcoe FW Tx sequence context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fw_tx_seq_ctx
+block|{
+name|uint32_t
+name|data_offset
+comment|/* The amount of data transmitted so far (equal to FCP_DATA PARAMETER field) */
+decl_stmt|;
+name|uint16_t
+name|seq_cnt
+comment|/* The last SEQ_CNT transmitted */
+decl_stmt|;
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcoe external FW Tx sequence context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_ext_fw_tx_seq_ctx
+block|{
+name|uint32_t
+name|rsrv0
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|struct
+name|fcoe_fw_tx_seq_ctx
+name|ctx
+comment|/* TX sequence context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE multiple sges context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_mul_sges_ctx
+block|{
+name|struct
+name|regpair_t
+name|cur_sge_addr
+comment|/* Current BD address */
+decl_stmt|;
+name|uint16_t
+name|cur_sge_off
+comment|/* Offset in current BD (in bytes) */
+decl_stmt|;
+name|uint8_t
+name|cur_sge_idx
+comment|/* Current BD index in BD list */
+decl_stmt|;
+name|uint8_t
+name|sgl_size
+comment|/* Total number of BDs */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE external multiple sges context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_ext_mul_sges_ctx
+block|{
+name|struct
+name|fcoe_mul_sges_ctx
+name|mul_sgl
+comment|/* SGL context */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|rsrv0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCP CMD payload $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fcp_cmd_payload
+block|{
+name|uint32_t
+name|opaque
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcp xfr rdy payload $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fcp_xfr_rdy_payload
+block|{
+name|uint32_t
+name|burst_len
+decl_stmt|;
+name|uint32_t
+name|data_ro
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FC frame $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_fc_frame
+block|{
+name|struct
+name|fcoe_fc_hdr
+name|fc_hdr
+decl_stmt|;
+name|uint32_t
+name|reserved0
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE KCQ CQE parameters $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_kcqe_params
+block|{
+name|uint32_t
+name|reserved0
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * FCoE KCQ CQE $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kcqe
+block|{
+name|uint32_t
+name|fcoe_conn_id
+comment|/* Drivers connection ID (only 16 bits are used) */
+decl_stmt|;
+name|uint32_t
+name|completion_status
+comment|/* 0=command completed succesfuly, 1=command failed */
+decl_stmt|;
+name|uint32_t
+name|fcoe_conn_context_id
+comment|/* Context ID of the FCoE connection */
+decl_stmt|;
+name|union
+name|fcoe_kcqe_params
+name|params
+comment|/* command-specific parameters */
+decl_stmt|;
+name|uint16_t
+name|qe_self_seq
+comment|/* Self identifying sequence number */
+decl_stmt|;
+name|uint8_t
+name|op_code
+comment|/* FCoE KCQ opcode */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_KCQE_RESERVED0
+value|(0x7<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_KCQE_RESERVED0_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_KCQE_RAMROD_COMPLETION
+value|(0x1<<3)
+comment|/* BitField flags	Everest only - indicates whether this KCQE is a ramrod completion */
+define|#
+directive|define
+name|FCOE_KCQE_RAMROD_COMPLETION_SHIFT
+value|3
+define|#
+directive|define
+name|FCOE_KCQE_LAYER_CODE
+value|(0x7<<4)
+comment|/* BitField flags	protocol layer (L2,L3,L4,L5,iSCSI,FCoE) */
+define|#
+directive|define
+name|FCOE_KCQE_LAYER_CODE_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_KCQE_LINKED_WITH_NEXT
+value|(0x1<<7)
+comment|/* BitField flags	Indicates whether this KCQE is linked with the next KCQE */
+define|#
+directive|define
+name|FCOE_KCQE_LINKED_WITH_NEXT_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE KWQE header $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_header
+block|{
+name|uint8_t
+name|op_code
+comment|/* FCoE KWQE opcode */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_KWQE_HEADER_RESERVED0
+value|(0xF<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_KWQE_HEADER_RESERVED0_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_KWQE_HEADER_LAYER_CODE
+value|(0x7<<4)
+comment|/* BitField flags	protocol layer (L2,L3,L4,L5) */
+define|#
+directive|define
+name|FCOE_KWQE_HEADER_LAYER_CODE_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_KWQE_HEADER_RESERVED1
+value|(0x1<<7)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_KWQE_HEADER_RESERVED1_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE firmware init request 1 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_init1
+block|{
+name|uint16_t
+name|num_tasks
+comment|/* Number of tasks in global task list */
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|task_list_pbl_addr_lo
+comment|/* Lower 32-bit of Task List page table */
+decl_stmt|;
+name|uint32_t
+name|task_list_pbl_addr_hi
+comment|/* Higher 32-bit of Task List page table */
+decl_stmt|;
+name|uint32_t
+name|dummy_buffer_addr_lo
+comment|/* Lower 32-bit of dummy buffer */
+decl_stmt|;
+name|uint32_t
+name|dummy_buffer_addr_hi
+comment|/* Higher 32-bit of dummy buffer */
+decl_stmt|;
+name|uint16_t
+name|sq_num_wqes
+comment|/* Number of entries in the Send Queue */
+decl_stmt|;
+name|uint16_t
+name|rq_num_wqes
+comment|/* Number of entries in the Receive Queue */
+decl_stmt|;
+name|uint16_t
+name|rq_buffer_log_size
+comment|/* Log of the size of a single buffer (entry) in the RQ */
+decl_stmt|;
+name|uint16_t
+name|cq_num_wqes
+comment|/* Number of entries in the Completion Queue */
+decl_stmt|;
+name|uint16_t
+name|mtu
+comment|/* Max transmission unit */
+decl_stmt|;
+name|uint8_t
+name|num_sessions_log
+comment|/* Log of the number of sessions */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_KWQE_INIT1_LOG_PAGE_SIZE
+value|(0xF<<0)
+comment|/* BitField flags	log of page size value */
+define|#
+directive|define
+name|FCOE_KWQE_INIT1_LOG_PAGE_SIZE_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_KWQE_INIT1_LOG_CACHED_PBES_PER_FUNC
+value|(0x7<<4)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_KWQE_INIT1_LOG_CACHED_PBES_PER_FUNC_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_KWQE_INIT1_CLASSIFY_FAILED_ALLOWED
+value|(0x1<<7)
+comment|/* BitField flags	Special MF mode where classification failure indication from HW is allowed */
+define|#
+directive|define
+name|FCOE_KWQE_INIT1_CLASSIFY_FAILED_ALLOWED_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE firmware init request 2 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_init2
+block|{
+name|uint8_t
+name|hsi_major_version
+comment|/* Implies on a change broken previous HSI */
+decl_stmt|;
+name|uint8_t
+name|hsi_minor_version
+comment|/* Implies on a change which does not broken previous HSI */
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|hash_tbl_pbl_addr_lo
+comment|/* Lower 32-bit of Hash table PBL */
+decl_stmt|;
+name|uint32_t
+name|hash_tbl_pbl_addr_hi
+comment|/* Higher 32-bit of Hash table PBL */
+decl_stmt|;
+name|uint32_t
+name|t2_hash_tbl_addr_lo
+comment|/* Lower 32-bit of T2 Hash table */
+decl_stmt|;
+name|uint32_t
+name|t2_hash_tbl_addr_hi
+comment|/* Higher 32-bit of T2 Hash table */
+decl_stmt|;
+name|uint32_t
+name|t2_ptr_hash_tbl_addr_lo
+comment|/* Lower 32-bit of T2 ptr Hash table */
+decl_stmt|;
+name|uint32_t
+name|t2_ptr_hash_tbl_addr_hi
+comment|/* Higher 32-bit of T2 ptr Hash table */
+decl_stmt|;
+name|uint32_t
+name|free_list_count
+comment|/* T2 free list count */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE firmware init request 3 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_init3
+block|{
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|error_bit_map_lo
+comment|/* 32 lower bits of error bitmap: 1=error, 0=warning */
+decl_stmt|;
+name|uint32_t
+name|error_bit_map_hi
+comment|/* 32 upper bits of error bitmap: 1=error, 0=warning */
+decl_stmt|;
+name|uint8_t
+name|perf_config
+comment|/* 0= no performance acceleration, 1=cached connection, 2=cached tasks, 3=both */
+decl_stmt|;
+name|uint8_t
+name|reserved21
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint32_t
+name|reserved2
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection offload request 1 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_conn_offload1
+block|{
+name|uint16_t
+name|fcoe_conn_id
+comment|/* Drivers connection ID. Should be sent in KCQEs to speed-up drivers access to connection data. */
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|sq_addr_lo
+comment|/* Lower 32-bit of SQ */
+decl_stmt|;
+name|uint32_t
+name|sq_addr_hi
+comment|/* Higher 32-bit of SQ */
+decl_stmt|;
+name|uint32_t
+name|rq_pbl_addr_lo
+comment|/* Lower 32-bit of RQ page table */
+decl_stmt|;
+name|uint32_t
+name|rq_pbl_addr_hi
+comment|/* Higher 32-bit of RQ page table */
+decl_stmt|;
+name|uint32_t
+name|rq_first_pbe_addr_lo
+comment|/* Lower 32-bit of first RQ pbe */
+decl_stmt|;
+name|uint32_t
+name|rq_first_pbe_addr_hi
+comment|/* Higher 32-bit of first RQ pbe */
+decl_stmt|;
+name|uint16_t
+name|rq_prod
+comment|/* Initial RQ producer */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection offload request 2 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_conn_offload2
+block|{
+name|uint16_t
+name|tx_max_fc_pay_len
+comment|/* The maximum acceptable FC payload size (Buffer-to-buffer Receive Data_Field size) supported by target, received during both FLOGI and PLOGI, minimum value should be taken */
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|cq_addr_lo
+comment|/* Lower 32-bit of CQ */
+decl_stmt|;
+name|uint32_t
+name|cq_addr_hi
+comment|/* Higher 32-bit of CQ */
+decl_stmt|;
+name|uint32_t
+name|xferq_addr_lo
+comment|/* Lower 32-bit of XFERQ */
+decl_stmt|;
+name|uint32_t
+name|xferq_addr_hi
+comment|/* Higher 32-bit of XFERQ */
+decl_stmt|;
+name|uint32_t
+name|conn_db_addr_lo
+comment|/* Lower 32-bit of Conn DB (RQ prod and CQ arm bit) */
+decl_stmt|;
+name|uint32_t
+name|conn_db_addr_hi
+comment|/* Higher 32-bit of Conn DB (RQ prod and CQ arm bit) */
+decl_stmt|;
+name|uint32_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection offload request 3 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_conn_offload3
+block|{
+name|uint16_t
+name|vlan_tag
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField vlan_tag	Vlan id */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_CFI
+value|(0x1<<12)
+comment|/* BitField vlan_tag	Canonical format indicator */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_CFI_SHIFT
+value|12
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_PRIORITY
+value|(0x7<<13)
+comment|/* BitField vlan_tag	Vlan priority */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_PRIORITY_SHIFT
+value|13
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint8_t
+name|s_id
+index|[
+literal|3
+index|]
+comment|/* Source ID, received during FLOGI */
+decl_stmt|;
+name|uint8_t
+name|tx_max_conc_seqs_c3
+comment|/* Maximum concurrent Sequences for Class 3 supported by target, received during PLOGI */
+decl_stmt|;
+name|uint8_t
+name|d_id
+index|[
+literal|3
+index|]
+comment|/* Destination ID, received after inquiry of the fabric network */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_MUL_N_PORT_IDS
+value|(0x1<<0)
+comment|/* BitField flags	Supporting multiple N_Port IDs indication, received during FLOGI */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_MUL_N_PORT_IDS_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_E_D_TOV_RES
+value|(0x1<<1)
+comment|/* BitField flags	E_D_TOV resolution (0 - msec, 1 - nsec), negotiated in PLOGI */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_E_D_TOV_RES_SHIFT
+value|1
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_CONT_INCR_SEQ_CNT
+value|(0x1<<2)
+comment|/* BitField flags	Continuously increasing SEQ_CNT indication, received during PLOGI */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_CONT_INCR_SEQ_CNT_SHIFT
+value|2
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_CONF_REQ
+value|(0x1<<3)
+comment|/* BitField flags	Confirmation request supported */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_CONF_REQ_SHIFT
+value|3
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_REC_VALID
+value|(0x1<<4)
+comment|/* BitField flags	REC allowed */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_REC_VALID_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_C2_VALID
+value|(0x1<<5)
+comment|/* BitField flags	Class 2 valid, received during PLOGI */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_C2_VALID_SHIFT
+value|5
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_ACK_0
+value|(0x1<<6)
+comment|/* BitField flags	ACK_0 capability supporting by target, received furing PLOGI */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_ACK_0_SHIFT
+value|6
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_VLAN_FLAG
+value|(0x1<<7)
+comment|/* BitField flags	Is inner vlan exist */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_OFFLOAD3_B_VLAN_FLAG_SHIFT
+value|7
+name|uint32_t
+name|reserved
+decl_stmt|;
+name|uint32_t
+name|confq_first_pbe_addr_lo
+comment|/* The first page used when handling CONFQ - low address */
+decl_stmt|;
+name|uint32_t
+name|confq_first_pbe_addr_hi
+comment|/* The first page used when handling CONFQ - high address */
+decl_stmt|;
+name|uint16_t
+name|tx_total_conc_seqs
+comment|/* Total concurrent Sequences for all Classes supported by target, received during PLOGI */
+decl_stmt|;
+name|uint16_t
+name|rx_max_fc_pay_len
+comment|/* The maximum acceptable FC payload size (Buffer-to-buffer Receive Data_Field size) supported by us, sent during FLOGI/PLOGI */
+decl_stmt|;
+name|uint16_t
+name|rx_total_conc_seqs
+comment|/* Total concurrent Sequences for all Classes supported by us, sent during PLOGI */
+decl_stmt|;
+name|uint8_t
+name|rx_max_conc_seqs_c3
+comment|/* Maximum Concurrent Sequences for Class 3 supported by us, sent during PLOGI */
+decl_stmt|;
+name|uint8_t
+name|rx_open_seqs_exch_c3
+comment|/* Maximum Open Sequences per Exchange for Class 3 supported by us, sent during PLOGI */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection offload request 4 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_conn_offload4
+block|{
+name|uint8_t
+name|e_d_tov_timer_val
+comment|/* E_D_TOV timer value in milliseconds/20, negotiated in PLOGI */
+decl_stmt|;
+name|uint8_t
+name|reserved2
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint8_t
+name|src_mac_addr_lo
+index|[
+literal|2
+index|]
+comment|/* Lower 16-bit of source MAC address  */
+decl_stmt|;
+name|uint8_t
+name|src_mac_addr_mid
+index|[
+literal|2
+index|]
+comment|/* Mid 16-bit of source MAC address  */
+decl_stmt|;
+name|uint8_t
+name|src_mac_addr_hi
+index|[
+literal|2
+index|]
+comment|/* Higher 16-bit of source MAC address */
+decl_stmt|;
+name|uint8_t
+name|dst_mac_addr_hi
+index|[
+literal|2
+index|]
+comment|/* Higher 16-bit of destination MAC address */
+decl_stmt|;
+name|uint8_t
+name|dst_mac_addr_lo
+index|[
+literal|2
+index|]
+comment|/* Lower 16-bit destination MAC address */
+decl_stmt|;
+name|uint8_t
+name|dst_mac_addr_mid
+index|[
+literal|2
+index|]
+comment|/* Mid 16-bit destination MAC address */
+decl_stmt|;
+name|uint32_t
+name|lcq_addr_lo
+comment|/* Lower 32-bit of LCQ */
+decl_stmt|;
+name|uint32_t
+name|lcq_addr_hi
+comment|/* Higher 32-bit of LCQ */
+decl_stmt|;
+name|uint32_t
+name|confq_pbl_base_addr_lo
+comment|/* CONFQ PBL low address */
+decl_stmt|;
+name|uint32_t
+name|confq_pbl_base_addr_hi
+comment|/* CONFQ PBL high address */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection enable request $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_conn_enable_disable
+block|{
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint8_t
+name|src_mac_addr_lo
+index|[
+literal|2
+index|]
+comment|/* Lower 16-bit of source MAC address (HBAs MAC address) */
+decl_stmt|;
+name|uint8_t
+name|src_mac_addr_mid
+index|[
+literal|2
+index|]
+comment|/* Mid 16-bit of source MAC address (HBAs MAC address) */
+decl_stmt|;
+name|uint8_t
+name|src_mac_addr_hi
+index|[
+literal|2
+index|]
+comment|/* Higher 16-bit of source MAC address (HBAs MAC address) */
+decl_stmt|;
+name|uint16_t
+name|vlan_tag
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_KWQE_CONN_ENABLE_DISABLE_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField vlan_tagVlan tag	Vlan id */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_ENABLE_DISABLE_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_KWQE_CONN_ENABLE_DISABLE_CFI
+value|(0x1<<12)
+comment|/* BitField vlan_tagVlan tag	Canonical format indicator */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_ENABLE_DISABLE_CFI_SHIFT
+value|12
+define|#
+directive|define
+name|FCOE_KWQE_CONN_ENABLE_DISABLE_PRIORITY
+value|(0x7<<13)
+comment|/* BitField vlan_tagVlan tag	Vlan priority */
+define|#
+directive|define
+name|FCOE_KWQE_CONN_ENABLE_DISABLE_PRIORITY_SHIFT
+value|13
+name|uint8_t
+name|dst_mac_addr_lo
+index|[
+literal|2
+index|]
+comment|/* Lower 16-bit of destination MAC address (FCFs MAC address) */
+decl_stmt|;
+name|uint8_t
+name|dst_mac_addr_mid
+index|[
+literal|2
+index|]
+comment|/* Mid 16-bit of destination MAC address (FCFs MAC address) */
+decl_stmt|;
+name|uint8_t
+name|dst_mac_addr_hi
+index|[
+literal|2
+index|]
+comment|/* Higher 16-bit of destination MAC address (FCFs MAC address) */
+decl_stmt|;
+name|uint16_t
+name|reserved1
+decl_stmt|;
+name|uint8_t
+name|s_id
+index|[
+literal|3
+index|]
+comment|/* Source ID, received during FLOGI */
+decl_stmt|;
+name|uint8_t
+name|vlan_flag
+comment|/* Vlan flag */
+decl_stmt|;
+name|uint8_t
+name|d_id
+index|[
+literal|3
+index|]
+comment|/* Destination ID, received after inquiry of the fabric network */
+decl_stmt|;
+name|uint8_t
+name|reserved3
+decl_stmt|;
+name|uint32_t
+name|context_id
+comment|/* Context ID (cid) of the connection */
+decl_stmt|;
+name|uint32_t
+name|conn_id
+comment|/* FCoE Connection ID */
+decl_stmt|;
+name|uint32_t
+name|reserved4
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection destroy request $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_conn_destroy
+block|{
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|context_id
+comment|/* Context ID (cid) of the connection */
+decl_stmt|;
+name|uint32_t
+name|conn_id
+comment|/* FCoE Connection ID */
+decl_stmt|;
+name|uint32_t
+name|reserved1
+index|[
+literal|5
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoe destroy request $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_destroy
+block|{
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|reserved1
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoe statistics request $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_kwqe_stat
+block|{
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint32_t
+name|stat_params_addr_lo
+comment|/* Statistics host address */
+decl_stmt|;
+name|uint32_t
+name|stat_params_addr_hi
+comment|/* Statistics host address */
+decl_stmt|;
+name|uint32_t
+name|reserved1
+index|[
+literal|5
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE KWQ WQE $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_kwqe
+block|{
+name|struct
+name|fcoe_kwqe_init1
+name|init1
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_init2
+name|init2
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_init3
+name|init3
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload1
+name|conn_offload1
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload2
+name|conn_offload2
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload3
+name|conn_offload3
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload4
+name|conn_offload4
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_enable_disable
+name|conn_enable_disable
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_destroy
+name|conn_destroy
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_destroy
+name|destroy
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_stat
+name|statistics
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * TX SGL context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_sgl_union_ctx
+block|{
+name|struct
+name|fcoe_cached_sge_ctx
+name|cached_sge
+comment|/* Cached SGEs context */
+decl_stmt|;
+name|struct
+name|fcoe_ext_mul_sges_ctx
+name|sgl
+comment|/* SGL context */
+decl_stmt|;
+name|uint32_t
+name|opaque
+index|[
+literal|5
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * Data-In/ELS/BLS information $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_read_flow_info
+block|{
+name|union
+name|fcoe_sgl_union_ctx
+name|sgl_ctx
+comment|/* The SGL that would be used for data placement (20 bytes) */
+decl_stmt|;
+name|uint32_t
+name|rsrv0
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcoe stat context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_s_stat_ctx
+block|{
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ACTIVE
+value|(0x1<<0)
+comment|/* BitField flags	Active Sequence indication (0 - not avtive; 1 - active) */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ACTIVE_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ACK_ABORT_SEQ_COND
+value|(0x1<<1)
+comment|/* BitField flags	Abort Sequence requested indication */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ACK_ABORT_SEQ_COND_SHIFT
+value|1
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ABTS_PERFORMED
+value|(0x1<<2)
+comment|/* BitField flags	ABTS (on Sequence) protocol complete indication (0 - not completed; 1 -completed by Recipient) */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ABTS_PERFORMED_SHIFT
+value|2
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_SEQ_TIMEOUT
+value|(0x1<<3)
+comment|/* BitField flags	E_D_TOV timeout indication */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_SEQ_TIMEOUT_SHIFT
+value|3
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_P_RJT
+value|(0x1<<4)
+comment|/* BitField flags	P_RJT transmitted indication */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_P_RJT_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ACK_EOFT
+value|(0x1<<5)
+comment|/* BitField flags	ACK (EOFt) transmitted indication (0 - not tranmitted; 1 - transmitted) */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_ACK_EOFT_SHIFT
+value|5
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_RSRV1
+value|(0x3<<6)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|FCOE_S_STAT_CTX_RSRV1_SHIFT
+value|6
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcoe rx seq context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_rx_seq_ctx
+block|{
+name|uint8_t
+name|seq_id
+comment|/* The Sequence ID */
+decl_stmt|;
+name|struct
+name|fcoe_s_stat_ctx
+name|s_stat
+comment|/* The Sequence status */
+decl_stmt|;
+name|uint16_t
+name|seq_cnt
+comment|/* The lowest SEQ_CNT received for the Sequence */
+decl_stmt|;
+name|uint32_t
+name|low_exp_ro
+comment|/* Report on the offset at the beginning of the Sequence */
+decl_stmt|;
+name|uint32_t
+name|high_exp_ro
+comment|/* The highest expected relative offset. The next buffer offset to be received in case of XFER_RDY or in FCP_DATA */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE RX statistics parameters section#0 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_rx_stat_params_section0
+block|{
+name|uint32_t
+name|fcoe_rx_pkt_cnt
+comment|/* Number of FCoE packets that were legally received */
+decl_stmt|;
+name|uint32_t
+name|fcoe_rx_byte_cnt
+comment|/* Number of FCoE bytes that were legally received */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE RX statistics parameters section#1 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_rx_stat_params_section1
+block|{
+name|uint32_t
+name|fcoe_ver_cnt
+comment|/* Number of packets with wrong FCoE version */
+decl_stmt|;
+name|uint32_t
+name|fcoe_rx_drop_pkt_cnt
+comment|/* Number of FCoE packets that were dropped */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE RX statistics parameters section#2 $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_rx_stat_params_section2
+block|{
+name|uint32_t
+name|fc_crc_cnt
+comment|/* Number of packets with FC CRC error */
+decl_stmt|;
+name|uint32_t
+name|eofa_del_cnt
+comment|/* Number of packets with EOFa delimiter */
+decl_stmt|;
+name|uint32_t
+name|miss_frame_cnt
+comment|/* Number of missing packets */
+decl_stmt|;
+name|uint32_t
+name|seq_timeout_cnt
+comment|/* Number of sequence timeout expirations (E_D_TOV) */
+decl_stmt|;
+name|uint32_t
+name|drop_seq_cnt
+comment|/* Number of Sequences that were sropped */
+decl_stmt|;
+name|uint32_t
+name|fcoe_rx_drop_pkt_cnt
+comment|/* Number of FCoE packets that were dropped */
+decl_stmt|;
+name|uint32_t
+name|fcp_rx_pkt_cnt
+comment|/* Number of FCP packets that were legally received */
+decl_stmt|;
+name|uint32_t
+name|reserved0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcoe rx_wr union context $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_rx_wr_union_ctx
+block|{
+name|struct
+name|fcoe_read_flow_info
+name|read_info
+comment|/* Data-In/ELS/BLS information */
+decl_stmt|;
+name|union
+name|fcoe_comp_flow_info
+name|comp_info
+comment|/* Completion information */
+decl_stmt|;
+name|uint32_t
+name|opaque
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * FCoE SQ element $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_sqe
+block|{
+name|uint16_t
+name|wqe
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_SQE_TASK_ID
+value|(0x7FFF<<0)
+comment|/* BitField wqe	The task ID (OX_ID) to be processed */
+define|#
+directive|define
+name|FCOE_SQE_TASK_ID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_SQE_TOGGLE_BIT
+value|(0x1<<15)
+comment|/* BitField wqe	Toggle bit updated by the driver */
+define|#
+directive|define
+name|FCOE_SQE_TOGGLE_BIT_SHIFT
+value|15
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE TX statistics parameters $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tx_stat_params
+block|{
+name|uint32_t
+name|fcoe_tx_pkt_cnt
+comment|/* Number of transmitted FCoE packets */
+decl_stmt|;
+name|uint32_t
+name|fcoe_tx_byte_cnt
+comment|/* Number of transmitted FCoE bytes */
+decl_stmt|;
+name|uint32_t
+name|fcp_tx_pkt_cnt
+comment|/* Number of transmitted FCP packets */
+decl_stmt|;
+name|uint32_t
+name|reserved0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE statistics parameters $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_statistics_params
+block|{
+name|struct
+name|fcoe_tx_stat_params
+name|tx_stat
+comment|/* FCoE TX statistics parameters */
+decl_stmt|;
+name|struct
+name|fcoe_rx_stat_params_section0
+name|rx_stat0
+comment|/* FCoE RX statistics parameters section#0 */
+decl_stmt|;
+name|struct
+name|fcoe_rx_stat_params_section1
+name|rx_stat1
+comment|/* FCoE RX statistics parameters section#1 */
+decl_stmt|;
+name|struct
+name|fcoe_rx_stat_params_section2
+name|rx_stat2
+comment|/* FCoE RX statistics parameters section#2 */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * 14 regs $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_tx_only
+block|{
+name|union
+name|fcoe_sgl_union_ctx
+name|sgl_ctx
+comment|/* TX SGL context */
+decl_stmt|;
+name|uint32_t
+name|rsrv0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * 32 bytes (8 regs) used for TX only purposes $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_tx_wr_rx_rd_union_ctx
+block|{
+name|struct
+name|fcoe_fc_frame
+name|tx_frame
+comment|/* Middle-path/ABTS/Data-Out information */
+decl_stmt|;
+name|struct
+name|fcoe_fcp_cmd_payload
+name|fcp_cmd
+comment|/* FCP_CMD payload */
+decl_stmt|;
+name|struct
+name|fcoe_ext_cleanup_info
+name|cleanup
+comment|/* Task ID to be cleaned */
+decl_stmt|;
+name|struct
+name|fcoe_ext_abts_info
+name|abts
+comment|/* Task ID to be aborted */
+decl_stmt|;
+name|struct
+name|fcoe_ext_fw_tx_seq_ctx
+name|tx_seq
+comment|/* TX sequence information */
+decl_stmt|;
+name|uint32_t
+name|opaque
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * tce_tx_wr_rx_rd_const $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_tx_wr_rx_rd_const
+block|{
+name|uint8_t
+name|init_flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TASK_TYPE
+value|(0x7<<0)
+comment|/* BitField init_flags	Task type - Write / Read / Middle / Unsolicited / ABTS / Cleanup */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TASK_TYPE_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_DEV_TYPE
+value|(0x1<<3)
+comment|/* BitField init_flags	Tape/Disk device indication */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_DEV_TYPE_SHIFT
+value|3
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_CLASS_TYPE
+value|(0x1<<4)
+comment|/* BitField init_flags	Class 3/2 indication */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_CLASS_TYPE_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_CACHED_SGE
+value|(0x3<<5)
+comment|/* BitField init_flags	Num of cached sge (0 - not cached sge) */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_CACHED_SGE_SHIFT
+value|5
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_SUPPORT_REC_TOV
+value|(0x1<<7)
+comment|/* BitField init_flags	Support REC_TOV flag, for FW use only */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_SUPPORT_REC_TOV_SHIFT
+value|7
+name|uint8_t
+name|tx_flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_VALID
+value|(0x1<<0)
+comment|/* BitField tx_flagsBoth TX and RX processing could read but only the TX could write	Indication of TX valid task */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_VALID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_STATE
+value|(0xF<<1)
+comment|/* BitField tx_flagsBoth TX and RX processing could read but only the TX could write	The TX state of the task */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_STATE_SHIFT
+value|1
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_RSRV1
+value|(0x1<<5)
+comment|/* BitField tx_flagsBoth TX and RX processing could read but only the TX could write	 */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_RSRV1_SHIFT
+value|5
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_SEQ_INIT
+value|(0x1<<6)
+comment|/* BitField tx_flagsBoth TX and RX processing could read but only the TX could write	TX Sequence initiative indication */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_SEQ_INIT_SHIFT
+value|6
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_COMP_TRNS
+value|(0x1<<7)
+comment|/* BitField tx_flagsBoth TX and RX processing could read but only the TX could write	Compelted full tranmission of this task */
+define|#
+directive|define
+name|FCOE_TCE_TX_WR_RX_RD_CONST_TX_COMP_TRNS_SHIFT
+value|7
+name|uint16_t
+name|rsrv3
+decl_stmt|;
+name|uint32_t
+name|verify_tx_seq
+comment|/* Sequence counter snapshot in order to verify target did not send FCP_RSP before the actual transmission of PBF from the SGL */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * tce_tx_wr_rx_rd $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_tx_wr_rx_rd
+block|{
+name|union
+name|fcoe_tx_wr_rx_rd_union_ctx
+name|union_ctx
+comment|/* 32 (8 regs) bytes used for TX only purposes */
+decl_stmt|;
+name|struct
+name|fcoe_tce_tx_wr_rx_rd_const
+name|const_ctx
+comment|/* Constant TX_WR_RX_RD */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * tce_rx_wr_tx_rd_const $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_rx_wr_tx_rd_const
+block|{
+name|uint32_t
+name|data_2_trns
+comment|/* The maximum amount of data that would be transferred in this task */
+decl_stmt|;
+name|uint32_t
+name|init_flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_CONST_CID
+value|(0xFFFFFF<<0)
+comment|/* BitField init_flags	The CID of the connection (used by the CHIP) */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_CONST_CID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_CONST_RSRV0
+value|(0xFF<<24)
+comment|/* BitField init_flags	 */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_CONST_RSRV0_SHIFT
+value|24
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * tce_rx_wr_tx_rd_var $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_rx_wr_tx_rd_var
+block|{
+name|uint16_t
+name|rx_flags
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RSRV1
+value|(0xF<<0)
+comment|/* BitField rx_flags	 */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_NUM_RQ_WQE
+value|(0x7<<4)
+comment|/* BitField rx_flags	The number of RQ WQEs that were consumed (for sense data only) */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_NUM_RQ_WQE_SHIFT
+value|4
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_CONF_REQ
+value|(0x1<<7)
+comment|/* BitField rx_flags	Confirmation request indication */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_CONF_REQ_SHIFT
+value|7
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RX_STATE
+value|(0xF<<8)
+comment|/* BitField rx_flags	The RX state of the task */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RX_STATE_SHIFT
+value|8
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_EXP_FIRST_FRAME
+value|(0x1<<12)
+comment|/* BitField rx_flags	Indication on expecting to receive the first frame from target */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_EXP_FIRST_FRAME_SHIFT
+value|12
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RX_SEQ_INIT
+value|(0x1<<13)
+comment|/* BitField rx_flags	RX Sequence initiative indication */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RX_SEQ_INIT_SHIFT
+value|13
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RSRV2
+value|(0x1<<14)
+comment|/* BitField rx_flags	 */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RSRV2_SHIFT
+value|14
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RX_VALID
+value|(0x1<<15)
+comment|/* BitField rx_flags	Indication of RX valid task */
+define|#
+directive|define
+name|FCOE_TCE_RX_WR_TX_RD_VAR_RX_VALID_SHIFT
+value|15
+name|uint16_t
+name|rx_id
+comment|/* The RX_ID read from incoming frame and to be used in subsequent transmitting frames */
+decl_stmt|;
+name|struct
+name|fcoe_fcp_xfr_rdy_payload
+name|fcp_xfr_rdy
+comment|/* Data-In/ELS/BLS information */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * tce_rx_wr_tx_rd $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_rx_wr_tx_rd
+block|{
+name|struct
+name|fcoe_tce_rx_wr_tx_rd_const
+name|const_ctx
+comment|/* The RX_ID read from incoming frame and to be used in subsequent transmitting frames */
+decl_stmt|;
+name|struct
+name|fcoe_tce_rx_wr_tx_rd_var
+name|var_ctx
+comment|/* The RX_ID read from incoming frame and to be used in subsequent transmitting frames */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * tce_rx_only $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_tce_rx_only
+block|{
+name|struct
+name|fcoe_rx_seq_ctx
+name|rx_seq_ctx
+comment|/* The context of current receiving Sequence */
+decl_stmt|;
+name|union
+name|fcoe_rx_wr_union_ctx
+name|union_ctx
+comment|/* Read flow info/ Completion flow info */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * task_ctx_entry $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_task_ctx_entry
+block|{
+name|struct
+name|fcoe_tce_tx_only
+name|txwr_only
+comment|/* TX processing shall be the only one to read/write to this section */
+decl_stmt|;
+name|struct
+name|fcoe_tce_tx_wr_rx_rd
+name|txwr_rxrd
+comment|/* TX processing shall write and RX shall read from this section */
+decl_stmt|;
+name|struct
+name|fcoe_tce_rx_wr_tx_rd
+name|rxwr_txrd
+comment|/* RX processing shall write and TX shall read from this section */
+decl_stmt|;
+name|struct
+name|fcoe_tce_rx_only
+name|rxwr_only
+comment|/* RX processing shall be the only one to read/write to this section */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE XFRQ element $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_xfrqe
+block|{
+name|uint16_t
+name|wqe
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_XFRQE_TASK_ID
+value|(0x7FFF<<0)
+comment|/* BitField wqe	The task ID (OX_ID) to be processed */
+define|#
+directive|define
+name|FCOE_XFRQE_TASK_ID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_XFRQE_TOGGLE_BIT
+value|(0x1<<15)
+comment|/* BitField wqe	Toggle bit updated by the driver */
+define|#
+directive|define
+name|FCOE_XFRQE_TOGGLE_BIT_SHIFT
+value|15
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Cached SGEs $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|common_fcoe_sgl
+block|{
+name|struct
+name|fcoe_bd_ctx
+name|sge
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE SQ\XFRQ element  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_cached_wqe
+block|{
+name|struct
+name|fcoe_sqe
+name|sqe
+comment|/* SQ WQE */
+decl_stmt|;
+name|struct
+name|fcoe_xfrqe
+name|xfrqe
+comment|/* XFRQ WQE */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection enable\disable params passed by driver to FW in FCoE enable ramrod $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_conn_enable_disable_ramrod_params
+block|{
+name|struct
+name|fcoe_kwqe_conn_enable_disable
+name|enable_disable_kwqe
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE connection offload params passed by driver to FW in FCoE offload ramrod $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_conn_offload_ramrod_params
+block|{
+name|struct
+name|fcoe_kwqe_conn_offload1
+name|offload_kwqe1
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload2
+name|offload_kwqe2
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload3
+name|offload_kwqe3
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_conn_offload4
+name|offload_kwqe4
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_mng_ctx
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|mid_seq_proc_flag
+comment|/* Middle Sequence received processing */
+decl_stmt|;
+name|uint8_t
+name|tce_in_cam_flag
+comment|/* TCE in CAM indication */
+decl_stmt|;
+name|uint8_t
+name|tce_on_ior_flag
+comment|/* TCE on IOR indication (TCE on IORs but not necessarily in CAM) */
+decl_stmt|;
+name|uint8_t
+name|en_cached_tce_flag
+comment|/* TCE cached functionality enabled indication */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|en_cached_tce_flag
+comment|/* TCE cached functionality enabled indication */
+decl_stmt|;
+name|uint8_t
+name|tce_on_ior_flag
+comment|/* TCE on IOR indication (TCE on IORs but not necessarily in CAM) */
+decl_stmt|;
+name|uint8_t
+name|tce_in_cam_flag
+comment|/* TCE in CAM indication */
+decl_stmt|;
+name|uint8_t
+name|mid_seq_proc_flag
+comment|/* Middle Sequence received processing */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|tce_cam_addr
+comment|/* CAM address of task context */
+decl_stmt|;
+name|uint8_t
+name|cached_conn_flag
+comment|/* Cached locked connection indication */
+decl_stmt|;
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|cached_conn_flag
+comment|/* Cached locked connection indication */
+decl_stmt|;
+name|uint8_t
+name|tce_cam_addr
+comment|/* CAM address of task context */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|dma_tce_ram_addr
+comment|/* RAM address of task context when executing DMA operations (read/write) */
+decl_stmt|;
+name|uint16_t
+name|tce_ram_addr
+comment|/* RAM address of task context (might be in cached table or in scratchpad) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tce_ram_addr
+comment|/* RAM address of task context (might be in cached table or in scratchpad) */
+decl_stmt|;
+name|uint16_t
+name|dma_tce_ram_addr
+comment|/* RAM address of task context when executing DMA operations (read/write) */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|ox_id
+comment|/* Last OX_ID that has been used */
+decl_stmt|;
+name|uint16_t
+name|wr_done_seq
+comment|/* Last task write done in the specific connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|wr_done_seq
+comment|/* Last task write done in the specific connection */
+decl_stmt|;
+name|uint16_t
+name|ox_id
+comment|/* Last OX_ID that has been used */
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|task_addr
+comment|/* Last task address in used */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Parameters initialized during offloaded according to FLOGI/PLOGI/PRLI and used in FCoE context section  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_params
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|fcoe_conn_id
+comment|/* The connection ID that would be used by driver to identify the conneciton */
+decl_stmt|;
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_MUL_N_PORT_IDS
+value|(0x1<<0)
+comment|/* BitField flags	Supporting multiple N_Port IDs indication, received during FLOGI */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_MUL_N_PORT_IDS_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_E_D_TOV_RES
+value|(0x1<<1)
+comment|/* BitField flags	E_D_TOV resolution (0 - msec, 1 - nsec), negotiated in PLOGI */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_E_D_TOV_RES_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONT_INCR_SEQ_CNT
+value|(0x1<<2)
+comment|/* BitField flags	Continuously increasing SEQ_CNT indication, received during PLOGI */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONT_INCR_SEQ_CNT_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONF_REQ
+value|(0x1<<3)
+comment|/* BitField flags	Confirmation request supported */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONF_REQ_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_REC_VALID
+value|(0x1<<4)
+comment|/* BitField flags	REC allowed */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_REC_VALID_SHIFT
+value|4
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CQ_TOGGLE_BIT
+value|(0x1<<5)
+comment|/* BitField flags	CQ toggle bit */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CQ_TOGGLE_BIT_SHIFT
+value|5
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_XFRQ_TOGGLE_BIT
+value|(0x1<<6)
+comment|/* BitField flags	XFRQ toggle bit */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_XFRQ_TOGGLE_BIT_SHIFT
+value|6
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONFQ_TOGGLE_BIT
+value|(0x1<<7)
+comment|/* BitField flags	CONFQ toggle bit */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONFQ_TOGGLE_BIT_SHIFT
+value|7
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_RSRV0
+value|(0xFF<<8)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_RSRV0_SHIFT
+value|8
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_MUL_N_PORT_IDS
+value|(0x1<<0)
+comment|/* BitField flags	Supporting multiple N_Port IDs indication, received during FLOGI */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_MUL_N_PORT_IDS_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_E_D_TOV_RES
+value|(0x1<<1)
+comment|/* BitField flags	E_D_TOV resolution (0 - msec, 1 - nsec), negotiated in PLOGI */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_E_D_TOV_RES_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONT_INCR_SEQ_CNT
+value|(0x1<<2)
+comment|/* BitField flags	Continuously increasing SEQ_CNT indication, received during PLOGI */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONT_INCR_SEQ_CNT_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONF_REQ
+value|(0x1<<3)
+comment|/* BitField flags	Confirmation request supported */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONF_REQ_SHIFT
+value|3
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_REC_VALID
+value|(0x1<<4)
+comment|/* BitField flags	REC allowed */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_REC_VALID_SHIFT
+value|4
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CQ_TOGGLE_BIT
+value|(0x1<<5)
+comment|/* BitField flags	CQ toggle bit */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CQ_TOGGLE_BIT_SHIFT
+value|5
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_XFRQ_TOGGLE_BIT
+value|(0x1<<6)
+comment|/* BitField flags	XFRQ toggle bit */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_XFRQ_TOGGLE_BIT_SHIFT
+value|6
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONFQ_TOGGLE_BIT
+value|(0x1<<7)
+comment|/* BitField flags	CONFQ toggle bit */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_B_CONFQ_TOGGLE_BIT_SHIFT
+value|7
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_RSRV0
+value|(0xFF<<8)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|USTORM_FCOE_PARAMS_RSRV0_SHIFT
+value|8
+name|uint16_t
+name|fcoe_conn_id
+comment|/* The connection ID that would be used by driver to identify the conneciton */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|hc_csdm_byte_en
+comment|/* Host coalescing Cstorm RAM address byte enable */
+decl_stmt|;
+name|uint8_t
+name|func_id
+comment|/* Function id */
+decl_stmt|;
+name|uint8_t
+name|port_id
+comment|/* Port id */
+decl_stmt|;
+name|uint8_t
+name|vnic_id
+comment|/* Vnic id */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|vnic_id
+comment|/* Vnic id */
+decl_stmt|;
+name|uint8_t
+name|port_id
+comment|/* Port id */
+decl_stmt|;
+name|uint8_t
+name|func_id
+comment|/* Function id */
+decl_stmt|;
+name|uint8_t
+name|hc_csdm_byte_en
+comment|/* Host coalescing Cstorm RAM address byte enable */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|rx_total_conc_seqs
+comment|/* Total concurrent Sequences for all Classes supported by us, sent during PLOGI */
+decl_stmt|;
+name|uint16_t
+name|rx_max_fc_pay_len
+comment|/* The maximum acceptable FC payload size (Buffer-to-buffer Receive Data_Field size) supported by us, sent during FLOGI/PLOGI */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rx_max_fc_pay_len
+comment|/* The maximum acceptable FC payload size (Buffer-to-buffer Receive Data_Field size) supported by us, sent during FLOGI/PLOGI */
+decl_stmt|;
+name|uint16_t
+name|rx_total_conc_seqs
+comment|/* Total concurrent Sequences for all Classes supported by us, sent during PLOGI */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|task_pbe_idx_off
+comment|/* The first PBE for this specific task list in RAM */
+decl_stmt|;
+name|uint8_t
+name|task_in_page_log_size
+comment|/* Number of tasks in page (log 2) */
+decl_stmt|;
+name|uint16_t
+name|rx_max_conc_seqs
+comment|/* Maximum Concurrent Sequences for Class 3 supported by us, sent during PLOGI */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rx_max_conc_seqs
+comment|/* Maximum Concurrent Sequences for Class 3 supported by us, sent during PLOGI */
+decl_stmt|;
+name|uint8_t
+name|task_in_page_log_size
+comment|/* Number of tasks in page (log 2) */
+decl_stmt|;
+name|uint8_t
+name|task_pbe_idx_off
+comment|/* The first PBE for this specific task list in RAM */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE 16-bits index structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_idx16_fields
+block|{
+name|uint16_t
+name|fields
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_IDX16_FIELDS_IDX
+value|(0x7FFF<<0)
+comment|/* BitField fields	 */
+define|#
+directive|define
+name|FCOE_IDX16_FIELDS_IDX_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_IDX16_FIELDS_MSB
+value|(0x1<<15)
+comment|/* BitField fields	 */
+define|#
+directive|define
+name|FCOE_IDX16_FIELDS_MSB_SHIFT
+value|15
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE 16-bits index union  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_idx16_field_union
+block|{
+name|struct
+name|fcoe_idx16_fields
+name|fields
+comment|/* Parameters field */
+decl_stmt|;
+name|uint16_t
+name|val
+comment|/* Global value */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * Parameters required for placement according to SGL  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_data_place_mng
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|sge_off
+decl_stmt|;
+name|uint8_t
+name|num_sges
+comment|/* Number of SGEs left to be used on context */
+decl_stmt|;
+name|uint8_t
+name|sge_idx
+comment|/* 0xFF value indicated loading SGL */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|sge_idx
+comment|/* 0xFF value indicated loading SGL */
+decl_stmt|;
+name|uint8_t
+name|num_sges
+comment|/* Number of SGEs left to be used on context */
+decl_stmt|;
+name|uint16_t
+name|sge_off
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Parameters required for placement according to SGL  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_data_place
+block|{
+name|struct
+name|ustorm_fcoe_data_place_mng
+name|cached_mng
+comment|/* 0xFF value indicated loading SGL */
+decl_stmt|;
+name|struct
+name|fcoe_bd_ctx
+name|cached_sge
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * TX processing shall write and RX processing shall read from this section  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_u_tce_tx_wr_rx_rd_union
+block|{
+name|struct
+name|fcoe_abts_info
+name|abts
+comment|/* ABTS information */
+decl_stmt|;
+name|struct
+name|fcoe_cleanup_info
+name|cleanup
+comment|/* Cleanup information */
+decl_stmt|;
+name|struct
+name|fcoe_fw_tx_seq_ctx
+name|tx_seq_ctx
+comment|/* TX sequence context */
+decl_stmt|;
+name|uint32_t
+name|opaque
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * TX processing shall write and RX processing shall read from this section  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_u_tce_tx_wr_rx_rd
+block|{
+name|union
+name|fcoe_u_tce_tx_wr_rx_rd_union
+name|union_ctx
+comment|/* FW DATA_OUT/CLEANUP information */
+decl_stmt|;
+name|struct
+name|fcoe_tce_tx_wr_rx_rd_const
+name|const_ctx
+comment|/* TX processing shall write and RX shall read from this section */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_tce
+block|{
+name|struct
+name|fcoe_u_tce_tx_wr_rx_rd
+name|txwr_rxrd
+comment|/* TX processing shall write and RX shall read from this section */
+decl_stmt|;
+name|struct
+name|fcoe_tce_rx_wr_tx_rd
+name|rxwr_txrd
+comment|/* RX processing shall write and TX shall read from this section */
+decl_stmt|;
+name|struct
+name|fcoe_tce_rx_only
+name|rxwr
+comment|/* RX processing shall be the only one to read/write to this section */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_cache_ctx
+block|{
+name|uint32_t
+name|rsrv0
+decl_stmt|;
+name|struct
+name|ustorm_fcoe_data_place
+name|data_place
+decl_stmt|;
+name|struct
+name|ustorm_fcoe_tce
+name|tce
+comment|/* Task context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ustorm FCoE Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_fcoe_st_context
+block|{
+name|struct
+name|ustorm_fcoe_mng_ctx
+name|mng_ctx
+comment|/* Managing the processing of the flow */
+decl_stmt|;
+name|struct
+name|ustorm_fcoe_params
+name|fcoe_params
+comment|/* Align to 128 bytes */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|cq_base_addr
+comment|/* CQ current page host address */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|rq_pbl_base
+comment|/* PBL host address for RQ */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|rq_cur_page_addr
+comment|/* RQ current page host address */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|confq_pbl_base_addr
+comment|/* Base address of the CONFQ page list */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|conn_db_base
+comment|/* Connection data base address in host memory where RQ producer and CQ arm bit reside in */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|xfrq_base_addr
+comment|/* XFRQ base host address */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|lcq_base_addr
+comment|/* LCQ base host address */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|union
+name|fcoe_idx16_field_union
+name|rq_cons
+comment|/* RQ consumer advance for each RQ WQE consuming */
+decl_stmt|;
+name|union
+name|fcoe_idx16_field_union
+name|rq_prod
+comment|/* RQ producer update by driver and read by FW (should be initialized to RQ size)  */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|union
+name|fcoe_idx16_field_union
+name|rq_prod
+comment|/* RQ producer update by driver and read by FW (should be initialized to RQ size)  */
+decl_stmt|;
+name|union
+name|fcoe_idx16_field_union
+name|rq_cons
+comment|/* RQ consumer advance for each RQ WQE consuming */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|xfrq_prod
+comment|/* XFRQ producer (No consumer is needed since Q can not be overloaded) */
+decl_stmt|;
+name|uint16_t
+name|cq_cons
+comment|/* CQ consumer copy of last update from driver (Q can not be overloaded) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_cons
+comment|/* CQ consumer copy of last update from driver (Q can not be overloaded) */
+decl_stmt|;
+name|uint16_t
+name|xfrq_prod
+comment|/* XFRQ producer (No consumer is needed since Q can not be overloaded) */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|lcq_cons
+comment|/* lcq consumer */
+decl_stmt|;
+name|uint16_t
+name|hc_cram_address
+comment|/* Host coalescing Cstorm RAM address */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|hc_cram_address
+comment|/* Host coalescing Cstorm RAM address */
+decl_stmt|;
+name|uint16_t
+name|lcq_cons
+comment|/* lcq consumer */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_xfrq_lcq_confq_size
+comment|/* SQ/XFRQ/LCQ/CONFQ size */
+decl_stmt|;
+name|uint16_t
+name|confq_prod
+comment|/* CONFQ producer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|confq_prod
+comment|/* CONFQ producer */
+decl_stmt|;
+name|uint16_t
+name|sq_xfrq_lcq_confq_size
+comment|/* SQ/XFRQ/LCQ/CONFQ size */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|hc_csdm_agg_int
+comment|/* Host coalescing CSDM aggregative interrupts */
+decl_stmt|;
+name|uint8_t
+name|rsrv2
+decl_stmt|;
+name|uint8_t
+name|available_rqes
+comment|/* Available RQEs */
+decl_stmt|;
+name|uint8_t
+name|sp_q_flush_cnt
+comment|/* The remain number of queues to be flushed (in QM) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|sp_q_flush_cnt
+comment|/* The remain number of queues to be flushed (in QM) */
+decl_stmt|;
+name|uint8_t
+name|available_rqes
+comment|/* Available RQEs */
+decl_stmt|;
+name|uint8_t
+name|rsrv2
+decl_stmt|;
+name|uint8_t
+name|hc_csdm_agg_int
+comment|/* Host coalescing CSDM aggregative interrupts */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|num_pend_tasks
+comment|/* Number of pending tasks */
+decl_stmt|;
+name|uint16_t
+name|pbf_ack_ram_addr
+comment|/* PBF TX sequence ACK ram address */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|pbf_ack_ram_addr
+comment|/* PBF TX sequence ACK ram address */
+decl_stmt|;
+name|uint16_t
+name|num_pend_tasks
+comment|/* Number of pending tasks */
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|ustorm_fcoe_cache_ctx
+name|cache_ctx
+comment|/* Cached context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The FCoE non-aggregative context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_fcoe_st_context
+block|{
+name|struct
+name|regpair_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|regpair_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ethernet context section  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_eth_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|remote_addr_4
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_5
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_0
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_1
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|local_addr_1
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_0
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_5
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_4
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|remote_addr_0
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_1
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_2
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_3
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|remote_addr_3
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_2
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_1
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_0
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved_vlan_type
+comment|/* this field is not an absolute must, but the reseved was here */
+decl_stmt|;
+name|uint16_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_CFI
+value|(0x1<<12)
+comment|/* BitField params	Canonical format indicator, part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_CFI_SHIFT
+value|12
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_PRIORITY
+value|(0x7<<13)
+comment|/* BitField params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_PRIORITY_SHIFT
+value|13
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_CFI
+value|(0x1<<12)
+comment|/* BitField params	Canonical format indicator, part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_CFI_SHIFT
+value|12
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_PRIORITY
+value|(0x7<<13)
+comment|/* BitField params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_FCOE_ETH_CONTEXT_SECTION_PRIORITY_SHIFT
+value|13
+name|uint16_t
+name|reserved_vlan_type
+comment|/* this field is not an absolute must, but the reseved was here */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|local_addr_2
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_3
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_4
+comment|/* Loca lMac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_5
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|local_addr_5
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_4
+comment|/* Loca lMac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_3
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_2
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Flags used in FCoE context section - 1 byte  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_context_flags
+block|{
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_PROC_Q
+value|(0x3<<0)
+comment|/* BitField flags	The current queue in process */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_PROC_Q_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_MID_SEQ
+value|(0x1<<2)
+comment|/* BitField flags	Middle of Sequence indication */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_MID_SEQ_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_BLOCK_SQ
+value|(0x1<<3)
+comment|/* BitField flags	Indicates whether the SQ is blocked since we are in the middle of ABTS/Cleanup procedure */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_BLOCK_SQ_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_REC_SUPPORT
+value|(0x1<<4)
+comment|/* BitField flags	REC support */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_REC_SUPPORT_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_SQ_TOGGLE
+value|(0x1<<5)
+comment|/* BitField flags	SQ toggle bit */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_SQ_TOGGLE_SHIFT
+value|5
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_XFRQ_TOGGLE
+value|(0x1<<6)
+comment|/* BitField flags	XFRQ toggle bit */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_XFRQ_TOGGLE_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_VNTAG_VLAN
+value|(0x1<<7)
+comment|/* BitField flags	Are we using VNTag inner vlan - in this case we have to read it on every VNTag version change */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_B_VNTAG_VLAN_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_tce
+block|{
+name|struct
+name|fcoe_tce_tx_only
+name|txwr
+comment|/* TX processing shall be the only one to read/write to this section */
+decl_stmt|;
+name|struct
+name|fcoe_tce_tx_wr_rx_rd
+name|txwr_rxrd
+comment|/* TX processing shall write and RX processing shall read from this section */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCP_DATA parameters required for transmission  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_fcp_data
+block|{
+name|uint32_t
+name|io_rem
+comment|/* IO remainder */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cached_sge_off
+decl_stmt|;
+name|uint8_t
+name|cached_num_sges
+comment|/* Number of SGEs on context */
+decl_stmt|;
+name|uint8_t
+name|cached_sge_idx
+comment|/* 0xFF value indicated loading SGL */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|cached_sge_idx
+comment|/* 0xFF value indicated loading SGL */
+decl_stmt|;
+name|uint8_t
+name|cached_num_sges
+comment|/* Number of SGEs on context */
+decl_stmt|;
+name|uint16_t
+name|cached_sge_off
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|buf_addr_hi_0
+comment|/* Higher buffer host address */
+decl_stmt|;
+name|uint32_t
+name|buf_addr_lo_0
+comment|/* Lower buffer host address */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|num_of_pending_tasks
+comment|/* Num of pending tasks */
+decl_stmt|;
+name|uint16_t
+name|buf_len_0
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|buf_len_0
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+name|uint16_t
+name|num_of_pending_tasks
+comment|/* Num of pending tasks */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|buf_addr_hi_1
+comment|/* Higher buffer host address */
+decl_stmt|;
+name|uint32_t
+name|buf_addr_lo_1
+comment|/* Lower buffer host address */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|task_pbe_idx_off
+comment|/* Task pbe index offset */
+decl_stmt|;
+name|uint16_t
+name|buf_len_1
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|buf_len_1
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+name|uint16_t
+name|task_pbe_idx_off
+comment|/* Task pbe index offset */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|buf_addr_hi_2
+comment|/* Higher buffer host address */
+decl_stmt|;
+name|uint32_t
+name|buf_addr_lo_2
+comment|/* Lower buffer host address */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|ox_id
+comment|/* OX_ID */
+decl_stmt|;
+name|uint16_t
+name|buf_len_2
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|buf_len_2
+comment|/* Buffer length (in bytes) */
+decl_stmt|;
+name|uint16_t
+name|ox_id
+comment|/* OX_ID */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Continuation of Flags used in FCoE context section - 1 byte  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_context_flags_cont
+block|{
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_CONT_B_CONFQ_TOGGLE
+value|(0x1<<0)
+comment|/* BitField flags	CONFQ toggle bit */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_CONT_B_CONFQ_TOGGLE_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_CONT_VLAN_FLAG
+value|(0x1<<1)
+comment|/* BitField flags	Is any inner vlan exist */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_CONT_VLAN_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_CONT_RESERVED
+value|(0x3F<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_FCOE_CONTEXT_FLAGS_CONT_RESERVED_SHIFT
+value|2
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * vlan configuration  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_vlan_conf
+block|{
+name|uint8_t
+name|vlan_conf
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_INNER_VLAN_PRIORITY
+value|(0x7<<0)
+comment|/* BitField vlan_conf	Original inner vlan priority */
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_INNER_VLAN_PRIORITY_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_INNER_VLAN_FLAG
+value|(0x1<<3)
+comment|/* BitField vlan_conf	Original inner vlan flag */
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_INNER_VLAN_FLAG_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_OUTER_VLAN_PRIORITY
+value|(0x7<<4)
+comment|/* BitField vlan_conf	Original outer vlan priority */
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_OUTER_VLAN_PRIORITY_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_RESERVED
+value|(0x1<<7)
+comment|/* BitField vlan_conf	 */
+define|#
+directive|define
+name|XSTORM_FCOE_VLAN_CONF_RESERVED_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE 16-bits vlan structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_vlan_fields
+block|{
+name|uint16_t
+name|fields
+decl_stmt|;
+define|#
+directive|define
+name|FCOE_VLAN_FIELDS_VID
+value|(0xFFF<<0)
+comment|/* BitField fields	 */
+define|#
+directive|define
+name|FCOE_VLAN_FIELDS_VID_SHIFT
+value|0
+define|#
+directive|define
+name|FCOE_VLAN_FIELDS_CLI
+value|(0x1<<12)
+comment|/* BitField fields	 */
+define|#
+directive|define
+name|FCOE_VLAN_FIELDS_CLI_SHIFT
+value|12
+define|#
+directive|define
+name|FCOE_VLAN_FIELDS_PRI
+value|(0x7<<13)
+comment|/* BitField fields	 */
+define|#
+directive|define
+name|FCOE_VLAN_FIELDS_PRI_SHIFT
+value|13
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE 16-bits vlan union  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_vlan_field_union
+block|{
+name|struct
+name|fcoe_vlan_fields
+name|fields
+comment|/* Parameters field */
+decl_stmt|;
+name|uint16_t
+name|val
+comment|/* Global value */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * FCoE 16-bits vlan, vif union  */
+end_comment
+
+begin_union
+union|union
+name|fcoe_vlan_vif_field_union
+block|{
+name|union
+name|fcoe_vlan_field_union
+name|vlan
+comment|/* Vlan */
+decl_stmt|;
+name|uint16_t
+name|vif
+comment|/* VIF */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * FCoE context section  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cs_ctl
+comment|/* cs ctl */
+decl_stmt|;
+name|uint8_t
+name|s_id
+index|[
+literal|3
+index|]
+comment|/* Source ID, received during FLOGI */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|s_id
+index|[
+literal|3
+index|]
+comment|/* Source ID, received during FLOGI */
+decl_stmt|;
+name|uint8_t
+name|cs_ctl
+comment|/* cs ctl */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|rctl
+comment|/* rctl */
+decl_stmt|;
+name|uint8_t
+name|d_id
+index|[
+literal|3
+index|]
+comment|/* Destination ID, received after inquiry of the fabric network */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|d_id
+index|[
+literal|3
+index|]
+comment|/* Destination ID, received after inquiry of the fabric network */
+decl_stmt|;
+name|uint8_t
+name|rctl
+comment|/* rctl */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_xfrq_lcq_confq_size
+comment|/* SQ/XFRQ/LCQ/CONFQ size */
+decl_stmt|;
+name|uint16_t
+name|tx_max_fc_pay_len
+comment|/* The maximum acceptable FC payload size (Buffer-to-buffer Receive Data_Field size) supported by target, received during both FLOGI and PLOGI, minimum value should be taken */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tx_max_fc_pay_len
+comment|/* The maximum acceptable FC payload size (Buffer-to-buffer Receive Data_Field size) supported by target, received during both FLOGI and PLOGI, minimum value should be taken */
+decl_stmt|;
+name|uint16_t
+name|sq_xfrq_lcq_confq_size
+comment|/* SQ/XFRQ/LCQ/CONFQ size */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|lcq_prod
+comment|/* LCQ producer value */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|port_id
+comment|/* Port ID */
+decl_stmt|;
+name|uint8_t
+name|func_id
+comment|/* Function ID */
+decl_stmt|;
+name|uint8_t
+name|seq_id
+comment|/* SEQ ID counter to be used in transmitted FC header */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_context_flags
+name|tx_flags
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|xstorm_fcoe_context_flags
+name|tx_flags
+decl_stmt|;
+name|uint8_t
+name|seq_id
+comment|/* SEQ ID counter to be used in transmitted FC header */
+decl_stmt|;
+name|uint8_t
+name|func_id
+comment|/* Function ID */
+decl_stmt|;
+name|uint8_t
+name|port_id
+comment|/* Port ID */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|mtu
+comment|/* MTU */
+decl_stmt|;
+name|uint8_t
+name|func_mode
+comment|/* Function mode */
+decl_stmt|;
+name|uint8_t
+name|vnic_id
+comment|/* Vnic ID */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|vnic_id
+comment|/* Vnic ID */
+decl_stmt|;
+name|uint8_t
+name|func_mode
+comment|/* Function mode */
+decl_stmt|;
+name|uint16_t
+name|mtu
+comment|/* MTU */
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|confq_curr_page_addr
+comment|/* The current page of CONFQ to be processed */
+decl_stmt|;
+name|struct
+name|fcoe_cached_wqe
+name|cached_wqe
+index|[
+literal|8
+index|]
+comment|/* Up to 8 SQ/XFRQ WQEs read in one shot */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|lcq_base_addr
+comment|/* The page address which the LCQ resides in host memory */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_tce
+name|tce
+comment|/* TX section task context */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_fcp_data
+name|fcp_data
+comment|/* The parameters required for FCP_DATA Sequences transmission */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|tx_max_conc_seqs_c3
+comment|/* Maximum concurrent Sequences for Class 3 supported by traget, received during PLOGI */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_context_flags_cont
+name|tx_flags_cont
+decl_stmt|;
+name|uint8_t
+name|dcb_val
+comment|/* DCB val - let us know if dcb info changes */
+decl_stmt|;
+name|uint8_t
+name|data_pb_cmd_size
+comment|/* Data pb cmd size */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|data_pb_cmd_size
+comment|/* Data pb cmd size */
+decl_stmt|;
+name|uint8_t
+name|dcb_val
+comment|/* DCB val - let us know if dcb info changes */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_context_flags_cont
+name|tx_flags_cont
+decl_stmt|;
+name|uint8_t
+name|tx_max_conc_seqs_c3
+comment|/* Maximum concurrent Sequences for Class 3 supported by traget, received during PLOGI */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|fcoe_tx_stat_params_ram_addr
+comment|/* stat Ram Addr */
+decl_stmt|;
+name|uint16_t
+name|fcoe_tx_fc_seq_ram_addr
+comment|/* Tx FC sequence Ram Addr */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|fcoe_tx_fc_seq_ram_addr
+comment|/* Tx FC sequence Ram Addr */
+decl_stmt|;
+name|uint16_t
+name|fcoe_tx_stat_params_ram_addr
+comment|/* stat Ram Addr */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|fcp_cmd_line_credit
+decl_stmt|;
+name|uint8_t
+name|eth_hdr_size
+comment|/* Ethernet header size without eth type */
+decl_stmt|;
+name|uint16_t
+name|pbf_addr
+comment|/* PBF addr */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|pbf_addr
+comment|/* PBF addr */
+decl_stmt|;
+name|uint8_t
+name|eth_hdr_size
+comment|/* Ethernet header size without eth type */
+decl_stmt|;
+name|uint8_t
+name|fcp_cmd_line_credit
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|union
+name|fcoe_vlan_vif_field_union
+name|multi_func_val
+comment|/* Outer vlan vif union */
+decl_stmt|;
+name|uint8_t
+name|page_log_size
+comment|/* Page log size */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_vlan_conf
+name|orig_vlan_conf
+comment|/* original vlan configuration, used when we switch from dcb enable to dcb disabled */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|struct
+name|xstorm_fcoe_vlan_conf
+name|orig_vlan_conf
+comment|/* original vlan configuration, used when we switch from dcb enable to dcb disabled */
+decl_stmt|;
+name|uint8_t
+name|page_log_size
+comment|/* Page log size */
+decl_stmt|;
+name|union
+name|fcoe_vlan_vif_field_union
+name|multi_func_val
+comment|/* Outer vlan vif union */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|fcp_cmd_frame_size
+comment|/* FCP_CMD frame size */
+decl_stmt|;
+name|uint16_t
+name|pbf_addr_ff
+comment|/* PBF addr with ff */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|pbf_addr_ff
+comment|/* PBF addr with ff */
+decl_stmt|;
+name|uint16_t
+name|fcp_cmd_frame_size
+comment|/* FCP_CMD frame size */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|vlan_num
+comment|/* Vlan number */
+decl_stmt|;
+name|uint8_t
+name|cos
+comment|/* Cos */
+decl_stmt|;
+name|uint8_t
+name|cache_xfrq_cons
+comment|/* Cache xferq consumer */
+decl_stmt|;
+name|uint8_t
+name|cache_sq_cons
+comment|/* Cache sq consumer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|cache_sq_cons
+comment|/* Cache sq consumer */
+decl_stmt|;
+name|uint8_t
+name|cache_xfrq_cons
+comment|/* Cache xferq consumer */
+decl_stmt|;
+name|uint8_t
+name|cos
+comment|/* Cos */
+decl_stmt|;
+name|uint8_t
+name|vlan_num
+comment|/* Vlan number */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|verify_tx_seq
+comment|/* Sequence number of last transmitted sequence in order to verify target did not send FCP_RSP before the actual transmission of PBF from the SGL */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Xstorm FCoE Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_fcoe_st_context
+block|{
+name|struct
+name|xstorm_fcoe_eth_context_section
+name|eth
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_context_section
+name|fcoe
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Fcoe connection context  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_context
+block|{
+name|struct
+name|ustorm_fcoe_st_context
+name|ustorm_st_context
+comment|/* Ustorm storm context */
+decl_stmt|;
+name|struct
+name|tstorm_fcoe_st_context
+name|tstorm_st_context
+comment|/* Tstorm storm context */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_ag_context
+name|xstorm_ag_context
+comment|/* Xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|tstorm_fcoe_ag_context
+name|tstorm_ag_context
+comment|/* Tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|ustorm_fcoe_ag_context
+name|ustorm_ag_context
+comment|/* Ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|timers_block_context
+name|timers_context
+comment|/* Timers block context */
+decl_stmt|;
+name|struct
+name|xstorm_fcoe_st_context
+name|xstorm_st_context
+comment|/* Xstorm storm context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE init params passed by driver to FW in FCoE init ramrod $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_init_ramrod_params
+block|{
+name|struct
+name|fcoe_kwqe_init1
+name|init_kwqe1
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_init2
+name|init_kwqe2
+decl_stmt|;
+name|struct
+name|fcoe_kwqe_init3
+name|init_kwqe3
+decl_stmt|;
+name|struct
+name|regpair_t
+name|eq_pbl_base
+comment|/* Physical address of PBL */
+decl_stmt|;
+name|uint32_t
+name|eq_pbl_size
+comment|/* PBL size */
+decl_stmt|;
+name|uint32_t
+name|reserved2
+decl_stmt|;
+name|uint16_t
+name|eq_prod
+comment|/* EQ prdocuer */
+decl_stmt|;
+name|uint16_t
+name|sb_num
+comment|/* Status block number */
+decl_stmt|;
+name|uint8_t
+name|sb_id
+comment|/* Status block id (EQ consumer) */
+decl_stmt|;
+name|uint8_t
+name|reserved0
+decl_stmt|;
+name|uint16_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * FCoE statistics params buffer passed by driver to FW in FCoE statistics ramrod $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|fcoe_stat_ramrod_params
+block|{
+name|struct
+name|fcoe_kwqe_stat
+name|stat_kwqe
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * CQ DB CQ producer and pending completion counter  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_cq_db_prod_pnd_cmpltn_cnt
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cntr
+comment|/* CQ pending completion counter */
+decl_stmt|;
+name|uint16_t
+name|prod
+comment|/* Ustorm CQ producer , updated by Ustorm */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|prod
+comment|/* Ustorm CQ producer , updated by Ustorm */
+decl_stmt|;
+name|uint16_t
+name|cntr
+comment|/* CQ pending completion counter */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * CQ DB pending completion ITT array  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_cq_db_prod_pnd_cmpltn_cnt_arr
+block|{
+name|struct
+name|iscsi_cq_db_prod_pnd_cmpltn_cnt
+name|prod_pend_comp
+index|[
+literal|8
+index|]
+comment|/* CQ pending completion ITT array */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * CQ DB pending completion ITT array  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_cq_db_pnd_comp_itt_arr
+block|{
+name|uint16_t
+name|itt
+index|[
+literal|8
+index|]
+comment|/* CQ pending completion ITT array */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Cstorm CQ sequence to notify array, updated by driver  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_cq_db_sqn_2_notify_arr
+block|{
+name|uint16_t
+name|sqn
+index|[
+literal|8
+index|]
+comment|/* Cstorm CQ sequence to notify array, updated by driver */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * CQ DB  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_cq_db
+block|{
+name|struct
+name|iscsi_cq_db_prod_pnd_cmpltn_cnt_arr
+name|cq_u_prod_pend_comp_ctr_arr
+comment|/* Ustorm CQ producer and pending completion counter array, updated by Ustorm */
+decl_stmt|;
+name|struct
+name|iscsi_cq_db_pnd_comp_itt_arr
+name|cq_c_pend_comp_itt_arr
+comment|/* Cstorm CQ pending completion ITT array, updated by Cstorm */
+decl_stmt|;
+name|struct
+name|iscsi_cq_db_sqn_2_notify_arr
+name|cq_drv_sqn_2_notify_arr
+comment|/* Cstorm CQ sequence to notify array, updated by driver */
+decl_stmt|;
+name|uint32_t
+name|reserved
+index|[
+literal|4
+index|]
+comment|/* 16 byte allignment */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI KCQ CQE parameters  */
+end_comment
+
+begin_union
+union|union
+name|iscsi_kcqe_params
+block|{
+name|uint32_t
+name|reserved0
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * iSCSI KCQ CQE  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kcqe
+block|{
+name|uint32_t
+name|iscsi_conn_id
+comment|/* Drivers connection ID (only 16 bits are used) */
+decl_stmt|;
+name|uint32_t
+name|completion_status
+comment|/* 0=command completed succesfuly, 1=command failed */
+decl_stmt|;
+name|uint32_t
+name|iscsi_conn_context_id
+comment|/* Context ID of the iSCSI connection */
+decl_stmt|;
+name|union
+name|iscsi_kcqe_params
+name|params
+comment|/* command-specific parameters */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KCQE_RESERVED0
+value|(0x7<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KCQE_RESERVED0_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KCQE_RAMROD_COMPLETION
+value|(0x1<<3)
+comment|/* BitField flags	Everest only - indicates whether this KCQE is a ramrod completion */
+define|#
+directive|define
+name|ISCSI_KCQE_RAMROD_COMPLETION_SHIFT
+value|3
+define|#
+directive|define
+name|ISCSI_KCQE_LAYER_CODE
+value|(0x7<<4)
+comment|/* BitField flags	protocol layer (L2,L3,L4,L5,iSCSI) */
+define|#
+directive|define
+name|ISCSI_KCQE_LAYER_CODE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KCQE_LINKED_WITH_NEXT
+value|(0x1<<7)
+comment|/* BitField flags	Indicates whether this KCQE is linked with the next KCQE */
+define|#
+directive|define
+name|ISCSI_KCQE_LINKED_WITH_NEXT_SHIFT
+value|7
+name|uint8_t
+name|op_code
+comment|/* iSCSI KCQ opcode */
+decl_stmt|;
+name|uint16_t
+name|qe_self_seq
+comment|/* Self identifying sequence number */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|qe_self_seq
+comment|/* Self identifying sequence number */
+decl_stmt|;
+name|uint8_t
+name|op_code
+comment|/* iSCSI KCQ opcode */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KCQE_RESERVED0
+value|(0x7<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KCQE_RESERVED0_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KCQE_RAMROD_COMPLETION
+value|(0x1<<3)
+comment|/* BitField flags	Everest only - indicates whether this KCQE is a ramrod completion */
+define|#
+directive|define
+name|ISCSI_KCQE_RAMROD_COMPLETION_SHIFT
+value|3
+define|#
+directive|define
+name|ISCSI_KCQE_LAYER_CODE
+value|(0x7<<4)
+comment|/* BitField flags	protocol layer (L2,L3,L4,L5,iSCSI) */
+define|#
+directive|define
+name|ISCSI_KCQE_LAYER_CODE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KCQE_LINKED_WITH_NEXT
+value|(0x1<<7)
+comment|/* BitField flags	Indicates whether this KCQE is linked with the next KCQE */
+define|#
+directive|define
+name|ISCSI_KCQE_LINKED_WITH_NEXT_SHIFT
+value|7
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI KWQE header  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_header
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED0
+value|(0xF<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED0_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_LAYER_CODE
+value|(0x7<<4)
+comment|/* BitField flags	protocol layer (L2,L3,L4,L5,iSCSI) */
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_LAYER_CODE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED1
+value|(0x1<<7)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED1_SHIFT
+value|7
+name|uint8_t
+name|op_code
+comment|/* iSCSI KWQE opcode */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|op_code
+comment|/* iSCSI KWQE opcode */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED0
+value|(0xF<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED0_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_LAYER_CODE
+value|(0x7<<4)
+comment|/* BitField flags	protocol layer (L2,L3,L4,L5,iSCSI) */
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_LAYER_CODE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED1
+value|(0x1<<7)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_HEADER_RESERVED1_SHIFT
+value|7
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI firmware init request 1  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_init1
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint8_t
+name|hsi_version
+comment|/* HSI version number */
+decl_stmt|;
+name|uint8_t
+name|num_cqs
+comment|/* Number of completion queues */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|num_cqs
+comment|/* Number of completion queues */
+decl_stmt|;
+name|uint8_t
+name|hsi_version
+comment|/* HSI version number */
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|dummy_buffer_addr_lo
+comment|/* Lower 32-bit of dummy buffer - Teton only */
+decl_stmt|;
+name|uint32_t
+name|dummy_buffer_addr_hi
+comment|/* Higher 32-bit of dummy buffer - Teton only */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|num_ccells_per_conn
+comment|/* Number of ccells per connection */
+decl_stmt|;
+name|uint16_t
+name|num_tasks_per_conn
+comment|/* Number of tasks per connection */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|num_tasks_per_conn
+comment|/* Number of tasks per connection */
+decl_stmt|;
+name|uint16_t
+name|num_ccells_per_conn
+comment|/* Number of ccells per connection */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_wqes_per_page
+comment|/* Number of work entries in a single page of SQ */
+decl_stmt|;
+name|uint16_t
+name|sq_num_wqes
+comment|/* Number of entries in the Send Queue */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_num_wqes
+comment|/* Number of entries in the Send Queue */
+decl_stmt|;
+name|uint16_t
+name|sq_wqes_per_page
+comment|/* Number of work entries in a single page of SQ */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|cq_log_wqes_per_page
+comment|/* Log of number of work entries in a single page of CQ */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_PAGE_SIZE
+value|(0xF<<0)
+comment|/* BitField flags	page size code */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_PAGE_SIZE_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_DELAYED_ACK_ENABLE
+value|(0x1<<4)
+comment|/* BitField flags	if set, delayed ack is enabled */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_DELAYED_ACK_ENABLE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_KEEP_ALIVE_ENABLE
+value|(0x1<<5)
+comment|/* BitField flags	if set, keep alive is enabled */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_KEEP_ALIVE_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_RESERVED1
+value|(0x3<<6)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_RESERVED1_SHIFT
+value|6
+name|uint16_t
+name|cq_num_wqes
+comment|/* Number of entries in the Completion Queue */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_num_wqes
+comment|/* Number of entries in the Completion Queue */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_PAGE_SIZE
+value|(0xF<<0)
+comment|/* BitField flags	page size code */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_PAGE_SIZE_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_DELAYED_ACK_ENABLE
+value|(0x1<<4)
+comment|/* BitField flags	if set, delayed ack is enabled */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_DELAYED_ACK_ENABLE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_KEEP_ALIVE_ENABLE
+value|(0x1<<5)
+comment|/* BitField flags	if set, keep alive is enabled */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_KEEP_ALIVE_ENABLE_SHIFT
+value|5
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_RESERVED1
+value|(0x3<<6)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_INIT1_RESERVED1_SHIFT
+value|6
+name|uint8_t
+name|cq_log_wqes_per_page
+comment|/* Log of number of work entries in a single page of CQ */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_num_pages
+comment|/* Number of pages in CQ page table */
+decl_stmt|;
+name|uint16_t
+name|sq_num_pages
+comment|/* Number of pages in SQ page table */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_num_pages
+comment|/* Number of pages in SQ page table */
+decl_stmt|;
+name|uint16_t
+name|cq_num_pages
+comment|/* Number of pages in CQ page table */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_buffer_size
+comment|/* Size of a single buffer (entry) in the RQ */
+decl_stmt|;
+name|uint16_t
+name|rq_num_wqes
+comment|/* Number of entries in the Receive Queue */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_num_wqes
+comment|/* Number of entries in the Receive Queue */
+decl_stmt|;
+name|uint16_t
+name|rq_buffer_size
+comment|/* Size of a single buffer (entry) in the RQ */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI firmware init request 2  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_init2
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint16_t
+name|max_cq_sqn
+comment|/* CQ wraparound value */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|max_cq_sqn
+comment|/* CQ wraparound value */
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|error_bit_map
+index|[
+literal|2
+index|]
+comment|/* bit per error type, 0=error, 1=warning */
+decl_stmt|;
+name|uint32_t
+name|tcp_keepalive
+comment|/* TCP keepalive time in seconds */
+decl_stmt|;
+name|uint32_t
+name|reserved1
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Initial iSCSI connection offload request 1  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_conn_offload1
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint16_t
+name|iscsi_conn_id
+comment|/* Drivers connection ID. Should be sent in KCQEs to speed-up drivers access to connection data. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|iscsi_conn_id
+comment|/* Drivers connection ID. Should be sent in KCQEs to speed-up drivers access to connection data. */
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|sq_page_table_addr_lo
+comment|/* Lower 32-bit of the SQs page table address */
+decl_stmt|;
+name|uint32_t
+name|sq_page_table_addr_hi
+comment|/* Higher 32-bit of the SQs page table address */
+decl_stmt|;
+name|uint32_t
+name|cq_page_table_addr_lo
+comment|/* Lower 32-bit of the CQs page table address */
+decl_stmt|;
+name|uint32_t
+name|cq_page_table_addr_hi
+comment|/* Higher 32-bit of the CQs page table address */
+decl_stmt|;
+name|uint32_t
+name|reserved0
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI Page Table Entry (PTE)  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_pte
+block|{
+name|uint32_t
+name|hi
+comment|/* Higher 32 bits of address */
+decl_stmt|;
+name|uint32_t
+name|lo
+comment|/* Lower 32 bits of address */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Initial iSCSI connection offload request 2  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_conn_offload2
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQE header */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQE header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|rq_page_table_addr_lo
+comment|/* Lower 32-bits of the RQs page table address */
+decl_stmt|;
+name|uint32_t
+name|rq_page_table_addr_hi
+comment|/* Higher 32-bits of the RQs page table address */
+decl_stmt|;
+name|struct
+name|iscsi_pte
+name|sq_first_pte
+comment|/* first SQ page table entry (for FW caching) */
+decl_stmt|;
+name|struct
+name|iscsi_pte
+name|cq_first_pte
+comment|/* first CQ page table entry (for FW caching) */
+decl_stmt|;
+name|uint32_t
+name|num_additional_wqes
+comment|/* Everest specific - number of offload3 KWQEs that will follow this KWQE */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Everest specific - Initial iSCSI connection offload request 3  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_conn_offload3
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQE header */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQE header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|reserved1
+decl_stmt|;
+name|struct
+name|iscsi_pte
+name|qp_first_pte
+index|[
+literal|3
+index|]
+comment|/* first page table entry of some iSCSI ring (for FW caching) */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI connection update request  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_conn_update
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQE header */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQE header */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|session_error_recovery_level
+comment|/* iSCSI Error Recovery Level negotiated on this connection */
+decl_stmt|;
+name|uint8_t
+name|max_outstanding_r2ts
+comment|/* Maximum number of outstanding R2ts that a target can send for a command */
+decl_stmt|;
+name|uint8_t
+name|reserved2
+decl_stmt|;
+name|uint8_t
+name|conn_flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_HEADER_DIGEST
+value|(0x1<<0)
+comment|/* BitField conn_flags	0=off, 1=on */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_HEADER_DIGEST_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_DATA_DIGEST
+value|(0x1<<1)
+comment|/* BitField conn_flags	0=off, 1=on */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_DATA_DIGEST_SHIFT
+value|1
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_INITIAL_R2T
+value|(0x1<<2)
+comment|/* BitField conn_flags	0=no, 1=yes */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_INITIAL_R2T_SHIFT
+value|2
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_IMMEDIATE_DATA
+value|(0x1<<3)
+comment|/* BitField conn_flags	0=no, 1=yes */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_IMMEDIATE_DATA_SHIFT
+value|3
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_OOO_SUPPORT_MODE
+value|(0x3<<4)
+comment|/* BitField conn_flags	 (use enum tcp_tstorm_ooo) */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_OOO_SUPPORT_MODE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_RESERVED1
+value|(0x3<<6)
+comment|/* BitField conn_flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_RESERVED1_SHIFT
+value|6
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|conn_flags
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_HEADER_DIGEST
+value|(0x1<<0)
+comment|/* BitField conn_flags	0=off, 1=on */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_HEADER_DIGEST_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_DATA_DIGEST
+value|(0x1<<1)
+comment|/* BitField conn_flags	0=off, 1=on */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_DATA_DIGEST_SHIFT
+value|1
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_INITIAL_R2T
+value|(0x1<<2)
+comment|/* BitField conn_flags	0=no, 1=yes */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_INITIAL_R2T_SHIFT
+value|2
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_IMMEDIATE_DATA
+value|(0x1<<3)
+comment|/* BitField conn_flags	0=no, 1=yes */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_IMMEDIATE_DATA_SHIFT
+value|3
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_OOO_SUPPORT_MODE
+value|(0x3<<4)
+comment|/* BitField conn_flags	 (use enum tcp_tstorm_ooo) */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_OOO_SUPPORT_MODE_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_RESERVED1
+value|(0x3<<6)
+comment|/* BitField conn_flags	 */
+define|#
+directive|define
+name|ISCSI_KWQE_CONN_UPDATE_RESERVED1_SHIFT
+value|6
+name|uint8_t
+name|reserved2
+decl_stmt|;
+name|uint8_t
+name|max_outstanding_r2ts
+comment|/* Maximum number of outstanding R2ts that a target can send for a command */
+decl_stmt|;
+name|uint8_t
+name|session_error_recovery_level
+comment|/* iSCSI Error Recovery Level negotiated on this connection */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|context_id
+comment|/* Context ID of the iSCSI connection */
+decl_stmt|;
+name|uint32_t
+name|max_send_pdu_length
+comment|/* Maximum length of a PDU that the target can receive */
+decl_stmt|;
+name|uint32_t
+name|max_recv_pdu_length
+comment|/* Maximum length of a PDU that the Initiator can receive */
+decl_stmt|;
+name|uint32_t
+name|first_burst_length
+comment|/* Maximum length of the immediate and unsolicited data that Initiator can send */
+decl_stmt|;
+name|uint32_t
+name|max_burst_length
+comment|/* Maximum length of the data that Initiator and target can send in one burst */
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+comment|/* Expected Status Serial Number */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI destroy connection request  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_kwqe_conn_destroy
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+name|uint16_t
+name|iscsi_conn_id
+comment|/* Drivers connection ID. Should be sent in KCQEs to speed-up drivers access to connection data. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|iscsi_conn_id
+comment|/* Drivers connection ID. Should be sent in KCQEs to speed-up drivers access to connection data. */
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_header
+name|hdr
+comment|/* KWQ WQE header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|context_id
+comment|/* Context ID of the iSCSI connection */
+decl_stmt|;
+name|uint32_t
+name|reserved1
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI KWQ WQE  */
+end_comment
+
+begin_union
+union|union
+name|iscsi_kwqe
+block|{
+name|struct
+name|iscsi_kwqe_init1
+name|init1
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_init2
+name|init2
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_conn_offload1
+name|conn_offload1
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_conn_offload2
+name|conn_offload2
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_conn_offload3
+name|conn_offload3
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_conn_update
+name|conn_update
+decl_stmt|;
+name|struct
+name|iscsi_kwqe_conn_destroy
+name|conn_destroy
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|iscsi_rq_db
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved1
+decl_stmt|;
+name|uint16_t
+name|rq_prod
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_prod
+decl_stmt|;
+name|uint16_t
+name|reserved1
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__fw_hdr
+index|[
+literal|15
+index|]
+comment|/* Used by FW for partial header placement */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_sq_db
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved0
+comment|/* Pad structure size to 16 bytes */
+decl_stmt|;
+name|uint16_t
+name|sq_prod
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sq_prod
+decl_stmt|;
+name|uint16_t
+name|reserved0
+comment|/* Pad structure size to 16 bytes */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|reserved1
+index|[
+literal|3
+index|]
+comment|/* Pad structure size to 16 bytes */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Tstorm Tcp flags  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_l5cm_tcp_flags
+block|{
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_DELAYED_ACK_EN
+value|(0x1<<12)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_DELAYED_ACK_EN_SHIFT
+value|12
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_TS_ENABLED
+value|(0x1<<13)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_TS_ENABLED_SHIFT
+value|13
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_RSRV1
+value|(0x3<<14)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_L5CM_TCP_FLAGS_RSRV1_SHIFT
+value|14
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Cstorm iSCSI Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|cstorm_iscsi_st_context
+block|{
+name|struct
+name|iscsi_cq_db_prod_pnd_cmpltn_cnt_arr
+name|cq_c_prod_pend_comp_ctr_arr
+comment|/* Cstorm CQ producer and CQ pending completion array, updated by Cstorm */
+decl_stmt|;
+name|struct
+name|iscsi_cq_db_sqn_2_notify_arr
+name|cq_c_prod_sqn_arr
+comment|/* Cstorm CQ producer sequence, updated by Cstorm */
+decl_stmt|;
+name|struct
+name|iscsi_cq_db_sqn_2_notify_arr
+name|cq_c_sqn_2_notify_arr
+comment|/* Event Coalescing CQ sequence to notify driver, copied by Cstorm from CQ DB that is updated by Driver */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|hq_pbl_base
+comment|/* HQ PBL base */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|hq_curr_pbe
+comment|/* HQ current PBE */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|task_pbl_base
+comment|/* Task Context Entry PBL base */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|cq_db_base
+comment|/* pointer to CQ DB array. each CQ DB entry consists of CQ PBL, arm bit and idx to notify */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_bd_itt
+comment|/* copied from HQ BD */
+decl_stmt|;
+name|uint16_t
+name|iscsi_conn_id
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|iscsi_conn_id
+decl_stmt|;
+name|uint16_t
+name|hq_bd_itt
+comment|/* copied from HQ BD */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|hq_bd_data_segment_len
+comment|/* copied from HQ BD */
+decl_stmt|;
+name|uint32_t
+name|hq_bd_buffer_offset
+comment|/* copied from HQ BD */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|rsrv
+decl_stmt|;
+name|uint8_t
+name|cq_proc_en_bit_map
+comment|/* CQ processing enable bit map, 1 bit per CQ */
+decl_stmt|;
+name|uint8_t
+name|cq_pend_comp_itt_valid_bit_map
+comment|/* CQ pending completion ITT valid bit map, 1 bit per CQ */
+decl_stmt|;
+name|uint8_t
+name|hq_bd_opcode
+comment|/* copied from HQ BD */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|hq_bd_opcode
+comment|/* copied from HQ BD */
+decl_stmt|;
+name|uint8_t
+name|cq_pend_comp_itt_valid_bit_map
+comment|/* CQ pending completion ITT valid bit map, 1 bit per CQ */
+decl_stmt|;
+name|uint8_t
+name|cq_proc_en_bit_map
+comment|/* CQ processing enable bit map, 1 bit per CQ */
+decl_stmt|;
+name|uint8_t
+name|rsrv
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|hq_tcp_seq
+comment|/* TCP sequence of next BD to release */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_DATA_DIGEST_EN
+value|(0x1<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_DATA_DIGEST_EN_SHIFT
+value|0
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HDR_DIGEST_EN
+value|(0x1<<1)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HDR_DIGEST_EN_SHIFT
+value|1
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_CTXT_VALID
+value|(0x1<<2)
+comment|/* BitField flags	copied from HQ BD */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_CTXT_VALID_SHIFT
+value|2
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_LCL_CMPLN_FLG
+value|(0x1<<3)
+comment|/* BitField flags	copied from HQ BD */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_LCL_CMPLN_FLG_SHIFT
+value|3
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_WRITE_TASK
+value|(0x1<<4)
+comment|/* BitField flags	calculated using HQ BD opcode and write flag */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_WRITE_TASK_SHIFT
+value|4
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_CTRL_FLAGS_RSRV
+value|(0x7FF<<5)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_CTRL_FLAGS_RSRV_SHIFT
+value|5
+name|uint16_t
+name|hq_cons
+comment|/* HQ consumer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_cons
+comment|/* HQ consumer */
+decl_stmt|;
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_DATA_DIGEST_EN
+value|(0x1<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_DATA_DIGEST_EN_SHIFT
+value|0
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HDR_DIGEST_EN
+value|(0x1<<1)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HDR_DIGEST_EN_SHIFT
+value|1
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_CTXT_VALID
+value|(0x1<<2)
+comment|/* BitField flags	copied from HQ BD */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_CTXT_VALID_SHIFT
+value|2
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_LCL_CMPLN_FLG
+value|(0x1<<3)
+comment|/* BitField flags	copied from HQ BD */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_LCL_CMPLN_FLG_SHIFT
+value|3
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_WRITE_TASK
+value|(0x1<<4)
+comment|/* BitField flags	calculated using HQ BD opcode and write flag */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_HQ_BD_WRITE_TASK_SHIFT
+value|4
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_CTRL_FLAGS_RSRV
+value|(0x7FF<<5)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|CSTORM_ISCSI_ST_CONTEXT_CTRL_FLAGS_RSRV_SHIFT
+value|5
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|rsrv1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * SCSI read/write SQ WQE  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_cmd_pdu_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_ATTRIBUTES
+value|(0x7<<0)
+comment|/* BitField op_attr	Attributes of the SCSI command. To be sent with the outgoing command PDU. */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_ATTRIBUTES_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x3<<3)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|3
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_WRITE_FLAG
+value|(0x1<<5)
+comment|/* BitField op_attr	Write bit. Initiator is expected to send the data to the target */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_WRITE_FLAG_SHIFT
+value|5
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_READ_FLAG
+value|(0x1<<6)
+comment|/* BitField op_attr	Read bit. Data from target is expected */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_READ_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG
+value|(0x1<<7)
+comment|/* BitField op_attr	Final bit. Firmware can change this bit based on the command before putting it into the outgoing PDU. */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG_SHIFT
+value|7
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_ATTRIBUTES
+value|(0x7<<0)
+comment|/* BitField op_attr	Attributes of the SCSI command. To be sent with the outgoing command PDU. */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_ATTRIBUTES_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x3<<3)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|3
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_WRITE_FLAG
+value|(0x1<<5)
+comment|/* BitField op_attr	Write bit. Initiator is expected to send the data to the target */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_WRITE_FLAG_SHIFT
+value|5
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_READ_FLAG
+value|(0x1<<6)
+comment|/* BitField op_attr	Read bit. Data from target is expected */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_READ_FLAG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG
+value|(0x1<<7)
+comment|/* BitField op_attr	Final bit. Firmware can change this bit based on the command before putting it into the outgoing PDU. */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_CMD_PDU_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|struct
+name|regpair_t
+name|lun
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+name|uint32_t
+name|expected_data_transfer_length
+decl_stmt|;
+name|uint32_t
+name|cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|scsi_command_block
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Buffer per connection, used in Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_conn_buf
+block|{
+name|struct
+name|regpair_t
+name|reserved
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context region, used only in iSCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_iscsi_rq_db
+block|{
+name|struct
+name|regpair_t
+name|pbl_base
+comment|/* Pointer to the rq page base list. */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|curr_pbe
+comment|/* Pointer to the current rq page base. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context region, used only in iSCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_iscsi_r2tq_db
+block|{
+name|struct
+name|regpair_t
+name|pbl_base
+comment|/* Pointer to the r2tq page base list. */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|curr_pbe
+comment|/* Pointer to the current r2tq page base. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context region, used only in iSCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_iscsi_cq_db
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_sn
+comment|/* CQ serial number */
+decl_stmt|;
+name|uint16_t
+name|prod
+comment|/* CQ producer */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|prod
+comment|/* CQ producer */
+decl_stmt|;
+name|uint16_t
+name|cq_sn
+comment|/* CQ serial number */
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|curr_pbe
+comment|/* Pointer to the current cq page base. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context region, used only in iSCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|rings_db
+block|{
+name|struct
+name|ustorm_iscsi_rq_db
+name|rq
+comment|/* RQ db. */
+decl_stmt|;
+name|struct
+name|ustorm_iscsi_r2tq_db
+name|r2tq
+comment|/* R2TQ db. */
+decl_stmt|;
+name|struct
+name|ustorm_iscsi_cq_db
+name|cq
+index|[
+literal|8
+index|]
+comment|/* CQ db. */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_prod
+comment|/* RQ prod */
+decl_stmt|;
+name|uint16_t
+name|r2tq_prod
+comment|/* R2TQ producer. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|r2tq_prod
+comment|/* R2TQ producer. */
+decl_stmt|;
+name|uint16_t
+name|rq_prod
+comment|/* RQ prod */
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|cq_pbl_base
+comment|/* Pointer to the cq page base list. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context region, used only in iSCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_iscsi_placement_db
+block|{
+name|uint32_t
+name|sgl_base_lo
+comment|/* SGL base address lo */
+decl_stmt|;
+name|uint32_t
+name|sgl_base_hi
+comment|/* SGL base address hi */
+decl_stmt|;
+name|uint32_t
+name|local_sge_0_address_hi
+comment|/* SGE address hi */
+decl_stmt|;
+name|uint32_t
+name|local_sge_0_address_lo
+comment|/* SGE address lo */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|curr_sge_offset
+comment|/* Current offset in the SGE */
+decl_stmt|;
+name|uint16_t
+name|local_sge_0_size
+comment|/* SGE size */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|local_sge_0_size
+comment|/* SGE size */
+decl_stmt|;
+name|uint16_t
+name|curr_sge_offset
+comment|/* Current offset in the SGE */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|local_sge_1_address_hi
+comment|/* SGE address hi */
+decl_stmt|;
+name|uint32_t
+name|local_sge_1_address_lo
+comment|/* SGE address lo */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|exp_padding_2b
+comment|/* Number of padding bytes not yet processed */
+decl_stmt|;
+name|uint8_t
+name|nal_len_3b
+comment|/* Non 4 byte aligned bytes in the previous iteration */
+decl_stmt|;
+name|uint16_t
+name|local_sge_1_size
+comment|/* SGE size */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|local_sge_1_size
+comment|/* SGE size */
+decl_stmt|;
+name|uint8_t
+name|nal_len_3b
+comment|/* Non 4 byte aligned bytes in the previous iteration */
+decl_stmt|;
+name|uint8_t
+name|exp_padding_2b
+comment|/* Number of padding bytes not yet processed */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|sgl_size
+comment|/* Number of SGEs remaining till end of SGL */
+decl_stmt|;
+name|uint8_t
+name|local_sge_index_2b
+comment|/* Index to the local SGE currently used */
+decl_stmt|;
+name|uint16_t
+name|reserved7
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved7
+decl_stmt|;
+name|uint8_t
+name|local_sge_index_2b
+comment|/* Index to the local SGE currently used */
+decl_stmt|;
+name|uint8_t
+name|sgl_size
+comment|/* Number of SGEs remaining till end of SGL */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|rem_pdu
+comment|/* Number of bytes remaining in PDU */
+decl_stmt|;
+name|uint32_t
+name|place_db_bitfield_1
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_REM_PDU_PAYLOAD
+value|(0xFFFFFF<<0)
+comment|/* BitField place_db_bitfield_1place_db_bitfield_1	Number of bytes remaining in PDU payload */
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_REM_PDU_PAYLOAD_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_CQ_ID
+value|(0xFF<<24)
+comment|/* BitField place_db_bitfield_1place_db_bitfield_1	Temp task context - determines the CQ index for CQE placement */
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_CQ_ID_SHIFT
+value|24
+name|uint32_t
+name|place_db_bitfield_2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_BYTES_2_TRUNCATE
+value|(0xFFFFFF<<0)
+comment|/* BitField place_db_bitfield_2place_db_bitfield_2	Bytes to truncate from the payload. */
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_BYTES_2_TRUNCATE_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_HOST_SGE_INDEX
+value|(0xFF<<24)
+comment|/* BitField place_db_bitfield_2place_db_bitfield_2	Sge index on host */
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_HOST_SGE_INDEX_SHIFT
+value|24
+name|uint32_t
+name|nal
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_REM_SGE_SIZE
+value|(0xFFFFFF<<0)
+comment|/* BitField nalNon aligned db	Number of bytes remaining in local SGEs */
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_REM_SGE_SIZE_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_EXP_DIGEST_3B
+value|(0xFF<<24)
+comment|/* BitField nalNon aligned db	Number of digest bytes not yet processed */
+define|#
+directive|define
+name|USTORM_ISCSI_PLACEMENT_DB_EXP_DIGEST_3B_SHIFT
+value|24
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ustorm iSCSI Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_iscsi_st_context
+block|{
+name|uint32_t
+name|exp_stat_sn
+comment|/* Expected status sequence number, incremented with each response/middle path/unsolicited received. */
+decl_stmt|;
+name|uint32_t
+name|exp_data_sn
+comment|/* Expected Data sequence number, incremented with each data in */
+decl_stmt|;
+name|struct
+name|rings_db
+name|ring
+comment|/* rq, r2tq ,cq */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|task_pbl_base
+comment|/* Task PBL base will be read from RAM to context */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|tce_phy_addr
+comment|/* Pointer to the task context physical address */
+decl_stmt|;
+name|struct
+name|ustorm_iscsi_placement_db
+name|place_db
+decl_stmt|;
+name|uint32_t
+name|reserved8
+comment|/* reserved */
+decl_stmt|;
+name|uint32_t
+name|rem_rcv_len
+comment|/* Temp task context - Remaining bytes to end of task */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|hdr_itt
+comment|/* field copied from PDU header */
+decl_stmt|;
+name|uint16_t
+name|iscsi_conn_id
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|iscsi_conn_id
+decl_stmt|;
+name|uint16_t
+name|hdr_itt
+comment|/* field copied from PDU header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|nal_bytes
+comment|/* nal bytes read from BRB */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|hdr_second_byte_union
+comment|/* field copied from PDU header */
+decl_stmt|;
+name|uint8_t
+name|bitfield_0
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BMIDDLEOFPDU
+value|(0x1<<0)
+comment|/* BitField bitfield_0bitfield_0	marks that processing of payload has started */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BMIDDLEOFPDU_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BFENCECQE
+value|(0x1<<1)
+comment|/* BitField bitfield_0bitfield_0	marks that fence is need on the next CQE */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BFENCECQE_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BRESETCRC
+value|(0x1<<2)
+comment|/* BitField bitfield_0bitfield_0	marks that a RESET should be sent to CRC machine. Used in NAL condition in the beginning of a PDU. */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BRESETCRC_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_RESERVED1
+value|(0x1F<<3)
+comment|/* BitField bitfield_0bitfield_0	reserved */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_RESERVED1_SHIFT
+value|3
+name|uint8_t
+name|task_pdu_cache_index
+decl_stmt|;
+name|uint8_t
+name|task_pbe_cache_index
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|task_pbe_cache_index
+decl_stmt|;
+name|uint8_t
+name|task_pdu_cache_index
+decl_stmt|;
+name|uint8_t
+name|bitfield_0
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BMIDDLEOFPDU
+value|(0x1<<0)
+comment|/* BitField bitfield_0bitfield_0	marks that processing of payload has started */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BMIDDLEOFPDU_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BFENCECQE
+value|(0x1<<1)
+comment|/* BitField bitfield_0bitfield_0	marks that fence is need on the next CQE */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BFENCECQE_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BRESETCRC
+value|(0x1<<2)
+comment|/* BitField bitfield_0bitfield_0	marks that a RESET should be sent to CRC machine. Used in NAL condition in the beginning of a PDU. */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_BRESETCRC_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_RESERVED1
+value|(0x1F<<3)
+comment|/* BitField bitfield_0bitfield_0	reserved */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_RESERVED1_SHIFT
+value|3
+name|uint8_t
+name|hdr_second_byte_union
+comment|/* field copied from PDU header */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved3
+comment|/* reserved */
+decl_stmt|;
+name|uint8_t
+name|reserved2
+comment|/* reserved */
+decl_stmt|;
+name|uint8_t
+name|acDecrement
+comment|/* Manage the AC decrement that should be done by USDM */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|acDecrement
+comment|/* Manage the AC decrement that should be done by USDM */
+decl_stmt|;
+name|uint8_t
+name|reserved2
+comment|/* reserved */
+decl_stmt|;
+name|uint16_t
+name|reserved3
+comment|/* reserved */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|task_stat
+comment|/* counts dataIn for read and holds data outs, r2t for write */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|hdr_opcode
+comment|/* field copied from PDU header */
+decl_stmt|;
+name|uint8_t
+name|num_cqs
+comment|/* Number of CQs supported by this connection */
+decl_stmt|;
+name|uint16_t
+name|reserved5
+comment|/* reserved */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved5
+comment|/* reserved */
+decl_stmt|;
+name|uint8_t
+name|num_cqs
+comment|/* Number of CQs supported by this connection */
+decl_stmt|;
+name|uint8_t
+name|hdr_opcode
+comment|/* field copied from PDU header */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|negotiated_rx
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_MAX_RECV_PDU_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField negotiated_rx	 */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_MAX_RECV_PDU_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_MAX_OUTSTANDING_R2TS
+value|(0xFF<<24)
+comment|/* BitField negotiated_rx	 */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_MAX_OUTSTANDING_R2TS_SHIFT
+value|24
+name|uint32_t
+name|negotiated_rx_and_flags
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_MAX_BURST_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField negotiated_rx_and_flags	Negotiated maximum length of sequence */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_MAX_BURST_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_CQE_POSTED_OR_HEADER_CACHED
+value|(0x1<<24)
+comment|/* BitField negotiated_rx_and_flags	Marks that unvalid CQE was already posted or PDU header was cachaed in RAM */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_CQE_POSTED_OR_HEADER_CACHED_SHIFT
+value|24
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_HDR_DIGEST_EN
+value|(0x1<<25)
+comment|/* BitField negotiated_rx_and_flags	Header digest support enable */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_HDR_DIGEST_EN_SHIFT
+value|25
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_DATA_DIGEST_EN
+value|(0x1<<26)
+comment|/* BitField negotiated_rx_and_flags	Data digest support enable */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_DATA_DIGEST_EN_SHIFT
+value|26
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_PROTOCOL_ERROR
+value|(0x1<<27)
+comment|/* BitField negotiated_rx_and_flags	 */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_PROTOCOL_ERROR_SHIFT
+value|27
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_TASK_VALID
+value|(0x1<<28)
+comment|/* BitField negotiated_rx_and_flags	temp task context */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_TASK_VALID_SHIFT
+value|28
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_TASK_TYPE
+value|(0x3<<29)
+comment|/* BitField negotiated_rx_and_flags	Task type: 0 = slow-path (non-RW) 1 = read 2 = write */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_TASK_TYPE_SHIFT
+value|29
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_ALL_DATA_ACKED
+value|(0x1<<31)
+comment|/* BitField negotiated_rx_and_flags	Set if all data is acked */
+define|#
+directive|define
+name|USTORM_ISCSI_ST_CONTEXT_B_ALL_DATA_ACKED_SHIFT
+value|31
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * TCP context region, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_tcp_st_context_section
+block|{
+name|uint32_t
+name|flags1
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_RTT_SRTT
+value|(0xFFFFFF<<0)
+comment|/* BitField flags1various state flags	20b only, Smoothed Rount Trip Time */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_RTT_SRTT_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_PAWS_INVALID
+value|(0x1<<24)
+comment|/* BitField flags1various state flags	PAWS asserted as invalid in KA flow */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_PAWS_INVALID_SHIFT
+value|24
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_TIMESTAMP_EXISTS
+value|(0x1<<25)
+comment|/* BitField flags1various state flags	Timestamps supported on this connection */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_TIMESTAMP_EXISTS_SHIFT
+value|25
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_RESERVED0
+value|(0x1<<26)
+comment|/* BitField flags1various state flags	 */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_RESERVED0_SHIFT
+value|26
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_STOP_RX_PAYLOAD
+value|(0x1<<27)
+comment|/* BitField flags1various state flags	stop receiving rx payload */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_STOP_RX_PAYLOAD_SHIFT
+value|27
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_KA_ENABLED
+value|(0x1<<28)
+comment|/* BitField flags1various state flags	Keep Alive enabled */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_KA_ENABLED_SHIFT
+value|28
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_FIRST_RTO_ESTIMATE
+value|(0x1<<29)
+comment|/* BitField flags1various state flags	First Retransmition Timout Estimation */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_FIRST_RTO_ESTIMATE_SHIFT
+value|29
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_MAX_SEG_RETRANSMIT_EN
+value|(0x1<<30)
+comment|/* BitField flags1various state flags	per connection flag, signals whether to check if rt count exceeds max_seg_retransmit */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_MAX_SEG_RETRANSMIT_EN_SHIFT
+value|30
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_LAST_ISLE_HAS_FIN
+value|(0x1<<31)
+comment|/* BitField flags1various state flags	last isle ends with FIN. FIN is counted as 1 byte for isle end sequence */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_LAST_ISLE_HAS_FIN_SHIFT
+value|31
+name|uint32_t
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_RTT_VARIATION
+value|(0xFFFFFF<<0)
+comment|/* BitField flags2various state flags	20b only, Round Trip Time variation */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_RTT_VARIATION_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_DA_EN
+value|(0x1<<24)
+comment|/* BitField flags2various state flags	 */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_DA_EN_SHIFT
+value|24
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_DA_COUNTER_EN
+value|(0x1<<25)
+comment|/* BitField flags2various state flags	per GOS flags, but duplicated for each context */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_DA_COUNTER_EN_SHIFT
+value|25
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_KA_PROBE_SENT
+value|(0x1<<26)
+comment|/* BitField flags2various state flags	keep alive packet was sent */
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_KA_PROBE_SENT_SHIFT
+value|26
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_PERSIST_PROBE_SENT
+value|(0x1<<27)
+comment|/* BitField flags2various state flags	persist packet was sent */
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_PERSIST_PROBE_SENT_SHIFT
+value|27
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_UPDATE_L2_STATSTICS
+value|(0x1<<28)
+comment|/* BitField flags2various state flags	determines wheather or not to update l2 statistics */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_UPDATE_L2_STATSTICS_SHIFT
+value|28
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_UPDATE_L4_STATSTICS
+value|(0x1<<29)
+comment|/* BitField flags2various state flags	determines wheather or not to update l4 statistics */
+define|#
+directive|define
+name|TSTORM_TCP_ST_CONTEXT_SECTION_UPDATE_L4_STATSTICS_SHIFT
+value|29
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_IN_WINDOW_RST_ATTACK
+value|(0x1<<30)
+comment|/* BitField flags2various state flags	possible blind-in-window RST attack detected */
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_IN_WINDOW_RST_ATTACK_SHIFT
+value|30
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_IN_WINDOW_SYN_ATTACK
+value|(0x1<<31)
+comment|/* BitField flags2various state flags	possible blind-in-window SYN attack detected */
+define|#
+directive|define
+name|__TSTORM_TCP_ST_CONTEXT_SECTION_IN_WINDOW_SYN_ATTACK_SHIFT
+value|31
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|mss
+decl_stmt|;
+name|uint8_t
+name|tcp_sm_state
+comment|/* 3b only, Tcp state machine state */
+decl_stmt|;
+name|uint8_t
+name|rto_exp
+comment|/* 3b only, Exponential Backoff index */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|rto_exp
+comment|/* 3b only, Exponential Backoff index */
+decl_stmt|;
+name|uint8_t
+name|tcp_sm_state
+comment|/* 3b only, Tcp state machine state */
+decl_stmt|;
+name|uint16_t
+name|mss
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|rcv_nxt
+comment|/* Receive sequence: next expected */
+decl_stmt|;
+name|uint32_t
+name|timestamp_recent
+comment|/* last timestamp from segTS */
+decl_stmt|;
+name|uint32_t
+name|timestamp_recent_time
+comment|/* time at which timestamp_recent has been set */
+decl_stmt|;
+name|uint32_t
+name|cwnd
+comment|/* Congestion window */
+decl_stmt|;
+name|uint32_t
+name|ss_thresh
+comment|/* Slow Start Threshold */
+decl_stmt|;
+name|uint32_t
+name|cwnd_accum
+comment|/* Congestion window accumilation */
+decl_stmt|;
+name|uint32_t
+name|prev_seg_seq
+comment|/* Sequence number used for last sndWnd update (was: snd_wnd_l1) */
+decl_stmt|;
+name|uint32_t
+name|expected_rel_seq
+comment|/* the last update of rel_seq */
+decl_stmt|;
+name|uint32_t
+name|recover
+comment|/* Recording of sndMax when we enter retransmit */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|retransmit_count
+comment|/* Number of times a packet was retransmitted */
+decl_stmt|;
+name|uint8_t
+name|ka_max_probe_count
+comment|/* Keep Alive maximum probe counter */
+decl_stmt|;
+name|uint8_t
+name|persist_probe_count
+comment|/* Persist probe counter */
+decl_stmt|;
+name|uint8_t
+name|ka_probe_count
+comment|/* Keep Alive probe counter */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|ka_probe_count
+comment|/* Keep Alive probe counter */
+decl_stmt|;
+name|uint8_t
+name|persist_probe_count
+comment|/* Persist probe counter */
+decl_stmt|;
+name|uint8_t
+name|ka_max_probe_count
+comment|/* Keep Alive maximum probe counter */
+decl_stmt|;
+name|uint8_t
+name|retransmit_count
+comment|/* Number of times a packet was retransmitted */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|statistics_counter_id
+comment|/* The ID of the statistics client for counting common/L2 statistics */
+decl_stmt|;
+name|uint8_t
+name|ooo_support_mode
+decl_stmt|;
+name|uint8_t
+name|snd_wnd_scale
+comment|/* 4b only, Far-end window (Snd.Wind.Scale) scale */
+decl_stmt|;
+name|uint8_t
+name|dup_ack_count
+comment|/* Duplicate Ack Counter */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|dup_ack_count
+comment|/* Duplicate Ack Counter */
+decl_stmt|;
+name|uint8_t
+name|snd_wnd_scale
+comment|/* 4b only, Far-end window (Snd.Wind.Scale) scale */
+decl_stmt|;
+name|uint8_t
+name|ooo_support_mode
+decl_stmt|;
+name|uint8_t
+name|statistics_counter_id
+comment|/* The ID of the statistics client for counting common/L2 statistics */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|retransmit_start_time
+comment|/* Used by retransmit as a recording of start time */
+decl_stmt|;
+name|uint32_t
+name|ka_timeout
+comment|/* Keep Alive timeout */
+decl_stmt|;
+name|uint32_t
+name|ka_interval
+comment|/* Keep Alive interval */
+decl_stmt|;
+name|uint32_t
+name|isle_start_seq
+comment|/* First Out-of-order isle start sequence */
+decl_stmt|;
+name|uint32_t
+name|isle_end_seq
+comment|/* First Out-of-order isle end sequence */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|second_isle_address
+comment|/* address of the second isle (if exists) in internal RAM */
+decl_stmt|;
+name|uint16_t
+name|recent_seg_wnd
+comment|/* Last far end window received (not scaled!) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|recent_seg_wnd
+comment|/* Last far end window received (not scaled!) */
+decl_stmt|;
+name|uint16_t
+name|second_isle_address
+comment|/* address of the second isle (if exists) in internal RAM */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|max_isles_ever_happened
+comment|/* for statistics only - max number of isles ever happened on this connection */
+decl_stmt|;
+name|uint8_t
+name|isles_number
+comment|/* number of isles */
+decl_stmt|;
+name|uint16_t
+name|last_isle_address
+comment|/* address of the last isle (if exists) in internal RAM */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|last_isle_address
+comment|/* address of the last isle (if exists) in internal RAM */
+decl_stmt|;
+name|uint8_t
+name|isles_number
+comment|/* number of isles */
+decl_stmt|;
+name|uint8_t
+name|max_isles_ever_happened
+comment|/* for statistics only - max number of isles ever happened on this connection */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|max_rt_time
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|lsb_mac_address
+comment|/* TX source MAC LSB-16 */
+decl_stmt|;
+name|uint16_t
+name|vlan_id
+comment|/* Connection-configured VLAN ID */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|vlan_id
+comment|/* Connection-configured VLAN ID */
+decl_stmt|;
+name|uint16_t
+name|lsb_mac_address
+comment|/* TX source MAC LSB-16 */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|msb_mac_address
+comment|/* TX source MAC MSB-16 */
+decl_stmt|;
+name|uint16_t
+name|mid_mac_address
+comment|/* TX source MAC MID-16 */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|mid_mac_address
+comment|/* TX source MAC MID-16 */
+decl_stmt|;
+name|uint16_t
+name|msb_mac_address
+comment|/* TX source MAC MSB-16 */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|rightmost_received_seq
+comment|/* The maximum sequence ever recieved - used for The New Patent */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Termination variables  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_term_vars
+block|{
+name|uint8_t
+name|BitMap
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TERM_VARS_TCP_STATE
+value|(0xF<<0)
+comment|/* BitField BitMap	tcp state for the termination process */
+define|#
+directive|define
+name|ISCSI_TERM_VARS_TCP_STATE_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TERM_VARS_FIN_RECEIVED_SBIT
+value|(0x1<<4)
+comment|/* BitField BitMap	fin received sticky bit */
+define|#
+directive|define
+name|ISCSI_TERM_VARS_FIN_RECEIVED_SBIT_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_TERM_VARS_ACK_ON_FIN_RECEIVED_SBIT
+value|(0x1<<5)
+comment|/* BitField BitMap	ack on fin received stick bit */
+define|#
+directive|define
+name|ISCSI_TERM_VARS_ACK_ON_FIN_RECEIVED_SBIT_SHIFT
+value|5
+define|#
+directive|define
+name|ISCSI_TERM_VARS_TERM_ON_CHIP
+value|(0x1<<6)
+comment|/* BitField BitMap	termination on chip ( option2 ) */
+define|#
+directive|define
+name|ISCSI_TERM_VARS_TERM_ON_CHIP_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_TERM_VARS_RSRV
+value|(0x1<<7)
+comment|/* BitField BitMap	 */
+define|#
+directive|define
+name|ISCSI_TERM_VARS_RSRV_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context region, used only in iSCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_iscsi_st_context_section
+block|{
+name|uint32_t
+name|nalPayload
+comment|/* Non-aligned payload */
+decl_stmt|;
+name|uint32_t
+name|b2nh
+comment|/* Number of bytes to next iSCSI header */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_cons
+comment|/* RQ consumer */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_HDR_DIGEST_EN
+value|(0x1<<0)
+comment|/* BitField flags	header digest enable, set at login stage */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_HDR_DIGEST_EN_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DATA_DIGEST_EN
+value|(0x1<<1)
+comment|/* BitField flags	data digest enable, set at login stage */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DATA_DIGEST_EN_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_PARTIAL_HEADER
+value|(0x1<<2)
+comment|/* BitField flags	partial header flow indication */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_PARTIAL_HEADER_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_FULL_FEATURE
+value|(0x1<<3)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_FULL_FEATURE_SHIFT
+value|3
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DROP_ALL_PDUS
+value|(0x1<<4)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DROP_ALL_PDUS_SHIFT
+value|4
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_NALLEN
+value|(0x3<<5)
+comment|/* BitField flags	Non-aligned length */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_NALLEN_SHIFT
+value|5
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_RSRV0
+value|(0x1<<7)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_RSRV0_SHIFT
+value|7
+name|uint8_t
+name|hdr_bytes_2_fetch
+comment|/* Number of bytes left to fetch to complete iSCSI header */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|hdr_bytes_2_fetch
+comment|/* Number of bytes left to fetch to complete iSCSI header */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_HDR_DIGEST_EN
+value|(0x1<<0)
+comment|/* BitField flags	header digest enable, set at login stage */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_HDR_DIGEST_EN_SHIFT
+value|0
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DATA_DIGEST_EN
+value|(0x1<<1)
+comment|/* BitField flags	data digest enable, set at login stage */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DATA_DIGEST_EN_SHIFT
+value|1
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_PARTIAL_HEADER
+value|(0x1<<2)
+comment|/* BitField flags	partial header flow indication */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_PARTIAL_HEADER_SHIFT
+value|2
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_FULL_FEATURE
+value|(0x1<<3)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_FULL_FEATURE_SHIFT
+value|3
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DROP_ALL_PDUS
+value|(0x1<<4)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_B_DROP_ALL_PDUS_SHIFT
+value|4
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_NALLEN
+value|(0x3<<5)
+comment|/* BitField flags	Non-aligned length */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_NALLEN_SHIFT
+value|5
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_RSRV0
+value|(0x1<<7)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TSTORM_ISCSI_ST_CONTEXT_SECTION_RSRV0_SHIFT
+value|7
+name|uint16_t
+name|rq_cons
+comment|/* RQ consumer */
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|rq_db_phy_addr
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|struct
+name|iscsi_term_vars
+name|term_vars
+comment|/* Termination variables */
+decl_stmt|;
+name|uint8_t
+name|rsrv1
+decl_stmt|;
+name|uint16_t
+name|iscsi_conn_id
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|iscsi_conn_id
+decl_stmt|;
+name|uint8_t
+name|rsrv1
+decl_stmt|;
+name|struct
+name|iscsi_term_vars
+name|term_vars
+comment|/* Termination variables */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|process_nxt
+comment|/* next TCP sequence to be processed by the iSCSI layer. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The iSCSI non-aggregative context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_iscsi_st_context
+block|{
+name|struct
+name|tstorm_tcp_st_context_section
+name|tcp
+comment|/* TCP  context region, shared in TOE, RDMA and iSCSI */
+decl_stmt|;
+name|struct
+name|tstorm_iscsi_st_context_section
+name|iscsi
+comment|/* iSCSI context region, used only in iSCSI */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ethernet context section, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_eth_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|remote_addr_4
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_5
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_0
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_1
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|local_addr_1
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_0
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_5
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_4
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|remote_addr_0
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_1
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_2
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_3
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|remote_addr_3
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_2
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_1
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|remote_addr_0
+comment|/* Remote Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved_vlan_type
+comment|/* this field is not an absolute must, but the reseved was here */
+decl_stmt|;
+name|uint16_t
+name|vlan_params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField vlan_params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_CFI
+value|(0x1<<12)
+comment|/* BitField vlan_params	Canonical format indicator, part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_CFI_SHIFT
+value|12
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_PRIORITY
+value|(0x7<<13)
+comment|/* BitField vlan_params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_PRIORITY_SHIFT
+value|13
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|vlan_params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_VLAN_ID
+value|(0xFFF<<0)
+comment|/* BitField vlan_params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_VLAN_ID_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_CFI
+value|(0x1<<12)
+comment|/* BitField vlan_params	Canonical format indicator, part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_CFI_SHIFT
+value|12
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_PRIORITY
+value|(0x7<<13)
+comment|/* BitField vlan_params	part of PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_ETH_CONTEXT_SECTION_PRIORITY_SHIFT
+value|13
+name|uint16_t
+name|reserved_vlan_type
+comment|/* this field is not an absolute must, but the reseved was here */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|local_addr_2
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_3
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_4
+comment|/* Loca lMac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_5
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|local_addr_5
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_4
+comment|/* Loca lMac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_3
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|local_addr_2
+comment|/* Local Mac Address, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * IpV4 context section, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_ip_v4_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_id
+decl_stmt|;
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_flags_offset
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_flags_offset
+decl_stmt|;
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_id
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__pbf_hdr_cmd_rsvd_ver_ihl
+decl_stmt|;
+name|uint8_t
+name|tos
+comment|/* Type Of Service, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_length
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_length
+decl_stmt|;
+name|uint8_t
+name|tos
+comment|/* Type Of Service, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|__pbf_hdr_cmd_rsvd_ver_ihl
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|ip_local_addr
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|ttl
+comment|/* Time to live, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|__pbf_hdr_cmd_rsvd_protocol
+decl_stmt|;
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_csum
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__pbf_hdr_cmd_rsvd_csum
+decl_stmt|;
+name|uint8_t
+name|__pbf_hdr_cmd_rsvd_protocol
+decl_stmt|;
+name|uint8_t
+name|ttl
+comment|/* Time to live, used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__pbf_hdr_cmd_rsvd_1
+comment|/* places the ip_remote_addr field in the proper place in the regpair */
+decl_stmt|;
+name|uint32_t
+name|ip_remote_addr
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * context section, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_padded_ip_v4_context_section
+block|{
+name|struct
+name|xstorm_ip_v4_context_section
+name|ip_v4
+decl_stmt|;
+name|uint32_t
+name|reserved1
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * IpV6 context section, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_ip_v6_context_section
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|pbf_hdr_cmd_rsvd_payload_len
+decl_stmt|;
+name|uint8_t
+name|pbf_hdr_cmd_rsvd_nxt_hdr
+decl_stmt|;
+name|uint8_t
+name|hop_limit
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|hop_limit
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+name|uint8_t
+name|pbf_hdr_cmd_rsvd_nxt_hdr
+decl_stmt|;
+name|uint16_t
+name|pbf_hdr_cmd_rsvd_payload_len
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|priority_flow_label
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_IP_V6_CONTEXT_SECTION_FLOW_LABEL
+value|(0xFFFFF<<0)
+comment|/* BitField priority_flow_label	used in PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_IP_V6_CONTEXT_SECTION_FLOW_LABEL_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_IP_V6_CONTEXT_SECTION_TRAFFIC_CLASS
+value|(0xFF<<20)
+comment|/* BitField priority_flow_label	used in PBF Header Builder Command */
+define|#
+directive|define
+name|XSTORM_IP_V6_CONTEXT_SECTION_TRAFFIC_CLASS_SHIFT
+value|20
+define|#
+directive|define
+name|XSTORM_IP_V6_CONTEXT_SECTION_PBF_HDR_CMD_RSVD_VER
+value|(0xF<<28)
+comment|/* BitField priority_flow_label	 */
+define|#
+directive|define
+name|XSTORM_IP_V6_CONTEXT_SECTION_PBF_HDR_CMD_RSVD_VER_SHIFT
+value|28
+name|uint32_t
+name|ip_local_addr_lo_hi
+comment|/* second 32 bits of Ip local Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_local_addr_lo_lo
+comment|/* first 32 bits of Ip local Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_local_addr_hi_hi
+comment|/* fourth 32 bits of Ip local Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_local_addr_hi_lo
+comment|/* third 32 bits of Ip local Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_remote_addr_lo_hi
+comment|/* second 32 bits of Ip remoteinsation Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_remote_addr_lo_lo
+comment|/* first 32 bits of Ip remoteinsation Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_remote_addr_hi_hi
+comment|/* fourth 32 bits of Ip remoteinsation Address, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|ip_remote_addr_hi_lo
+comment|/* third 32 bits of Ip remoteinsation Address, used in PBF Header Builder Command */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|xstorm_ip_context_section_types
+block|{
+name|struct
+name|xstorm_padded_ip_v4_context_section
+name|padded_ip_v4
+decl_stmt|;
+name|struct
+name|xstorm_ip_v6_context_section
+name|ip_v6
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * TCP context section, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_tcp_context_section
+block|{
+name|uint32_t
+name|snd_max
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|remote_port
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+name|uint16_t
+name|local_port
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|local_port
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+name|uint16_t
+name|remote_port
+comment|/* used in PBF Header Builder Command */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|original_nagle_1b
+decl_stmt|;
+name|uint8_t
+name|ts_enabled
+comment|/* Only 1 bit is used */
+decl_stmt|;
+name|uint16_t
+name|tcp_params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_TOTAL_HEADER_SIZE
+value|(0xFF<<0)
+comment|/* BitField tcp_paramsTcp parameters	for ease of pbf command construction */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_TOTAL_HEADER_SIZE_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECT_BIT
+value|(0x1<<8)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECT_BIT_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECN_ENABLED
+value|(0x1<<9)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECN_ENABLED_SHIFT
+value|9
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SACK_ENABLED
+value|(0x1<<10)
+comment|/* BitField tcp_paramsTcp parameters	Selective Ack Enabled */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SACK_ENABLED_SHIFT
+value|10
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SMALL_WIN_ADV
+value|(0x1<<11)
+comment|/* BitField tcp_paramsTcp parameters	window smaller than initial window was advertised to far end */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SMALL_WIN_ADV_SHIFT
+value|11
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_FIN_SENT_FLAG
+value|(0x1<<12)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_FIN_SENT_FLAG_SHIFT
+value|12
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_WINDOW_SATURATED
+value|(0x1<<13)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_WINDOW_SATURATED_SHIFT
+value|13
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SLOWPATH_QUEUES_FLUSH_COUNTER
+value|(0x3<<14)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SLOWPATH_QUEUES_FLUSH_COUNTER_SHIFT
+value|14
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tcp_params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_TOTAL_HEADER_SIZE
+value|(0xFF<<0)
+comment|/* BitField tcp_paramsTcp parameters	for ease of pbf command construction */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_TOTAL_HEADER_SIZE_SHIFT
+value|0
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECT_BIT
+value|(0x1<<8)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECT_BIT_SHIFT
+value|8
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECN_ENABLED
+value|(0x1<<9)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|__XSTORM_TCP_CONTEXT_SECTION_ECN_ENABLED_SHIFT
+value|9
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SACK_ENABLED
+value|(0x1<<10)
+comment|/* BitField tcp_paramsTcp parameters	Selective Ack Enabled */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SACK_ENABLED_SHIFT
+value|10
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SMALL_WIN_ADV
+value|(0x1<<11)
+comment|/* BitField tcp_paramsTcp parameters	window smaller than initial window was advertised to far end */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SMALL_WIN_ADV_SHIFT
+value|11
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_FIN_SENT_FLAG
+value|(0x1<<12)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_FIN_SENT_FLAG_SHIFT
+value|12
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_WINDOW_SATURATED
+value|(0x1<<13)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_WINDOW_SATURATED_SHIFT
+value|13
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SLOWPATH_QUEUES_FLUSH_COUNTER
+value|(0x3<<14)
+comment|/* BitField tcp_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_SLOWPATH_QUEUES_FLUSH_COUNTER_SHIFT
+value|14
+name|uint8_t
+name|ts_enabled
+comment|/* Only 1 bit is used */
+decl_stmt|;
+name|uint8_t
+name|original_nagle_1b
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|pseudo_csum
+comment|/* the precaluclated pseudo checksum header for pbf command construction */
+decl_stmt|;
+name|uint16_t
+name|window_scaling_factor
+comment|/*  local_adv_wnd by this variable to reach the advertised window to far end */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|window_scaling_factor
+comment|/*  local_adv_wnd by this variable to reach the advertised window to far end */
+decl_stmt|;
+name|uint16_t
+name|pseudo_csum
+comment|/* the precaluclated pseudo checksum header for pbf command construction */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved2
+comment|/* The ID of the statistics client for counting common/L2 statistics */
+decl_stmt|;
+name|uint8_t
+name|statistics_counter_id
+comment|/* The ID of the statistics client for counting common/L2 statistics */
+decl_stmt|;
+name|uint8_t
+name|statistics_params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L2_STATSTICS
+value|(0x1<<0)
+comment|/* BitField statistics_paramsTcp parameters	set by the driver, determines wheather or not to update l2 statistics */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L2_STATSTICS_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L4_STATSTICS
+value|(0x1<<1)
+comment|/* BitField statistics_paramsTcp parameters	set by the driver, determines wheather or not to update l4 statistics */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L4_STATSTICS_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_RESERVED
+value|(0x3F<<2)
+comment|/* BitField statistics_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_RESERVED_SHIFT
+value|2
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|statistics_params
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L2_STATSTICS
+value|(0x1<<0)
+comment|/* BitField statistics_paramsTcp parameters	set by the driver, determines wheather or not to update l2 statistics */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L2_STATSTICS_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L4_STATSTICS
+value|(0x1<<1)
+comment|/* BitField statistics_paramsTcp parameters	set by the driver, determines wheather or not to update l4 statistics */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_UPDATE_L4_STATSTICS_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_RESERVED
+value|(0x3F<<2)
+comment|/* BitField statistics_paramsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_TCP_CONTEXT_SECTION_RESERVED_SHIFT
+value|2
+name|uint8_t
+name|statistics_counter_id
+comment|/* The ID of the statistics client for counting common/L2 statistics */
+decl_stmt|;
+name|uint16_t
+name|reserved2
+comment|/* The ID of the statistics client for counting common/L2 statistics */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|ts_time_diff
+comment|/* Time Stamp Offload, used in PBF Header Builder Command */
+decl_stmt|;
+name|uint32_t
+name|__next_timer_expir
+comment|/* Last Packet Real Time Clock Stamp */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Common context section, shared in TOE, RDMA and ISCSI  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_common_context_section
+block|{
+name|struct
+name|xstorm_eth_context_section
+name|ethernet
+decl_stmt|;
+name|union
+name|xstorm_ip_context_section_types
+name|ip_union
+decl_stmt|;
+name|struct
+name|xstorm_tcp_context_section
+name|tcp
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__dcb_val
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PHYSQ_INITIALIZED
+value|(0x1<<0)
+comment|/* BitField flagsTcp parameters	part of the tx switching state machine */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PHYSQ_INITIALIZED_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PBF_PORT
+value|(0x7<<1)
+comment|/* BitField flagsTcp parameters	determines to which voq credit will be returned */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PBF_PORT_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_VLAN_MODE
+value|(0x1<<4)
+comment|/* BitField flagsTcp parameters	Flag that states wether inner valn was provided by the OS */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_VLAN_MODE_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_ORIGINAL_PRIORITY
+value|(0x7<<5)
+comment|/* BitField flagsTcp parameters	original priority given from the OS */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_ORIGINAL_PRIORITY_SHIFT
+value|5
+name|uint8_t
+name|outer_tag_flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_DCB_OUTER_PRI
+value|(0x7<<0)
+comment|/* BitField outer_tag_flagsTcp parameters	Priority of outer tag in case of DCB enabled */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_DCB_OUTER_PRI_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_OUTER_PRI
+value|(0x7<<3)
+comment|/* BitField outer_tag_flagsTcp parameters	Priority of outer tag in case of DCB disabled */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_OUTER_PRI_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_RESERVED
+value|(0x3<<6)
+comment|/* BitField outer_tag_flagsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_RESERVED_SHIFT
+value|6
+name|uint8_t
+name|ip_version_1b
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|ip_version_1b
+decl_stmt|;
+name|uint8_t
+name|outer_tag_flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_DCB_OUTER_PRI
+value|(0x7<<0)
+comment|/* BitField outer_tag_flagsTcp parameters	Priority of outer tag in case of DCB enabled */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_DCB_OUTER_PRI_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_OUTER_PRI
+value|(0x7<<3)
+comment|/* BitField outer_tag_flagsTcp parameters	Priority of outer tag in case of DCB disabled */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_OUTER_PRI_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_RESERVED
+value|(0x3<<6)
+comment|/* BitField outer_tag_flagsTcp parameters	 */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_RESERVED_SHIFT
+value|6
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PHYSQ_INITIALIZED
+value|(0x1<<0)
+comment|/* BitField flagsTcp parameters	part of the tx switching state machine */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PHYSQ_INITIALIZED_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PBF_PORT
+value|(0x7<<1)
+comment|/* BitField flagsTcp parameters	determines to which voq credit will be returned */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_PBF_PORT_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_VLAN_MODE
+value|(0x1<<4)
+comment|/* BitField flagsTcp parameters	Flag that states wether inner valn was provided by the OS */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_VLAN_MODE_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_ORIGINAL_PRIORITY
+value|(0x7<<5)
+comment|/* BitField flagsTcp parameters	original priority given from the OS */
+define|#
+directive|define
+name|XSTORM_COMMON_CONTEXT_SECTION_ORIGINAL_PRIORITY_SHIFT
+value|5
+name|uint8_t
+name|__dcb_val
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Flags used in ISCSI context section  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_iscsi_context_flags
+block|{
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_IMMEDIATE_DATA
+value|(0x1<<0)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_IMMEDIATE_DATA_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_INITIAL_R2T
+value|(0x1<<1)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_INITIAL_R2T_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_EN_HEADER_DIGEST
+value|(0x1<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_EN_HEADER_DIGEST_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_EN_DATA_DIGEST
+value|(0x1<<3)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_EN_DATA_DIGEST_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_HQ_BD_WRITTEN
+value|(0x1<<4)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_HQ_BD_WRITTEN_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_LAST_OP_SQ
+value|(0x1<<5)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_LAST_OP_SQ_SHIFT
+value|5
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_UPDATE_SND_NXT
+value|(0x1<<6)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_B_UPDATE_SND_NXT_SHIFT
+value|6
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_RESERVED4
+value|(0x1<<7)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_FLAGS_RESERVED4_SHIFT
+value|7
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_x
+block|{
+name|uint32_t
+name|data_out_buffer_offset
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+name|uint32_t
+name|data_sn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_xuc_x_write_only
+block|{
+name|uint32_t
+name|tx_r2t_sn
+comment|/* Xstorm increments for every data-out seq sent. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_xuc_xu_write_both
+block|{
+name|uint32_t
+name|sgl_base_lo
+decl_stmt|;
+name|uint32_t
+name|sgl_base_hi
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|sgl_size
+decl_stmt|;
+name|uint8_t
+name|sge_index
+decl_stmt|;
+name|uint16_t
+name|sge_offset
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sge_offset
+decl_stmt|;
+name|uint8_t
+name|sge_index
+decl_stmt|;
+name|uint8_t
+name|sgl_size
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iSCSI context section  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_iscsi_context_section
+block|{
+name|uint32_t
+name|first_burst_length
+decl_stmt|;
+name|uint32_t
+name|max_send_pdu_length
+decl_stmt|;
+name|struct
+name|regpair_t
+name|sq_pbl_base
+decl_stmt|;
+name|struct
+name|regpair_t
+name|sq_curr_pbe
+decl_stmt|;
+name|struct
+name|regpair_t
+name|hq_pbl_base
+decl_stmt|;
+name|struct
+name|regpair_t
+name|hq_curr_pbe_base
+decl_stmt|;
+name|struct
+name|regpair_t
+name|r2tq_pbl_base
+decl_stmt|;
+name|struct
+name|regpair_t
+name|r2tq_curr_pbe_base
+decl_stmt|;
+name|struct
+name|regpair_t
+name|task_pbl_base
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|data_out_count
+decl_stmt|;
+name|struct
+name|xstorm_iscsi_context_flags
+name|flags
+decl_stmt|;
+name|uint8_t
+name|task_pbl_cache_idx
+comment|/* All-ones value stands for PBL not cached */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|task_pbl_cache_idx
+comment|/* All-ones value stands for PBL not cached */
+decl_stmt|;
+name|struct
+name|xstorm_iscsi_context_flags
+name|flags
+decl_stmt|;
+name|uint16_t
+name|data_out_count
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|seq_more_2_send
+decl_stmt|;
+name|uint32_t
+name|pdu_more_2_send
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_x
+name|temp_tce_x
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_xuc_x_write_only
+name|temp_tce_x_wr
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_xuc_xu_write_both
+name|temp_tce_xu_wr
+decl_stmt|;
+name|struct
+name|regpair_t
+name|lun
+decl_stmt|;
+name|uint32_t
+name|exp_data_transfer_len_ttt
+comment|/* Overloaded with ttt in multi-pdu sequences flow. */
+decl_stmt|;
+name|uint32_t
+name|pdu_data_2_rxmit
+decl_stmt|;
+name|uint32_t
+name|rxmit_bytes_2_dr
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|rxmit_sge_offset
+decl_stmt|;
+name|uint16_t
+name|hq_rxmit_cons
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|hq_rxmit_cons
+decl_stmt|;
+name|uint16_t
+name|rxmit_sge_offset
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|r2tq_cons
+decl_stmt|;
+name|uint8_t
+name|rxmit_flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_NEW_HQ_BD
+value|(0x1<<0)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_NEW_HQ_BD_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PDU_HDR
+value|(0x1<<1)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PDU_HDR_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_END_PDU
+value|(0x1<<2)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_END_PDU_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_DR
+value|(0x1<<3)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_DR_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_START_DR
+value|(0x1<<4)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_START_DR_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PADDING
+value|(0x3<<5)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PADDING_SHIFT
+value|5
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_ISCSI_CONT_FAST_RXMIT
+value|(0x1<<7)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_ISCSI_CONT_FAST_RXMIT_SHIFT
+value|7
+name|uint8_t
+name|rxmit_sge_idx
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|rxmit_sge_idx
+decl_stmt|;
+name|uint8_t
+name|rxmit_flags
+decl_stmt|;
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_NEW_HQ_BD
+value|(0x1<<0)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_NEW_HQ_BD_SHIFT
+value|0
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PDU_HDR
+value|(0x1<<1)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PDU_HDR_SHIFT
+value|1
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_END_PDU
+value|(0x1<<2)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_END_PDU_SHIFT
+value|2
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_DR
+value|(0x1<<3)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_DR_SHIFT
+value|3
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_START_DR
+value|(0x1<<4)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_START_DR_SHIFT
+value|4
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PADDING
+value|(0x3<<5)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_RXMIT_PADDING_SHIFT
+value|5
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_ISCSI_CONT_FAST_RXMIT
+value|(0x1<<7)
+comment|/* BitField rxmit_flags	 */
+define|#
+directive|define
+name|XSTORM_ISCSI_CONTEXT_SECTION_B_ISCSI_CONT_FAST_RXMIT_SHIFT
+value|7
+name|uint16_t
+name|r2tq_cons
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|hq_rxmit_tcp_seq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Xstorm iSCSI Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_iscsi_st_context
+block|{
+name|struct
+name|xstorm_common_context_section
+name|common
+decl_stmt|;
+name|struct
+name|xstorm_iscsi_context_section
+name|iscsi
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Iscsi connection context  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_context
+block|{
+name|struct
+name|ustorm_iscsi_st_context
+name|ustorm_st_context
+comment|/* Ustorm storm context */
+decl_stmt|;
+name|struct
+name|tstorm_iscsi_st_context
+name|tstorm_st_context
+comment|/* Tstorm storm context */
+decl_stmt|;
+name|struct
+name|xstorm_iscsi_ag_context
+name|xstorm_ag_context
+comment|/* Xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|tstorm_iscsi_ag_context
+name|tstorm_ag_context
+comment|/* Tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|cstorm_iscsi_ag_context
+name|cstorm_ag_context
+comment|/* Cstorm aggregative context */
+decl_stmt|;
+name|struct
+name|ustorm_iscsi_ag_context
+name|ustorm_ag_context
+comment|/* Ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|timers_block_context
+name|timers_context
+comment|/* Timers block context */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|upb_context
+comment|/* UPb context */
+decl_stmt|;
+name|struct
+name|xstorm_iscsi_st_context
+name|xstorm_st_context
+comment|/* Xstorm storm context */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|xpb_context
+comment|/* XPb context (inside the PBF) */
+decl_stmt|;
+name|struct
+name|cstorm_iscsi_st_context
+name|cstorm_st_context
+comment|/* Cstorm storm context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PDU header of an iSCSI DATA-OUT  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_data_pdu_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG
+value|(0x1<<7)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG_SHIFT
+value|7
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG
+value|(0x1<<7)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_FINAL_FLAG_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_DATA_PDU_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|struct
+name|regpair_t
+name|lun
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+name|uint32_t
+name|ttt
+decl_stmt|;
+name|uint32_t
+name|rsrv2
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|rsrv3
+decl_stmt|;
+name|uint32_t
+name|data_sn
+decl_stmt|;
+name|uint32_t
+name|buffer_offset
+decl_stmt|;
+name|uint32_t
+name|rsrv4
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PDU header of an iSCSI login request  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_login_req_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_NSG
+value|(0x3<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_NSG_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CSG
+value|(0x3<<2)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CSG_SHIFT
+value|2
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_RSRV0
+value|(0x3<<4)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_RSRV0_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG
+value|(0x1<<6)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_TRANSIT
+value|(0x1<<7)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_TRANSIT_SHIFT
+value|7
+name|uint8_t
+name|version_max
+decl_stmt|;
+name|uint8_t
+name|version_min
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|version_min
+decl_stmt|;
+name|uint8_t
+name|version_max
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_NSG
+value|(0x3<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_NSG_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CSG
+value|(0x3<<2)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CSG_SHIFT
+value|2
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_RSRV0
+value|(0x3<<4)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_RSRV0_SHIFT
+value|4
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG
+value|(0x1<<6)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_TRANSIT
+value|(0x1<<7)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_TRANSIT_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_LOGIN_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|uint32_t
+name|isid_lo
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|isid_hi
+decl_stmt|;
+name|uint16_t
+name|tsih
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tsih
+decl_stmt|;
+name|uint16_t
+name|isid_hi
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|itt
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cid
+decl_stmt|;
+name|uint16_t
+name|rsrv1
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv1
+decl_stmt|;
+name|uint16_t
+name|cid
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|rsrv2
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PDU header of an iSCSI logout request  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_logout_req_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_REASON_CODE
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_REASON_CODE_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_RSRV1_1
+value|(0x1<<7)
+comment|/* BitField op_attr	this value must be 1 */
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_RSRV1_1_SHIFT
+value|7
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_REASON_CODE
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_REASON_CODE_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_RSRV1_1
+value|(0x1<<7)
+comment|/* BitField op_attr	this value must be 1 */
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_RSRV1_1_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_LOGOUT_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|uint32_t
+name|rsrv2
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|cid
+decl_stmt|;
+name|uint16_t
+name|rsrv1
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv1
+decl_stmt|;
+name|uint16_t
+name|cid
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|rsrv3
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PDU header of an iSCSI TMF request  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_tmf_req_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_FUNCTION
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_FUNCTION_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_RSRV1_1
+value|(0x1<<7)
+comment|/* BitField op_attr	this value must be 1 */
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_RSRV1_1_SHIFT
+value|7
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_FUNCTION
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_FUNCTION_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_RSRV1_1
+value|(0x1<<7)
+comment|/* BitField op_attr	this value must be 1 */
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_RSRV1_1_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_TMF_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|struct
+name|regpair_t
+name|lun
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+name|uint32_t
+name|referenced_task_tag
+decl_stmt|;
+name|uint32_t
+name|cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|ref_cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_data_sn
+decl_stmt|;
+name|uint32_t
+name|rsrv2
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PDU header of an iSCSI Text request  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_text_req_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x3F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG
+value|(0x1<<6)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_FINAL
+value|(0x1<<7)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_FINAL_SHIFT
+value|7
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x3F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG
+value|(0x1<<6)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_CONTINUE_FLG_SHIFT
+value|6
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_FINAL
+value|(0x1<<7)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_FINAL_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_TEXT_REQ_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|struct
+name|regpair_t
+name|lun
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+name|uint32_t
+name|ttt
+decl_stmt|;
+name|uint32_t
+name|cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|rsrv3
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * PDU header of an iSCSI Nop-Out  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_nop_out_hdr_little_endian
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV2_1
+value|(0x1<<7)
+comment|/* BitField op_attr	this reserved bit must be set to 1 */
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV2_1_SHIFT
+value|7
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint8_t
+name|op_attr
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV1
+value|(0x7F<<0)
+comment|/* BitField op_attr	 */
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV1_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV2_1
+value|(0x1<<7)
+comment|/* BitField op_attr	this reserved bit must be set to 1 */
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_RSRV2_1_SHIFT
+value|7
+name|uint8_t
+name|opcode
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|data_fields
+decl_stmt|;
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH
+value|(0xFFFFFF<<0)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_DATA_SEGMENT_LENGTH_SHIFT
+value|0
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH
+value|(0xFF<<24)
+comment|/* BitField data_fields	 */
+define|#
+directive|define
+name|ISCSI_NOP_OUT_HDR_LITTLE_ENDIAN_TOTAL_AHS_LENGTH_SHIFT
+value|24
+name|struct
+name|regpair_t
+name|lun
+decl_stmt|;
+name|uint32_t
+name|itt
+decl_stmt|;
+name|uint32_t
+name|ttt
+decl_stmt|;
+name|uint32_t
+name|cmd_sn
+decl_stmt|;
+name|uint32_t
+name|exp_stat_sn
+decl_stmt|;
+name|uint32_t
+name|rsrv3
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * iscsi pdu headers in little endian form.  */
+end_comment
+
+begin_union
+union|union
+name|iscsi_pdu_headers_little_endian
+block|{
+name|uint32_t
+name|fullHeaderSize
+index|[
+literal|12
+index|]
+comment|/* The full size of the header. protects the union size */
+decl_stmt|;
+name|struct
+name|iscsi_cmd_pdu_hdr_little_endian
+name|command_pdu_hdr
+comment|/* PDU header of an iSCSI command - read,write  */
+decl_stmt|;
+name|struct
+name|iscsi_data_pdu_hdr_little_endian
+name|data_out_pdu_hdr
+comment|/* PDU header of an iSCSI DATA-IN and DATA-OUT PDU  */
+decl_stmt|;
+name|struct
+name|iscsi_login_req_hdr_little_endian
+name|login_req_pdu_hdr
+comment|/* PDU header of an iSCSI Login request */
+decl_stmt|;
+name|struct
+name|iscsi_logout_req_hdr_little_endian
+name|logout_req_pdu_hdr
+comment|/* PDU header of an iSCSI Logout request */
+decl_stmt|;
+name|struct
+name|iscsi_tmf_req_hdr_little_endian
+name|tmf_req_pdu_hdr
+comment|/* PDU header of an iSCSI TMF request */
+decl_stmt|;
+name|struct
+name|iscsi_text_req_hdr_little_endian
+name|text_req_pdu_hdr
+comment|/* PDU header of an iSCSI Text request */
+decl_stmt|;
+name|struct
+name|iscsi_nop_out_hdr_little_endian
+name|nop_out_pdu_hdr
+comment|/* PDU header of an iSCSI Nop-Out */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|iscsi_hq_bd
+block|{
+name|union
+name|iscsi_pdu_headers_little_endian
+name|pdu_header
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved1
+decl_stmt|;
+name|uint16_t
+name|lcl_cmp_flg
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|lcl_cmp_flg
+decl_stmt|;
+name|uint16_t
+name|reserved1
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|sgl_base_lo
+decl_stmt|;
+name|uint32_t
+name|sgl_base_hi
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|sgl_size
+decl_stmt|;
+name|uint8_t
+name|sge_index
+decl_stmt|;
+name|uint16_t
+name|sge_offset
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|sge_offset
+decl_stmt|;
+name|uint8_t
+name|sge_index
+decl_stmt|;
+name|uint8_t
+name|sgl_size
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * CQE data for L2 OOO connection $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_l2_ooo_data
+block|{
+name|uint32_t
+name|iscsi_cid
+comment|/* iSCSI context ID  */
+decl_stmt|;
+name|uint8_t
+name|drop_isle
+comment|/* isle number of the first isle to drop */
+decl_stmt|;
+name|uint8_t
+name|drop_size
+comment|/* number of isles to drop */
+decl_stmt|;
+name|uint8_t
+name|ooo_opcode
+comment|/* Out Of Order opcode (use enum tcp_ooo_event */
+decl_stmt|;
+name|uint8_t
+name|ooo_isle
+comment|/* OOO isle number to add the packet to */
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_xuc_c_write_only
+block|{
+name|uint32_t
+name|total_data_acked
+comment|/* Xstorm inits to zero. C increments. U validates  */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_r2t_table_entry
+block|{
+name|uint32_t
+name|ttt
+decl_stmt|;
+name|uint32_t
+name|desired_data_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_xuc_u_write_only
+block|{
+name|uint32_t
+name|exp_r2t_sn
+comment|/* Xstorm inits to zero. U increments. */
+decl_stmt|;
+name|struct
+name|iscsi_task_context_r2t_table_entry
+name|r2t_table
+index|[
+literal|4
+index|]
+comment|/* U updates. X reads */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|data_in_count
+comment|/* X inits to zero. U increments. */
+decl_stmt|;
+name|uint8_t
+name|cq_id
+comment|/* X inits to zero. U uses. */
+decl_stmt|;
+name|uint8_t
+name|valid_1b
+comment|/* X sets. U resets. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|valid_1b
+comment|/* X sets. U resets. */
+decl_stmt|;
+name|uint8_t
+name|cq_id
+comment|/* X inits to zero. U uses. */
+decl_stmt|;
+name|uint16_t
+name|data_in_count
+comment|/* X inits to zero. U increments. */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_xuc
+block|{
+name|struct
+name|iscsi_task_context_entry_xuc_c_write_only
+name|write_c
+comment|/* Cstorm only inits data here, without further change by any storm. */
+decl_stmt|;
+name|uint32_t
+name|exp_data_transfer_len
+comment|/* Xstorm only inits data here. */
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_xuc_x_write_only
+name|write_x
+comment|/* only Xstorm writes data here. */
+decl_stmt|;
+name|uint32_t
+name|lun_lo
+comment|/* Xstorm only inits data here. */
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_xuc_xu_write_both
+name|write_xu
+comment|/* Both X and U update this struct, but in different flow. */
+decl_stmt|;
+name|uint32_t
+name|lun_hi
+comment|/* Xstorm only inits data here. */
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_xuc_u_write_only
+name|write_u
+comment|/* Ustorm only inits data here, without further change by any storm. */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_u
+block|{
+name|uint32_t
+name|exp_r2t_buff_offset
+decl_stmt|;
+name|uint32_t
+name|rem_rcv_len
+decl_stmt|;
+name|uint32_t
+name|exp_data_sn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry
+block|{
+name|struct
+name|iscsi_task_context_entry_x
+name|tce_x
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|data_out_count
+decl_stmt|;
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rsrv0
+decl_stmt|;
+name|uint16_t
+name|data_out_count
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|iscsi_task_context_entry_xuc
+name|tce_xuc
+decl_stmt|;
+name|struct
+name|iscsi_task_context_entry_u
+name|tce_u
+decl_stmt|;
+name|uint32_t
+name|rsrv1
+index|[
+literal|7
+index|]
+comment|/* increase the size to 128 bytes */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iscsi_task_context_entry_xuc_x_init_only
+block|{
+name|struct
+name|regpair_t
+name|lun
+comment|/* X inits. U validates */
+decl_stmt|;
+name|uint32_t
+name|exp_data_transfer_len
+comment|/* Xstorm inits to SQ WQE data. U validates */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The data afex vif list ramrod need $$KEEP_ENDIANNESS$$  */
 end_comment
 
@@ -15359,6 +37458,25 @@ name|echo
 decl_stmt|;
 name|uint16_t
 name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  *  $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|c2s_pri_trans_table_entry
+block|{
+name|uint8_t
+name|val
+index|[
+name|MAX_VLAN_PRIORITIES
+index|]
+comment|/* Inner to outer vlan priority translation table entry for current PF */
 decl_stmt|;
 block|}
 struct|;
@@ -15900,7 +38018,7 @@ name|hc_dyn_drv_cnt
 comment|/* 4 bytes * 4 indices = 2 lines */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 index|[
 literal|2
@@ -16522,7 +38640,7 @@ struct|struct
 name|event_ring_data
 block|{
 name|struct
-name|regpair_native
+name|regpair_native_t
 name|base_addr
 comment|/* ring base address */
 decl_stmt|;
@@ -16607,7 +38725,7 @@ struct|struct
 name|event_ring_next
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|addr
 comment|/* Address of the next page of the ring */
 decl_stmt|;
@@ -16788,6 +38906,13 @@ decl_stmt|;
 name|uint32_t
 name|reserved2
 decl_stmt|;
+name|uint8_t
+name|dcb_outer_pri
+index|[
+name|MAX_TRAFFIC_TYPES
+index|]
+comment|/* Indicates the updated DCB outer tag priority per protocol */
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -16828,22 +38953,81 @@ name|dmae_cmd_id
 comment|/* The DMAE command id to use for FW DMAE transactions */
 decl_stmt|;
 name|uint8_t
-name|gre_tunnel_mode
-comment|/* GRE Tunnel Mode to enable on the Function (E2/E3 Only) */
-decl_stmt|;
-name|uint8_t
-name|gre_tunnel_rss
-comment|/* Type of RSS to perform on GRE Tunneled packets */
-decl_stmt|;
-name|uint8_t
-name|nvgre_clss_en
-comment|/* If set, NVGRE tunneled packets are classified according to their inner MAC (gre_mode must be NVGRE_TUNNEL) */
+name|no_added_tags
+comment|/* If set, the mfTag length is always zero (used in UFP) */
 decl_stmt|;
 name|uint16_t
+name|reserved0
+decl_stmt|;
+name|uint32_t
 name|reserved1
+decl_stmt|;
+name|uint8_t
+name|inner_clss_vxlan
+comment|/* Classification type for VXLAN */
+decl_stmt|;
+name|uint8_t
+name|inner_clss_l2gre
+comment|/* If set, classification on the inner MAC/VLAN of L2GRE tunneled packets is enabled */
+decl_stmt|;
+name|uint8_t
+name|inner_clss_l2geneve
+comment|/* If set, classification on the inner MAC/(VLAN or VNI) of L2GENEVE tunneled packets is enabled */
+decl_stmt|;
+name|uint8_t
+name|inner_rss
+comment|/* If set, RSS on the inner headers of tunneled packets is enabled */
+decl_stmt|;
+name|uint16_t
+name|vxlan_dst_port
+comment|/* UDP Destination Port to be recognised as VXLAN tunneled packets (0 is disabled) */
+decl_stmt|;
+name|uint16_t
+name|geneve_dst_port
+comment|/* UDP Destination Port to be recognised as GENEVE tunneled packets (0 is disabled) */
+decl_stmt|;
+name|uint8_t
+name|sd_accept_mf_clss_fail
+comment|/* If set, accept packets that fail Multi-Function Switch-Dependent classification. Only one VNIC on the port can have this set to 1 */
+decl_stmt|;
+name|uint8_t
+name|sd_accept_mf_clss_fail_match_ethtype
+comment|/* If set, accepted packets must match the ethertype of sd_clss_fail_ethtype */
+decl_stmt|;
+name|uint16_t
+name|sd_accept_mf_clss_fail_ethtype
+comment|/* Ethertype to match in the case of sd_accept_mf_clss_fail_match_ethtype */
+decl_stmt|;
+name|uint16_t
+name|sd_vlan_eth_type
+comment|/* Value of ether-type to use in the case of switch dependant multi-function mode. Setting this to 0 uses the default value of 0x8100 */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_force_pri_flg
+comment|/* If set, the SD Vlan Priority is forced to the value of the sd_vlan_pri_force_val field regardless of the DCB or inband VLAN priority. */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_force_pri_val
+comment|/* value to force SD Vlan Priority if sd_vlan_pri_force_flg is set */
+decl_stmt|;
+name|uint8_t
+name|c2s_pri_tt_valid
+comment|/* When set, c2s_pri_trans_table is valid */
+decl_stmt|;
+name|uint8_t
+name|c2s_pri_default
+comment|/* This value will be the sVlan pri value in case no Cvlan is present */
+decl_stmt|;
+name|uint8_t
+name|reserved2
 index|[
-literal|2
+literal|6
 index|]
+decl_stmt|;
+name|struct
+name|c2s_pri_trans_table_entry
+name|c2s_pri_trans_table
+comment|/* Inner to outer vlan priority translation table entry for current PF */
 decl_stmt|;
 block|}
 struct|;
@@ -16909,26 +39093,69 @@ name|uint8_t
 name|echo
 decl_stmt|;
 name|uint8_t
+name|update_tunn_cfg_flg
+comment|/* If set, tunneling config for the function will be updated according to the following fields */
+decl_stmt|;
+name|uint8_t
+name|inner_clss_vxlan
+comment|/* Classification type for VXLAN */
+decl_stmt|;
+name|uint8_t
+name|inner_clss_l2gre
+comment|/* If set, classification on the inner MAC/VLAN of L2GRE tunneled packets is enabled */
+decl_stmt|;
+name|uint8_t
+name|inner_clss_l2geneve
+comment|/* If set, classification on the inner MAC/(VLAN or VNI) of L2GENEVE tunneled packets is enabled */
+decl_stmt|;
+name|uint8_t
+name|inner_rss
+comment|/* If set, RSS on the inner headers of tunneled packets is enabled */
+decl_stmt|;
+name|uint16_t
+name|vxlan_dst_port
+comment|/* UDP Destination Port to be recognised as VXLAN tunneled packets (0 is disabled) */
+decl_stmt|;
+name|uint16_t
+name|geneve_dst_port
+comment|/* UDP Destination Port to be recognised as GENEVE tunneled packets (0 is disabled) */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_force_pri_change_flg
+comment|/* If set, the SD VLAN Priority Fixed configuration is updated from fields sd_vlan_pri_force_flg and sd_vlan_pri_force_val */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_force_pri_flg
+comment|/* If set, the SD Vlan Priority is forced to the value of the sd_vlan_pri_force_val field regardless of the DCB or inband VLAN priority. */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_force_pri_val
+comment|/* value to force SD Vlan Priority if sd_vlan_pri_force_flg is set */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_tag_change_flg
+comment|/* If set, the SD VLAN Tag is changed according to the field sd_vlan_tag */
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_eth_type_change_flg
+comment|/* If set, the SD VLAN Ethertype is changed according to the field sd_vlan_eth_type */
+decl_stmt|;
+name|uint8_t
 name|reserved1
 decl_stmt|;
-name|uint8_t
-name|update_gre_cfg_flg
-comment|/* If set, GRE config for the function will be updated according to the gre_tunnel_rss and nvgre_clss_en fields */
+name|uint16_t
+name|sd_vlan_tag
+comment|/* New value of Outer Vlan in case of switch depended multi-function mode */
 decl_stmt|;
-name|uint8_t
-name|gre_tunnel_mode
-comment|/* GRE Tunnel Mode to enable on the Function (E2/E3 Only) */
+name|uint16_t
+name|sd_vlan_eth_type
+comment|/* New value of ether-type in the case of switch dependant multi-function mode. Setting this to 0 restores the default value of 0x8100 */
 decl_stmt|;
-name|uint8_t
-name|gre_tunnel_rss
-comment|/* Type of RSS to perform on GRE Tunneled packets */
-decl_stmt|;
-name|uint8_t
-name|nvgre_clss_en
-comment|/* If set, NVGRE tunneled packets are classified according to their inner MAC (gre_mode must be NVGRE_TUNNEL) */
+name|uint16_t
+name|reserved0
 decl_stmt|;
 name|uint32_t
-name|reserved3
+name|reserved2
 decl_stmt|;
 block|}
 struct|;
@@ -17030,52 +39257,6 @@ value|4
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * GRE RSS Mode  */
-end_comment
-
-begin_enum
-enum|enum
-name|gre_rss_mode
-block|{
-name|GRE_OUTER_HEADERS_RSS
-comment|/* RSS for GRE Packets is performed on the outer headers */
-block|,
-name|GRE_INNER_HEADERS_RSS
-comment|/* RSS for GRE Packets is performed on the inner headers */
-block|,
-name|NVGRE_KEY_ENTROPY_RSS
-comment|/* RSS for NVGRE Packets is done based on a hash containing the entropy bits from the GRE Key Field (gre_tunnel must be NVGRE_TUNNEL) */
-block|,
-name|MAX_GRE_RSS_MODE
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * GRE Tunnel Mode  */
-end_comment
-
-begin_enum
-enum|enum
-name|gre_tunnel_type
-block|{
-name|NO_GRE_TUNNEL
-block|,
-name|NVGRE_TUNNEL
-comment|/* NV-GRE Tunneling Microsoft L2 over GRE. GRE header contains mandatory Key Field. */
-block|,
-name|L2GRE_TUNNEL
-comment|/* L2-GRE Tunneling General L2 over GRE. GRE can contain Key field with Tenant ID and Sequence Field */
-block|,
-name|IPGRE_TUNNEL
-comment|/* IP-GRE Tunneling IP over GRE. GRE may contain Key field with Tenant ID, Sequence Field and/or Checksum Field */
-block|,
-name|MAX_GRE_TUNNEL_TYPE
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/*  * Dynamic Host-Coalescing - Driver(host) counters  */
@@ -17333,7 +39514,7 @@ struct|struct
 name|hc_sb_data
 block|{
 name|struct
-name|regpair_native
+name|regpair_native_t
 name|host_sb_addr
 comment|/* Host status block address */
 decl_stmt|;
@@ -17393,7 +39574,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|regpair_native
+name|regpair_native_t
 name|rsrv1
 index|[
 literal|2
@@ -17429,7 +39610,7 @@ struct|struct
 name|hc_sp_status_block_data
 block|{
 name|struct
-name|regpair_native
+name|regpair_native_t
 name|host_sb_addr
 comment|/* Host status block address */
 decl_stmt|;
@@ -17554,6 +39735,28 @@ enum|;
 end_enum
 
 begin_comment
+comment|/*  * Inner Headers Classification Type  */
+end_comment
+
+begin_enum
+enum|enum
+name|inner_clss_type
+block|{
+name|INNER_CLSS_DISABLED
+comment|/* Inner Classification Disabled */
+block|,
+name|INNER_CLSS_USE_VLAN
+comment|/* Inner Classification using MAC/Inner VLAN */
+block|,
+name|INNER_CLSS_USE_VNI
+comment|/* Inner Classification using MAC/VNI (Only for VXLAN and GENEVE) */
+block|,
+name|MAX_INNER_CLSS_TYPE
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * IP versions  */
 end_comment
 
@@ -17578,6 +39781,9 @@ begin_enum
 enum|enum
 name|malicious_vf_error_id
 block|{
+name|MALICIOUS_VF_NO_ERROR
+comment|/* Zero placeholder value */
+block|,
 name|VF_PF_CHANNEL_NOT_READY
 comment|/* Writing to VF/PF channel when it is not ready */
 block|,
@@ -17658,7 +39864,7 @@ struct|struct
 name|tstorm_per_pf_stats
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|rcv_error_bytes
 comment|/* number of bytes received with errors */
 decl_stmt|;
@@ -17742,7 +39948,7 @@ struct|struct
 name|tstorm_per_queue_stats
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|rcv_ucast_bytes
 comment|/* number of bytes in unicast packets received without errors and pass the filter */
 decl_stmt|;
@@ -17755,7 +39961,7 @@ name|checksum_discard
 comment|/* number of total packets received with checksum error */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|rcv_bcast_bytes
 comment|/* number of bytes in broadcast packets received without errors and pass the filter */
 decl_stmt|;
@@ -17768,7 +39974,7 @@ name|pkts_too_big_discard
 comment|/* number of too long packets received */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|rcv_mcast_bytes
 comment|/* number of bytes in multicast packets received without errors and pass the filter */
 decl_stmt|;
@@ -17802,17 +40008,17 @@ struct|struct
 name|ustorm_per_queue_stats
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|ucast_no_buff_bytes
 comment|/* the number of unicast bytes received from network dropped because of no buffer at host */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|mcast_no_buff_bytes
 comment|/* the number of multicast bytes received from network dropped because of no buffer at host */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|bcast_no_buff_bytes
 comment|/* the number of broadcast bytes received from network dropped because of no buffer at host */
 decl_stmt|;
@@ -17833,7 +40039,7 @@ name|coalesced_pkts
 comment|/* the number of packets coalesced in all aggregations */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|coalesced_bytes
 comment|/* the number of bytes coalesced in all aggregations */
 decl_stmt|;
@@ -17858,17 +40064,17 @@ struct|struct
 name|xstorm_per_queue_stats
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|ucast_bytes_sent
 comment|/* number of total bytes sent without errors */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|mcast_bytes_sent
 comment|/* number of total bytes sent without errors */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|bcast_bytes_sent
 comment|/* number of total bytes sent without errors */
 decl_stmt|;
@@ -18008,12 +40214,12 @@ index|]
 comment|/* to fix this structure size to 8 bytes */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|phy_address
 comment|/* SPE physical address */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|mac_config_addr
 comment|/* physical address of the MAC configuration command, as allocated by the driver */
 decl_stmt|;
@@ -18035,7 +40241,7 @@ struct|struct
 name|protocol_common_spe
 block|{
 name|struct
-name|spe_hdr
+name|spe_hdr_t
 name|hdr
 comment|/* SPE header */
 decl_stmt|;
@@ -18077,7 +40283,7 @@ name|drift_adjust_period
 comment|/* Drift Adjust Period (in us) */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|offset_delta
 comment|/* Timesync Offset Delta (in ns) */
 decl_stmt|;
@@ -18094,12 +40300,12 @@ struct|struct
 name|slow_path_element
 block|{
 name|struct
-name|spe_hdr
+name|spe_hdr_t
 name|hdr
 comment|/* common data for all protocols */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|protocol_data
 comment|/* additional data specific to the protocol */
 decl_stmt|;
@@ -18182,7 +40388,7 @@ name|uint32_t
 name|reserved
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|address
 comment|/* pxp address */
 decl_stmt|;
@@ -18231,7 +40437,7 @@ name|uint32_t
 name|reserved1
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|stats_counters_addrs
 comment|/* stats counter */
 decl_stmt|;
@@ -18335,7 +40541,7 @@ struct|struct
 name|tstorm_queue_zone_data
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 index|[
 literal|4
@@ -18354,7 +40560,7 @@ struct|struct
 name|tstorm_vf_zone_data
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 decl_stmt|;
 block|}
@@ -18425,6 +40631,180 @@ enum|;
 end_enum
 
 begin_comment
+comment|/*  * Input for measuring Pci Latency  */
+end_comment
+
+begin_struct
+struct|struct
+name|t_measure_pci_latency_ctrl
+block|{
+name|struct
+name|regpair_t
+name|read_addr
+comment|/* Address to read from */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|sleep
+comment|/* Measure including a thread sleep */
+decl_stmt|;
+name|uint8_t
+name|enable
+comment|/* Enable PCI Latency measurements */
+decl_stmt|;
+name|uint8_t
+name|func_id
+comment|/* Function ID */
+decl_stmt|;
+name|uint8_t
+name|read_size
+comment|/* Amount of bytes to read */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|read_size
+comment|/* Amount of bytes to read */
+decl_stmt|;
+name|uint8_t
+name|func_id
+comment|/* Function ID */
+decl_stmt|;
+name|uint8_t
+name|enable
+comment|/* Enable PCI Latency measurements */
+decl_stmt|;
+name|uint8_t
+name|sleep
+comment|/* Measure including a thread sleep */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|num_meas
+comment|/* Number of measurements to make */
+decl_stmt|;
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|period_10us
+comment|/* Number of 10s of microseconds to wait between measurements */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|period_10us
+comment|/* Number of 10s of microseconds to wait between measurements */
+decl_stmt|;
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint16_t
+name|num_meas
+comment|/* Number of measurements to make */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Input for measuring Pci Latency  */
+end_comment
+
+begin_struct
+struct|struct
+name|t_measure_pci_latency_data
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|max_time_ns
+comment|/* Maximum Time for a read (in ns) */
+decl_stmt|;
+name|uint16_t
+name|min_time_ns
+comment|/* Minimum Time for a read (in ns) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|min_time_ns
+comment|/* Minimum Time for a read (in ns) */
+decl_stmt|;
+name|uint16_t
+name|max_time_ns
+comment|/* Maximum Time for a read (in ns) */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved
+decl_stmt|;
+name|uint16_t
+name|num_reads
+comment|/* Number of reads - Used for Average */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|num_reads
+comment|/* Number of reads - Used for Average */
+decl_stmt|;
+name|uint16_t
+name|reserved
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|regpair_t
+name|sum_time_ns
+comment|/* Sum of all the reads (in ns) - Used for Average */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * zone A per-queue data  */
 end_comment
 
@@ -18438,7 +40818,7 @@ name|eth_rx_producers
 comment|/* ETH RX rings producers */
 decl_stmt|;
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 index|[
 literal|3
@@ -18457,7 +40837,7 @@ struct|struct
 name|ustorm_vf_zone_data
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 decl_stmt|;
 block|}
@@ -18564,7 +40944,7 @@ struct|struct
 name|xstorm_queue_zone_data
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 index|[
 literal|4
@@ -18583,9 +40963,2526 @@ struct|struct
 name|xstorm_vf_zone_data
 block|{
 name|struct
-name|regpair
+name|regpair_t
 name|reserved
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Out-of-order states  */
+end_comment
+
+begin_enum
+enum|enum
+name|tcp_ooo_event
+block|{
+name|TCP_EVENT_ADD_PEN
+init|=
+literal|0
+block|,
+name|TCP_EVENT_ADD_NEW_ISLE
+init|=
+literal|1
+block|,
+name|TCP_EVENT_ADD_ISLE_RIGHT
+init|=
+literal|2
+block|,
+name|TCP_EVENT_ADD_ISLE_LEFT
+init|=
+literal|3
+block|,
+name|TCP_EVENT_JOIN
+init|=
+literal|4
+block|,
+name|TCP_EVENT_NOP
+init|=
+literal|5
+block|,
+name|MAX_TCP_OOO_EVENT
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * OOO support modes  */
+end_comment
+
+begin_enum
+enum|enum
+name|tcp_tstorm_ooo
+block|{
+name|TCP_TSTORM_OOO_DROP_AND_PROC_ACK
+block|,
+name|TCP_TSTORM_OOO_SEND_PURE_ACK
+block|,
+name|TCP_TSTORM_OOO_SUPPORTED
+block|,
+name|MAX_TCP_TSTORM_OOO
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * toe statistics collected by the Cstorm (per port)  */
+end_comment
+
+begin_struct
+struct|struct
+name|cstorm_toe_stats
+block|{
+name|uint32_t
+name|no_tx_cqes
+comment|/* count the number of time storm find that there are no more CQEs */
+decl_stmt|;
+name|uint32_t
+name|reserved
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe storm context of Cstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|cstorm_toe_st_context
+block|{
+name|uint32_t
+name|bds_ring_page_base_addr_lo
+comment|/* Base address of next page in host bds ring */
+decl_stmt|;
+name|uint32_t
+name|bds_ring_page_base_addr_hi
+comment|/* Base address of next page in host bds ring */
+decl_stmt|;
+name|uint32_t
+name|free_seq
+comment|/* Sequnce number of the last byte that was free including */
+decl_stmt|;
+name|uint32_t
+name|__last_rel_to_notify
+comment|/* Accumulated release size for the next Chimney completion msg */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|__rss_params_ram_line
+comment|/* The ram line containing the rss params */
+decl_stmt|;
+name|uint16_t
+name|bd_cons
+comment|/* The bd s ring consumer  */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|bd_cons
+comment|/* The bd s ring consumer  */
+decl_stmt|;
+name|uint16_t
+name|__rss_params_ram_line
+comment|/* The ram line containing the rss params */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|cpu_id
+comment|/* CPU id for sending completion for TSS (only 8 bits are used) */
+decl_stmt|;
+name|uint32_t
+name|prev_snd_max
+comment|/* last snd_max that was used for dynamic HC producer update */
+decl_stmt|;
+name|uint32_t
+name|__reserved4
+comment|/* reserved */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Cstorm Toe Storm Aligned Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|cstorm_toe_st_aligned_context
+block|{
+name|struct
+name|cstorm_toe_st_context
+name|context
+comment|/* context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * prefetched isle bd  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_prefetched_isle_bd
+block|{
+name|uint32_t
+name|__addr_lo
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+name|uint32_t
+name|__addr_hi
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__reserved1
+comment|/* reserved */
+decl_stmt|;
+name|uint8_t
+name|__isle_num
+comment|/* isle_number of the pre-fetched BD */
+decl_stmt|;
+name|uint16_t
+name|__buf_un_used
+comment|/* Number of bytes left for placement in the pre fetched  application/grq bd   0 size for buffer is not valid */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__buf_un_used
+comment|/* Number of bytes left for placement in the pre fetched  application/grq bd   0 size for buffer is not valid */
+decl_stmt|;
+name|uint8_t
+name|__isle_num
+comment|/* isle_number of the pre-fetched BD */
+decl_stmt|;
+name|uint8_t
+name|__reserved1
+comment|/* reserved */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * ring params  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_ring_params
+block|{
+name|uint32_t
+name|rq_cons_addr_lo
+comment|/* A pointer to the next to consume application bd */
+decl_stmt|;
+name|uint32_t
+name|rq_cons_addr_hi
+comment|/* A pointer to the next to consume application bd */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|__rq_local_cons
+comment|/* consumer of the local rq ring */
+decl_stmt|;
+name|uint8_t
+name|__rq_local_prod
+comment|/* producer of the local rq ring */
+decl_stmt|;
+name|uint16_t
+name|rq_cons
+comment|/* RQ consumer is the index of the next to consume application bd */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rq_cons
+comment|/* RQ consumer is the index of the next to consume application bd */
+decl_stmt|;
+name|uint8_t
+name|__rq_local_prod
+comment|/* producer of the local rq ring */
+decl_stmt|;
+name|uint8_t
+name|__rq_local_cons
+comment|/* consumer of the local rq ring */
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * prefetched bd  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_prefetched_bd
+block|{
+name|uint32_t
+name|__addr_lo
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+name|uint32_t
+name|__addr_hi
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_START
+value|(0x1<<0)
+comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_START_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_END
+value|(0x1<<1)
+comment|/* BitField flagsbd command flags	this bd is the end of an application buffer */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_END_SHIFT
+value|1
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_NO_PUSH
+value|(0x1<<2)
+comment|/* BitField flagsbd command flags	this application buffer must not be partially completed */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_NO_PUSH_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_TOE_PREFETCHED_BD_SPLIT
+value|(0x1<<3)
+comment|/* BitField flagsbd command flags	this application buffer is part of a bigger buffer and this buffer is not the last */
+define|#
+directive|define
+name|USTORM_TOE_PREFETCHED_BD_SPLIT_SHIFT
+value|3
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_RESERVED1
+value|(0xFFF<<4)
+comment|/* BitField flagsbd command flags	reserved */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_RESERVED1_SHIFT
+value|4
+name|uint16_t
+name|__buf_un_used
+comment|/* Number of bytes left for placement in the pre fetched  application/grq bd   0 size for buffer is not valid */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|__buf_un_used
+comment|/* Number of bytes left for placement in the pre fetched  application/grq bd   0 size for buffer is not valid */
+decl_stmt|;
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_START
+value|(0x1<<0)
+comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_START_SHIFT
+value|0
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_END
+value|(0x1<<1)
+comment|/* BitField flagsbd command flags	this bd is the end of an application buffer */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_END_SHIFT
+value|1
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_NO_PUSH
+value|(0x1<<2)
+comment|/* BitField flagsbd command flags	this application buffer must not be partially completed */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_NO_PUSH_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_TOE_PREFETCHED_BD_SPLIT
+value|(0x1<<3)
+comment|/* BitField flagsbd command flags	this application buffer is part of a bigger buffer and this buffer is not the last */
+define|#
+directive|define
+name|USTORM_TOE_PREFETCHED_BD_SPLIT_SHIFT
+value|3
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_RESERVED1
+value|(0xFFF<<4)
+comment|/* BitField flagsbd command flags	reserved */
+define|#
+directive|define
+name|__USTORM_TOE_PREFETCHED_BD_RESERVED1_SHIFT
+value|4
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ustorm Toe Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_st_context
+block|{
+name|uint32_t
+name|__pen_rq_placed
+comment|/* Number of bytes that were placed in the RQ and not completed yet. */
+decl_stmt|;
+name|uint32_t
+name|pen_grq_placed_bytes
+comment|/* The number of in-order bytes (peninsula) that were placed in the GRQ (excluding bytes that were already  copied  to RQ BDs or RQ dummy BDs) */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_IGNORE_GRQ_PUSH
+value|(0x1<<0)
+comment|/* BitField flags2various state flags	we will ignore grq push unless it is ping pong test */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_IGNORE_GRQ_PUSH_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_PUSH_FLAG
+value|(0x1<<1)
+comment|/* BitField flags2various state flags	indicates if push timer is set */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_PUSH_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RSS_UPDATE_ENABLED
+value|(0x1<<2)
+comment|/* BitField flags2various state flags	indicates if RSS update is supported */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RSS_UPDATE_ENABLED_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RESERVED0
+value|(0x1F<<3)
+comment|/* BitField flags2various state flags	 */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RESERVED0_SHIFT
+value|3
+name|uint8_t
+name|__indirection_shift
+comment|/* Offset in bits of the cupid of this connection on the 64Bits fetched from internal memoy */
+decl_stmt|;
+name|uint16_t
+name|indirection_ram_offset
+comment|/* address offset in internal memory  from the begining of the table  consisting the cpu id of this connection (Only 12 bits are used) */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|indirection_ram_offset
+comment|/* address offset in internal memory  from the begining of the table  consisting the cpu id of this connection (Only 12 bits are used) */
+decl_stmt|;
+name|uint8_t
+name|__indirection_shift
+comment|/* Offset in bits of the cupid of this connection on the 64Bits fetched from internal memoy */
+decl_stmt|;
+name|uint8_t
+name|flags2
+decl_stmt|;
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_IGNORE_GRQ_PUSH
+value|(0x1<<0)
+comment|/* BitField flags2various state flags	we will ignore grq push unless it is ping pong test */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_IGNORE_GRQ_PUSH_SHIFT
+value|0
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_PUSH_FLAG
+value|(0x1<<1)
+comment|/* BitField flags2various state flags	indicates if push timer is set */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_PUSH_FLAG_SHIFT
+value|1
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RSS_UPDATE_ENABLED
+value|(0x1<<2)
+comment|/* BitField flags2various state flags	indicates if RSS update is supported */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RSS_UPDATE_ENABLED_SHIFT
+value|2
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RESERVED0
+value|(0x1F<<3)
+comment|/* BitField flags2various state flags	 */
+define|#
+directive|define
+name|USTORM_TOE_ST_CONTEXT_RESERVED0_SHIFT
+value|3
+endif|#
+directive|endif
+name|uint32_t
+name|__rq_available_bytes
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|isles_counter
+comment|/* signals that dca is enabled */
+decl_stmt|;
+name|uint8_t
+name|__push_timer_state
+comment|/* indicates if push timer is set */
+decl_stmt|;
+name|uint16_t
+name|rcv_indication_size
+comment|/* The chip will release the current GRQ buffer to the driver when it knows that the driver has no knowledge of other GRQ payload that it can indicate and the current GRQ buffer has at least RcvIndicationSize bytes. */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|rcv_indication_size
+comment|/* The chip will release the current GRQ buffer to the driver when it knows that the driver has no knowledge of other GRQ payload that it can indicate and the current GRQ buffer has at least RcvIndicationSize bytes. */
+decl_stmt|;
+name|uint8_t
+name|__push_timer_state
+comment|/* indicates if push timer is set */
+decl_stmt|;
+name|uint8_t
+name|isles_counter
+comment|/* signals that dca is enabled */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|__min_expiration_time
+comment|/* if the timer will expire before this time it will be considered as a race */
+decl_stmt|;
+name|uint32_t
+name|initial_rcv_wnd
+comment|/* the maximal advertized window */
+decl_stmt|;
+name|uint32_t
+name|__bytes_cons
+comment|/* the last rq_available_bytes producer that was read from host - used to know how many bytes were added */
+decl_stmt|;
+name|uint32_t
+name|__prev_consumed_grq_bytes
+comment|/* the last rq_available_bytes producer that was read from host - used to know how many bytes were added */
+decl_stmt|;
+name|uint32_t
+name|prev_rcv_win_right_edge
+comment|/* siquence of the last bytes that can be recieved - used to know how many bytes were added */
+decl_stmt|;
+name|uint32_t
+name|rcv_nxt
+comment|/* Receive sequence: next expected - of the right most recieved packet */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_isle_bd
+name|__isle_bd
+comment|/* prefetched bd for the isle */
+decl_stmt|;
+name|struct
+name|ustorm_toe_ring_params
+name|pen_ring_params
+comment|/* peninsula ring params */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_0
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_1
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_2
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_3
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_4
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_5
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_6
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_7
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_8
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|struct
+name|ustorm_toe_prefetched_bd
+name|__pen_bd_9
+comment|/* peninsula prefetched bd for the peninsula */
+decl_stmt|;
+name|uint32_t
+name|__reserved3
+comment|/* reserved */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ustorm Toe Storm Aligned Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_st_aligned_context
+block|{
+name|struct
+name|ustorm_toe_st_context
+name|context
+comment|/* context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * TOE context region, used only in TOE  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_st_context_section
+block|{
+name|uint32_t
+name|reserved0
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The TOE non-aggregative context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_st_context
+block|{
+name|struct
+name|tstorm_tcp_st_context_section
+name|tcp
+comment|/* TCP context region, shared in TOE, RDMA and ISCSI */
+decl_stmt|;
+name|struct
+name|tstorm_toe_st_context_section
+name|toe
+comment|/* TOE context region, used only in TOE */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The TOE non-aggregative aligned context of Tstorm  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_st_aligned_context
+block|{
+name|struct
+name|tstorm_toe_st_context
+name|context
+comment|/* context */
+decl_stmt|;
+name|uint8_t
+name|padding
+index|[
+literal|16
+index|]
+comment|/* padding to 64 byte aligned */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * TOE context section  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_context_section
+block|{
+name|uint32_t
+name|tx_bd_page_base_lo
+comment|/* BD page base address at the host for TxBdCons */
+decl_stmt|;
+name|uint32_t
+name|tx_bd_page_base_hi
+comment|/* BD page base address at the host for TxBdCons */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|tx_bd_offset
+comment|/* The offset within the BD */
+decl_stmt|;
+name|uint16_t
+name|tx_bd_cons
+comment|/* The transmit BD cons pointer to the host ring */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|tx_bd_cons
+comment|/* The transmit BD cons pointer to the host ring */
+decl_stmt|;
+name|uint16_t
+name|tx_bd_offset
+comment|/* The offset within the BD */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|bd_prod
+decl_stmt|;
+name|uint16_t
+name|seqMismatchCnt
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|seqMismatchCnt
+decl_stmt|;
+name|uint16_t
+name|bd_prod
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|driver_doorbell_info_ptr_lo
+decl_stmt|;
+name|uint32_t
+name|driver_doorbell_info_ptr_hi
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Xstorm Toe Storm Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_st_context
+block|{
+name|struct
+name|xstorm_common_context_section
+name|common
+decl_stmt|;
+name|struct
+name|xstorm_toe_context_section
+name|toe
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Xstorm Toe Storm Aligned Context  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_st_aligned_context
+block|{
+name|struct
+name|xstorm_toe_st_context
+name|context
+comment|/* context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ethernet connection context  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_context
+block|{
+name|struct
+name|ustorm_toe_st_aligned_context
+name|ustorm_st_context
+comment|/* Ustorm storm context */
+decl_stmt|;
+name|struct
+name|tstorm_toe_st_aligned_context
+name|tstorm_st_context
+comment|/* Tstorm storm context */
+decl_stmt|;
+name|struct
+name|xstorm_toe_ag_context
+name|xstorm_ag_context
+comment|/* Xstorm aggregative context */
+decl_stmt|;
+name|struct
+name|tstorm_toe_ag_context
+name|tstorm_ag_context
+comment|/* Tstorm aggregative context */
+decl_stmt|;
+name|struct
+name|cstorm_toe_ag_context
+name|cstorm_ag_context
+comment|/* Cstorm aggregative context */
+decl_stmt|;
+name|struct
+name|ustorm_toe_ag_context
+name|ustorm_ag_context
+comment|/* Ustorm aggregative context */
+decl_stmt|;
+name|struct
+name|timers_block_context
+name|timers_context
+comment|/* Timers block context */
+decl_stmt|;
+name|struct
+name|xstorm_toe_st_aligned_context
+name|xstorm_st_context
+comment|/* Xstorm storm context */
+decl_stmt|;
+name|struct
+name|cstorm_toe_st_aligned_context
+name|cstorm_st_context
+comment|/* Cstorm storm context */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * ramrod data for toe protocol initiate offload ramrod (CQE)  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_initiate_offload_ramrod_data
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_INITIATE_OFFLOAD_RAMROD_DATA_SEARCH_CONFIG_FAILED
+value|(0x1<<0)
+comment|/* BitField flags	error in searcher configuration */
+define|#
+directive|define
+name|TOE_INITIATE_OFFLOAD_RAMROD_DATA_SEARCH_CONFIG_FAILED_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_INITIATE_OFFLOAD_RAMROD_DATA_LICENSE_FAILURE
+value|(0x1<<1)
+comment|/* BitField flags	license errors */
+define|#
+directive|define
+name|TOE_INITIATE_OFFLOAD_RAMROD_DATA_LICENSE_FAILURE_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_INITIATE_OFFLOAD_RAMROD_DATA_RESERVED0
+value|(0x3FFFFFFF<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TOE_INITIATE_OFFLOAD_RAMROD_DATA_RESERVED0_SHIFT
+value|2
+name|uint32_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * union for ramrod data for TOE protocol (CQE) (force size of 16 bits)  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_init_ramrod_data
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved1
+decl_stmt|;
+name|uint8_t
+name|reserved0
+decl_stmt|;
+name|uint8_t
+name|rss_num
+comment|/* the rss num in its rqr to complete this ramrod */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint8_t
+name|rss_num
+comment|/* the rss num in its rqr to complete this ramrod */
+decl_stmt|;
+name|uint8_t
+name|reserved0
+decl_stmt|;
+name|uint16_t
+name|reserved1
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * next page pointer bd used in toe CQs and tx/rx bd chains  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_page_addr_bd
+block|{
+name|uint32_t
+name|addr_lo
+comment|/* page pointer */
+decl_stmt|;
+name|uint32_t
+name|addr_hi
+comment|/* page pointer */
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|8
+index|]
+comment|/* resereved for driver use */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * union for ramrod data for TOE protocol (CQE) (force size of 16 bits)  */
+end_comment
+
+begin_union
+union|union
+name|toe_ramrod_data
+block|{
+name|struct
+name|ramrod_data
+name|general
+decl_stmt|;
+name|struct
+name|toe_initiate_offload_ramrod_data
+name|initiate_offload
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * TOE_RX_CQES_OPCODE_RSS_UPD results  */
+end_comment
+
+begin_enum
+enum|enum
+name|toe_rss_update_opcode
+block|{
+name|TOE_RSS_UPD_QUIET
+block|,
+name|TOE_RSS_UPD_SLEEPING
+block|,
+name|TOE_RSS_UPD_DELAYED
+block|,
+name|MAX_TOE_RSS_UPDATE_OPCODE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * union for ramrod data for TOE protocol (CQE) (force size of 16 bits)  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rss_update_ramrod_data
+block|{
+name|uint8_t
+name|indirection_table
+index|[
+literal|128
+index|]
+comment|/* RSS indirection table */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|uint16_t
+name|toe_rss_bitmap
+comment|/* The bitmap specifies which toe rss chains to complete the ramrod on (0 bitmap is not valid option). The port is gleaned from the CID */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|toe_rss_bitmap
+comment|/* The bitmap specifies which toe rss chains to complete the ramrod on (0 bitmap is not valid option). The port is gleaned from the CID */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe Rx Buffer Descriptor  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_bd
+block|{
+name|uint32_t
+name|addr_lo
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+name|uint32_t
+name|addr_hi
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BD_START
+value|(0x1<<0)
+comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+define|#
+directive|define
+name|TOE_RX_BD_START_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BD_END
+value|(0x1<<1)
+comment|/* BitField flagsbd command flags	this bd is the end of an application buffer */
+define|#
+directive|define
+name|TOE_RX_BD_END_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_RX_BD_NO_PUSH
+value|(0x1<<2)
+comment|/* BitField flagsbd command flags	this application buffer must not be partially completed */
+define|#
+directive|define
+name|TOE_RX_BD_NO_PUSH_SHIFT
+value|2
+define|#
+directive|define
+name|TOE_RX_BD_SPLIT
+value|(0x1<<3)
+comment|/* BitField flagsbd command flags	this application buffer is part of a bigger buffer and this buffer is not the last */
+define|#
+directive|define
+name|TOE_RX_BD_SPLIT_SHIFT
+value|3
+define|#
+directive|define
+name|TOE_RX_BD_RESERVED1
+value|(0xFFF<<4)
+comment|/* BitField flagsbd command flags	reserved */
+define|#
+directive|define
+name|TOE_RX_BD_RESERVED1_SHIFT
+value|4
+name|uint16_t
+name|size
+comment|/* Size of the buffer pointed by the BD */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|size
+comment|/* Size of the buffer pointed by the BD */
+decl_stmt|;
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_BD_START
+value|(0x1<<0)
+comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+define|#
+directive|define
+name|TOE_RX_BD_START_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_BD_END
+value|(0x1<<1)
+comment|/* BitField flagsbd command flags	this bd is the end of an application buffer */
+define|#
+directive|define
+name|TOE_RX_BD_END_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_RX_BD_NO_PUSH
+value|(0x1<<2)
+comment|/* BitField flagsbd command flags	this application buffer must not be partially completed */
+define|#
+directive|define
+name|TOE_RX_BD_NO_PUSH_SHIFT
+value|2
+define|#
+directive|define
+name|TOE_RX_BD_SPLIT
+value|(0x1<<3)
+comment|/* BitField flagsbd command flags	this application buffer is part of a bigger buffer and this buffer is not the last */
+define|#
+directive|define
+name|TOE_RX_BD_SPLIT_SHIFT
+value|3
+define|#
+directive|define
+name|TOE_RX_BD_RESERVED1
+value|(0xFFF<<4)
+comment|/* BitField flagsbd command flags	reserved */
+define|#
+directive|define
+name|TOE_RX_BD_RESERVED1_SHIFT
+value|4
+endif|#
+directive|endif
+name|uint32_t
+name|dbg_bytes_prod
+comment|/* a cyclic parameter that caounts how many byte were available for placement till no not including this bd */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * ramrod data for toe protocol General rx completion  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_completion_ramrod_data
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|reserved0
+decl_stmt|;
+name|uint16_t
+name|hash_value
+comment|/* information for ustorm to use in completion */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|hash_value
+comment|/* information for ustorm to use in completion */
+decl_stmt|;
+name|uint16_t
+name|reserved0
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * OOO params in union for TOE rx cqe data  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_cqe_ooo_params
+block|{
+name|uint32_t
+name|ooo_params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_CQE_OOO_PARAMS_NBYTES
+value|(0xFFFFFF<<0)
+comment|/* BitField ooo_paramsdata params for OOO cqe	connection nbytes */
+define|#
+directive|define
+name|TOE_RX_CQE_OOO_PARAMS_NBYTES_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_CQE_OOO_PARAMS_ISLE_NUM
+value|(0xFF<<24)
+comment|/* BitField ooo_paramsdata params for OOO cqe	isle number for OOO completions */
+define|#
+directive|define
+name|TOE_RX_CQE_OOO_PARAMS_ISLE_NUM_SHIFT
+value|24
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * in order params in union for TOE rx cqe data  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_cqe_in_order_params
+block|{
+name|uint32_t
+name|in_order_params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_CQE_IN_ORDER_PARAMS_NBYTES
+value|(0xFFFFFFFF<<0)
+comment|/* BitField in_order_paramsdata params for in order cqe	connection nbytes */
+define|#
+directive|define
+name|TOE_RX_CQE_IN_ORDER_PARAMS_NBYTES_SHIFT
+value|0
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * union for TOE rx cqe data  */
+end_comment
+
+begin_union
+union|union
+name|toe_rx_cqe_data_union
+block|{
+name|struct
+name|toe_rx_cqe_ooo_params
+name|ooo_params
+comment|/* data params for OOO cqe - nbytes and isle number */
+decl_stmt|;
+name|struct
+name|toe_rx_cqe_in_order_params
+name|in_order_params
+comment|/* data params for in order cqe - nbytes */
+decl_stmt|;
+name|uint32_t
+name|raw_data
+comment|/* global data param */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * The toe Rx cq element  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_cqe
+block|{
+name|uint32_t
+name|params1
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_CQE_CID
+value|(0xFFFFFF<<0)
+comment|/* BitField params1completion cid and opcode	connection id */
+define|#
+directive|define
+name|TOE_RX_CQE_CID_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_CQE_COMPLETION_OPCODE
+value|(0xFF<<24)
+comment|/* BitField params1completion cid and opcode	completion opcode - use enum toe_rx_cqe_type or toe_rss_update_opcode */
+define|#
+directive|define
+name|TOE_RX_CQE_COMPLETION_OPCODE_SHIFT
+value|24
+name|union
+name|toe_rx_cqe_data_union
+name|data
+comment|/* completion cid and opcode */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe rx doorbell data in host memory  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_db_data
+block|{
+name|uint32_t
+name|rcv_win_right_edge
+comment|/* siquence of the last bytes that can be recieved */
+decl_stmt|;
+name|uint32_t
+name|bytes_prod
+comment|/* cyclic counter of posted bytes */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint8_t
+name|reserved1
+comment|/* reserved */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_DB_DATA_IGNORE_WND_UPDATES
+value|(0x1<<0)
+comment|/* BitField flags	ustorm ignores window updates when this flag is set */
+define|#
+directive|define
+name|TOE_RX_DB_DATA_IGNORE_WND_UPDATES_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_DB_DATA_PARTIAL_FILLED_BUF
+value|(0x1<<1)
+comment|/* BitField flags	indicates if to set push timer due to partially filled receive request after offload */
+define|#
+directive|define
+name|TOE_RX_DB_DATA_PARTIAL_FILLED_BUF_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_RX_DB_DATA_RESERVED0
+value|(0x3F<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TOE_RX_DB_DATA_RESERVED0_SHIFT
+value|2
+name|uint16_t
+name|bds_prod
+comment|/* cyclic counter of bds to post */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|bds_prod
+comment|/* cyclic counter of bds to post */
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_RX_DB_DATA_IGNORE_WND_UPDATES
+value|(0x1<<0)
+comment|/* BitField flags	ustorm ignores window updates when this flag is set */
+define|#
+directive|define
+name|TOE_RX_DB_DATA_IGNORE_WND_UPDATES_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_RX_DB_DATA_PARTIAL_FILLED_BUF
+value|(0x1<<1)
+comment|/* BitField flags	indicates if to set push timer due to partially filled receive request after offload */
+define|#
+directive|define
+name|TOE_RX_DB_DATA_PARTIAL_FILLED_BUF_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_RX_DB_DATA_RESERVED0
+value|(0x3F<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TOE_RX_DB_DATA_RESERVED0_SHIFT
+value|2
+name|uint8_t
+name|reserved1
+comment|/* reserved */
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|consumed_grq_bytes
+comment|/* cyclic counter of consumed grq bytes */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe Rx Generic Buffer Descriptor  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_rx_grq_bd
+block|{
+name|uint32_t
+name|addr_lo
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+name|uint32_t
+name|addr_hi
+comment|/* receive payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe slow path element  */
+end_comment
+
+begin_union
+union|union
+name|toe_spe_data
+block|{
+name|uint8_t
+name|protocol_data
+index|[
+literal|8
+index|]
+comment|/* to fix this structure size to 8 bytes */
+decl_stmt|;
+name|struct
+name|regpair_t
+name|phys_addr
+comment|/* used in initiate offload ramrod */
+decl_stmt|;
+name|struct
+name|toe_rx_completion_ramrod_data
+name|rx_completion
+comment|/* used in all ramrods that have a general rx completion */
+decl_stmt|;
+name|struct
+name|toe_init_ramrod_data
+name|toe_init
+comment|/* used in toe init ramrod */
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * toe slow path element  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_spe
+block|{
+name|struct
+name|spe_hdr_t
+name|hdr
+comment|/* common data for all protocols */
+decl_stmt|;
+name|union
+name|toe_spe_data
+name|toe_data
+comment|/* data specific to toe protocol */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * TOE slow path opcodes (opcode 0 is illegal) - includes commands and completions  */
+end_comment
+
+begin_enum
+enum|enum
+name|toe_sq_opcode_type
+block|{
+name|CMP_OPCODE_TOE_GA
+init|=
+literal|1
+block|,
+name|CMP_OPCODE_TOE_GR
+init|=
+literal|2
+block|,
+name|CMP_OPCODE_TOE_GNI
+init|=
+literal|3
+block|,
+name|CMP_OPCODE_TOE_GAIR
+init|=
+literal|4
+block|,
+name|CMP_OPCODE_TOE_GAIL
+init|=
+literal|5
+block|,
+name|CMP_OPCODE_TOE_GRI
+init|=
+literal|6
+block|,
+name|CMP_OPCODE_TOE_GJ
+init|=
+literal|7
+block|,
+name|CMP_OPCODE_TOE_DGI
+init|=
+literal|8
+block|,
+name|CMP_OPCODE_TOE_CMP
+init|=
+literal|9
+block|,
+name|CMP_OPCODE_TOE_REL
+init|=
+literal|10
+block|,
+name|CMP_OPCODE_TOE_SKP
+init|=
+literal|11
+block|,
+name|CMP_OPCODE_TOE_URG
+init|=
+literal|12
+block|,
+name|CMP_OPCODE_TOE_RT_TO
+init|=
+literal|13
+block|,
+name|CMP_OPCODE_TOE_KA_TO
+init|=
+literal|14
+block|,
+name|CMP_OPCODE_TOE_MAX_RT
+init|=
+literal|15
+block|,
+name|CMP_OPCODE_TOE_DBT_RE
+init|=
+literal|16
+block|,
+name|CMP_OPCODE_TOE_SYN
+init|=
+literal|17
+block|,
+name|CMP_OPCODE_TOE_OPT_ERR
+init|=
+literal|18
+block|,
+name|CMP_OPCODE_TOE_FW2_TO
+init|=
+literal|19
+block|,
+name|CMP_OPCODE_TOE_2WY_CLS
+init|=
+literal|20
+block|,
+name|CMP_OPCODE_TOE_TX_CMP
+init|=
+literal|21
+block|,
+name|RAMROD_OPCODE_TOE_INIT
+init|=
+literal|32
+block|,
+name|RAMROD_OPCODE_TOE_RSS_UPDATE
+init|=
+literal|33
+block|,
+name|RAMROD_OPCODE_TOE_TERMINATE_RING
+init|=
+literal|34
+block|,
+name|CMP_OPCODE_TOE_RST_RCV
+init|=
+literal|48
+block|,
+name|CMP_OPCODE_TOE_FIN_RCV
+init|=
+literal|49
+block|,
+name|CMP_OPCODE_TOE_FIN_UPL
+init|=
+literal|50
+block|,
+name|CMP_OPCODE_TOE_SRC_ERR
+init|=
+literal|51
+block|,
+name|CMP_OPCODE_TOE_LCN_ERR
+init|=
+literal|52
+block|,
+name|RAMROD_OPCODE_TOE_INITIATE_OFFLOAD
+init|=
+literal|80
+block|,
+name|RAMROD_OPCODE_TOE_SEARCHER_DELETE
+init|=
+literal|81
+block|,
+name|RAMROD_OPCODE_TOE_TERMINATE
+init|=
+literal|82
+block|,
+name|RAMROD_OPCODE_TOE_QUERY
+init|=
+literal|83
+block|,
+name|RAMROD_OPCODE_TOE_RESET_SEND
+init|=
+literal|84
+block|,
+name|RAMROD_OPCODE_TOE_INVALIDATE
+init|=
+literal|85
+block|,
+name|RAMROD_OPCODE_TOE_EMPTY_RAMROD
+init|=
+literal|86
+block|,
+name|RAMROD_OPCODE_TOE_UPDATE
+init|=
+literal|87
+block|,
+name|MAX_TOE_SQ_OPCODE_TYPE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Toe statistics collected by the Xstorm (per port)  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_stats_section
+block|{
+name|uint32_t
+name|tcp_out_segments
+decl_stmt|;
+name|uint32_t
+name|tcp_retransmitted_segments
+decl_stmt|;
+name|struct
+name|regpair_t
+name|ip_out_octets
+decl_stmt|;
+name|uint32_t
+name|ip_out_requests
+decl_stmt|;
+name|uint32_t
+name|reserved
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Toe statistics collected by the Xstorm (per port)  */
+end_comment
+
+begin_struct
+struct|struct
+name|xstorm_toe_stats
+block|{
+name|struct
+name|xstorm_toe_stats_section
+name|statistics
+index|[
+literal|2
+index|]
+comment|/* 0 - ipv4 , 1 - ipv6 */
+decl_stmt|;
+name|uint32_t
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Toe statistics collected by the Tstorm (per port)  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_stats_section
+block|{
+name|uint32_t
+name|ip_in_receives
+decl_stmt|;
+name|uint32_t
+name|ip_in_delivers
+decl_stmt|;
+name|struct
+name|regpair_t
+name|ip_in_octets
+decl_stmt|;
+name|uint32_t
+name|tcp_in_errors
+comment|/* all discards except discards already counted by Ipv4 stats */
+decl_stmt|;
+name|uint32_t
+name|ip_in_header_errors
+comment|/* IP checksum */
+decl_stmt|;
+name|uint32_t
+name|ip_in_discards
+comment|/* no resources */
+decl_stmt|;
+name|uint32_t
+name|ip_in_truncated_packets
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Toe statistics collected by the Tstorm (per port)  */
+end_comment
+
+begin_struct
+struct|struct
+name|tstorm_toe_stats
+block|{
+name|struct
+name|tstorm_toe_stats_section
+name|statistics
+index|[
+literal|2
+index|]
+comment|/* 0 - ipv4 , 1 - ipv6 */
+decl_stmt|;
+name|uint32_t
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Eth statistics query structure for the eth_stats_query ramrod  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_stats_query
+block|{
+name|struct
+name|xstorm_toe_stats
+name|xstorm_toe
+comment|/* Xstorm Toe statistics structure */
+decl_stmt|;
+name|struct
+name|tstorm_toe_stats
+name|tstorm_toe
+comment|/* Tstorm Toe statistics structure */
+decl_stmt|;
+name|struct
+name|cstorm_toe_stats
+name|cstorm_toe
+comment|/* Cstorm Toe statistics structure */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe Tx Buffer Descriptor  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_tx_bd
+block|{
+name|uint32_t
+name|addr_lo
+comment|/* tranasmit payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+name|uint32_t
+name|addr_hi
+comment|/* tranasmit payload base address  - Single continuous buffer (page) pointer */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_BD_PUSH
+value|(0x1<<0)
+comment|/* BitField flagsbd command flags	End of data flag */
+define|#
+directive|define
+name|TOE_TX_BD_PUSH_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_BD_NOTIFY
+value|(0x1<<1)
+comment|/* BitField flagsbd command flags	notify driver with released data bytes including this bd */
+define|#
+directive|define
+name|TOE_TX_BD_NOTIFY_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_TX_BD_FIN
+value|(0x1<<2)
+comment|/* BitField flagsbd command flags	send fin request */
+define|#
+directive|define
+name|TOE_TX_BD_FIN_SHIFT
+value|2
+define|#
+directive|define
+name|TOE_TX_BD_LARGE_IO
+value|(0x1<<3)
+comment|/* BitField flagsbd command flags	this bd is part of an application buffer larger than mss */
+define|#
+directive|define
+name|TOE_TX_BD_LARGE_IO_SHIFT
+value|3
+define|#
+directive|define
+name|TOE_TX_BD_RESERVED1
+value|(0xFFF<<4)
+comment|/* BitField flagsbd command flags	reserved */
+define|#
+directive|define
+name|TOE_TX_BD_RESERVED1_SHIFT
+value|4
+name|uint16_t
+name|size
+comment|/* Size of the data represented by the BD */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|size
+comment|/* Size of the data represented by the BD */
+decl_stmt|;
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_BD_PUSH
+value|(0x1<<0)
+comment|/* BitField flagsbd command flags	End of data flag */
+define|#
+directive|define
+name|TOE_TX_BD_PUSH_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_BD_NOTIFY
+value|(0x1<<1)
+comment|/* BitField flagsbd command flags	notify driver with released data bytes including this bd */
+define|#
+directive|define
+name|TOE_TX_BD_NOTIFY_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_TX_BD_FIN
+value|(0x1<<2)
+comment|/* BitField flagsbd command flags	send fin request */
+define|#
+directive|define
+name|TOE_TX_BD_FIN_SHIFT
+value|2
+define|#
+directive|define
+name|TOE_TX_BD_LARGE_IO
+value|(0x1<<3)
+comment|/* BitField flagsbd command flags	this bd is part of an application buffer larger than mss */
+define|#
+directive|define
+name|TOE_TX_BD_LARGE_IO_SHIFT
+value|3
+define|#
+directive|define
+name|TOE_TX_BD_RESERVED1
+value|(0xFFF<<4)
+comment|/* BitField flagsbd command flags	reserved */
+define|#
+directive|define
+name|TOE_TX_BD_RESERVED1_SHIFT
+value|4
+endif|#
+directive|endif
+name|uint32_t
+name|nextBdStartSeq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The toe Tx cqe  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_tx_cqe
+block|{
+name|uint32_t
+name|params
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_CQE_CID
+value|(0xFFFFFF<<0)
+comment|/* BitField paramscompletion cid and opcode	connection id */
+define|#
+directive|define
+name|TOE_TX_CQE_CID_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_CQE_COMPLETION_OPCODE
+value|(0xFF<<24)
+comment|/* BitField paramscompletion cid and opcode	completion opcode (use enum toe_tx_cqe_type) */
+define|#
+directive|define
+name|TOE_TX_CQE_COMPLETION_OPCODE_SHIFT
+value|24
+name|uint32_t
+name|len
+comment|/* the more2release in Bytes */
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * toe tx doorbell data in host memory  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_tx_db_data
+block|{
+name|uint32_t
+name|bytes_prod_seq
+comment|/* greatest sequence the chip can transmit */
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FIN
+value|(0x1<<0)
+comment|/* BitField flags	flag for post FIN request */
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FIN_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FLUSH
+value|(0x1<<1)
+comment|/* BitField flags	flag for last doorbell - flushing doorbell queue */
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FLUSH_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_TX_DB_DATA_RESERVE
+value|(0x3FFF<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TOE_TX_DB_DATA_RESERVE_SHIFT
+value|2
+name|uint16_t
+name|bds_prod
+comment|/* cyclic counter of posted bds */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|bds_prod
+comment|/* cyclic counter of posted bds */
+decl_stmt|;
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FIN
+value|(0x1<<0)
+comment|/* BitField flags	flag for post FIN request */
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FIN_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FLUSH
+value|(0x1<<1)
+comment|/* BitField flags	flag for last doorbell - flushing doorbell queue */
+define|#
+directive|define
+name|TOE_TX_DB_DATA_FLUSH_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_TX_DB_DATA_RESERVE
+value|(0x3FFF<<2)
+comment|/* BitField flags	 */
+define|#
+directive|define
+name|TOE_TX_DB_DATA_RESERVE_SHIFT
+value|2
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * sturct used in update ramrod. Driver notifies chip which fields have changed via the bitmap  $$KEEP_ENDIANNESS$$  */
+end_comment
+
+begin_struct
+struct|struct
+name|toe_update_ramrod_cached_params
+block|{
+name|uint16_t
+name|changed_fields
+decl_stmt|;
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_DEST_ADDR_CHANGED
+value|(0x1<<0)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_DEST_ADDR_CHANGED_SHIFT
+value|0
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_MSS_CHANGED
+value|(0x1<<1)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_MSS_CHANGED_SHIFT
+value|1
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_KA_TIMEOUT_CHANGED
+value|(0x1<<2)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_KA_TIMEOUT_CHANGED_SHIFT
+value|2
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_KA_INTERVAL_CHANGED
+value|(0x1<<3)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_KA_INTERVAL_CHANGED_SHIFT
+value|3
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_MAX_RT_CHANGED
+value|(0x1<<4)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_MAX_RT_CHANGED_SHIFT
+value|4
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_RCV_INDICATION_SIZE_CHANGED
+value|(0x1<<5)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_RCV_INDICATION_SIZE_CHANGED_SHIFT
+value|5
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_FLOW_LABEL_CHANGED
+value|(0x1<<6)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_FLOW_LABEL_CHANGED_SHIFT
+value|6
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_ENABLE_KEEPALIVE_CHANGED
+value|(0x1<<7)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_ENABLE_KEEPALIVE_CHANGED_SHIFT
+value|7
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_ENABLE_NAGLE_CHANGED
+value|(0x1<<8)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_ENABLE_NAGLE_CHANGED_SHIFT
+value|8
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_TTL_CHANGED
+value|(0x1<<9)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_TTL_CHANGED_SHIFT
+value|9
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_HOP_LIMIT_CHANGED
+value|(0x1<<10)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_HOP_LIMIT_CHANGED_SHIFT
+value|10
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_TOS_CHANGED
+value|(0x1<<11)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_TOS_CHANGED_SHIFT
+value|11
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_TRAFFIC_CLASS_CHANGED
+value|(0x1<<12)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_TRAFFIC_CLASS_CHANGED_SHIFT
+value|12
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_KA_MAX_PROBE_COUNT_CHANGED
+value|(0x1<<13)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_KA_MAX_PROBE_COUNT_CHANGED_SHIFT
+value|13
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_USER_PRIORITY_CHANGED
+value|(0x1<<14)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_USER_PRIORITY_CHANGED_SHIFT
+value|14
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_INITIAL_RCV_WND_CHANGED
+value|(0x1<<15)
+comment|/* BitField changed_fieldsbitmap for indicating changed fields	 */
+define|#
+directive|define
+name|TOE_UPDATE_RAMROD_CACHED_PARAMS_INITIAL_RCV_WND_CHANGED_SHIFT
+value|15
+name|uint8_t
+name|ka_restart
+comment|/* Only 1 bit is used */
+decl_stmt|;
+name|uint8_t
+name|retransmit_restart
+comment|/* Only 1 bit is used */
+decl_stmt|;
+name|uint8_t
+name|dest_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|uint16_t
+name|mss
+decl_stmt|;
+name|uint32_t
+name|ka_timeout
+decl_stmt|;
+name|uint32_t
+name|ka_interval
+decl_stmt|;
+name|uint32_t
+name|max_rt
+decl_stmt|;
+name|uint32_t
+name|flow_label
+comment|/* Only 20 bits are used */
+decl_stmt|;
+name|uint16_t
+name|rcv_indication_size
+decl_stmt|;
+name|uint8_t
+name|enable_keepalive
+comment|/* Only 1 bit is used */
+decl_stmt|;
+name|uint8_t
+name|enable_nagle
+comment|/* Only 1 bit is used */
+decl_stmt|;
+name|uint8_t
+name|ttl
+decl_stmt|;
+name|uint8_t
+name|hop_limit
+decl_stmt|;
+name|uint8_t
+name|tos
+decl_stmt|;
+name|uint8_t
+name|traffic_class
+decl_stmt|;
+name|uint8_t
+name|ka_max_probe_count
+decl_stmt|;
+name|uint8_t
+name|user_priority
+comment|/* Only 4 bits are used */
+decl_stmt|;
+name|uint16_t
+name|reserved2
+decl_stmt|;
+name|uint32_t
+name|initial_rcv_wnd
+decl_stmt|;
+name|uint32_t
+name|reserved1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * rx rings pause data for E1h only  */
+end_comment
+
+begin_struct
+struct|struct
+name|ustorm_toe_rx_pause_data_e1h
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|grq_thr_low
+comment|/* number of remaining grqes under which, we send pause message */
+decl_stmt|;
+name|uint16_t
+name|cq_thr_low
+comment|/* number of remaining cqes under which, we send pause message */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_thr_low
+comment|/* number of remaining cqes under which, we send pause message */
+decl_stmt|;
+name|uint16_t
+name|grq_thr_low
+comment|/* number of remaining grqes under which, we send pause message */
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+name|uint16_t
+name|grq_thr_high
+comment|/* number of remaining grqes above which, we send un-pause message */
+decl_stmt|;
+name|uint16_t
+name|cq_thr_high
+comment|/* number of remaining cqes above which, we send un-pause message */
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+name|uint16_t
+name|cq_thr_high
+comment|/* number of remaining cqes above which, we send un-pause message */
+decl_stmt|;
+name|uint16_t
+name|grq_thr_high
+comment|/* number of remaining grqes above which, we send un-pause message */
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
