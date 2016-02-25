@@ -6648,9 +6648,6 @@ modifier|*
 name|grc_dump
 decl_stmt|;
 name|int
-name|trigger_grcdump
-decl_stmt|;
-name|int
 name|grcdump_done
 decl_stmt|;
 block|}
@@ -9022,7 +9019,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {                                              \         if (__predict_false(sc->debug)) {             \             device_printf((sc)->dev,                  \                           "%s(%s:%d) ERROR: " format, \                           __FUNCTION__,               \                           __FILE__,                   \                           __LINE__,                   \                           ## args);                   \         } else {                                      \             device_printf((sc)->dev,                  \                           "ERROR: " format,           \                           ## args);                   \         }                                             \         sc->trigger_grcdump |= 0x1;                   \     } while(0)
+value|do {                                              \         if (__predict_false(sc->debug)) {             \             device_printf((sc)->dev,                  \                           "%s(%s:%d) ERROR: " format, \                           __FUNCTION__,               \                           __FILE__,                   \                           __LINE__,                   \                           ## args);                   \         } else {                                      \             device_printf((sc)->dev,                  \                           "ERROR: " format,           \                           ## args);                   \         }                                             \     } while(0)
 end_define
 
 begin_ifdef
