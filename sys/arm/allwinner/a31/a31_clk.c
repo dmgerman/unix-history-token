@@ -429,7 +429,6 @@ operator|++
 control|)
 if|if
 condition|(
-operator|!
 operator|(
 name|ccm_read_4
 argument_list|(
@@ -440,6 +439,8 @@ argument_list|)
 operator|&
 name|A31_CCM_PLL6_CFG_REG_LOCK
 operator|)
+operator|==
+name|A31_CCM_PLL6_CFG_REG_LOCK
 condition|)
 break|break;
 if|if
