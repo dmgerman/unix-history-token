@@ -43,6 +43,17 @@ begin_comment
 comment|/* page table entry */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|pn_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* page number */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
