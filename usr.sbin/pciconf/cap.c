@@ -2662,7 +2662,7 @@ name|char
 modifier|*
 name|ea_bei_to_name
 parameter_list|(
-name|uint8_t
+name|int
 name|bei
 parameter_list|)
 block|{
