@@ -3246,7 +3246,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n\t\t [%d] %s, %s, %s, base [0x%lx], size [0x%lx]"
+literal|"\n\t\t [%d] %s, %s, %s, base [0x%jx], size [0x%jx]"
 literal|"\n\t\t\tPrimary properties [0x%x] (%s)"
 literal|"\n\t\t\tSecondary properties [0x%x] (%s)"
 argument_list|,
@@ -3277,11 +3277,19 @@ else|:
 literal|"Read-only"
 operator|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|base
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|max_offset
 operator|+
 literal|1
+argument_list|)
 argument_list|,
 name|flags_pp
 argument_list|,
