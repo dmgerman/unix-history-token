@@ -1720,6 +1720,16 @@ name|uart_ns8250_class
 block|}
 block|,
 block|{
+literal|"ns16550a"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|uart_ns8250_class
+block|}
+block|,
+block|{
 literal|"snps,dw-apb-uart"
 block|,
 operator|(
