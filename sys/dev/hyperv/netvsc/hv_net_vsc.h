@@ -2013,6 +2013,12 @@ name|HN_TRUST_HCSUM_UDP
 value|0x0004
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|hn_tx_ring
@@ -2089,6 +2095,11 @@ name|struct
 name|hn_softc
 modifier|*
 name|hn_sc
+decl_stmt|;
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|hn_chan
 decl_stmt|;
 name|int
 name|hn_direct_tx_size
@@ -2304,9 +2315,9 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*

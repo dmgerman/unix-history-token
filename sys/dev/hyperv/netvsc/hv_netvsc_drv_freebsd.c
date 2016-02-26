@@ -2051,6 +2051,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|sc
+operator|->
+name|hn_tx_ring
+index|[
+literal|0
+index|]
+operator|.
+name|hn_chan
+operator|=
+name|chan
+expr_stmt|;
 name|if_initname
 argument_list|(
 name|ifp
@@ -4079,7 +4090,7 @@ name|rndis_mesg
 operator|->
 name|msg_len
 expr_stmt|;
-comment|/* 	 * Chimney send, if the packet could fit into one chimney buffer. 	 */
+comment|/* 	 * Chimney send, if the packet could fit into one chimney buffer. 	 * 	 * TODO: vRSS, chimney buffer should be per-channel. 	 */
 if|if
 condition|(
 name|packet
@@ -4478,11 +4489,6 @@ modifier|*
 name|ifp
 parameter_list|,
 name|struct
-name|hv_device
-modifier|*
-name|device_ctx
-parameter_list|,
-name|struct
 name|hn_tx_ring
 modifier|*
 name|txr
@@ -4512,7 +4518,9 @@ name|error
 operator|=
 name|hv_nv_on_send
 argument_list|(
-name|device_ctx
+name|txr
+operator|->
+name|hn_chan
 argument_list|,
 operator|&
 name|txd
@@ -4713,18 +4721,6 @@ name|sc
 operator|->
 name|hn_ifp
 decl_stmt|;
-name|struct
-name|hv_device
-modifier|*
-name|device_ctx
-init|=
-name|vmbus_get_devctx
-argument_list|(
-name|sc
-operator|->
-name|hn_dev
-argument_list|)
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|hn_use_if_start
@@ -4918,8 +4914,6 @@ operator|=
 name|hn_send_pkt
 argument_list|(
 name|ifp
-argument_list|,
-name|device_ctx
 argument_list|,
 name|txr
 argument_list|,
@@ -11775,18 +11769,6 @@ operator|->
 name|hn_ifp
 decl_stmt|;
 name|struct
-name|hv_device
-modifier|*
-name|device_ctx
-init|=
-name|vmbus_get_devctx
-argument_list|(
-name|sc
-operator|->
-name|hn_dev
-argument_list|)
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m_head
@@ -11960,8 +11942,6 @@ operator|=
 name|hn_send_pkt
 argument_list|(
 name|ifp
-argument_list|,
-name|device_ctx
 argument_list|,
 name|txr
 argument_list|,

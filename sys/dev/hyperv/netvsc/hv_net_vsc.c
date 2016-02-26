@@ -2904,9 +2904,9 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*
@@ -3003,9 +3003,7 @@ name|ret
 operator|=
 name|hv_vmbus_channel_send_packet_pagebuffer
 argument_list|(
-name|device
-operator|->
-name|channel
+name|chan
 argument_list|,
 name|pkt
 operator|->
@@ -3039,9 +3037,7 @@ name|ret
 operator|=
 name|hv_vmbus_channel_send_packet
 argument_list|(
-name|device
-operator|->
-name|channel
+name|chan
 argument_list|,
 operator|&
 name|send_msg

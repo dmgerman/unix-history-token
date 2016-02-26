@@ -1080,6 +1080,8 @@ operator|->
 name|net_dev
 operator|->
 name|dev
+operator|->
+name|channel
 argument_list|,
 name|packet
 argument_list|)
