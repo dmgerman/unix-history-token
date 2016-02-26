@@ -747,6 +747,17 @@ begin_comment
 comment|/* PCI Advanced Features */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIY_EA
+value|0x14
+end_define
+
+begin_comment
+comment|/* PCI Extended Allocation */
+end_comment
+
 begin_comment
 comment|/* Extended Capability Register Fields */
 end_comment
@@ -3615,6 +3626,428 @@ define|#
 directive|define
 name|PCIR_MSI_PENDING
 value|0x14
+end_define
+
+begin_comment
+comment|/* PCI Enhanced Allocation registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_EA_NUM_ENT
+value|2
+end_define
+
+begin_comment
+comment|/* Number of Capability Entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_NUM_ENT_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* Num Entries Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_EA_FIRST_ENT
+value|4
+end_define
+
+begin_comment
+comment|/* First EA Entry in List */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIR_EA_FIRST_ENT_BRIDGE
+value|8
+end_define
+
+begin_comment
+comment|/* First EA Entry for Bridges */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_ES
+value|0x00000007
+end_define
+
+begin_comment
+comment|/* Entry Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI
+value|0x000000f0
+end_define
+
+begin_comment
+comment|/* BAR Equivalent Indicator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_OFFSET
+value|4
+end_define
+
+begin_comment
+comment|/* 0-5 map to BARs 0-5 respectively */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_BAR_0
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_BAR_5
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_BAR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> PCIM_EA_BEI_OFFSET)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_BRIDGE
+value|0x6
+end_define
+
+begin_comment
+comment|/* Resource behind bridge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_ENI
+value|0x7
+end_define
+
+begin_comment
+comment|/* Equivalent Not Indicated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_ROM
+value|0x8
+end_define
+
+begin_comment
+comment|/* Expansion ROM */
+end_comment
+
+begin_comment
+comment|/* 9-14 map to VF BARs 0-5 respectively */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_VF_BAR_0
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_VF_BAR_5
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BEI_RESERVED
+value|0xf
+end_define
+
+begin_comment
+comment|/* Reserved - Treat like ENI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_PP
+value|0x0000ff00
+end_define
+
+begin_comment
+comment|/* Primary Properties */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_PP_OFFSET
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_SP_OFFSET
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_SP
+value|0x00ff0000
+end_define
+
+begin_comment
+comment|/* Secondary Properties */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_MEM
+value|0x00
+end_define
+
+begin_comment
+comment|/* Non-Prefetch Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_MEM_PREFETCH
+value|0x01
+end_define
+
+begin_comment
+comment|/* Prefetchable Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_IO
+value|0x02
+end_define
+
+begin_comment
+comment|/* I/O Space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_VF_MEM_PREFETCH
+value|0x03
+end_define
+
+begin_comment
+comment|/* VF Prefetchable Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_VF_MEM
+value|0x04
+end_define
+
+begin_comment
+comment|/* VF Non-Prefetch Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_BRIDGE_MEM
+value|0x05
+end_define
+
+begin_comment
+comment|/* Bridge Non-Prefetch Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_BRIDGE_MEM_PREFETCH
+value|0x06
+end_define
+
+begin_comment
+comment|/* Bridge Prefetchable Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_BRIDGE_IO
+value|0x07
+end_define
+
+begin_comment
+comment|/* Bridge I/O Space */
+end_comment
+
+begin_comment
+comment|/* 0x08-0xfc reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_MEM_RESERVED
+value|0xfd
+end_define
+
+begin_comment
+comment|/* Reserved Memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_IO_RESERVED
+value|0xfe
+end_define
+
+begin_comment
+comment|/* Reserved I/O Space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_P_UNAVAILABLE
+value|0xff
+end_define
+
+begin_comment
+comment|/* Entry Unavailable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_WRITABLE
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Writable: 1 = RW, 0 = HwInit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_ENABLE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Enable for this entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_BASE
+value|4
+end_define
+
+begin_comment
+comment|/* Base Address Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_MAX_OFFSET
+value|8
+end_define
+
+begin_comment
+comment|/* MaxOffset (resource length) */
+end_comment
+
+begin_comment
+comment|/* bit 0 is reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_IS_64
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* 64-bit field flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_FIELD_MASK
+value|0xfffffffc
+end_define
+
+begin_comment
+comment|/* For Base& Max Offset */
+end_comment
+
+begin_comment
+comment|/* Bridge config register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_SEC_NR
+parameter_list|(
+name|reg
+parameter_list|)
+value|((reg)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_EA_SUB_NR
+parameter_list|(
+name|reg
+parameter_list|)
+value|(((reg)>> 8)& 0xff)
 end_define
 
 begin_comment
