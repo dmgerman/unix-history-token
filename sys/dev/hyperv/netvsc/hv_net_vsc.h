@@ -1581,9 +1581,6 @@ name|hv_device
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|num_outstanding_sends
-decl_stmt|;
 comment|/* Send buffer allocated by us but manages by NetVSP */
 name|void
 modifier|*
