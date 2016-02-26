@@ -2699,7 +2699,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Sc:d:e:h:l:m:"
+literal|"CSc:d:e:h:l:m:"
 argument_list|)
 operator|)
 operator|!=
@@ -2845,6 +2845,14 @@ literal|"Invalid memsize '%s'"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|memflags
+operator||=
+name|VM_MEM_F_INCORE
 expr_stmt|;
 break|break;
 case|case
