@@ -1956,6 +1956,11 @@ struct|struct
 name|hn_rx_ring
 block|{
 name|struct
+name|ifnet
+modifier|*
+name|hn_ifp
+decl_stmt|;
+name|struct
 name|lro_ctrl
 name|hn_lro
 decl_stmt|;

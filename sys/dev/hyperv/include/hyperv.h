@@ -2044,10 +2044,14 @@ name|hv_vmbus_channel
 modifier|*
 name|primary_channel
 decl_stmt|;
-comment|/* 	 * Support per channel state for use by vmbus drivers. 	 */
+comment|/* 	 * Driver private data 	 */
 name|void
 modifier|*
-name|per_channel_state
+name|hv_chan_priv1
+decl_stmt|;
+name|void
+modifier|*
+name|hv_chan_priv2
 decl_stmt|;
 block|}
 name|hv_vmbus_channel
