@@ -2576,31 +2576,11 @@ name|net_dev
 decl_stmt|;
 empty_stmt|;
 comment|/* Stop outbound traffic ie sends and receives completions */
-name|mtx_lock
-argument_list|(
-operator|&
-name|device
-operator|->
-name|channel
-operator|->
-name|inbound_lock
-argument_list|)
-expr_stmt|;
 name|net_dev
 operator|->
 name|destroy
 operator|=
 name|TRUE
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|device
-operator|->
-name|channel
-operator|->
-name|inbound_lock
-argument_list|)
 expr_stmt|;
 comment|/* Wait for all send completions */
 while|while

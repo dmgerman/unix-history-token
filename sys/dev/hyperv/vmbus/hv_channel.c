@@ -2166,28 +2166,11 @@ operator|->
 name|channel_task
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Grab the lock to prevent race condition when a packet received 	 * and unloading driver is in the process. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|channel
-operator|->
-name|inbound_lock
-argument_list|)
-expr_stmt|;
 name|channel
 operator|->
 name|on_channel_callback
 operator|=
 name|NULL
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|channel
-operator|->
-name|inbound_lock
-argument_list|)
 expr_stmt|;
 comment|/** 	 * Send a closing message 	 */
 name|info
@@ -3569,8 +3552,6 @@ block|{
 return|return;
 block|}
 comment|/** 	 * To deal with the race condition where we might 	 * receive a packet while the relevant driver is 	 * being unloaded, dispatch the callback while 	 * holding the channel lock. The unloading driver 	 * will acquire the same channel lock to set the 	 * callback to NULL. This closes the window. 	 */
-comment|/* 	 * Disable the lock due to newly added WITNESS check in r277723. 	 * Will seek other way to avoid race condition. 	 * -- whu 	 */
-comment|// mtx_lock(&channel->inbound_lock);
 if|if
 condition|(
 name|channel
@@ -3646,7 +3627,6 @@ operator|)
 condition|)
 do|;
 block|}
-comment|// mtx_unlock(&channel->inbound_lock);
 block|}
 end_function
 

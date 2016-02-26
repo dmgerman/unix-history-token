@@ -1976,10 +1976,6 @@ name|hv_vmbus_ring_buffer_info
 name|inbound
 decl_stmt|;
 name|struct
-name|mtx
-name|inbound_lock
-decl_stmt|;
-name|struct
 name|taskqueue
 modifier|*
 name|rxq

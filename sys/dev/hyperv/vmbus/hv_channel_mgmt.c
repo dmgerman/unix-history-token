@@ -473,20 +473,6 @@ argument_list|(
 operator|&
 name|channel
 operator|->
-name|inbound_lock
-argument_list|,
-literal|"channel inbound"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|channel
-operator|->
 name|sc_lock
 argument_list|,
 literal|"vmbus multi channel"
@@ -531,14 +517,6 @@ operator|&
 name|channel
 operator|->
 name|sc_lock
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|channel
-operator|->
-name|inbound_lock
 argument_list|)
 expr_stmt|;
 name|free
