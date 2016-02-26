@@ -211,6 +211,11 @@ name|hv_device
 modifier|*
 name|device
 parameter_list|,
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
 name|hv_vm_packet_descriptor
 modifier|*
 name|pkt
@@ -3154,6 +3159,11 @@ name|hv_device
 modifier|*
 name|device
 parameter_list|,
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
 name|hv_vm_packet_descriptor
 modifier|*
 name|pkt
@@ -3378,6 +3388,8 @@ name|net_dev
 argument_list|,
 name|device
 argument_list|,
+name|chan
+argument_list|,
 name|net_vsc_pkt
 argument_list|)
 expr_stmt|;
@@ -3408,11 +3420,6 @@ operator|.
 name|transaction_id
 argument_list|,
 name|status
-argument_list|)
-expr_stmt|;
-name|hv_rf_receive_rollup
-argument_list|(
-name|net_dev
 argument_list|)
 expr_stmt|;
 block|}
@@ -3695,6 +3702,8 @@ name|net_dev
 argument_list|,
 name|device
 argument_list|,
+name|chan
+argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
@@ -3808,7 +3817,7 @@ argument_list|)
 expr_stmt|;
 name|hv_rf_channel_rollup
 argument_list|(
-name|net_dev
+name|chan
 argument_list|)
 expr_stmt|;
 block|}
