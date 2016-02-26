@@ -720,6 +720,14 @@ name|primary_channel
 operator|=
 name|channel
 expr_stmt|;
+name|new_channel
+operator|->
+name|device
+operator|=
+name|channel
+operator|->
+name|device
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1547,6 +1555,15 @@ operator|*
 operator|)
 name|context
 expr_stmt|;
+if|if
+condition|(
+name|HV_VMBUS_CHAN_ISPRIMARY
+argument_list|(
+name|channel
+argument_list|)
+condition|)
+block|{
+comment|/* Only primary channel owns the hv_device */
 name|hv_vmbus_child_device_unregister
 argument_list|(
 name|channel
@@ -1554,6 +1571,7 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2284,6 +2302,15 @@ argument_list|,
 name|list_entry
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|HV_VMBUS_CHAN_ISPRIMARY
+argument_list|(
+name|channel
+argument_list|)
+condition|)
+block|{
+comment|/* Only primary channel owns the hv_device */
 name|hv_vmbus_child_device_unregister
 argument_list|(
 name|channel
@@ -2291,6 +2318,7 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
+block|}
 name|hv_vmbus_free_vmbus_channel
 argument_list|(
 name|channel

@@ -2054,6 +2054,16 @@ name|hv_vmbus_channel
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_CHAN_ISPRIMARY
+parameter_list|(
+name|chan
+parameter_list|)
+value|((chan)->primary_channel == NULL)
+end_define
+
 begin_function
 specifier|static
 specifier|inline
