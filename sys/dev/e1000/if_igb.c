@@ -14359,6 +14359,25 @@ name|if_ioctl
 operator|=
 name|igb_ioctl
 expr_stmt|;
+comment|/* TSO parameters */
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+name|IP_MAXPACKET
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomaxsegcount
+operator|=
+name|IGB_MAX_SCATTER
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomaxsegsize
+operator|=
+name|IGB_TSO_SEG_SIZE
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IGB_LEGACY_TX

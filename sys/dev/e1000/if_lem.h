@@ -591,7 +591,7 @@ begin_define
 define|#
 directive|define
 name|EM_MAX_SCATTER
-value|64
+value|40
 end_define
 
 begin_define
@@ -600,24 +600,6 @@ directive|define
 name|EM_VFTA_SIZE
 value|128
 end_define
-
-begin_define
-define|#
-directive|define
-name|EM_TSO_SIZE
-value|(65535 + sizeof(struct ether_vlan_header))
-end_define
-
-begin_define
-define|#
-directive|define
-name|EM_TSO_SEG_SIZE
-value|4096
-end_define
-
-begin_comment
-comment|/* Max dma segment size */
-end_comment
 
 begin_define
 define|#
