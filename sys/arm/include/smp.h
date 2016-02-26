@@ -257,15 +257,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|platform_mp_probe
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|platform_mp_start_ap
 parameter_list|(

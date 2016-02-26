@@ -133,21 +133,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|platform_mp_probe
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|platform_mp_start_ap
 parameter_list|(

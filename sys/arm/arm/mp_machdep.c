@@ -333,6 +333,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|mp_ncpus
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"cpu_mp_probe: mp_ncpus is unset"
+operator|)
+argument_list|)
+expr_stmt|;
 name|CPU_SETOF
 argument_list|(
 literal|0
@@ -343,8 +354,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|platform_mp_probe
-argument_list|()
+name|mp_ncpus
+operator|>
+literal|1
 operator|)
 return|;
 block|}

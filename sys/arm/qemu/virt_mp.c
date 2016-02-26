@@ -97,23 +97,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
-name|platform_mp_probe
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|mp_ncpus
-operator|>
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|boolean_t
 name|virt_maxid
