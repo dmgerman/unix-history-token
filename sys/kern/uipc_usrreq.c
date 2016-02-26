@@ -1103,8 +1103,6 @@ parameter_list|(
 name|struct
 name|unpcb
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1559,8 +1557,6 @@ expr_stmt|;
 name|unp_drop
 argument_list|(
 name|unp2
-argument_list|,
-name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|UNP_PCB_UNLOCK
@@ -3157,8 +3153,6 @@ expr_stmt|;
 name|unp_drop
 argument_list|(
 name|ref
-argument_list|,
-name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|UNP_PCB_UNLOCK
@@ -7742,9 +7736,6 @@ name|struct
 name|unpcb
 modifier|*
 name|unp
-parameter_list|,
-name|int
-name|errno
 parameter_list|)
 block|{
 name|struct
@@ -7769,11 +7760,12 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Regardless of whether the socket's peer dropped the connection 	 * with this socket by aborting or disconnecting, POSIX requires 	 * that ECONNRESET is returned. 	 */
 name|so
 operator|->
 name|so_error
 operator|=
-name|errno
+name|ECONNRESET
 expr_stmt|;
 name|unp2
 operator|=
