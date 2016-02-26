@@ -893,7 +893,7 @@ argument_list|,
 literal|"go into scheduler"
 argument_list|)
 expr_stmt|;
-name|platform_mp_init_secondary
+name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
 comment|/* Enter the scheduler */

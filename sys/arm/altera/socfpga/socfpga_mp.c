@@ -272,26 +272,13 @@ end_function
 
 begin_macro
 unit|}  void
-name|platform_mp_init_secondary
+name|platform_mp_setmaxid
 argument_list|(
 argument|void
 argument_list|)
 end_macro
 
 begin_block
-block|{
-name|intr_pic_init_secondary
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_function
-name|void
-name|platform_mp_setmaxid
-parameter_list|(
-name|void
-parameter_list|)
 block|{
 name|int
 name|hwcpu
@@ -347,7 +334,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 name|void

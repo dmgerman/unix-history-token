@@ -195,19 +195,6 @@ end_define
 
 begin_function
 name|void
-name|platform_mp_init_secondary
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|intr_pic_init_secondary
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|platform_mp_setmaxid
 parameter_list|(
 name|void
