@@ -296,6 +296,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAS2_WIMGE_MASK
+value|0x0000001F
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAS3_RPN
 value|0xFFFFF000
 end_define
