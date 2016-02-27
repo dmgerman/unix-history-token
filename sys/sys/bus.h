@@ -2426,6 +2426,49 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|resource
+operator|*
+name|bus_alloc_resource_anywhere
+argument_list|(
+argument|device_t dev
+argument_list|,
+argument|int type
+argument_list|,
+argument|int *rid
+argument_list|,
+argument|rman_res_t count
+argument_list|,
+argument|u_int flags
+argument_list|)
+block|{
+return|return
+operator|(
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|type
+argument_list|,
+name|rid
+argument_list|,
+literal|0ul
+argument_list|,
+operator|~
+literal|0ul
+argument_list|,
+name|count
+argument_list|,
+name|flags
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/*  * Access functions for device.  */
 end_comment
