@@ -1299,7 +1299,7 @@ name|sc
 operator|->
 name|mfa_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1311,13 +1311,6 @@ name|sc
 operator|->
 name|mfa_res_id
 operator|)
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|0x100000
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
