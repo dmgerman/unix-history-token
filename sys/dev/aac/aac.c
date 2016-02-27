@@ -8716,7 +8716,7 @@ name|sc
 operator|->
 name|aac_regs_res1
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|sc
 operator|->
@@ -8726,11 +8726,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|atu_size
 argument_list|,

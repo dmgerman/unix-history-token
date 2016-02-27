@@ -513,7 +513,7 @@ literal|0
 expr_stmt|;
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -521,11 +521,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|PCCARD_CIS_SIZE
 argument_list|,

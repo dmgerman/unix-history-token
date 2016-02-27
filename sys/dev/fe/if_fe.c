@@ -3699,7 +3699,7 @@ literal|0
 expr_stmt|;
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -3707,11 +3707,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|size
 argument_list|,

@@ -462,7 +462,7 @@ name|sc
 operator|->
 name|port_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -472,11 +472,6 @@ operator|&
 name|sc
 operator|->
 name|port_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|NSP_IOSIZE
 argument_list|,

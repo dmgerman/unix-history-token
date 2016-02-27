@@ -4148,7 +4148,7 @@ condition|)
 block|{
 name|port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -4156,11 +4156,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|if_16550a_type
 index|[
@@ -4220,7 +4215,7 @@ else|#
 directive|else
 name|port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -4228,11 +4223,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|IO_COMSIZE
 argument_list|,
@@ -6704,7 +6694,7 @@ condition|)
 block|{
 name|port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -6712,11 +6702,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|if_16550a_type
 index|[
@@ -6770,7 +6755,7 @@ else|#
 directive|else
 name|port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -6778,11 +6763,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|IO_COMSIZE
 argument_list|,

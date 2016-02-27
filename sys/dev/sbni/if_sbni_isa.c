@@ -291,7 +291,7 @@ name|sc
 operator|->
 name|io_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -301,11 +301,6 @@ operator|&
 name|sc
 operator|->
 name|io_rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|SBNI_PORTS
 argument_list|,

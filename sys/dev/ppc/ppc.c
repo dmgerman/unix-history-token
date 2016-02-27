@@ -7149,7 +7149,7 @@ name|ppc
 operator|->
 name|res_ioport
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -7159,11 +7159,6 @@ operator|&
 name|ppc
 operator|->
 name|rid_ioport
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|IO_LPTSIZE_EXTENDED
 argument_list|,
@@ -7198,7 +7193,7 @@ name|ppc
 operator|->
 name|res_ioport
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -7208,11 +7203,6 @@ operator|&
 name|ppc
 operator|->
 name|rid_ioport
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|IO_LPTSIZE_NORMAL
 argument_list|,

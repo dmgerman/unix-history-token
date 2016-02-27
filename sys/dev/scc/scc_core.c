@@ -587,7 +587,7 @@ name|sc
 operator|->
 name|sc_rres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -599,11 +599,6 @@ operator|&
 name|sc
 operator|->
 name|sc_rrid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|cl
 operator|->
@@ -1984,7 +1979,7 @@ name|sc
 operator|->
 name|sc_rres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1996,11 +1991,6 @@ operator|&
 name|sc
 operator|->
 name|sc_rrid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|cl
 operator|->
@@ -2036,7 +2026,7 @@ name|sc
 operator|->
 name|sc_rres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -2048,11 +2038,6 @@ operator|&
 name|sc
 operator|->
 name|sc_rrid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|cl
 operator|->

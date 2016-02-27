@@ -2354,7 +2354,7 @@ name|sc
 operator|->
 name|res_ioport
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|device
 argument_list|,
@@ -2364,11 +2364,6 @@ operator|&
 name|sc
 operator|->
 name|rid_ioport
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|ports
 argument_list|,

@@ -929,7 +929,7 @@ name|sc
 operator|->
 name|mem_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -939,11 +939,6 @@ operator|&
 name|sc
 operator|->
 name|mem_rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 literal|0x100
 argument_list|,
