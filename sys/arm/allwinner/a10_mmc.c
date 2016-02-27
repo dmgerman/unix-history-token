@@ -294,6 +294,9 @@ name|void
 modifier|*
 name|a10_intrhand
 decl_stmt|;
+name|bus_size_t
+name|a10_fifo_reg
+decl_stmt|;
 comment|/* Fields required for DMA access. */
 name|bus_addr_t
 name|a10_dma_desc_phys
@@ -796,6 +799,38 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
+comment|/* 	 * Later chips use a different FIFO offset. Unfortunately the FDT 	 * uses the same compatible string for old and new implementations. 	 */
+switch|switch
+condition|(
+name|allwinner_soc_family
+argument_list|()
+condition|)
+block|{
+case|case
+name|ALLWINNERSOC_SUN4I
+case|:
+case|case
+name|ALLWINNERSOC_SUN5I
+case|:
+case|case
+name|ALLWINNERSOC_SUN7I
+case|:
+name|sc
+operator|->
+name|a10_fifo_reg
+operator|=
+name|A10_MMC_FIFO
+expr_stmt|;
+break|break;
+default|default:
+name|sc
+operator|->
+name|a10_fifo_reg
+operator|=
+name|A31_MMC_FIFO
+expr_stmt|;
+break|break;
 block|}
 comment|/* Activate the module clock. */
 switch|switch
@@ -2734,7 +2769,9 @@ name|A10_MMC_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|A10_MMC_FIFO
+name|sc
+operator|->
+name|a10_fifo_reg
 argument_list|,
 name|buf
 index|[
@@ -2752,7 +2789,9 @@ name|A10_MMC_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|A10_MMC_FIFO
+name|sc
+operator|->
+name|a10_fifo_reg
 argument_list|)
 expr_stmt|;
 name|sc
