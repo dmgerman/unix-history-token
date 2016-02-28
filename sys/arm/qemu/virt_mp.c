@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<dev/psci/psci.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/qemu/virt_mp.h>
 end_include
 
 begin_decl_stmt
@@ -135,9 +147,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_setmaxid
+name|virt_mp_setmaxid
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|mp_maxid
@@ -253,9 +266,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|virt_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|ofw_cpu_early_foreach
