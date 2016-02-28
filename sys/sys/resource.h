@@ -378,8 +378,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIM_NLIMITS
+name|RLIMIT_UMTXP
 value|14
+end_define
+
+begin_comment
+comment|/* process-shared umtx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIM_NLIMITS
+value|15
 end_define
 
 begin_comment
@@ -445,6 +456,8 @@ block|,
 literal|"swap"
 block|,
 literal|"kqueues"
+block|,
+literal|"umtx"
 block|, }
 decl_stmt|;
 end_decl_stmt

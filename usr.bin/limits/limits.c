@@ -351,6 +351,14 @@ literal|"\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"  umtxp%-4s            %8s"
+block|,
+literal|"\n"
+block|,
+literal|1
+block|}
 block|,       }
 block|}
 block|,
@@ -479,6 +487,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"ulimit%s -o %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
 block|,       }
 block|}
 block|,
@@ -602,6 +618,14 @@ block|}
 block|,
 block|{
 literal|"limit%s kqueues %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"limit%s umtxp %s"
 block|,
 literal|";\n"
 block|,
@@ -850,6 +874,14 @@ block|}
 block|,
 block|{
 literal|"limit%s kqueues %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"limit%s umtxp %s"
 block|,
 literal|";\n"
 block|,
@@ -1354,6 +1386,12 @@ literal|"kqueues"
 block|,
 name|login_getcapnum
 block|}
+block|,
+block|{
+literal|"umtxp"
+block|,
+name|login_getcapnum
+block|}
 block|, }
 struct|;
 end_struct
@@ -1688,7 +1726,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":EeC:U:BSHP:ab:c:d:f:l:m:n:s:t:u:v:p:w:k:"
+literal|":EeC:U:BSHP:ab:c:d:f:l:m:n:s:t:u:v:p:w:k:o:"
 argument_list|)
 operator|)
 operator|!=

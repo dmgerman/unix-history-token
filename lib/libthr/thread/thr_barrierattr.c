@@ -248,18 +248,16 @@ operator|*
 name|attr
 operator|==
 name|NULL
-condition|)
-return|return
+operator|||
 operator|(
-name|EINVAL
-operator|)
-return|;
-comment|/* Only PTHREAD_PROCESS_PRIVATE is supported. */
-if|if
-condition|(
 name|pshared
 operator|!=
 name|PTHREAD_PROCESS_PRIVATE
+operator|&&
+name|pshared
+operator|!=
+name|PTHREAD_PROCESS_SHARED
+operator|)
 condition|)
 return|return
 operator|(
