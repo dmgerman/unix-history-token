@@ -78,6 +78,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|double
+name|secs_elapsed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|summary
 parameter_list|(
@@ -169,6 +178,13 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|ddflags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|speed
 decl_stmt|;
 end_decl_stmt
 
