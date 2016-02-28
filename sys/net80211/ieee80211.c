@@ -3284,7 +3284,7 @@ operator|)
 operator|)
 condition|)
 return|return;
-name|IEEE80211_LOCK
+name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -3353,11 +3353,6 @@ name|ic_promisc_task
 argument_list|)
 expr_stmt|;
 block|}
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3387,7 +3382,7 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
-name|IEEE80211_LOCK
+name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -3456,11 +3451,6 @@ name|ic_mcast_task
 argument_list|)
 expr_stmt|;
 block|}
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
