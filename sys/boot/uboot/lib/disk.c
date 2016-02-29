@@ -659,7 +659,8 @@ condition|)
 block|{
 name|stor_printf
 argument_list|(
-literal|"size=%d not multiple of device block size=%d\n"
+literal|"size=%zu not multiple of device "
+literal|"block size=%d\n"
 argument_list|,
 name|size
 argument_list|,

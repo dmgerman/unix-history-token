@@ -610,7 +610,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s: %lldMB\n"
+literal|"%s: %juMB\n"
 argument_list|,
 name|ub_mem_type
 argument_list|(
@@ -620,11 +620,16 @@ name|i
 index|]
 argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|size
 operator|/
 literal|1024
 operator|/
 literal|1024
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1750,11 +1755,8 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Compatible U-Boot API signature found @%x\n"
+literal|"Compatible U-Boot API signature found @%p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|sig
 argument_list|)
 expr_stmt|;
@@ -2161,7 +2163,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"heap base at %p, top at %p, used %d\n"
+literal|"heap base at %p, top at %p, used %td\n"
 argument_list|,
 name|end
 argument_list|,

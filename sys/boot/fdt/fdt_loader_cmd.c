@@ -1418,12 +1418,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Using DTB from memory address 0x%08X.\n"
+literal|"Using DTB from memory address 0x%p.\n"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|fdt_to_load
 argument_list|)
 expr_stmt|;
@@ -2041,6 +2037,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2218,6 +2220,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
