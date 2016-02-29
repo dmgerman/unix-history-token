@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.c,v 1.117 2015/06/02 15:35:31 christos Exp $	*/
+comment|/*	$NetBSD: readline.c,v 1.126 2016/02/24 17:13:22 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: readline.c,v 1.117 2015/06/02 15:35:31 christos Exp $"
+literal|"$NetBSD: readline.c,v 1.126 2016/02/24 17:13:22 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -75,49 +75,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -135,7 +99,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -154,22 +160,6 @@ begin_include
 include|#
 directive|include
 file|"el.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fcns.h"
-end_include
-
-begin_comment
-comment|/* for EL_NUM_FCNS */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"histedit.h"
 end_include
 
 begin_include
@@ -883,7 +873,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -951,7 +941,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1077,7 +1067,7 @@ name|__unused__
 operator|)
 argument_list|)
 argument_list|,
-name|char
+name|wchar_t
 operator|*
 name|c
 argument_list|)
@@ -1109,7 +1099,7 @@ operator|*
 name|c
 operator|=
 operator|(
-name|char
+name|wchar_t
 operator|)
 name|i
 expr_stmt|;
@@ -9965,11 +9955,14 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|char
+name|wchar_t
 modifier|*
-name|cp
+name|wc
 parameter_list|)
 block|{
+name|char
+name|ch
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -9978,10 +9971,15 @@ name|num_read
 init|=
 literal|0
 decl_stmt|;
-operator|*
-name|cp
+name|ch
 operator|=
 literal|'\0'
+expr_stmt|;
+operator|*
+name|wc
+operator|=
+literal|L'
+expr|\0'
 expr_stmt|;
 while|while
 condition|(
@@ -10032,7 +10030,8 @@ name|el
 operator|->
 name|el_infd
 argument_list|,
-name|cp
+operator|&
+name|ch
 argument_list|,
 operator|(
 name|size_t
@@ -10108,7 +10107,8 @@ name|el
 operator|->
 name|el_infd
 argument_list|,
-name|cp
+operator|&
+name|ch
 argument_list|,
 literal|1
 argument_list|)
@@ -10141,7 +10141,8 @@ name|el
 operator|->
 name|el_infd
 argument_list|,
-name|cp
+operator|&
+name|ch
 argument_list|,
 literal|1
 argument_list|)
@@ -10185,6 +10186,14 @@ name|EL_GETCFN
 argument_list|,
 name|EL_BUILTIN_GETCFN
 argument_list|)
+expr_stmt|;
+operator|*
+name|wc
+operator|=
+operator|(
+name|wchar_t
+operator|)
+name|ch
 expr_stmt|;
 return|return
 operator|(
@@ -10622,7 +10631,7 @@ argument_list|)
 expr_stmt|;
 name|min
 operator|=
-name|SIZE_T_MAX
+name|SIZE_MAX
 expr_stmt|;
 for|for
 control|(
@@ -11141,6 +11150,27 @@ name|void
 parameter_list|)
 block|{ }
 end_function
+
+begin_decl_stmt
+name|int
+comment|/*ARGSUSED*/
+name|rl_set_keyboard_input_timeout
+argument_list|(
+name|int
+name|u
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_decl_stmt
 
 end_unit
 

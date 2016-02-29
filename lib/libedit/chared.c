@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chared.c,v 1.40 2014/06/18 18:12:28 christos Exp $	*/
+comment|/*	$NetBSD: chared.c,v 1.49 2016/02/24 14:29:21 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: chared.c,v 1.40 2014/06/18 18:12:28 christos Exp $"
+literal|"$NetBSD: chared.c,v 1.49 2016/02/24 14:29:21 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,13 +84,31 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"el.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common.h"
 end_include
 
 begin_function_decl
@@ -879,7 +897,7 @@ name|protected
 name|int
 name|ce__isword
 parameter_list|(
-name|Int
+name|wint_t
 name|p
 parameter_list|)
 block|{
@@ -913,7 +931,7 @@ name|protected
 name|int
 name|cv__isword
 parameter_list|(
-name|Int
+name|wint_t
 name|p
 parameter_list|)
 block|{
@@ -956,7 +974,7 @@ name|protected
 name|int
 name|cv__isWord
 parameter_list|(
-name|Int
+name|wint_t
 name|p
 parameter_list|)
 block|{
@@ -997,7 +1015,7 @@ modifier|*
 name|wtest
 function_decl|)
 parameter_list|(
-name|Int
+name|wint_t
 parameter_list|)
 parameter_list|)
 block|{
@@ -1100,7 +1118,7 @@ modifier|*
 name|wtest
 function_decl|)
 parameter_list|(
-name|Int
+name|wint_t
 parameter_list|)
 parameter_list|)
 block|{
@@ -1200,7 +1218,7 @@ modifier|*
 name|wtest
 function_decl|)
 parameter_list|(
-name|Int
+name|wint_t
 parameter_list|)
 parameter_list|)
 block|{
@@ -1327,7 +1345,7 @@ modifier|*
 name|wtest
 function_decl|)
 parameter_list|(
-name|Int
+name|wint_t
 parameter_list|)
 parameter_list|)
 block|{
@@ -1645,7 +1663,7 @@ modifier|*
 name|wtest
 function_decl|)
 parameter_list|(
-name|Int
+name|wint_t
 parameter_list|)
 parameter_list|)
 block|{
@@ -3553,8 +3571,8 @@ modifier|*
 name|prompt
 parameter_list|)
 block|{
-name|Char
-name|ch
+name|wchar_t
+name|wch
 decl_stmt|;
 name|ssize_t
 name|len
@@ -3568,6 +3586,8 @@ operator|->
 name|el_line
 operator|.
 name|buffer
+decl_stmt|,
+name|ch
 decl_stmt|;
 if|if
 condition|(
@@ -3650,17 +3670,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|FUN
-argument_list|(
-name|el
-argument_list|,
-name|getc
-argument_list|)
+name|el_wgetc
 argument_list|(
 name|el
 argument_list|,
 operator|&
-name|ch
+name|wch
 argument_list|)
 operator|!=
 literal|1
@@ -3680,13 +3695,21 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+name|ch
+operator|=
+operator|(
+name|Char
+operator|)
+name|wch
+expr_stmt|;
 switch|switch
 condition|(
 name|ch
 condition|)
 block|{
 case|case
-literal|0010
+literal|L'
+expr|\b'
 case|:
 comment|/* Delete and backspace */
 case|case
@@ -3706,6 +3729,9 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+name|len
+operator|--
+expr_stmt|;
 name|cp
 operator|--
 expr_stmt|;
@@ -3715,11 +3741,13 @@ literal|0033
 case|:
 comment|/* ESC */
 case|case
-literal|'\r'
+literal|L'
+expr|\r'
 case|:
 comment|/* Newline */
 case|case
-literal|'\n'
+literal|L'
+expr|\n'
 case|:
 name|buf
 index|[

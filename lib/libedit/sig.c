@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sig.c,v 1.17 2011/07/28 20:50:55 christos Exp $	*/
+comment|/*	$NetBSD: sig.c,v 1.24 2016/02/16 19:08:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: sig.c,v 1.17 2011/07/28 20:50:55 christos Exp $"
+literal|"$NetBSD: sig.c,v 1.24 2016/02/16 19:08:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,13 +84,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"el.h"
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"el.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common.h"
 end_include
 
 begin_decl_stmt
@@ -153,12 +165,18 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|save_errno
 decl_stmt|;
 name|sigset_t
 name|nset
 decl_stmt|,
 name|oset
 decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -363,6 +381,10 @@ literal|0
 argument_list|,
 name|signo
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 end_function
