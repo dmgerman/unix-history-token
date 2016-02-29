@@ -5944,6 +5944,23 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
+name|m_new
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|=
+name|rxr
+operator|->
+name|hn_rx_idx
+expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
+name|m_new
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Note:  Moved RX completion back to hv_nv_on_receive() so all 	 * messages (not just data messages) will trigger a response. 	 */
 name|if_inc_counter
 argument_list|(
@@ -9321,6 +9338,12 @@ name|sc
 operator|->
 name|hn_ifp
 expr_stmt|;
+name|rxr
+operator|->
+name|hn_rx_idx
+operator|=
+name|i
+expr_stmt|;
 comment|/* 		 * Initialize LRO. 		 */
 if|#
 directive|if
@@ -12072,8 +12095,33 @@ name|txr
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|idx
+init|=
+literal|0
 decl_stmt|;
-comment|/* TODO: vRSS, TX ring selection */
+comment|/* 	 * Select the TX ring based on flowid 	 */
+if|if
+condition|(
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
+condition|)
+name|idx
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|%
+name|sc
+operator|->
+name|hn_tx_ring_cnt
+expr_stmt|;
 name|txr
 operator|=
 operator|&
@@ -12081,7 +12129,7 @@ name|sc
 operator|->
 name|hn_tx_ring
 index|[
-literal|0
+name|idx
 index|]
 expr_stmt|;
 name|error
