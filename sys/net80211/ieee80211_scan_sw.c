@@ -2426,8 +2426,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|maxdwell
-decl_stmt|,
-name|scanend
 decl_stmt|;
 name|int
 name|scandone
@@ -2571,7 +2569,9 @@ name|done
 goto|;
 block|}
 block|}
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 operator|=
 name|ticks
 operator|+
@@ -2667,7 +2667,9 @@ name|ss
 operator|->
 name|ss_mindwell
 argument_list|,
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 argument_list|)
 condition|)
 break|break;
@@ -2694,12 +2696,16 @@ name|ss
 operator|->
 name|ss_maxdwell
 argument_list|,
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 argument_list|)
 condition|)
 name|maxdwell
 operator|=
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 operator|-
 name|ticks
 expr_stmt|;
@@ -3085,7 +3091,9 @@ name|ss
 operator|->
 name|ss_mindwell
 argument_list|,
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 argument_list|)
 condition|)
 block|{
@@ -3106,7 +3114,9 @@ name|ss
 operator|->
 name|ss_mindwell
 argument_list|,
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 argument_list|)
 expr_stmt|;
 name|ss
@@ -3207,7 +3217,9 @@ name|ss
 operator|->
 name|ss_mindwell
 argument_list|,
-name|scanend
+name|ss_priv
+operator|->
+name|ss_scanend
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
@@ -3305,6 +3317,12 @@ name|ISCAN_CANCEL
 operator||
 name|ISCAN_ABORT
 operator|)
+expr_stmt|;
+name|ss_priv
+operator|->
+name|ss_scanend
+operator|=
+literal|0
 expr_stmt|;
 name|ss
 operator|->
