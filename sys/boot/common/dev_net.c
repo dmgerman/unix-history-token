@@ -288,12 +288,6 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|char
-name|temp
-index|[
-name|FNAME_SIZE
-index|]
-decl_stmt|;
 name|struct
 name|iodesc
 modifier|*
