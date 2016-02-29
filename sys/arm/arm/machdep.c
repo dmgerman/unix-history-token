@@ -6917,9 +6917,10 @@ name|l2_start
 decl_stmt|,
 name|lastaddr
 decl_stmt|;
-name|uint32_t
+name|u_long
 name|memsize
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|l2size
 decl_stmt|;
 name|char
@@ -7924,7 +7925,7 @@ name|kernelstack
 decl_stmt|,
 name|dpcpu
 decl_stmt|;
-name|uint32_t
+name|u_long
 name|memsize
 decl_stmt|;
 name|char

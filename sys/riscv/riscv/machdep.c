@@ -3511,7 +3511,7 @@ decl_stmt|;
 name|vm_size_t
 name|kernlen
 decl_stmt|;
-name|uint32_t
+name|u_long
 name|memsize
 decl_stmt|;
 name|caddr_t

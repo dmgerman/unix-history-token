@@ -4265,13 +4265,14 @@ decl_stmt|;
 name|int
 name|mr_cnt
 decl_stmt|,
-name|memsize
-decl_stmt|,
 name|err
 decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|;
+name|u_long
+name|memsize
 decl_stmt|;
 name|uint32_t
 name|valid_win_num

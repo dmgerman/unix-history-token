@@ -8068,13 +8068,14 @@ name|int
 name|availmem_regions_sz
 decl_stmt|;
 name|uint32_t
-name|memsize
-decl_stmt|,
 name|br
 decl_stmt|,
 name|cr
 decl_stmt|,
 name|i
+decl_stmt|;
+name|u_long
+name|memsize
 decl_stmt|;
 comment|/* Grab physical memory regions information from DTS */
 if|if

@@ -298,7 +298,8 @@ index|]
 decl_stmt|;
 name|int
 name|mr_cnt
-decl_stmt|,
+decl_stmt|;
+name|u_long
 name|val
 decl_stmt|;
 name|int

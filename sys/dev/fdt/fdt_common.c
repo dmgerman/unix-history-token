@@ -2967,7 +2967,7 @@ name|int
 modifier|*
 name|mrcnt
 parameter_list|,
-name|uint32_t
+name|u_long
 modifier|*
 name|memsize
 parameter_list|)
@@ -2987,7 +2987,7 @@ decl_stmt|;
 name|phandle_t
 name|memory
 decl_stmt|;
-name|uint32_t
+name|u_long
 name|memory_size
 decl_stmt|;
 name|int
