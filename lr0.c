@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lr0.c,v 1.16 2014/04/07 21:53:50 tom Exp $ */
+comment|/* $Id: lr0.c,v 1.17 2014/11/28 15:46:42 tom Exp $ */
 end_comment
 
 begin_include
@@ -222,6 +222,14 @@ specifier|static
 name|Value_t
 modifier|*
 name|shift_symbol
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|Value_t
+modifier|*
+name|rules
 decl_stmt|;
 end_decl_stmt
 
@@ -2193,10 +2201,6 @@ decl_stmt|;
 name|int
 name|lhs
 decl_stmt|;
-name|Value_t
-modifier|*
-name|rules
-decl_stmt|;
 name|derives
 operator|=
 name|NEW2
@@ -2650,6 +2654,11 @@ expr_stmt|;
 name|DO_FREE
 argument_list|(
 name|derives
+argument_list|)
+expr_stmt|;
+name|DO_FREE
+argument_list|(
+name|rules
 argument_list|)
 expr_stmt|;
 block|}
