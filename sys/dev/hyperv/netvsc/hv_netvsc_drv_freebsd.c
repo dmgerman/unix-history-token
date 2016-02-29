@@ -1212,6 +1212,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100099
+end_if
+
 begin_function_decl
 specifier|static
 name|int
@@ -1231,6 +1239,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -6228,6 +6241,11 @@ name|ifr
 operator|->
 name|ifr_mtu
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100099
 comment|/* 		 * Make sure that LRO aggregation length limit is still 		 * valid, after the MTU change. 		 */
 name|NV_LOCK
 argument_list|(
@@ -6295,6 +6313,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 do|do
 block|{
 name|NV_LOCK
@@ -7594,6 +7614,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100099
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -7849,6 +7877,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -9343,6 +9376,11 @@ name|hn_ifp
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100099
 name|rxr
 operator|->
 name|hn_lro
@@ -9359,6 +9397,8 @@ name|lro_ackcnt_lim
 operator|=
 name|HN_LRO_ACKCNT_DEF
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* INET || INET6 */
@@ -9477,6 +9517,11 @@ argument_list|,
 literal|"# of LRO tries"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100099
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -9527,6 +9572,8 @@ argument_list|,
 literal|"Max # of ACKs to be aggregated by LRO"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
