@@ -3298,6 +3298,10 @@ condition|(
 name|ctrlr
 operator|->
 name|ioq
+operator|&&
+name|ctrlr
+operator|->
+name|ioq
 index|[
 literal|0
 index|]
