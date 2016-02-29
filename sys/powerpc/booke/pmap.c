@@ -736,22 +736,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|tlb1_set_entry
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|tlb1_write_entry
 parameter_list|(
@@ -14174,7 +14158,6 @@ comment|/*  * Register permanent kernel mapping in TLB1.  *  * Entries are creat
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|tlb1_set_entry
 parameter_list|(
