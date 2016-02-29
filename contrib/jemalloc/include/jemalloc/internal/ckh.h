@@ -156,15 +156,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* Used for pseudo-random number generation. */
-define|#
-directive|define
-name|CKH_A
-value|1103515241
-define|#
-directive|define
-name|CKH_C
-value|12347
-name|uint32_t
+name|uint64_t
 name|prng_state
 decl_stmt|;
 comment|/* Total number of items. */
@@ -358,7 +350,7 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|seachkey
+name|searchkey
 parameter_list|,
 name|void
 modifier|*

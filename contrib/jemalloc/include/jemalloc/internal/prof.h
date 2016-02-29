@@ -1700,6 +1700,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|unlikely
+argument_list|(
 operator|(
 name|uintptr_t
 operator|)
@@ -1709,6 +1711,7 @@ operator|(
 name|uintptr_t
 operator|)
 name|PROF_TDATA_STATE_MAX
+argument_list|)
 condition|)
 name|tdata
 operator|=
@@ -1727,9 +1730,12 @@ name|tdata
 expr_stmt|;
 if|if
 condition|(
+name|unlikely
+argument_list|(
 name|tdata
 operator|==
 name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1738,11 +1744,14 @@ operator|)
 return|;
 if|if
 condition|(
+name|likely
+argument_list|(
 name|tdata
 operator|->
 name|bytes_until_sample
 operator|>=
 name|usize
+argument_list|)
 condition|)
 block|{
 if|if

@@ -176,12 +176,16 @@ decl_stmt|;
 name|ssize_t
 name|lg_dirty_mult
 decl_stmt|;
+name|ssize_t
+name|decay_time
+decl_stmt|;
 name|size_t
 name|pactive
 decl_stmt|;
 name|size_t
 name|pdirty
 decl_stmt|;
+comment|/* The remainder are only populated if config_stats is true. */
 name|arena_stats_t
 name|astats
 decl_stmt|;

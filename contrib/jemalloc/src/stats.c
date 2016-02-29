@@ -1387,6 +1387,8 @@ name|dss
 decl_stmt|;
 name|ssize_t
 name|lg_dirty_mult
+decl_stmt|,
+name|decay_time
 decl_stmt|;
 name|size_t
 name|page
@@ -1511,6 +1513,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|opt_purge
+operator|==
+name|purge_mode_ratio
+condition|)
+block|{
+if|if
+condition|(
 name|lg_dirty_mult
 operator|>=
 literal|0
@@ -1541,6 +1550,56 @@ argument_list|,
 name|cbopaque
 argument_list|,
 literal|"min active:dirty page ratio: N/A\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|CTL_M2_GET
+argument_list|(
+literal|"stats.arenas.0.decay_time"
+argument_list|,
+name|i
+argument_list|,
+operator|&
+name|decay_time
+argument_list|,
+name|ssize_t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opt_purge
+operator|==
+name|purge_mode_decay
+condition|)
+block|{
+if|if
+condition|(
+name|decay_time
+operator|>=
+literal|0
+condition|)
+block|{
+name|malloc_cprintf
+argument_list|(
+name|write_cb
+argument_list|,
+name|cbopaque
+argument_list|,
+literal|"decay time: %zd\n"
+argument_list|,
+name|decay_time
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|malloc_cprintf
+argument_list|(
+name|write_cb
+argument_list|,
+name|cbopaque
+argument_list|,
+literal|"decay time: N/A\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1610,37 +1669,20 @@ name|write_cb
 argument_list|,
 name|cbopaque
 argument_list|,
-literal|"dirty pages: %zu:%zu active:dirty, %"
+literal|"purging: dirty: %zu, sweeps: %"
 name|FMTu64
-literal|" sweep%s, %"
+literal|", madvises: %"
 name|FMTu64
-literal|" madvise%s, %"
+literal|", "
+literal|"purged: %"
 name|FMTu64
-literal|" purged\n"
-argument_list|,
-name|pactive
+literal|"\n"
 argument_list|,
 name|pdirty
 argument_list|,
 name|npurge
 argument_list|,
-name|npurge
-operator|==
-literal|1
-condition|?
-literal|""
-else|:
-literal|"s"
-argument_list|,
 name|nmadvise
-argument_list|,
-name|nmadvise
-operator|==
-literal|1
-condition|?
-literal|""
-else|:
-literal|"s"
 argument_list|,
 name|purged
 argument_list|)
@@ -2275,6 +2317,8 @@ name|sv
 decl_stmt|,
 name|bsz
 decl_stmt|,
+name|usz
+decl_stmt|,
 name|ssz
 decl_stmt|,
 name|sssz
@@ -2286,6 +2330,13 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|bool
+argument_list|)
+expr_stmt|;
+name|usz
+operator|=
+sizeof|sizeof
+argument_list|(
+name|unsigned
 argument_list|)
 expr_stmt|;
 name|ssz
@@ -2359,6 +2410,17 @@ else|:
 literal|"disabled"
 argument_list|)
 expr_stmt|;
+name|malloc_cprintf
+argument_list|(
+name|write_cb
+argument_list|,
+name|cbopaque
+argument_list|,
+literal|"config.malloc_conf: \"%s\"\n"
+argument_list|,
+name|config_malloc_conf
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|OPT_WRITE_BOOL
@@ -2376,6 +2438,14 @@ parameter_list|,
 name|m
 parameter_list|)
 value|{					\ 		bool bv2;						\ 		if (je_mallctl("opt."#n,&bv,&bsz, NULL, 0) == 0&&	\ 		    je_mallctl(#m,&bv2,&bsz, NULL, 0) == 0) {		\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "  opt."#n": %s ("#m": %s)\n", bv ? "true"	\ 			    : "false", bv2 ? "true" : "false");		\ 		}							\ }
+define|#
+directive|define
+name|OPT_WRITE_UNSIGNED
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|if (je_mallctl("opt."#n,&uv,&usz, NULL, 0) == 0) {	\ 			malloc_cprintf(write_cb, cbopaque,		\ 			"  opt."#n": %zu\n", sv);			\ 		}
 define|#
 directive|define
 name|OPT_WRITE_SIZE_T
@@ -2430,15 +2500,39 @@ name|OPT_WRITE_CHAR_P
 argument_list|(
 argument|dss
 argument_list|)
-name|OPT_WRITE_SIZE_T
+name|OPT_WRITE_UNSIGNED
 argument_list|(
 argument|narenas
 argument_list|)
+name|OPT_WRITE_CHAR_P
+argument_list|(
+argument|purge
+argument_list|)
+if|if
+condition|(
+name|opt_purge
+operator|==
+name|purge_mode_ratio
+condition|)
+block|{
 name|OPT_WRITE_SSIZE_T_MUTABLE
 argument_list|(
 argument|lg_dirty_mult
 argument_list|,
 argument|arenas.lg_dirty_mult
+argument_list|)
+block|}
+if|if
+condition|(
+name|opt_purge
+operator|==
+name|purge_mode_decay
+condition|)
+name|OPT_WRITE_SSIZE_T_MUTABLE
+argument_list|(
+argument|decay_time
+argument_list|,
+argument|arenas.decay_time
 argument_list|)
 name|OPT_WRITE_BOOL
 argument_list|(
@@ -2640,6 +2734,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|opt_purge
+operator|==
+name|purge_mode_ratio
+condition|)
+block|{
+if|if
+condition|(
 name|ssv
 operator|>=
 literal|0
@@ -2651,7 +2752,8 @@ name|write_cb
 argument_list|,
 name|cbopaque
 argument_list|,
-literal|"Min active:dirty page ratio per arena: %u:1\n"
+literal|"Min active:dirty page ratio per arena: "
+literal|"%u:1\n"
 argument_list|,
 operator|(
 literal|1U
@@ -2669,7 +2771,48 @@ name|write_cb
 argument_list|,
 name|cbopaque
 argument_list|,
-literal|"Min active:dirty page ratio per arena: N/A\n"
+literal|"Min active:dirty page ratio per arena: "
+literal|"N/A\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|CTL_GET
+argument_list|(
+literal|"arenas.decay_time"
+argument_list|,
+operator|&
+name|ssv
+argument_list|,
+name|ssize_t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opt_purge
+operator|==
+name|purge_mode_decay
+condition|)
+block|{
+name|malloc_cprintf
+argument_list|(
+name|write_cb
+argument_list|,
+name|cbopaque
+argument_list|,
+literal|"Unused dirty page decay time: %zd%s\n"
+argument_list|,
+name|ssv
+argument_list|,
+operator|(
+name|ssv
+operator|<
+literal|0
+operator|)
+condition|?
+literal|" (no decay)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
