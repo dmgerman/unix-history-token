@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reader.c,v 1.58 2014/10/06 22:15:08 tom Exp $ */
+comment|/* $Id: reader.c,v 1.59 2015/07/11 00:39:03 tom Exp $ */
 end_comment
 
 begin_include
@@ -144,6 +144,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|CACHE_SIZE
+value|256
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -531,7 +538,7 @@ condition|)
 block|{
 name|cache_size
 operator|+=
-literal|256
+name|CACHE_SIZE
 expr_stmt|;
 name|cache
 operator|=
@@ -6250,7 +6257,7 @@ name|k
 decl_stmt|;
 name|cache_size
 operator|=
-literal|256
+name|CACHE_SIZE
 expr_stmt|;
 name|cache
 operator|=
@@ -8968,6 +8975,13 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|cache
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cache_size
+operator|>=
+name|CACHE_SIZE
 argument_list|)
 expr_stmt|;
 name|sprintf

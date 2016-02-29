@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lr0.c,v 1.17 2014/11/28 15:46:42 tom Exp $ */
+comment|/* $Id: lr0.c,v 1.18 2015/07/11 00:53:38 tom Exp $ */
 end_comment
 
 begin_include
@@ -2643,6 +2643,16 @@ condition|(
 name|derives
 condition|)
 block|{
+if|if
+condition|(
+name|derives
+index|[
+name|start_symbol
+index|]
+operator|!=
+name|rules
+condition|)
+block|{
 name|DO_FREE
 argument_list|(
 name|derives
@@ -2651,6 +2661,7 @@ name|start_symbol
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|DO_FREE
 argument_list|(
 name|derives

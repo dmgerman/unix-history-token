@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.54 2014/10/06 22:40:07 tom Exp $ */
+comment|/* $Id: main.c,v 1.55 2015/07/11 00:34:19 tom Exp $ */
 end_comment
 
 begin_include
@@ -2106,6 +2106,10 @@ modifier|*
 name|label
 parameter_list|)
 block|{
+define|#
+directive|define
+name|MY_FMT
+value|"%s/%.*sXXXXXX"
 name|FILE
 modifier|*
 name|result
@@ -2184,6 +2188,7 @@ operator|=
 literal|"."
 expr_stmt|;
 block|}
+comment|/* The size of the format is guaranteed to be longer than the result from      * printing empty strings with it; this calculation accounts for the      * string-lengths as well.      */
 name|name
 operator|=
 name|malloc
@@ -2193,7 +2198,10 @@ argument_list|(
 name|tmpdir
 argument_list|)
 operator|+
-literal|10
+sizeof|sizeof
+argument_list|(
+name|MY_FMT
+argument_list|)
 operator|+
 name|strlen
 argument_list|(
@@ -2248,7 +2256,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s/%.*sXXXXXX"
+name|MY_FMT
 argument_list|,
 name|tmpdir
 argument_list|,
@@ -2380,6 +2388,9 @@ expr_stmt|;
 return|return
 name|result
 return|;
+undef|#
+directive|undef
+name|MY_FMT
 block|}
 end_function
 
