@@ -386,7 +386,7 @@ operator|=
 name|HV_MESSAGE_TYPE_NONE
 expr_stmt|;
 comment|/* 	     * Make sure the write to message_type (ie set to 	     * HV_MESSAGE_TYPE_NONE) happens before we read the 	     * message_pending and EOMing. Otherwise, the EOMing will 	     * not deliver any more messages 	     * since there is no empty slot 	     */
-name|wmb
+name|atomic_thread_fence_seq_cst
 argument_list|()
 expr_stmt|;
 if|if
@@ -562,7 +562,7 @@ operator|=
 name|HV_MESSAGE_TYPE_NONE
 expr_stmt|;
 comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 */
-name|wmb
+name|atomic_thread_fence_seq_cst
 argument_list|()
 expr_stmt|;
 if|if
