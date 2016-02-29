@@ -2391,6 +2391,16 @@ operator|)
 name|arg
 decl_stmt|;
 name|struct
+name|scan_state
+modifier|*
+name|ss_priv
+init|=
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+decl_stmt|;
+name|struct
 name|ieee80211vap
 modifier|*
 name|vap
@@ -2446,10 +2456,7 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2536,10 +2543,7 @@ comment|/* 			 * Use an 1ms delay so the null data frame has a chance 			 * to g
 name|cv_timedwait
 argument_list|(
 operator|&
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_scan_cv
 argument_list|,
@@ -2556,10 +2560,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2574,10 +2575,7 @@ name|scanend
 operator|=
 name|ticks
 operator|+
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_duration
 expr_stmt|;
@@ -2619,10 +2617,7 @@ name|ss_last
 operator|)
 operator|||
 operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2657,10 +2652,7 @@ name|IEEE80211_SCAN_GOTPICK
 operator|)
 operator|||
 operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2841,10 +2833,7 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* XXX scan state can change! Re-validate scan state! */
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_chanmindwell
 operator|=
@@ -2855,10 +2844,7 @@ operator|->
 name|ss_mindwell
 expr_stmt|;
 comment|/* clear mindwell lock and initial channel change flush */
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&=
@@ -2867,11 +2853,7 @@ name|ISCAN_REP
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2879,7 +2861,6 @@ operator|(
 name|ISCAN_CANCEL
 operator||
 name|ISCAN_ABORT
-operator|)
 operator|)
 condition|)
 continue|continue;
@@ -2898,10 +2879,7 @@ comment|/* Wait to be signalled to scan the next channel */
 name|cv_wait
 argument_list|(
 operator|&
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_scan_cv
 argument_list|,
@@ -2925,10 +2903,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2964,11 +2939,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -2976,7 +2947,6 @@ name|ISCAN_CANCEL
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* XXX printf? */
@@ -3058,10 +3028,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* clear internal flags and any indication of a pick */
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&=
@@ -3079,10 +3046,7 @@ comment|/* 	 * If not canceled and scan completed, do post-processing. 	 * If th
 if|if
 condition|(
 operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -3192,10 +3156,7 @@ argument_list|(
 name|ic
 argument_list|,
 operator|&
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_scan_task
 argument_list|)
@@ -3257,11 +3218,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
@@ -3269,7 +3226,6 @@ name|ISCAN_CANCEL
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* XXX printf? */
@@ -3339,10 +3295,7 @@ name|IEEE80211_FEXT_BGSCAN
 expr_stmt|;
 block|}
 block|}
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&=
