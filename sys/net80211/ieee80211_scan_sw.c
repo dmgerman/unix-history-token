@@ -2628,7 +2628,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Use an 1ms delay so the null data frame has a chance 			 * to go out. 			 * XXX Should use M_TXCB mechanism to eliminate this. 			 */
+comment|/* Wait until null data frame will be ACK'ed */
 name|mtx_sleep
 argument_list|(
 name|vap
@@ -2644,7 +2644,7 @@ literal|"sta_ps"
 argument_list|,
 name|msecs_to_ticks
 argument_list|(
-literal|1
+literal|10
 argument_list|)
 argument_list|)
 expr_stmt|;
