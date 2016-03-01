@@ -552,45 +552,12 @@ name|us_size
 value|us_type._us_size
 end_define
 
-begin_comment
-comment|/*  * The slab structure for UMA_ZONE_REFCNT zones for whose items we  * maintain reference counters in the slab for.  */
-end_comment
-
-begin_struct
-struct|struct
-name|uma_slab_refcnt
-block|{
-name|struct
-name|uma_slab
-name|us_head
-decl_stmt|;
-comment|/* slab header data */
-name|uint32_t
-name|us_refcnt
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* Actually larger. */
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|struct
 name|uma_slab
 modifier|*
 name|uma_slab_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|uma_slab_refcnt
-modifier|*
-name|uma_slabrefcnt_t
 typedef|;
 end_typedef
 

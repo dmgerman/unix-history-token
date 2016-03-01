@@ -494,15 +494,8 @@ begin_comment
 comment|/* Zone is a Secondary Zone */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UMA_ZONE_REFCNT
-value|0x0400
-end_define
-
 begin_comment
-comment|/* Allocate refcnts in slabs */
+comment|/*				0x0400	   Unused */
 end_comment
 
 begin_define
@@ -569,7 +562,7 @@ define|#
 directive|define
 name|UMA_ZONE_INHERIT
 define|\
-value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB | UMA_ZONE_PCPU)
+value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_VTOSLAB | UMA_ZONE_PCPU)
 end_define
 
 begin_comment
@@ -1219,25 +1212,6 @@ name|zone
 parameter_list|,
 name|int
 name|itemcnt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  *	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  *	A pointer to a uint32_t reference counter.  */
-end_comment
-
-begin_function_decl
-name|uint32_t
-modifier|*
-name|uma_find_refcnt
-parameter_list|(
-name|uma_zone_t
-name|zone
-parameter_list|,
-name|void
-modifier|*
-name|item
 parameter_list|)
 function_decl|;
 end_function_decl
