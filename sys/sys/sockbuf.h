@@ -43,6 +43,12 @@ directive|include
 file|<sys/_sx.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -177,6 +183,17 @@ end_define
 
 begin_comment
 comment|/* backpressure indicator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SB_AIO_RUNNING
+value|0x2000
+end_define
+
+begin_comment
+comment|/* AIO operation running */
 end_comment
 
 begin_define
@@ -402,6 +419,19 @@ modifier|*
 name|sb_upcallarg
 decl_stmt|;
 comment|/* (a) */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kaiocb
+argument_list|)
+name|sb_aiojobq
+expr_stmt|;
+comment|/* (a) pending AIO ops */
+name|struct
+name|task
+name|sb_aiotask
+decl_stmt|;
+comment|/* AIO task */
 block|}
 struct|;
 end_struct

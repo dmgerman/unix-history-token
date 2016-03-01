@@ -1899,6 +1899,24 @@ argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+name|db_print_indent
+argument_list|(
+name|indent
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sb_aiojobq first: %p\n"
+argument_list|,
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|sb
+operator|->
+name|sb_aiojobq
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2210,19 +2228,6 @@ argument_list|,
 name|so
 operator|->
 name|so_oobmark
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"so_aiojobq first: %p\n"
-argument_list|,
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_aiojobq
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|db_print_sockbuf
