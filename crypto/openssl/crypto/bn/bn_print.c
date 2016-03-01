@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cryptlib.h"
 end_include
 
@@ -721,6 +727,14 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<=
+operator|(
+name|INT_MAX
+operator|/
+literal|4
+operator|)
+operator|&&
 name|isxdigit
 argument_list|(
 operator|(
@@ -736,7 +750,18 @@ condition|;
 name|i
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
+if|if
+condition|(
+name|i
+operator|>
+name|INT_MAX
+operator|/
+literal|4
+condition|)
+goto|goto
+name|err
+goto|;
 name|num
 operator|=
 name|i
@@ -793,7 +818,7 @@ name|ret
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* i is the number of hex digests; */
+comment|/* i is the number of hex digits */
 if|if
 condition|(
 name|bn_expand
@@ -1115,6 +1140,14 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<=
+operator|(
+name|INT_MAX
+operator|/
+literal|4
+operator|)
+operator|&&
 name|isdigit
 argument_list|(
 operator|(
@@ -1130,7 +1163,18 @@ condition|;
 name|i
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
+if|if
+condition|(
+name|i
+operator|>
+name|INT_MAX
+operator|/
+literal|4
+condition|)
+goto|goto
+name|err
+goto|;
 name|num
 operator|=
 name|i
@@ -1187,7 +1231,7 @@ name|ret
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* i is the number of digests, a bit of an over expand; */
+comment|/* i is the number of digits, a bit of an over expand */
 if|if
 condition|(
 name|bn_expand

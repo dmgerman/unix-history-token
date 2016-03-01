@@ -1228,13 +1228,6 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -serverpref   - Use server's cipher preferences (only SSLv2)\n"
-argument_list|)
-expr_stmt|;
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
 literal|" -cipher       - preferred cipher to use, use the 'openssl ciphers'\n"
 argument_list|)
 expr_stmt|;

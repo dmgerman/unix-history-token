@@ -207,6 +207,7 @@ name|BIO
 modifier|*
 name|BIO_new_mem_buf
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -287,10 +288,15 @@ name|ret
 operator|->
 name|ptr
 expr_stmt|;
+comment|/* Cast away const and trust in the MEM_RDONLY flag. */
 name|b
 operator|->
 name|data
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|b

@@ -7769,6 +7769,16 @@ argument_list|)
 condition|)
 name|ABORT
 expr_stmt|;
+comment|/*      * We have not performed precomputation so have_precompute mult should be      * false      */
+if|if
+condition|(
+name|EC_GROUP_have_precompute_mult
+argument_list|(
+name|NISTP
+argument_list|)
+condition|)
+name|ABORT
+expr_stmt|;
 comment|/* now repeat all tests with precomputation */
 if|if
 condition|(
@@ -7778,6 +7788,16 @@ argument_list|(
 name|NISTP
 argument_list|,
 name|ctx
+argument_list|)
+condition|)
+name|ABORT
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|EC_GROUP_have_precompute_mult
+argument_list|(
+name|NISTP
 argument_list|)
 condition|)
 name|ABORT

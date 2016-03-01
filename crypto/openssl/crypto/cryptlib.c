@@ -4371,11 +4371,13 @@ name|int
 name|CRYPTO_memcmp
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|in_a
 parameter_list|,
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|in_b
@@ -4388,6 +4390,7 @@ name|size_t
 name|i
 decl_stmt|;
 specifier|const
+specifier|volatile
 name|unsigned
 name|char
 modifier|*
@@ -4396,6 +4399,7 @@ init|=
 name|in_a
 decl_stmt|;
 specifier|const
+specifier|volatile
 name|unsigned
 name|char
 modifier|*
