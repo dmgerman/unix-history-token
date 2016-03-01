@@ -2090,6 +2090,9 @@ decl_stmt|;
 name|int
 name|hn_oactive
 decl_stmt|;
+name|int
+name|hn_tx_idx
+decl_stmt|;
 name|struct
 name|mtx
 name|hn_tx_lock

@@ -387,7 +387,7 @@ define|#
 directive|define
 name|HN_RNDIS_MSG_LEN
 define|\
-value|(sizeof(rndis_msg) +		\      RNDIS_VLAN_PPI_SIZE +		\      RNDIS_TSO_PPI_SIZE +		\      RNDIS_CSUM_PPI_SIZE)
+value|(sizeof(rndis_msg) +		\      RNDIS_HASH_PPI_SIZE +		\      RNDIS_VLAN_PPI_SIZE +		\      RNDIS_TSO_PPI_SIZE +		\      RNDIS_CSUM_PPI_SIZE)
 end_define
 
 begin_define
@@ -3493,6 +3493,11 @@ name|rndis_per_packet_info
 modifier|*
 name|rppi
 decl_stmt|;
+name|struct
+name|ndis_hash_info
+modifier|*
+name|hash_info
+decl_stmt|;
 name|uint32_t
 name|rndis_msg_size
 decl_stmt|;
@@ -3583,6 +3588,49 @@ name|RNDIS_MESSAGE_SIZE
 argument_list|(
 name|rndis_packet
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Set the hash info for this packet, so that the host could 	 * dispatch the TX done event for this packet back to this TX 	 * ring's channel. 	 */
+name|rndis_msg_size
+operator|+=
+name|RNDIS_HASH_PPI_SIZE
+expr_stmt|;
+name|rppi
+operator|=
+name|hv_set_rppi_data
+argument_list|(
+name|rndis_mesg
+argument_list|,
+name|RNDIS_HASH_PPI_SIZE
+argument_list|,
+name|nbl_hash_value
+argument_list|)
+expr_stmt|;
+name|hash_info
+operator|=
+operator|(
+expr|struct
+name|ndis_hash_info
+operator|*
+operator|)
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|rppi
+operator|+
+name|rppi
+operator|->
+name|per_packet_info_offset
+operator|)
+expr_stmt|;
+name|hash_info
+operator|->
+name|hash
+operator|=
+name|txr
+operator|->
+name|hn_tx_idx
 expr_stmt|;
 if|if
 condition|(
@@ -9974,6 +10022,12 @@ operator|->
 name|hn_sc
 operator|=
 name|sc
+expr_stmt|;
+name|txr
+operator|->
+name|hn_tx_idx
+operator|=
+name|id
 expr_stmt|;
 ifndef|#
 directive|ifndef
