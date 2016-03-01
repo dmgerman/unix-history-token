@@ -2013,7 +2013,7 @@ name|status
 operator|&
 name|MALO_A2HRIC_BIT_RX_RDY
 condition|)
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -2031,7 +2031,7 @@ name|status
 operator|&
 name|MALO_A2HRIC_BIT_TX_DONE
 condition|)
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->

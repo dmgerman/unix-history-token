@@ -2206,7 +2206,7 @@ name|mode
 operator|==
 name|CMCI
 condition|)
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|mca_tq
 argument_list|,
@@ -2873,7 +2873,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|mca_tq
 argument_list|,
@@ -2942,7 +2942,7 @@ if|if
 condition|(
 name|i
 condition|)
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|mca_tq
 argument_list|,

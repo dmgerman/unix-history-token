@@ -700,23 +700,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|int
-name|taskqueue_enqueue_fast
-parameter_list|(
-name|struct
-name|taskqueue
-modifier|*
-name|queue
-parameter_list|,
-name|struct
-name|task
-modifier|*
-name|task
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|taskqueue
 modifier|*

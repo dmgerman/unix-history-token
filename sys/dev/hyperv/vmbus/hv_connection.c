@@ -1140,7 +1140,7 @@ operator|->
 name|inbound
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|channel
 operator|->

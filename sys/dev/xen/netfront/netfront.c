@@ -6526,7 +6526,7 @@ name|rxq
 init|=
 name|xrxq
 decl_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|rxq
 operator|->
@@ -6558,7 +6558,7 @@ name|txq
 init|=
 name|xtxq
 decl_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|txq
 operator|->

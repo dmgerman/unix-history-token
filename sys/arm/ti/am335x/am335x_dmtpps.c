@@ -1085,7 +1085,7 @@ argument_list|,
 name|DMT_IRQ_TCAR
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
 argument_list|,

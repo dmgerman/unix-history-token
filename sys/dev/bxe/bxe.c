@@ -38838,7 +38838,7 @@ comment|/*|| more_tx*/
 condition|)
 block|{
 comment|/* still more work to do */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|fp
 operator|->
@@ -38981,7 +38981,7 @@ comment|/*|| more_tx*/
 condition|)
 block|{
 comment|/* still more work to do, bail out if this ISR and process later */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|fp
 operator|->
@@ -39210,7 +39210,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* schedule slowpath handler */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -39307,7 +39307,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* schedule slowpath handler */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->

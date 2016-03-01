@@ -4548,7 +4548,7 @@ name|reason
 operator|&
 name|AAC_DB_RESPONSE_READY
 condition|)
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
 argument_list|,
