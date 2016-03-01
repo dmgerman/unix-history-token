@@ -726,8 +726,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A31_CCM_AHB_GATING_SDMMC0
-value|(1<< 8)
+name|A31_CCM_AHB_GATING_OHCI2
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB_GATING_OHCI1
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB_GATING_OHCI0
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB_GATING_EHCI1
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB_GATING_EHCI0
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB_GATING_USBDRD
+value|(1<< 24)
 end_define
 
 begin_define
@@ -735,6 +770,13 @@ define|#
 directive|define
 name|A31_CCM_AHB_GATING_GMAC
 value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB_GATING_SDMMC0
+value|(1<< 8)
 end_define
 
 begin_define
@@ -814,6 +856,41 @@ end_define
 begin_comment
 comment|/* AHB1_RST_REG0 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB1_RST_REG0_OHCI2
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB1_RST_REG0_OHCI1
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB1_RST_REG0_OHCI0
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB1_RST_REG0_EHCI1
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_AHB1_RST_REG0_EHCI0
+value|(1<< 26)
+end_define
 
 begin_define
 define|#
@@ -967,6 +1044,73 @@ name|A31_CCM_SD_CLK_DIV_RATIO_M
 value|0xf
 end_define
 
+begin_comment
+comment|/* USB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_GATING_OHCI2
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_GATING_OHCI1
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_GATING_OHCI0
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_GATING_USBPHY2
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_GATING_USBPHY1
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_GATING_USBPHY0
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_USBPHY2_RST
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_USBPHY1_RST
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A31_CCM_USBPHY_CLK_USBPHY0_RST
+value|(1<< 0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1008,6 +1152,24 @@ name|int
 name|a31_clk_i2c_activate
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a31_clk_ehci_activate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a31_clk_ehci_deactivate
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
