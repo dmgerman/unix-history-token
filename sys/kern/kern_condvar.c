@@ -360,7 +360,8 @@ if|if
 condition|(
 name|cold
 operator|||
-name|panicstr
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return.  Don't run any other 		 * thread or panic below, in case this is the idle 		 * process and already asleep. 		 */
@@ -638,7 +639,8 @@ if|if
 condition|(
 name|cold
 operator|||
-name|panicstr
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return.  Don't run any other 		 * thread or panic below, in case this is the idle 		 * process and already asleep. 		 */
@@ -860,7 +862,8 @@ if|if
 condition|(
 name|cold
 operator|||
-name|panicstr
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * procs or panic below, in case this is the idle process and 		 * already asleep. 		 */
@@ -1160,7 +1163,8 @@ if|if
 condition|(
 name|cold
 operator|||
-name|panicstr
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * thread or panic below, in case this is the idle process and 		 * already asleep. 		 */
@@ -1467,7 +1471,8 @@ if|if
 condition|(
 name|cold
 operator|||
-name|panicstr
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * thread or panic below, in case this is the idle process and 		 * already asleep. 		 */
