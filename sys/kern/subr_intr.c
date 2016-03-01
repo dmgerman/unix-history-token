@@ -2880,6 +2880,9 @@ name|isrc_table_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure that we do not mix the two ways 	 * how we handle interrupt sources. Let contested event wins. 	 */
+ifdef|#
+directive|ifdef
+name|INTR_SOLO
 if|if
 condition|(
 name|isrc
@@ -2895,6 +2898,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|isrc
+operator|->
+name|isrc_event
+operator|!=
+name|NULL
+condition|)
+block|{
+endif|#
+directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2938,19 +2954,10 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|notyet
-end_ifdef
-
-begin_comment
 comment|/*  *  Destroy interrupt event for interrupt source.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|isrc_event_destroy
@@ -3002,18 +3009,9 @@ name|ie
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  *  Add handler to interrupt source.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|isrc_add_handler
@@ -3134,13 +3132,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Lookup interrupt controller locked.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|intr_pic
@@ -3211,13 +3203,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Lookup interrupt controller.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|intr_pic
@@ -3263,13 +3249,7 @@ name|pic
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Create interrupt controller.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|intr_pic
@@ -3373,19 +3353,10 @@ name|pic
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|notyet
-end_ifdef
-
-begin_comment
 comment|/*  *  Destroy interrupt controller.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pic_destroy
@@ -3458,18 +3429,9 @@ name|M_INTRNG
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  *  Register interrupt controller.  */
-end_comment
-
-begin_function
 name|int
 name|intr_pic_register
 parameter_list|(
@@ -3539,13 +3501,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Unregister interrupt controller.  */
-end_comment
-
-begin_function
 name|int
 name|intr_pic_unregister
 parameter_list|(
@@ -3564,13 +3520,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Mark interrupt controller (itself) as a root one.  *  *  Note that only an interrupt controller can really know its position  *  in interrupt controller's tree. So root PIC must claim itself as a root.  *  *  In FDT case, according to ePAPR approved version 1.1 from 08 April 2011,  *  page 30:  *    "The root of the interrupt tree is determined when traversal  *     of the interrupt tree reaches an interrupt controller node without  *     an interrupts property and thus no explicit interrupt parent."  */
-end_comment
-
-begin_function
 name|int
 name|intr_pic_claim_root
 parameter_list|(
@@ -3791,9 +3741,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|intr_irq_add_handler
 parameter_list|(
@@ -4072,9 +4019,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|intr_irq_remove_handler
 parameter_list|(
@@ -4121,6 +4065,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INTR_SOLO
 if|if
 condition|(
 name|isrc
@@ -4202,6 +4149,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|isrc
@@ -4287,9 +4236,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|intr_irq_config
 parameter_list|(
@@ -4361,9 +4307,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|intr_irq_describe
 parameter_list|(
@@ -4412,6 +4355,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INTR_SOLO
 if|if
 condition|(
 name|isrc
@@ -4457,6 +4403,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|intr_event_describe_handler
@@ -4501,15 +4449,9 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SMP
-end_ifdef
-
-begin_function
 name|int
 name|intr_irq_bind
 parameter_list|(
@@ -4549,6 +4491,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INTR_SOLO
 if|if
 condition|(
 name|isrc
@@ -4567,6 +4512,8 @@ name|cpu
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|intr_event_bind
@@ -4580,13 +4527,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Return the CPU that the next interrupt source should use.  * For now just returns the next CPU according to round-robin.  */
-end_comment
-
-begin_function
 name|u_int
 name|intr_irq_next_cpu
 parameter_list|(
@@ -4648,13 +4589,7 @@ name|last_cpu
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Distribute all the interrupt sources among the available  *  CPUs once the AP's have been launched.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|intr_irq_shuffle
@@ -4818,9 +4753,6 @@ name|isrc_table_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|intr_irq_shuffle
@@ -4834,14 +4766,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_function
 name|u_int
 name|intr_irq_next_cpu
 parameter_list|(
@@ -4862,42 +4788,24 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function_decl
 name|void
 name|dosoftints
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
+argument_list|)
+decl_stmt|;
 name|void
 name|dosoftints
 parameter_list|(
 name|void
 parameter_list|)
 block|{ }
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SMP
-end_ifdef
-
-begin_comment
 comment|/*  *  Init interrupt controller on another CPU.  */
-end_comment
-
-begin_function
 name|void
 name|intr_pic_init_secondary
 parameter_list|(
@@ -4926,29 +4834,17 @@ argument_list|)
 expr_stmt|;
 comment|//mtx_unlock(&isrc_table_lock);
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
-end_ifdef
-
-begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
 argument|irqs
 argument_list|,
 argument|db_show_irqs
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|u_int
 name|i
@@ -5047,7 +4943,7 @@ name|irqsum
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

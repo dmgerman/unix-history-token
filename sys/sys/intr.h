@@ -211,10 +211,15 @@ name|intr_event
 modifier|*
 name|isrc_event
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INTR_SOLO
 name|intr_irq_filter_t
 modifier|*
 name|isrc_filter
 decl_stmt|;
+endif|#
+directive|endif
 name|intr_ipi_filter_t
 modifier|*
 name|isrc_ipifilter
