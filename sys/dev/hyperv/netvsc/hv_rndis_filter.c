@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -1569,7 +1575,9 @@ name|request
 operator|->
 name|wait_sema
 argument_list|,
-literal|500
+literal|5
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 if|if
@@ -2622,7 +2630,9 @@ name|request
 operator|->
 name|wait_sema
 argument_list|,
-literal|500
+literal|5
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 if|if
