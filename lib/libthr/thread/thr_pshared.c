@@ -254,6 +254,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Among all processes sharing a lock only one executes  * pthread_lock_destroy().  Other processes still have the hash and  * mapped off-page.  *  * Mitigate the problem by checking the liveness of all hashed keys  * periodically.  Right now this is executed on each  * pthread_lock_destroy(), but may be done less often if found to be  * too time-consuming.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -486,6 +490,7 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
+comment|/* 		 * When the key already exists in the hash, we should 		 * return either the new (just mapped) or old (hashed) 		 * val, and the other val should be unmapped to avoid 		 * address space leak. 		 * 		 * If two threads perform lock of the same object 		 * which is not yet stored in the pshared_hash, then 		 * the val already inserted by the first thread should 		 * be returned, and the second val freed (order is by 		 * the pshared_lock()).  Otherwise, if we unmap the 		 * value obtained from the hash, the first thread 		 * might operate on an unmapped off-page object. 		 * 		 * There is still an issue: if hashed key was unmapped 		 * and then other page is mapped at the same key 		 * address, the hash would return the old val.  I 		 * decided to handle the race of simultaneous hash 		 * insertion, leaving the unlikely remap problem 		 * unaddressed. 		 */
 if|if
 condition|(
 name|h
