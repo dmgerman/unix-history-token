@@ -255,7 +255,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fmtstr
 parameter_list|(
 name|char
@@ -287,7 +287,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fmtint
 parameter_list|(
 name|char
@@ -319,7 +319,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fmtfp
 parameter_list|(
 name|char
@@ -349,7 +349,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|doapr_outch
 parameter_list|(
 name|char
@@ -373,7 +373,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|_dopr
 parameter_list|(
 name|char
@@ -582,7 +582,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|_dopr
 parameter_list|(
 name|char
@@ -718,7 +718,10 @@ name|state
 operator|=
 name|DP_S_FLAGS
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -732,7 +735,10 @@ name|maxlen
 argument_list|,
 name|ch
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|ch
 operator|=
 operator|*
@@ -1160,6 +1166,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
 name|fmtint
 argument_list|(
 name|sbuffer
@@ -1181,7 +1190,10 @@ name|max
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'X'
@@ -1271,6 +1283,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
 name|fmtint
 argument_list|(
 name|sbuffer
@@ -1306,7 +1321,10 @@ name|max
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'f'
@@ -1336,6 +1354,9 @@ argument_list|,
 name|double
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fmtfp
 argument_list|(
 name|sbuffer
@@ -1355,7 +1376,10 @@ name|max
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'E'
@@ -1432,6 +1456,9 @@ break|break;
 case|case
 literal|'c'
 case|:
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1450,7 +1477,10 @@ argument_list|,
 name|int
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'s'
@@ -1487,6 +1517,9 @@ operator|*
 name|maxlen
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|fmtstr
 argument_list|(
 name|sbuffer
@@ -1506,7 +1539,10 @@ name|min
 argument_list|,
 name|max
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'p'
@@ -1524,6 +1560,9 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fmtint
 argument_list|(
 name|sbuffer
@@ -1547,7 +1586,10 @@ name|flags
 operator||
 name|DP_F_NUM
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'n'
@@ -1671,6 +1713,9 @@ break|break;
 case|case
 literal|'%'
 case|:
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1684,7 +1729,10 @@ name|maxlen
 argument_list|,
 name|ch
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'w'
@@ -1757,6 +1805,9 @@ name|maxlen
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1770,7 +1821,10 @@ name|maxlen
 argument_list|,
 literal|'\0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|*
 name|retlen
 operator|=
@@ -1778,13 +1832,15 @@ name|currlen
 operator|-
 literal|1
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fmtstr
 parameter_list|(
 name|char
@@ -1822,7 +1878,8 @@ parameter_list|)
 block|{
 name|int
 name|padlen
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|strln
 decl_stmt|;
 name|int
@@ -1840,21 +1897,23 @@ name|value
 operator|=
 literal|"<NULL>"
 expr_stmt|;
-for|for
-control|(
 name|strln
 operator|=
-literal|0
-init|;
+name|strlen
+argument_list|(
 name|value
-index|[
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|strln
-index|]
-condition|;
-operator|++
+operator|>
+name|INT_MAX
+condition|)
 name|strln
-control|)
-empty_stmt|;
+operator|=
+name|INT_MAX
+expr_stmt|;
 name|padlen
 operator|=
 name|min
@@ -1863,6 +1922,10 @@ name|strln
 expr_stmt|;
 if|if
 condition|(
+name|min
+operator|<
+literal|0
+operator|||
 name|padlen
 operator|<
 literal|0
@@ -1897,6 +1960,9 @@ name|max
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1909,7 +1975,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -1929,6 +1998,9 @@ name|max
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1943,7 +2015,10 @@ operator|*
 name|value
 operator|++
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|cnt
 expr_stmt|;
@@ -1963,6 +2038,9 @@ name|max
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1975,7 +2053,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|padlen
 expr_stmt|;
@@ -1983,12 +2064,15 @@ operator|++
 name|cnt
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fmtint
 parameter_list|(
 name|char
@@ -2336,6 +2420,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2348,7 +2435,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|spadlen
 expr_stmt|;
@@ -2358,6 +2448,9 @@ if|if
 condition|(
 name|signvalue
 condition|)
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2370,7 +2463,10 @@ name|maxlen
 argument_list|,
 name|signvalue
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 comment|/* prefix */
 while|while
 condition|(
@@ -2378,6 +2474,9 @@ operator|*
 name|prefix
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2391,7 +2490,10 @@ argument_list|,
 operator|*
 name|prefix
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|prefix
 operator|++
 expr_stmt|;
@@ -2411,6 +2513,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2423,7 +2528,10 @@ name|maxlen
 argument_list|,
 literal|'0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|zpadlen
 expr_stmt|;
@@ -2436,6 +2544,10 @@ name|place
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2452,7 +2564,11 @@ operator|--
 name|place
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 comment|/* left justified spaces */
 while|while
 condition|(
@@ -2461,6 +2577,9 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2473,12 +2592,17 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|spadlen
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2588,7 +2712,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fmtfp
 parameter_list|(
 name|char
@@ -2966,6 +3090,9 @@ condition|(
 name|signvalue
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2978,7 +3105,10 @@ name|maxlen
 argument_list|,
 name|signvalue
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -2994,6 +3124,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3006,7 +3139,10 @@ name|maxlen
 argument_list|,
 literal|'0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -3019,6 +3155,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3031,7 +3170,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -3039,7 +3181,8 @@ block|}
 if|if
 condition|(
 name|signvalue
-condition|)
+operator|&&
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3052,13 +3195,20 @@ name|maxlen
 argument_list|,
 name|signvalue
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|iplace
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3075,7 +3225,11 @@ operator|--
 name|iplace
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 comment|/*      * Decimal point. This should probably use locale to find the correct      * char to print out.      */
 if|if
 condition|(
@@ -3090,6 +3244,9 @@ name|DP_F_NUM
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3102,13 +3259,20 @@ name|maxlen
 argument_list|,
 literal|'.'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|fplace
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3125,7 +3289,11 @@ operator|--
 name|fplace
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 block|}
 while|while
 condition|(
@@ -3134,6 +3302,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3146,7 +3317,10 @@ name|maxlen
 argument_list|,
 literal|'0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|zpadlen
 expr_stmt|;
@@ -3158,6 +3332,9 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3170,17 +3347,30 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|padlen
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|BUFFER_INC
+value|1024
+end_define
+
 begin_function
 specifier|static
-name|void
+name|int
 name|doapr_outch
 parameter_list|(
 name|char
@@ -3239,10 +3429,22 @@ operator|*
 name|maxlen
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|maxlen
+operator|>
+name|INT_MAX
+operator|-
+name|BUFFER_INC
+condition|)
+return|return
+literal|0
+return|;
 operator|*
 name|maxlen
 operator|+=
-literal|1024
+name|BUFFER_INC
 expr_stmt|;
 if|if
 condition|(
@@ -3263,14 +3465,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|*
 name|buffer
+operator|==
+name|NULL
 condition|)
-block|{
-comment|/* Panic! Can't really do anything sensible. Just return */
-return|return;
-block|}
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|*
@@ -3308,8 +3510,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|buffer
+name|char
+modifier|*
+name|tmpbuf
+decl_stmt|;
+name|tmpbuf
 operator|=
 name|OPENSSL_realloc
 argument_list|(
@@ -3322,14 +3527,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|tmpbuf
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 operator|*
 name|buffer
-condition|)
-block|{
-comment|/* Panic! Can't really do anything sensible. Just return */
-return|return;
-block|}
+operator|=
+name|tmpbuf
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -3382,7 +3591,9 @@ operator|)
 name|c
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -3507,6 +3718,9 @@ argument_list|(
 literal|"doapr()"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|_dopr
 argument_list|(
 operator|&
@@ -3528,7 +3742,18 @@ name|format
 argument_list|,
 name|args
 argument_list|)
+condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|dynbuf
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|dynbuf
@@ -3670,6 +3895,9 @@ decl_stmt|;
 name|int
 name|truncated
 decl_stmt|;
+if|if
+condition|(
+operator|!
 name|_dopr
 argument_list|(
 operator|&
@@ -3690,7 +3918,11 @@ name|format
 argument_list|,
 name|args
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|truncated

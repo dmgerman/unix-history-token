@@ -85,6 +85,7 @@ typedef|typedef
 struct|struct
 name|SRP_user_pwd_st
 block|{
+comment|/* Owned by us. */
 name|char
 modifier|*
 name|id
@@ -97,6 +98,7 @@ name|BIGNUM
 modifier|*
 name|v
 decl_stmt|;
+comment|/* Not owned by us. */
 specifier|const
 name|BIGNUM
 modifier|*
@@ -107,6 +109,7 @@ name|BIGNUM
 modifier|*
 name|N
 decl_stmt|;
+comment|/* Owned by us. */
 name|char
 modifier|*
 name|info
@@ -118,6 +121,14 @@ name|DECLARE_STACK_OF
 argument_list|(
 argument|SRP_user_pwd
 argument_list|)
+name|void
+name|SRP_user_pwd_free
+parameter_list|(
+name|SRP_user_pwd
+modifier|*
+name|user_pwd
+parameter_list|)
+function_decl|;
 typedef|typedef
 struct|struct
 name|SRP_VBASE_st
@@ -205,9 +216,24 @@ modifier|*
 name|verifier_file
 parameter_list|)
 function_decl|;
+comment|/* This method ignores the configured seed and fails for an unknown user. */
 name|SRP_user_pwd
 modifier|*
 name|SRP_VBASE_get_by_user
+parameter_list|(
+name|SRP_VBASE
+modifier|*
+name|vb
+parameter_list|,
+name|char
+modifier|*
+name|username
+parameter_list|)
+function_decl|;
+comment|/* NOTE: unlike in SRP_VBASE_get_by_user, caller owns the returned pointer.*/
+name|SRP_user_pwd
+modifier|*
+name|SRP_VBASE_get1_by_user
 parameter_list|(
 name|SRP_VBASE
 modifier|*

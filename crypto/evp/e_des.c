@@ -88,10 +88,11 @@ parameter_list|,
 name|size_t
 parameter_list|,
 specifier|const
-name|void
+name|DES_key_schedule
 modifier|*
 parameter_list|,
-name|void
+name|unsigned
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -125,7 +126,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/* ---------^^^ this is not a typo, just a way to detect that  * assembler support was in general requested... */
+comment|/* ----------^^^ this is not a typo, just a way to detect that  * assembler support was in general requested... */
 end_comment
 
 begin_include
@@ -182,6 +183,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
 name|DES_key_schedule
 modifier|*
 name|ks
@@ -212,6 +214,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
 name|DES_key_schedule
 modifier|*
 name|ks
@@ -502,6 +505,8 @@ operator|->
 name|stream
 operator|.
 name|cbc
+operator|!=
+name|NULL
 condition|)
 block|{
 call|(

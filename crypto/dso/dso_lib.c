@@ -309,6 +309,13 @@ name|ret
 argument_list|)
 condition|)
 block|{
+name|sk_void_free
+argument_list|(
+name|ret
+operator|->
+name|meth_data
+argument_list|)
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|ret

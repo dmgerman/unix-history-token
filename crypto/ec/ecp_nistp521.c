@@ -13700,12 +13700,8 @@ name|g_pre_comp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
 goto|goto
-name|err
+name|done
 goto|;
 block|}
 if|if
@@ -14512,6 +14508,8 @@ argument_list|,
 name|tmp_felems
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 if|if
 condition|(
 operator|!
