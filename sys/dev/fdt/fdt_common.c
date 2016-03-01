@@ -3259,6 +3259,12 @@ name|mrcnt
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|memsize
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|memsize
 operator|=

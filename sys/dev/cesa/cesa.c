@@ -8074,9 +8074,6 @@ name|cr
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_long
-name|memsize
-decl_stmt|;
 comment|/* Grab physical memory regions information from DTS */
 if|if
 condition|(
@@ -8087,8 +8084,7 @@ argument_list|,
 operator|&
 name|availmem_regions_sz
 argument_list|,
-operator|&
-name|memsize
+name|NULL
 argument_list|)
 operator|!=
 literal|0

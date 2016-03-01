@@ -4271,9 +4271,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|u_long
-name|memsize
-decl_stmt|;
 name|uint32_t
 name|valid_win_num
 init|=
@@ -4289,8 +4286,7 @@ argument_list|,
 operator|&
 name|mr_cnt
 argument_list|,
-operator|&
-name|memsize
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
