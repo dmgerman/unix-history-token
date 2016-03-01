@@ -946,6 +946,24 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__riscv__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LG_QUANTUM
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__s390__
 end_ifdef
 
