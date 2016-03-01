@@ -6903,7 +6903,7 @@ name|l2_start
 decl_stmt|,
 name|lastaddr
 decl_stmt|;
-name|u_long
+name|uint64_t
 name|memsize
 decl_stmt|;
 name|uint32_t
