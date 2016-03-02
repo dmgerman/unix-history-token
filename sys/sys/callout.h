@@ -200,6 +200,32 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Flags for callout_stop_safe() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CS_DRAIN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* callout_drain(), wait allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CS_MIGRBLOCK
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Block migration, return value 					  indicates that the callout was 				          executing */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -237,7 +263,7 @@ name|callout_drain
 parameter_list|(
 name|c
 parameter_list|)
-value|_callout_stop_safe(c, 1, NULL)
+value|_callout_stop_safe(c, CS_DRAIN, NULL)
 end_define
 
 begin_function_decl
