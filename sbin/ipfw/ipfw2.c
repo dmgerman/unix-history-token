@@ -3557,7 +3557,7 @@ block|}
 if|if
 condition|(
 name|code
-operator|>
+operator|>=
 literal|32
 condition|)
 operator|*
