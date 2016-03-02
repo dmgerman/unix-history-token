@@ -71,6 +71,19 @@ end_function_decl
 
 begin_function_decl
 name|uint64_t
+name|range_addr_phys_to_pci
+parameter_list|(
+name|struct
+name|pcie_range
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
 name|range_addr_pci_to_phys
 parameter_list|(
 name|struct
