@@ -537,9 +537,12 @@ comment|/* Follow same locking order as filemon_pid_check. */
 name|filemon_lock_write
 argument_list|()
 expr_stmt|;
-name|filemon_filemon_lock
+name|sx_xlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Remove from the in-use list. */
@@ -583,9 +586,12 @@ name|link
 argument_list|)
 expr_stmt|;
 comment|/* Give up write access. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|filemon_unlock_write
@@ -676,9 +682,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|filemon_filemon_lock
+name|sx_xlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -799,9 +808,12 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return

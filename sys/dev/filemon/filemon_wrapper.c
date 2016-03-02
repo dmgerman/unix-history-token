@@ -264,9 +264,12 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-name|filemon_filemon_lock
+name|sx_xlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|filemon_unlock_read
@@ -422,10 +425,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -549,10 +554,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -744,10 +751,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1012,10 +1021,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1171,10 +1182,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1330,10 +1343,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1489,10 +1504,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1648,10 +1665,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1782,10 +1801,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1935,10 +1956,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2106,10 +2129,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2234,10 +2259,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2334,10 +2361,12 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Unlock the found filemon structure. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
