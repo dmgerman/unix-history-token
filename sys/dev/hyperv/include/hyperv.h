@@ -2053,6 +2053,10 @@ name|void
 modifier|*
 name|hv_chan_priv2
 decl_stmt|;
+name|void
+modifier|*
+name|hv_chan_priv3
+decl_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;

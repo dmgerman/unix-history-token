@@ -1649,12 +1649,6 @@ comment|/* Negotiated NVSP version */
 name|uint32_t
 name|nvsp_version
 decl_stmt|;
-name|uint8_t
-name|callback_buf
-index|[
-name|NETVSC_PACKET_SIZE
-index|]
-decl_stmt|;
 block|}
 name|netvsc_dev
 typedef|;
