@@ -8019,7 +8019,7 @@ do|;
 block|}
 else|else
 block|{
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
