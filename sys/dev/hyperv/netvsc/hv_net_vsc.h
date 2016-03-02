@@ -2267,24 +2267,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|hv_nv_on_receive_completion
-parameter_list|(
-name|struct
-name|hv_device
-modifier|*
-name|device
-parameter_list|,
-name|uint64_t
-name|tid
-parameter_list|,
-name|uint32_t
-name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|netvsc_dev
 modifier|*
 name|hv_nv_on_device_add

@@ -200,6 +200,25 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|hv_nv_on_receive_completion
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|uint64_t
+name|tid
+parameter_list|,
+name|uint32_t
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|hv_nv_on_receive
 parameter_list|(
 name|netvsc_dev
@@ -3339,7 +3358,7 @@ block|}
 comment|/* 	 * Moved completion call back here so that all received  	 * messages (not just data messages) will trigger a response 	 * message back to the host. 	 */
 name|hv_nv_on_receive_completion
 argument_list|(
-name|device
+name|chan
 argument_list|,
 name|vm_xfer_page_pkt
 operator|->
@@ -3358,13 +3377,14 @@ comment|/*  * Net VSC on receive completion  *  * Send a receive completion pack
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|hv_nv_on_receive_completion
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device
+name|chan
 parameter_list|,
 name|uint64_t
 name|tid
@@ -3414,9 +3434,7 @@ name|ret
 operator|=
 name|hv_vmbus_channel_send_packet
 argument_list|(
-name|device
-operator|->
-name|channel
+name|chan
 argument_list|,
 operator|&
 name|rx_comp_msg
