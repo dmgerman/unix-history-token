@@ -216,6 +216,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|powerpc_intr_mask
+parameter_list|(
+name|u_int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|powerpc_intr_unmask
+parameter_list|(
+name|u_int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

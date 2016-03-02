@@ -3050,7 +3050,7 @@ name|p_pwait
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * We disable setuid/setgid/etc in compatibility mode on the basis 	 * that most setugid applications are not written with that 	 * environment in mind, and will therefore almost certainly operate 	 * incorrectly. In principle there's no reason that setugid 	 * applications might not be useful in capability mode, so we may want 	 * to reconsider this conservative design choice in the future. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
+comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * We disable setuid/setgid/etc in capability mode on the basis 	 * that most setugid applications are not written with that 	 * environment in mind, and will therefore almost certainly operate 	 * incorrectly. In principle there's no reason that setugid 	 * applications might not be useful in capability mode, so we may want 	 * to reconsider this conservative design choice in the future. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
 name|credential_changing
 operator|=
 literal|0

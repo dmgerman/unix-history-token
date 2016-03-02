@@ -29,6 +29,29 @@ directive|include
 file|<sys/linker.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -285,11 +308,8 @@ name|e_entry
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Kernel entry at 0x%x...\n"
+literal|"Kernel entry at 0x%p...\n"
 argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|entry
 argument_list|)
 expr_stmt|;

@@ -29,19 +29,19 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSICUM
+name|HAVE_CAPSPER
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<libcapsicum.h>
+file|<libcasper.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<libcapsicum_dns.h>
+file|<casper/cap_dns.h>
 end_include
 
 begin_endif
@@ -50,7 +50,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CAPSICUM */
+comment|/* HAVE_CAPSPER */
 end_comment
 
 begin_include
@@ -904,7 +904,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSICUM
+name|HAVE_CAPSPER
 end_ifdef
 
 begin_decl_stmt
@@ -1045,7 +1045,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSICUM
+name|HAVE_CAPSPER
 if|if
 condition|(
 name|capdns
@@ -1345,7 +1345,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSICUM
+name|HAVE_CAPSPER
 if|if
 condition|(
 name|capdns

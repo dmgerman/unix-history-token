@@ -253,7 +253,7 @@ name|aha
 operator|->
 name|port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -261,11 +261,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|port_rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|AHA_NREGS
 argument_list|,
@@ -579,7 +574,7 @@ name|aha
 operator|->
 name|port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -589,11 +584,6 @@ operator|&
 name|aha
 operator|->
 name|portrid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|AHA_NREGS
 argument_list|,

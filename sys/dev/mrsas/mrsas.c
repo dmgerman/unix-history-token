@@ -6097,7 +6097,22 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|sc
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"There is no Controller number %d\n"
+argument_list|,
+name|user_ioc
+operator|->
+name|host_no
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|user_ioc
 operator|->
 name|host_no
@@ -6105,20 +6120,6 @@ operator|>=
 name|mrsas_mgmt_info
 operator|.
 name|max_index
-operator|)
-operator|||
-operator|(
-name|sc
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
 condition|)
 name|mrsas_dprint
 argument_list|(
@@ -6126,28 +6127,13 @@ name|sc
 argument_list|,
 name|MRSAS_FAULT
 argument_list|,
-literal|"There is no Controller number %d .\n"
+literal|"Invalid Controller number %d\n"
 argument_list|,
 name|user_ioc
 operator|->
 name|host_no
 argument_list|)
 expr_stmt|;
-else|else
-name|mrsas_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MRSAS_FAULT
-argument_list|,
-literal|"Invalid Controller number %d .\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|host_no
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 name|sc
@@ -18499,16 +18485,13 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
+operator|==
+name|NULL
 condition|)
 block|{
-name|device_printf
+name|printf
 argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
 literal|"invalid instance!\n"
 argument_list|)
 expr_stmt|;

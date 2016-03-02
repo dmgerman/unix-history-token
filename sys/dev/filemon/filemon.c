@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/condvar.h>
 end_include
 
@@ -142,25 +148,6 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/capsicum.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -550,9 +537,12 @@ comment|/* Follow same locking order as filemon_pid_check. */
 name|filemon_lock_write
 argument_list|()
 expr_stmt|;
-name|filemon_filemon_lock
+name|sx_xlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Remove from the in-use list. */
@@ -596,9 +586,12 @@ name|link
 argument_list|)
 expr_stmt|;
 comment|/* Give up write access. */
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|filemon_unlock_write
@@ -662,16 +655,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
 name|cap_rights_t
 name|rights
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -696,9 +682,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|filemon_filemon_lock
+name|sx_xlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -740,11 +729,6 @@ operator|*
 operator|)
 name|data
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -753,8 +737,6 @@ argument_list|,
 name|CAP_PWRITE
 argument_list|)
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|filemon
 operator|->
@@ -826,9 +808,12 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|filemon_filemon_unlock
+name|sx_xunlock
 argument_list|(
+operator|&
 name|filemon
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return

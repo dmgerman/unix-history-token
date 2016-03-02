@@ -1483,7 +1483,7 @@ expr_stmt|;
 operator|*
 name|iohp
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1491,11 +1491,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|port_rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|BSHW_IOSZ
 argument_list|,
@@ -1542,7 +1537,7 @@ expr_stmt|;
 operator|*
 name|memhp
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1550,11 +1545,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|mem_rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|BSHW_MEMSZ
 argument_list|,

@@ -4502,6 +4502,15 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|SSL_in_init
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
 return|return
 name|s
 operator|->
@@ -4512,6 +4521,21 @@ argument_list|(
 name|s
 argument_list|)
 return|;
+block|}
+else|else
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL_SHUTDOWN
+argument_list|,
+name|SSL_R_SHUTDOWN_WHILE_IN_INIT
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 end_function
 
@@ -9561,6 +9585,19 @@ operator|->
 name|options
 operator||=
 name|SSL_OP_LEGACY_SERVER_CONNECT
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*      * Disable SSLv2 by default, callers that want to enable SSLv2 will have to      * explicitly clear this option via either of SSL_CTX_clear_options() or      * SSL_clear_options().      */
+end_comment
+
+begin_expr_stmt
+name|ret
+operator|->
+name|options
+operator||=
+name|SSL_OP_NO_SSLv2
 expr_stmt|;
 end_expr_stmt
 

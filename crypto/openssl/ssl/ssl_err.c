@@ -1077,15 +1077,6 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
-name|SSL_F_SSL3_SHUTDOWN
-argument_list|)
-block|,
-literal|"ssl3_shutdown"
-block|}
-block|,
-block|{
-name|ERR_FUNC
-argument_list|(
 name|SSL_F_SSL3_WRITE_BYTES
 argument_list|)
 block|,

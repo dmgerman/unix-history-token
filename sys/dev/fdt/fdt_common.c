@@ -2967,7 +2967,7 @@ name|int
 modifier|*
 name|mrcnt
 parameter_list|,
-name|uint32_t
+name|uint64_t
 modifier|*
 name|memsize
 parameter_list|)
@@ -2987,7 +2987,7 @@ decl_stmt|;
 name|phandle_t
 name|memory
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|memory_size
 decl_stmt|;
 name|int
@@ -3259,6 +3259,12 @@ name|mrcnt
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|memsize
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|memsize
 operator|=

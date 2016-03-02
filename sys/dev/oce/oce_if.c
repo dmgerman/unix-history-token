@@ -3189,7 +3189,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|ii
 operator|->
@@ -5179,7 +5179,7 @@ argument_list|)
 condition|)
 endif|#
 directive|endif
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_swi
 argument_list|,

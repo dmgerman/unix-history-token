@@ -174,7 +174,7 @@ name|sc
 operator|->
 name|sc_mem_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -184,11 +184,6 @@ operator|&
 name|sc
 operator|->
 name|sc_mem_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|SIPROBEALLOC
 argument_list|,

@@ -1242,14 +1242,13 @@ return|;
 comment|/* We only support default allocations. */
 if|if
 condition|(
+operator|!
+name|RMAN_IS_DEFAULT_RANGE
+argument_list|(
 name|start
-operator|!=
-literal|0UL
-operator|||
+argument_list|,
 name|end
-operator|!=
-operator|~
-literal|0UL
+argument_list|)
 condition|)
 return|return
 operator|(

@@ -358,7 +358,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint64_t
 modifier|*
 parameter_list|)
 function_decl|;

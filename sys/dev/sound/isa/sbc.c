@@ -1561,7 +1561,7 @@ else|#
 directive|else
 name|io
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1569,11 +1569,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 literal|16
 argument_list|,
@@ -3866,7 +3861,7 @@ index|[
 name|i
 index|]
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|scp
 operator|->
@@ -3881,11 +3876,6 @@ name|io_rid
 index|[
 name|i
 index|]
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|io_range
 index|[

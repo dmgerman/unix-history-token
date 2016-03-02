@@ -644,7 +644,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -657,11 +657,6 @@ name|io_rid
 index|[
 literal|0
 index|]
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 literal|0x40
 argument_list|,
@@ -684,7 +679,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -697,11 +692,6 @@ name|io_rid
 index|[
 literal|0
 index|]
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 literal|0x44
 argument_list|,

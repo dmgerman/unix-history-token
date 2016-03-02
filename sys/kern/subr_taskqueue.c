@@ -3364,36 +3364,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* NB: for backwards compatibility */
-end_comment
-
-begin_function
-name|int
-name|taskqueue_enqueue_fast
-parameter_list|(
-name|struct
-name|taskqueue
-modifier|*
-name|queue
-parameter_list|,
-name|struct
-name|task
-modifier|*
-name|task
-parameter_list|)
-block|{
-return|return
-name|taskqueue_enqueue
-argument_list|(
-name|queue
-argument_list|,
-name|task
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 specifier|static
 name|void

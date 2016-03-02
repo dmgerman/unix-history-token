@@ -463,7 +463,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_CQE_THRESH
-value|0
+value|32
 end_define
 
 begin_define
@@ -635,7 +635,7 @@ begin_define
 define|#
 directive|define
 name|NICVF_TXBUF_MAXSIZE
-value|9212
+value|NIC_HW_MAX_FRS
 end_define
 
 begin_comment
@@ -652,6 +652,31 @@ end_define
 begin_comment
 comment|/* Single command is at most 256 buffers 					   (hdr + 255 subcmds) */
 end_comment
+
+begin_comment
+comment|/* TSO-related definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NICVF_TSO_MAXSIZE
+value|IP_MAXPACKET
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TSO_NSEGS
+value|NICVF_TXBUF_NSEGS
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TSO_HEADER_SIZE
+value|128
+end_define
 
 begin_comment
 comment|/* Queue enable/disable */
@@ -1135,6 +1160,13 @@ decl_stmt|;
 name|struct
 name|rx_tx_queue_stats
 name|stats
+decl_stmt|;
+name|boolean_t
+name|lro_enabled
+decl_stmt|;
+name|struct
+name|lro_ctrl
+name|lro
 decl_stmt|;
 block|}
 name|__aligned
@@ -1632,6 +1664,21 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nicvf_tx_mbuf_locked
+parameter_list|(
+name|struct
+name|snd_queue
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

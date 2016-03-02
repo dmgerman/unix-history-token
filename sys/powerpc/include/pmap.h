@@ -1001,6 +1001,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|pmap_change_attr
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|,
+name|vm_memattr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pmap_deactivate
 parameter_list|(

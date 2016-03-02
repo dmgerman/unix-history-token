@@ -8332,7 +8332,7 @@ argument_list|,
 literal|0x0000
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
 argument_list|,

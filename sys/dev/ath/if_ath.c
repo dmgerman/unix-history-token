@@ -23943,7 +23943,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"AR%s mac %d.%d RF%s phy %d.%d\n"
+literal|"%s mac %d.%d RF%s phy %d.%d\n"
 argument_list|,
 name|ath_hal_mac_name
 argument_list|(

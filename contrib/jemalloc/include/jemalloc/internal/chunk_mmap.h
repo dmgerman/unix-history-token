@@ -52,6 +52,10 @@ name|void
 modifier|*
 name|chunk_alloc_mmap
 parameter_list|(
+name|void
+modifier|*
+name|new_addr
+parameter_list|,
 name|size_t
 name|size
 parameter_list|,

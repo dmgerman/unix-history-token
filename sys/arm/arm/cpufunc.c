@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -1317,6 +1323,14 @@ name|cputype
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<=
+literal|5
+end_if
+
 begin_decl_stmt
 name|u_int
 name|cpu_reset_needs_v4_MMU_disable
@@ -1324,8 +1338,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* flag used in locore.s */
+comment|/* flag used in locore-v4.s */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2260,11 +2279,6 @@ name|cpufuncs
 operator|=
 name|arm1176_cpufuncs
 expr_stmt|;
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;
@@ -2357,11 +2371,6 @@ name|cpufuncs
 operator|=
 name|cortexa_cpufuncs
 expr_stmt|;
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* V4 or higher */
 name|get_cachetype_cp15
 argument_list|()
 expr_stmt|;

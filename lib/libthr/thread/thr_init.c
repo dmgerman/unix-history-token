@@ -344,7 +344,12 @@ operator|.
 name|m_ceiling
 operator|=
 literal|0
-block|}
+block|,
+operator|.
+name|m_pshared
+operator|=
+name|PTHREAD_PROCESS_PRIVATE
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -368,7 +373,12 @@ operator|.
 name|m_ceiling
 operator|=
 literal|0
-block|}
+block|,
+operator|.
+name|m_pshared
+operator|=
+name|PTHREAD_PROCESS_PRIVATE
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1877,6 +1887,9 @@ name|struct
 name|sched_param
 name|sched_param
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/* Setup the thread attributes. */
 name|thr_self
 argument_list|(
@@ -1976,21 +1989,29 @@ name|cancel_async
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Initialize the mutex queue: */
+comment|/* Initialize the mutex queues */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TMQ_NITEMS
+condition|;
+name|i
+operator|++
+control|)
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|thread
 operator|->
-name|mutexq
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|thread
-operator|->
-name|pp_mutexq
+name|mq
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|thread
@@ -2121,6 +2142,9 @@ name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
 name|_thr_list_init
+argument_list|()
+expr_stmt|;
+name|__thr_pshared_init
 argument_list|()
 expr_stmt|;
 name|_thr_wake_addr_init

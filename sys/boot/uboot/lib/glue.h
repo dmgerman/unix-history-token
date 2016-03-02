@@ -25,6 +25,55 @@ directive|include
 file|"api_public.h"
 end_include
 
+begin_comment
+comment|/*  * Mask used to align the start address for API signature search to 1MiB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|API_SIG_SEARCH_MASK
+value|~0x000fffff
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips__
+end_ifdef
+
+begin_comment
+comment|/*  * On MIPS, U-Boot passes us a hint address, which is very close to the end of  * RAM (less than 1MiB), so searching for the API signature within more than  * that leads to exception.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|API_SIG_SEARCH_LEN
+value|0x00100000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Search for the API signature within 3MiB of the 1MiB-aligned address that  * U-Boot has hinted us.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|API_SIG_SEARCH_LEN
+value|0x00300000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|syscall

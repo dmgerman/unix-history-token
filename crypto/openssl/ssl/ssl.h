@@ -11049,10 +11049,6 @@ name|SSL_F_SSL3_SETUP_WRITE_BUFFER
 value|291
 define|#
 directive|define
-name|SSL_F_SSL3_SHUTDOWN
-value|396
-define|#
-directive|define
 name|SSL_F_SSL3_WRITE_BYTES
 value|158
 define|#

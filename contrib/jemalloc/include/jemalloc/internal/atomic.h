@@ -117,7 +117,7 @@ name|JEMALLOC_H_INLINES
 end_ifdef
 
 begin_comment
-comment|/*  * All arithmetic functions return the arithmetic result of the atomic  * operation.  Some atomic operation APIs return the value prior to mutation, in  * which case the following functions must redundantly compute the result so  * that it can be returned.  These functions are normally inlined, so the extra  * operations can be optimized away if the return values aren't used by the  * callers.  *  *<t> atomic_read_<t>(<t> *p) { return (*p); }  *<t> atomic_add_<t>(<t> *p,<t> x) { return (*p + x); }  *<t> atomic_sub_<t>(<t> *p,<t> x) { return (*p - x); }  *   bool atomic_cas_<t>(<t> *p,<t> c,<t> s)  *   {  *     if (*p != c)  *       return (true);  *     *p = s;  *     return (false);  *   }  *   void atomic_write_<t>(<t> *p,<t> x) { *p = x; }  */
+comment|/*  * All arithmetic functions return the arithmetic result of the atomic  * operation.  Some atomic operation APIs return the value prior to mutation, in  * which case the following functions must redundantly compute the result so  * that it can be returned.  These functions are normally inlined, so the extra  * operations can be optimized away if the return values aren't used by the  * callers.  *  *<t> atomic_read_<t>(<t> *p) { return (*p); }  *<t> atomic_add_<t>(<t> *p,<t> x) { return (*p += x); }  *<t> atomic_sub_<t>(<t> *p,<t> x) { return (*p -= x); }  *   bool atomic_cas_<t>(<t> *p,<t> c,<t> s)  *   {  *     if (*p != c)  *       return (true);  *     *p = s;  *     return (false);  *   }  *   void atomic_write_<t>(<t> *p,<t> x) { *p = x; }  */
 end_comment
 
 begin_ifndef

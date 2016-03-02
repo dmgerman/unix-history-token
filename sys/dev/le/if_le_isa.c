@@ -819,7 +819,7 @@ name|lesc
 operator|->
 name|sc_rres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -827,11 +827,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|i
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|leip
 operator|->
@@ -1221,7 +1216,7 @@ name|lesc
 operator|->
 name|sc_rres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1229,11 +1224,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|j
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|le_isa_params
 index|[

@@ -819,6 +819,14 @@ name|sktmp
 operator|=
 name|NULL
 expr_stmt|;
+name|int
+name|trust
+init|=
+name|X509_TRUST_UNTRUSTED
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 if|if
 condition|(
 name|ctx
@@ -906,8 +914,13 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
+name|ok
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 name|CRYPTO_add
@@ -960,8 +973,13 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
+name|ok
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 name|num
@@ -1049,7 +1067,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 comment|/*              * If successful for now free up cert so it will be picked up              * again later.              */
 if|if
@@ -1115,8 +1133,13 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
+name|ok
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 name|CRYPTO_add
@@ -1292,7 +1315,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 else|else
@@ -1414,7 +1437,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 if|if
 condition|(
@@ -1454,10 +1477,11 @@ argument_list|)
 expr_stmt|;
 name|ok
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 name|num
@@ -1465,23 +1489,29 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* we now have our chain, lets check it... */
-name|i
+if|if
+condition|(
+operator|(
+name|trust
 operator|=
 name|check_trust
 argument_list|(
 name|ctx
 argument_list|)
-expr_stmt|;
-comment|/* If explicitly rejected error */
-if|if
-condition|(
-name|i
+operator|)
 operator|==
 name|X509_TRUST_REJECTED
 condition|)
+block|{
+comment|/* Callback already issued */
+name|ok
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
-name|end
+name|err
 goto|;
+block|}
 comment|/*          * If it's not explicitly trusted then check if there is an alternative          * chain that could be used. We only do this if we haven't already          * checked via TRUSTED_FIRST and the user hasn't switched off alternate          * chain checking          */
 name|retry
 operator|=
@@ -1489,7 +1519,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|trust
 operator|!=
 name|X509_TRUST_TRUSTED
 operator|&&
@@ -1558,7 +1588,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 comment|/* Check if we found an alternate chain */
 if|if
@@ -1628,7 +1658,7 @@ do|;
 comment|/*      * If not explicitly trusted then indicate error unless it's a single      * self signed certificate in which case we've indicated an error already      * and set bad_chain == 1      */
 if|if
 condition|(
-name|i
+name|trust
 operator|!=
 name|X509_TRUST_TRUSTED
 operator|&&
@@ -1749,7 +1779,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 comment|/* We have the chain complete: now we need to check its purpose */
@@ -1766,7 +1796,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 comment|/* Check name constraints */
 name|ok
@@ -1782,7 +1812,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 name|ok
 operator|=
@@ -1797,7 +1827,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 comment|/* We may as well copy down any DSA parameters that are required */
 name|X509_get_pubkey_parameters
@@ -1825,9 +1855,9 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
-name|i
+name|err
 operator|=
 name|X509_chain_check_suiteb
 argument_list|(
@@ -1851,7 +1881,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|err
 operator|!=
 name|X509_V_OK
 condition|)
@@ -1860,7 +1890,7 @@ name|ctx
 operator|->
 name|error
 operator|=
-name|i
+name|err
 expr_stmt|;
 name|ctx
 operator|->
@@ -1892,7 +1922,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 block|}
 comment|/* At this point, we have a chain and need to verify it */
@@ -1927,7 +1957,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 ifndef|#
 directive|ifndef
@@ -1946,7 +1976,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 name|ok
 operator|=
@@ -1961,7 +1991,7 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 endif|#
 directive|endif
@@ -1996,15 +2026,26 @@ operator|!
 name|ok
 condition|)
 goto|goto
-name|end
+name|err
 goto|;
 if|if
 condition|(
 literal|0
 condition|)
 block|{
-name|end
+name|err
 label|:
+comment|/* Ensure we return an error */
+if|if
+condition|(
+name|ok
+operator|>
+literal|0
+condition|)
+name|ok
+operator|=
+literal|0
+expr_stmt|;
 name|X509_get_pubkey_parameters
 argument_list|(
 name|NULL

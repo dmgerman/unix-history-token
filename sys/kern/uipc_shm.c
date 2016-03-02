@@ -386,79 +386,12 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
-name|shm_access
-parameter_list|(
-name|struct
-name|shmfd
-modifier|*
-name|shmfd
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|ucred
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|shmfd
-modifier|*
-name|shm_alloc
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|ucred
-parameter_list|,
-name|mode_t
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|shm_init
 parameter_list|(
 name|void
 modifier|*
 name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|shm_drop
-parameter_list|(
-name|struct
-name|shmfd
-modifier|*
-name|shmfd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|shmfd
-modifier|*
-name|shm_hold
-parameter_list|(
-name|struct
-name|shmfd
-modifier|*
-name|shmfd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -516,22 +449,6 @@ name|struct
 name|ucred
 modifier|*
 name|ucred
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|shm_dotruncate
-parameter_list|(
-name|struct
-name|shmfd
-modifier|*
-name|shmfd
-parameter_list|,
-name|off_t
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -611,7 +528,6 @@ comment|/* File descriptor operations. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|fileops
 name|shm_ops
@@ -2037,7 +1953,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|shm_dotruncate
 parameter_list|(
@@ -2540,7 +2455,6 @@ comment|/*  * shmfd object management including creation and reference counting 
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|shmfd
 modifier|*
@@ -2793,7 +2707,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|shmfd
 modifier|*
@@ -2822,7 +2735,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|shm_drop
 parameter_list|(
@@ -2909,7 +2821,6 @@ comment|/*  * Determine if the credentials have sufficient permissions for a  * 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|shm_access
 parameter_list|(

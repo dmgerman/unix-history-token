@@ -1159,7 +1159,7 @@ name|sc
 operator|->
 name|ndis_res_am
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|sc
 operator|->
@@ -1169,11 +1169,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0UL
-argument_list|,
-operator|~
-literal|0UL
 argument_list|,
 literal|0x1000
 argument_list|,

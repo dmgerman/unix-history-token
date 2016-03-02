@@ -245,6 +245,10 @@ decl_stmt|;
 name|vm_ooffset_t
 name|charge
 decl_stmt|;
+name|void
+modifier|*
+name|umtx_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -306,6 +310,17 @@ end_define
 
 begin_comment
 comment|/* dont split this object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_UMTXDEAD
+value|0x0020
+end_define
+
+begin_comment
+comment|/* umtx pshared was terminated */
 end_comment
 
 begin_define
@@ -878,6 +893,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|umtx_shm_object_init
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|umtx_shm_object_terminated
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|vm_object_t

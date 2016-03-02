@@ -104,7 +104,7 @@ decl_stmt|;
 block|}
 name|rlimit_param
 index|[
-literal|14
+literal|15
 index|]
 init|=
 block|{
@@ -191,6 +191,12 @@ literal|"kqueues"
 block|,
 literal|"   "
 block|}
+block|,
+block|{
+literal|"umtxp"
+block|,
+literal|"   "
+block|}
 block|, }
 struct|;
 end_struct
@@ -200,7 +206,7 @@ if|#
 directive|if
 name|RLIM_NLIMITS
 operator|>
-literal|14
+literal|15
 end_if
 
 begin_error

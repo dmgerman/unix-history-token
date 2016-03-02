@@ -8926,7 +8926,7 @@ block|}
 if|if
 condition|(
 name|id
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|pwd

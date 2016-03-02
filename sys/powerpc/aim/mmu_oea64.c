@@ -2531,6 +2531,14 @@ name|LPTE_G
 operator|)
 return|;
 case|case
+name|VM_MEMATTR_CACHEABLE
+case|:
+return|return
+operator|(
+name|LPTE_M
+operator|)
+return|;
+case|case
 name|VM_MEMATTR_WRITE_COMBINING
 case|:
 case|case

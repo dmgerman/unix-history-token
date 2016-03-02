@@ -1020,25 +1020,12 @@ name|hdrspace
 argument_list|)
 expr_stmt|;
 comment|/* strip header */
-name|m_cat
+name|m_catpkt
 argument_list|(
 name|mfrag
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-comment|/* NB: m_cat doesn't update the packet header */
-name|mfrag
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|+=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
 expr_stmt|;
 comment|/* track last seqnum and fragno */
 name|lwh

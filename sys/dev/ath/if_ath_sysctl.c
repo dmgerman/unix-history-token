@@ -3049,7 +3049,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->

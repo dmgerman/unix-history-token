@@ -84,6 +84,31 @@ value|(BITMAP_GROUP_NBITS-1)
 end_define
 
 begin_comment
+comment|/*  * Do some analysis on how big the bitmap is before we use a tree.  For a brute  * force linear search, if we would have to call ffsl more than 2^3 times, use a  * tree instead.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LG_BITMAP_MAXBITS
+operator|-
+name|LG_BITMAP_GROUP_NBITS
+operator|>
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_TREE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Number of groups required to store a given number of bits. */
 end_comment
 
@@ -198,6 +223,12 @@ begin_comment
 comment|/*  * Maximum number of groups required to support LG_BITMAP_MAXBITS.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_TREE
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -292,6 +323,31 @@ define|\
 value|(LG_BITMAP_MAXBITS / LG_SIZEOF_BITMAP)				\     + !!(LG_BITMAP_MAXBITS % LG_SIZEOF_BITMAP)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* USE_TREE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITMAP_GROUPS_MAX
+value|BITMAP_BITS2GROUPS(BITMAP_MAXBITS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_TREE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -331,6 +387,9 @@ comment|/* Logical number of bits in bitmap (stored at bottom level). */
 name|size_t
 name|nbits
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TREE
 comment|/* Number of levels necessary for nbits. */
 name|unsigned
 name|nlevels
@@ -344,6 +403,16 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+else|#
+directive|else
+comment|/* USE_TREE */
+comment|/* Number of groups necessary for nbits. */
+name|size_t
+name|ngroups
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* USE_TREE */
 block|}
 struct|;
 end_struct
@@ -382,9 +451,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
-name|bitmap_info_ngroups
+name|void
+name|bitmap_init
 parameter_list|(
+name|bitmap_t
+modifier|*
+name|bitmap
+parameter_list|,
 specifier|const
 name|bitmap_info_t
 modifier|*
@@ -397,20 +470,6 @@ begin_function_decl
 name|size_t
 name|bitmap_size
 parameter_list|(
-name|size_t
-name|nbits
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bitmap_init
-parameter_list|(
-name|bitmap_t
-modifier|*
-name|bitmap
-parameter_list|,
 specifier|const
 name|bitmap_info_t
 modifier|*
@@ -569,7 +628,10 @@ modifier|*
 name|binfo
 parameter_list|)
 block|{
-name|unsigned
+ifdef|#
+directive|ifdef
+name|USE_TREE
+name|size_t
 name|rgoff
 init|=
 name|binfo
@@ -601,6 +663,49 @@ operator|==
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+name|size_t
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|binfo
+operator|->
+name|ngroups
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|bitmap
+index|[
+name|i
+index|]
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|false
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|true
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -657,7 +762,10 @@ operator|(
 name|g
 operator|&
 operator|(
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -745,7 +853,10 @@ argument_list|(
 name|g
 operator|&
 operator|(
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -757,7 +868,10 @@ argument_list|)
 expr_stmt|;
 name|g
 operator|^=
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -782,6 +896,9 @@ name|bit
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TREE
 comment|/* Propagate group state transitions up the tree. */
 if|if
 condition|(
@@ -846,7 +963,10 @@ argument_list|(
 name|g
 operator|&
 operator|(
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -858,7 +978,10 @@ argument_list|)
 expr_stmt|;
 name|g
 operator|^=
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -880,6 +1003,8 @@ condition|)
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -922,6 +1047,9 @@ name|binfo
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TREE
 name|i
 operator|=
 name|binfo
@@ -946,7 +1074,7 @@ index|]
 expr_stmt|;
 name|bit
 operator|=
-name|jemalloc_ffsl
+name|ffs_lu
 argument_list|(
 name|g
 argument_list|)
@@ -988,7 +1116,7 @@ name|LG_BITMAP_GROUP_NBITS
 operator|)
 operator|+
 operator|(
-name|jemalloc_ffsl
+name|ffs_lu
 argument_list|(
 name|g
 argument_list|)
@@ -997,6 +1125,60 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|g
+operator|=
+name|bitmap
+index|[
+literal|0
+index|]
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|bit
+operator|=
+name|ffs_lu
+argument_list|(
+name|g
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|i
+operator|++
+expr_stmt|;
+name|g
+operator|=
+name|bitmap
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+name|bit
+operator|=
+operator|(
+name|bit
+operator|-
+literal|1
+operator|)
+operator|+
+operator|(
+name|i
+operator|<<
+literal|6
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bitmap_set
 argument_list|(
 name|bitmap
@@ -1042,6 +1224,7 @@ decl_stmt|;
 name|bitmap_t
 name|g
 decl_stmt|;
+name|UNUSED
 name|bool
 name|propagate
 decl_stmt|;
@@ -1099,7 +1282,10 @@ operator|(
 name|g
 operator|&
 operator|(
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -1114,7 +1300,10 @@ argument_list|)
 expr_stmt|;
 name|g
 operator|^=
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -1140,6 +1329,9 @@ name|bit
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_TREE
 comment|/* Propagate group state transitions up the tree. */
 if|if
 condition|(
@@ -1211,7 +1403,10 @@ operator|(
 name|g
 operator|&
 operator|(
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -1226,7 +1421,10 @@ argument_list|)
 expr_stmt|;
 name|g
 operator|^=
-literal|1LU
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|bit
@@ -1247,6 +1445,9 @@ condition|)
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* USE_TREE */
 block|}
 end_function
 

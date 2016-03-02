@@ -876,7 +876,7 @@ end_endif
 begin_return
 return|return
 operator|(
-name|buf_ring_peek
+name|buf_ring_peek_clear_sc
 argument_list|(
 name|br
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: prompt.h,v 1.10 2009/12/30 22:37:40 christos Exp $	*/
+comment|/*	$NetBSD: prompt.h,v 1.13 2016/02/17 19:47:49 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ define|#
 directive|define
 name|_h_el_prompt
 end_define
-
-begin_include
-include|#
-directive|include
-file|"histedit.h"
-end_include
 
 begin_typedef
 typedef|typedef

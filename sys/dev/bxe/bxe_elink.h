@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2014 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2017 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -969,6 +969,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ELINK_SFP_EEPROM_VENDOR_SPECIFIC_ADDR
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELINK_SFP_EEPROM_VENDOR_SPECIFIC_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|ELINK_SFP_EEPROM_A2_CHECKSUM_RANGE
 value|0x5e
 end_define
@@ -1616,6 +1630,14 @@ name|ELINK_SUPPORTED_Asym_Pause
 value|(1<<11)
 define|#
 directive|define
+name|ELINK_SUPPORTED_1000baseKX_Full
+value|(1<<17)
+define|#
+directive|define
+name|ELINK_SUPPORTED_10000baseKR_Full
+value|(1<<19)
+define|#
+directive|define
 name|ELINK_SUPPORTED_20000baseMLD2_Full
 value|(1<<21)
 define|#
@@ -1900,6 +1922,10 @@ define|#
 directive|define
 name|ELINK_FEATURE_CONFIG_BOOT_FROM_SAN
 value|(1<<14)
+define|#
+directive|define
+name|ELINK_FEATURE_CONFIG_DISABLE_PD
+value|(1<<15)
 comment|/* Will be populated during common init */
 name|struct
 name|elink_phy
@@ -1985,6 +2011,10 @@ name|ELINK_PHY_INITIALIZED
 value|(1<<1)
 name|uint32_t
 name|lfa_base
+decl_stmt|;
+comment|/* The same definitions as the shmem2 parameter */
+name|uint32_t
+name|link_attr_sync
 decl_stmt|;
 block|}
 struct|;
@@ -2102,10 +2132,6 @@ name|turn_to_run_wc_rt
 decl_stmt|;
 name|uint16_t
 name|rsrv2
-decl_stmt|;
-comment|/* The same definitions as the shmem2 parameter */
-name|uint32_t
-name|link_attr_sync
 decl_stmt|;
 block|}
 struct|;
@@ -2938,22 +2964,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|elink_status_t
-name|elink_sfp_module_detection
-parameter_list|(
-name|struct
-name|elink_phy
-modifier|*
-name|phy
-parameter_list|,
-name|struct
-name|elink_params
-modifier|*
-name|params
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|//elink_status_t elink_sfp_module_detection(struct elink_phy *phy,
+end_comment
+
+begin_comment
+comment|//			       struct elink_params *params);
+end_comment
 
 begin_function_decl
 name|void
@@ -2972,25 +2989,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|elink_status_t
-name|elink_check_half_open_conn
-parameter_list|(
-name|struct
-name|elink_params
-modifier|*
-name|params
-parameter_list|,
-name|struct
-name|elink_vars
-modifier|*
-name|vars
-parameter_list|,
-name|uint8_t
-name|notify
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|//elink_status_t elink_check_half_open_conn(struct elink_params *params,
+end_comment
+
+begin_comment
+comment|//			            struct elink_vars *vars, uint8_t notify);
+end_comment
 
 begin_function_decl
 name|void

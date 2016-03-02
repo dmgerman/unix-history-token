@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: refresh.c,v 1.37 2011/07/29 23:44:45 christos Exp $	*/
+comment|/*	$NetBSD: refresh.c,v 1.44 2016/02/17 19:47:49 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: refresh.c,v 1.37 2011/07/29 23:44:45 christos Exp $"
+literal|"$NetBSD: refresh.c,v 1.44 2016/02/17 19:47:49 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -90,19 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -130,7 +124,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|Int
+name|wint_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -205,7 +199,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|Int
+name|wint_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -305,7 +299,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|do 				\ 				    if (
+value|do				\ 				    if (
 comment|/*CONSTCOND*/
 value|a) {	\ 					(void) fprintf b;	\ 					c;			\ 				    }				\ 				while (
 comment|/*CONSTCOND*/
@@ -625,7 +619,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|Int
+name|wint_t
 name|c
 parameter_list|)
 block|{
@@ -807,7 +801,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|Int
+name|wint_t
 name|c
 parameter_list|,
 name|int
@@ -831,7 +825,7 @@ argument_list|,
 operator|(
 name|__F
 operator|,
-literal|"printing %5x '%c'\r\n"
+literal|"printing %5x '%lc'\r\n"
 operator|,
 name|c
 operator|,
@@ -894,6 +888,9 @@ operator|.
 name|h
 index|]
 operator|=
+operator|(
+name|Char
+operator|)
 name|c
 expr_stmt|;
 comment|/* assumes !shift is only used for single-column chars */
@@ -1005,7 +1002,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* re_refresh():  *	draws the new virtual screen image from the current input  *  	line, then goes line-by-line changing the real image to the new  *	virtual image. The routine to re-draw a line can be replaced  *	easily in hopes of a smarter one being placed there.  */
+comment|/* re_refresh():  *	draws the new virtual screen image from the current input  *	line, then goes line-by-line changing the real image to the new  *	virtual image. The routine to re-draw a line can be replaced  *	easily in hopes of a smarter one being placed there.  */
 end_comment
 
 begin_function
@@ -2425,7 +2422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* re_clear_eol():  *	Find the number of characters we need to clear till the end of line  *	in order to make sure that we have cleared the previous contents of  *	the line. fx and sx is the number of characters inserted or deleted  *	in the first or second diff, diff is the difference between the  * 	number of characters between the new and old line.  */
+comment|/* re_clear_eol():  *	Find the number of characters we need to clear till the end of line  *	in order to make sure that we have cleared the previous contents of  *	the line. fx and sx is the number of characters inserted or deleted  *	in the first or second diff, diff is the difference between the  *	number of characters between the new and old line.  */
 end_comment
 
 begin_function
@@ -5007,7 +5004,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|Int
+name|wint_t
 name|c
 parameter_list|)
 block|{
@@ -5077,6 +5074,9 @@ name|h
 operator|++
 index|]
 operator|=
+operator|(
+name|Char
+operator|)
 name|c
 expr_stmt|;
 while|while

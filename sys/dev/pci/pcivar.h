@@ -474,6 +474,55 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pci_ea_entry
+block|{
+name|int
+name|eae_bei
+decl_stmt|;
+name|uint32_t
+name|eae_flags
+decl_stmt|;
+name|uint64_t
+name|eae_base
+decl_stmt|;
+name|uint64_t
+name|eae_max_offset
+decl_stmt|;
+name|uint32_t
+name|eae_cfg_offset
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|pci_ea_entry
+argument_list|)
+name|eae_link
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pcicfg_ea
+block|{
+name|int
+name|ea_location
+decl_stmt|;
+comment|/* Structure offset in Configuration Header */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pci_ea_entry
+argument_list|)
+name|ea_entries
+expr_stmt|;
+comment|/* EA entries */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -659,6 +708,11 @@ name|pcicfg_vf
 name|vf
 decl_stmt|;
 comment|/* SR-IOV Virtual Function */
+name|struct
+name|pcicfg_ea
+name|ea
+decl_stmt|;
+comment|/* Enhanced Allocation */
 block|}
 name|pcicfgregs
 typedef|;

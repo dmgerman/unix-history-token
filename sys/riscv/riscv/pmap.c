@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 2003 Peter Wemm  * All rights reserved.  * Copyright (c) 2005-2010 Alan L. Cox<alc@cs.rice.edu>  * All rights reserved.  * Copyright (c) 2014 Andrew Turner  * All rights reserved.  * Copyright (c) 2014 The FreeBSD Foundation  * All rights reserved.  * Copyright (c) 2015 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Portions of this software were developed by Andrew Turner under  * sponsorship from The FreeBSD Foundation.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  */
+comment|/*-  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 2003 Peter Wemm  * All rights reserved.  * Copyright (c) 2005-2010 Alan L. Cox<alc@cs.rice.edu>  * All rights reserved.  * Copyright (c) 2014 Andrew Turner  * All rights reserved.  * Copyright (c) 2014 The FreeBSD Foundation  * All rights reserved.  * Copyright (c) 2015-2016 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Portions of this software were developed by Andrew Turner under  * sponsorship from The FreeBSD Foundation.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  */
 end_comment
 
 begin_comment
@@ -466,13 +466,6 @@ specifier|static
 name|struct
 name|rwlock_padalign
 name|pvh_global_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint64_t
-name|pagetable_l0
 decl_stmt|;
 end_decl_stmt
 
@@ -1653,7 +1646,7 @@ decl_stmt|;
 name|pt_entry_t
 name|entry
 decl_stmt|;
-name|u_int
+name|pn_t
 name|pn
 decl_stmt|;
 name|pa
@@ -3503,7 +3496,7 @@ decl_stmt|;
 name|pt_entry_t
 name|entry
 decl_stmt|;
-name|u_int
+name|pn_t
 name|pn
 decl_stmt|;
 name|int
@@ -4338,7 +4331,7 @@ decl_stmt|;
 name|vm_paddr_t
 name|phys
 decl_stmt|;
-name|int
+name|pn_t
 name|pn
 decl_stmt|;
 name|PMAP_LOCK_ASSERT
@@ -4955,7 +4948,7 @@ decl_stmt|;
 name|pt_entry_t
 name|entry
 decl_stmt|;
-name|int
+name|pn_t
 name|pn
 decl_stmt|;
 name|mtx_assert
@@ -5074,19 +5067,41 @@ argument_list|(
 name|nkpg
 argument_list|)
 expr_stmt|;
-name|panic
+name|pn
+operator|=
+operator|(
+name|paddr
+operator|/
+name|PAGE_SIZE
+operator|)
+expr_stmt|;
+name|entry
+operator|=
+operator|(
+name|PTE_VALID
+operator||
+operator|(
+name|PTE_TYPE_PTR
+operator|<<
+name|PTE_TYPE_S
+operator|)
+operator|)
+expr_stmt|;
+name|entry
+operator||=
+operator|(
+name|pn
+operator|<<
+name|PTE_PPN0_S
+operator|)
+expr_stmt|;
+name|pmap_load_store
 argument_list|(
-literal|"%s: implement grow l1\n"
+name|l1
 argument_list|,
-name|__func__
+name|entry
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pmap_load_store(l1, paddr | L1_TABLE);
-endif|#
-directive|endif
 name|PTE_SYNC
 argument_list|(
 name|l1
@@ -7774,13 +7789,13 @@ decl_stmt|;
 name|pt_entry_t
 name|entry
 decl_stmt|;
-name|int
+name|pn_t
 name|l2_pn
 decl_stmt|;
-name|int
+name|pn_t
 name|l3_pn
 decl_stmt|;
-name|int
+name|pn_t
 name|pn
 decl_stmt|;
 name|va
@@ -9102,7 +9117,7 @@ decl_stmt|;
 name|pt_entry_t
 name|entry
 decl_stmt|;
-name|int
+name|pn_t
 name|pn
 decl_stmt|;
 name|KASSERT
@@ -12585,10 +12600,10 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|uint64_t
+name|pt_entry_t
 name|entry
 decl_stmt|;
-name|uint64_t
+name|pn_t
 name|pn
 decl_stmt|;
 name|pmap_t
@@ -12655,8 +12670,14 @@ operator|)
 expr_stmt|;
 name|pmap_load_store
 argument_list|(
-operator|&
-name|pagetable_l0
+operator|(
+name|uint64_t
+operator|*
+operator|)
+name|PCPU_GET
+argument_list|(
+name|sptbr
+argument_list|)
 argument_list|,
 name|entry
 argument_list|)

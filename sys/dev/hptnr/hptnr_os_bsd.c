@@ -651,7 +651,7 @@ index|]
 operator|.
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|hba
 operator|->
@@ -675,13 +675,6 @@ name|index
 index|]
 operator|.
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-name|length
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -733,7 +726,7 @@ index|]
 operator|.
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|hba
 operator|->
@@ -757,13 +750,6 @@ name|index
 index|]
 operator|.
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-name|length
 argument_list|,
 name|RF_ACTIVE
 argument_list|)

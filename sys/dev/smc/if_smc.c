@@ -1074,7 +1074,7 @@ name|SYS_RES_MEMORY
 expr_stmt|;
 name|reg
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1082,11 +1082,6 @@ name|type
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 literal|16
 argument_list|,
@@ -1436,7 +1431,7 @@ name|sc
 operator|->
 name|smc_reg
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1446,11 +1441,6 @@ operator|&
 name|sc
 operator|->
 name|smc_reg_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 literal|16
 argument_list|,
@@ -1478,7 +1468,7 @@ name|sc
 operator|->
 name|smc_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1488,11 +1478,6 @@ operator|&
 name|sc
 operator|->
 name|smc_irq_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 literal|1
 argument_list|,
@@ -2603,7 +2588,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -3627,7 +3612,7 @@ name|cmd
 operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -3713,7 +3698,7 @@ argument_list|,
 name|curbank
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -3958,7 +3943,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -4006,7 +3991,7 @@ operator|&=
 operator|~
 name|RCV_INT
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -4043,7 +4028,7 @@ operator|&=
 operator|~
 name|ALLOC_INT
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -4167,7 +4152,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * See if there are any packets to transmit. 		 */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -5380,7 +5365,7 @@ argument_list|,
 literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->

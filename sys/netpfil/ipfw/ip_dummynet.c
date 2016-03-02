@@ -294,7 +294,7 @@ operator|)
 name|arg
 expr_stmt|;
 comment|/* UNUSED */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|dn_tq
 argument_list|,

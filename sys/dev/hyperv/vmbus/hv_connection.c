@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -339,7 +345,9 @@ name|msg_info
 operator|->
 name|wait_sema
 argument_list|,
-literal|500
+literal|5
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 comment|/* KYS 5 seconds */
@@ -746,13 +754,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|contigfree
+name|free
 argument_list|(
 name|hv_vmbus_g_connection
 operator|.
 name|interrupt_page
-argument_list|,
-name|PAGE_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -858,13 +864,11 @@ name|hv_vmbus_channel_unload
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|contigfree
+name|free
 argument_list|(
 name|hv_vmbus_g_connection
 operator|.
 name|interrupt_page
-argument_list|,
-name|PAGE_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1136,7 +1140,7 @@ operator|->
 name|inbound
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|channel
 operator|->

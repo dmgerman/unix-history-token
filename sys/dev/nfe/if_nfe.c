@@ -9816,7 +9816,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -10090,7 +10090,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->

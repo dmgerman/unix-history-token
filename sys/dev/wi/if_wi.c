@@ -11010,7 +11010,7 @@ name|sc
 operator|->
 name|iobase
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -11020,11 +11020,6 @@ operator|&
 name|sc
 operator|->
 name|iobase_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 operator|(
 literal|1

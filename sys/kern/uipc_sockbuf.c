@@ -1381,7 +1381,7 @@ name|sb_flags
 operator|&
 name|SB_AIO
 condition|)
-name|aio_swake
+name|sowakeup_aio
 argument_list|(
 name|so
 argument_list|,

@@ -992,6 +992,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|umtx_shm_object_init
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1710,6 +1715,19 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|object
+operator|->
+name|ref_count
+operator|==
+literal|1
+condition|)
+name|umtx_shm_object_terminated
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The test for text of vp vnode does not need a bypass to 	 * reach right VV_TEXT there, since it is obtained from 	 * object->handle. 	 */
 if|if
 condition|(
@@ -2419,6 +2437,11 @@ return|return;
 block|}
 name|doterm
 label|:
+name|umtx_shm_object_terminated
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|temp
 operator|=
 name|object

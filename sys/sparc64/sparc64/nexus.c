@@ -990,10 +990,9 @@ name|sc
 operator|->
 name|sc_mem_rman
 argument_list|,
-literal|0ULL
+literal|0
 argument_list|,
-operator|~
-literal|0ULL
+name|BUS_SPACE_MAXADDR
 argument_list|)
 operator|!=
 literal|0

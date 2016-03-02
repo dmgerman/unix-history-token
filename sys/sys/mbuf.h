@@ -412,12 +412,21 @@ begin_struct
 struct|struct
 name|m_ext
 block|{
+union|union
+block|{
+specifier|volatile
+name|u_int
+name|ext_count
+decl_stmt|;
+comment|/* value of ref count info */
 specifier|volatile
 name|u_int
 modifier|*
 name|ext_cnt
 decl_stmt|;
 comment|/* pointer to ref count info */
+block|}
+union|;
 name|caddr_t
 name|ext_buf
 decl_stmt|;
@@ -1469,7 +1478,7 @@ value|0x000001
 end_define
 
 begin_comment
-comment|/* embedded ext_cnt, notyet */
+comment|/* embedded ext_count */
 end_comment
 
 begin_define
@@ -1597,19 +1606,6 @@ end_define
 begin_comment
 comment|/*  * External reference/free functions.  */
 end_comment
-
-begin_function_decl
-name|void
-name|sf_ext_ref
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -2302,13 +2298,6 @@ name|zone_jumbo16
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|uma_zone_t
-name|zone_ext_refcnt
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|mb_dupcl
@@ -2317,7 +2306,6 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2518,7 +2506,6 @@ name|mbuf
 modifier|*
 name|m_copym
 parameter_list|(
-specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2688,7 +2675,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|m_extadd
 parameter_list|(
 name|struct
@@ -2720,8 +2707,6 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -3585,6 +3570,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/*  * XXX: m_cljset() is a dangerous API.  One must attach only a new,  * unreferenced cluster to an mbuf(9).  It is not possible to assert  * that, so care can be taken only by users of the API.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -3604,9 +3593,6 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|uma_zone_t
-name|zone
-decl_stmt|;
 name|int
 name|size
 decl_stmt|;
@@ -3622,10 +3608,6 @@ name|size
 operator|=
 name|MCLBYTES
 expr_stmt|;
-name|zone
-operator|=
-name|zone_clust
-expr_stmt|;
 break|break;
 if|#
 directive|if
@@ -3639,10 +3621,6 @@ name|size
 operator|=
 name|MJUMPAGESIZE
 expr_stmt|;
-name|zone
-operator|=
-name|zone_jumbop
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -3653,10 +3631,6 @@ name|size
 operator|=
 name|MJUM9BYTES
 expr_stmt|;
-name|zone
-operator|=
-name|zone_jumbo9
-expr_stmt|;
 break|break;
 case|case
 name|EXT_JUMBO16
@@ -3664,10 +3638,6 @@ case|:
 name|size
 operator|=
 name|MJUM16BYTES
-expr_stmt|;
-name|zone
-operator|=
-name|zone_jumbo16
 expr_stmt|;
 break|break;
 default|default:
@@ -3736,20 +3706,15 @@ name|m_ext
 operator|.
 name|ext_flags
 operator|=
-literal|0
+name|EXT_FLAG_EMBREF
 expr_stmt|;
 name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_cnt
+name|ext_count
 operator|=
-name|uma_find_refcnt
-argument_list|(
-name|zone
-argument_list|,
-name|cl
-argument_list|)
+literal|1
 expr_stmt|;
 name|m
 operator|->
@@ -3851,8 +3816,63 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+specifier|inline
+name|u_int
+name|m_extrefcnt
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+argument_list|,
+operator|(
+literal|"%s: M_EXT missing"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_flags
+operator|&
+name|EXT_FLAG_EMBREF
+operator|)
+condition|?
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_count
+else|:
+operator|*
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_cnt
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-unit|}
 comment|/*  * mbuf, cluster, and external object allocation macros (for compatibility  * purposes).  */
 end_comment
 
@@ -3930,7 +3950,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(void )m_extadd((m), (caddr_t)(buf), (size), (free), (arg1), (arg2),\     (flags), (type), M_NOWAIT)
+value|m_extadd((m), (caddr_t)(buf), (size), (free), (arg1), (arg2),	\     (flags), (type))
 end_define
 
 begin_define
@@ -3961,11 +3981,10 @@ name|M_WRITABLE
 parameter_list|(
 name|m
 parameter_list|)
-value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (*((m)->m_ext.ext_cnt) == 1)) )
+value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (m_extrefcnt(m) == 1)))
 end_define
 
 begin_comment
-unit|\
 comment|/* Check if the supplied mbuf has a packet header, or else panic. */
 end_comment
 
@@ -4030,7 +4049,7 @@ comment|/*  * Set the m_data pointer of a newly allocated mbuf to place an objec
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|void
 name|m_align

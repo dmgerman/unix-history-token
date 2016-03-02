@@ -675,6 +675,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICC_SRE_EL2_SRE
+value|(1U<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICC_SRE_EL2_EN
 value|(1U<< 3)
 end_define

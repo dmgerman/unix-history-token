@@ -12527,7 +12527,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
 argument_list|,
@@ -12790,7 +12790,7 @@ operator|||
 name|rval
 condition|)
 block|{
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
 argument_list|,

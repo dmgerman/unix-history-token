@@ -1872,6 +1872,12 @@ operator|!
 name|st
 operator|->
 name|sorted
+operator|&&
+name|st
+operator|->
+name|comp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int

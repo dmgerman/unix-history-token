@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Define simple versions of assertion macros that won't recurse in case  * of assertion failures in malloc_*printf().  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -214,9 +218,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|SYS_write
-comment|/* 	 * Use syscall(2) rather than write(2) when possible in order to avoid 	 * the possibility of memory allocation within libc.  This is necessary 	 * on FreeBSD; most operating systems do not have this problem though. 	 */
+comment|/* 	 * Use syscall(2) rather than write(2) when possible in order to avoid 	 * the possibility of memory allocation within libc.  This is necessary 	 * on FreeBSD; most operating systems do not have this problem though. 	 * 	 * syscall() returns long or int, depending on platform, so capture the 	 * unused result in the widest plausible type to avoid compiler 	 * warnings. 	 */
 name|UNUSED
-name|int
+name|long
 name|result
 init|=
 name|syscall
@@ -236,7 +240,7 @@ decl_stmt|;
 else|#
 directive|else
 name|UNUSED
-name|int
+name|ssize_t
 name|result
 init|=
 name|write
@@ -460,6 +464,9 @@ name|LPSTR
 operator|)
 name|buf
 argument_list|,
+operator|(
+name|DWORD
+operator|)
 name|buflen
 argument_list|,
 name|NULL
@@ -2582,8 +2589,18 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|assert
+argument_list|(
+name|i
+operator|<
+name|INT_MAX
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
+operator|(
+name|int
+operator|)
 name|i
 expr_stmt|;
 undef|#
@@ -2884,6 +2901,34 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Restore normal assertion macros, in order to make it possible to compile all  * C files as a single concatenation.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|assert
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|not_reached
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|not_implemented
+end_undef
+
+begin_include
+include|#
+directive|include
+file|"jemalloc/internal/assert.h"
+end_include
 
 end_unit
 

@@ -22235,11 +22235,6 @@ name|R92C_RXFLTMAP_SUBTYPE
 argument_list|(
 name|IEEE80211_FC0_SUBTYPE_REASSOC_RESP
 argument_list|)
-operator||
-name|R92C_RXFLTMAP_SUBTYPE
-argument_list|(
-name|IEEE80211_FC0_SUBTYPE_BEACON
-argument_list|)
 operator|)
 expr_stmt|;
 break|break;

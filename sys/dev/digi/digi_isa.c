@@ -1336,7 +1336,7 @@ name|res
 operator|.
 name|io
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1348,11 +1348,6 @@ operator|->
 name|res
 operator|.
 name|iorid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|IO_SIZE
 argument_list|,
@@ -1424,7 +1419,7 @@ name|res
 operator|.
 name|mem
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1436,11 +1431,6 @@ operator|->
 name|res
 operator|.
 name|mrid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|sc
 operator|->
@@ -1768,7 +1758,7 @@ name|res
 operator|.
 name|io
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1780,11 +1770,6 @@ operator|->
 name|res
 operator|.
 name|iorid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|iosize
 argument_list|,
@@ -1861,7 +1846,7 @@ name|res
 operator|.
 name|mem
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -1873,11 +1858,6 @@ operator|->
 name|res
 operator|.
 name|mrid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|msize
 argument_list|,

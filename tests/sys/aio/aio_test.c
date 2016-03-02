@@ -121,6 +121,12 @@ directive|include
 file|"freebsd_test_suite/macros.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1216,6 +1222,9 @@ argument_list|(
 literal|"aio"
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE_UNSAFE_AIO
+argument_list|()
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|pathname
@@ -1440,6 +1449,9 @@ name|ATF_REQUIRE_KERNEL_MODULE
 argument_list|(
 literal|"aio"
 argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_UNSAFE_AIO
+argument_list|()
 expr_stmt|;
 comment|/* 	 * In theory, mkstemp() can return a name that is then collided with. 	 * Because this is a regression test, we treat that as a test failure 	 * rather than retrying. 	 */
 name|strcpy
@@ -1976,6 +1988,9 @@ argument_list|(
 literal|"aio"
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE_UNSAFE_AIO
+argument_list|()
+expr_stmt|;
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|openpty
@@ -2221,6 +2236,9 @@ name|ATF_REQUIRE_KERNEL_MODULE
 argument_list|(
 literal|"aio"
 argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_UNSAFE_AIO
+argument_list|()
 expr_stmt|;
 name|ATF_REQUIRE_MSG
 argument_list|(

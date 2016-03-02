@@ -379,7 +379,7 @@ name|true
 operator|)
 return|;
 operator|*
-name|tsd_arenas_cache_bypassp_get
+name|tsd_arenas_tdata_bypassp_get
 argument_list|(
 name|tsd_fetch
 argument_list|()
@@ -406,7 +406,7 @@ name|tsd_boot1
 argument_list|()
 expr_stmt|;
 operator|*
-name|tsd_arenas_cache_bypassp_get
+name|tsd_arenas_tdata_bypassp_get
 argument_list|(
 name|tsd_fetch
 argument_list|()
@@ -498,6 +498,17 @@ literal|"/INCLUDE:__tls_used"
 name|)
 end_pragma
 
+begin_pragma
+pragma|#
+directive|pragma
+name|comment
+name|(
+name|linker
+name|,
+literal|"/INCLUDE:_tls_callback"
+name|)
+end_pragma
+
 begin_else
 else|#
 directive|else
@@ -511,6 +522,17 @@ name|(
 name|linker
 name|,
 literal|"/INCLUDE:_tls_used"
+name|)
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|comment
+name|(
+name|linker
+name|,
+literal|"/INCLUDE:tls_callback"
 name|)
 end_pragma
 
@@ -544,33 +566,29 @@ literal|".CRT$XLY"
 argument_list|)
 end_macro
 
-begin_macro
+begin_function_decl
 name|JEMALLOC_ATTR
-argument_list|(
-argument|used
-argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|static
+function_decl|(
+name|used
+function_decl|)
 name|BOOL
 argument_list|(
 argument|WINAPI *const tls_callback
 argument_list|)
-operator|(
+parameter_list|(
 name|HINSTANCE
 name|hinstDLL
-operator|,
+parameter_list|,
 name|DWORD
 name|fdwReason
-operator|,
+parameter_list|,
 name|LPVOID
 name|lpvReserved
-operator|)
-operator|=
+parameter_list|)
+init|=
 name|_tls_callback
-expr_stmt|;
-end_expr_stmt
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
