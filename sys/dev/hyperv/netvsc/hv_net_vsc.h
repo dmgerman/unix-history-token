@@ -2203,6 +2203,9 @@ decl_stmt|;
 name|int
 name|hn_rx_ring_cnt
 decl_stmt|;
+name|int
+name|hn_rx_ring_inuse
+decl_stmt|;
 name|struct
 name|hn_rx_ring
 modifier|*
@@ -2210,6 +2213,9 @@ name|hn_rx_ring
 decl_stmt|;
 name|int
 name|hn_tx_ring_cnt
+decl_stmt|;
+name|int
+name|hn_tx_ring_inuse
 decl_stmt|;
 name|struct
 name|hn_tx_ring
