@@ -692,6 +692,29 @@ name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"arm,gem5_pcie"
+argument_list|)
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"GEM5 PCIe host controller"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|ENXIO
@@ -1031,6 +1054,8 @@ argument_list|,
 name|phys_base
 operator|+
 name|size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1067,6 +1092,8 @@ operator|+
 name|PCI_IO_WINDOW_OFFSET
 operator|+
 name|size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
