@@ -86,7 +86,7 @@ file|"hv_rndis_filter.h"
 end_include
 
 begin_comment
-comment|/* priv1 and priv1 are consumed by the main driver */
+comment|/* priv1 and priv2 are consumed by the main driver */
 end_comment
 
 begin_define
