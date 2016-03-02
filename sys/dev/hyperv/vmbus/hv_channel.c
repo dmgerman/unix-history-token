@@ -309,7 +309,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hv_vmbus_channel_stat
+name|vmbus_channel_sysctl_create
 parameter_list|(
 name|hv_vmbus_channel
 modifier|*
@@ -983,8 +983,8 @@ argument_list|,
 name|recv_ring_buffer_size
 argument_list|)
 expr_stmt|;
-comment|/* setup statistic tracking for this channel */
-name|hv_vmbus_channel_stat
+comment|/* Create sysctl tree for this channel */
+name|vmbus_channel_sysctl_create
 argument_list|(
 name|new_channel
 argument_list|)
