@@ -1537,7 +1537,7 @@ name|BIO_get_conn_int_port
 parameter_list|(
 name|b
 parameter_list|)
-value|BIO_ctrl(b,BIO_C_GET_CONNECT,3,0,NULL)
+value|BIO_ctrl(b,BIO_C_GET_CONNECT,3,NULL)
 define|#
 directive|define
 name|BIO_set_nbio
