@@ -1526,7 +1526,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|MEXTADD
+name|m_extadd
 argument_list|(
 name|m
 argument_list|,
