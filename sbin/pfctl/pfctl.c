@@ -12235,12 +12235,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|opts
 operator|&
-name|PF_OPT_QUIET
-operator|)
+name|PF_OPT_VERBOSE
 condition|)
 name|fprintf
 argument_list|(
