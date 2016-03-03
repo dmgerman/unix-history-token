@@ -197,6 +197,9 @@ literal|0
 block|,      }
 block|,
 comment|/* Cipher 03 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -227,6 +230,8 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 04 */
 block|{
 literal|1
@@ -290,6 +295,9 @@ literal|128
 block|,      }
 block|,
 comment|/* Cipher 06 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -320,6 +328,8 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 07 */
 ifndef|#
 directive|ifndef
@@ -357,6 +367,9 @@ block|,
 endif|#
 directive|endif
 comment|/* Cipher 08 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -387,7 +400,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 09 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -418,6 +436,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0A */
 block|{
 literal|1
@@ -453,6 +473,9 @@ block|,      }
 block|,
 comment|/* The DH ciphers */
 comment|/* Cipher 0B */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -483,7 +506,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0C */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -515,6 +543,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0D */
 block|{
 literal|0
@@ -550,6 +580,9 @@ literal|168
 block|,      }
 block|,
 comment|/* Cipher 0E */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -581,7 +614,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0F */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -613,6 +651,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 10 */
 block|{
 literal|0
@@ -649,6 +689,9 @@ block|,      }
 block|,
 comment|/* The Ephemeral DH ciphers */
 comment|/* Cipher 11 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -679,7 +722,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 12 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -710,6 +758,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 13 */
 block|{
 literal|1
@@ -744,6 +794,9 @@ literal|168
 block|,      }
 block|,
 comment|/* Cipher 14 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -774,7 +827,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 15 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -805,6 +863,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 16 */
 block|{
 literal|1
@@ -839,6 +899,9 @@ literal|168
 block|,      }
 block|,
 comment|/* Cipher 17 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -869,6 +932,8 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 18 */
 block|{
 literal|1
@@ -901,6 +966,9 @@ literal|128
 block|,      }
 block|,
 comment|/* Cipher 19 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -931,7 +999,12 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 1A */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -962,6 +1035,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 1B */
 block|{
 literal|1
@@ -1012,6 +1087,9 @@ directive|ifndef
 name|OPENSSL_NO_KRB5
 comment|/* The Kerberos ciphers*/
 comment|/* Cipher 1E */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1042,6 +1120,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 1F */
 block|{
 literal|1
@@ -1138,6 +1218,9 @@ literal|128
 block|,      }
 block|,
 comment|/* Cipher 22 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1168,6 +1251,8 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 23 */
 block|{
 literal|1
@@ -1262,6 +1347,9 @@ literal|128
 block|,      }
 block|,
 comment|/* Cipher 26 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1292,7 +1380,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 27 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1323,7 +1416,12 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 28 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1354,7 +1452,12 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 29 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1385,7 +1488,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 2A */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1416,7 +1524,12 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 2B */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1447,6 +1560,8 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_KRB5 */
@@ -2258,6 +2373,9 @@ block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      TLS1_CK_R
 endif|#
 directive|endif
 comment|/* Cipher 62 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2288,7 +2406,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 63 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2319,7 +2442,12 @@ block|,
 literal|56
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 64 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2350,7 +2478,12 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 65 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2381,6 +2514,8 @@ block|,
 literal|128
 block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 66 */
 block|{
 literal|1

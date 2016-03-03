@@ -30,6 +30,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/e_os2.h>
 end_include
 
@@ -3578,7 +3584,8 @@ name|a
 parameter_list|,
 name|bits
 parameter_list|)
-value|((((((bits+BN_BITS2-1))/BN_BITS2))<= (a)->dmax)?\         (a):bn_expand2((a),(bits+BN_BITS2-1)/BN_BITS2))
+define|\
+value|( \         bits> (INT_MAX - BN_BITS2 + 1) ? \             NULL \         : \             (((bits+BN_BITS2-1)/BN_BITS2)<= (a)->dmax) ? \                 (a) \             : \                 bn_expand2((a),(bits+BN_BITS2-1)/BN_BITS2) \     )
 define|#
 directive|define
 name|bn_wexpand
