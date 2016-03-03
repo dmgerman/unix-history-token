@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|NSTIME_SEC_MAX
-value|18446744072
+value|KQU(18446744072)
 end_define
 
 begin_endif

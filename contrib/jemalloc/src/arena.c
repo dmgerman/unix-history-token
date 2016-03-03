@@ -7112,6 +7112,9 @@ operator|>=
 operator|-
 literal|1
 operator|&&
+operator|(
+name|uint64_t
+operator|)
 name|decay_time
 operator|<=
 name|NSTIME_SEC_MAX
