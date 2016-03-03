@@ -953,9 +953,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-goto|goto
-name|invalid
-goto|;
+break|break;
 block|}
 if|if
 condition|(
