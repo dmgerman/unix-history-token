@@ -4,11 +4,11 @@ comment|/* crypto/engine/hw_atalla.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -716,7 +716,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_atalla() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_atalla() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -865,7 +865,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the atalla-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * atalla-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -908,7 +908,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
-comment|/* Use the DSA_OpenSSL() method and just hook the mod_exp-ish 	 * bits. */
+comment|/*      * Use the DSA_OpenSSL() method and just hook the mod_exp-ish bits.      */
 name|meth2
 operator|=
 name|DSA_OpenSSL
@@ -1074,7 +1074,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the Atalla library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * Atalla library. NB: This is only set (or unset) during an init() or  * finish() call (reference counts permitting) and they're operating with  * global locks, so this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1088,7 +1088,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -1122,7 +1122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the static string constants for the DSO file name and the function  * symbol names to bind to. Regrettably, the DSO name on *nix appears to be  * "atasi.so" rather than something more consistent like "libatasi.so". At the  * time of writing, I'm not sure what the file name on win32 is but clearly  * native name translation is not possible (eg libatasi.so on *nix, and  * atasi.dll on win32). For the purposes of testing, I have created a symbollic  * link called "libatasi.so" so that we can use native name-translation - a  * better solution will be needed. */
+comment|/*  * These are the static string constants for the DSO file name and the  * function symbol names to bind to. Regrettably, the DSO name on *nix  * appears to be "atasi.so" rather than something more consistent like  * "libatasi.so". At the time of writing, I'm not sure what the file name on  * win32 is but clearly native name translation is not possible (eg  * libatasi.so on *nix, and atasi.dll on win32). For the purposes of testing,  * I have created a symbollic link called "libatasi.so" so that we can use  * native name-translation - a better solution will be needed.  */
 end_comment
 
 begin_decl_stmt
@@ -1274,7 +1274,7 @@ block|{
 name|free_ATALLA_LIBNAME
 argument_list|()
 expr_stmt|;
-comment|/* Unload the atalla error strings so any error state including our 	 * functs or reasons won't lead to a segfault (they simply get displayed 	 * without corresponding string data because none will be found). */
+comment|/*      * Unload the atalla error strings so any error state including our      * functs or reasons won't lead to a segfault (they simply get displayed      * without corresponding string data because none will be found).      */
 name|ERR_unload_ATALLA_strings
 argument_list|()
 expr_stmt|;
@@ -1310,7 +1310,7 @@ name|tfnASI_GetPerformanceStatistics
 modifier|*
 name|p3
 decl_stmt|;
-comment|/* Not sure of the origin of this magic value, but Ben's code had it 	 * and it seemed to have been working for a few people. :-) */
+comment|/*      * Not sure of the origin of this magic value, but Ben's code had it and      * it seemed to have been working for a few people. :-)      */
 name|unsigned
 name|int
 name|config_buf
@@ -1336,8 +1336,8 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Attempt to load libatasi.so/atasi.dll/whatever. Needs to be 	 * changed unfortunately because the Atalla drivers don't have 	 * standard library names that can be platform-translated well. */
-comment|/* TODO: Work out how to actually map to the names the Atalla 	 * drivers really use - for now a symbollic link needs to be 	 * created on the host system from libatasi.so to atasi.so on 	 * unix variants. */
+comment|/*      * Attempt to load libatasi.so/atasi.dll/whatever. Needs to be changed      * unfortunately because the Atalla drivers don't have standard library      * names that can be platform-translated well.      */
+comment|/*      * TODO: Work out how to actually map to the names the Atalla drivers      * really use - for now a symbollic link needs to be created on the host      * system from libatasi.so to atasi.so on unix variants.      */
 name|atalla_dso
 operator|=
 name|DSO_load
@@ -1445,7 +1445,7 @@ name|p_Atalla_GetPerformanceStatistics
 operator|=
 name|p3
 expr_stmt|;
-comment|/* Perform a basic test to see if there's actually any unit 	 * running. */
+comment|/*      * Perform a basic test to see if there's actually any unit running.      */
 if|if
 condition|(
 name|p1
@@ -1721,7 +1721,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* I need somewhere to store temporary serialised values for 	 * use with the Atalla API calls. A neat cheat - I'll use 	 * BIGNUMs from the BN_CTX but access their arrays directly as 	 * byte arrays<grin>. This way I don't have to clean anything 	 * up. */
+comment|/*      * I need somewhere to store temporary serialised values for use with the      * Atalla API calls. A neat cheat - I'll use BIGNUMs from the BN_CTX but      * access their arrays directly as byte arrays<grin>. This way I don't      * have to clean anything up.      */
 name|BIGNUM
 modifier|*
 name|modulus
@@ -2251,7 +2251,7 @@ name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_comment
-comment|/* This code was liberated and adapted from the commented-out code in  * dsa_ossl.c. Because of the unoptimised form of the Atalla acceleration  * (it doesn't have a CRT form for RSA), this function means that an  * Atalla system running with a DSA server certificate can handshake  * around 5 or 6 times faster/more than an equivalent system running with  * RSA. Just check out the "signs" statistics from the RSA and DSA parts  * of "openssl speed -engine atalla dsa1024 rsa1024". */
+comment|/*  * This code was liberated and adapted from the commented-out code in  * dsa_ossl.c. Because of the unoptimised form of the Atalla acceleration (it  * doesn't have a CRT form for RSA), this function means that an Atalla  * system running with a DSA server certificate can handshake around 5 or 6  * times faster/more than an equivalent system running with RSA. Just check  * out the "signs" statistics from the RSA and DSA parts of "openssl speed  * -engine atalla dsa1024 rsa1024".  */
 end_comment
 
 begin_function
@@ -2584,7 +2584,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifndef

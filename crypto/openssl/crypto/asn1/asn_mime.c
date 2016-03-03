@@ -4,11 +4,11 @@ comment|/* asn_mime.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  */
 end_comment
 
 begin_include
@@ -60,11 +60,11 @@ file|"asn1_locl.h"
 end_include
 
 begin_comment
-comment|/* Generalised MIME like utilities for streaming ASN1. Although many  * have a PKCS7/CMS like flavour others are more general purpose.  */
+comment|/*  * Generalised MIME like utilities for streaming ASN1. Although many have a  * PKCS7/CMS like flavour others are more general purpose.  */
 end_comment
 
 begin_comment
-comment|/* MIME format structures  * Note that all are translated to lower case apart from  * parameter values. Quotes are stripped off  */
+comment|/*  * MIME format structures Note that all are translated to lower case apart  * from parameter values. Quotes are stripped off  */
 end_comment
 
 begin_typedef
@@ -565,7 +565,7 @@ name|out
 condition|)
 do|;
 block|}
-comment|/* else just write out ASN1 structure which will have all content 	 * stored internally 	 */
+comment|/*      * else just write out ASN1 structure which will have all content stored      * internally      */
 else|else
 name|ASN1_item_i2d_bio
 argument_list|(
@@ -644,7 +644,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* prepend the b64 BIO so all data is base64 encoded. 	 */
+comment|/*      * prepend the b64 BIO so all data is base64 encoded.      */
 name|out
 operator|=
 name|BIO_push
@@ -1272,6 +1272,8 @@ condition|)
 block|{
 comment|/* We want multipart/signed */
 comment|/* Generate a random boundary */
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 operator|(
@@ -1283,7 +1285,12 @@ name|bound
 argument_list|,
 literal|32
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
@@ -1747,7 +1754,7 @@ name|rv
 init|=
 literal|1
 decl_stmt|;
-comment|/* If data is not deteched or resigning then the output BIO is 	 * already set up to finalise when it is written through. 	 */
+comment|/*      * If data is not deteched or resigning then the output BIO is already      * set up to finalise when it is written through.      */
 if|if
 condition|(
 operator|!
@@ -1916,7 +1923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SMIME reader: handle multipart/signed and opaque signing.  * in multipart case the content is placed in a memory BIO  * pointed to by "bcont". In opaque this is set to NULL  */
+comment|/*  * SMIME reader: handle multipart/signed and opaque signing. in multipart  * case the content is placed in a memory BIO pointed to by "bcont". In  * opaque this is set to NULL  */
 end_comment
 
 begin_function
@@ -2496,7 +2503,7 @@ index|[
 name|MAX_SMLEN
 index|]
 decl_stmt|;
-comment|/* Buffer output so we don't write one line at a time. This is 	 * useful when streaming as we don't end up with one OCTET STRING 	 * per line. 	 */
+comment|/*      * Buffer output so we don't write one line at a time. This is useful      * when streaming as we don't end up with one OCTET STRING per line.      */
 name|bf
 operator|=
 name|BIO_new
@@ -2843,7 +2850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Split a multipart/XXX message body into component parts: result is  * canonical parts in a STACK of bios  */
+comment|/*  * Split a multipart/XXX message body into component parts: result is  * canonical parts in a STACK of bios  */
 end_comment
 
 begin_decl_stmt
@@ -3300,7 +3307,7 @@ name|p
 operator|++
 control|)
 block|{
-comment|/* State machine to handle MIME headers 	 * if this looks horrible that's because it *is*          */
+comment|/*              * State machine to handle MIME headers if this looks horrible              * that's because it *is*              */
 switch|switch
 condition|(
 name|state
@@ -3461,7 +3468,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-break|break ;
+break|break;
 case|case
 name|MIME_VALUE
 case|:
@@ -4644,7 +4651,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check for a multipart boundary. Returns:  * 0 : no boundary  * 1 : part boundary  * 2 : final boundary  */
+comment|/*-  * Check for a multipart boundary. Returns:  * 0 : no boundary  * 1 : part boundary  * 2 : final boundary  */
 end_comment
 
 begin_function

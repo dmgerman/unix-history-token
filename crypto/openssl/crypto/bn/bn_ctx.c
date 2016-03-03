@@ -8,7 +8,7 @@ comment|/* Written by Ulf Moeller for the OpenSSL project. */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_if
@@ -74,7 +74,7 @@ file|"bn_lcl.h"
 end_include
 
 begin_comment
-comment|/* TODO list  *  * 1. Check a bunch of "(words+1)" type hacks in various bignum functions and  * check they can be safely removed.  *  - Check +1 and other ugliness in BN_from_montgomery()  *  * 2. Consider allowing a BN_new_ex() that, at least, lets you specify an  * appropriate 'block' size that will be honoured by bn_expand_internal() to  * prevent piddly little reallocations. OTOH, profiling bignum expansions in  * BN_CTX doesn't show this to be a big issue.  */
+comment|/*-  * TODO list  *  * 1. Check a bunch of "(words+1)" type hacks in various bignum functions and  * check they can be safely removed.  *  - Check +1 and other ugliness in BN_from_montgomery()  *  * 2. Consider allowing a BN_new_ex() that, at least, lets you specify an  * appropriate 'block' size that will be honoured by bn_expand_internal() to  * prevent piddly little reallocations. OTOH, profiling bignum expansions in  * BN_CTX doesn't show this to be a big issue.  */
 end_comment
 
 begin_comment
@@ -588,7 +588,7 @@ name|str
 parameter_list|,
 name|ctx
 parameter_list|)
-value|do { \ 				ctxdbg_cur = (str); \ 				fprintf(stderr,"Starting %s\n", ctxdbg_cur); \ 				ctxdbg(ctx); \ 				} while(0)
+value|do { \                                 ctxdbg_cur = (str); \                                 fprintf(stderr,"Starting %s\n", ctxdbg_cur); \                                 ctxdbg(ctx); \                                 } while(0)
 end_define
 
 begin_define
@@ -598,7 +598,7 @@ name|CTXDBG_EXIT
 parameter_list|(
 name|ctx
 parameter_list|)
-value|do { \ 				fprintf(stderr,"Ending %s\n", ctxdbg_cur); \ 				ctxdbg(ctx); \ 				} while(0)
+value|do { \                                 fprintf(stderr,"Ending %s\n", ctxdbg_cur); \                                 ctxdbg(ctx); \                                 } while(0)
 end_define
 
 begin_define
@@ -654,7 +654,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This function is an evil legacy and should not be used. This implementation  * is WYSIWYG, though I've done my best. */
+comment|/*  * This function is an evil legacy and should not be used. This  * implementation is WYSIWYG, though I've done my best.  */
 end_comment
 
 begin_ifndef
@@ -672,7 +672,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* Assume the caller obtained the context via BN_CTX_new() and so is 	 * trying to reset it for use. Nothing else makes sense, least of all 	 * binary compatibility from a time when they could declare a static 	 * variable. */
+comment|/*      * Assume the caller obtained the context via BN_CTX_new() and so is      * trying to reset it for use. Nothing else makes sense, least of all      * binary compatibility from a time when they could declare a static      * variable.      */
 name|BN_POOL_reset
 argument_list|(
 operator|&
@@ -1131,7 +1131,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Setting too_many prevents repeated "get" attempts from 		 * cluttering the error stack. */
+comment|/*          * Setting too_many prevents repeated "get" attempts from cluttering          * the error stack.          */
 name|ctx
 operator|->
 name|too_many

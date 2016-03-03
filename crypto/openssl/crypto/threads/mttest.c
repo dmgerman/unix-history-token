@@ -4,14 +4,8 @@ comment|/* crypto/threads/mttest.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -186,12 +180,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../e_os.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/x509.h>
 end_include
 
@@ -212,29 +200,6 @@ include|#
 directive|include
 file|<openssl/rand.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_NO_FP_API
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|APPS_WIN16
-end_define
-
-begin_include
-include|#
-directive|include
-file|"../buffer/bss_file.c"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -289,7 +254,6 @@ end_define
 
 begin_function_decl
 name|int
-name|MS_CALLBACK
 name|verify_callback
 parameter_list|(
 name|int
@@ -345,6 +309,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -365,6 +330,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -385,6 +351,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -405,6 +372,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -425,6 +393,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -457,51 +426,56 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|void
 name|irix_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|void
 name|solaris_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|void
 name|pthreads_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|void
 name|netware_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|void
 name|beos_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -661,18 +635,18 @@ specifier|static
 name|void
 name|print_stats
 parameter_list|(
-name|FILE
+name|BIO
 modifier|*
-name|fp
+name|bio
 parameter_list|,
 name|SSL_CTX
 modifier|*
 name|ctx
 parameter_list|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4ld items in the session cache\n"
 argument_list|,
@@ -682,9 +656,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d client connects (SSL_connect())\n"
 argument_list|,
@@ -694,9 +668,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d client connects that finished\n"
 argument_list|,
@@ -706,9 +680,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d server connects (SSL_accept())\n"
 argument_list|,
@@ -718,9 +692,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d server connects that finished\n"
 argument_list|,
@@ -730,9 +704,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d session cache hits\n"
 argument_list|,
@@ -742,9 +716,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d session cache misses\n"
 argument_list|,
@@ -754,9 +728,9 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|fp
+name|bio
 argument_list|,
 literal|"%4d session cache timeouts\n"
 argument_list|,
@@ -777,100 +751,100 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"usage: ssltest [args ...]\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -server_auth  - check server certificate\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -client_auth  - do client authentication\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -v            - more output\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -CApath arg   - PEM format directory of CA's\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -CAfile arg   - PEM format file of CA's\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -threads arg  - number of threads\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -loops arg    - number of 'connections', per thread\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -reconnect    - reuse session-id's\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -stats        - server session-id cache stats\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -cert arg     - server certificate/key\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -ccert arg    - client certificate/key\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|" -ssl3         - just SSLv3n\n"
 argument_list|)
@@ -946,6 +920,7 @@ name|ccert
 init|=
 name|TEST_CLIENT_CERT
 decl_stmt|;
+specifier|const
 name|SSL_METHOD
 modifier|*
 name|ssl_method
@@ -969,9 +944,9 @@ name|NULL
 condition|)
 name|bio_err
 operator|=
-name|BIO_new_fp
+name|BIO_new_fd
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
 name|BIO_NOCLOSE
 argument_list|)
@@ -984,9 +959,9 @@ name|NULL
 condition|)
 name|bio_stdout
 operator|=
-name|BIO_new_fp
+name|BIO_new_fd
 argument_list|(
-name|stdout
+literal|1
 argument_list|,
 name|BIO_NOCLOSE
 argument_list|)
@@ -1343,9 +1318,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"unknown option %s\n"
 argument_list|,
@@ -1473,11 +1448,23 @@ name|SSL_FILETYPE_PEM
 argument_list|)
 condition|)
 block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"SSL_CTX_use_certificate_file (%s)\n"
+argument_list|,
+name|scert
+argument_list|)
+expr_stmt|;
 name|ERR_print_errors
 argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
+goto|goto
+name|end
+goto|;
 block|}
 elseif|else
 if|if
@@ -1493,6 +1480,15 @@ name|SSL_FILETYPE_PEM
 argument_list|)
 condition|)
 block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"SSL_CTX_use_RSAPrivateKey_file (%s)\n"
+argument_list|,
+name|scert
+argument_list|)
+expr_stmt|;
 name|ERR_print_errors
 argument_list|(
 name|bio_err
@@ -1569,9 +1565,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"SSL_load_verify_locations\n"
 argument_list|)
@@ -1590,9 +1586,9 @@ condition|(
 name|client_auth
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"client authentication\n"
 argument_list|)
@@ -1614,9 +1610,9 @@ condition|(
 name|server_auth
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"server authentication\n"
 argument_list|)
@@ -1653,16 +1649,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"Client SSL_CTX stats then free it\n"
 argument_list|)
 expr_stmt|;
 name|print_stats
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 name|c_ctx
 argument_list|)
@@ -1680,16 +1676,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"Server SSL_CTX stats then free it\n"
 argument_list|)
 expr_stmt|;
 name|print_stats
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 name|s_ctx
 argument_list|)
@@ -1699,44 +1695,44 @@ condition|(
 name|cache_stats
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"-----\n"
 argument_list|)
 expr_stmt|;
-name|lh_stats
+name|lh_SSL_SESSION_stats_bio
 argument_list|(
 name|SSL_CTX_sessions
 argument_list|(
 name|s_ctx
 argument_list|)
 argument_list|,
-name|stderr
+name|bio_err
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"-----\n"
 argument_list|)
 expr_stmt|;
-comment|/*	lh_node_stats(SSL_CTX_sessions(s_ctx),stderr); 			fprintf(stderr,"-----\n"); */
-name|lh_node_usage_stats
+comment|/*-     lh_SSL_SESSION_node_stats_bio(SSL_CTX_sessions(s_ctx),bio_err);             BIO_printf(bio_err,"-----\n"); */
+name|lh_SSL_SESSION_node_usage_stats_bio
 argument_list|(
 name|SSL_CTX_sessions
 argument_list|(
 name|s_ctx
 argument_list|)
 argument_list|,
-name|stderr
+name|bio_err
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"-----\n"
 argument_list|)
@@ -1747,9 +1743,9 @@ argument_list|(
 name|s_ctx
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"done free\n"
 argument_list|)
@@ -1820,6 +1816,9 @@ name|ctx
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|CRYPTO_THREADID
+name|thread_id
 decl_stmt|;
 name|ctx
 index|[
@@ -1906,14 +1905,23 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|fprintf
+name|CRYPTO_THREADID_current
 argument_list|(
-name|stdout
+operator|&
+name|thread_id
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_stdout
 argument_list|,
 literal|"started thread %lu\n"
 argument_list|,
-name|CRYPTO_thread_id
-argument_list|()
+name|CRYPTO_THREADID_hash
+argument_list|(
+operator|&
+name|thread_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1930,8 +1938,8 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*		fprintf(stderr,"%4d %2d ctx->ref (%3d,%3d)\n", 			CRYPTO_thread_id(),i, 			ssl_ctx[0]->references, 			ssl_ctx[1]->references); */
-comment|/*	pthread_delay_np(&tm);*/
+comment|/*-     BIO_printf(bio_err,"%4d %2d ctx->ref (%3d,%3d)\n",                    CRYPTO_THREADID_hash(&thread_id),i,                    ssl_ctx[0]->references,                    ssl_ctx[1]->references); */
+comment|/*      pthread_delay_np(&tm); */
 name|ret
 operator|=
 name|doit
@@ -1946,16 +1954,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"error[%d] %lu - %d\n"
 argument_list|,
 name|i
 argument_list|,
-name|CRYPTO_thread_id
-argument_list|()
+name|CRYPTO_THREADID_hash
+argument_list|(
+operator|&
+name|thread_id
+argument_list|)
 argument_list|,
 name|ret
 argument_list|)
@@ -1967,14 +1978,17 @@ operator|)
 return|;
 block|}
 block|}
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"DONE %lu\n"
 argument_list|,
-name|CRYPTO_thread_id
-argument_list|()
+name|CRYPTO_THREADID_hash
+argument_list|(
+operator|&
+name|thread_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2466,8 +2480,10 @@ argument_list|(
 name|s_ssl
 argument_list|)
 condition|)
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"server waiting in SSL_accept - %s\n"
 argument_list|,
 name|SSL_state_string_long
@@ -2481,14 +2497,18 @@ if|if
 condition|(
 name|s_write
 condition|)
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"server:SSL_write()\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"server:SSL_read()\n"
 argument_list|)
 expr_stmt|;
@@ -2507,8 +2527,10 @@ argument_list|(
 name|c_ssl
 argument_list|)
 condition|)
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"client waiting in SSL_connect - %s\n"
 argument_list|,
 name|SSL_state_string_long
@@ -2522,14 +2544,18 @@ if|if
 condition|(
 name|c_write
 condition|)
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"client:SSL_write()\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"client:SSL_read()\n"
 argument_list|)
 expr_stmt|;
@@ -2543,9 +2569,9 @@ operator|!
 name|do_server
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"ERROR IN STARTUP\n"
 argument_list|)
@@ -2628,9 +2654,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"ERROR in CLIENT\n"
 argument_list|)
@@ -2655,9 +2681,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"SSL CLIENT STARTUP FAILED\n"
 argument_list|)
@@ -2738,9 +2764,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"ERROR in CLIENT\n"
 argument_list|)
@@ -2765,9 +2791,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"SSL CLIENT STARTUP FAILED\n"
 argument_list|)
@@ -2787,27 +2813,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|undef
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"CLIENT:from server:"
 argument_list|)
 expr_stmt|;
-name|fwrite
+name|BIO_write
 argument_list|(
+name|bio_stdout
+argument_list|,
 name|cbuf
 argument_list|,
-literal|1
-argument_list|,
 name|i
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
-name|fflush
+name|BIO_flush
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2892,9 +2916,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"ERROR in SERVER\n"
 argument_list|)
@@ -2919,9 +2943,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"SSL SERVER STARTUP FAILED\n"
 argument_list|)
@@ -2945,27 +2969,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|undef
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"SERVER:from client:"
 argument_list|)
 expr_stmt|;
-name|fwrite
+name|BIO_write
 argument_list|(
+name|bio_stdout
+argument_list|,
 name|sbuf
 argument_list|,
-literal|1
-argument_list|,
 name|i
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
-name|fflush
+name|BIO_flush
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3033,9 +3055,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"ERROR in SERVER\n"
 argument_list|)
@@ -3060,9 +3082,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"SSL SERVER STARTUP FAILED\n"
 argument_list|)
@@ -3138,9 +3160,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|undef
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"DONE\n"
 argument_list|)
@@ -3149,7 +3171,7 @@ endif|#
 directive|endif
 name|err
 label|:
-comment|/* We have to set the BIO's to NULL otherwise they will be 	 * free()ed twice.  Once when th s_ssl is SSL_free()ed and 	 * again when c_ssl is SSL_free()ed. 	 * This is a hack required because s_ssl and c_ssl are sharing the same 	 * BIO structure and SSL_set_bio() and SSL_free() automatically 	 * BIO_free non NULL entries. 	 * You should not normally do this or be required to do this */
+comment|/*      * We have to set the BIO's to NULL otherwise they will be free()ed      * twice.  Once when th s_ssl is SSL_free()ed and again when c_ssl is      * SSL_free()ed. This is a hack required because s_ssl and c_ssl are      * sharing the same BIO structure and SSL_set_bio() and SSL_free()      * automatically BIO_free non NULL entries. You should not normally do      * this or be required to do this      */
 if|if
 condition|(
 name|s_ssl
@@ -3245,7 +3267,6 @@ end_function
 
 begin_function
 name|int
-name|MS_CALLBACK
 name|verify_callback
 parameter_list|(
 name|int
@@ -3297,9 +3318,9 @@ if|if
 condition|(
 name|ok
 condition|)
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"depth=%d %s\n"
 argument_list|,
@@ -3311,9 +3332,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"depth=%d error=%d %s\n"
 argument_list|,
@@ -3492,6 +3513,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -3643,8 +3665,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"reaping\n"
 argument_list|)
 expr_stmt|;
@@ -3713,9 +3737,9 @@ operator|==
 name|WAIT_FAILED
 condition|)
 block|{
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"WaitForMultipleObjects failed:%d\n"
 argument_list|,
@@ -3826,8 +3850,10 @@ operator|)
 operator|/
 literal|1000.0
 expr_stmt|;
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"win32 threads done - %.3f seconds\n"
 argument_list|,
 name|ret
@@ -3860,7 +3886,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*static rwlock_t *lock_cs; */
+comment|/*  * static rwlock_t *lock_cs;  */
 end_comment
 
 begin_decl_stmt
@@ -3948,26 +3974,11 @@ expr_stmt|;
 block|}
 name|CRYPTO_set_id_callback
 argument_list|(
-operator|(
-name|unsigned
-name|long
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|solaris_thread_id
 argument_list|)
 expr_stmt|;
 name|CRYPTO_set_locking_callback
 argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|solaris_locking_callback
 argument_list|)
 expr_stmt|;
@@ -3989,9 +4000,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"cleanup\n"
 argument_list|)
@@ -4023,9 +4034,9 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"%8ld:%s\n"
 argument_list|,
@@ -4051,9 +4062,9 @@ argument_list|(
 name|lock_count
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"done cleanup\n"
 argument_list|)
@@ -4071,6 +4082,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -4082,9 +4094,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|undef
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"thread=%4d mode=%s lock=%s %s:%d\n"
 argument_list|,
@@ -4118,7 +4130,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	if (CRYPTO_LOCK_SSL_CERT == type) 	fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n", 		CRYPTO_thread_id(), 		mode,file,line); 	*/
+comment|/*-     if (CRYPTO_LOCK_SSL_CERT == type)     BIO_printf(bio_err,"(t,m,f,l) %ld %d %s %d\n",                CRYPTO_thread_id(),                mode,file,line);     */
 if|if
 condition|(
 name|mode
@@ -4126,7 +4138,7 @@ operator|&
 name|CRYPTO_LOCK
 condition|)
 block|{
-comment|/*	if (mode& CRYPTO_READ) 			rw_rdlock(&(lock_cs[type])); 		else 			rw_wrlock(&(lock_cs[type])); */
+comment|/*-         if (mode& CRYPTO_READ)                 rw_rdlock(&(lock_cs[type]));         else                 rw_wrlock(&(lock_cs[type])); */
 name|mutex_lock
 argument_list|(
 operator|&
@@ -4147,7 +4159,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*		rw_unlock(&(lock_cs[type]));  */
+comment|/*      rw_unlock(&(lock_cs[type]));  */
 name|mutex_unlock
 argument_list|(
 operator|&
@@ -4259,8 +4271,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"reaping\n"
 argument_list|)
 expr_stmt|;
@@ -4291,48 +4305,44 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+if|#
+directive|if
+literal|0
+comment|/* We can't currently find out the reference amount */
+block|BIO_printf(bio_stdout, "solaris threads done (%d,%d)\n",                s_ctx->references, c_ctx->references);
+else|#
+directive|else
+name|BIO_printf
 argument_list|(
-literal|"solaris threads done (%d,%d)\n"
+name|bio_stdout
 argument_list|,
-name|s_ctx
-operator|->
-name|references
-argument_list|,
-name|c_ctx
-operator|->
-name|references
+literal|"solaris threads done\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_function
-name|unsigned
-name|long
+name|void
 name|solaris_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 block|{
-name|unsigned
-name|long
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+name|CRYPTO_THREADID_set_numeric
+argument_list|(
 operator|(
 name|unsigned
 name|long
 operator|)
 name|thr_self
 argument_list|()
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
@@ -4476,26 +4486,11 @@ expr_stmt|;
 block|}
 name|CRYPTO_set_id_callback
 argument_list|(
-operator|(
-name|unsigned
-name|long
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|irix_thread_id
 argument_list|)
 expr_stmt|;
 name|CRYPTO_set_locking_callback
 argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|irix_locking_callback
 argument_list|)
 expr_stmt|;
@@ -4588,6 +4583,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -4603,8 +4599,10 @@ operator|&
 name|CRYPTO_LOCK
 condition|)
 block|{
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"lock %d\n"
 argument_list|,
 name|type
@@ -4621,8 +4619,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"unlock %d\n"
 argument_list|,
 name|type
@@ -4725,8 +4725,10 @@ name|ssl_ctx
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"reaping\n"
 argument_list|)
 expr_stmt|;
@@ -4750,19 +4752,22 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+if|#
+directive|if
+literal|0
+comment|/* We can't currently find out the reference amount */
+block|BIO_printf(bio_stdout, "irix threads done (%d,%d)\n",                s_ctx->references, c_ctx->references);
+else|#
+directive|else
+name|BIO_printf
 argument_list|(
-literal|"irix threads done (%d,%d)\n"
+name|bio_stdout
 argument_list|,
-name|s_ctx
-operator|->
-name|references
-argument_list|,
-name|c_ctx
-operator|->
-name|references
+literal|"irix threads done\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4774,24 +4779,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|long
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+name|CRYPTO_THREADID_set_numeric
+argument_list|(
 operator|(
 name|unsigned
 name|long
 operator|)
 name|getpid
 argument_list|()
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
@@ -4898,28 +4895,13 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|CRYPTO_set_id_callback
+name|CRYPTO_THREADID_set_callback
 argument_list|(
-operator|(
-name|unsigned
-name|long
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|pthreads_thread_id
 argument_list|)
 expr_stmt|;
 name|CRYPTO_set_locking_callback
 argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|pthreads_locking_callback
 argument_list|)
 expr_stmt|;
@@ -4941,9 +4923,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"cleanup\n"
 argument_list|)
@@ -4974,9 +4956,9 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"%8ld:%s\n"
 argument_list|,
@@ -5002,9 +4984,9 @@ argument_list|(
 name|lock_count
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"done cleanup\n"
 argument_list|)
@@ -5022,6 +5004,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -5033,9 +5016,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|undef
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"thread=%4d mode=%s lock=%s %s:%d\n"
 argument_list|,
@@ -5069,7 +5052,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	if (CRYPTO_LOCK_SSL_CERT == type) 		fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n", 		CRYPTO_thread_id(), 		mode,file,line); */
+comment|/*-     if (CRYPTO_LOCK_SSL_CERT == type)             BIO_printf(bio_err,"(t,m,f,l) %ld %d %s %d\n",                        CRYPTO_thread_id(),                        mode,file,line); */
 if|if
 condition|(
 name|mode
@@ -5155,7 +5138,7 @@ index|]
 operator|=
 name|c_ctx
 expr_stmt|;
-comment|/* 	thr_setconcurrency(thread_number); 	*/
+comment|/*      * thr_setconcurrency(thread_number);      */
 for|for
 control|(
 name|i
@@ -5200,8 +5183,10 @@ name|ssl_ctx
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"reaping\n"
 argument_list|)
 expr_stmt|;
@@ -5230,48 +5215,46 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+if|#
+directive|if
+literal|0
+comment|/* We can't currently find out the reference amount */
+block|BIO_printf(bio_stdout, "pthreads threads done (%d,%d)\n",                s_ctx->references, c_ctx->references);
+else|#
+directive|else
+name|BIO_printf
 argument_list|(
-literal|"pthreads threads done (%d,%d)\n"
+name|bio_stdout
 argument_list|,
-name|s_ctx
-operator|->
-name|references
-argument_list|,
-name|c_ctx
-operator|->
-name|references
+literal|"pthreads threads done\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_function
-name|unsigned
-name|long
+name|void
 name|pthreads_thread_id
 parameter_list|(
-name|void
+name|CRYPTO_THREADID
+modifier|*
+name|tid
 parameter_list|)
 block|{
-name|unsigned
-name|long
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+name|CRYPTO_THREADID_set_numeric
+argument_list|(
+name|tid
+argument_list|,
 operator|(
 name|unsigned
 name|long
 operator|)
 name|pthread_self
 argument_list|()
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
@@ -5370,26 +5353,11 @@ argument_list|)
 expr_stmt|;
 name|CRYPTO_set_id_callback
 argument_list|(
-operator|(
-name|unsigned
-name|long
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|netware_thread_id
 argument_list|)
 expr_stmt|;
 name|CRYPTO_set_locking_callback
 argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|netware_locking_callback
 argument_list|)
 expr_stmt|;
@@ -5411,9 +5379,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"thread_cleanup\n"
 argument_list|)
@@ -5441,9 +5409,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"%8ld:%s\n"
 argument_list|,
@@ -5474,9 +5442,9 @@ argument_list|(
 name|ThreadSem
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stdout
+name|bio_stdout
 argument_list|,
 literal|"done cleanup\n"
 argument_list|)
@@ -5494,6 +5462,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -5616,8 +5585,10 @@ name|ThreadSwitchWithDelay
 argument_list|()
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"reaping\n"
 argument_list|)
 expr_stmt|;
@@ -5642,19 +5613,22 @@ name|ThreadSem
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+if|#
+directive|if
+literal|0
+comment|/* We can't currently find out the reference amount */
+block|BIO_printf(bio_stdout, "netware threads done (%d,%d)\n",                s_ctx->references, c_ctx->references);
+else|#
+directive|else
+name|BIO_printf
 argument_list|(
-literal|"netware threads done (%d,%d)\n"
+name|bio_stdout
 argument_list|,
-name|s_ctx
-operator|->
-name|references
-argument_list|,
-name|c_ctx
-operator|->
-name|references
+literal|"netware threads done\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5666,24 +5640,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|long
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+name|CRYPTO_THREADID_set_numeric
+argument_list|(
 operator|(
 name|unsigned
 name|long
 operator|)
 name|GetThreadID
 argument_list|()
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
@@ -5844,9 +5810,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"cleanup\n"
 argument_list|)
@@ -5872,9 +5838,9 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"%8ld:%s\n"
 argument_list|,
@@ -5900,9 +5866,9 @@ argument_list|(
 name|lock_count
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|BIO_printf
 argument_list|(
-name|stderr
+name|bio_err
 argument_list|,
 literal|"done cleanup\n"
 argument_list|)
@@ -5932,7 +5898,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|fprintf(stderr,"thread=%4d mode=%s lock=%s %s:%d\n", 		CRYPTO_thread_id(), 		(mode&CRYPTO_LOCK)?"l":"u", 		(type&CRYPTO_READ)?"r":"w",file,line);
+block|BIO_printf(bio_err, "thread=%4d mode=%s lock=%s %s:%d\n",                CRYPTO_thread_id(),                (mode& CRYPTO_LOCK) ? "l" : "u",                (type& CRYPTO_READ) ? "r" : "w", file, line);
 endif|#
 directive|endif
 if|if
@@ -6060,8 +6026,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"waiting...\n"
 argument_list|)
 expr_stmt|;
@@ -6094,8 +6062,10 @@ name|result
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|BIO_printf
 argument_list|(
+name|bio_stdout
+argument_list|,
 literal|"beos threads done (%d,%d)\n"
 argument_list|,
 name|s_ctx

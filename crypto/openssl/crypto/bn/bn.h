@@ -4,15 +4,15 @@ comment|/* crypto/bn/bn.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the Eric Young open source  * license provided above.  *  * The binary polynomial arithmetic software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the Eric Young open source  * license provided above.  *  * The binary polynomial arithmetic software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_ifndef
@@ -26,6 +26,12 @@ define|#
 directive|define
 name|HEADER_BN_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -78,7 +84,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* These preprocessor symbols control various aspects of the bignum headers and  * library code. They're not defined by any "normal" configuration, as they are  * intended for development and testing purposes. NB: defining all three can be  * useful for debugging application code as well as openssl itself.  *  * BN_DEBUG - turn on various debugging alterations to the bignum code  * BN_DEBUG_RAND - uses random poisoning of unused words to trip up  * mismanagement of bignum internals. You must also define BN_DEBUG.  */
+comment|/*  * These preprocessor symbols control various aspects of the bignum headers  * and library code. They're not defined by any "normal" configuration, as  * they are intended for development and testing purposes. NB: defining all  * three can be useful for debugging application code as well as openssl  * itself. BN_DEBUG - turn on various debugging alterations to the bignum  * code BN_DEBUG_RAND - uses random poisoning of unused words to trip up  * mismanagement of bignum internals. You must also define BN_DEBUG.  */
 comment|/* #define BN_DEBUG */
 comment|/* #define BN_DEBUG_RAND */
 ifndef|#
@@ -95,7 +101,7 @@ directive|define
 name|BN_RECURSION
 endif|#
 directive|endif
-comment|/* This next option uses the C libraries (2 word)/(1 word) function.  * If it is not defined, I use my C version (which is slower).  * The reason for this flag is that when the particular C compiler  * library routine is used, and the library is linked with a different  * compiler, the library is missing.  This mostly happens when the  * library is built with gcc and then linked using normal cc.  This would  * be a common occurrence because gcc normally produces code that is  * 2 times faster than system compilers for the big number stuff.  * For machines with only one compiler (or shared libraries), this should  * be on.  Again this in only really a problem on machines  * using "long long's", are 32bit, and are not using my assembler code. */
+comment|/*  * This next option uses the C libraries (2 word)/(1 word) function. If it is  * not defined, I use my C version (which is slower). The reason for this  * flag is that when the particular C compiler library routine is used, and  * the library is linked with a different compiler, the library is missing.  * This mostly happens when the library is built with gcc and then linked  * using normal cc.  This would be a common occurrence because gcc normally  * produces code that is 2 times faster than system compilers for the big  * number stuff. For machines with only one compiler (or shared libraries),  * this should be on.  Again this in only really a problem on machines using  * "long long's", are 32bit, and are not using my assembler code.  */
 if|#
 directive|if
 name|defined
@@ -128,7 +134,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* assuming long is 64bit - this is the DEC Alpha  * unsigned long long is only 64 bits :-(, don't define  * BN_LLONG for the DEC Alpha */
+comment|/*  * assuming long is 64bit - this is the DEC Alpha unsigned long long is only  * 64 bits :-(, don't define BN_LLONG for the DEC Alpha  */
 ifdef|#
 directive|ifdef
 name|SIXTY_FOUR_BIT_LONG
@@ -210,7 +216,7 @@ name|BN_HEX_FMT2
 value|"%016lX"
 endif|#
 directive|endif
-comment|/* This is where the long long data type is 64 bits, but long is 32.  * For machines where there are 64bit registers, this is the mode to use.  * IRIX, on R4000 and above should use this mode, along with the relevant  * assembler code :-).  Do NOT define BN_LLONG.  */
+comment|/*  * This is where the long long data type is 64 bits, but long is 32. For  * machines where there are 64bit registers, this is the mode to use. IRIX,  * on R4000 and above should use this mode, along with the relevant assembler  * code :-).  Do NOT define BN_LLONG.  */
 ifdef|#
 directive|ifdef
 name|SIXTY_FOUR_BIT
@@ -400,7 +406,7 @@ name|BN_HEX_FMT2
 value|"%08X"
 endif|#
 directive|endif
-comment|/* 2011-02-22 SMS.  * In various places, a size_t variable or a type cast to size_t was  * used to perform integer-only operations on pointers.  This failed on  * VMS with 64-bit pointers (CC /POINTER_SIZE = 64) because size_t is  * still only 32 bits.  What's needed in these cases is an integer type  * with the same size as a pointer, which size_t is not certain to be.   * The only fix here is VMS-specific.  */
+comment|/*  * 2011-02-22 SMS. In various places, a size_t variable or a type cast to  * size_t was used to perform integer-only operations on pointers.  This  * failed on VMS with 64-bit pointers (CC /POINTER_SIZE = 64) because size_t  * is still only 32 bits.  What's needed in these cases is an integer type  * with the same size as a pointer, which size_t is not certain to be. The  * only fix here is VMS-specific.  */
 if|#
 directive|if
 name|defined
@@ -448,20 +454,20 @@ define|#
 directive|define
 name|BN_FLG_STATIC_DATA
 value|0x02
+comment|/*  * avoid leaking exponent information through timing,  * BN_mod_exp_mont() will call BN_mod_exp_mont_consttime,  * BN_div() will call BN_div_no_branch,  * BN_mod_inverse() will call BN_mod_inverse_no_branch.  */
 define|#
 directive|define
 name|BN_FLG_CONSTTIME
 value|0x04
-comment|/* avoid leaking exponent information through timing,                                       * BN_mod_exp_mont() will call BN_mod_exp_mont_consttime,                                       * BN_div() will call BN_div_no_branch,                                       * BN_mod_inverse() will call BN_mod_inverse_no_branch.                                       */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|OPENSSL_NO_DEPRECATED
+comment|/* deprecated name for the flag */
 define|#
 directive|define
 name|BN_FLG_EXP_CONSTTIME
 value|BN_FLG_CONSTTIME
-comment|/* deprecated name for the flag */
-comment|/* avoid leaking exponent information through timings                                       * (BN_mod_exp_mont() will call BN_mod_exp_mont_consttime) */
+comment|/*  * avoid leaking exponent information through timings  * (BN_mod_exp_mont() will call BN_mod_exp_mont_consttime)  */
 endif|#
 directive|endif
 ifndef|#
@@ -492,7 +498,7 @@ parameter_list|,
 name|n
 parameter_list|)
 value|((b)->flags&(n))
-comment|/* get a clone of a BIGNUM with changed flags, for *temporary* use only  * (the two BIGNUMs cannot not be used in parallel!) */
+comment|/*  * get a clone of a BIGNUM with changed flags, for *temporary* use only (the  * two BIGNUMs cannot not be used in parallel!)  */
 define|#
 directive|define
 name|BN_with_flags
@@ -520,7 +526,7 @@ name|BN_ULONG
 modifier|*
 name|d
 decl_stmt|;
-comment|/* Pointer to an array of 'BN_BITS2' bit chunks. */
+comment|/* Pointer to an array of 'BN_BITS2' bit                                  * chunks. */
 name|int
 name|top
 decl_stmt|;
@@ -558,20 +564,20 @@ comment|/* The modulus */
 name|BIGNUM
 name|Ni
 decl_stmt|;
-comment|/* R*(1/R mod N) - N*Ni = 1 	                * (Ni is only stored for bignum algorithm) */
+comment|/* R*(1/R mod N) - N*Ni = 1 (Ni is only                                  * stored for bignum algorithm) */
 name|BN_ULONG
 name|n0
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* least significant word(s) of Ni; 	                  (type changed with 0.9.9, was "BN_ULONG n0;" before) */
+comment|/* least significant word(s) of Ni; (type                                  * changed with 0.9.9, was "BN_ULONG n0;"                                  * before) */
 name|int
 name|flags
 decl_stmt|;
 block|}
 struct|;
-comment|/* Used for reciprocal division/mod functions  * It cannot be shared between threads  */
+comment|/*  * Used for reciprocal division/mod functions It cannot be shared between  * threads  */
 struct|struct
 name|bn_recp_ctx_st
 block|{
@@ -671,7 +677,7 @@ name|callback
 parameter_list|,
 name|cb_arg
 parameter_list|)
-value|{ \ 		BN_GENCB *tmp_gencb = (gencb); \ 		tmp_gencb->ver = 1; \ 		tmp_gencb->arg = (cb_arg); \ 		tmp_gencb->cb.cb_1 = (callback); }
+value|{ \                 BN_GENCB *tmp_gencb = (gencb); \                 tmp_gencb->ver = 1; \                 tmp_gencb->arg = (cb_arg); \                 tmp_gencb->cb.cb_1 = (callback); }
 comment|/* Macro to populate a BN_GENCB structure with a "new"-style callback */
 define|#
 directive|define
@@ -683,13 +689,13 @@ name|callback
 parameter_list|,
 name|cb_arg
 parameter_list|)
-value|{ \ 		BN_GENCB *tmp_gencb = (gencb); \ 		tmp_gencb->ver = 2; \ 		tmp_gencb->arg = (cb_arg); \ 		tmp_gencb->cb.cb_2 = (callback); }
+value|{ \                 BN_GENCB *tmp_gencb = (gencb); \                 tmp_gencb->ver = 2; \                 tmp_gencb->arg = (cb_arg); \                 tmp_gencb->cb.cb_2 = (callback); }
 define|#
 directive|define
 name|BN_prime_checks
 value|0
-comment|/* default: select number of iterations 			     based on the size of the number */
-comment|/* number of Miller-Rabin iterations for an error rate  of less than 2^-80  * for random 'b'-bit input, b>= 100 (taken from table 4.4 in the Handbook  * of Applied Cryptography [Menezes, van Oorschot, Vanstone; CRC Press 1996];  * original paper: Damgaard, Landrock, Pomerance: Average case error estimates  * for the strong probable prime test. -- Math. Comp. 61 (1993) 177-194) */
+comment|/* default: select number of iterations based                                  * on the size of the number */
+comment|/*  * number of Miller-Rabin iterations for an error rate of less than 2^-80 for  * random 'b'-bit input, b>= 100 (taken from table 4.4 in the Handbook of  * Applied Cryptography [Menezes, van Oorschot, Vanstone; CRC Press 1996];  * original paper: Damgaard, Landrock, Pomerance: Average case error  * estimates for the strong probable prime test. -- Math. Comp. 61 (1993)  * 177-194)  */
 define|#
 directive|define
 name|BN_prime_checks_for_size
@@ -715,7 +721,7 @@ name|a
 parameter_list|,
 name|w
 parameter_list|)
-value|((((a)->top == 1)&& ((a)->d[0] == (BN_ULONG)(w))) || \ 				(((w) == 0)&& ((a)->top == 0)))
+value|((((a)->top == 1)&& ((a)->d[0] == (BN_ULONG)(w))) || \                                 (((w) == 0)&& ((a)->top == 0)))
 define|#
 directive|define
 name|BN_is_zero
@@ -760,7 +766,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { \ 		BIGNUM *_tmp_bn = (a); \ 		_tmp_bn->top = 0; \ 		_tmp_bn->neg = 0; \ 	} while(0)
+value|do { \                 BIGNUM *_tmp_bn = (a); \                 _tmp_bn->top = 0; \                 _tmp_bn->neg = 0; \         } while(0)
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_DEPRECATED
@@ -1148,7 +1154,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/** BN_set_negative sets sign of a BIGNUM  * \param  b  pointer to the BIGNUM object  * \param  n  0 if the BIGNUM b should be positive and a value != 0 otherwise   */
+comment|/** BN_set_negative sets sign of a BIGNUM  * \param  b  pointer to the BIGNUM object  * \param  n  0 if the BIGNUM b should be positive and a value != 0 otherwise  */
 name|void
 name|BN_set_negative
 parameter_list|(
@@ -2078,7 +2084,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* returns -2 for error */
+comment|/* returns                                                                   * -2 for                                                                   * error */
 name|BIGNUM
 modifier|*
 name|BN_mod_inverse
@@ -2494,7 +2500,7 @@ name|mont
 parameter_list|,
 name|ctx
 parameter_list|)
-value|BN_mod_mul_montgomery(\ 	(r),(a),&((mont)->RR),(mont),(ctx))
+value|BN_mod_mul_montgomery(\         (r),(a),&((mont)->RR),(mont),(ctx))
 name|int
 name|BN_from_montgomery
 parameter_list|(
@@ -2956,7 +2962,8 @@ function_decl|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC2M
-comment|/* Functions for arithmetic over binary polynomials represented by BIGNUMs.   *  * The BIGNUM::neg property of BIGNUMs representing binary polynomials is  * ignored.  *  * Note that input arguments are not const so that their bit arrays can  * be expanded to the appropriate size if needed.  */
+comment|/*  * Functions for arithmetic over binary polynomials represented by BIGNUMs.  * The BIGNUM::neg property of BIGNUMs representing binary polynomials is  * ignored. Note that input arguments are not const so that their bit arrays  * can be expanded to the appropriate size if needed.  */
+comment|/*  * r = a + b  */
 name|int
 name|BN_GF2m_add
 parameter_list|(
@@ -2975,7 +2982,6 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/*r = a + b*/
 define|#
 directive|define
 name|BN_GF2m_sub
@@ -2987,6 +2993,7 @@ parameter_list|,
 name|b
 parameter_list|)
 value|BN_GF2m_add(r, a, b)
+comment|/*  * r=a mod p  */
 name|int
 name|BN_GF2m_mod
 parameter_list|(
@@ -3005,7 +3012,7 @@ modifier|*
 name|p
 parameter_list|)
 function_decl|;
-comment|/*r=a mod p*/
+comment|/* r = (a * b) mod p */
 name|int
 name|BN_GF2m_mod_mul
 parameter_list|(
@@ -3033,7 +3040,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a * b) mod p */
+comment|/* r = (a * a) mod p */
 name|int
 name|BN_GF2m_mod_sqr
 parameter_list|(
@@ -3056,7 +3063,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a * a) mod p */
+comment|/* r = (1 / b) mod p */
 name|int
 name|BN_GF2m_mod_inv
 parameter_list|(
@@ -3079,7 +3086,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (1 / b) mod p */
+comment|/* r = (a / b) mod p */
 name|int
 name|BN_GF2m_mod_div
 parameter_list|(
@@ -3107,7 +3114,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a / b) mod p */
+comment|/* r = (a ^ b) mod p */
 name|int
 name|BN_GF2m_mod_exp
 parameter_list|(
@@ -3135,7 +3142,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a ^ b) mod p */
+comment|/* r = sqrt(a) mod p */
 name|int
 name|BN_GF2m_mod_sqrt
 parameter_list|(
@@ -3158,7 +3165,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = sqrt(a) mod p */
+comment|/* r^2 + r = a mod p */
 name|int
 name|BN_GF2m_mod_solve_quad
 parameter_list|(
@@ -3181,7 +3188,6 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r^2 + r = a mod p */
 define|#
 directive|define
 name|BN_GF2m_cmp
@@ -3191,7 +3197,8 @@ parameter_list|,
 name|b
 parameter_list|)
 value|BN_ucmp((a), (b))
-comment|/* Some functions allow for representation of the irreducible polynomials  * as an unsigned int[], say p.  The irreducible f(t) is then of the form:  *     t^p[0] + t^p[1] + ... + t^p[k]  * where m = p[0]> p[1]> ...> p[k] = 0.  */
+comment|/*-  * Some functions allow for representation of the irreducible polynomials  * as an unsigned int[], say p.  The irreducible f(t) is then of the form:  *     t^p[0] + t^p[1] + ... + t^p[k]  * where m = p[0]> p[1]> ...> p[k] = 0.  */
+comment|/* r = a mod p */
 name|int
 name|BN_GF2m_mod_arr
 parameter_list|(
@@ -3210,7 +3217,7 @@ name|p
 index|[]
 parameter_list|)
 function_decl|;
-comment|/* r = a mod p */
+comment|/* r = (a * b) mod p */
 name|int
 name|BN_GF2m_mod_mul_arr
 parameter_list|(
@@ -3238,7 +3245,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a * b) mod p */
+comment|/* r = (a * a) mod p */
 name|int
 name|BN_GF2m_mod_sqr_arr
 parameter_list|(
@@ -3261,7 +3268,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a * a) mod p */
+comment|/* r = (1 / b) mod p */
 name|int
 name|BN_GF2m_mod_inv_arr
 parameter_list|(
@@ -3284,7 +3291,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (1 / b) mod p */
+comment|/* r = (a / b) mod p */
 name|int
 name|BN_GF2m_mod_div_arr
 parameter_list|(
@@ -3312,7 +3319,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a / b) mod p */
+comment|/* r = (a ^ b) mod p */
 name|int
 name|BN_GF2m_mod_exp_arr
 parameter_list|(
@@ -3340,7 +3347,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = (a ^ b) mod p */
+comment|/* r = sqrt(a) mod p */
 name|int
 name|BN_GF2m_mod_sqrt_arr
 parameter_list|(
@@ -3363,7 +3370,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r = sqrt(a) mod p */
+comment|/* r^2 + r = a mod p */
 name|int
 name|BN_GF2m_mod_solve_quad_arr
 parameter_list|(
@@ -3386,7 +3393,6 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* r^2 + r = a mod p */
 name|int
 name|BN_GF2m_poly2arr
 parameter_list|(
@@ -3418,7 +3424,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* faster mod functions for the 'NIST primes'   * 0<= a< p^2 */
+comment|/*  * faster mod functions for the 'NIST primes' 0<= a< p^2  */
 name|int
 name|BN_nist_mod_192
 parameter_list|(
@@ -3578,7 +3584,8 @@ name|a
 parameter_list|,
 name|bits
 parameter_list|)
-value|((((((bits+BN_BITS2-1))/BN_BITS2))<= (a)->dmax)?\ 	(a):bn_expand2((a),(bits+BN_BITS2-1)/BN_BITS2))
+define|\
+value|( \         bits> (INT_MAX - BN_BITS2 + 1) ? \             NULL \         : \             (((bits+BN_BITS2-1)/BN_BITS2)<= (a)->dmax) ? \                 (a) \             : \                 bn_expand2((a),(bits+BN_BITS2-1)/BN_BITS2) \     )
 define|#
 directive|define
 name|bn_wexpand
@@ -3619,7 +3626,7 @@ function_decl|;
 comment|/* unused */
 endif|#
 directive|endif
-comment|/* Bignum consistency macros  * There is one "API" macro, bn_fix_top(), for stripping leading zeroes from  * bignum data after direct manipulations on the data. There is also an  * "internal" macro, bn_check_top(), for verifying that there are no leading  * zeroes. Unfortunately, some auditing is required due to the fact that  * bn_fix_top() has become an overabused duct-tape because bignum data is  * occasionally passed around in an inconsistent state. So the following  * changes have been made to sort this out;  * - bn_fix_top()s implementation has been moved to bn_correct_top()  * - if BN_DEBUG isn't defined, bn_fix_top() maps to bn_correct_top(), and  *   bn_check_top() is as before.  * - if BN_DEBUG *is* defined;  *   - bn_check_top() tries to pollute unused words even if the bignum 'top' is  *     consistent. (ed: only if BN_DEBUG_RAND is defined)  *   - bn_fix_top() maps to bn_check_top() rather than "fixing" anything.  * The idea is to have debug builds flag up inconsistent bignums when they  * occur. If that occurs in a bn_fix_top(), we examine the code in question; if  * the use of bn_fix_top() was appropriate (ie. it follows directly after code  * that manipulates the bignum) it is converted to bn_correct_top(), and if it  * was not appropriate, we convert it permanently to bn_check_top() and track  * down the cause of the bug. Eventually, no internal code should be using the  * bn_fix_top() macro. External applications and libraries should try this with  * their own code too, both in terms of building against the openssl headers  * with BN_DEBUG defined *and* linking with a version of OpenSSL built with it  * defined. This not only improves external code, it provides more test  * coverage for openssl's own code.  */
+comment|/*-  * Bignum consistency macros  * There is one "API" macro, bn_fix_top(), for stripping leading zeroes from  * bignum data after direct manipulations on the data. There is also an  * "internal" macro, bn_check_top(), for verifying that there are no leading  * zeroes. Unfortunately, some auditing is required due to the fact that  * bn_fix_top() has become an overabused duct-tape because bignum data is  * occasionally passed around in an inconsistent state. So the following  * changes have been made to sort this out;  * - bn_fix_top()s implementation has been moved to bn_correct_top()  * - if BN_DEBUG isn't defined, bn_fix_top() maps to bn_correct_top(), and  *   bn_check_top() is as before.  * - if BN_DEBUG *is* defined;  *   - bn_check_top() tries to pollute unused words even if the bignum 'top' is  *     consistent. (ed: only if BN_DEBUG_RAND is defined)  *   - bn_fix_top() maps to bn_check_top() rather than "fixing" anything.  * The idea is to have debug builds flag up inconsistent bignums when they  * occur. If that occurs in a bn_fix_top(), we examine the code in question; if  * the use of bn_fix_top() was appropriate (ie. it follows directly after code  * that manipulates the bignum) it is converted to bn_correct_top(), and if it  * was not appropriate, we convert it permanently to bn_check_top() and track  * down the cause of the bug. Eventually, no internal code should be using the  * bn_fix_top() macro. External applications and libraries should try this with  * their own code too, both in terms of building against the openssl headers  * with BN_DEBUG defined *and* linking with a version of OpenSSL built with it  * defined. This not only improves external code, it provides more test  * coverage for openssl's own code.  */
 ifdef|#
 directive|ifdef
 name|BN_DEBUG
@@ -3658,9 +3665,11 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { \ 		const BIGNUM *_bnum1 = (a); \ 		if(_bnum1->top< _bnum1->dmax) { \ 			unsigned char _tmp_char; \
-comment|/* We cast away const without the compiler knowing, any \ 			 * *genuinely* constant variables that aren't mutable \ 			 * wouldn't be constructed with top!=dmax. */
-value|\ 			BN_ULONG *_not_const; \ 			memcpy(&_not_const,&_bnum1->d, sizeof(BN_ULONG*)); \ 			RAND_pseudo_bytes(&_tmp_char, 1); \ 			memset((unsigned char *)(_not_const + _bnum1->top), _tmp_char, \ 				(_bnum1->dmax - _bnum1->top) * sizeof(BN_ULONG)); \ 		} \ 	} while(0)
+value|do { \                 const BIGNUM *_bnum1 = (a); \                 if(_bnum1->top< _bnum1->dmax) { \                         unsigned char _tmp_char; \
+comment|/* We cast away const without the compiler knowing, any \                          * *genuinely* constant variables that aren't mutable \                          * wouldn't be constructed with top!=dmax. */
+value|\                         BN_ULONG *_not_const; \                         memcpy(&_not_const,&_bnum1->d, sizeof(BN_ULONG*)); \
+comment|/* Debug only - safe to ignore error return */
+value|\                         RAND_pseudo_bytes(&_tmp_char, 1); \                         memset((unsigned char *)(_not_const + _bnum1->top), _tmp_char, \                                 (_bnum1->dmax - _bnum1->top) * sizeof(BN_ULONG)); \                 } \         } while(0)
 ifdef|#
 directive|ifdef
 name|BN_DEBUG_TRIX
@@ -3686,7 +3695,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { \ 		const BIGNUM *_bnum2 = (a); \ 		if (_bnum2 != NULL) { \ 			assert((_bnum2->top == 0) || \ 				(_bnum2->d[_bnum2->top - 1] != 0)); \ 			bn_pollute(_bnum2); \ 		} \ 	} while(0)
+value|do { \                 const BIGNUM *_bnum2 = (a); \                 if (_bnum2 != NULL) { \                         assert((_bnum2->top == 0) || \                                 (_bnum2->d[_bnum2->top - 1] != 0)); \                         bn_pollute(_bnum2); \                 } \         } while(0)
 define|#
 directive|define
 name|bn_fix_top
@@ -3712,9 +3721,9 @@ parameter_list|,
 name|words
 parameter_list|)
 define|\
-value|do { \ 		const BIGNUM *_bnum2 = (bn); \ 		assert((words)<= (_bnum2)->dmax&& (words)>= (_bnum2)->top); \
+value|do { \                 const BIGNUM *_bnum2 = (bn); \                 assert((words)<= (_bnum2)->dmax&& (words)>= (_bnum2)->top); \
 comment|/* avoid unused variable warning with NDEBUG */
-value|\ 		(void)(_bnum2); \ 	} while(0)
+value|\                 (void)(_bnum2); \         } while(0)
 else|#
 directive|else
 comment|/* !BN_DEBUG */
@@ -3762,7 +3771,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|{ \         BN_ULONG *ftl; \ 	int tmp_top = (a)->top; \ 	if (tmp_top> 0) \ 		{ \ 		for (ftl=&((a)->d[tmp_top-1]); tmp_top> 0; tmp_top--) \ 			if (*(ftl--)) break; \ 		(a)->top = tmp_top; \ 		} \ 	bn_pollute(a); \ 	}
+value|{ \         BN_ULONG *ftl; \         int tmp_top = (a)->top; \         if (tmp_top> 0) \                 { \                 for (ftl=&((a)->d[tmp_top-1]); tmp_top> 0; tmp_top--) \                         if (*(ftl--)) break; \                 (a)->top = tmp_top; \                 } \         bn_pollute(a); \         }
 name|BN_ULONG
 name|bn_mul_add_words
 parameter_list|(
@@ -3964,7 +3973,7 @@ name|bottom
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_BN_strings
 parameter_list|(
@@ -4071,6 +4080,10 @@ name|BN_F_BN_GF2M_MOD_SQRT
 value|137
 define|#
 directive|define
+name|BN_F_BN_LSHIFT
+value|145
+define|#
+directive|define
 name|BN_F_BN_MOD_EXP2_MONT
 value|118
 define|#
@@ -4131,6 +4144,10 @@ name|BN_F_BN_RAND_RANGE
 value|122
 define|#
 directive|define
+name|BN_F_BN_RSHIFT
+value|146
+define|#
+directive|define
 name|BN_F_BN_USUB
 value|115
 comment|/* Reason codes. */
@@ -4146,6 +4163,10 @@ define|#
 directive|define
 name|BN_R_BIGNUM_TOO_LONG
 value|114
+define|#
+directive|define
+name|BN_R_BITS_TOO_SMALL
+value|118
 define|#
 directive|define
 name|BN_R_CALLED_WITH_EVEN_MODULUS
@@ -4174,6 +4195,10 @@ define|#
 directive|define
 name|BN_R_INVALID_RANGE
 value|115
+define|#
+directive|define
+name|BN_R_INVALID_SHIFT
+value|119
 define|#
 directive|define
 name|BN_R_NOT_A_SQUARE

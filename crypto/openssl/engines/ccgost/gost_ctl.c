@@ -83,7 +83,7 @@ name|gost_cmds
 index|[]
 init|=
 block|{
-comment|/*	{ GOST_CTRL_RNG, 	"RNG", 	"Type of random number generator to use", 	ENGINE_CMD_FLAG_STRING 	}, 	{ GOST_CTRL_RNG_PARAMS, 	"RNG_PARAMS", 	"Parameter for random number generator", 	ENGINE_CMD_FLAG_STRING 	}, */
+comment|/*- { GOST_CTRL_RNG,     "RNG",     "Type of random number generator to use",     ENGINE_CMD_FLAG_STRING     },     { GOST_CTRL_RNG_PARAMS,     "RNG_PARAMS",     "Parameter for random number generator",     ENGINE_CMD_FLAG_STRING     }, */
 block|{
 name|GOST_CTRL_CRYPT_PARAMS
 block|,
@@ -364,7 +364,7 @@ name|param
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* if there is value in the environment, use it, else -passed string * */
+comment|/*      * if there is value in the environment, use it, else -passed string *      */
 if|if
 condition|(
 operator|!

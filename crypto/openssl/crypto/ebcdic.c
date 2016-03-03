@@ -56,7 +56,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*CHARSET_EBCDIC*/
+comment|/* CHARSET_EBCDIC */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ file|"ebcdic.h"
 end_include
 
 begin_comment
-comment|/*      Initial Port for  Apache-1.3     by<Martin.Kraemer@Mch.SNI.De>  *      Adapted for       OpenSSL-0.9.4  by<Martin.Kraemer@Mch.SNI.De>  */
+comment|/*-  *      Initial Port for  Apache-1.3     by<Martin.Kraemer@Mch.SNI.De>  *      Adapted for       OpenSSL-0.9.4  by<Martin.Kraemer@Mch.SNI.De>  */
 end_comment
 
 begin_ifdef
@@ -76,7 +76,7 @@ name|_OSD_POSIX
 end_ifdef
 
 begin_comment
-comment|/*     "BS2000 OSD" is a POSIX subsystem on a main frame.     It is made by Siemens AG, Germany, for their BS2000 mainframe machines.     Within the POSIX subsystem, the same character set was chosen as in     "native BS2000", namely EBCDIC. (EDF04)      The name "ASCII" in these routines is misleading: actually, conversion     is not between EBCDIC and ASCII, but EBCDIC(EDF04) and ISO-8859.1;     that means that (western european) national characters are preserved.      This table is identical to the one used by rsh/rcp/ftp and other POSIX tools. */
+comment|/*  * "BS2000 OSD" is a POSIX subsystem on a main frame. It is made by Siemens  * AG, Germany, for their BS2000 mainframe machines. Within the POSIX  * subsystem, the same character set was chosen as in "native BS2000", namely  * EBCDIC. (EDF04)  *  * The name "ASCII" in these routines is misleading: actually, conversion is  * not between EBCDIC and ASCII, but EBCDIC(EDF04) and ISO-8859.1; that means  * that (western european) national characters are preserved.  *  * This table is identical to the one used by rsh/rcp/ftp and other POSIX  * tools.  */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ literal|256
 index|]
 init|=
 block|{
-comment|/*00*/
+comment|/*      * 00      */
 literal|0x00
 block|,
 literal|0x01
@@ -126,8 +126,8 @@ literal|0x0e
 block|,
 literal|0x0f
 block|,
-comment|/*................*/
-comment|/*10*/
+comment|/* ................ */
+comment|/*      * 10      */
 literal|0x10
 block|,
 literal|0x11
@@ -160,8 +160,8 @@ literal|0x1e
 block|,
 literal|0x1f
 block|,
-comment|/*................*/
-comment|/*20*/
+comment|/* ................ */
+comment|/*      * 20      */
 literal|0x80
 block|,
 literal|0x81
@@ -194,8 +194,8 @@ literal|0x06
 block|,
 literal|0x07
 block|,
-comment|/*................*/
-comment|/*30*/
+comment|/* ................ */
+comment|/*      * 30      */
 literal|0x90
 block|,
 literal|0x91
@@ -228,8 +228,8 @@ literal|0x9e
 block|,
 literal|0x1a
 block|,
-comment|/*................*/
-comment|/*40*/
+comment|/* ................ */
+comment|/*      * 40      */
 literal|0x20
 block|,
 literal|0xa0
@@ -262,8 +262,8 @@ literal|0x2b
 block|,
 literal|0x7c
 block|,
-comment|/* .........`.<(+|*/
-comment|/*50*/
+comment|/* .........`.<(+| */
+comment|/*      * 50      */
 literal|0x26
 block|,
 literal|0xe9
@@ -296,8 +296,8 @@ literal|0x3b
 block|,
 literal|0x9f
 block|,
-comment|/*&.........!$*);.*/
-comment|/*60*/
+comment|/*&.........!$*);. */
+comment|/*      * 60      */
 literal|0x2d
 block|,
 literal|0x2f
@@ -331,7 +331,7 @@ block|,
 literal|0x3f
 block|,
 comment|/*-/........^,%_>?*/
-comment|/*70*/
+comment|/*      * 70      */
 literal|0xf8
 block|,
 literal|0xc9
@@ -364,8 +364,8 @@ literal|0x3d
 block|,
 literal|0x22
 block|,
-comment|/*..........:#@'="*/
-comment|/*80*/
+comment|/* ..........:#@'=" */
+comment|/*      * 80      */
 literal|0xd8
 block|,
 literal|0x61
@@ -398,8 +398,8 @@ literal|0xfe
 block|,
 literal|0xb1
 block|,
-comment|/*.abcdefghi......*/
-comment|/*90*/
+comment|/* .abcdefghi...... */
+comment|/*      * 90      */
 literal|0xb0
 block|,
 literal|0x6a
@@ -432,8 +432,8 @@ literal|0xc6
 block|,
 literal|0xa4
 block|,
-comment|/*.jklmnopqr......*/
-comment|/*a0*/
+comment|/* .jklmnopqr...... */
+comment|/*      * a0      */
 literal|0xb5
 block|,
 literal|0xaf
@@ -466,8 +466,8 @@ literal|0xde
 block|,
 literal|0xae
 block|,
-comment|/*..stuvwxyz......*/
-comment|/*b0*/
+comment|/* ..stuvwxyz...... */
+comment|/*      * b0      */
 literal|0xa2
 block|,
 literal|0xa3
@@ -500,8 +500,8 @@ literal|0xb4
 block|,
 literal|0xd7
 block|,
-comment|/*...........[\]..*/
-comment|/*c0*/
+comment|/* ...........[\].. */
+comment|/*      * c0      */
 literal|0xf9
 block|,
 literal|0x41
@@ -534,8 +534,8 @@ literal|0xf3
 block|,
 literal|0xf5
 block|,
-comment|/*.ABCDEFGHI......*/
-comment|/*d0*/
+comment|/* .ABCDEFGHI...... */
+comment|/*      * d0      */
 literal|0xa6
 block|,
 literal|0x4a
@@ -568,8 +568,8 @@ literal|0xfa
 block|,
 literal|0xff
 block|,
-comment|/*.JKLMNOPQR......*/
-comment|/*e0*/
+comment|/* .JKLMNOPQR...... */
+comment|/*      * e0      */
 literal|0xd9
 block|,
 literal|0xf7
@@ -602,8 +602,8 @@ literal|0xd3
 block|,
 literal|0xd5
 block|,
-comment|/*..STUVWXYZ......*/
-comment|/*f0*/
+comment|/* ..STUVWXYZ...... */
+comment|/*      * f0      */
 literal|0x30
 block|,
 literal|0x31
@@ -635,7 +635,7 @@ block|,
 literal|0xda
 block|,
 literal|0x7e
-comment|/*0123456789.{.}.~*/
+comment|/* 0123456789.{.}.~ */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -654,7 +654,7 @@ literal|256
 index|]
 init|=
 block|{
-comment|/*00*/
+comment|/*      * 00      */
 literal|0x00
 block|,
 literal|0x01
@@ -687,8 +687,8 @@ literal|0x0e
 block|,
 literal|0x0f
 block|,
-comment|/*................*/
-comment|/*10*/
+comment|/* ................ */
+comment|/*      * 10      */
 literal|0x10
 block|,
 literal|0x11
@@ -721,8 +721,8 @@ literal|0x1e
 block|,
 literal|0x1f
 block|,
-comment|/*................*/
-comment|/*20*/
+comment|/* ................ */
+comment|/*      * 20      */
 literal|0x40
 block|,
 literal|0x5a
@@ -756,7 +756,7 @@ block|,
 literal|0x61
 block|,
 comment|/* !"#$%&'()*+,-./ */
-comment|/*30*/
+comment|/*      * 30      */
 literal|0xf0
 block|,
 literal|0xf1
@@ -789,8 +789,8 @@ literal|0x6e
 block|,
 literal|0x6f
 block|,
-comment|/*0123456789:;<=>?*/
-comment|/*40*/
+comment|/* 0123456789:;<=>? */
+comment|/*      * 40      */
 literal|0x7c
 block|,
 literal|0xc1
@@ -823,8 +823,8 @@ literal|0xd5
 block|,
 literal|0xd6
 block|,
-comment|/*@ABCDEFGHIJKLMNO*/
-comment|/*50*/
+comment|/* @ABCDEFGHIJKLMNO */
+comment|/*      * 50      */
 literal|0xd7
 block|,
 literal|0xd8
@@ -857,8 +857,8 @@ literal|0x6a
 block|,
 literal|0x6d
 block|,
-comment|/*PQRSTUVWXYZ[\]^_*/
-comment|/*60*/
+comment|/* PQRSTUVWXYZ[\]^_ */
+comment|/*      * 60      */
 literal|0x4a
 block|,
 literal|0x81
@@ -891,8 +891,8 @@ literal|0x95
 block|,
 literal|0x96
 block|,
-comment|/*`abcdefghijklmno*/
-comment|/*70*/
+comment|/* `abcdefghijklmno */
+comment|/*      * 70      */
 literal|0x97
 block|,
 literal|0x98
@@ -925,8 +925,8 @@ literal|0xff
 block|,
 literal|0x07
 block|,
-comment|/*pqrstuvwxyz{|}~.*/
-comment|/*80*/
+comment|/* pqrstuvwxyz{|}~. */
+comment|/*      * 80      */
 literal|0x20
 block|,
 literal|0x21
@@ -959,8 +959,8 @@ literal|0x0a
 block|,
 literal|0x14
 block|,
-comment|/*................*/
-comment|/*90*/
+comment|/* ................ */
+comment|/*      * 90      */
 literal|0x30
 block|,
 literal|0x31
@@ -993,8 +993,8 @@ literal|0x3e
 block|,
 literal|0x5f
 block|,
-comment|/*................*/
-comment|/*a0*/
+comment|/* ................ */
+comment|/*      * a0      */
 literal|0x41
 block|,
 literal|0xaa
@@ -1027,8 +1027,8 @@ literal|0xaf
 block|,
 literal|0xa1
 block|,
-comment|/*................*/
-comment|/*b0*/
+comment|/* ................ */
+comment|/*      * b0      */
 literal|0x90
 block|,
 literal|0x8f
@@ -1061,8 +1061,8 @@ literal|0xb9
 block|,
 literal|0xab
 block|,
-comment|/*................*/
-comment|/*c0*/
+comment|/* ................ */
+comment|/*      * c0      */
 literal|0x64
 block|,
 literal|0x65
@@ -1095,8 +1095,8 @@ literal|0x76
 block|,
 literal|0x77
 block|,
-comment|/*................*/
-comment|/*d0*/
+comment|/* ................ */
+comment|/*      * d0      */
 literal|0xac
 block|,
 literal|0x69
@@ -1129,8 +1129,8 @@ literal|0xae
 block|,
 literal|0x59
 block|,
-comment|/*................*/
-comment|/*e0*/
+comment|/* ................ */
+comment|/*      * e0      */
 literal|0x44
 block|,
 literal|0x45
@@ -1163,8 +1163,8 @@ literal|0x56
 block|,
 literal|0x57
 block|,
-comment|/*................*/
-comment|/*f0*/
+comment|/* ................ */
+comment|/*      * f0      */
 literal|0x8c
 block|,
 literal|0x49
@@ -1196,7 +1196,7 @@ block|,
 literal|0x8e
 block|,
 literal|0xdf
-comment|/*................*/
+comment|/* ................ */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1211,7 +1211,7 @@ comment|/*_OSD_POSIX*/
 end_comment
 
 begin_comment
-comment|/* This code does basic character mapping for IBM's TPF and OS/390 operating systems. It is a modified version of the BS2000 table.  Bijective EBCDIC (character set IBM-1047) to US-ASCII table: This table is bijective - there are no ambigous or duplicate characters. */
+comment|/*  * This code does basic character mapping for IBM's TPF and OS/390 operating  * systems. It is a modified version of the BS2000 table.  *  * Bijective EBCDIC (character set IBM-1047) to US-ASCII table: This table is  * bijective - there are no ambigous or duplicate characters.  */
 end_comment
 
 begin_decl_stmt
@@ -1240,7 +1240,7 @@ literal|0x86
 block|,
 literal|0x7f
 block|,
-comment|/* 00-0f:           */
+comment|/* 00-0f: */
 literal|0x87
 block|,
 literal|0x8d
@@ -1274,7 +1274,7 @@ literal|0x08
 block|,
 literal|0x97
 block|,
-comment|/* 10-1f:           */
+comment|/* 10-1f: */
 literal|0x18
 block|,
 literal|0x19
@@ -1308,7 +1308,7 @@ literal|0x17
 block|,
 literal|0x1b
 block|,
-comment|/* 20-2f:           */
+comment|/* 20-2f: */
 literal|0x88
 block|,
 literal|0x89
@@ -1342,7 +1342,7 @@ literal|0x96
 block|,
 literal|0x04
 block|,
-comment|/* 30-3f:           */
+comment|/* 30-3f: */
 literal|0x98
 block|,
 literal|0x99
@@ -1376,7 +1376,7 @@ literal|0xe3
 block|,
 literal|0xe5
 block|,
-comment|/* 40-4f:           */
+comment|/* 40-4f: */
 literal|0xe7
 block|,
 literal|0xf1
@@ -1393,7 +1393,7 @@ literal|0x2b
 block|,
 literal|0x7c
 block|,
-comment|/*  ...........<(+| */
+comment|/* ...........<(+| */
 literal|0x26
 block|,
 literal|0xe9
@@ -1410,7 +1410,7 @@ literal|0xee
 block|,
 literal|0xef
 block|,
-comment|/* 50-5f:           */
+comment|/* 50-5f: */
 literal|0xec
 block|,
 literal|0xdf
@@ -1444,7 +1444,7 @@ literal|0xc3
 block|,
 literal|0xc5
 block|,
-comment|/* 60-6f:           */
+comment|/* 60-6f: */
 literal|0xc7
 block|,
 literal|0xd1
@@ -1478,7 +1478,7 @@ literal|0xce
 block|,
 literal|0xcf
 block|,
-comment|/* 70-7f:           */
+comment|/* 70-7f: */
 literal|0xcc
 block|,
 literal|0x60
@@ -1512,7 +1512,7 @@ literal|0x66
 block|,
 literal|0x67
 block|,
-comment|/* 80-8f:           */
+comment|/* 80-8f: */
 literal|0x68
 block|,
 literal|0x69
@@ -1546,7 +1546,7 @@ literal|0x6f
 block|,
 literal|0x70
 block|,
-comment|/* 90-9f:           */
+comment|/* 90-9f: */
 literal|0x71
 block|,
 literal|0x72
@@ -1580,7 +1580,7 @@ literal|0x77
 block|,
 literal|0x78
 block|,
-comment|/* a0-af:           */
+comment|/* a0-af: */
 literal|0x79
 block|,
 literal|0x7a
@@ -1614,7 +1614,7 @@ literal|0xb6
 block|,
 literal|0xbc
 block|,
-comment|/* b0-bf:           */
+comment|/* b0-bf: */
 literal|0xbd
 block|,
 literal|0xbe
@@ -1648,7 +1648,7 @@ literal|0x46
 block|,
 literal|0x47
 block|,
-comment|/* c0-cf:           */
+comment|/* c0-cf: */
 literal|0x48
 block|,
 literal|0x49
@@ -1682,7 +1682,7 @@ literal|0x4f
 block|,
 literal|0x50
 block|,
-comment|/* d0-df:           */
+comment|/* d0-df: */
 literal|0x51
 block|,
 literal|0x52
@@ -1716,7 +1716,7 @@ literal|0x57
 block|,
 literal|0x58
 block|,
-comment|/* e0-ef:           */
+comment|/* e0-ef: */
 literal|0x59
 block|,
 literal|0x5a
@@ -1750,7 +1750,7 @@ literal|0x36
 block|,
 literal|0x37
 block|,
-comment|/* f0-ff:           */
+comment|/* f0-ff: */
 literal|0x38
 block|,
 literal|0x39
@@ -1772,7 +1772,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The US-ASCII to EBCDIC (character set IBM-1047) table: This table is bijective (no ambiguous or duplicate characters) */
+comment|/*  * The US-ASCII to EBCDIC (character set IBM-1047) table: This table is  * bijective (no ambiguous or duplicate characters)  */
 end_comment
 
 begin_decl_stmt
@@ -1801,7 +1801,7 @@ literal|0x2e
 block|,
 literal|0x2f
 block|,
-comment|/* 00-0f:           */
+comment|/* 00-0f: */
 literal|0x16
 block|,
 literal|0x05
@@ -1835,7 +1835,7 @@ literal|0x32
 block|,
 literal|0x26
 block|,
-comment|/* 10-1f:           */
+comment|/* 10-1f: */
 literal|0x18
 block|,
 literal|0x19
@@ -1869,7 +1869,7 @@ literal|0x50
 block|,
 literal|0x7d
 block|,
-comment|/* 20-2f:           */
+comment|/* 20-2f: */
 literal|0x4d
 block|,
 literal|0x5d
@@ -1886,7 +1886,7 @@ literal|0x4b
 block|,
 literal|0x61
 block|,
-comment|/*  !"#$%&'()*+,-./ */
+comment|/* !"#$%&'()*+,-./ */
 literal|0xf0
 block|,
 literal|0xf1
@@ -1903,7 +1903,7 @@ literal|0xf6
 block|,
 literal|0xf7
 block|,
-comment|/* 30-3f:           */
+comment|/* 30-3f: */
 literal|0xf8
 block|,
 literal|0xf9
@@ -1937,7 +1937,7 @@ literal|0xc6
 block|,
 literal|0xc7
 block|,
-comment|/* 40-4f:           */
+comment|/* 40-4f: */
 literal|0xc8
 block|,
 literal|0xc9
@@ -1971,7 +1971,7 @@ literal|0xe5
 block|,
 literal|0xe6
 block|,
-comment|/* 50-5f:           */
+comment|/* 50-5f: */
 literal|0xe7
 block|,
 literal|0xe8
@@ -2005,7 +2005,7 @@ literal|0x86
 block|,
 literal|0x87
 block|,
-comment|/* 60-6f:           */
+comment|/* 60-6f: */
 literal|0x88
 block|,
 literal|0x89
@@ -2039,7 +2039,7 @@ literal|0xa5
 block|,
 literal|0xa6
 block|,
-comment|/* 70-7f:           */
+comment|/* 70-7f: */
 literal|0xa7
 block|,
 literal|0xa8
@@ -2073,7 +2073,7 @@ literal|0x06
 block|,
 literal|0x08
 block|,
-comment|/* 80-8f:           */
+comment|/* 80-8f: */
 literal|0x28
 block|,
 literal|0x29
@@ -2107,7 +2107,7 @@ literal|0x36
 block|,
 literal|0x17
 block|,
-comment|/* 90-9f:           */
+comment|/* 90-9f: */
 literal|0x38
 block|,
 literal|0x39
@@ -2141,7 +2141,7 @@ literal|0x6a
 block|,
 literal|0xb5
 block|,
-comment|/* a0-af:           */
+comment|/* a0-af: */
 literal|0xbb
 block|,
 literal|0xb4
@@ -2175,7 +2175,7 @@ literal|0xb6
 block|,
 literal|0xb3
 block|,
-comment|/* b0-bf:           */
+comment|/* b0-bf: */
 literal|0x9d
 block|,
 literal|0xda
@@ -2209,7 +2209,7 @@ literal|0x9e
 block|,
 literal|0x68
 block|,
-comment|/* c0-cf:           */
+comment|/* c0-cf: */
 literal|0x74
 block|,
 literal|0x71
@@ -2243,7 +2243,7 @@ literal|0xec
 block|,
 literal|0xbf
 block|,
-comment|/* d0-df:           */
+comment|/* d0-df: */
 literal|0x80
 block|,
 literal|0xfd
@@ -2277,7 +2277,7 @@ literal|0x9c
 block|,
 literal|0x48
 block|,
-comment|/* e0-ef:           */
+comment|/* e0-ef: */
 literal|0x54
 block|,
 literal|0x51
@@ -2311,7 +2311,7 @@ literal|0xcc
 block|,
 literal|0xe1
 block|,
-comment|/* f0-ff:           */
+comment|/* f0-ff: */
 literal|0x70
 block|,
 literal|0xdd
@@ -2342,7 +2342,7 @@ comment|/*_OSD_POSIX*/
 end_comment
 
 begin_comment
-comment|/* Translate a memory block from EBCDIC (host charset) to ASCII (net charset)  * dest and srce may be identical, or separate memory blocks, but  * should not overlap. These functions intentionally have an interface  * compatible to memcpy(3).  */
+comment|/*  * Translate a memory block from EBCDIC (host charset) to ASCII (net charset)  * dest and srce may be identical, or separate memory blocks, but should not  * overlap. These functions intentionally have an interface compatible to  * memcpy(3).  */
 end_comment
 
 begin_function

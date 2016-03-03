@@ -4,11 +4,11 @@ comment|/* asn1_gen.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2002.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2002.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -109,6 +109,17 @@ define|#
 directive|define
 name|ASN1_FLAG_EXP_MAX
 value|20
+end_define
+
+begin_comment
+comment|/* Maximum number of nested sequences */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASN1_GEN_SEQ_MAX_DEPTH
+value|50
 end_define
 
 begin_comment
@@ -239,6 +250,30 @@ end_typedef
 
 begin_function_decl
 specifier|static
+name|ASN1_TYPE
+modifier|*
+name|generate_v3
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|X509V3_CTX
+modifier|*
+name|cnf
+parameter_list|,
+name|int
+name|depth
+parameter_list|,
+name|int
+modifier|*
+name|perr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|bitstr_cb
 parameter_list|(
@@ -345,6 +380,13 @@ parameter_list|,
 name|X509V3_CTX
 modifier|*
 name|cnf
+parameter_list|,
+name|int
+name|depth
+parameter_list|,
+name|int
+modifier|*
+name|perr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -447,6 +489,66 @@ parameter_list|,
 name|X509V3_CTX
 modifier|*
 name|cnf
+parameter_list|)
+block|{
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+name|ASN1_TYPE
+modifier|*
+name|ret
+init|=
+name|generate_v3
+argument_list|(
+name|str
+argument_list|,
+name|cnf
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|err
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_GENERATE_V3
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|ASN1_TYPE
+modifier|*
+name|generate_v3
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|X509V3_CTX
+modifier|*
+name|cnf
+parameter_list|,
+name|int
+name|depth
+parameter_list|,
+name|int
+modifier|*
+name|perr
 parameter_list|)
 block|{
 name|ASN1_TYPE
@@ -556,9 +658,16 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+operator|*
+name|perr
+operator|=
+name|ASN1_R_UNKNOWN_TAG
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -584,12 +693,26 @@ operator|!
 name|cnf
 condition|)
 block|{
-name|ASN1err
-argument_list|(
-name|ASN1_F_ASN1_GENERATE_V3
-argument_list|,
+operator|*
+name|perr
+operator|=
 name|ASN1_R_SEQUENCE_OR_SET_NEEDS_CONFIG
-argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|depth
+operator|>=
+name|ASN1_GEN_SEQ_MAX_DEPTH
+condition|)
+block|{
+operator|*
+name|perr
+operator|=
+name|ASN1_R_ILLEGAL_NESTED_TAGGING
 expr_stmt|;
 return|return
 name|NULL
@@ -608,6 +731,10 @@ operator|.
 name|str
 argument_list|,
 name|cnf
+argument_list|,
+name|depth
+argument_list|,
+name|perr
 argument_list|)
 expr_stmt|;
 block|}
@@ -733,7 +860,7 @@ name|cpy_start
 operator|-
 name|orig_der
 expr_stmt|;
-comment|/* For IMPLICIT tagging the length should match the 		 * original length and constructed flag should be 		 * consistent. 		 */
+comment|/*          * For IMPLICIT tagging the length should match the original length          * and constructed flag should be consistent.          */
 if|if
 condition|(
 name|r
@@ -759,7 +886,7 @@ name|r
 operator|&
 name|V_ASN1_CONSTRUCTED
 expr_stmt|;
-comment|/* Work out new length with IMPLICIT tag: ignore constructed 		 * because it will mess up if indefinite length 		 */
+comment|/*          * Work out new length with IMPLICIT tag: ignore constructed because          * it will mess up if indefinite length          */
 name|len
 operator|=
 name|ASN1_object_size
@@ -1080,6 +1207,16 @@ name|tmp_tag
 decl_stmt|,
 name|tmp_class
 decl_stmt|;
+if|if
+condition|(
+name|elem
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -1436,6 +1573,24 @@ case|:
 if|if
 condition|(
 operator|!
+name|vstart
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_CB
+argument_list|,
+name|ASN1_R_UNKNOWN_FORMAT
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+operator|!
 name|strncmp
 argument_list|(
 name|vstart
@@ -1499,7 +1654,7 @@ name|vstart
 argument_list|,
 literal|"BITLIST"
 argument_list|,
-literal|3
+literal|7
 argument_list|)
 condition|)
 name|arg
@@ -1761,6 +1916,13 @@ parameter_list|,
 name|X509V3_CTX
 modifier|*
 name|cnf
+parameter_list|,
+name|int
+name|depth
+parameter_list|,
+name|int
+modifier|*
+name|perr
 parameter_list|)
 block|{
 name|ASN1_TYPE
@@ -1868,7 +2030,7 @@ name|ASN1_TYPE
 modifier|*
 name|typ
 init|=
-name|ASN1_generate_v3
+name|generate_v3
 argument_list|(
 name|sk_CONF_VALUE_value
 argument_list|(
@@ -1880,6 +2042,12 @@ operator|->
 name|value
 argument_list|,
 name|cnf
+argument_list|,
+name|depth
+operator|+
+literal|1
+argument_list|,
+name|perr
 argument_list|)
 decl_stmt|;
 if|if
@@ -1905,7 +2073,7 @@ name|bad
 goto|;
 block|}
 block|}
-comment|/* Now we has a STACK of the components, convert to the correct form */
+comment|/*      * Now we has a STACK of the components, convert to the correct form      */
 if|if
 condition|(
 name|utype
@@ -2132,7 +2300,7 @@ name|exp_count
 operator|++
 index|]
 expr_stmt|;
-comment|/* If IMPLICIT set tag to implicit value then 	 * reset implicit tag since it has been used. 	 */
+comment|/*      * If IMPLICIT set tag to implicit value then reset implicit tag since it      * has been used.      */
 if|if
 condition|(
 name|arg
@@ -2586,7 +2754,7 @@ literal|"FORMAT"
 argument_list|,
 name|ASN1_GEN_FLAG_FORMAT
 argument_list|)
-block|, 	}
+block|,     }
 decl_stmt|;
 if|if
 condition|(

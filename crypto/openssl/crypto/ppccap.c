@@ -238,7 +238,7 @@ argument_list|)
 return|;
 else|#
 directive|else
-comment|/* boundary of 32 was experimentally determined on 		   Linux 2.6.22, might have to be adjusted on AIX... */
+comment|/*          * boundary of 32 was experimentally determined on Linux 2.6.22,          * might have to be adjusted on AIX...          */
 if|if
 condition|(
 name|num
@@ -320,7 +320,7 @@ operator|&
 name|PPC_FPU64
 operator|)
 condition|)
-comment|/* this is a "must" on POWER6, but run-time detection 		 * is not implemented yet... */
+comment|/*          * this is a "must" on POWER6, but run-time detection is not          * implemented yet...          */
 return|return
 name|bn_mul_mont_fpu64
 argument_list|(
@@ -643,7 +643,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Wanted code detecting POWER6 CPU and setting PPC_FPU64 		 */
+comment|/*          * Wanted code detecting POWER6 CPU and setting PPC_FPU64          */
 block|}
 if|if
 condition|(

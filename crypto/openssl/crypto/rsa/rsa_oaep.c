@@ -4,7 +4,7 @@ comment|/* crypto/rsa/rsa_oaep.c */
 end_comment
 
 begin_comment
-comment|/* Written by Ulf Moeller. This software is distributed on an "AS IS"    basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. */
+comment|/*  * Written by Ulf Moeller. This software is distributed on an "AS IS" basis,  * WITHOUT WARRANTY OF ANY KIND, either express or implied.  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* EME-OAEP as defined in RFC 2437 (PKCS #1 v2.0) */
 end_comment
 
 begin_comment
-comment|/* See Victor Shoup, "OAEP reconsidered," Nov. 2000,  *<URL: http://www.shoup.net/papers/oaep.ps.Z>  * for problems with the security proof for the  * original OAEP scheme, which EME-OAEP is based on.  *   * A new proof can be found in E. Fujisaki, T. Okamoto,  * D. Pointcheval, J. Stern, "RSA-OEAP is Still Alive!",  * Dec. 2000,<URL: http://eprint.iacr.org/2000/061/>.  * The new proof has stronger requirements for the  * underlying permutation: "partial-one-wayness" instead  * of one-wayness.  For the RSA function, this is  * an equivalent notion.  */
+comment|/*  * See Victor Shoup, "OAEP reconsidered," Nov. 2000,<URL:  * http://www.shoup.net/papers/oaep.ps.Z> for problems with the security  * proof for the original OAEP scheme, which EME-OAEP is based on. A new  * proof can be found in E. Fujisaki, T. Okamoto, D. Pointcheval, J. Stern,  * "RSA-OEAP is Still Alive!", Dec. 2000,<URL:  * http://eprint.iacr.org/2000/061/>. The new proof has stronger requirements  * for the underlying permutation: "partial-one-wayness" instead of  * one-wayness.  For the RSA function, this is an equivalent notion.  */
 end_comment
 
 begin_include
@@ -525,7 +525,7 @@ decl_stmt|,
 modifier|*
 name|maskeddb
 decl_stmt|;
-comment|/* |em| is the encoded message, zero-padded to exactly |num| bytes: 	 * em = Y || maskedSeed || maskedDB */
+comment|/*      * |em| is the encoded message, zero-padded to exactly |num| bytes: em =      * Y || maskedSeed || maskedDB      */
 name|unsigned
 name|char
 modifier|*
@@ -562,7 +562,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* 	 * |num| is the length of the modulus; |flen| is the length of the 	 * encoded message. Therefore, for any |from| that was obtained by 	 * decrypting a ciphertext, we must have |flen|<= |num|. Similarly, 	 * num< 2 * SHA_DIGEST_LENGTH + 2 must hold for the modulus 	 * irrespective of the ciphertext, see PKCS #1 v2.2, section 7.1.2. 	 * This does not leak any side-channel information. 	 */
+comment|/*      * |num| is the length of the modulus; |flen| is the length of the      * encoded message. Therefore, for any |from| that was obtained by      * decrypting a ciphertext, we must have |flen|<= |num|. Similarly,      * num< 2 * SHA_DIGEST_LENGTH + 2 must hold for the modulus      * irrespective of the ciphertext, see PKCS #1 v2.2, section 7.1.2.      * This does not leak any side-channel information.      */
 if|if
 condition|(
 name|num
@@ -624,7 +624,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* 	 * Always do this zero-padding copy (even when num == flen) to avoid 	 * leaking that information. The copy still leaks some side-channel 	 * information, but it's impossible to have a fixed  memory access 	 * pattern since we can't read out of the bounds of |from|. 	 * 	 * TODO(emilia): Consider porting BN_bn2bin_padded from BoringSSL. 	 */
+comment|/*      * Always do this zero-padding copy (even when num == flen) to avoid      * leaking that information. The copy still leaks some side-channel      * information, but it's impossible to have a fixed  memory access      * pattern since we can't read out of the bounds of |from|.      *      * TODO(emilia): Consider porting BN_bn2bin_padded from BoringSSL.      */
 name|memset
 argument_list|(
 name|em
@@ -647,7 +647,7 @@ argument_list|,
 name|flen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The first byte must be zero, however we must not leak if this is 	 * true. See James H. Manger, "A Chosen Ciphertext  Attack on RSA 	 * Optimal Asymmetric Encryption Padding (OAEP) [...]", CRYPTO 2001). 	 */
+comment|/*      * The first byte must be zero, however we must not leak if this is      * true. See James H. Manger, "A Chosen Ciphertext  Attack on RSA      * Optimal Asymmetric Encryption Padding (OAEP) [...]", CRYPTO 2001).      */
 name|good
 operator|=
 name|constant_time_is_zero
@@ -808,7 +808,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Padding consists of a number of 0-bytes, followed by a 1. */
+comment|/*          * Padding consists of a number of 0-bytes, followed by a 1.          */
 name|unsigned
 name|int
 name|equals1
@@ -866,7 +866,7 @@ name|good
 operator|&=
 name|found_one_byte
 expr_stmt|;
-comment|/* 	 * At this point |good| is zero unless the plaintext was valid, 	 * so plaintext-awareness ensures timing side-channels are no longer a 	 * concern. 	 */
+comment|/*      * At this point |good| is zero unless the plaintext was valid,      * so plaintext-awareness ensures timing side-channels are no longer a      * concern.      */
 if|if
 condition|(
 operator|!
@@ -926,7 +926,7 @@ goto|;
 block|}
 name|decoding_err
 label|:
-comment|/* To avoid chosen ciphertext attacks, the error message should not reveal 	 * which kind of decoding error happened. */
+comment|/*      * To avoid chosen ciphertext attacks, the error message should not      * reveal which kind of decoding error happened.      */
 name|RSAerr
 argument_list|(
 name|RSA_F_RSA_PADDING_CHECK_PKCS1_OAEP

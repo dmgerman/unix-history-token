@@ -225,7 +225,7 @@ block|,
 literal|"08E2A8A0E65147D4BD6316030E16D19C85C97F0A9CA267122B96ABBCEA7E8FC8"
 block|}
 block|,
-comment|/*1.2.643.2.2.35.1*/
+comment|/*      * 1.2.643.2.2.35.1      */
 block|{
 name|NID_id_GostR3410_2001_CryptoPro_A_ParamSet
 block|,
@@ -242,7 +242,7 @@ block|,
 literal|"8D91E471E0989CDA27DF505A453F2B7635294F2DDF23E3B122ACC99C9E9F1E14"
 block|}
 block|,
-comment|/*1.2.643.2.2.35.2*/
+comment|/*      * 1.2.643.2.2.35.2      */
 block|{
 name|NID_id_GostR3410_2001_CryptoPro_B_ParamSet
 block|,
@@ -259,7 +259,7 @@ block|,
 literal|"3FA8124359F96680B83D1C3EB2C070E5C545C9858D03ECFB744BF8D717717EFC"
 block|}
 block|,
-comment|/*1.2.643.2.2.35.3*/
+comment|/*      * 1.2.643.2.2.35.3      */
 block|{
 name|NID_id_GostR3410_2001_CryptoPro_C_ParamSet
 block|,
@@ -276,7 +276,7 @@ block|,
 literal|"41ECE55743711A8C3CBF3783CD08C0EE4D4DC440D4641A8F366E550DFDB3BB67"
 block|}
 block|,
-comment|/*1.2.643.2.2.36.0*/
+comment|/*      * 1.2.643.2.2.36.0      */
 block|{
 name|NID_id_GostR3410_2001_CryptoPro_XchA_ParamSet
 block|,
@@ -293,7 +293,7 @@ block|,
 literal|"8D91E471E0989CDA27DF505A453F2B7635294F2DDF23E3B122ACC99C9E9F1E14"
 block|}
 block|,
-comment|/*1.2.643.2.2.36.1*/
+comment|/*      * 1.2.643.2.2.36.1      */
 block|{
 name|NID_id_GostR3410_2001_CryptoPro_XchB_ParamSet
 block|,

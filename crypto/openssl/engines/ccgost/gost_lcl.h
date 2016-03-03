@@ -274,7 +274,7 @@ block|{
 name|int
 name|sign_param_nid
 decl_stmt|;
-comment|/* Should be set whenever parameters are filled */
+comment|/* Should be set whenever parameters are                                  * filled */
 name|EVP_MD
 modifier|*
 name|md
@@ -408,7 +408,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Hacks to shorten symbols to 31 characters or less, or OpenVMS.    This mimics what's done in symhacks.h, but since this is a very    local header file, I prefered to put this hack directly here.    -- Richard Levitte */
+comment|/*  * Hacks to shorten symbols to 31 characters or less, or OpenVMS. This mimics  * what's done in symhacks.h, but since this is a very local header file, I  * prefered to put this hack directly here. -- Richard Levitte  */
 end_comment
 
 begin_ifdef
@@ -555,7 +555,7 @@ comment|/*============== Message digest  and cipher related structures  ========
 end_comment
 
 begin_comment
-comment|/* Structure used as EVP_MD_CTX-md_data.  	  * It allows to avoid storing in the md-data pointers to 	  * dynamically allocated memory. 	  * 	  * I cannot invent better way to avoid memory leaks, because 	  * openssl insist on invoking Init on Final-ed digests, and there 	  * is no reliable way to find out whether pointer in the passed 	  * md_data is valid or not. 	  * */
+comment|/*           * Structure used as EVP_MD_CTX-md_data. It allows to avoid storing           * in the md-data pointers to dynamically allocated memory. I           * cannot invent better way to avoid memory leaks, because openssl           * insist on invoking Init on Final-ed digests, and there is no           * reliable way to find out whether pointer in the passed md_data is           * valid or not.           */
 end_comment
 
 begin_struct
@@ -1119,7 +1119,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Store bignum in byte array of given length, prepending by zeros  * if nesseccary */
+comment|/*  * Store bignum in byte array of given length, prepending by zeros if  * nesseccary  */
 end_comment
 
 begin_function_decl

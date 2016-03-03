@@ -269,7 +269,7 @@ name|BSWAP8
 parameter_list|(
 name|x
 parameter_list|)
-value|({	u64 ret=(x);			\ 			asm ("bswapq %0"		\ 			: "+r"(ret));	ret;		})
+value|({ u64 ret=(x);                    \                         asm ("bswapq %0"                \                         : "+r"(ret));   ret;            })
 end_define
 
 begin_define
@@ -279,7 +279,7 @@ name|BSWAP4
 parameter_list|(
 name|x
 parameter_list|)
-value|({	u32 ret=(x);			\ 			asm ("bswapl %0"		\ 			: "+r"(ret));	ret;		})
+value|({ u32 ret=(x);                    \                         asm ("bswapl %0"                \                         : "+r"(ret));   ret;            })
 end_define
 
 begin_elif
@@ -311,7 +311,7 @@ name|BSWAP8
 parameter_list|(
 name|x
 parameter_list|)
-value|({	u32 lo=(u64)(x)>>32,hi=(x);	\ 			asm ("bswapl %0; bswapl %1"	\ 			: "+r"(hi),"+r"(lo));		\ 			(u64)hi<<32|lo;			})
+value|({ u32 lo=(u64)(x)>>32,hi=(x);     \                         asm ("bswapl %0; bswapl %1"     \                         : "+r"(hi),"+r"(lo));           \                         (u64)hi<<32|lo;                 })
 end_define
 
 begin_define
@@ -321,7 +321,7 @@ name|BSWAP4
 parameter_list|(
 name|x
 parameter_list|)
-value|({	u32 ret=(x);			\ 			asm ("bswapl %0"		\ 			: "+r"(ret));	ret;		})
+value|({ u32 ret=(x);                    \                         asm ("bswapl %0"                \                         : "+r"(ret));   ret;            })
 end_define
 
 begin_elif
@@ -353,7 +353,7 @@ name|BSWAP8
 parameter_list|(
 name|x
 parameter_list|)
-value|({	u32 lo=(u64)(x)>>32,hi=(x);	\ 			asm ("rev %0,%0; rev %1,%1"	\ 			: "+r"(hi),"+r"(lo));		\ 			(u64)hi<<32|lo;			})
+value|({  u32 lo=(u64)(x)>>32,hi=(x);     \                         asm ("rev %0,%0; rev %1,%1"     \                         : "+r"(hi),"+r"(lo));           \                         (u64)hi<<32|lo;                 })
 end_define
 
 begin_define
@@ -363,7 +363,7 @@ name|BSWAP4
 parameter_list|(
 name|x
 parameter_list|)
-value|({	u32 ret;			\ 			asm ("rev %0,%1"		\ 			: "=r"(ret) : "r"((u32)(x)));	\ 			ret;				})
+value|({ u32 ret;                        \                         asm ("rev %0,%1"                \                         : "=r"(ret) : "r"((u32)(x)));   \                         ret;                            })
 end_define
 
 begin_endif
@@ -543,7 +543,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GCM definitions */
+comment|/*- GCM definitions */
 end_comment
 
 begin_typedef
@@ -637,7 +637,7 @@ name|Xi
 union|,
 name|H
 union|;
-comment|/* Relative position of Xi, H and pre-computed Htable is used 	 * in some assembler modules, i.e. don't change the order! */
+comment|/*      * Relative position of Xi, H and pre-computed Htable is used in some      * assembler modules, i.e. don't change the order!      */
 if|#
 directive|if
 name|TABLE_BITS

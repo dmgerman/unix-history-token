@@ -72,7 +72,7 @@ name|size_t
 name|bytes
 parameter_list|)
 block|{
-comment|/* Well, largest suitable chunk size actually is 	 * (1<<(sizeof(size_t)*8-3))-64, but below number 	 * is large enough for not to care about excessive 	 * calls to WHIRLPOOL_BitUpdate... */
+comment|/*      * Well, largest suitable chunk size actually is      * (1<<(sizeof(size_t)*8-3))-64, but below number is large enough for not      * to care about excessive calls to WHIRLPOOL_BitUpdate...      */
 name|size_t
 name|chunk
 init|=
@@ -210,7 +210,7 @@ name|inp
 init|=
 name|_inp
 decl_stmt|;
-comment|/* This 256-bit increment procedure relies on the size_t 	 * being natural size of CPU register, so that we don't 	 * have to mask the value in order to detect overflows. */
+comment|/*      * This 256-bit increment procedure relies on the size_t being natural      * size of CPU register, so that we don't have to mask the value in order      * to detect overflows.      */
 name|c
 operator|->
 name|bitlen
@@ -231,8 +231,8 @@ index|]
 operator|<
 name|bits
 condition|)
-comment|/* overflow */
 block|{
+comment|/* overflow */
 name|n
 operator|=
 literal|1
@@ -288,8 +288,8 @@ name|bitrem
 operator|==
 literal|0
 condition|)
-comment|/* byte-oriented loop */
 block|{
+comment|/* byte-oriented loop */
 while|while
 condition|(
 name|bits
@@ -441,7 +441,7 @@ comment|/* bit-oriented loop */
 endif|#
 directive|endif
 block|{
-comment|/* 			   inp 			   | 			   +-------+-------+------- 			      ||||||||||||||||||||| 			   +-------+-------+------- 		+-------+-------+-------+-------+------- 		||||||||||||||				c->data 		+-------+-------+-------+-------+------- 			| 			c->bitoff/8 		*/
+comment|/*-                    inp                    |                    +-------+-------+-------                       |||||||||||||||||||||                    +-------+-------+-------         +-------+-------+-------+-------+-------         ||||||||||||||                          c->data         +-------+-------+-------+-------+-------                 |                 c->bitoff/8         */
 while|while
 condition|(
 name|bits
@@ -511,7 +511,7 @@ name|inpgap
 operator|=
 literal|0
 expr_stmt|;
-comment|/* bits%8   */
+comment|/* bits%8 */
 name|inp
 operator|++
 expr_stmt|;
@@ -674,8 +674,8 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-comment|/* remaining less than 8 bits */
 block|{
+comment|/* remaining less than 8 bits */
 name|b
 operator|=
 operator|(

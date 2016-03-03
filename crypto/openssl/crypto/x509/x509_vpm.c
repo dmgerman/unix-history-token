@@ -4,11 +4,11 @@ comment|/* x509_vpm.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2004.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2004.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -91,7 +91,7 @@ name|trust
 operator|=
 literal|0
 expr_stmt|;
-comment|/*param->inh_flags = X509_VP_FLAG_DEFAULT;*/
+comment|/*      * param->inh_flags = X509_VP_FLAG_DEFAULT;      */
 name|param
 operator|->
 name|inh_flags
@@ -199,6 +199,13 @@ modifier|*
 name|param
 parameter_list|)
 block|{
+if|if
+condition|(
+name|param
+operator|==
+name|NULL
+condition|)
+return|return;
 name|x509_verify_param_zero
 argument_list|(
 name|param
@@ -213,7 +220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function determines how parameters are "inherited" from one structure  * to another. There are several different ways this can happen.  *  * 1. If a child structure needs to have its values initialized from a parent  *    they are simply copied across. For example SSL_CTX copied to SSL.  * 2. If the structure should take on values only if they are currently unset.  *    For example the values in an SSL structure will take appropriate value  *    for SSL servers or clients but only if the application has not set new  *    ones.  *  * The "inh_flags" field determines how this function behaves.   *  * Normally any values which are set in the default are not copied from the  * destination and verify flags are ORed together.  *  * If X509_VP_FLAG_DEFAULT is set then anything set in the source is copied  * to the destination. Effectively the values in "to" become default values  * which will be used only if nothing new is set in "from".  *  * If X509_VP_FLAG_OVERWRITE is set then all value are copied across whether  * they are set or not. Flags is still Ored though.  *  * If X509_VP_FLAG_RESET_FLAGS is set then the flags value is copied instead  * of ORed.  *  * If X509_VP_FLAG_LOCKED is set then no values are copied.  *  * If X509_VP_FLAG_ONCE is set then the current inh_flags setting is zeroed  * after the next call.  */
+comment|/*-  * This function determines how parameters are "inherited" from one structure  * to another. There are several different ways this can happen.  *  * 1. If a child structure needs to have its values initialized from a parent  *    they are simply copied across. For example SSL_CTX copied to SSL.  * 2. If the structure should take on values only if they are currently unset.  *    For example the values in an SSL structure will take appropriate value  *    for SSL servers or clients but only if the application has not set new  *    ones.  *  * The "inh_flags" field determines how this function behaves.  *  * Normally any values which are set in the default are not copied from the  * destination and verify flags are ORed together.  *  * If X509_VP_FLAG_DEFAULT is set then anything set in the source is copied  * to the destination. Effectively the values in "to" become default values  * which will be used only if nothing new is set in "from".  *  * If X509_VP_FLAG_OVERWRITE is set then all value are copied across whether  * they are set or not. Flags is still Ored though.  *  * If X509_VP_FLAG_RESET_FLAGS is set then the flags value is copied instead  * of ORed.  *  * If X509_VP_FLAG_LOCKED is set then no values are copied.  *  * If X509_VP_FLAG_ONCE is set then the current inh_flags setting is zeroed  * after the next call.  */
 end_comment
 
 begin_comment
@@ -230,7 +237,7 @@ parameter_list|,
 name|def
 parameter_list|)
 define|\
-value|(to_overwrite || \ 		((src->field != def)&& (to_default || (dest->field == def))))
+value|(to_overwrite || \                 ((src->field != def)&& (to_default || (dest->field == def))))
 end_define
 
 begin_comment
@@ -247,7 +254,7 @@ parameter_list|,
 name|def
 parameter_list|)
 define|\
-value|if (test_x509_verify_param_copy(field, def)) \ 		dest->field = src->field
+value|if (test_x509_verify_param_copy(field, def)) \                 dest->field = src->field
 end_define
 
 begin_function
@@ -969,7 +976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Default verify parameters: these are used for various  * applications and can be overridden by the user specified table.  * NB: the 'name' field *must* be in alphabetical order because it  * will be searched using OBJ_search.  */
+comment|/*  * Default verify parameters: these are used for various applications and can  * be overridden by the user specified table. NB: the 'name' field *must* be  * in alphabetical order because it will be searched using OBJ_search.  */
 end_comment
 
 begin_decl_stmt

@@ -4,7 +4,7 @@ comment|/* crypto/asn1/x_crl.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -191,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The X509_CRL_INFO structure needs a bit of customisation.  * Since we cache the original encoding the signature wont be affected by  * reordering of the revoked field.  */
+comment|/*  * The X509_CRL_INFO structure needs a bit of customisation. Since we cache  * the original encoding the signature wont be affected by reordering of the  * revoked field.  */
 end_comment
 
 begin_function
@@ -246,7 +246,7 @@ condition|(
 name|operation
 condition|)
 block|{
-comment|/* Just set cmp function here. We don't sort because that 		 * would affect the output of X509_CRL_print(). 		 */
+comment|/*          * Just set cmp function here. We don't sort because that would          * affect the output of X509_CRL_print().          */
 case|case
 name|ASN1_OP_D2I_POST
 case|:
@@ -352,7 +352,7 @@ argument|X509_CRL_INFO
 argument_list|,
 argument|X509_CRL_INFO
 argument_list|)
-comment|/* Set CRL entry issuer according to CRL certificate issuer extension.  * Check for unhandled critical CRL entry extensions.  */
+comment|/*  * Set CRL entry issuer according to CRL certificate issuer extension. Check  * for unhandled critical CRL entry extensions.  */
 specifier|static
 name|int
 name|crl_set_issuers
@@ -681,14 +681,14 @@ block|}
 end_for
 
 begin_expr_stmt
-unit|}  	return
+unit|}      return
 literal|1
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
 unit|}
-comment|/* The X509_CRL structure needs a bit of customisation. Cache some extensions  * and hash of the whole CRL.  */
+comment|/*  * The X509_CRL structure needs a bit of customisation. Cache some extensions  * and hash of the whole CRL.  */
 end_comment
 
 begin_function
@@ -923,7 +923,7 @@ name|flags
 operator||=
 name|EXFLAG_INVALID
 expr_stmt|;
-comment|/* See if we have any unhandled critical CRL extensions and  		 * indicate this in a flag. We only currently handle IDP so 		 * anything else critical sets the flag. 		 * 		 * This code accesses the X509_CRL structure directly: 		 * applications shouldn't do this. 		 */
+comment|/*          * See if we have any unhandled critical CRL extensions and indicate          * this in a flag. We only currently handle IDP so anything else          * critical sets the flag. This code accesses the X509_CRL structure          * directly: applications shouldn't do this.          */
 name|exts
 operator|=
 name|crl
@@ -1408,9 +1408,9 @@ specifier|static
 name|int
 name|X509_REVOKED_cmp
 argument_list|(
-argument|const X509_REVOKED * const *a
+argument|const X509_REVOKED *const *a
 argument_list|,
-argument|const X509_REVOKED * const *b
+argument|const X509_REVOKED *const *b
 argument_list|)
 block|{
 return|return
@@ -1881,7 +1881,7 @@ name|serialNumber
 operator|=
 name|serial
 expr_stmt|;
-comment|/* Sort revoked into serial number order if not already sorted. 	 * Do this under a lock to avoid race condition.  	 */
+comment|/*      * Sort revoked into serial number order if not already sorted. Do this      * under a lock to avoid race condition.      */
 if|if
 condition|(
 operator|!

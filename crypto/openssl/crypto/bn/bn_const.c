@@ -14,7 +14,7 @@ file|"bn.h"
 end_include
 
 begin_comment
-comment|/* "First Oakley Default Group" from RFC2409, section 6.1.  *  * The prime is: 2^768 - 2 ^704 - 1 + 2^64 * { [2^638 pi] + 149686 }  *  * RFC2409 specifies a generator of 2.  * RFC2412 specifies a generator of of 22.  */
+comment|/*-  * "First Oakley Default Group" from RFC2409, section 6.1.  *  * The prime is: 2^768 - 2 ^704 - 1 + 2^64 * { [2^638 pi] + 149686 }  *  * RFC2409 specifies a generator of 2.  * RFC2412 specifies a generator of of 22.  */
 end_comment
 
 begin_function
@@ -226,7 +226,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -245,7 +245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "Second Oakley Default Group" from RFC2409, section 6.2.  *  * The prime is: 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 }.  *  * RFC2409 specifies a generator of 2.  * RFC2412 specifies a generator of 22.  */
+comment|/*-  * "Second Oakley Default Group" from RFC2409, section 6.2.  *  * The prime is: 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 }.  *  * RFC2409 specifies a generator of 2.  * RFC2412 specifies a generator of 22.  */
 end_comment
 
 begin_function
@@ -521,7 +521,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -540,7 +540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "1536-bit MODP Group" from RFC3526, Section 2.  *  * The prime is: 2^1536 - 2^1472 - 1 + 2^64 * { [2^1406 pi] + 741804 }  *  * RFC3526 specifies a generator of 2.  * RFC2312 specifies a generator of 22.  */
+comment|/*-  * "1536-bit MODP Group" from RFC3526, Section 2.  *  * The prime is: 2^1536 - 2^1472 - 1 + 2^64 * { [2^1406 pi] + 741804 }  *  * RFC3526 specifies a generator of 2.  * RFC2312 specifies a generator of 22.  */
 end_comment
 
 begin_function
@@ -944,7 +944,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -963,7 +963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "2048-bit MODP Group" from RFC3526, Section 3.  *  * The prime is: 2^2048 - 2^1984 - 1 + 2^64 * { [2^1918 pi] + 124476 }  *  * RFC3526 specifies a generator of 2.  */
+comment|/*-  * "2048-bit MODP Group" from RFC3526, Section 3.  *  * The prime is: 2^2048 - 2^1984 - 1 + 2^64 * { [2^1918 pi] + 124476 }  *  * RFC3526 specifies a generator of 2.  */
 end_comment
 
 begin_function
@@ -1495,7 +1495,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -1514,7 +1514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "3072-bit MODP Group" from RFC3526, Section 4.  *  * The prime is: 2^3072 - 2^3008 - 1 + 2^64 * { [2^2942 pi] + 1690314 }  *  * RFC3526 specifies a generator of 2.  */
+comment|/*-  * "3072-bit MODP Group" from RFC3526, Section 4.  *  * The prime is: 2^3072 - 2^3008 - 1 + 2^64 * { [2^2942 pi] + 1690314 }  *  * RFC3526 specifies a generator of 2.  */
 end_comment
 
 begin_function
@@ -2302,7 +2302,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -2321,7 +2321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "4096-bit MODP Group" from RFC3526, Section 5.  *  * The prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }  *  * RFC3526 specifies a generator of 2.  */
+comment|/*-  * "4096-bit MODP Group" from RFC3526, Section 5.  *  * The prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }  *  * RFC3526 specifies a generator of 2.  */
 end_comment
 
 begin_function
@@ -3365,7 +3365,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -3384,7 +3384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "6144-bit MODP Group" from RFC3526, Section 6.  *  * The prime is: 2^6144 - 2^6080 - 1 + 2^64 * { [2^6014 pi] + 929484 }  *  * RFC3526 specifies a generator of 2.  */
+comment|/*-  * "6144-bit MODP Group" from RFC3526, Section 6.  *  * The prime is: 2^6144 - 2^6080 - 1 + 2^64 * { [2^6014 pi] + 929484 }  *  * RFC3526 specifies a generator of 2.  */
 end_comment
 
 begin_function
@@ -4940,7 +4940,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn
@@ -4959,7 +4959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "8192-bit MODP Group" from RFC3526, Section 7.  *  * The prime is: 2^8192 - 2^8128 - 1 + 2^64 * { [2^8062 pi] + 4743158 }  *  * RFC3526 specifies a generator of 2.  */
+comment|/*-  * "8192-bit MODP Group" from RFC3526, Section 7.  *  * The prime is: 2^8192 - 2^8128 - 1 + 2^64 * { [2^8062 pi] + 4743158 }  *  * RFC3526 specifies a generator of 2.  */
 end_comment
 
 begin_function
@@ -7027,7 +7027,7 @@ block|,
 literal|0xFF
 block|,
 literal|0xFF
-block|, 		}
+block|,     }
 decl_stmt|;
 return|return
 name|BN_bin2bn

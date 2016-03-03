@@ -4,7 +4,7 @@ comment|/* crypto/asn1/a_int.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -131,7 +131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * This converts an ASN1 INTEGER into its content encoding.  * The internal representation is an ASN1_STRING whose data is a big endian  * representation of the value, ignoring the sign. The sign is determined by  * the type: V_ASN1_INTEGER for positive and V_ASN1_NEG_INTEGER for negative.   *  * Positive integers are no problem: they are almost the same as the DER  * encoding, except if the first byte is>= 0x80 we need to add a zero pad.  *  * Negative integers are a bit trickier...  * The DER representation of negative integers is in 2s complement form.  * The internal form is converted by complementing each octet and finally   * adding one to the result. This can be done less messily with a little trick.  * If the internal form has trailing zeroes then they will become FF by the  * complement and 0 by the add one (due to carry) so just copy as many trailing   * zeros to the destination as there are in the source. The carry will add one  * to the last none zero octet: so complement this octet and add one and finally  * complement any left over until you get to the start of the string.  *  * Padding is a little trickier too. If the first bytes is> 0x80 then we pad  * with 0xff. However if the first byte is 0x80 and one of the following bytes  * is non-zero we pad with 0xff. The reason for this distinction is that 0x80  * followed by optional zeros isn't padded.  */
+comment|/*-  * This converts an ASN1 INTEGER into its content encoding.  * The internal representation is an ASN1_STRING whose data is a big endian  * representation of the value, ignoring the sign. The sign is determined by  * the type: V_ASN1_INTEGER for positive and V_ASN1_NEG_INTEGER for negative.  *  * Positive integers are no problem: they are almost the same as the DER  * encoding, except if the first byte is>= 0x80 we need to add a zero pad.  *  * Negative integers are a bit trickier...  * The DER representation of negative integers is in 2s complement form.  * The internal form is converted by complementing each octet and finally  * adding one to the result. This can be done less messily with a little trick.  * If the internal form has trailing zeroes then they will become FF by the  * complement and 0 by the add one (due to carry) so just copy as many trailing  * zeros to the destination as there are in the source. The carry will add one  * to the last none zero octet: so complement this octet and add one and finally  * complement any left over until you get to the start of the string.  *  * Padding is a little trickier too. If the first bytes is> 0x80 then we pad  * with 0xff. However if the first byte is 0x80 and one of the following bytes  * is non-zero we pad with 0xff. The reason for this distinction is that 0x80  * followed by optional zeros isn't padded.  */
 end_comment
 
 begin_function
@@ -222,6 +222,20 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|==
+literal|1
+operator|&&
+name|i
+operator|==
+literal|0
+condition|)
+name|neg
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|neg
 operator|&&
@@ -271,7 +285,7 @@ operator|==
 literal|128
 condition|)
 block|{
-comment|/* 			 * Special case: if any other bytes non zero we pad: 			 * otherwise we don't. 			 */
+comment|/*                  * Special case: if any other bytes non zero we pad:                  * otherwise we don't.                  */
 for|for
 control|(
 name|i
@@ -416,6 +430,10 @@ condition|(
 operator|!
 operator|*
 name|n
+operator|&&
+name|i
+operator|>
+literal|1
 condition|)
 block|{
 operator|*
@@ -607,7 +625,7 @@ name|p
 operator|+
 name|len
 expr_stmt|;
-comment|/* We must OPENSSL_malloc stuff, even for 0 bytes otherwise it 	 * signifies a missing NULL parameter. */
+comment|/*      * We must OPENSSL_malloc stuff, even for 0 bytes otherwise it signifies      * a missing NULL parameter.      */
 name|s
 operator|=
 operator|(
@@ -650,7 +668,7 @@ operator|!
 name|len
 condition|)
 block|{
-comment|/* Strictly speaking this is an illegal INTEGER but we 		 * tolerate it. 		 */
+comment|/*          * Strictly speaking this is an illegal INTEGER but we tolerate it.          */
 name|ret
 operator|->
 name|type
@@ -666,8 +684,8 @@ name|p
 operator|&
 literal|0x80
 condition|)
-comment|/* a negative number */
 block|{
+comment|/* a negative number */
 name|ret
 operator|->
 name|type
@@ -739,7 +757,7 @@ name|p
 operator|--
 expr_stmt|;
 block|}
-comment|/* Special case: if all zeros then the number will be of 		 * the form FF followed by n zero bytes: this corresponds to 		 * 1 followed by n zero bytes. We've already written n zeros 		 * so we just append an extra one and set the first byte to 		 * a 1. This is treated separately because it is the only case 		 * where the number of bytes is larger than len. 		 */
+comment|/*          * Special case: if all zeros then the number will be of the form FF          * followed by n zero bytes: this corresponds to 1 followed by n zero          * bytes. We've already written n zeros so we just append an extra          * one and set the first byte to a 1. This is treated separately          * because it is the only case where the number of bytes is larger          * than len.          */
 if|if
 condition|(
 operator|!
@@ -954,7 +972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is a version of d2i_ASN1_INTEGER that ignores the sign bit of  * ASN1 integers: some broken software can encode a positive INTEGER  * with its MSB set as negative (it doesn't add a padding zero).  */
+comment|/*  * This is a version of d2i_ASN1_INTEGER that ignores the sign bit of ASN1  * integers: some broken software can encode a positive INTEGER with its MSB  * set as negative (it doesn't add a padding zero).  */
 end_comment
 
 begin_function
@@ -1111,7 +1129,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* We must OPENSSL_malloc stuff, even for 0 bytes otherwise it 	 * signifies a missing NULL parameter. */
+comment|/*      * We must OPENSSL_malloc stuff, even for 0 bytes otherwise it signifies      * a missing NULL parameter.      */
 name|s
 operator|=
 operator|(
@@ -1751,6 +1769,12 @@ block|}
 if|if
 condition|(
 name|BN_is_negative
+argument_list|(
+name|bn
+argument_list|)
+operator|&&
+operator|!
+name|BN_is_zero
 argument_list|(
 name|bn
 argument_list|)

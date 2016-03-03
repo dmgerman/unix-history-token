@@ -4,7 +4,7 @@ comment|/* crypto/asn1/x_name.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -295,7 +295,7 @@ name|IMPLEMENT_ASN1_DUP_FUNCTION
 argument_list|(
 argument|X509_NAME_ENTRY
 argument_list|)
-comment|/* For the "Name" type we need a SEQUENCE OF { SET OF X509_NAME_ENTRY }  * so declare two template wrappers for this  */
+comment|/*  * For the "Name" type we need a SEQUENCE OF { SET OF X509_NAME_ENTRY } so  * declare two template wrappers for this  */
 name|ASN1_ITEM_TEMPLATE
 argument_list|(
 name|X509_NAME_ENTRIES
@@ -334,7 +334,7 @@ name|ASN1_ITEM_TEMPLATE_END
 argument_list|(
 argument|X509_NAME_INTERNAL
 argument_list|)
-comment|/* Normally that's where it would end: we'd have two nested STACK structures  * representing the ASN1. Unfortunately X509_NAME uses a completely different  * form and caches encodings so we have to process the internal form and convert  * to the external form.  */
+comment|/*  * Normally that's where it would end: we'd have two nested STACK structures  * representing the ASN1. Unfortunately X509_NAME uses a completely different  * form and caches encodings so we have to process the internal form and  * convert to the external form.  */
 specifier|const
 name|ASN1_EXTERN_FUNCS
 name|x509_name_ff
@@ -1489,7 +1489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function generates the canonical encoding of the Name structure.  * In it all strings are converted to UTF8, leading, trailing and  * multiple spaces collapsed, converted to lower case and the leading  * SEQUENCE header removed.  *  * In future we could also normalize the UTF8 too.  *  * By doing this comparison of Name structures can be rapidly  * perfomed by just using memcmp() of the canonical encoding.  * By omitting the leading SEQUENCE name constraints of type  * dirName can also be checked with a simple memcmp().  */
+comment|/*  * This function generates the canonical encoding of the Name structure. In  * it all strings are converted to UTF8, leading, trailing and multiple  * spaces collapsed, converted to lower case and the leading SEQUENCE header  * removed. In future we could also normalize the UTF8 too. By doing this  * comparison of Name structures can be rapidly perfomed by just using  * memcmp() of the canonical encoding. By omitting the leading SEQUENCE name  * constraints of type dirName can also be checked with a simple memcmp().  */
 end_comment
 
 begin_function
@@ -1818,7 +1818,7 @@ define|#
 directive|define
 name|ASN1_MASK_CANON
 define|\
-value|(B_ASN1_UTF8STRING | B_ASN1_BMPSTRING | B_ASN1_UNIVERSALSTRING \ 	| B_ASN1_PRINTABLESTRING | B_ASN1_T61STRING | B_ASN1_IA5STRING \ 	| B_ASN1_VISIBLESTRING)
+value|(B_ASN1_UTF8STRING | B_ASN1_BMPSTRING | B_ASN1_UNIVERSALSTRING \         | B_ASN1_PRINTABLESTRING | B_ASN1_T61STRING | B_ASN1_IA5STRING \         | B_ASN1_VISIBLESTRING)
 end_define
 
 begin_function
@@ -1929,7 +1929,7 @@ name|out
 operator|->
 name|length
 expr_stmt|;
-comment|/* Convert string in place to canonical form. 	 * Ultimately we may need to handle a wider range of characters 	 * but for now ignore anything with MSB set and rely on the 	 * isspace() and tolower() functions. 	 */
+comment|/*      * Convert string in place to canonical form. Ultimately we may need to      * handle a wider range of characters but for now ignore anything with      * MSB set and rely on the isspace() and tolower() functions.      */
 comment|/* Ignore leading spaces */
 while|while
 condition|(
@@ -2056,7 +2056,7 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* Ignore subsequent spaces. Note: don't need to 			 * check len here because we know the last  			 * character is a non-space so we can't overflow. 			 */
+comment|/*              * Ignore subsequent spaces. Note: don't need to check len here              * because we know the last character is a non-space so we can't              * overflow.              */
 do|do
 block|{
 name|from

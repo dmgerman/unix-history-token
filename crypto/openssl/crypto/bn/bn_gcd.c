@@ -4,11 +4,11 @@ comment|/* crypto/bn/bn_gcd.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -357,8 +357,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* a odd - b even */
 block|{
+comment|/* a odd - b even */
 if|if
 condition|(
 operator|!
@@ -400,8 +400,8 @@ block|}
 block|}
 block|}
 else|else
-comment|/* a is even */
 block|{
+comment|/* a is even */
 if|if
 condition|(
 name|BN_is_odd
@@ -450,8 +450,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* a even - b even */
 block|{
+comment|/* a even - b even */
 if|if
 condition|(
 operator|!
@@ -838,7 +838,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* From  B = a mod |n|,  A = |n|  it follows that 	 * 	 *      0<= B< A, 	 *     -sign*X*a  ==  B   (mod |n|), 	 *      sign*Y*a  ==  A   (mod |n|). 	 */
+comment|/*-      * From  B = a mod |n|,  A = |n|  it follows that      *      *      0<= B< A,      *     -sign*X*a  ==  B   (mod |n|),      *      sign*Y*a  ==  A   (mod |n|).      */
 if|if
 condition|(
 name|BN_is_odd
@@ -864,7 +864,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Binary inversion algorithm; requires odd modulus. 		 * This is faster than the general algorithm if the modulus 		 * is sufficiently small (about 400 .. 500 bits on 32-bit 		 * sytems, but much more on 64-bit systems) */
+comment|/*          * Binary inversion algorithm; requires odd modulus. This is faster          * than the general algorithm if the modulus is sufficiently small          * (about 400 .. 500 bits on 32-bit sytems, but much more on 64-bit          * systems)          */
 name|int
 name|shift
 decl_stmt|;
@@ -877,8 +877,8 @@ name|B
 argument_list|)
 condition|)
 block|{
-comment|/* 			 *      0< B< |n|, 			 *      0< A<= |n|, 			 * (1) -sign*X*a  ==  B   (mod |n|), 			 * (2)  sign*Y*a  ==  A   (mod |n|) 			 */
-comment|/* Now divide  B  by the maximum possible power of two in the integers, 			 * and divide  X  by the same value mod |n|. 			 * When we're done, (1) still holds. */
+comment|/*-              *      0< B< |n|,              *      0< A<= |n|,              * (1) -sign*X*a  ==  B   (mod |n|),              * (2)  sign*Y*a  ==  A   (mod |n|)              */
+comment|/*              * Now divide B by the maximum possible power of two in the              * integers, and divide X by the same value mod |n|. When we're              * done, (1) still holds.              */
 name|shift
 operator|=
 literal|0
@@ -893,8 +893,8 @@ argument_list|,
 name|shift
 argument_list|)
 condition|)
-comment|/* note that 0< B */
 block|{
+comment|/* note that 0< B */
 name|shift
 operator|++
 expr_stmt|;
@@ -922,7 +922,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* now X is even, so we can easily divide it by two */
+comment|/*                  * now X is even, so we can easily divide it by two                  */
 if|if
 condition|(
 operator|!
@@ -960,7 +960,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Same for  A  and  Y.  Afterwards, (2) still holds. */
+comment|/*              * Same for A and Y.  Afterwards, (2) still holds.              */
 name|shift
 operator|=
 literal|0
@@ -975,8 +975,8 @@ argument_list|,
 name|shift
 argument_list|)
 condition|)
-comment|/* note that 0< A */
 block|{
+comment|/* note that 0< A */
 name|shift
 operator|++
 expr_stmt|;
@@ -1042,7 +1042,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* We still have (1) and (2). 			 * Both  A  and  B  are odd. 			 * The following computations ensure that 			 * 			 *     0<= B< |n|, 			 *      0< A< |n|, 			 * (1) -sign*X*a  ==  B   (mod |n|), 			 * (2)  sign*Y*a  ==  A   (mod |n|), 			 * 			 * and that either  A  or  B  is even in the next iteration. 			 */
+comment|/*-              * We still have (1) and (2).              * Both  A  and  B  are odd.              * The following computations ensure that              *              *     0<= B< |n|,              *      0< A< |n|,              * (1) -sign*X*a  ==  B   (mod |n|),              * (2)  sign*Y*a  ==  A   (mod |n|),              *              * and that either  A  or  B  is even in the next iteration.              */
 if|if
 condition|(
 name|BN_ucmp
@@ -1071,7 +1071,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* NB: we could use BN_mod_add_quick(X, X, Y, n), but that 				 * actually makes the algorithm slower */
+comment|/*                  * NB: we could use BN_mod_add_quick(X, X, Y, n), but that                  * actually makes the algorithm slower                  */
 if|if
 condition|(
 operator|!
@@ -1106,7 +1106,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* as above, BN_mod_add_quick(Y, Y, X, n) would slow things down */
+comment|/*                  * as above, BN_mod_add_quick(Y, Y, X, n) would slow things                  * down                  */
 if|if
 condition|(
 operator|!
@@ -1141,7 +1141,7 @@ name|BIGNUM
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/* 			 *      0< B< A, 			 * (*) -sign*X*a  ==  B   (mod |n|), 			 *      sign*Y*a  ==  A   (mod |n|) 			 */
+comment|/*-              *      0< B< A,              * (*) -sign*X*a  ==  B   (mod |n|),              *      sign*Y*a  ==  A   (mod |n|)              */
 comment|/* (D, M) := (A/B, A%B) ... */
 if|if
 condition|(
@@ -1313,7 +1313,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* M (= A - 2*B) already has the correct value */
+comment|/*                          * M (= A - 2*B) already has the correct value                          */
 block|}
 else|else
 block|{
@@ -1331,7 +1331,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* currently  M = A - 2*B,  but we need  M = A - 3*B */
+comment|/*                          * currently M = A - 2*B, but we need M = A - 3*B                          */
 if|if
 condition|(
 operator|!
@@ -1372,12 +1372,12 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Now 			 *      A = D*B + M; 			 * thus we have 			 * (**)  sign*Y*a  ==  D*B + M   (mod |n|). 			 */
+comment|/*-              * Now              *      A = D*B + M;              * thus we have              * (**)  sign*Y*a  ==  D*B + M   (mod |n|).              */
 name|tmp
 operator|=
 name|A
 expr_stmt|;
-comment|/* keep the BIGNUM object, the value does not matter */
+comment|/* keep the BIGNUM object, the value does not                                  * matter */
 comment|/* (A, B) := (B, A mod B) ... */
 name|A
 operator|=
@@ -1388,8 +1388,8 @@ operator|=
 name|M
 expr_stmt|;
 comment|/* ... so we have  0<= B< A  again */
-comment|/* Since the former  M  is now  B  and the former  B  is now  A, 			 * (**) translates into 			 *       sign*Y*a  ==  D*A + B    (mod |n|), 			 * i.e. 			 *       sign*Y*a - D*A  ==  B    (mod |n|). 			 * Similarly, (*) translates into 			 *      -sign*X*a  ==  A          (mod |n|). 			 * 			 * Thus, 			 *   sign*Y*a + D*sign*X*a  ==  B  (mod |n|), 			 * i.e. 			 *        sign*(Y + D*X)*a  ==  B  (mod |n|). 			 * 			 * So if we set  (X, Y, sign) := (Y + D*X, X, -sign),  we arrive back at 			 *      -sign*X*a  ==  B   (mod |n|), 			 *       sign*Y*a  ==  A   (mod |n|). 			 * Note that  X  and  Y  stay non-negative all the time. 			 */
-comment|/* most of the time D is very small, so we can optimize tmp := D*X+Y */
+comment|/*-              * Since the former  M  is now  B  and the former  B  is now  A,              * (**) translates into              *       sign*Y*a  ==  D*A + B    (mod |n|),              * i.e.              *       sign*Y*a - D*A  ==  B    (mod |n|).              * Similarly, (*) translates into              *      -sign*X*a  ==  A          (mod |n|).              *              * Thus,              *   sign*Y*a + D*sign*X*a  ==  B  (mod |n|),              * i.e.              *        sign*(Y + D*X)*a  ==  B  (mod |n|).              *              * So if we set  (X, Y, sign) := (Y + D*X, X, -sign),  we arrive back at              *      -sign*X*a  ==  B   (mod |n|),              *       sign*Y*a  ==  A   (mod |n|).              * Note that  X  and  Y  stay non-negative all the time.              */
+comment|/*              * most of the time D is very small, so we can optimize tmp :=              * D*X+Y              */
 if|if
 condition|(
 name|BN_is_one
@@ -1549,7 +1549,7 @@ name|M
 operator|=
 name|Y
 expr_stmt|;
-comment|/* keep the BIGNUM object, the value does not matter */
+comment|/* keep the BIGNUM object, the value does not                                  * matter */
 name|Y
 operator|=
 name|X
@@ -1565,7 +1565,7 @@ name|sign
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * The while loop (Euclid's algorithm) ends when 	 *      A == gcd(a,n); 	 * we have 	 *       sign*Y*a  ==  A  (mod |n|), 	 * where  Y  is non-negative. 	 */
+comment|/*-      * The while loop (Euclid's algorithm) ends when      *      A == gcd(a,n);      * we have      *       sign*Y*a  ==  A  (mod |n|),      * where  Y  is non-negative.      */
 if|if
 condition|(
 name|sign
@@ -1708,7 +1708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* BN_mod_inverse_no_branch is a special version of BN_mod_inverse.   * It does not contain branches that may leak sensitive information.  */
+comment|/*  * BN_mod_inverse_no_branch is a special version of BN_mod_inverse. It does  * not contain branches that may leak sensitive information.  */
 end_comment
 
 begin_function
@@ -1944,7 +1944,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* Turn BN_FLG_CONSTTIME flag on, so that when BN_div is invoked, 	 	 * BN_div_no_branch will be called eventually. 	 	 */
+comment|/*          * Turn BN_FLG_CONSTTIME flag on, so that when BN_div is invoked,          * BN_div_no_branch will be called eventually.          */
 name|pB
 operator|=
 operator|&
@@ -1982,7 +1982,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* From  B = a mod |n|,  A = |n|  it follows that 	 * 	 *      0<= B< A, 	 *     -sign*X*a  ==  B   (mod |n|), 	 *      sign*Y*a  ==  A   (mod |n|). 	 */
+comment|/*-      * From  B = a mod |n|,  A = |n|  it follows that      *      *      0<= B< A,      *     -sign*X*a  ==  B   (mod |n|),      *      sign*Y*a  ==  A   (mod |n|).      */
 while|while
 condition|(
 operator|!
@@ -1996,8 +1996,8 @@ name|BIGNUM
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/* 		 *      0< B< A, 		 * (*) -sign*X*a  ==  B   (mod |n|), 		 *      sign*Y*a  ==  A   (mod |n|) 		 */
-comment|/* Turn BN_FLG_CONSTTIME flag on, so that when BN_div is invoked, 	 	 * BN_div_no_branch will be called eventually. 	 	 */
+comment|/*-          *      0< B< A,          * (*) -sign*X*a  ==  B   (mod |n|),          *      sign*Y*a  ==  A   (mod |n|)          */
+comment|/*          * Turn BN_FLG_CONSTTIME flag on, so that when BN_div is invoked,          * BN_div_no_branch will be called eventually.          */
 name|pA
 operator|=
 operator|&
@@ -2032,12 +2032,12 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Now 		 *      A = D*B + M; 		 * thus we have 		 * (**)  sign*Y*a  ==  D*B + M   (mod |n|). 		 */
+comment|/*-          * Now          *      A = D*B + M;          * thus we have          * (**)  sign*Y*a  ==  D*B + M   (mod |n|).          */
 name|tmp
 operator|=
 name|A
 expr_stmt|;
-comment|/* keep the BIGNUM object, the value does not matter */
+comment|/* keep the BIGNUM object, the value does not                                  * matter */
 comment|/* (A, B) := (B, A mod B) ... */
 name|A
 operator|=
@@ -2048,7 +2048,7 @@ operator|=
 name|M
 expr_stmt|;
 comment|/* ... so we have  0<= B< A  again */
-comment|/* Since the former  M  is now  B  and the former  B  is now  A, 		 * (**) translates into 		 *       sign*Y*a  ==  D*A + B    (mod |n|), 		 * i.e. 		 *       sign*Y*a - D*A  ==  B    (mod |n|). 		 * Similarly, (*) translates into 		 *      -sign*X*a  ==  A          (mod |n|). 		 * 		 * Thus, 		 *   sign*Y*a + D*sign*X*a  ==  B  (mod |n|), 		 * i.e. 		 *        sign*(Y + D*X)*a  ==  B  (mod |n|). 		 * 		 * So if we set  (X, Y, sign) := (Y + D*X, X, -sign),  we arrive back at 		 *      -sign*X*a  ==  B   (mod |n|), 		 *       sign*Y*a  ==  A   (mod |n|). 		 * Note that  X  and  Y  stay non-negative all the time. 		 */
+comment|/*-          * Since the former  M  is now  B  and the former  B  is now  A,          * (**) translates into          *       sign*Y*a  ==  D*A + B    (mod |n|),          * i.e.          *       sign*Y*a - D*A  ==  B    (mod |n|).          * Similarly, (*) translates into          *      -sign*X*a  ==  A          (mod |n|).          *          * Thus,          *   sign*Y*a + D*sign*X*a  ==  B  (mod |n|),          * i.e.          *        sign*(Y + D*X)*a  ==  B  (mod |n|).          *          * So if we set  (X, Y, sign) := (Y + D*X, X, -sign),  we arrive back at          *      -sign*X*a  ==  B   (mod |n|),          *       sign*Y*a  ==  A   (mod |n|).          * Note that  X  and  Y  stay non-negative all the time.          */
 if|if
 condition|(
 operator|!
@@ -2085,7 +2085,7 @@ name|M
 operator|=
 name|Y
 expr_stmt|;
-comment|/* keep the BIGNUM object, the value does not matter */
+comment|/* keep the BIGNUM object, the value does not                                  * matter */
 name|Y
 operator|=
 name|X
@@ -2100,7 +2100,7 @@ operator|-
 name|sign
 expr_stmt|;
 block|}
-comment|/* 	 * The while loop (Euclid's algorithm) ends when 	 *      A == gcd(a,n); 	 * we have 	 *       sign*Y*a  ==  A  (mod |n|), 	 * where  Y  is non-negative. 	 */
+comment|/*-      * The while loop (Euclid's algorithm) ends when      *      A == gcd(a,n);      * we have      *       sign*Y*a  ==  A  (mod |n|),      * where  Y  is non-negative.      */
 if|if
 condition|(
 name|sign

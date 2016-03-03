@@ -4,15 +4,15 @@ comment|/* dso_dlfcn.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* We need to do this early, because stdio.h includes the header files    that handle _GNU_SOURCE and other similar macros.  Defining it later    is simply too late, because those headers are protected from re-    inclusion.  */
+comment|/*  * We need to do this early, because stdio.h includes the header files that  * handle _GNU_SOURCE and other similar macros.  Defining it later is simply  * too late, because those headers are protected from re- inclusion.  */
 end_comment
 
 begin_ifndef
@@ -410,7 +410,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Prior to using the dlopen() function, we should decide on the flag  * we send. There's a few different ways of doing this and it's a  * messy venn-diagram to match up which platforms support what. So  * as we don't have autoconf yet, I'm implementing a hack that could  * be hacked further relatively easily to deal with cases as we find  * them. Initially this is to cope with OpenBSD. */
+comment|/*  * Prior to using the dlopen() function, we should decide on the flag we  * send. There's a few different ways of doing this and it's a messy  * venn-diagram to match up which platforms support what. So as we don't have  * autoconf yet, I'm implementing a hack that could be hacked further  * relatively easily to deal with cases as we find them. Initially this is to  * cope with OpenBSD.  */
 end_comment
 
 begin_if
@@ -525,7 +525,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* For this DSO_METHOD, our meth_data STACK will contain;  * (i) the handle (void*) returned from dlopen().  */
+comment|/*  * For this DSO_METHOD, our meth_data STACK will contain; (i) the handle  * (void*) returned from dlopen().  */
 end_comment
 
 begin_function
@@ -783,7 +783,7 @@ argument_list|,
 name|DSO_R_NULL_HANDLE
 argument_list|)
 expr_stmt|;
-comment|/* Should push the value back onto the stack in 		 * case of a retry. */
+comment|/*          * Should push the value back onto the stack in case of a retry.          */
 name|sk_void_push
 argument_list|(
 name|dso
@@ -1202,7 +1202,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* If the first file specification is a rooted path, it rules. 	   same goes if the second file specification is missing. */
+comment|/*      * If the first file specification is a rooted path, it rules. same goes      * if the second file specification is missing.      */
 if|if
 condition|(
 operator|!
@@ -1261,7 +1261,7 @@ name|filespec1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the first file specification is missing, the second one rules. */
+comment|/*      * If the first file specification is missing, the second one rules.      */
 elseif|else
 if|if
 condition|(
@@ -1309,8 +1309,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* This part isn't as trivial as it looks.  It assumes that 		   the second file specification really is a directory, and 		   makes no checks whatsoever.  Therefore, the result becomes 		   the concatenation of filespec2 followed by a slash followed 		   by filespec1. */
 block|{
+comment|/*          * This part isn't as trivial as it looks.  It assumes that the          * second file specification really is a directory, and makes no          * checks whatsoever.  Therefore, the result becomes the          * concatenation of filespec2 followed by a slash followed by          * filespec1.          */
 name|int
 name|spec2len
 decl_stmt|,
@@ -1327,20 +1327,14 @@ name|len
 operator|=
 name|spec2len
 operator|+
-operator|(
-name|filespec1
-condition|?
 name|strlen
 argument_list|(
 name|filespec1
 argument_list|)
-else|:
-literal|0
-operator|)
 expr_stmt|;
 if|if
 condition|(
-name|filespec2
+name|spec2len
 operator|&&
 name|filespec2
 index|[
@@ -1642,7 +1636,7 @@ name|__sgi
 end_ifdef
 
 begin_comment
-comment|/* This is a quote from IRIX manual for dladdr(3c):<dlfcn.h> does not contain a prototype for dladdr or definition of      Dl_info.  The #include<dlfcn.h>  in the SYNOPSIS line is traditional,      but contains no dladdr prototype and no IRIX library contains an      implementation.  Write your own declaration based on the code below.       The following code is dependent on internal interfaces that are not      part of the IRIX compatibility guarantee; however, there is no future      intention to change this interface, so on a practical level, the code      below is safe to use on IRIX. */
+comment|/*- This is a quote from IRIX manual for dladdr(3c):<dlfcn.h> does not contain a prototype for dladdr or definition of      Dl_info.  The #include<dlfcn.h>  in the SYNOPSIS line is traditional,      but contains no dladdr prototype and no IRIX library contains an      implementation.  Write your own declaration based on the code below.       The following code is dependent on internal interfaces that are not      part of the IRIX compatibility guarantee; however, there is no future      intention to change this interface, so on a practical level, the code      below is safe to use on IRIX. */
 end_comment
 
 begin_include

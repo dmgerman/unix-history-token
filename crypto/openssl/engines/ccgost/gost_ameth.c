@@ -312,7 +312,7 @@ argument_list|(
 name|NID_id_GostR3411_94_CryptoProParamSet
 argument_list|)
 expr_stmt|;
-comment|/*gkp->cipher_params = OBJ_nid2obj(cipher_param_nid);*/
+comment|/*      * gkp->cipher_params = OBJ_nid2obj(cipher_param_nid);      */
 name|params
 operator|->
 name|length
@@ -376,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parses GOST algorithm parameters from X509_ALGOR and  * modifies pkey setting NID and parameters  */
+comment|/*  * Parses GOST algorithm parameters from X509_ALGOR and modifies pkey setting  * NID and parameters  */
 end_comment
 
 begin_function
@@ -529,13 +529,28 @@ argument_list|(
 name|gkp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|EVP_PKEY_set_type
 argument_list|(
 name|pkey
 argument_list|,
 name|pkey_nid
 argument_list|)
+condition|)
+block|{
+name|GOSTerr
+argument_list|(
+name|GOST_F_DECODE_GOST_ALGOR_PARAMS
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 switch|switch
 condition|(
 name|pkey_nid
@@ -1321,7 +1336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------- free functions * ------------------------------*/
+comment|/* --------------------- free functions * ------------------------------*/
 end_comment
 
 begin_function
@@ -2964,6 +2979,26 @@ operator|=
 name|EC_KEY_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|eto
+condition|)
+block|{
+name|GOSTerr
+argument_list|(
+name|GOST_F_PARAM_COPY_GOST01
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+operator|!
 name|EVP_PKEY_assign
 argument_list|(
 name|to
@@ -2975,8 +3010,23 @@ argument_list|)
 argument_list|,
 name|eto
 argument_list|)
+condition|)
+block|{
+name|GOSTerr
+argument_list|(
+name|GOST_F_PARAM_COPY_GOST01
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
 name|EC_KEY_set_group
 argument_list|(
 name|eto
@@ -2986,7 +3036,19 @@ argument_list|(
 name|efrom
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|GOSTerr
+argument_list|(
+name|GOST_F_PARAM_COPY_GOST01
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|EC_KEY_get0_private_key
@@ -4118,6 +4180,52 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|X
+operator|||
+operator|!
+name|Y
+condition|)
+block|{
+name|GOSTerr
+argument_list|(
+name|GOST_F_PUB_ENCODE_GOST01
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|X
+condition|)
+name|BN_free
+argument_list|(
+name|X
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Y
+condition|)
+name|BN_free
+argument_list|(
+name|Y
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+operator|!
 name|EC_POINT_get_affine_coordinates_GFp
 argument_list|(
 name|EC_KEY_get0_group
@@ -4133,7 +4241,34 @@ name|Y
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+block|{
+name|GOSTerr
+argument_list|(
+name|GOST_F_PUB_ENCODE_GOST01
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+name|BN_free
+argument_list|(
+name|X
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|Y
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|data_len
 operator|=
 literal|2
@@ -4538,7 +4673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------ ASN1 METHOD for GOST MAC  -------------------*/
+comment|/* ---------------------- ASN1 METHOD for GOST MAC  -------------------*/
 end_comment
 
 begin_function

@@ -8,11 +8,11 @@ comment|/*  * Originally written by Bodo Moeller for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_include
@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|ABORT
-value|do { \ 	fflush(stdout); \ 	fprintf(stderr, "%s:%d: ABORT\n", __FILE__, __LINE__); \ 	ERR_print_errors_fp(stderr); \ 	EXIT(1); \ } while (0)
+value|do { \         fflush(stdout); \         fprintf(stderr, "%s:%d: ABORT\n", __FILE__, __LINE__); \         ERR_print_errors_fp(stderr); \         EXIT(1); \ } while (0)
 end_define
 
 begin_define
@@ -238,14 +238,14 @@ literal|0
 end_if
 
 begin_ifdef
-unit|static void timings(EC_GROUP *group, int type, BN_CTX *ctx) 	{ 	clock_t clck; 	int i, j; 	BIGNUM *s; 	BIGNUM *r[10], *r0[10]; 	EC_POINT *P; 		 	s = BN_new(); 	if (s == NULL) ABORT;  	fprintf(stdout, "Timings for %d-bit field, ", EC_GROUP_get_degree(group)); 	if (!EC_GROUP_get_order(group, s, ctx)) ABORT; 	fprintf(stdout, "%d-bit scalars ", (int)BN_num_bits(s)); 	fflush(stdout);  	P = EC_POINT_new(group); 	if (P == NULL) ABORT; 	EC_POINT_copy(P, EC_GROUP_get0_generator(group));  	for (i = 0; i< 10; i++) 		{ 		if ((r[i] = BN_new()) == NULL) ABORT; 		if (!BN_pseudo_rand(r[i], BN_num_bits(s), 0, 0)) ABORT; 		if (type != TIMING_BASE_PT) 			{ 			if ((r0[i] = BN_new()) == NULL) ABORT; 			if (!BN_pseudo_rand(r0[i], BN_num_bits(s), 0, 0)) ABORT; 			} 		}  	clck = clock(); 	for (i = 0; i< 10; i++) 		{ 		for (j = 0; j< 10; j++) 			{ 			if (!EC_POINT_mul(group, P, (type != TIMING_RAND_PT) ? r[i] : NULL,  				(type != TIMING_BASE_PT) ? P : NULL, (type != TIMING_BASE_PT) ? r0[i] : NULL, ctx)) ABORT; 			} 		} 	clck = clock() - clck;  	fprintf(stdout, "\n");
+unit|static void timings(EC_GROUP *group, int type, BN_CTX *ctx) {     clock_t clck;     int i, j;     BIGNUM *s;     BIGNUM *r[10], *r0[10];     EC_POINT *P;      s = BN_new();     if (s == NULL)         ABORT;      fprintf(stdout, "Timings for %d-bit field, ", EC_GROUP_get_degree(group));     if (!EC_GROUP_get_order(group, s, ctx))         ABORT;     fprintf(stdout, "%d-bit scalars ", (int)BN_num_bits(s));     fflush(stdout);      P = EC_POINT_new(group);     if (P == NULL)         ABORT;     EC_POINT_copy(P, EC_GROUP_get0_generator(group));      for (i = 0; i< 10; i++) {         if ((r[i] = BN_new()) == NULL)             ABORT;         if (!BN_pseudo_rand(r[i], BN_num_bits(s), 0, 0))             ABORT;         if (type != TIMING_BASE_PT) {             if ((r0[i] = BN_new()) == NULL)                 ABORT;             if (!BN_pseudo_rand(r0[i], BN_num_bits(s), 0, 0))                 ABORT;         }     }      clck = clock();     for (i = 0; i< 10; i++) {         for (j = 0; j< 10; j++) {             if (!EC_POINT_mul                 (group, P, (type != TIMING_RAND_PT) ? r[i] : NULL,                  (type != TIMING_BASE_PT) ? P : NULL,                  (type != TIMING_BASE_PT) ? r0[i] : NULL, ctx))                 ABORT;         }     }     clck = clock() - clck;      fprintf(stdout, "\n");
 ifdef|#
 directive|ifdef
 name|CLOCKS_PER_SEC
 end_ifdef
 
 begin_comment
-comment|/* "To determine the time in seconds, the value returned 	 * by the clock function should be divided by the value 	 * of the macro CLOCKS_PER_SEC." 	 *                                       -- ISO/IEC 9899 */
+comment|/*      * "To determine the time in seconds, the value returned by the clock      * function should be divided by the value of the macro CLOCKS_PER_SEC."      * -- ISO/IEC 9899      */
 end_comment
 
 begin_define
@@ -261,7 +261,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* "`CLOCKS_PER_SEC' undeclared (first use this function)" 	 *                            -- cc on NeXTstep/OpenStep */
+comment|/*      * "`CLOCKS_PER_SEC' undeclared (first use this function)" -- cc on      * NeXTstep/OpenStep      */
 end_comment
 
 begin_define
@@ -284,7 +284,7 @@ directive|endif
 end_endif
 
 begin_endif
-unit|if (type == TIMING_BASE_PT) { 		fprintf(stdout, "%i %s in %.2f " UNIT "\n", i*j, 			"base point multiplications", (double)clck/CLOCKS_PER_SEC); 	} else if (type == TIMING_RAND_PT) { 		fprintf(stdout, "%i %s in %.2f " UNIT "\n", i*j, 			"random point multiplications", (double)clck/CLOCKS_PER_SEC); 	} else if (type == TIMING_SIMUL) { 		fprintf(stdout, "%i %s in %.2f " UNIT "\n", i*j, 			"s*P+t*Q operations", (double)clck/CLOCKS_PER_SEC); 	} 	fprintf(stdout, "average: %.4f " UNIT "\n", (double)clck/(CLOCKS_PER_SEC*i*j));  	EC_POINT_free(P); 	BN_free(s); 	for (i = 0; i< 10; i++) 		{ 		BN_free(r[i]); 		if (type != TIMING_BASE_PT) BN_free(r0[i]); 		} 	}
+unit|if (type == TIMING_BASE_PT) {         fprintf(stdout, "%i %s in %.2f " UNIT "\n", i * j,                 "base point multiplications", (double)clck / CLOCKS_PER_SEC);     } else if (type == TIMING_RAND_PT) {         fprintf(stdout, "%i %s in %.2f " UNIT "\n", i * j,                 "random point multiplications",                 (double)clck / CLOCKS_PER_SEC);     } else if (type == TIMING_SIMUL) {         fprintf(stdout, "%i %s in %.2f " UNIT "\n", i * j,                 "s*P+t*Q operations", (double)clck / CLOCKS_PER_SEC);     }     fprintf(stdout, "average: %.4f " UNIT "\n",             (double)clck / (CLOCKS_PER_SEC * i * j));      EC_POINT_free(P);     BN_free(s);     for (i = 0; i< 10; i++) {         BN_free(r[i]);         if (type != TIMING_BASE_PT)             BN_free(r0[i]);     } }
 endif|#
 directive|endif
 end_endif
@@ -539,7 +539,7 @@ argument_list|)
 condition|)
 name|ABORT
 expr_stmt|;
-comment|/* If i == 1, P will be the predefined generator for which 		 * EC_GROUP_precompute_mult has set up precomputation. */
+comment|/*          * If i == 1, P will be the predefined generator for which          * EC_GROUP_precompute_mult has set up precomputation.          */
 if|if
 condition|(
 operator|!
@@ -1152,7 +1152,7 @@ name|EC_GFp_mont_method
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* applications should use EC_GROUP_new_curve_GFp 	                                             * so that the library gets to choose the EC_METHOD */
+comment|/* applications should use                                                  * EC_GROUP_new_curve_GFp so                                                  * that the library gets to                                                  * choose the EC_METHOD */
 if|if
 condition|(
 operator|!
@@ -1659,7 +1659,7 @@ if|#
 directive|if
 literal|0
 comment|/* optional */
-block|{ 			EC_POINT *points[3]; 		 			points[0] = R; 			points[1] = Q; 			points[2] = P; 			if (!EC_POINTs_make_affine(group, 2, points, ctx)) ABORT; 		}
+block|{             EC_POINT *points[3];              points[0] = R;             points[1] = Q;             points[2] = P;             if (!EC_POINTs_make_affine(group, 2, points, ctx))                 ABORT;         }
 endif|#
 directive|endif
 block|}
@@ -2083,7 +2083,7 @@ argument_list|)
 condition|)
 name|ABORT
 expr_stmt|;
-comment|/* Curve secp160r1 (Certicom Research SEC 2 Version 1.0, section 2.4.2, 2000) 	 * -- not a NIST curve, but commonly used */
+comment|/*      * Curve secp160r1 (Certicom Research SEC 2 Version 1.0, section 2.4.2,      * 2000) -- not a NIST curve, but commonly used      */
 if|if
 condition|(
 operator|!
@@ -4090,7 +4090,7 @@ index|]
 operator|=
 name|y
 expr_stmt|;
-comment|/* (group order + 1)/2,  so  y*Q + y*Q = Q */
+comment|/* (group order + 1)/2, so y*Q + y*Q = Q */
 name|scalars
 index|[
 literal|1
@@ -4437,7 +4437,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|timings(P_160, TIMING_BASE_PT, ctx); 	timings(P_160, TIMING_RAND_PT, ctx); 	timings(P_160, TIMING_SIMUL, ctx); 	timings(P_192, TIMING_BASE_PT, ctx); 	timings(P_192, TIMING_RAND_PT, ctx); 	timings(P_192, TIMING_SIMUL, ctx); 	timings(P_224, TIMING_BASE_PT, ctx); 	timings(P_224, TIMING_RAND_PT, ctx); 	timings(P_224, TIMING_SIMUL, ctx); 	timings(P_256, TIMING_BASE_PT, ctx); 	timings(P_256, TIMING_RAND_PT, ctx); 	timings(P_256, TIMING_SIMUL, ctx); 	timings(P_384, TIMING_BASE_PT, ctx); 	timings(P_384, TIMING_RAND_PT, ctx); 	timings(P_384, TIMING_SIMUL, ctx); 	timings(P_521, TIMING_BASE_PT, ctx); 	timings(P_521, TIMING_RAND_PT, ctx); 	timings(P_521, TIMING_SIMUL, ctx);
+block|timings(P_160, TIMING_BASE_PT, ctx);     timings(P_160, TIMING_RAND_PT, ctx);     timings(P_160, TIMING_SIMUL, ctx);     timings(P_192, TIMING_BASE_PT, ctx);     timings(P_192, TIMING_RAND_PT, ctx);     timings(P_192, TIMING_SIMUL, ctx);     timings(P_224, TIMING_BASE_PT, ctx);     timings(P_224, TIMING_RAND_PT, ctx);     timings(P_224, TIMING_SIMUL, ctx);     timings(P_256, TIMING_BASE_PT, ctx);     timings(P_256, TIMING_RAND_PT, ctx);     timings(P_256, TIMING_SIMUL, ctx);     timings(P_384, TIMING_BASE_PT, ctx);     timings(P_384, TIMING_RAND_PT, ctx);     timings(P_384, TIMING_SIMUL, ctx);     timings(P_521, TIMING_BASE_PT, ctx);     timings(P_521, TIMING_RAND_PT, ctx);     timings(P_521, TIMING_SIMUL, ctx);
 endif|#
 directive|endif
 if|if
@@ -4594,9 +4594,9 @@ parameter_list|,
 name|_variable
 parameter_list|)
 define|\
-value|if (!BN_hex2bn(&x, _x)) ABORT; \ 	if (!EC_POINT_set_compressed_coordinates_GF2m(group, P, x, _y_bit, ctx)) ABORT; \ 	if (EC_POINT_is_on_curve(group, P, ctx)<= 0) ABORT; \ 	if (!BN_hex2bn(&z, _order)) ABORT; \ 	if (!BN_hex2bn(&cof, _cof)) ABORT; \ 	if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \ 	if (!EC_POINT_get_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \ 	fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \ 	BN_print_fp(stdout, x); \ 	fprintf(stdout, "\n     y = 0x"); \ 	BN_print_fp(stdout, y); \ 	fprintf(stdout, "\n"); \
+value|if (!BN_hex2bn(&x, _x)) ABORT; \         if (!EC_POINT_set_compressed_coordinates_GF2m(group, P, x, _y_bit, ctx)) ABORT; \         if (EC_POINT_is_on_curve(group, P, ctx)<= 0) ABORT; \         if (!BN_hex2bn(&z, _order)) ABORT; \         if (!BN_hex2bn(&cof, _cof)) ABORT; \         if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \         if (!EC_POINT_get_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \         fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \         BN_print_fp(stdout, x); \         fprintf(stdout, "\n     y = 0x"); \         BN_print_fp(stdout, y); \         fprintf(stdout, "\n"); \
 comment|/* G_y value taken from the standard: */
-value|\ 	if (!BN_hex2bn(&z, _y)) ABORT; \ 	if (0 != BN_cmp(y, z)) ABORT;
+value|\         if (!BN_hex2bn(&z, _y)) ABORT; \         if (0 != BN_cmp(y, z)) ABORT;
 end_define
 
 begin_else
@@ -4632,7 +4632,7 @@ parameter_list|,
 name|_variable
 parameter_list|)
 define|\
-value|if (!BN_hex2bn(&x, _x)) ABORT; \ 	if (!BN_hex2bn(&y, _y)) ABORT; \ 	if (!EC_POINT_set_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \ 	if (EC_POINT_is_on_curve(group, P, ctx)<= 0) ABORT; \ 	if (!BN_hex2bn(&z, _order)) ABORT; \ 	if (!BN_hex2bn(&cof, _cof)) ABORT; \ 	if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \ 	fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \ 	BN_print_fp(stdout, x); \ 	fprintf(stdout, "\n     y = 0x"); \ 	BN_print_fp(stdout, y); \ 	fprintf(stdout, "\n");
+value|if (!BN_hex2bn(&x, _x)) ABORT; \         if (!BN_hex2bn(&y, _y)) ABORT; \         if (!EC_POINT_set_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \         if (EC_POINT_is_on_curve(group, P, ctx)<= 0) ABORT; \         if (!BN_hex2bn(&z, _order)) ABORT; \         if (!BN_hex2bn(&cof, _cof)) ABORT; \         if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \         fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \         BN_print_fp(stdout, x); \         fprintf(stdout, "\n     y = 0x"); \         BN_print_fp(stdout, y); \         fprintf(stdout, "\n");
 end_define
 
 begin_endif
@@ -4668,7 +4668,7 @@ parameter_list|,
 name|_variable
 parameter_list|)
 define|\
-value|if (!BN_hex2bn(&p, _p)) ABORT; \ 	if (!BN_hex2bn(&a, _a)) ABORT; \ 	if (!BN_hex2bn(&b, _b)) ABORT; \ 	if (!EC_GROUP_set_curve_GF2m(group, p, a, b, ctx)) ABORT; \ 	CHAR2_CURVE_TEST_INTERNAL(_name, _p, _a, _b, _x, _y, _y_bit, _order, _cof, _degree, _variable) \ 	fprintf(stdout, "verify degree ..."); \ 	if (EC_GROUP_get_degree(group) != _degree) ABORT; \ 	fprintf(stdout, " ok\n"); \ 	group_order_tests(group); \ 	if (!(_variable = EC_GROUP_new(EC_GROUP_method_of(group)))) ABORT; \ 	if (!EC_GROUP_copy(_variable, group)) ABORT; \  #ifndef OPENSSL_NO_EC2M
+value|if (!BN_hex2bn(&p, _p)) ABORT; \         if (!BN_hex2bn(&a, _a)) ABORT; \         if (!BN_hex2bn(&b, _b)) ABORT; \         if (!EC_GROUP_set_curve_GF2m(group, p, a, b, ctx)) ABORT; \         CHAR2_CURVE_TEST_INTERNAL(_name, _p, _a, _b, _x, _y, _y_bit, _order, _cof, _degree, _variable) \         fprintf(stdout, "verify degree ..."); \         if (EC_GROUP_get_degree(group) != _degree) ABORT; \         fprintf(stdout, " ok\n"); \         group_order_tests(group); \         if (!(_variable = EC_GROUP_new(EC_GROUP_method_of(group)))) ABORT; \         if (!EC_GROUP_copy(_variable, group)) ABORT; \  # ifndef OPENSSL_NO_EC2M
 end_define
 
 begin_function
@@ -4882,7 +4882,7 @@ name|EC_GF2m_simple_method
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* applications should use EC_GROUP_new_curve_GF2m 	                                                * so that the library gets to choose the EC_METHOD */
+comment|/* applications should use                                                     * EC_GROUP_new_curve_GF2m                                                     * so that the library gets                                                     * to choose the EC_METHOD */
 if|if
 condition|(
 operator|!
@@ -6280,7 +6280,7 @@ index|]
 operator|=
 name|y
 expr_stmt|;
-comment|/* (group order + 1)/2,  so  y*Q + y*Q = Q */
+comment|/* (group order + 1)/2, so y*Q + y*Q = Q */
 name|scalars
 index|[
 literal|1
@@ -6601,7 +6601,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|timings(C2_K163, TIMING_BASE_PT, ctx); 	timings(C2_K163, TIMING_RAND_PT, ctx); 	timings(C2_K163, TIMING_SIMUL, ctx); 	timings(C2_B163, TIMING_BASE_PT, ctx); 	timings(C2_B163, TIMING_RAND_PT, ctx); 	timings(C2_B163, TIMING_SIMUL, ctx); 	timings(C2_K233, TIMING_BASE_PT, ctx); 	timings(C2_K233, TIMING_RAND_PT, ctx); 	timings(C2_K233, TIMING_SIMUL, ctx); 	timings(C2_B233, TIMING_BASE_PT, ctx); 	timings(C2_B233, TIMING_RAND_PT, ctx); 	timings(C2_B233, TIMING_SIMUL, ctx); 	timings(C2_K283, TIMING_BASE_PT, ctx); 	timings(C2_K283, TIMING_RAND_PT, ctx); 	timings(C2_K283, TIMING_SIMUL, ctx); 	timings(C2_B283, TIMING_BASE_PT, ctx); 	timings(C2_B283, TIMING_RAND_PT, ctx); 	timings(C2_B283, TIMING_SIMUL, ctx); 	timings(C2_K409, TIMING_BASE_PT, ctx); 	timings(C2_K409, TIMING_RAND_PT, ctx); 	timings(C2_K409, TIMING_SIMUL, ctx); 	timings(C2_B409, TIMING_BASE_PT, ctx); 	timings(C2_B409, TIMING_RAND_PT, ctx); 	timings(C2_B409, TIMING_SIMUL, ctx); 	timings(C2_K571, TIMING_BASE_PT, ctx); 	timings(C2_K571, TIMING_RAND_PT, ctx); 	timings(C2_K571, TIMING_SIMUL, ctx); 	timings(C2_B571, TIMING_BASE_PT, ctx); 	timings(C2_B571, TIMING_RAND_PT, ctx); 	timings(C2_B571, TIMING_SIMUL, ctx);
+block|timings(C2_K163, TIMING_BASE_PT, ctx);     timings(C2_K163, TIMING_RAND_PT, ctx);     timings(C2_K163, TIMING_SIMUL, ctx);     timings(C2_B163, TIMING_BASE_PT, ctx);     timings(C2_B163, TIMING_RAND_PT, ctx);     timings(C2_B163, TIMING_SIMUL, ctx);     timings(C2_K233, TIMING_BASE_PT, ctx);     timings(C2_K233, TIMING_RAND_PT, ctx);     timings(C2_K233, TIMING_SIMUL, ctx);     timings(C2_B233, TIMING_BASE_PT, ctx);     timings(C2_B233, TIMING_RAND_PT, ctx);     timings(C2_B233, TIMING_SIMUL, ctx);     timings(C2_K283, TIMING_BASE_PT, ctx);     timings(C2_K283, TIMING_RAND_PT, ctx);     timings(C2_K283, TIMING_SIMUL, ctx);     timings(C2_B283, TIMING_BASE_PT, ctx);     timings(C2_B283, TIMING_RAND_PT, ctx);     timings(C2_B283, TIMING_SIMUL, ctx);     timings(C2_K409, TIMING_BASE_PT, ctx);     timings(C2_K409, TIMING_RAND_PT, ctx);     timings(C2_K409, TIMING_SIMUL, ctx);     timings(C2_B409, TIMING_BASE_PT, ctx);     timings(C2_B409, TIMING_RAND_PT, ctx);     timings(C2_B409, TIMING_SIMUL, ctx);     timings(C2_K571, TIMING_BASE_PT, ctx);     timings(C2_K571, TIMING_RAND_PT, ctx);     timings(C2_K571, TIMING_SIMUL, ctx);     timings(C2_B571, TIMING_BASE_PT, ctx);     timings(C2_B571, TIMING_RAND_PT, ctx);     timings(C2_B571, TIMING_SIMUL, ctx);
 endif|#
 directive|endif
 if|if
@@ -7004,7 +7004,7 @@ name|OPENSSL_NO_EC_NISTP_64_GCC_128
 end_ifndef
 
 begin_comment
-comment|/* nistp_test_params contains magic numbers for testing our optimized  * implementations of several NIST curves with characteristic> 3. */
+comment|/*  * nistp_test_params contains magic numbers for testing our optimized  * implementations of several NIST curves with characteristic> 3.  */
 end_comment
 
 begin_struct
@@ -7023,7 +7023,7 @@ function_decl|;
 name|int
 name|degree
 decl_stmt|;
-comment|/* Qx, Qy and D are taken from 	 * http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/ECDSA_Prime.pdf 	 * Otherwise, values are standard curve parameters from FIPS 180-3 */
+comment|/*      * Qx, Qy and D are taken from      * http://csrcdocut.gov/groups/ST/toolkit/documents/Examples/ECDSA_Prime.pdf      * Otherwise, values are standard curve parameters from FIPS 180-3      */
 specifier|const
 name|char
 modifier|*
@@ -7072,34 +7072,33 @@ name|EC_GFp_nistp224_method
 block|,
 literal|224
 block|,
+comment|/* p */
 literal|"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001"
 block|,
-comment|/* p */
+comment|/* a */
 literal|"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFE"
 block|,
-comment|/* a */
+comment|/* b */
 literal|"B4050A850C04B3ABF54132565044B0B7D7BFD8BA270B39432355FFB4"
 block|,
-comment|/* b */
+comment|/* Qx */
 literal|"E84FB0B8E7000CB657D7973CF6B42ED78B301674276DF744AF130B3E"
 block|,
-comment|/* Qx */
+comment|/* Qy */
 literal|"4376675C6FC5612C21A0FF2D2A89D2987DF7A2BC52183B5982298555"
 block|,
-comment|/* Qy */
+comment|/* Gx */
 literal|"B70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21"
 block|,
-comment|/* Gx */
+comment|/* Gy */
 literal|"BD376388B5F723FB4C22DFE6CD4375A05A07476444D5819985007E34"
 block|,
-comment|/* Gy */
+comment|/* order */
 literal|"FFFFFFFFFFFFFFFFFFFFFFFFFFFF16A2E0B8F03E13DD29455C5C2A3D"
 block|,
-comment|/* order */
-literal|"3F0C488E987C80BE0FEE521F8D90BE6034EC69AE11CA72AA777481E8"
-block|,
 comment|/* d */
-block|}
+literal|"3F0C488E987C80BE0FEE521F8D90BE6034EC69AE11CA72AA777481E8"
+block|,      }
 block|,
 block|{
 comment|/* P-256 */
@@ -7107,34 +7106,33 @@ name|EC_GFp_nistp256_method
 block|,
 literal|256
 block|,
+comment|/* p */
 literal|"ffffffff00000001000000000000000000000000ffffffffffffffffffffffff"
 block|,
-comment|/* p */
+comment|/* a */
 literal|"ffffffff00000001000000000000000000000000fffffffffffffffffffffffc"
 block|,
-comment|/* a */
+comment|/* b */
 literal|"5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b"
 block|,
-comment|/* b */
+comment|/* Qx */
 literal|"b7e08afdfe94bad3f1dc8c734798ba1c62b3a0ad1e9ea2a38201cd0889bc7a19"
 block|,
-comment|/* Qx */
+comment|/* Qy */
 literal|"3603f747959dbf7a4bb226e41928729063adc7ae43529e61b563bbc606cc5e09"
 block|,
-comment|/* Qy */
+comment|/* Gx */
 literal|"6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296"
 block|,
-comment|/* Gx */
+comment|/* Gy */
 literal|"4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5"
 block|,
-comment|/* Gy */
+comment|/* order */
 literal|"ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551"
 block|,
-comment|/* order */
-literal|"c477f9f65c22cce20657faa5b2d1d8122336f851a508a1ed04e479c34985bf96"
-block|,
 comment|/* d */
-block|}
+literal|"c477f9f65c22cce20657faa5b2d1d8122336f851a508a1ed04e479c34985bf96"
+block|,      }
 block|,
 block|{
 comment|/* P-521 */
@@ -7142,35 +7140,34 @@ name|EC_GFp_nistp521_method
 block|,
 literal|521
 block|,
+comment|/* p */
 literal|"1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 block|,
-comment|/* p */
+comment|/* a */
 literal|"1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc"
 block|,
-comment|/* a */
+comment|/* b */
 literal|"051953eb9618e1c9a1f929a21a0b68540eea2da725b99b315f3b8b489918ef109e156193951ec7e937b1652c0bd3bb1bf073573df883d2c34f1ef451fd46b503f00"
 block|,
-comment|/* b */
+comment|/* Qx */
 literal|"0098e91eef9a68452822309c52fab453f5f117c1da8ed796b255e9ab8f6410cca16e59df403a6bdc6ca467a37056b1e54b3005d8ac030decfeb68df18b171885d5c4"
 block|,
-comment|/* Qx */
+comment|/* Qy */
 literal|"0164350c321aecfc1cca1ba4364c9b15656150b4b78d6a48d7d28e7f31985ef17be8554376b72900712c4b83ad668327231526e313f5f092999a4632fd50d946bc2e"
 block|,
-comment|/* Qy */
+comment|/* Gx */
 literal|"c6858e06b70404e9cd9e3ecb662395b4429c648139053fb521f828af606b4d3dbaa14b5e77efe75928fe1dc127a2ffa8de3348b3c1856a429bf97e7e31c2e5bd66"
 block|,
-comment|/* Gx */
+comment|/* Gy */
 literal|"11839296a789a3bc0045c8a5fb42c7d1bd998f54449579b446817afbd17273e662c97ee72995ef42640c550b9013fad0761353c7086a272c24088be94769fd16650"
 block|,
-comment|/* Gy */
+comment|/* order */
 literal|"1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa51868783bf2f966b7fcc0148f709a5d03bb5c9b8899c47aebb6fb71e91386409"
 block|,
-comment|/* order */
-literal|"0100085f47b8e1b8b11b7eb33028c0b2888e304bfc98501955b45bba1478dc184eeedf09b86a5f7c21994406072787205e69a63709fe35aa93ba333514b24f961722"
-block|,
 comment|/* d */
-block|}
-block|, 	}
+literal|"0100085f47b8e1b8b11b7eb33028c0b2888e304bfc98501955b45bba1478dc184eeedf09b86a5f7c21994406072787205e69a63709fe35aa93ba333514b24f961722"
+block|,      }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -7950,7 +7947,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|timings(NISTP, TIMING_BASE_PT, ctx); 	timings(NISTP, TIMING_RAND_PT, ctx);
+block|timings(NISTP, TIMING_BASE_PT, ctx);     timings(NISTP, TIMING_RAND_PT, ctx);
 endif|#
 directive|endif
 name|EC_GROUP_free

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -48,7 +48,7 @@ define|\
 value|((void*) (1 ? p : (type*)0))
 endif|#
 directive|endif
-comment|/* In C++ we get problems because an explicit cast is needed from (void *)  * we use CHECKED_STACK_OF to ensure the correct type is passed in the macros  * below.   */
+comment|/*  * In C++ we get problems because an explicit cast is needed from (void *) we  * use CHECKED_STACK_OF to ensure the correct type is passed in the macros  * below.  */
 define|#
 directive|define
 name|CHECKED_STACK_OF
@@ -88,7 +88,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|((int (*)(const void *, const void *)) \ 	((1 ? p : (int (*)(const type * const *, const type * const *))0)))
+value|((int (*)(const void *, const void *)) \         ((1 ? p : (int (*)(const type * const *, const type * const *))0)))
 define|#
 directive|define
 name|STACK_OF
@@ -121,14 +121,14 @@ name|type2
 parameter_list|)
 define|\
 value|STACK_OF(type) \     { \     _STACK stack; \     };
+comment|/* nada (obsolete in new safestack approach)*/
 define|#
 directive|define
 name|IMPLEMENT_STACK_OF
 parameter_list|(
 name|type
 parameter_list|)
-comment|/* nada (obsolete in new safestack approach)*/
-comment|/* Strings are special: normally an lhash entry will point to a single  * (somewhat) mutable object. In the case of strings:  *  * a) Instead of a single char, there is an array of chars, NUL-terminated.  * b) The string may have be immutable.  *  * So, they need their own declarations. Especially important for  * type-checking tools, such as Deputy.  * o * In practice, however, it appears to be hard to have a const  * string. For now, I'm settling for dealing with the fact it is a  * string at all.  */
+comment|/*-  * Strings are special: normally an lhash entry will point to a single  * (somewhat) mutable object. In the case of strings:  *  * a) Instead of a single char, there is an array of chars, NUL-terminated.  * b) The string may have be immutable.  *  * So, they need their own declarations. Especially important for  * type-checking tools, such as Deputy.  *  * In practice, however, it appears to be hard to have a const  * string. For now, I'm settling for dealing with the fact it is a  * string at all.  */
 typedef|typedef
 name|char
 modifier|*
@@ -140,14 +140,14 @@ name|char
 modifier|*
 name|OPENSSL_CSTRING
 typedef|;
-comment|/* Confusingly, LHASH_OF(STRING) deals with char ** throughout, but  * STACK_OF(STRING) is really more like STACK_OF(char), only, as  * mentioned above, instead of a single char each entry is a  * NUL-terminated array of chars. So, we have to implement STRING  * specially for STACK_OF. This is dealt with in the autogenerated  * macros below.  */
+comment|/*  * Confusingly, LHASH_OF(STRING) deals with char ** throughout, but  * STACK_OF(STRING) is really more like STACK_OF(char), only, as mentioned  * above, instead of a single char each entry is a NUL-terminated array of  * chars. So, we have to implement STRING specially for STACK_OF. This is  * dealt with in the autogenerated macros below.  */
 name|DECLARE_SPECIAL_STACK_OF
 argument_list|(
 argument|OPENSSL_STRING
 argument_list|,
 argument|char
 argument_list|)
-comment|/* Similarly, we sometimes use a block of characters, NOT  * nul-terminated. These should also be distinguished from "normal"  * stacks. */
+comment|/*  * Similarly, we sometimes use a block of characters, NOT nul-terminated.  * These should also be distinguished from "normal" stacks.  */
 typedef|typedef
 name|void
 modifier|*
@@ -159,7 +159,7 @@ argument|OPENSSL_BLOCK
 argument_list|,
 argument|void
 argument_list|)
-comment|/* SKM_sk_... stack macros are internal to safestack.h:  * never use them directly, use sk_<type>_... instead */
+comment|/*  * SKM_sk_... stack macros are internal to safestack.h: never use them  * directly, use sk_<type>_... instead  */
 define|#
 directive|define
 name|SKM_sk_new
@@ -281,7 +281,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|sk_find_ex(CHECKED_STACK_OF(type, st), \ 		   CHECKED_PTR_OF(type, val))
+value|sk_find_ex(CHECKED_STACK_OF(type, st), \                    CHECKED_PTR_OF(type, val))
 define|#
 directive|define
 name|SKM_sk_delete
@@ -331,7 +331,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((int (*)(const type * const *,const type * const *)) \ 	sk_set_cmp_func(CHECKED_STACK_OF(type, st), CHECKED_SK_CMP_FUNC(type, cmp)))
+value|((int (*)(const type * const *,const type * const *)) \         sk_set_cmp_func(CHECKED_STACK_OF(type, st), CHECKED_SK_CMP_FUNC(type, cmp)))
 define|#
 directive|define
 name|SKM_sk_dup
@@ -415,7 +415,7 @@ parameter_list|,
 name|ex_class
 parameter_list|)
 define|\
-value|(STACK_OF(type) *)d2i_ASN1_SET( \ 				(STACK_OF(OPENSSL_BLOCK) **)CHECKED_PTR_OF(STACK_OF(type)*, st), \ 				pp, length, \ 				CHECKED_D2I_OF(type, d2i_func), \ 				CHECKED_SK_FREE_FUNC(type, free_func), \ 				ex_tag, ex_class)
+value|(STACK_OF(type) *)d2i_ASN1_SET( \                                 (STACK_OF(OPENSSL_BLOCK) **)CHECKED_PTR_OF(STACK_OF(type)*, st), \                                 pp, length, \                                 CHECKED_D2I_OF(type, d2i_func), \                                 CHECKED_SK_FREE_FUNC(type, free_func), \                                 ex_tag, ex_class)
 define|#
 directive|define
 name|SKM_ASN1_SET_OF_i2d
@@ -435,7 +435,7 @@ parameter_list|,
 name|is_set
 parameter_list|)
 define|\
-value|i2d_ASN1_SET((STACK_OF(OPENSSL_BLOCK) *)CHECKED_STACK_OF(type, st), pp, \ 				CHECKED_I2D_OF(type, i2d_func), \ 				ex_tag, ex_class, is_set)
+value|i2d_ASN1_SET((STACK_OF(OPENSSL_BLOCK) *)CHECKED_STACK_OF(type, st), pp, \                                 CHECKED_I2D_OF(type, i2d_func), \                                 ex_tag, ex_class, is_set)
 define|#
 directive|define
 name|SKM_ASN1_seq_pack
@@ -451,7 +451,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|ASN1_seq_pack(CHECKED_PTR_OF(STACK_OF(type), st), \ 			CHECKED_I2D_OF(type, i2d_func), buf, len)
+value|ASN1_seq_pack(CHECKED_PTR_OF(STACK_OF(type), st), \                         CHECKED_I2D_OF(type, i2d_func), buf, len)
 define|#
 directive|define
 name|SKM_ASN1_seq_unpack
@@ -489,8 +489,8 @@ parameter_list|,
 name|seq
 parameter_list|)
 define|\
-value|(STACK_OF(type) *)PKCS12_decrypt_d2i(algor, \ 				CHECKED_D2I_OF(type, d2i_func), \ 				CHECKED_SK_FREE_FUNC(type, free_func), \ 				pass, passlen, oct, seq)
-comment|/* This block of defines is updated by util/mkstack.pl, please do not touch! */
+value|(STACK_OF(type) *)PKCS12_decrypt_d2i(algor, \                                 CHECKED_D2I_OF(type, d2i_func), \                                 CHECKED_SK_FREE_FUNC(type, free_func), \                                 pass, passlen, oct, seq)
+comment|/*  * This block of defines is updated by util/mkstack.pl, please do not touch!  */
 define|#
 directive|define
 name|sk_ACCESS_DESCRIPTION_new
@@ -15504,7 +15504,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((int (*)(const char * const *,const char * const *)) \ 	sk_set_cmp_func(CHECKED_STACK_OF(OPENSSL_STRING, st), CHECKED_SK_CMP_FUNC(char, cmp)))
+value|((int (*)(const char * const *,const char * const *)) \         sk_set_cmp_func(CHECKED_STACK_OF(OPENSSL_STRING, st), CHECKED_SK_CMP_FUNC(char, cmp)))
 define|#
 directive|define
 name|sk_OPENSSL_STRING_dup
@@ -15676,7 +15676,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((int (*)(const void * const *,const void * const *)) \ 	sk_set_cmp_func(CHECKED_STACK_OF(OPENSSL_BLOCK, st), CHECKED_SK_CMP_FUNC(void, cmp)))
+value|((int (*)(const void * const *,const void * const *)) \         sk_set_cmp_func(CHECKED_STACK_OF(OPENSSL_BLOCK, st), CHECKED_SK_CMP_FUNC(void, cmp)))
 define|#
 directive|define
 name|sk_OPENSSL_BLOCK_dup
@@ -15848,7 +15848,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((int (*)(const OPENSSL_STRING * const *,const OPENSSL_STRING * const *)) \ 	sk_set_cmp_func(CHECKED_STACK_OF(OPENSSL_PSTRING, st), CHECKED_SK_CMP_FUNC(OPENSSL_STRING, cmp)))
+value|((int (*)(const OPENSSL_STRING * const *,const OPENSSL_STRING * const *)) \         sk_set_cmp_func(CHECKED_STACK_OF(OPENSSL_PSTRING, st), CHECKED_SK_CMP_FUNC(OPENSSL_STRING, cmp)))
 define|#
 directive|define
 name|sk_OPENSSL_PSTRING_dup
@@ -19043,7 +19043,6 @@ parameter_list|(
 name|lh
 parameter_list|)
 value|LHM_lh_free(SSL_SESSION,lh)
-comment|/* End of util/mkstack.pl block, you may now edit :-) */
 ifdef|#
 directive|ifdef
 name|__cplusplus

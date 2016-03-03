@@ -4,7 +4,7 @@ comment|/* crypto/x509/x509_vfy.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -541,7 +541,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int x509_subject_cmp(X509 **a, X509 **b) 	{ 	return X509_subject_name_cmp(*a,*b); 	}
+unit|static int x509_subject_cmp(X509 **a, X509 **b) {     return X509_subject_name_cmp(*a, *b); }
 endif|#
 directive|endif
 end_endif
@@ -561,6 +561,9 @@ name|x
 decl_stmt|,
 modifier|*
 name|xtmp
+decl_stmt|,
+modifier|*
+name|xtmp2
 decl_stmt|,
 modifier|*
 name|chain_ss
@@ -591,6 +594,10 @@ literal|0
 decl_stmt|;
 name|int
 name|num
+decl_stmt|,
+name|j
+decl_stmt|,
+name|retry
 decl_stmt|;
 name|int
 function_decl|(
@@ -636,22 +643,35 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|ctx
+operator|->
+name|chain
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/*          * This X509_STORE_CTX has already been used to verify a cert. We          * cannot do another one.          */
+name|X509err
+argument_list|(
+name|X509_F_X509_VERIFY_CERT
+argument_list|,
+name|ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|cb
 operator|=
 name|ctx
 operator|->
 name|verify_cb
 expr_stmt|;
-comment|/* first we make sure the chain we are going to build is 	 * present and that the first entry is in place */
-if|if
-condition|(
-name|ctx
-operator|->
-name|chain
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/*      * first we make sure the chain we are going to build is present and that      * the first entry is in place      */
 if|if
 condition|(
 operator|(
@@ -713,7 +733,6 @@ name|last_untrusted
 operator|=
 literal|1
 expr_stmt|;
-block|}
 comment|/* We use a temporary STACK so we can chop and hack at it */
 if|if
 condition|(
@@ -790,7 +809,7 @@ operator|<
 name|num
 condition|)
 break|break;
-comment|/* FIXME: If this happens, we should take 		                         * note of it and, if appropriate, use the 		                         * X509_V_ERR_CERT_CHAIN_TOO_LONG error 		                         * code later. 		                         */
+comment|/* FIXME: If this happens, we should take                                  * note of it and, if appropriate, use the                                  * X509_V_ERR_CERT_CHAIN_TOO_LONG error code                                  * later. */
 comment|/* If we are self signed, we break */
 if|if
 condition|(
@@ -892,14 +911,21 @@ expr_stmt|;
 name|num
 operator|++
 expr_stmt|;
-comment|/* reparse the full chain for 				 * the next one */
+comment|/*                  * reparse the full chain for the next one                  */
 continue|continue;
 block|}
 block|}
 break|break;
 block|}
-comment|/* at this point, chain should contain a list of untrusted 	 * certificates.  We now need to add at least one trusted one, 	 * if possible, otherwise we complain. */
-comment|/* Examine last certificate in chain and see if it  	 * is self signed.  	 */
+comment|/* Remember how many untrusted certs we have */
+name|j
+operator|=
+name|num
+expr_stmt|;
+comment|/*      * at this point, chain should contain a list of untrusted certificates.      * We now need to add at least one trusted one, if possible, otherwise we      * complain.      */
+do|do
+block|{
+comment|/*          * Examine last certificate in chain and see if it is self signed.          */
 name|i
 operator|=
 name|sk_X509_num
@@ -949,7 +975,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* We have a single self signed certificate: see if 			 * we can find it in the store. We must have an exact 			 * match to avoid possible impersonation. 			 */
+comment|/*                  * We have a single self signed certificate: see if we can                  * find it in the store. We must have an exact match to avoid                  * possible impersonation.                  */
 name|ok
 operator|=
 name|ctx
@@ -1035,7 +1061,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* We have a match: replace certificate with store version 				 * so we get any trust settings. 				 */
+comment|/*                      * We have a match: replace certificate with store                      * version so we get any trust settings.                      */
 name|X509_free
 argument_list|(
 name|x
@@ -1071,7 +1097,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* extract and save self signed certificate for later use */
+comment|/*                  * extract and save self signed certificate for later use                  */
 name|chain_ss
 operator|=
 name|sk_X509_pop
@@ -1087,6 +1113,9 @@ name|last_untrusted
 operator|--
 expr_stmt|;
 name|num
+operator|--
+expr_stmt|;
+name|j
 operator|--
 expr_stmt|;
 name|x
@@ -1201,7 +1230,140 @@ name|num
 operator|++
 expr_stmt|;
 block|}
-comment|/* we now have our chain, lets check it... */
+comment|/*          * If we haven't got a least one certificate from our store then check          * if there is an alternative chain that could be used.  We only do this          * if the user hasn't switched off alternate chain checking          */
+name|retry
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|==
+name|ctx
+operator|->
+name|last_untrusted
+operator|&&
+operator|!
+operator|(
+name|ctx
+operator|->
+name|param
+operator|->
+name|flags
+operator|&
+name|X509_V_FLAG_NO_ALT_CHAINS
+operator|)
+condition|)
+block|{
+while|while
+condition|(
+name|j
+operator|--
+operator|>
+literal|1
+condition|)
+block|{
+name|xtmp2
+operator|=
+name|sk_X509_value
+argument_list|(
+name|ctx
+operator|->
+name|chain
+argument_list|,
+name|j
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|ok
+operator|=
+name|ctx
+operator|->
+name|get_issuer
+argument_list|(
+operator|&
+name|xtmp
+argument_list|,
+name|ctx
+argument_list|,
+name|xtmp2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ok
+operator|<
+literal|0
+condition|)
+goto|goto
+name|end
+goto|;
+comment|/* Check if we found an alternate chain */
+if|if
+condition|(
+name|ok
+operator|>
+literal|0
+condition|)
+block|{
+comment|/*                      * Free up the found cert we'll add it again later                      */
+name|X509_free
+argument_list|(
+name|xtmp
+argument_list|)
+expr_stmt|;
+comment|/*                      * Dump all the certs above this point - we've found an                      * alternate chain                      */
+while|while
+condition|(
+name|num
+operator|>
+name|j
+condition|)
+block|{
+name|xtmp
+operator|=
+name|sk_X509_pop
+argument_list|(
+name|ctx
+operator|->
+name|chain
+argument_list|)
+expr_stmt|;
+name|X509_free
+argument_list|(
+name|xtmp
+argument_list|)
+expr_stmt|;
+name|num
+operator|--
+expr_stmt|;
+block|}
+name|ctx
+operator|->
+name|last_untrusted
+operator|=
+name|sk_X509_num
+argument_list|(
+name|ctx
+operator|->
+name|chain
+argument_list|)
+expr_stmt|;
+name|retry
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+block|}
+do|while
+condition|(
+name|retry
+condition|)
+do|;
 comment|/* Is last certificate looked up self signed? */
 if|if
 condition|(
@@ -1400,7 +1562,7 @@ operator|->
 name|chain
 argument_list|)
 expr_stmt|;
-comment|/* Check revocation status: we do this after copying parameters 	 * because they may be needed for CRL signature verification. 	 */
+comment|/*      * Check revocation status: we do this after copying parameters because      * they may be needed for CRL signature verification.      */
 name|ok
 operator|=
 name|ctx
@@ -1567,7 +1729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a STACK_OF(X509) find the issuer of cert (if any)  */
+comment|/*  * Given a STACK_OF(X509) find the issuer of cert (if any)  */
 end_comment
 
 begin_decl_stmt
@@ -1812,7 +1974,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check a certificate chains extensions for consistency  * with the supplied purpose  */
+comment|/*  * Check a certificate chains extensions for consistency with the supplied  * purpose  */
 end_comment
 
 begin_function
@@ -1881,7 +2043,7 @@ name|ctx
 operator|->
 name|verify_cb
 expr_stmt|;
-comment|/* must_be_ca can have 1 of 3 values: 	   -1: we accept both CA and non-CA certificates, to allow direct 	       use of self-signed certificates (which are marked as CA). 	   0:  we only accept non-CA certificates.  This is currently not 	       used, but the possibility is present for future extensions. 	   1:  we only accept CA certificates.  This is currently used for 	       all certificates in the chain except the leaf certificate. 	*/
+comment|/*-      *  must_be_ca can have 1 of 3 values:      * -1: we accept both CA and non-CA certificates, to allow direct      *     use of self-signed certificates (which are marked as CA).      * 0:  we only accept non-CA certificates.  This is currently not      *     used, but the possibility is present for future extensions.      * 1:  we only accept CA certificates.  This is currently used for      *     all certificates in the chain except the leaf certificate.      */
 name|must_be_ca
 operator|=
 operator|-
@@ -1920,7 +2082,7 @@ operator|&
 name|X509_V_FLAG_ALLOW_PROXY_CERTS
 operator|)
 expr_stmt|;
-comment|/* A hack to keep people who don't want to modify their 		   software happy */
+comment|/*          * A hack to keep people who don't want to modify their software          * happy          */
 if|if
 condition|(
 name|getenv
@@ -2429,7 +2591,7 @@ condition|)
 name|plen
 operator|++
 expr_stmt|;
-comment|/* If this certificate is a proxy certificate, the next 		   certificate must be another proxy certificate or a EE 		   certificate.  If not, the next certificate must be a 		   CA certificate.  */
+comment|/*          * If this certificate is a proxy certificate, the next certificate          * must be another proxy certificate or a EE certificate.  If not,          * the next certificate must be a CA certificate.          */
 if|if
 condition|(
 name|x
@@ -2587,7 +2749,7 @@ name|EXFLAG_SI
 operator|)
 condition|)
 continue|continue;
-comment|/* Check against constraints for all certificates higher in 		 * chain including trust anchor. Trust anchor not strictly 		 * speaking needed but if it includes constraints it is to be 		 * assumed it expects them to be obeyed. 		 */
+comment|/*          * Check against constraints for all certificates higher in chain          * including trust anchor. Trust anchor not strictly speaking needed          * but if it includes constraints it is to be assumed it expects them          * to be obeyed.          */
 for|for
 control|(
 name|j
@@ -3070,7 +3232,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* If error looking up CRL, nothing we can do except 		 * notify callback 		 */
+comment|/*          * If error looking up CRL, nothing we can do except notify callback          */
 if|if
 condition|(
 operator|!
@@ -3222,7 +3384,7 @@ name|dcrl
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* If reasons not updated we wont get anywhere by 		 * another iteration, so exit loop. 		 */
+comment|/*          * If reasons not updated we wont get anywhere by another iteration,          * so exit loop.          */
 if|if
 condition|(
 name|last_reasons
@@ -3805,7 +3967,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Compare two CRL extensions for delta checking purposes. They should be  * both present or both absent. If both present all fields must be identical.  */
+comment|/*  * Compare two CRL extensions for delta checking purposes. They should be  * both present or both absent. If both present all fields must be identical.  */
 end_comment
 
 begin_function
@@ -4119,7 +4281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For a given base CRL find a delta... maybe extend to delta scoring  * or retrieve a chain of deltas...  */
+comment|/*  * For a given base CRL find a delta... maybe extend to delta scoring or  * retrieve a chain of deltas...  */
 end_comment
 
 begin_decl_stmt
@@ -4274,7 +4436,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* For a given CRL return how suitable it is for the supplied certificate 'x'.  * The return value is a mask of several criteria.  * If the issuer is not the certificate issuer this is returned in *pissuer.  * The reasons mask is also used to determine if the CRL is suitable: if  * no new reasons the CRL is rejected, otherwise reasons is updated.  */
+comment|/*  * For a given CRL return how suitable it is for the supplied certificate  * 'x'. The return value is a mask of several criteria. If the issuer is not  * the certificate issuer this is returned in *pissuer. The reasons mask is  * also used to determine if the CRL is suitable: if no new reasons the CRL  * is rejected, otherwise reasons is updated.  */
 end_comment
 
 begin_function
@@ -4743,7 +4905,7 @@ name|X509_V_FLAG_EXTENDED_CRL_SUPPORT
 operator|)
 condition|)
 return|return;
-comment|/* Otherwise the CRL issuer is not on the path. Look for it in the 	 * set of untrusted certificates. 	 */
+comment|/*      * Otherwise the CRL issuer is not on the path. Look for it in the set of      * untrusted certificates.      */
 for|for
 control|(
 name|i
@@ -4818,7 +4980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check the path of a CRL issuer certificate. This creates a new  * X509_STORE_CTX and populates it with most of the parameters from the  * parent. This could be optimised somewhat since a lot of path checking  * will be duplicated by the parent, but this will rarely be used in   * practice.  */
+comment|/*  * Check the path of a CRL issuer certificate. This creates a new  * X509_STORE_CTX and populates it with most of the parameters from the  * parent. This could be optimised somewhat since a lot of path checking will  * be duplicated by the parent, but this will rarely be used in practice.  */
 end_comment
 
 begin_function
@@ -4956,7 +5118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* RFC3280 says nothing about the relationship between CRL path  * and certificate path, which could lead to situations where a  * certificate could be revoked or validated by a CA not authorised  * to do so. RFC5280 is more strict and states that the two paths must  * end in the same trust anchor, though some discussions remain...  * until this is resolved we use the RFC5280 version  */
+comment|/*  * RFC3280 says nothing about the relationship between CRL path and  * certificate path, which could lead to situations where a certificate could  * be revoked or validated by a CA not authorised to do so. RFC5280 is more  * strict and states that the two paths must end in the same trust anchor,  * though some discussions remain... until this is resolved we use the  * RFC5280 version  */
 end_comment
 
 begin_decl_stmt
@@ -5038,7 +5200,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Check for match between two dist point names: three separate cases.  * 1. Both are relative names and compare X509_NAME types.  * 2. One full, one relative. Compare X509_NAME to GENERAL_NAMES.  * 3. Both are full names and compare two GENERAL_NAMES.  * 4. One is NULL: automatic match.  */
+comment|/*-  * Check for match between two dist point names: three separate cases.  * 1. Both are relative names and compare X509_NAME types.  * 2. One full, one relative. Compare X509_NAME to GENERAL_NAMES.  * 3. Both are full names and compare two GENERAL_NAMES.  * 4. One is NULL: automatic match.  */
 end_comment
 
 begin_function
@@ -5659,7 +5821,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Retrieve CRL corresponding to current certificate.  * If deltas enabled try to find a delta CRL too  */
+comment|/*  * Retrieve CRL corresponding to current certificate. If deltas enabled try  * to find a delta CRL too  */
 end_comment
 
 begin_function
@@ -5937,7 +6099,7 @@ name|ctx
 operator|->
 name|current_issuer
 expr_stmt|;
-comment|/* Else find CRL issuer: if not last certificate then issuer 	 * is next certificate in chain. 	 */
+comment|/*      * Else find CRL issuer: if not last certificate then issuer is next      * certificate in chain.      */
 elseif|else
 if|if
 condition|(
@@ -6019,7 +6181,7 @@ condition|(
 name|issuer
 condition|)
 block|{
-comment|/* Skip most tests for deltas because they have already 		 * been done 		 */
+comment|/*          * Skip most tests for deltas because they have already been done          */
 if|if
 condition|(
 operator|!
@@ -6363,7 +6525,7 @@ name|X509_REVOKED
 modifier|*
 name|rev
 decl_stmt|;
-comment|/* The rules changed for this... previously if a CRL contained 	 * unhandled critical extensions it could still be used to indicate 	 * a certificate was revoked. This has since been changed since  	 * critical extension can change the meaning of CRL entries. 	 */
+comment|/*      * The rules changed for this... previously if a CRL contained unhandled      * critical extensions it could still be used to indicate a certificate      * was revoked. This has since been changed since critical extension can      * change the meaning of CRL entries.      */
 if|if
 condition|(
 operator|!
@@ -6412,7 +6574,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Look for serial number of certificate in CRL 	 * If found make sure reason is not removeFromCRL. 	 */
+comment|/*      * Look for serial number of certificate in CRL If found make sure reason      * is not removeFromCRL.      */
 if|if
 condition|(
 name|X509_CRL_get0_by_cert
@@ -6549,7 +6711,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* Locate certificates with bad extensions and notify 		 * callback. 		 */
+comment|/*          * Locate certificates with bad extensions and notify callback.          */
 name|X509
 modifier|*
 name|x
@@ -7078,7 +7240,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*	ctx->error=0;  not needed */
+comment|/*      ctx->error=0;  not needed */
 while|while
 condition|(
 name|n
@@ -7092,7 +7254,7 @@ name|error_depth
 operator|=
 name|n
 expr_stmt|;
-comment|/* Skip signature check for self signed certificates unless 		 * explicitly asked for. It doesn't add any security and 		 * just wastes time. 		 */
+comment|/*          * Skip signature check for self signed certificates unless          * explicitly asked for. It doesn't add any security and just wastes          * time.          */
 if|if
 condition|(
 operator|!
@@ -8434,7 +8596,7 @@ modifier|*
 name|free_func
 parameter_list|)
 block|{
-comment|/* This function is (usually) called only once, by 	 * SSL_get_ex_data_X509_STORE_CTX_idx (ssl/ssl_cert.c). */
+comment|/*      * This function is (usually) called only once, by      * SSL_get_ex_data_X509_STORE_CTX_idx (ssl/ssl_cert.c).      */
 return|return
 name|CRYPTO_get_ex_new_index
 argument_list|(
@@ -8881,7 +9043,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is used to set the X509_STORE_CTX purpose and trust  * values. This is intended to be used when another structure has its  * own trust and purpose values which (if set) will be inherited by  * the ctx. If they aren't set then we will usually have a default  * purpose in mind which should then be used to set the trust value.  * An example of this is SSL use: an SSL structure will have its own  * purpose and trust settings which the application can set: if they  * aren't set then we use the default of SSL client/server.  */
+comment|/*  * This function is used to set the X509_STORE_CTX purpose and trust values.  * This is intended to be used when another structure has its own trust and  * purpose values which (if set) will be inherited by the ctx. If they aren't  * set then we will usually have a default purpose in mind which should then  * be used to set the trust value. An example of this is SSL use: an SSL  * structure will have its own purpose and trust settings which the  * application can set: if they aren't set then we use the default of SSL  * client/server.  */
 end_comment
 
 begin_function
@@ -9160,6 +9322,12 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ctx
+condition|)
+return|return;
 name|X509_STORE_CTX_cleanup
 argument_list|(
 name|ctx
@@ -9342,7 +9510,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Inherit callbacks and flags from X509_STORE if not set 	 * use defaults. 	 */
+comment|/*      * Inherit callbacks and flags from X509_STORE if not set use defaults.      */
 if|if
 condition|(
 name|store
@@ -9672,7 +9840,7 @@ name|check_policy
 operator|=
 name|check_policy
 expr_stmt|;
-comment|/* This memset() can't make any sense anyway, so it's removed. As 	 * X509_STORE_CTX_cleanup does a proper "free" on the ex_data, we put a 	 * corresponding "new" here and remove this bogus initialisation. */
+comment|/*      * This memset() can't make any sense anyway, so it's removed. As      * X509_STORE_CTX_cleanup does a proper "free" on the ex_data, we put a      * corresponding "new" here and remove this bogus initialisation.      */
 comment|/* memset(&(ctx->ex_data),0,sizeof(CRYPTO_EX_DATA)); */
 if|if
 condition|(
@@ -9715,7 +9883,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Set alternative lookup method: just a STACK of trusted certificates.  * This avoids X509_STORE nastiness where it isn't needed.  */
+comment|/*  * Set alternative lookup method: just a STACK of trusted certificates. This  * avoids X509_STORE nastiness where it isn't needed.  */
 end_comment
 
 begin_decl_stmt

@@ -4,15 +4,15 @@ comment|/* ssl/s3_srvr.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_comment
@@ -274,7 +274,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* RFC 5054 says SHOULD reject,  			   we do so if There is no srp login name */
+comment|/*              * RFC 5054 says SHOULD reject, we do so if There is no srp              * login name              */
 name|ret
 operator|=
 name|SSL3_AL_FATAL
@@ -474,7 +474,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_HEARTBEATS
-comment|/* If we're awaiting a HeartbeatResponse, pretend we 	 * already got and don't await it anymore, because 	 * Heartbeats don't make sense during handshakes anyway. 	 */
+comment|/*      * If we're awaiting a HeartbeatResponse, pretend we already got and      * don't await it anymore, because Heartbeats don't make sense during      * handshakes anyway.      */
 if|if
 condition|(
 name|s
@@ -582,6 +582,12 @@ argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -619,6 +625,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -644,6 +656,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -668,6 +686,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -697,7 +721,7 @@ operator|&=
 operator|~
 name|SSL3_FLAGS_CCS_OK
 expr_stmt|;
-comment|/* Should have been reset by ssl3_get_finished, too. */
+comment|/*              * Should have been reset by ssl3_get_finished, too.              */
 name|s
 operator|->
 name|s3
@@ -715,7 +739,7 @@ operator|!=
 name|SSL_ST_RENEGOTIATE
 condition|)
 block|{
-comment|/* Ok, we now need to push on a buffering BIO so that 				 * the output is sent in a way that TCP likes :-) 				 */
+comment|/*                  * Ok, we now need to push on a buffering BIO so that the                  * output is sent in a way that TCP likes :-)                  */
 if|if
 condition|(
 operator|!
@@ -731,6 +755,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -777,7 +807,7 @@ name|SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION
 operator|)
 condition|)
 block|{
-comment|/* Server attempting to renegotiate with 				 * client that doesn't support secure 				 * renegotiation. 				 */
+comment|/*                  * Server attempting to renegotiate with client that doesn't                  * support secure renegotiation.                  */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_ACCEPT
@@ -799,13 +829,19 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
 block|}
 else|else
 block|{
-comment|/* s->state == SSL_ST_RENEGOTIATE, 				 * we will just send a HelloRequest */
+comment|/*                  * s->state == SSL_ST_RENEGOTIATE, we will just send a                  * HelloRequest                  */
 name|s
 operator|->
 name|ctx
@@ -954,7 +990,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* callback indicates firther work to be done */
+comment|/*                      * callback indicates firther work to be done                      */
 name|s
 operator|->
 name|rwstate
@@ -981,7 +1017,7 @@ argument_list|,
 name|al
 argument_list|)
 expr_stmt|;
-comment|/* This is not really an error but the only means to                                    for a client to detect whether srp is supported. */
+comment|/*                      * This is not really an error but the only means to for                      * a client to detect whether srp is supported.                      */
 if|if
 condition|(
 name|al
@@ -1003,6 +1039,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -1252,7 +1294,7 @@ name|new_cipher
 operator|->
 name|algorithm_mkey
 expr_stmt|;
-comment|/* 			 * clear this, it may get reset by 			 * send_server_key_exchange 			 */
+comment|/*              * clear this, it may get reset by              * send_server_key_exchange              */
 name|s
 operator|->
 name|s3
@@ -1263,11 +1305,11 @@ name|use_rsa_tmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* only send if a DH key exchange, fortezza or 			 * RSA but we have a sign only certificate 			 * 			 * PSK: may send PSK identity hints 			 * 			 * For ECC ciphersuites, we send a serverKeyExchange 			 * message only if the cipher suite is either 			 * ECDH-anon or ECDHE. In other cases, the 			 * server certificate contains the server's 			 * public key for key exchange. 			 */
+comment|/*              * only send if a DH key exchange, fortezza or RSA but we have a              * sign only certificate PSK: may send PSK identity hints For              * ECC ciphersuites, we send a serverKeyExchange message only if              * the cipher suite is either ECDH-anon or ECDHE. In other cases,              * the server certificate contains the server's public key for              * key exchange.              */
 if|if
 condition|(
 literal|0
-comment|/* PSK: send ServerKeyExchange if PSK identity 			 * hint if provided */
+comment|/*                  * PSK: send ServerKeyExchange if PSK identity hint if                  * provided                  */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_PSK
@@ -1435,7 +1477,7 @@ operator|&
 name|SSL_VERIFY_PEER
 operator|)
 operator|||
-comment|/* if SSL_VERIFY_CLIENT_ONCE is set, 				 * don't request cert during re-negotiation: */
+comment|/*                     * if SSL_VERIFY_CLIENT_ONCE is set, don't request cert                     * during re-negotiation:                     */
 operator|(
 operator|(
 name|s
@@ -1456,7 +1498,7 @@ name|SSL_VERIFY_CLIENT_ONCE
 operator|)
 operator|)
 operator|||
-comment|/* never request cert in anonymous ciphersuites 				 * (see section "Certificate request" in SSL 3 drafts 				 * and in RFC 2246): */
+comment|/*                     * never request cert in anonymous ciphersuites (see                     * section "Certificate request" in SSL 3 drafts and in                     * RFC 2246):                     */
 operator|(
 operator|(
 name|s
@@ -1472,7 +1514,7 @@ operator|&
 name|SSL_aNULL
 operator|)
 operator|&&
-comment|/* ... except when the application insists on verification 				  * (against the specs, but s3_clnt.c accepts this for SSL 3) */
+comment|/*                      * ... except when the application insists on                      * verification (against the specs, but s3_clnt.c accepts                      * this for SSL 3)                      */
 operator|!
 operator|(
 name|s
@@ -1483,7 +1525,7 @@ name|SSL_VERIFY_FAIL_IF_NO_PEER_CERT
 operator|)
 operator|)
 operator|||
-comment|/* never request cert in Kerberos ciphersuites */
+comment|/*                     * never request cert in Kerberos ciphersuites                     */
 operator|(
 name|s
 operator|->
@@ -1512,7 +1554,7 @@ name|algorithm_auth
 operator|&
 name|SSL_aSRP
 operator|)
-comment|/* With normal PSK Certificates and 				 * Certificate Requests are omitted */
+comment|/*                     * With normal PSK Certificates and Certificate Requests                     * are omitted                     */
 operator|||
 operator|(
 name|s
@@ -1558,6 +1600,7 @@ name|s3
 operator|->
 name|handshake_buffer
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1566,10 +1609,19 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
+block|}
 block|}
 else|else
 block|{
@@ -1684,7 +1736,7 @@ break|break;
 case|case
 name|SSL3_ST_SW_FLUSH
 case|:
-comment|/* This code originally checked to see if 			 * any data was pending using BIO_CTRL_INFO 			 * and then flushed. This caused problems 			 * as documented in PR#1939. The proposed 			 * fix doesn't completely resolve this issue 			 * as buggy implementations of BIO_CTRL_PENDING 			 * still exist. So instead we just flush 			 * unconditionally. 			 */
+comment|/*              * This code originally checked to see if any data was pending              * using BIO_CTRL_INFO and then flushed. This caused problems as              * documented in PR#1939. The proposed fix doesn't completely              * resolve this issue as buggy implementations of              * BIO_CTRL_PENDING still exist. So instead we just flush              * unconditionally.              */
 name|s
 operator|->
 name|rwstate
@@ -1839,7 +1891,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* For the ECDH ciphersuites when 				 * the client sends its ECDH pub key in 				 * a certificate, the CertificateVerify 				 * message is not sent. 				 * Also for GOST ciphersuites when 				 * the client uses its key from the certificate 				 * for key exchange. 				 */
+comment|/*                  * For the ECDH ciphersuites when the client sends its ECDH                  * pub key in a certificate, the CertificateVerify message is                  * not sent. Also for GOST ciphersuites when the client uses                  * its key from the certificate for key exchange.                  */
 if|#
 directive|if
 name|defined
@@ -1922,7 +1974,7 @@ operator|->
 name|peer
 condition|)
 break|break;
-comment|/* For TLS v1.2 freeze the handshake buffer 				 * at this point and digest cached records. 				 */
+comment|/*                  * For TLS v1.2 freeze the handshake buffer at this point and                  * digest cached records.                  */
 if|if
 condition|(
 operator|!
@@ -1939,6 +1991,12 @@ name|SSL_F_SSL3_ACCEPT
 argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 operator|-
@@ -1961,10 +2019,18 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -1988,7 +2054,7 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We need to get hashes here so if there is 				 * a client cert, it can be verified 				 * FIXME - digest processing for CertificateVerify 				 * should be generalized. But it is next step 				 */
+comment|/*                  * We need to get hashes here so if there is a client cert,                  * it can be verified FIXME - digest processing for                  * CertificateVerify should be generalized. But it is next                  * step                  */
 if|if
 condition|(
 name|s
@@ -1997,6 +2063,7 @@ name|s3
 operator|->
 name|handshake_buffer
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -2005,10 +2072,19 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
+block|}
 for|for
 control|(
 name|dgst_num
@@ -2095,6 +2171,12 @@ operator|<
 literal|0
 condition|)
 block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -2117,25 +2199,6 @@ case|:
 case|case
 name|SSL3_ST_SR_CERT_VRFY_B
 case|:
-comment|/* 			 * This *should* be the first time we enable CCS, but be 			 * extra careful about surrounding code changes. We need 			 * to set this here because we don't know if we're 			 * expecting a CertificateVerify or not. 			 */
-if|if
-condition|(
-operator|!
-name|s
-operator|->
-name|s3
-operator|->
-name|change_cipher_spec
-condition|)
-name|s
-operator|->
-name|s3
-operator|->
-name|flags
-operator||=
-name|SSL3_FLAGS_CCS_OK
-expr_stmt|;
-comment|/* we should decide if we expected this one */
 name|ret
 operator|=
 name|ssl3_get_cert_verify
@@ -2220,7 +2283,7 @@ case|:
 case|case
 name|SSL3_ST_SR_NEXT_PROTO_B
 case|:
-comment|/* 			 * Enable CCS for resumed handshakes with NPN. 			 * In a full handshake with NPN, we end up here through 			 * SSL3_ST_SR_CERT_VRFY_B, where SSL3_FLAGS_CCS_OK was 			 * already set. Receiving a CCS clears the flag, so make 			 * sure not to re-enable it to ban duplicates. 			 * s->s3->change_cipher_spec is set when a CCS is 			 * processed in s3_pkt.c, and remains set until 			 * the client's Finished message is read. 			 */
+comment|/*              * Enable CCS for NPN. Receiving a CCS clears the flag, so make              * sure not to re-enable it to ban duplicates. This *should* be the              * first time we have received one - but we check anyway to be              * cautious.              * s->s3->change_cipher_spec is set when a CCS is              * processed in s3_pkt.c, and remains set until              * the client's Finished message is read.              */
 if|if
 condition|(
 operator|!
@@ -2275,7 +2338,7 @@ case|:
 case|case
 name|SSL3_ST_SR_FINISHED_B
 case|:
-comment|/* 			 * Enable CCS for resumed handshakes without NPN. 			 * In a full handshake, we end up here through 			 * SSL3_ST_SR_CERT_VRFY_B, where SSL3_FLAGS_CCS_OK was 			 * already set. Receiving a CCS clears the flag, so make 			 * sure not to re-enable it to ban duplicates. 			 * s->s3->change_cipher_spec is set when a CCS is 			 * processed in s3_pkt.c, and remains set until 			 * the client's Finished message is read. 			 */
+comment|/*              * Enable CCS for handshakes without NPN. In NPN the CCS flag has              * already been set. Receiving a CCS clears the flag, so make              * sure not to re-enable it to ban duplicates.              * s->s3->change_cipher_spec is set when a CCS is              * processed in s3_pkt.c, and remains set until              * the client's Finished message is read.              */
 if|if
 condition|(
 operator|!
@@ -2472,6 +2535,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -2529,6 +2598,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -2707,8 +2782,8 @@ name|renegotiate
 operator|==
 literal|2
 condition|)
-comment|/* skipped if we just sent a HelloRequest */
 block|{
+comment|/* skipped if we just sent a                                         * HelloRequest */
 name|s
 operator|->
 name|renegotiate
@@ -2768,6 +2843,9 @@ goto|goto
 name|end
 goto|;
 comment|/* break; */
+case|case
+name|SSL_ST_ERR
+case|:
 default|default:
 name|SSLerr
 argument_list|(
@@ -3041,7 +3119,7 @@ decl_stmt|;
 name|long
 name|n
 decl_stmt|;
-comment|/* this function is called when we really expect a Certificate message, 	 * so permit appropriate message length */
+comment|/*      * this function is called when we really expect a Certificate message,      * so permit appropriate message length      */
 name|n
 operator|=
 name|s
@@ -3103,7 +3181,7 @@ operator|==
 name|SSL3_MT_CLIENT_HELLO
 condition|)
 block|{
-comment|/* We only allow the client to restart the handshake once per 		 * negotiation. */
+comment|/*          * We only allow the client to restart the handshake once per          * negotiation.          */
 if|if
 condition|(
 name|s
@@ -3127,7 +3205,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Throw away what we have done so far in the current handshake, 		 * which will now be aborted. (A full SSL_clear would be too much.) */
+comment|/*          * Throw away what we have done so far in the current handshake,          * which will now be aborted. (A full SSL_clear would be too much.)          */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH
@@ -3295,7 +3373,7 @@ name|ciphers
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* We do this so that we will respond with our native type. 	 * If we are TLSv1 and we get SSLv3, we will respond with TLSv1, 	 * This down switching should be handled by a different method. 	 * If we are SSLv3, we will respond with SSLv3, even if prompted with 	 * TLSv1. 	 */
+comment|/*      * We do this so that we will respond with our native type. If we are      * TLSv1 and we get SSLv3, we will respond with TLSv1, This down      * switching should be handled by a different method. If we are SSLv3, we      * will respond with SSLv3, even if prompted with TLSv1.      */
 if|if
 condition|(
 name|s
@@ -3372,7 +3450,34 @@ name|s
 operator|->
 name|init_msg
 expr_stmt|;
-comment|/* use version from inside client hello, not from record header 	 * (may differ: see RFC 2246, Appendix E, second paragraph) */
+comment|/*      * 2 bytes for client version, SSL3_RANDOM_SIZE bytes for random, 1 byte      * for session id length      */
+if|if
+condition|(
+name|n
+operator|<
+literal|2
+operator|+
+name|SSL3_RANDOM_SIZE
+operator|+
+literal|1
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_LENGTH_TOO_SHORT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
+comment|/*      * use version from inside client hello, not from record header (may      * differ: see RFC 2246, Appendix E, second paragraph)      */
 name|s
 operator|->
 name|client_version
@@ -3468,7 +3573,7 @@ operator|->
 name|write_hash
 condition|)
 block|{
-comment|/* similar to ssl3_get_record, send alert using remote version number */
+comment|/*              * similar to ssl3_get_record, send alert using remote version              * number              */
 name|s
 operator|->
 name|version
@@ -3486,7 +3591,7 @@ goto|goto
 name|f_err
 goto|;
 block|}
-comment|/* If we require cookies and this ClientHello doesn't 	 * contain one, just return since we do not want to 	 * allocate any memory yet. So check cookie length... 	 */
+comment|/*      * If we require cookies and this ClientHello doesn't contain one, just      * return since we do not want to allocate any memory yet. So check      * cookie length...      */
 if|if
 condition|(
 name|SSL_get_options
@@ -3512,6 +3617,36 @@ operator|+
 name|SSL3_RANDOM_SIZE
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|+
+name|SSL3_RANDOM_SIZE
+operator|+
+name|session_length
+operator|+
+literal|1
+operator|>=
+name|d
+operator|+
+name|n
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_LENGTH_TOO_SHORT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 name|cookie_length
 operator|=
 operator|*
@@ -3562,13 +3697,39 @@ name|p
 operator|++
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|+
+name|j
+operator|>
+name|d
+operator|+
+name|n
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_LENGTH_TOO_SHORT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 name|s
 operator|->
 name|hit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Versions before 0.9.7 always allow clients to resume sessions in renegotiation. 	 * 0.9.7 and later allow this by default, but optionally ignore resumption requests 	 * with flag SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION (it's a new flag rather 	 * than a change to default behavior so that applications relying on this for security 	 * won't even compile against older library versions). 	 * 	 * 1.0.1 and later also have a function SSL_renegotiate_abbreviated() to request 	 * renegotiation but not a new session (s->new_session remains unset): for servers, 	 * this essentially just means that the SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION 	 * setting will be ignored. 	 */
+comment|/*      * Versions before 0.9.7 always allow clients to resume sessions in      * renegotiation. 0.9.7 and later allow this by default, but optionally      * ignore resumption requests with flag      * SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION (it's a new flag rather      * than a change to default behavior so that applications relying on this      * for security won't even compile against older library versions).      * 1.0.1 and later also have a function SSL_renegotiate_abbreviated() to      * request renegotiation but not a new session (s->new_session remains      * unset): for servers, this essentially just means that the      * SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION setting will be ignored.      */
 if|if
 condition|(
 operator|(
@@ -3617,7 +3778,7 @@ operator|+
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Only resume if the session's version matches the negotiated 		 * version. 		 * RFC 5246 does not provide much useful advice on resumption 		 * with a different protocol version. It doesn't forbid it but 		 * the sanity of such behaviour would be questionable. 		 * In practice, clients do not accept a version mismatch and 		 * will abort the handshake with an error. 		 */
+comment|/*          * Only resume if the session's version matches the negotiated          * version.          * RFC 5246 does not provide much useful advice on resumption          * with a different protocol version. It doesn't forbid it but          * the sanity of such behaviour would be questionable.          * In practice, clients do not accept a version mismatch and          * will abort the handshake with an error.          */
 if|if
 condition|(
 name|i
@@ -3635,7 +3796,7 @@ operator|->
 name|ssl_version
 condition|)
 block|{
-comment|/* previous session */
+comment|/* previous                                                                 * session */
 name|s
 operator|->
 name|hit
@@ -3655,8 +3816,8 @@ goto|goto
 name|err
 goto|;
 else|else
-comment|/* i == 0 */
 block|{
+comment|/* i == 0 */
 if|if
 condition|(
 operator|!
@@ -3692,6 +3853,32 @@ name|DTLS1_BAD_VER
 condition|)
 block|{
 comment|/* cookie stuff */
+if|if
+condition|(
+name|p
+operator|+
+literal|1
+operator|>
+name|d
+operator|+
+name|n
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_LENGTH_TOO_SHORT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 name|cookie_len
 operator|=
 operator|*
@@ -3700,7 +3887,33 @@ name|p
 operator|++
 operator|)
 expr_stmt|;
-comment|/*  		 * The ClientHello may contain a cookie even if the 		 * HelloVerify message has not been sent--make sure that it 		 * does not cause an overflow. 		 */
+if|if
+condition|(
+name|p
+operator|+
+name|cookie_len
+operator|>
+name|d
+operator|+
+name|n
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_LENGTH_TOO_SHORT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
+comment|/*          * The ClientHello may contain a cookie even if the          * HelloVerify message has not been sent--make sure that it          * does not cause an overflow.          */
 if|if
 condition|(
 name|cookie_len
@@ -3811,6 +4024,7 @@ goto|;
 block|}
 comment|/* else cookie verification succeeded */
 block|}
+comment|/* default verification */
 elseif|else
 if|if
 condition|(
@@ -3837,7 +4051,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* default verification */
 block|{
 name|al
 operator|=
@@ -3864,6 +4077,32 @@ operator|+=
 name|cookie_len
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|+
+literal|2
+operator|>
+name|d
+operator|+
+name|n
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_LENGTH_TOO_SHORT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 name|n2s
 argument_list|(
 name|p
@@ -3873,20 +4112,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|i
 operator|==
 literal|0
-operator|)
-operator|&&
-operator|(
-name|j
-operator|!=
-literal|0
-operator|)
 condition|)
 block|{
-comment|/* we need a cipher if we are not resuming a session */
 name|al
 operator|=
 name|SSL_AD_ILLEGAL_PARAMETER
@@ -3902,14 +4132,17 @@ goto|goto
 name|f_err
 goto|;
 block|}
+comment|/* i bytes of cipher data + 1 byte for compression length later */
 if|if
 condition|(
 operator|(
 name|p
 operator|+
 name|i
+operator|+
+literal|1
 operator|)
-operator|>=
+operator|>
 operator|(
 name|d
 operator|+
@@ -3935,13 +4168,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
-name|i
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
 name|ssl_bytes_to_cipher_list
 argument_list|(
 name|s
@@ -3957,7 +4183,6 @@ operator|)
 argument_list|)
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 goto|goto
@@ -3971,17 +4196,9 @@ expr_stmt|;
 comment|/* If it is a hit, check that the cipher is in the list */
 if|if
 condition|(
-operator|(
 name|s
 operator|->
 name|hit
-operator|)
-operator|&&
-operator|(
-name|i
-operator|>
-literal|0
-operator|)
 condition|)
 block|{
 name|j
@@ -4081,13 +4298,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Disabled because it can be used in a ciphersuite downgrade  * attack: CVE-2010-4180.  */
+comment|/*          * Disabled because it can be used in a ciphersuite downgrade attack:          * CVE-2010-4180.          */
 if|#
 directive|if
 literal|0
-block|if (j == 0&& (s->options& SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG)&& (sk_SSL_CIPHER_num(ciphers) == 1)) 			{
-comment|/* Special case as client bug workaround: the previously used cipher may 			 * not be in the current list, the client instead might be trying to 			 * continue using a cipher that before wasn't chosen due to server 			 * preferences.  We'll have to reject the connection if the cipher is not 			 * enabled, though. */
-block|c = sk_SSL_CIPHER_value(ciphers, 0); 			if (sk_SSL_CIPHER_find(SSL_get_ciphers(s), c)>= 0) 				{ 				s->session->cipher = c; 				j = 1; 				} 			}
+block|if (j == 0&& (s->options& SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG)&& (sk_SSL_CIPHER_num(ciphers) == 1)) {
+comment|/*              * Special case as client bug workaround: the previously used              * cipher may not be in the current list, the client instead              * might be trying to continue using a cipher that before wasn't              * chosen due to server preferences.  We'll have to reject the              * connection if the cipher is not enabled, though.              */
+block|c = sk_SSL_CIPHER_value(ciphers, 0);             if (sk_SSL_CIPHER_find(SSL_get_ciphers(s), c)>= 0) {                 s->session->cipher = c;                 j = 1;             }         }
 endif|#
 directive|endif
 if|if
@@ -4097,7 +4314,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* we need to have the cipher in the cipher 			 * list if we are asked to reuse it */
+comment|/*              * we need to have the cipher in the cipher list if we are asked              * to reuse it              */
 name|al
 operator|=
 name|SSL_AD_ILLEGAL_PARAMETER
@@ -4213,7 +4430,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLSEXT
-comment|/* TLS extensions*/
+comment|/* TLS extensions */
 if|if
 condition|(
 name|s
@@ -4276,7 +4493,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Check if we want to use external pre-shared secret for this 	 * handshake for not reused session only. We need to generate 	 * server_random before calling tls_session_secret_cb in order to allow 	 * SessionTicket processing to use it in key derivation. */
+comment|/*      * Check if we want to use external pre-shared secret for this handshake      * for not reused session only. We need to generate server_random before      * calling tls_session_secret_cb in order to allow SessionTicket      * processing to use it in key derivation.      */
 block|{
 name|unsigned
 name|char
@@ -4522,7 +4739,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* Worst case, we will use the NULL compression, but if we have other 	 * options, we will now look for them.  We have i-1 compression 	 * algorithms from the client, starting at q. */
+comment|/*      * Worst case, we will use the NULL compression, but if we have other      * options, we will now look for them.  We have i-1 compression      * algorithms from the client, starting at q.      */
 name|s
 operator|->
 name|s3
@@ -4866,7 +5083,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* If compression is disabled we'd better not try to resume a session 	 * using compression. 	 */
+comment|/*      * If compression is disabled we'd better not try to resume a session      * using compression.      */
 if|if
 condition|(
 name|s
@@ -4895,7 +5112,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* Given s->session->ciphers and SSL_get_ciphers, we must 	 * pick a cipher */
+comment|/*      * Given s->session->ciphers and SSL_get_ciphers, we must pick a cipher      */
 if|if
 condition|(
 operator|!
@@ -4973,13 +5190,13 @@ condition|)
 block|{
 name|al
 operator|=
-name|SSL_AD_ILLEGAL_PARAMETER
+name|SSL_AD_INTERNAL_ERROR
 expr_stmt|;
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_HELLO
 argument_list|,
-name|SSL_R_NO_CIPHERS_PASSED
+name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5237,7 +5454,7 @@ name|f_err
 goto|;
 block|}
 block|}
-comment|/* we now have the following setup.  	 * client_random 	 * cipher_list 		- our prefered list of ciphers 	 * ciphers 		- the clients prefered list of ciphers 	 * compression		- basically ignored right now 	 * ssl version is set	- sslv3 	 * s->session		- The ssl session has been setup. 	 * s->hit		- session reuse flag 	 * s->tmp.new_cipher	- the new cipher to use. 	 */
+comment|/*-      * we now have the following setup.      * client_random      * cipher_list          - our prefered list of ciphers      * ciphers              - the clients prefered list of ciphers      * compression          - basically ignored right now      * ssl version is set   - sslv3      * s->session           - The ssl session has been setup.      * s->hit               - session reuse flag      * s->tmp.new_cipher    - the new cipher to use.      */
 comment|/* Handles TLS extensions that we couldn't check earlier */
 if|if
 condition|(
@@ -5296,9 +5513,15 @@ argument_list|,
 name|al
 argument_list|)
 expr_stmt|;
-block|}
 name|err
 label|:
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ciphers
@@ -5397,10 +5620,18 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* Do the message type and length last */
@@ -5458,7 +5689,7 @@ name|p
 operator|+=
 name|SSL3_RANDOM_SIZE
 expr_stmt|;
-comment|/* There are several cases for the session ID to send 		 * back in the server hello: 		 * - For session reuse from the session cache, 		 *   we send back the old session ID. 		 * - If stateless session reuse (using a session ticket) 		 *   is successful, we send back the client's "session ID" 		 *   (which doesn't actually identify the session). 		 * - If it is a new session, we send back the new 		 *   session ID. 		 * - However, if we want the new session to be single-use, 		 *   we send back a 0-length session ID. 		 * s->hit is non-zero in either case of session reuse, 		 * so the following won't overwrite an ID that we're supposed 		 * to send back. 		 */
+comment|/*-          * There are several cases for the session ID to send          * back in the server hello:          * - For session reuse from the session cache,          *   we send back the old session ID.          * - If stateless session reuse (using a session ticket)          *   is successful, we send back the client's "session ID"          *   (which doesn't actually identify the session).          * - If it is a new session, we send back the new          *   session ID.          * - However, if we want the new session to be single-use,          *   we send back a 0-length session ID.          * s->hit is non-zero in either case of session reuse,          * so the following won't overwrite an ID that we're supposed          * to send back.          */
 if|if
 condition|(
 operator|!
@@ -5516,6 +5747,12 @@ name|SSL_F_SSL3_SEND_SERVER_HELLO
 argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 operator|-
@@ -5640,6 +5877,12 @@ argument_list|,
 name|SSL_R_SERVERHELLO_TLSEXT
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -5671,6 +5914,12 @@ name|SSL_F_SSL3_SEND_SERVER_HELLO
 argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 operator|-
@@ -6799,7 +7048,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* XXX: For now, we only support ephemeral ECDH 			 * keys over named (not generic) curves. For  			 * supported named curves, curve_id is non-zero. 			 */
+comment|/*              * XXX: For now, we only support ephemeral ECDH keys over named              * (not generic) curves. For supported named curves, curve_id is              * non-zero.              */
 if|if
 condition|(
 operator|(
@@ -6828,7 +7077,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Encode the public key. 			 * First check the size of encoding and 			 * allocate memory accordingly. 			 */
+comment|/*              * Encode the public key. First check the size of encoding and              * allocate memory accordingly.              */
 name|encodedlen
 operator|=
 name|EC_POINT_point2oct
@@ -6945,14 +7194,14 @@ name|bn_ctx
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX: For now, we only support named (not  			 * generic) curves in ECDH ephemeral key exchanges. 			 * In this situation, we need four additional bytes 			 * to encode the entire ServerECDHParams 			 * structure.  			 */
+comment|/*              * XXX: For now, we only support named (not generic) curves in              * ECDH ephemeral key exchanges. In this situation, we need four              * additional bytes to encode the entire ServerECDHParams              * structure.              */
 name|n
 operator|=
 literal|4
 operator|+
 name|encodedlen
 expr_stmt|;
-comment|/* We'll generate the serverKeyExchange message 			 * explicitly so we can set these to NULLs 			 */
+comment|/*              * We'll generate the serverKeyExchange message explicitly so we              * can set these to NULLs              */
 name|r
 index|[
 literal|0
@@ -6996,7 +7245,7 @@ operator|&
 name|SSL_kPSK
 condition|)
 block|{
-comment|/* reserve size for record length and PSK identity hint*/
+comment|/*              * reserve size for record length and PSK identity hint              */
 name|n
 operator|+=
 literal|2
@@ -7446,7 +7695,7 @@ operator|&
 name|SSL_kEECDH
 condition|)
 block|{
-comment|/* XXX: For now, we only support named (not generic) curves. 			 * In this situation, the serverKeyExchange message has: 			 * [1 byte CurveType], [2 byte CurveName] 			 * [1 byte length of encoded point], followed by 			 * the actual encoded point itself 			 */
+comment|/*              * XXX: For now, we only support named (not generic) curves. In              * this situation, the serverKeyExchange message has: [1 byte              * CurveType], [2 byte CurveName] [1 byte length of encoded              * point], followed by the actual encoded point itself              */
 operator|*
 name|p
 operator|=
@@ -7589,7 +7838,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* n is the length of the params, they start at&(d[4]) 			 * and p points to the space at the end. */
+comment|/*              * n is the length of the params, they start at&(d[4]) and p              * points to the space at the end.              */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
@@ -7810,7 +8059,7 @@ condition|(
 name|md
 condition|)
 block|{
-comment|/* For TLS1.2 and later send signature 				 * algorithm */
+comment|/*                  * For TLS1.2 and later send signature algorithm                  */
 if|if
 condition|(
 name|TLS1_get_version
@@ -8038,7 +8287,7 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* we should now have things packed up, so lets send 		 * it off */
+comment|/*          * we should now have things packed up, so lets send it off          */
 name|s
 operator|->
 name|init_num
@@ -8115,6 +8364,12 @@ argument_list|(
 operator|&
 name|md_ctx
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 operator|(
@@ -8517,7 +8772,7 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* we should now have things packed up, so lets send 		 * it off */
+comment|/*          * we should now have things packed up, so lets send it off          */
 name|s
 operator|->
 name|init_num
@@ -8639,6 +8894,12 @@ operator|)
 return|;
 name|err
 label|:
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -8764,7 +9025,6 @@ name|SSL3_MT_CLIENT_KEY_EXCHANGE
 argument_list|,
 literal|2048
 argument_list|,
-comment|/* ??? */
 operator|&
 name|ok
 argument_list|)
@@ -8874,7 +9134,7 @@ name|cert
 operator|->
 name|rsa_tmp
 expr_stmt|;
-comment|/* Don't do a callback because rsa_tmp should 			 * be sent already */
+comment|/*              * Don't do a callback because rsa_tmp should be sent already              */
 if|if
 condition|(
 name|rsa
@@ -9035,7 +9295,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-comment|/* 		 * Reject overly short RSA ciphertext because we want to be sure 		 * that the buffer size makes it safe to iterate over the entire 		 * size of a premaster secret (SSL_MAX_MASTER_KEY_LENGTH). The 		 * actual expected size is larger due to RSA padding, but the 		 * bound is sufficient to be safe. 		 */
+comment|/*          * Reject overly short RSA ciphertext because we want to be sure          * that the buffer size makes it safe to iterate over the entire          * size of a premaster secret (SSL_MAX_MASTER_KEY_LENGTH). The          * actual expected size is larger due to RSA padding, but the          * bound is sufficient to be safe.          */
 if|if
 condition|(
 name|n
@@ -9058,8 +9318,8 @@ goto|goto
 name|f_err
 goto|;
 block|}
-comment|/* We must not leak whether a decryption failure occurs because 		 * of Bleichenbacher's attack on PKCS #1 v1.5 RSA padding (see 		 * RFC 2246, section 7.4.7.1). The code follows that advice of 		 * the TLS RFC and generates a random premaster secret for the 		 * case that the decrypt fails. See 		 * https://tools.ietf.org/html/rfc5246#section-7.4.7.1 */
-comment|/* should be RAND_bytes, but we cannot work around a failure. */
+comment|/*          * We must not leak whether a decryption failure occurs because of          * Bleichenbacher's attack on PKCS #1 v1.5 RSA padding (see RFC 2246,          * section 7.4.7.1). The code follows that advice of the TLS RFC and          * generates a random premaster secret for the case that the decrypt          * fails. See https://tools.ietf.org/html/rfc5246#section-7.4.7.1          */
+comment|/*          * should be RAND_bytes, but we cannot work around a failure.          */
 if|if
 condition|(
 name|RAND_pseudo_bytes
@@ -9098,7 +9358,7 @@ expr_stmt|;
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
-comment|/* decrypt_len should be SSL_MAX_MASTER_KEY_LENGTH. 		 * decrypt_good will be 0xff if so and zero otherwise. */
+comment|/*          * decrypt_len should be SSL_MAX_MASTER_KEY_LENGTH. decrypt_good will          * be 0xff if so and zero otherwise.          */
 name|decrypt_good
 operator|=
 name|constant_time_eq_int_8
@@ -9108,7 +9368,7 @@ argument_list|,
 name|SSL_MAX_MASTER_KEY_LENGTH
 argument_list|)
 expr_stmt|;
-comment|/* If the version in the decrypted pre-master secret is correct 		 * then version_good will be 0xff, otherwise it'll be zero. 		 * The Klima-Pokorny-Rosa extension of Bleichenbacher's attack 		 * (http://eprint.iacr.org/2003/052/) exploits the version 		 * number check as a "bad version oracle". Thus version checks 		 * are done in constant time and are treated like any other 		 * decryption error. */
+comment|/*          * If the version in the decrypted pre-master secret is correct then          * version_good will be 0xff, otherwise it'll be zero. The          * Klima-Pokorny-Rosa extension of Bleichenbacher's attack          * (http://eprint.iacr.org/2003/052/) exploits the version number          * check as a "bad version oracle". Thus version checks are done in          * constant time and are treated like any other decryption error.          */
 name|version_good
 operator|=
 name|constant_time_eq_8
@@ -9151,7 +9411,7 @@ literal|0xff
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* The premaster secret must contain the same version number as 		 * the ClientHello to detect version rollback attacks 		 * (strangely, the protocol does not offer such protection for 		 * DH ciphersuites). However, buggy clients exist that send the 		 * negotiated protocol version instead if the server does not 		 * support the requested protocol version. If 		 * SSL_OP_TLS_ROLLBACK_BUG is set, tolerate such clients. */
+comment|/*          * The premaster secret must contain the same version number as the          * ClientHello to detect version rollback attacks (strangely, the          * protocol does not offer such protection for DH ciphersuites).          * However, buggy clients exist that send the negotiated protocol          * version instead if the server does not support the requested          * protocol version. If SSL_OP_TLS_ROLLBACK_BUG is set, tolerate such          * clients.          */
 if|if
 condition|(
 name|s
@@ -9212,12 +9472,12 @@ operator||=
 name|workaround_good
 expr_stmt|;
 block|}
-comment|/* Both decryption and version must be good for decrypt_good 		 * to remain non-zero (0xff). */
+comment|/*          * Both decryption and version must be good for decrypt_good to          * remain non-zero (0xff).          */
 name|decrypt_good
 operator|&=
 name|version_good
 expr_stmt|;
-comment|/* 		 * Now copy rand_premaster_secret over from p using 		 * decrypt_good_mask. If decryption failed, then p does not 		 * contain valid plaintext, however, a check above guarantees 		 * it is still sufficiently large to read from. 		 */
+comment|/*          * Now copy rand_premaster_secret over from p using          * decrypt_good_mask. If decryption failed, then p does not          * contain valid plaintext, however, a check above guarantees          * it is still sufficiently large to read from.          */
 for|for
 control|(
 name|j
@@ -9376,8 +9636,8 @@ name|n
 operator|==
 literal|0L
 condition|)
-comment|/* the parameters are in the cert */
 block|{
+comment|/* the parameters are in the cert */
 name|al
 operator|=
 name|SSL_AD_HANDSHAKE_FAILURE
@@ -9801,7 +10061,7 @@ name|enc_pms
 operator|.
 name|length
 expr_stmt|;
-comment|/* Note that the length is checked again below, 		** after decryption 		*/
+comment|/*          * Note that the length is checked again below, ** after decryption          */
 if|if
 condition|(
 name|enc_pms
@@ -9930,7 +10190,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*  Note: no authenticator is not considered an error, 		**  but will return authtime == 0. 		*/
+comment|/*          * Note: no authenticator is not considered an error, ** but will          * return authtime == 0.          */
 if|if
 condition|(
 operator|(
@@ -10265,7 +10525,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* The premaster secret must contain the same version number as the 		     * ClientHello to detect version rollback attacks (strangely, the 		     * protocol does not offer such protection for DH ciphersuites). 		     * However, buggy clients exist that send random bytes instead of 		     * the protocol version. 		     * If SSL_OP_TLS_ROLLBACK_BUG is set, tolerate such clients.  		     * (Perhaps we should have a separate BUG value for the Kerberos cipher) 		     */
+comment|/*              * The premaster secret must contain the same version number as              * the ClientHello to detect version rollback attacks (strangely,              * the protocol does not offer such protection for DH              * ciphersuites). However, buggy clients exist that send random              * bytes instead of the protocol version. If              * SSL_OP_TLS_ROLLBACK_BUG is set, tolerate such clients.              * (Perhaps we should have a separate BUG value for the Kerberos              * cipher)              */
 if|if
 condition|(
 operator|!
@@ -10376,7 +10636,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  Was doing kssl_ctx_free() here, 		**  but it caused problems for apache. 		**  kssl_ctx = kssl_ctx_free(kssl_ctx); 		**  if (s->kssl_ctx)  s->kssl_ctx = NULL; 		*/
+comment|/*- Was doing kssl_ctx_free() here,          *  but it caused problems for apache.          *  kssl_ctx = kssl_ctx_free(kssl_ctx);          *  if (s->kssl_ctx)  s->kssl_ctx = NULL;          */
 name|kclean
 label|:
 name|OPENSSL_cleanse
@@ -10499,7 +10759,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* use the ephermeral values we saved when 			 * generating the ServerKeyExchange msg. 			 */
+comment|/*              * use the ephermeral values we saved when generating the              * ServerKeyExchange msg.              */
 name|tkey
 operator|=
 name|s
@@ -10639,7 +10899,7 @@ name|EVP_PKEY_EC
 operator|)
 condition|)
 block|{
-comment|/* XXX: For now, we do not support client 				 * authentication using ECDH certificates 				 * so this branch (n == 0L) of the code is 				 * never executed. When that support is 				 * added, we ought to ensure the key  				 * received in the certificate is  				 * authorized for key agreement. 				 * ECDH_compute_key implicitly checks that 				 * the two ECDH shares are for the same 				 * group. 				 */
+comment|/*                  * XXX: For now, we do not support client authentication                  * using ECDH certificates so this branch (n == 0L) of the                  * code is never executed. When that support is added, we                  * ought to ensure the key received in the certificate is                  * authorized for key agreement. ECDH_compute_key implicitly                  * checks that the two ECDH shares are for the same group.                  */
 name|al
 operator|=
 name|SSL_AD_HANDSHAKE_FAILURE
@@ -10693,7 +10953,7 @@ comment|/* Skip certificate verify processing */
 block|}
 else|else
 block|{
-comment|/* Get client's public key from encoded point 			 * in the ClientKeyExchange message. 			 */
+comment|/*              * Get client's public key from encoded point in the              * ClientKeyExchange message.              */
 if|if
 condition|(
 operator|(
@@ -10776,7 +11036,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* p is pointing to somewhere in the buffer 			 * currently, so set it to the start  			 */
+comment|/*              * p is pointing to somewhere in the buffer currently, so set it              * to the start              */
 name|p
 operator|=
 operator|(
@@ -10910,7 +11170,6 @@ name|method
 operator|->
 name|ssl3_enc
 operator|->
-name|\
 name|generate_master_secret
 argument_list|(
 name|s
@@ -11062,7 +11321,7 @@ goto|goto
 name|psk_err
 goto|;
 block|}
-comment|/* Create guaranteed NULL-terminated identity 			 * string for the callback */
+comment|/*          * Create guaranteed NULL-terminated identity string for the callback          */
 name|memcpy
 argument_list|(
 name|tmp_id
@@ -11140,7 +11399,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* PSK related to the given identity not found */
+comment|/*              * PSK related to the given identity not found              */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
@@ -11669,7 +11928,7 @@ decl_stmt|;
 name|long
 name|Tlen
 decl_stmt|;
-comment|/* Get our certificate private key*/
+comment|/* Get our certificate private key */
 name|alg_a
 operator|=
 name|s
@@ -11735,7 +11994,7 @@ argument_list|(
 name|pkey_ctx
 argument_list|)
 expr_stmt|;
-comment|/* If client certificate is present and is of the same type, maybe 			 * use it for key exchange.  Don't mind errors from 			 * EVP_PKEY_derive_set_peer, because it is completely valid to use 			 * a client certificate for authorization only. */
+comment|/*          * If client certificate is present and is of the same type, maybe          * use it for key exchange.  Don't mind errors from          * EVP_PKEY_derive_set_peer, because it is completely valid to use a          * client certificate for authorization only.          */
 name|client_pub_pkey
 operator|=
 name|X509_get_pubkey
@@ -11880,6 +12139,16 @@ argument_list|,
 name|premaster_secret
 argument_list|,
 literal|32
+argument_list|)
+expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|premaster_secret
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|premaster_secret
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check if pubkey from client certificate was used */
@@ -12029,6 +12298,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -12099,6 +12374,26 @@ operator|&
 name|mctx
 argument_list|)
 expr_stmt|;
+comment|/*      * We should only process a CertificateVerify message if we have received      * a Certificate from the client. If so then |s->session->peer| will be non      * NULL. In some instances a CertificateVerify message is not required even      * if the peer has sent a Certificate (e.g. such as in the case of static      * DH). In that case the ClientKeyExchange processing will skip the      * CertificateVerify state so we should not arrive here.      */
+if|if
+condition|(
+name|s
+operator|->
+name|session
+operator|->
+name|peer
+operator|==
+name|NULL
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
 name|n
 operator|=
 name|s
@@ -12113,8 +12408,7 @@ name|SSL3_ST_SR_CERT_VRFY_A
 argument_list|,
 name|SSL3_ST_SR_CERT_VRFY_B
 argument_list|,
-operator|-
-literal|1
+name|SSL3_MT_CERTIFICATE_VERIFY
 argument_list|,
 name|SSL3_RT_MAX_PLAIN_LENGTH
 argument_list|,
@@ -12135,17 +12429,6 @@ operator|)
 name|n
 operator|)
 return|;
-if|if
-condition|(
-name|s
-operator|->
-name|session
-operator|->
-name|peer
-operator|!=
-name|NULL
-condition|)
-block|{
 name|peer
 operator|=
 name|s
@@ -12170,93 +12453,6 @@ argument_list|,
 name|pkey
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|peer
-operator|=
-name|NULL
-expr_stmt|;
-name|pkey
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|message_type
-operator|!=
-name|SSL3_MT_CERTIFICATE_VERIFY
-condition|)
-block|{
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|reuse_message
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|!=
-name|NULL
-condition|)
-block|{
-name|al
-operator|=
-name|SSL_AD_UNEXPECTED_MESSAGE
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_CERT_VERIFY
-argument_list|,
-name|SSL_R_MISSING_VERIFY_MESSAGE
-argument_list|)
-expr_stmt|;
-goto|goto
-name|f_err
-goto|;
-block|}
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|end
-goto|;
-block|}
-if|if
-condition|(
-name|peer
-operator|==
-name|NULL
-condition|)
-block|{
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_CERT_VERIFY
-argument_list|,
-name|SSL_R_NO_CLIENT_CERT_RECEIVED
-argument_list|)
-expr_stmt|;
-name|al
-operator|=
-name|SSL_AD_UNEXPECTED_MESSAGE
-expr_stmt|;
-goto|goto
-name|f_err
-goto|;
-block|}
 if|if
 condition|(
 operator|!
@@ -12282,30 +12478,6 @@ goto|goto
 name|f_err
 goto|;
 block|}
-if|if
-condition|(
-name|s
-operator|->
-name|s3
-operator|->
-name|change_cipher_spec
-condition|)
-block|{
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_CERT_VERIFY
-argument_list|,
-name|SSL_R_CCS_RECEIVED_EARLY
-argument_list|)
-expr_stmt|;
-name|al
-operator|=
-name|SSL_AD_UNEXPECTED_MESSAGE
-expr_stmt|;
-goto|goto
-name|f_err
-goto|;
-block|}
 comment|/* we now have a signature that we need to verify */
 name|p
 operator|=
@@ -12319,7 +12491,7 @@ operator|->
 name|init_msg
 expr_stmt|;
 comment|/* Check for broken implementations of GOST ciphersuites */
-comment|/* If key is GOST and n is exactly 64, it is bare 	 * signature without length field */
+comment|/*      * If key is GOST and n is exactly 64, it is bare signature without      * length field      */
 if|if
 condition|(
 name|n
@@ -13108,6 +13280,12 @@ argument_list|,
 name|al
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 block|}
 name|end
 label|:
@@ -13311,7 +13489,7 @@ goto|goto
 name|f_err
 goto|;
 block|}
-comment|/* If tls asked for a client cert, the client must return a 0 list */
+comment|/*          * If tls asked for a client cert, the client must return a 0 list          */
 if|if
 condition|(
 operator|(
@@ -13773,7 +13951,7 @@ name|s
 operator|->
 name|verify_result
 expr_stmt|;
-comment|/* With the current implementation, sess_cert will always be NULL 	 * when we arrive here. */
+comment|/*      * With the current implementation, sess_cert will always be NULL when we      * arrive here.      */
 if|if
 condition|(
 name|s
@@ -13852,7 +14030,7 @@ name|cert_chain
 operator|=
 name|sk
 expr_stmt|;
-comment|/* Inconsistency alert: cert_chain does *not* include the 	 * peer's own certificate, while we do include it in s3_clnt.c */
+comment|/*      * Inconsistency alert: cert_chain does *not* include the peer's own      * certificate, while we do include it in s3_clnt.c      */
 name|sk
 operator|=
 name|NULL
@@ -13877,9 +14055,15 @@ argument_list|,
 name|al
 argument_list|)
 expr_stmt|;
-block|}
 name|err
 label|:
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|x
@@ -13991,6 +14175,12 @@ argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -14019,6 +14209,12 @@ name|SSL_F_SSL3_SEND_SERVER_CERTIFICATE
 argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 operator|(
@@ -14081,6 +14277,19 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|unsigned
+name|char
+modifier|*
+name|senc
+init|=
+name|NULL
+decl_stmt|;
+name|EVP_CIPHER_CTX
+name|ctx
+decl_stmt|;
+name|HMAC_CTX
+name|hctx
+decl_stmt|;
 if|if
 condition|(
 name|s
@@ -14094,9 +14303,6 @@ name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|senc
 decl_stmt|,
 modifier|*
 name|macstart
@@ -14121,12 +14327,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|hlen
-decl_stmt|;
-name|EVP_CIPHER_CTX
-name|ctx
-decl_stmt|;
-name|HMAC_CTX
-name|hctx
 decl_stmt|;
 name|SSL_CTX
 modifier|*
@@ -14162,17 +14362,29 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Some length values are 16 bits, so forget it if session is  		 * too long  		 */
+comment|/*          * Some length values are 16 bits, so forget it if session is too          * long          */
 if|if
 condition|(
+name|slen_full
+operator|==
+literal|0
+operator|||
 name|slen_full
 operator|>
 literal|0xFF00
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|senc
 operator|=
 name|OPENSSL_malloc
@@ -14185,14 +14397,37 @@ condition|(
 operator|!
 name|senc
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
+name|EVP_CIPHER_CTX_init
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
+name|HMAC_CTX_init
+argument_list|(
+operator|&
+name|hctx
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|senc
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|i2d_SSL_SESSION
 argument_list|(
 name|s
@@ -14202,8 +14437,11 @@ argument_list|,
 operator|&
 name|p
 argument_list|)
-expr_stmt|;
-comment|/* create a fresh copy (not shared with other threads) to clean up */
+condition|)
+goto|goto
+name|err
+goto|;
+comment|/*          * create a fresh copy (not shared with other threads) to clean up          */
 name|const_p
 operator|=
 name|senc
@@ -14226,17 +14464,9 @@ name|sess
 operator|==
 name|NULL
 condition|)
-block|{
-name|OPENSSL_free
-argument_list|(
-name|senc
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
+goto|goto
+name|err
+goto|;
 name|sess
 operator|->
 name|session_id_length
@@ -14256,25 +14486,31 @@ expr_stmt|;
 if|if
 condition|(
 name|slen
+operator|==
+literal|0
+operator|||
+name|slen
 operator|>
 name|slen_full
 condition|)
-comment|/* shouldn't ever happen */
 block|{
-name|OPENSSL_free
+comment|/* shouldn't ever happen */
+name|SSL_SESSION_free
 argument_list|(
-name|senc
+name|sess
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 name|p
 operator|=
 name|senc
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|i2d_SSL_SESSION
 argument_list|(
 name|sess
@@ -14282,13 +14518,23 @@ argument_list|,
 operator|&
 name|p
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|SSL_SESSION_free
 argument_list|(
 name|sess
 argument_list|)
 expr_stmt|;
-comment|/* Grow buffer if need be: the length calculation is as  		 * follows 1 (size of message name) + 3 (message length  		 * bytes) + 4 (ticket lifetime hint) + 2 (ticket length) +  		 * 16 (key name) + max_iv_len (iv length) +  		 * session_length + max_enc_block_size (max encrypted session  		 * length) + max_md_size (HMAC).  		 */
+goto|goto
+name|err
+goto|;
+block|}
+name|SSL_SESSION_free
+argument_list|(
+name|sess
+argument_list|)
+expr_stmt|;
+comment|/*-          * Grow buffer if need be: the length calculation is as          * follows 1 (size of message name) + 3 (message length          * bytes) + 4 (ticket lifetime hint) + 2 (ticket length) +          * 16 (key name) + max_iv_len (iv length) +          * session_length + max_enc_block_size (max encrypted session          * length) + max_md_size (HMAC).          */
 if|if
 condition|(
 operator|!
@@ -14309,10 +14555,9 @@ operator|+
 name|slen
 argument_list|)
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|err
+goto|;
 name|p
 operator|=
 operator|(
@@ -14340,19 +14585,7 @@ name|p
 operator|+=
 literal|3
 expr_stmt|;
-name|EVP_CIPHER_CTX_init
-argument_list|(
-operator|&
-name|ctx
-argument_list|)
-expr_stmt|;
-name|HMAC_CTX_init
-argument_list|(
-operator|&
-name|hctx
-argument_list|)
-expr_stmt|;
-comment|/* Initialize HMAC and cipher contexts. If callback present 		 * it does all the work otherwise use generated values 		 * from parent ctx. 		 */
+comment|/*          * Initialize HMAC and cipher contexts. If callback present it does          * all the work otherwise use generated values from parent ctx.          */
 if|if
 condition|(
 name|tctx
@@ -14383,27 +14616,29 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|OPENSSL_free
-argument_list|(
-name|senc
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
+goto|goto
+name|err
+goto|;
 block|}
 else|else
 block|{
-name|RAND_pseudo_bytes
+if|if
+condition|(
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
 literal|16
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
 name|EVP_EncryptInit_ex
 argument_list|(
 operator|&
@@ -14420,7 +14655,13 @@ name|tlsext_tick_aes_key
 argument_list|,
 name|iv
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
 name|HMAC_Init_ex
 argument_list|(
 operator|&
@@ -14437,7 +14678,10 @@ argument_list|()
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|memcpy
 argument_list|(
 name|key_name
@@ -14450,7 +14694,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Ticket lifetime hint (advisory only): 		 * We leave this unspecified for resumed session (for simplicity), 		 * and guess that tickets for new sessions will live as long 		 * as their sessions. */
+comment|/*          * Ticket lifetime hint (advisory only): We leave this unspecified          * for resumed session (for simplicity), and guess that tickets for          * new sessions will live as long as their sessions.          */
 name|l2n
 argument_list|(
 name|s
@@ -14514,6 +14758,9 @@ name|ctx
 argument_list|)
 expr_stmt|;
 comment|/* Encrypt session data */
+if|if
+condition|(
+operator|!
 name|EVP_EncryptUpdate
 argument_list|(
 operator|&
@@ -14528,11 +14775,17 @@ name|senc
 argument_list|,
 name|slen
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|p
 operator|+=
 name|len
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|EVP_EncryptFinal
 argument_list|(
 operator|&
@@ -14543,17 +14796,17 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|p
 operator|+=
 name|len
 expr_stmt|;
-name|EVP_CIPHER_CTX_cleanup
-argument_list|(
-operator|&
-name|ctx
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|!
 name|HMAC_Update
 argument_list|(
 operator|&
@@ -14565,7 +14818,13 @@ name|p
 operator|-
 name|macstart
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
 name|HMAC_Final
 argument_list|(
 operator|&
@@ -14575,6 +14834,15 @@ name|p
 argument_list|,
 operator|&
 name|hlen
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
 argument_list|)
 expr_stmt|;
 name|HMAC_CTX_cleanup
@@ -14679,6 +14947,39 @@ name|SSL3_RT_HANDSHAKE
 argument_list|)
 operator|)
 return|;
+name|err
+label|:
+if|if
+condition|(
+name|senc
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|senc
+argument_list|)
+expr_stmt|;
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
+name|HMAC_CTX_cleanup
+argument_list|(
+operator|&
+name|hctx
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 end_function
 
@@ -14705,7 +15006,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Grow buffer if need be: the length calculation is as  		 * follows 1 (message type) + 3 (message length) +  		 * 1 (ocsp response type) + 3 (ocsp response length)  		 * + (ocsp response)  		 */
+comment|/*-          * Grow buffer if need be: the length calculation is as          * follows 1 (message type) + 3 (message length) +          * 1 (ocsp response type) + 3 (ocsp response length)          * + (ocsp response)          */
 if|if
 condition|(
 operator|!
@@ -14722,10 +15023,18 @@ operator|->
 name|tlsext_ocsp_resplen
 argument_list|)
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|p
 operator|=
 operator|(
@@ -14840,7 +15149,7 @@ name|OPENSSL_NO_NEXTPROTONEG
 end_ifndef
 
 begin_comment
-comment|/* ssl3_get_next_proto reads a Next Protocol Negotiation handshake message. It  * sets the next_proto member in s if found */
+comment|/*  * ssl3_get_next_proto reads a Next Protocol Negotiation handshake message.  * It sets the next_proto member in s if found  */
 end_comment
 
 begin_function
@@ -14869,7 +15178,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Clients cannot send a NextProtocol message if we didn't see the 	 * extension in their ClientHello */
+comment|/*      * Clients cannot send a NextProtocol message if we didn't see the      * extension in their ClientHello      */
 if|if
 condition|(
 operator|!
@@ -14887,11 +15196,18 @@ argument_list|,
 name|SSL_R_GOT_NEXT_PROTO_WITHOUT_EXTENSION
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
 block|}
+comment|/* See the payload format below */
 name|n
 operator|=
 name|s
@@ -14910,7 +15226,6 @@ name|SSL3_MT_NEXT_PROTO
 argument_list|,
 literal|514
 argument_list|,
-comment|/* See the payload format below */
 operator|&
 name|ok
 argument_list|)
@@ -14928,7 +15243,7 @@ operator|)
 name|n
 operator|)
 return|;
-comment|/* s->state doesn't reflect whether ChangeCipherSpec has been received 	 * in this handshake, but s->s3->change_cipher_spec does (will be reset 	 * by ssl3_get_finished). */
+comment|/*      * s->state doesn't reflect whether ChangeCipherSpec has been received in      * this handshake, but s->s3->change_cipher_spec does (will be reset by      * ssl3_get_finished).      */
 if|if
 condition|(
 operator|!
@@ -14946,6 +15261,12 @@ argument_list|,
 name|SSL_R_GOT_NEXT_PROTO_BEFORE_A_CCS
 argument_list|)
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -14957,10 +15278,18 @@ name|n
 operator|<
 literal|2
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 literal|0
 return|;
 comment|/* The body must be> 1 bytes long */
+block|}
 name|p
 operator|=
 operator|(
@@ -14972,7 +15301,7 @@ name|s
 operator|->
 name|init_msg
 expr_stmt|;
-comment|/* The payload looks like: 	 *   uint8 proto_len; 	 *   uint8 proto[proto_len]; 	 *   uint8 padding_len; 	 *   uint8 padding[padding_len]; 	 */
+comment|/*-      * The payload looks like:      *   uint8 proto_len;      *   uint8 proto[proto_len];      *   uint8 padding_len;      *   uint8 padding[padding_len];      */
 name|proto_len
 operator|=
 name|p
@@ -14990,9 +15319,17 @@ name|s
 operator|->
 name|init_num
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|padding_len
 operator|=
 name|p
@@ -15014,9 +15351,17 @@ name|s
 operator|->
 name|init_num
 condition|)
+block|{
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|s
 operator|->
 name|next_proto_negotiated
@@ -15040,6 +15385,12 @@ name|SSL_F_SSL3_GET_NEXT_PROTO
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 literal|0

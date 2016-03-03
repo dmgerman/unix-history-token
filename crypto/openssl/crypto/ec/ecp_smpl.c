@@ -4,11 +4,11 @@ comment|/* crypto/ec/ecp_smpl.c */
 end_comment
 
 begin_comment
-comment|/* Includes code written by Lenka Fibikova<fibikova@exp-math.uni-essen.de>  * for the OpenSSL project.   * Includes code written by Bodo Moeller for the OpenSSL project. */
+comment|/*  * Includes code written by Lenka Fibikova<fibikova@exp-math.uni-essen.de>  * for the OpenSSL project. Includes code written by Bodo Moeller for the  * OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -173,7 +173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Most method functions in this file are designed to work with  * non-trivial representations of field elements if necessary  * (see ecp_mont.c): while standard modular addition and subtraction  * are used, the field_mul and field_sqr methods will be used for  * multiplication, and field_encode and field_decode (if defined)  * will be used for converting between representations.   * Functions ec_GFp_simple_points_make_affine() and  * ec_GFp_simple_point_get_affine_coordinates() specifically assume  * that if a non-trivial representation is used, it is a Montgomery  * representation (i.e. 'encoding' means multiplying by some factor R).  */
+comment|/*  * Most method functions in this file are designed to work with  * non-trivial representations of field elements if necessary  * (see ecp_mont.c): while standard modular addition and subtraction  * are used, the field_mul and field_sqr methods will be used for  * multiplication, and field_encode and field_decode (if defined)  * will be used for converting between representations.  *  * Functions ec_GFp_simple_points_make_affine() and  * ec_GFp_simple_point_get_affine_coordinates() specifically assume  * that if a non-trivial representation is used, it is a Montgomery  * representation (i.e. 'encoding' means multiplying by some factor R).  */
 end_comment
 
 begin_function
@@ -1197,7 +1197,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* check the discriminant: 	 * y^2 = x^3 + a*x + b is an elliptic curve<=> 4*a^3 + 27*b^2 != 0 (mod p)           * 0 =< a, b< p */
+comment|/*-      * check the discriminant:      * y^2 = x^3 + a*x + b is an elliptic curve<=> 4*a^3 + 27*b^2 != 0 (mod p)      * 0 =< a, b< p      */
 if|if
 condition|(
 name|BN_is_zero
@@ -2282,7 +2282,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* unlike for projective coordinates, we do not tolerate this */
+comment|/*          * unlike for projective coordinates, we do not tolerate this          */
 name|ECerr
 argument_list|(
 name|EC_F_EC_GFP_SIMPLE_POINT_SET_AFFINE_COORDINATES
@@ -2735,7 +2735,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* in the Montgomery case, field_mul will cancel out Montgomery factor in X: */
+comment|/*              * in the Montgomery case, field_mul will cancel out Montgomery              * factor in X:              */
 if|if
 condition|(
 operator|!
@@ -2781,7 +2781,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* field_mul works on standard representation */
+comment|/*                  * field_mul works on standard representation                  */
 if|if
 condition|(
 operator|!
@@ -2831,7 +2831,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* in the Montgomery case, field_mul will cancel out Montgomery factor in Y: */
+comment|/*              * in the Montgomery case, field_mul will cancel out Montgomery              * factor in Y:              */
 if|if
 condition|(
 operator|!
@@ -3162,7 +3162,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* Note that in this function we must not read components of 'a' or 'b' 	 * once we have written the corresponding components of 'r'. 	 * ('r' might be one of 'a' or 'b'.) 	 */
+comment|/*      * Note that in this function we must not read components of 'a' or 'b'      * once we have written the corresponding components of 'r'. ('r' might      * be one of 'a' or 'b'.)      */
 comment|/* n1, n2 */
 if|if
 condition|(
@@ -4188,7 +4188,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Note that in this function we must not read components of 'a' 	 * once we have written the corresponding components of 'r'. 	 * ('r' might the same as 'a'.) 	 */
+comment|/*      * Note that in this function we must not read components of 'a' once we      * have written the corresponding components of 'r'. ('r' might the same      * as 'a'.)      */
 comment|/* n1 */
 if|if
 condition|(
@@ -4390,7 +4390,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* n1 = 3 * (X_a + Z_a^2) * (X_a - Z_a^2) 		 *    = 3 * X_a^2 - 3 * Z_a^4 */
+comment|/*-          * n1 = 3 * (X_a + Z_a^2) * (X_a - Z_a^2)          *    = 3 * X_a^2 - 3 * Z_a^4          */
 block|}
 else|else
 block|{
@@ -5133,7 +5133,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* We have a curve defined by a Weierstrass equation 	 *      y^2 = x^3 + a*x + b. 	 * The point to consider is given in Jacobian projective coordinates 	 * where  (X, Y, Z)  represents  (x, y) = (X/Z^2, Y/Z^3). 	 * Substituting this and multiplying by  Z^6  transforms the above equation into 	 *      Y^2 = X^3 + a*X*Z^4 + b*Z^6. 	 * To test this, we add up the right-hand side in 'rh'. 	 */
+comment|/*-      * We have a curve defined by a Weierstrass equation      *      y^2 = x^3 + a*x + b.      * The point to consider is given in Jacobian projective coordinates      * where  (X, Y, Z)  represents  (x, y) = (X/Z^2, Y/Z^3).      * Substituting this and multiplying by  Z^6  transforms the above equation into      *      Y^2 = X^3 + a*X*Z^4 + b*Z^6.      * To test this, we add up the right-hand side in 'rh'.      */
 comment|/* rh := X^2 */
 if|if
 condition|(
@@ -5554,7 +5554,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* return values: 	 *  -1   error 	 *   0   equal (in affine coordinates) 	 *   1   not equal 	 */
+comment|/*-      * return values:      *  -1   error      *   0   equal (in affine coordinates)      *   1   not equal      */
 name|int
 function_decl|(
 modifier|*
@@ -5803,7 +5803,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* We have to decide whether 	 *     (X_a/Z_a^2, Y_a/Z_a^3) = (X_b/Z_b^2, Y_b/Z_b^3), 	 * or equivalently, whether 	 *     (X_a*Z_b^2, Y_a*Z_b^3) = (X_b*Z_a^2, Y_b*Z_a^3). 	 */
+comment|/*-      * We have to decide whether      *     (X_a/Z_a^2, Y_a/Z_a^3) = (X_b/Z_b^2, Y_b/Z_b^3),      * or equivalently, whether      *     (X_a*Z_b^2, Y_a*Z_b^3) = (X_b*Z_a^2, Y_b*Z_a^3).      */
 if|if
 condition|(
 operator|!
@@ -6488,7 +6488,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Set each prod_Z[i] to the product of points[0]->Z .. points[i]->Z, 	 * skipping any zero-valued inputs (pretend that they're 1). */
+comment|/*      * Set each prod_Z[i] to the product of points[0]->Z .. points[i]->Z,      * skipping any zero-valued inputs (pretend that they're 1).      */
 if|if
 condition|(
 operator|!
@@ -6673,7 +6673,7 @@ name|err
 goto|;
 block|}
 block|}
-comment|/* Now use a single explicit inversion to replace every 	 * non-zero points[i]->Z by its inverse. */
+comment|/*      * Now use a single explicit inversion to replace every non-zero      * points[i]->Z by its inverse.      */
 if|if
 condition|(
 operator|!
@@ -6719,7 +6719,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* In the Montgomery case, we just turned  R*H  (representing H) 		 * into  1/(R*H),  but we need  R*(1/H)  (representing 1/H); 		 * i.e. we need to multiply by the Montgomery factor twice. */
+comment|/*          * In the Montgomery case, we just turned R*H (representing H) into          * 1/(R*H), but we need R*(1/H) (representing 1/H); i.e. we need to          * multiply by the Montgomery factor twice.          */
 if|if
 condition|(
 operator|!
@@ -6779,7 +6779,7 @@ operator|--
 name|i
 control|)
 block|{
-comment|/* Loop invariant: tmp is the product of the inverses of 		 * points[0]->Z .. points[i]->Z (zero-valued inputs skipped). */
+comment|/*          * Loop invariant: tmp is the product of the inverses of points[0]->Z          * .. points[i]->Z (zero-valued inputs skipped).          */
 if|if
 condition|(
 operator|!
@@ -6795,7 +6795,7 @@ name|Z
 argument_list|)
 condition|)
 block|{
-comment|/* Set tmp_Z to the inverse of points[i]->Z (as product 			 * of Z inverses 0 .. i, Z values 0 .. i - 1). */
+comment|/*              * Set tmp_Z to the inverse of points[i]->Z (as product of Z              * inverses 0 .. i, Z values 0 .. i - 1).              */
 if|if
 condition|(
 operator|!
@@ -6824,7 +6824,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Update tmp to satisfy the loop invariant for i - 1. */
+comment|/*              * Update tmp to satisfy the loop invariant for i - 1.              */
 if|if
 condition|(
 operator|!

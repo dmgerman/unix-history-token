@@ -950,7 +950,7 @@ block|,
 literal|0
 block|,
 literal|16
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_DES_CBC
@@ -960,7 +960,7 @@ block|,
 literal|8
 block|,
 literal|8
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_3DES_CBC
@@ -970,7 +970,7 @@ block|,
 literal|8
 block|,
 literal|24
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_AES_CBC
@@ -980,7 +980,7 @@ block|,
 literal|16
 block|,
 literal|16
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_AES_CBC
@@ -990,7 +990,7 @@ block|,
 literal|16
 block|,
 literal|24
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_AES_CBC
@@ -1000,7 +1000,7 @@ block|,
 literal|16
 block|,
 literal|32
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_BLF_CBC
@@ -1010,7 +1010,7 @@ block|,
 literal|8
 block|,
 literal|16
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_CAST_CBC
@@ -1020,7 +1020,7 @@ block|,
 literal|8
 block|,
 literal|16
-block|, }
+block|,     }
 block|,
 block|{
 name|CRYPTO_SKIPJACK_CBC
@@ -1030,7 +1030,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,     }
 block|,
 block|{
 literal|0
@@ -1040,7 +1040,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,     }
 block|, }
 struct|;
 end_struct
@@ -1091,7 +1091,7 @@ block|,
 name|NID_ripemd160
 block|,
 literal|16
-comment|/*?*/
+comment|/* ? */
 block|}
 block|,
 block|{
@@ -1892,7 +1892,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* 	 * XXXX just disable all digests for now, because it sucks. 	 * we need a better way to decide this - i.e. I may not 	 * want digests on slow cards like hifn on fast machines, 	 * but might want them on slow or loaded machines, etc. 	 * will also want them when using crypto cards that don't 	 * suck moose gonads - would be nice to be able to decide something 	 * as reasonable default without having hackery that's card dependent. 	 * of course, the default should probably be just do everything, 	 * with perhaps a sysctl to turn algoritms off (or have them off 	 * by default) on cards that generally suck like the hifn. 	 */
+comment|/*      * XXXX just disable all digests for now, because it sucks.      * we need a better way to decide this - i.e. I may not      * want digests on slow cards like hifn on fast machines,      * but might want them on slow or loaded machines, etc.      * will also want them when using crypto cards that don't      * suck moose gonads - would be nice to be able to decide something      * as reasonable default without having hackery that's card dependent.      * of course, the default should probably be just do everything,      * with perhaps a sysctl to turn algoritms off (or have them off      * by default) on cards that generally suck like the hifn.      */
 operator|*
 name|nids
 operator|=
@@ -2158,7 +2158,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* XXX need better errror handling 		 * this can fail for a number of different reasons. 		 */
+comment|/*          * XXX need better errror handling this can fail for a number of          * different reasons.          */
 return|return
 operator|(
 literal|0
@@ -2514,7 +2514,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* XXX if this ioctl fails, someting's wrong. the invoker 	 * may have called us with a bogus ctx, or we could 	 * have a device that for whatever reason just doesn't 	 * want to play ball - it's not clear what's right 	 * here - should this be an error? should it just 	 * increase a counter, hmm. For right now, we return 	 * 0 - I don't believe that to be "right". we could 	 * call the gorpy openssl lib error handlers that 	 * print messages to users of the library. hmm.. 	 */
+comment|/*      * XXX if this ioctl fails, someting's wrong. the invoker may have called      * us with a bogus ctx, or we could have a device that for whatever      * reason just doesn't want to play ball - it's not clear what's right      * here - should this be an error? should it just increase a counter,      * hmm. For right now, we return 0 - I don't believe that to be "right".      * we could call the gorpy openssl lib error handlers that print messages      * to users of the library. hmm..      */
 if|if
 condition|(
 name|ioctl
@@ -4963,7 +4963,7 @@ name|ret
 init|=
 literal|1
 decl_stmt|;
-comment|/* Currently, we know we can do mod exp iff we can do any 	 * asymmetric operations at all. 	 */
+comment|/*      * Currently, we know we can do mod exp iff we can do any asymmetric      * operations at all.      */
 if|if
 condition|(
 name|cryptodev_asymfeat
@@ -5166,7 +5166,7 @@ name|in_mont
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* else cryptodev operation worked ok ==> ret = 1*/
+comment|/* else cryptodev operation worked ok ==> ret = 1 */
 name|err
 label|:
 name|zapparams
@@ -5553,7 +5553,7 @@ name|ctx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* else cryptodev operation worked ok ==> ret = 1*/
+comment|/* else cryptodev operation worked ok ==> ret = 1 */
 name|err
 label|:
 name|zapparams
@@ -6387,7 +6387,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*OCF success value is 0, if not zero, change dsaret to fail*/
+comment|/*          * OCF success value is 0, if not zero, change dsaret to fail          */
 if|if
 condition|(
 literal|0
@@ -6971,7 +6971,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * find out what asymmetric crypto algorithms we support 	 */
+comment|/*      * find out what asymmetric crypto algorithms we support      */
 if|if
 condition|(
 name|ioctl

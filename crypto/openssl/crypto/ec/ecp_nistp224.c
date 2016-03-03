@@ -110,7 +110,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* nonstandard; implemented by gcc on 64-bit platforms */
+comment|/* nonstandard; implemented by gcc on 64-bit                                  * platforms */
 end_comment
 
 begin_else
@@ -155,7 +155,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*		    INTERNAL REPRESENTATION OF FIELD ELEMENTS  *  * Field elements are represented as a_0 + 2^56*a_1 + 2^112*a_2 + 2^168*a_3  * using 64-bit coefficients called 'limbs',  * and sometimes (for multiplication results) as  * b_0 + 2^56*b_1 + 2^112*b_2 + 2^168*b_3 + 2^224*b_4 + 2^280*b_5 + 2^336*b_6  * using 128-bit coefficients called 'widelimbs'.  * A 4-limb representation is an 'felem';  * a 7-widelimb representation is a 'widefelem'.  * Even within felems, bits of adjacent limbs overlap, and we don't always  * reduce the representations: we ensure that inputs to each felem  * multiplication satisfy a_i< 2^60, so outputs satisfy b_i< 4*2^60*2^60,  * and fit into a 128-bit word without overflow. The coefficients are then  * again partially reduced to obtain an felem satisfying a_i< 2^57.  * We only reduce to the unique minimal representation at the end of the  * computation.  */
+comment|/*-  * INTERNAL REPRESENTATION OF FIELD ELEMENTS  *  * Field elements are represented as a_0 + 2^56*a_1 + 2^112*a_2 + 2^168*a_3  * using 64-bit coefficients called 'limbs',  * and sometimes (for multiplication results) as  * b_0 + 2^56*b_1 + 2^112*b_2 + 2^168*b_3 + 2^224*b_4 + 2^280*b_5 + 2^336*b_6  * using 128-bit coefficients called 'widelimbs'.  * A 4-limb representation is an 'felem';  * a 7-widelimb representation is a 'widefelem'.  * Even within felems, bits of adjacent limbs overlap, and we don't always  * reduce the representations: we ensure that inputs to each felem  * multiplication satisfy a_i< 2^60, so outputs satisfy b_i< 4*2^60*2^60,  * and fit into a 128-bit word without overflow. The coefficients are then  * again partially reduced to obtain an felem satisfying a_i< 2^57.  * We only reduce to the unique minimal representation at the end of the  * computation.  */
 end_comment
 
 begin_typedef
@@ -193,7 +193,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Field element represented as a byte arrary.  * 28*8 = 224 bits is also the group order size for the elliptic curve,  * and we also use this type for scalars for point multiplication.   */
+comment|/*  * Field element represented as a byte arrary. 28*8 = 224 bits is also the  * group order size for the elliptic curve, and we also use this type for  * scalars for point multiplication.  */
 end_comment
 
 begin_typedef
@@ -515,7 +515,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Precomputed multiples of the standard generator  * Points are given in coordinates (X, Y, Z) where Z normally is 1  * (0 for the point at infinity).  * For each field element, slice a_0 is word 0, etc.  *  * The table has 2 * 16 elements, starting with the following:  * index | bits    | point  * ------+---------+------------------------------  *     0 | 0 0 0 0 | 0G  *     1 | 0 0 0 1 | 1G  *     2 | 0 0 1 0 | 2^56G  *     3 | 0 0 1 1 | (2^56 + 1)G  *     4 | 0 1 0 0 | 2^112G  *     5 | 0 1 0 1 | (2^112 + 1)G  *     6 | 0 1 1 0 | (2^112 + 2^56)G  *     7 | 0 1 1 1 | (2^112 + 2^56 + 1)G  *     8 | 1 0 0 0 | 2^168G  *     9 | 1 0 0 1 | (2^168 + 1)G  *    10 | 1 0 1 0 | (2^168 + 2^56)G  *    11 | 1 0 1 1 | (2^168 + 2^56 + 1)G  *    12 | 1 1 0 0 | (2^168 + 2^112)G  *    13 | 1 1 0 1 | (2^168 + 2^112 + 1)G  *    14 | 1 1 1 0 | (2^168 + 2^112 + 2^56)G  *    15 | 1 1 1 1 | (2^168 + 2^112 + 2^56 + 1)G  * followed by a copy of this with each element multiplied by 2^28.  *  * The reason for this is so that we can clock bits into four different  * locations when doing simple scalar multiplies against the base point,  * and then another four locations using the second 16 elements.  */
+comment|/*-  * Precomputed multiples of the standard generator  * Points are given in coordinates (X, Y, Z) where Z normally is 1  * (0 for the point at infinity).  * For each field element, slice a_0 is word 0, etc.  *  * The table has 2 * 16 elements, starting with the following:  * index | bits    | point  * ------+---------+------------------------------  *     0 | 0 0 0 0 | 0G  *     1 | 0 0 0 1 | 1G  *     2 | 0 0 1 0 | 2^56G  *     3 | 0 0 1 1 | (2^56 + 1)G  *     4 | 0 1 0 0 | 2^112G  *     5 | 0 1 0 1 | (2^112 + 1)G  *     6 | 0 1 1 0 | (2^112 + 2^56)G  *     7 | 0 1 1 1 | (2^112 + 2^56 + 1)G  *     8 | 1 0 0 0 | 2^168G  *     9 | 1 0 0 1 | (2^168 + 1)G  *    10 | 1 0 1 0 | (2^168 + 2^56)G  *    11 | 1 0 1 1 | (2^168 + 2^56 + 1)G  *    12 | 1 1 0 0 | (2^168 + 2^112)G  *    13 | 1 1 0 1 | (2^168 + 2^112 + 1)G  *    14 | 1 1 1 0 | (2^168 + 2^112 + 2^56)G  *    15 | 1 1 1 1 | (2^168 + 2^112 + 2^56 + 1)G  * followed by a copy of this with each element multiplied by 2^28.  *  * The reason for this is so that we can clock bits into four different  * locations when doing simple scalar multiplies against the base point,  * and then another four locations using the second 16 elements.  */
 end_comment
 
 begin_decl_stmt
@@ -1702,7 +1702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper functions to convert field elements to/from internal representation */
+comment|/*  * Helper functions to convert field elements to/from internal representation  */
 end_comment
 
 begin_function
@@ -1802,12 +1802,12 @@ operator|)
 operator|(
 name|in
 operator|+
-literal|21
+literal|20
 operator|)
 operator|)
 operator|)
-operator|&
-literal|0x00ffffffffffffff
+operator|>>
+literal|8
 expr_stmt|;
 block|}
 end_function
@@ -2148,7 +2148,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*				FIELD OPERATIONS  *  * Field operations, using the internal representation of field elements.  * NB! These operations are specific to our point multiplication and cannot be  * expected to be correct in general - e.g., multiplication with a large scalar  * will cause an overflow.  *  */
+comment|/*-  *                              FIELD OPERATIONS  *  * Field operations, using the internal representation of field elements.  * NB! These operations are specific to our point multiplication and cannot be  * expected to be correct in general - e.g., multiplication with a large scalar  * will cause an overflow.  *  */
 end_comment
 
 begin_function
@@ -3066,7 +3066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Multiply a field element by a scalar: out = out * scalar  * The scalars we actually use are small, so results fit without overflow */
+comment|/*  * Multiply a field element by a scalar: out = out * scalar The scalars we  * actually use are small, so results fit without overflow  */
 end_comment
 
 begin_function
@@ -3114,7 +3114,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Multiply an unreduced field element by a scalar: out = out * scalar  * The scalars we actually use are small, so results fit without overflow */
+comment|/*  * Multiply an unreduced field element by a scalar: out = out * scalar The  * scalars we actually use are small, so results fit without overflow  */
 end_comment
 
 begin_function
@@ -3703,7 +3703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reduce seven 128-bit coefficients to four 64-bit coefficients.  * Requires in[i]< 2^126,  * ensures out[0]< 2^56, out[1]< 2^56, out[2]< 2^56, out[3]<= 2^56 + 2^16 */
+comment|/*-  * Reduce seven 128-bit coefficients to four 64-bit coefficients.  * Requires in[i]< 2^126,  * ensures out[0]< 2^56, out[1]< 2^56, out[2]< 2^56, out[3]<= 2^56 + 2^16 */
 end_comment
 
 begin_function
@@ -4144,7 +4144,7 @@ index|]
 operator|&
 literal|0x00ffffffffffffff
 expr_stmt|;
-comment|/* out[0]< 2^56, out[1]< 2^56, out[2]< 2^56, 	 * out[3]<= 2^56 + 2^16 (due to final carry), 	 * so out< 2*p */
+comment|/*-      * out[0]< 2^56, out[1]< 2^56, out[2]< 2^56,      * out[3]<= 2^56 + 2^16 (due to final carry),      * so out< 2*p      */
 name|out
 index|[
 literal|3
@@ -4231,7 +4231,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reduce to unique minimal representation.  * Requires 0<= in< 2*p (always call felem_reduce first) */
+comment|/*  * Reduce to unique minimal representation. Requires 0<= in< 2*p (always  * call felem_reduce first)  */
 end_comment
 
 begin_function
@@ -4346,7 +4346,7 @@ index|]
 operator|&=
 literal|0x00ffffffffffffff
 expr_stmt|;
-comment|/* Case 2: a = 0 iff p<= in< 2^224, i.e., 	 * the high 128 bits are all 1 and the lower part is non-zero */
+comment|/*      * Case 2: a = 0 iff p<= in< 2^224, i.e., the high 128 bits are all 1      * and the lower part is non-zero      */
 name|a
 operator|=
 operator|(
@@ -4416,7 +4416,7 @@ operator|)
 operator|>>
 literal|63
 expr_stmt|;
-comment|/* subtract 2^224 - 2^96 + 1 if a is all-one*/
+comment|/* subtract 2^224 - 2^96 + 1 if a is all-one */
 name|tmp
 index|[
 literal|3
@@ -4457,7 +4457,7 @@ literal|1
 operator|&
 name|a
 expr_stmt|;
-comment|/* eliminate negative coefficients: if tmp[0] is negative, tmp[1] must 	 * be non-zero, so we only need one step */
+comment|/*      * eliminate negative coefficients: if tmp[0] is negative, tmp[1] must be      * non-zero, so we only need one step      */
 name|a
 operator|=
 name|tmp
@@ -4569,7 +4569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Zero-check: returns 1 if input is 0, and 0 otherwise.  * We know that field elements are reduced to in< 2^225,  * so we only need to check three cases: 0, 2^224 - 2^96 + 1,  * and 2^225 - 2^97 + 2 */
+comment|/*  * Zero-check: returns 1 if input is 0, and 0 otherwise. We know that field  * elements are reduced to in< 2^225, so we only need to check three cases:  * 0, 2^224 - 2^96 + 1, and 2^225 - 2^97 + 2  */
 end_comment
 
 begin_function
@@ -4977,8 +4977,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^12 - 2^6 */
 block|{
+comment|/* 2^12 - 2^6 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5039,8 +5039,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^24 - 2^12 */
 block|{
+comment|/* 2^24 - 2^12 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5101,8 +5101,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^48 - 2^24 */
 block|{
+comment|/* 2^48 - 2^24 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5163,8 +5163,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^96 - 2^48 */
 block|{
+comment|/* 2^96 - 2^48 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5225,8 +5225,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^120 - 2^24 */
 block|{
+comment|/* 2^120 - 2^24 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5272,8 +5272,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^126 - 2^6 */
 block|{
+comment|/* 2^126 - 2^6 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5351,8 +5351,8 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* 2^224 - 2^97 */
 block|{
+comment|/* 2^224 - 2^97 */
 name|felem_square
 argument_list|(
 name|tmp
@@ -5389,7 +5389,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy in constant time:  * if icopy == 1, copy in to out,  * if icopy == 0, copy out to itself. */
+comment|/*  * Copy in constant time: if icopy == 1, copy in to out, if icopy == 0, copy  * out to itself.  */
 end_comment
 
 begin_function
@@ -5411,7 +5411,7 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
-comment|/* icopy is a (64-bit) 0 or 1, so copy is either all-zero or all-one */
+comment|/*      * icopy is a (64-bit) 0 or 1, so copy is either all-zero or all-one      */
 specifier|const
 name|limb
 name|copy
@@ -5467,11 +5467,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*			 ELLIPTIC CURVE POINT OPERATIONS  *  * Points are represented in Jacobian projective coordinates:  * (X, Y, Z) corresponds to the affine point (X/Z^2, Y/Z^3),  * or to the point at infinity if Z == 0.  *  */
+comment|/*-  *                       ELLIPTIC CURVE POINT OPERATIONS  *  * Points are represented in Jacobian projective coordinates:  * (X, Y, Z) corresponds to the affine point (X/Z^2, Y/Z^3),  * or to the point at infinity if Z == 0.  *  */
 end_comment
 
 begin_comment
-comment|/* Double an elliptic curve point:  * (X', Y', Z') = 2 * (X, Y, Z), where  * X' = (3 * (X - Z^2) * (X + Z^2))^2 - 8 * X * Y^2  * Y' = 3 * (X - Z^2) * (X + Z^2) * (4 * X * Y^2 - X') - 8 * Y^2  * Z' = (Y + Z)^2 - Y^2 - Z^2 = 2 * Y * Z  * Outputs can equal corresponding inputs, i.e., x_out == x_in is allowed,  * while x_out == y_in is not (maybe this works, but it's not tested). */
+comment|/*-  * Double an elliptic curve point:  * (X', Y', Z') = 2 * (X, Y, Z), where  * X' = (3 * (X - Z^2) * (X + Z^2))^2 - 8 * X * Y^2  * Y' = 3 * (X - Z^2) * (X + Z^2) * (4 * X * Y^2 - X') - 8 * Y^2  * Z' = (Y + Z)^2 - Y^2 - Z^2 = 2 * Y * Z  * Outputs can equal corresponding inputs, i.e., x_out == x_in is allowed,  * while x_out == y_in is not (maybe this works, but it's not tested).  */
 end_comment
 
 begin_function
@@ -5770,11 +5770,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add two elliptic curve points:  * (X_1, Y_1, Z_1) + (X_2, Y_2, Z_2) = (X_3, Y_3, Z_3), where  * X_3 = (Z_1^3 * Y_2 - Z_2^3 * Y_1)^2 - (Z_1^2 * X_2 - Z_2^2 * X_1)^3 -  * 2 * Z_2^2 * X_1 * (Z_1^2 * X_2 - Z_2^2 * X_1)^2  * Y_3 = (Z_1^3 * Y_2 - Z_2^3 * Y_1) * (Z_2^2 * X_1 * (Z_1^2 * X_2 - Z_2^2 * X_1)^2 - X_3) -  *        Z_2^3 * Y_1 * (Z_1^2 * X_2 - Z_2^2 * X_1)^3  * Z_3 = (Z_1^2 * X_2 - Z_2^2 * X_1) * (Z_1 * Z_2)  *  * This runs faster if 'mixed' is set, which requires Z_2 = 1 or Z_2 = 0.  */
+comment|/*-  * Add two elliptic curve points:  * (X_1, Y_1, Z_1) + (X_2, Y_2, Z_2) = (X_3, Y_3, Z_3), where  * X_3 = (Z_1^3 * Y_2 - Z_2^3 * Y_1)^2 - (Z_1^2 * X_2 - Z_2^2 * X_1)^3 -  * 2 * Z_2^2 * X_1 * (Z_1^2 * X_2 - Z_2^2 * X_1)^2  * Y_3 = (Z_1^3 * Y_2 - Z_2^3 * Y_1) * (Z_2^2 * X_1 * (Z_1^2 * X_2 - Z_2^2 * X_1)^2 - X_3) -  *        Z_2^3 * Y_1 * (Z_1^2 * X_2 - Z_2^2 * X_1)^3  * Z_3 = (Z_1^2 * X_2 - Z_2^2 * X_1) * (Z_1 * Z_2)  *  * This runs faster if 'mixed' is set, which requires Z_2 = 1 or Z_2 = 0.  */
 end_comment
 
 begin_comment
-comment|/* This function is not entirely constant-time:  * it includes a branch for checking whether the two input points are equal,  * (while not equal to the point at infinity).  * This case never happens during single point multiplication,  * so there is no timing leak for ECDH or ECDSA signing. */
+comment|/*  * This function is not entirely constant-time: it includes a branch for  * checking whether the two input points are equal, (while not equal to the  * point at infinity). This case never happens during single point  * multiplication, so there is no timing leak for ECDH or ECDSA signing.  */
 end_comment
 
 begin_function
@@ -5926,7 +5926,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We'll assume z2 = 1 (special case z2 = 0 is handled later) */
+comment|/*          * We'll assume z2 = 1 (special case z2 = 0 is handled later)          */
 comment|/* ftmp4 = z2^3*y1 */
 name|felem_assign
 argument_list|(
@@ -6030,7 +6030,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* the formulae are incorrect if the points are equal 	 * so we check for this and do doubling if this happens */
+comment|/*      * the formulae are incorrect if the points are equal so we check for      * this and do doubling if this happens      */
 name|x_equal
 operator|=
 name|felem_is_zero
@@ -6243,7 +6243,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* ftmp5[i]< 2 * 2^57 = 2^58 */
-comment|/* x_out = (z1^3*y2 - z2^3*y1)^2 - (z1^2*x2 - z2^2*x1)^3 - 	   2*z2^2*x1*(z1^2*x2 - z2^2*x1)^2 */
+comment|/*-      * x_out = (z1^3*y2 - z2^3*y1)^2 - (z1^2*x2 - z2^2*x1)^3 -      *  2*z2^2*x1*(z1^2*x2 - z2^2*x1)^2      */
 name|felem_diff_128_64
 argument_list|(
 name|tmp2
@@ -6268,7 +6268,7 @@ name|x_out
 argument_list|)
 expr_stmt|;
 comment|/* ftmp2[i]< 2^57 + 2^58 + 2< 2^59 */
-comment|/* tmp2 = (z1^3*y2 - z2^3*y1)*(z2^2*x1*(z1^2*x2 - z2^2*x1)^2 - x_out) */
+comment|/*      * tmp2 = (z1^3*y2 - z2^3*y1)*(z2^2*x1*(z1^2*x2 - z2^2*x1)^2 - x_out)      */
 name|felem_mul
 argument_list|(
 name|tmp2
@@ -6279,7 +6279,7 @@ name|ftmp2
 argument_list|)
 expr_stmt|;
 comment|/* tmp2[i]< 4 * 2^57 * 2^59 = 2^118 */
-comment|/* y_out = (z1^3*y2 - z2^3*y1)*(z2^2*x1*(z1^2*x2 - z2^2*x1)^2 - x_out) - 	   z2^3*y1*(z1^2*x2 - z2^2*x1)^3 */
+comment|/*-      * y_out = (z1^3*y2 - z2^3*y1)*(z2^2*x1*(z1^2*x2 - z2^2*x1)^2 - x_out) -      *  z2^3*y1*(z1^2*x2 - z2^2*x1)^3      */
 name|widefelem_diff
 argument_list|(
 name|tmp2
@@ -6295,8 +6295,8 @@ argument_list|,
 name|tmp2
 argument_list|)
 expr_stmt|;
-comment|/* the result (x_out, y_out, z_out) is incorrect if one of the inputs is 	 * the point at infinity, so we need to check for this separately */
-comment|/* if point 1 is at infinity, copy point 2 to output, and vice versa */
+comment|/*      * the result (x_out, y_out, z_out) is incorrect if one of the inputs is      * the point at infinity, so we need to check for this separately      */
+comment|/*      * if point 1 is at infinity, copy point 2 to output, and vice versa      */
 name|copy_conditional
 argument_list|(
 name|x_out
@@ -6376,7 +6376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* select_point selects the |idx|th point from a precomputation table and  * copies it to out. */
+comment|/*  * select_point selects the |idx|th point from a precomputation table and  * copies it to out.  * The pre_comp array argument should be size of |size| argument  */
 end_comment
 
 begin_function
@@ -6395,9 +6395,7 @@ parameter_list|,
 specifier|const
 name|felem
 name|pre_comp
-index|[
-comment|/*size*/
-index|]
+index|[]
 index|[
 literal|3
 index|]
@@ -6583,7 +6581,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Interleaved point multiplication using precomputed point multiples:  * The small point multiples 0*P, 1*P, ..., 16*P are in pre_comp[],  * the scalars in scalars[]. If g_scalar is non-NULL, we also add this multiple  * of the generator, using certain (large) precomputed multiples in g_pre_comp.  * Output point (X, Y, Z) is stored in x_out, y_out, z_out */
+comment|/*  * Interleaved point multiplication using precomputed point multiples: The  * small point multiples 0*P, 1*P, ..., 16*P are in pre_comp[], the scalars  * in scalars[]. If g_scalar is non-NULL, we also add this multiple of the  * generator, using certain (large) precomputed multiples in g_pre_comp.  * Output point (X, Y, Z) is stored in x_out, y_out, z_out  */
 end_comment
 
 begin_function
@@ -6694,12 +6692,12 @@ name|felem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Loop over all scalars msb-to-lsb, interleaving additions 	 * of multiples of the generator (two in each of the last 28 rounds) 	 * and additions of other points multiples (every 5th round). 	 */
+comment|/*      * Loop over all scalars msb-to-lsb, interleaving additions of multiples      * of the generator (two in each of the last 28 rounds) and additions of      * other points multiples (every 5th round).      */
 name|skip
 operator|=
 literal|1
 expr_stmt|;
-comment|/* save two point operations in the first round */
+comment|/* save two point operations in the first                                  * round */
 for|for
 control|(
 name|i
@@ -6843,6 +6841,7 @@ operator|!
 name|skip
 condition|)
 block|{
+comment|/* value 1 below is argument for "mixed" */
 name|point_add
 argument_list|(
 name|nq
@@ -6876,7 +6875,6 @@ literal|2
 index|]
 argument_list|,
 literal|1
-comment|/* mixed */
 argument_list|,
 name|tmp
 index|[
@@ -7192,7 +7190,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* (X, -Y, Z) is the negative point */
+comment|/* (X, -Y, Z) is the negative                                             * point */
 name|copy_conditional
 argument_list|(
 name|tmp
@@ -7327,7 +7325,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*		       FUNCTIONS TO MANAGE PRECOMPUTATION  */
+comment|/*  * FUNCTIONS TO MANAGE PRECOMPUTATION  */
 end_comment
 
 begin_function
@@ -7561,7 +7559,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*			   OPENSSL EC_METHOD FUNCTIONS  */
+comment|/*  * OPENSSL EC_METHOD FUNCTIONS  */
 end_comment
 
 begin_function
@@ -7847,7 +7845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Takes the Jacobian coordinates (X, Y, Z) of a point and returns  * (X', Y') = (X/Z^2, Y/Z^3) */
+comment|/*  * Takes the Jacobian coordinates (X, Y, Z) of a point and returns (X', Y') =  * (X/Z^2, Y/Z^3)  */
 end_comment
 
 begin_function
@@ -8118,7 +8116,7 @@ parameter_list|,
 name|felem
 name|points
 index|[
-comment|/*num*/
+comment|/* num */
 index|]
 index|[
 literal|3
@@ -8127,11 +8125,11 @@ parameter_list|,
 name|felem
 name|tmp_felems
 index|[
-comment|/*num+1*/
+comment|/* num+1 */
 index|]
 parameter_list|)
 block|{
-comment|/* Runs in constant time, unless an input is the point at infinity 	 * (which normally shouldn't happen). */
+comment|/*      * Runs in constant time, unless an input is the point at infinity (which      * normally shouldn't happen).      */
 name|ec_GFp_nistp_points_make_affine_internal
 argument_list|(
 name|num
@@ -8259,7 +8257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computes scalar*generator + \sum scalars[i]*points[i], ignoring NULL values  * Result is stored in r (r can equal one of the inputs). */
+comment|/*  * Computes scalar*generator + \sum scalars[i]*points[i], ignoring NULL  * values Result is stored in r (r can equal one of the inputs).  */
 end_comment
 
 begin_function
@@ -8700,7 +8698,7 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
-comment|/* we don't have valid precomputation: 			 * treat the generator as a random point */
+comment|/*              * we don't have valid precomputation: treat the generator as a              * random point              */
 name|num_points
 operator|=
 name|num_points
@@ -8722,7 +8720,7 @@ operator|>=
 literal|3
 condition|)
 block|{
-comment|/* unless we precompute multiples for just one or two points, 			 * converting those into affine form is time well spent  */
+comment|/*              * unless we precompute multiples for just one or two points,              * converting those into affine form is time well spent              */
 name|mixed
 operator|=
 literal|1
@@ -8814,7 +8812,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* we treat NULL scalars as 0, and NULL points as points at infinity, 		 * i.e., they contribute nothing to the linear combination */
+comment|/*          * we treat NULL scalars as 0, and NULL points as points at infinity,          * i.e., they contribute nothing to the linear combination          */
 name|memset
 argument_list|(
 name|secrets
@@ -8934,7 +8932,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* this is an unusual input, and we don't guarantee 					 * constant-timeness */
+comment|/*                      * this is an unusual input, and we don't guarantee                      * constant-timeness                      */
 if|if
 condition|(
 operator|!
@@ -9365,7 +9363,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* this is an unusual input, and we don't guarantee 			 * constant-timeness */
+comment|/*              * this is an unusual input, and we don't guarantee              * constant-timeness              */
 if|if
 condition|(
 operator|!
@@ -9424,7 +9422,7 @@ argument_list|,
 name|num_bytes
 argument_list|)
 expr_stmt|;
-comment|/* do the multiplication with generator precomputation*/
+comment|/* do the multiplication with generator precomputation */
 name|batch_mul
 argument_list|(
 name|x_out
@@ -9879,7 +9877,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* if the generator is the standard one, use built-in precomputation */
+comment|/*      * if the generator is the standard one, use built-in precomputation      */
 if|if
 condition|(
 literal|0
@@ -10005,7 +10003,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* compute 2^56*G, 2^112*G, 2^168*G for the first table, 	 * 2^28*G, 2^84*G, 2^140*G, 2^196*G for the second one 	 */
+comment|/*      * compute 2^56*G, 2^112*G, 2^168*G for the first table, 2^28*G, 2^84*G,      * 2^140*G, 2^196*G for the second one      */
 for|for
 control|(
 name|i
@@ -10814,7 +10812,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 2^56*G + 2^112*G + 2^168*G resp. 2^84*G + 2^140*G + 2^196*G */
+comment|/*          * 2^56*G + 2^112*G + 2^168*G resp. 2^84*G + 2^140*G + 2^196*G          */
 name|point_add
 argument_list|(
 name|pre

@@ -8,7 +8,7 @@ comment|/**  * \file   crypto/ecdsa/ecdsa.h Include file for the OpenSSL ECDSA f
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -119,7 +119,7 @@ modifier|*
 name|sig
 parameter_list|)
 function_decl|;
-comment|/** DER encode content of ECDSA_SIG object (note: this function modifies *pp  *  (*pp += length of the DER encoded signature)).  *  \param  sig  pointer to the ECDSA_SIG object  *  \param  pp   pointer to a unsigned char pointer for the output or NULL  *  \return the length of the DER encoded ECDSA_SIG object or 0   */
+comment|/** DER encode content of ECDSA_SIG object (note: this function modifies *pp  *  (*pp += length of the DER encoded signature)).  *  \param  sig  pointer to the ECDSA_SIG object  *  \param  pp   pointer to a unsigned char pointer for the output or NULL  *  \return the length of the DER encoded ECDSA_SIG object or 0  */
 name|int
 name|i2d_ECDSA_SIG
 parameter_list|(
@@ -135,7 +135,7 @@ modifier|*
 name|pp
 parameter_list|)
 function_decl|;
-comment|/** Decodes a DER encoded ECDSA signature (note: this function changes *pp  *  (*pp += len)).   *  \param  sig  pointer to ECDSA_SIG pointer (may be NULL)  *  \param  pp   memory buffer with the DER encoded signature  *  \param  len  length of the buffer  *  \return pointer to the decoded ECDSA_SIG structure (or NULL)  */
+comment|/** Decodes a DER encoded ECDSA signature (note: this function changes *pp  *  (*pp += len)).  *  \param  sig  pointer to ECDSA_SIG pointer (may be NULL)  *  \param  pp   memory buffer with the DER encoded signature  *  \param  len  length of the buffer  *  \return pointer to the decoded ECDSA_SIG structure (or NULL)  */
 name|ECDSA_SIG
 modifier|*
 name|d2i_ECDSA_SIG
@@ -175,7 +175,7 @@ modifier|*
 name|eckey
 parameter_list|)
 function_decl|;
-comment|/** Computes ECDSA signature of a given hash value using the supplied  *  private key (note: sig must point to ECDSA_size(eckey) bytes of memory).  *  \param  dgst     pointer to the hash value to sign  *  \param  dgstlen  length of the hash value  *  \param  kinv     BIGNUM with a pre-computed inverse k (optional)  *  \param  rp       BIGNUM with a pre-computed rp value (optioanl),   *                   see ECDSA_sign_setup  *  \param  eckey    EC_KEY object containing a private EC key  *  \return pointer to a ECDSA_SIG structure or NULL if an error occurred  */
+comment|/** Computes ECDSA signature of a given hash value using the supplied  *  private key (note: sig must point to ECDSA_size(eckey) bytes of memory).  *  \param  dgst     pointer to the hash value to sign  *  \param  dgstlen  length of the hash value  *  \param  kinv     BIGNUM with a pre-computed inverse k (optional)  *  \param  rp       BIGNUM with a pre-computed rp value (optioanl),  *                   see ECDSA_sign_setup  *  \param  eckey    EC_KEY object containing a private EC key  *  \return pointer to a ECDSA_SIG structure or NULL if an error occurred  */
 name|ECDSA_SIG
 modifier|*
 name|ECDSA_do_sign_ex
@@ -254,7 +254,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/** Sets method to be used for the ECDSA operations  *  \param  eckey  EC_KEY object  *  \param  meth   new method  *  \return 1 on success and 0 otherwise   */
+comment|/** Sets method to be used for the ECDSA operations  *  \param  eckey  EC_KEY object  *  \param  meth   new method  *  \return 1 on success and 0 otherwise  */
 name|int
 name|ECDSA_set_method
 parameter_list|(
@@ -332,7 +332,7 @@ modifier|*
 name|eckey
 parameter_list|)
 function_decl|;
-comment|/** Computes ECDSA signature of a given hash value using the supplied  *  private key (note: sig must point to ECDSA_size(eckey) bytes of memory).  *  \param  type     this parameter is ignored  *  \param  dgst     pointer to the hash value to sign  *  \param  dgstlen  length of the hash value  *  \param  sig      buffer to hold the DER encoded signature  *  \param  siglen   pointer to the length of the returned signature  *  \param  kinv     BIGNUM with a pre-computed inverse k (optional)  *  \param  rp       BIGNUM with a pre-computed rp value (optioanl),   *                   see ECDSA_sign_setup  *  \param  eckey    EC_KEY object containing a private EC key  *  \return 1 on success and 0 otherwise  */
+comment|/** Computes ECDSA signature of a given hash value using the supplied  *  private key (note: sig must point to ECDSA_size(eckey) bytes of memory).  *  \param  type     this parameter is ignored  *  \param  dgst     pointer to the hash value to sign  *  \param  dgstlen  length of the hash value  *  \param  sig      buffer to hold the DER encoded signature  *  \param  siglen   pointer to the length of the returned signature  *  \param  kinv     BIGNUM with a pre-computed inverse k (optional)  *  \param  rp       BIGNUM with a pre-computed rp value (optioanl),  *                   see ECDSA_sign_setup  *  \param  eckey    EC_KEY object containing a private EC key  *  \return 1 on success and 0 otherwise  */
 name|int
 name|ECDSA_sign_ex
 parameter_list|(
@@ -373,7 +373,7 @@ modifier|*
 name|eckey
 parameter_list|)
 function_decl|;
-comment|/** Verifies that the given signature is valid ECDSA signature  *  of the supplied hash value using the specified public key.  *  \param  type     this parameter is ignored  *  \param  dgst     pointer to the hash value   *  \param  dgstlen  length of the hash value  *  \param  sig      pointer to the DER encoded signature  *  \param  siglen   length of the DER encoded signature  *  \param  eckey    EC_KEY object containing a public EC key  *  \return 1 if the signature is valid, 0 if the signature is invalid  *          and -1 on error  */
+comment|/** Verifies that the given signature is valid ECDSA signature  *  of the supplied hash value using the specified public key.  *  \param  type     this parameter is ignored  *  \param  dgst     pointer to the hash value  *  \param  dgstlen  length of the hash value  *  \param  sig      pointer to the DER encoded signature  *  \param  siglen   length of the DER encoded signature  *  \param  eckey    EC_KEY object containing a public EC key  *  \return 1 if the signature is valid, 0 if the signature is invalid  *          and -1 on error  */
 name|int
 name|ECDSA_verify
 parameter_list|(
@@ -455,7 +455,7 @@ name|idx
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_ECDSA_strings
 parameter_list|(

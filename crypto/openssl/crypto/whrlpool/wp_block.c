@@ -144,7 +144,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Well, formally there're couple of other architectures, which permit  * unaligned loads, specifically those not crossing cache lines, IA-64  * and PowerPC... */
+comment|/*  * Well, formally there're couple of other architectures, which permit  * unaligned loads, specifically those not crossing cache lines, IA-64 and  * PowerPC...  */
 end_comment
 
 begin_undef
@@ -204,15 +204,15 @@ directive|ifndef
 name|OPENSSL_SMALL_FOOTPRINT
 end_ifndef
 
+begin_comment
+comment|/*  * it appears that for elder non-MMX  * CPUs this is actually faster!  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|OPENSSL_SMALL_FOOTPRINT
 end_define
-
-begin_comment
-comment|/* it appears that for elder non-MMX 					   CPUs this is actually faster! */
-end_comment
 
 begin_endif
 endif|#
@@ -230,7 +230,7 @@ name|inp
 parameter_list|,
 name|num
 parameter_list|)
-value|do {			\ 	extern unsigned int OPENSSL_ia32cap_P[];		\ 	void whirlpool_block_mmx(void *,const void *,size_t);	\ 	if (!(OPENSSL_ia32cap_P[0]& (1<<23)))	break;		\         whirlpool_block_mmx(ctx->H.c,inp,num);	return;		\ 					} while (0)
+value|do {                    \         extern unsigned int OPENSSL_ia32cap_P[];                \         void whirlpool_block_mmx(void *,const void *,size_t);   \         if (!(OPENSSL_ia32cap_P[0]& (1<<23)))  break;          \         whirlpool_block_mmx(ctx->H.c,inp,num);  return;         \                                         } while (0)
 end_define
 
 begin_endif
@@ -342,7 +342,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ u64 ret; asm ("rolq %1,%0"	\ 				   : "=r"(ret) : "J"(n),"0"(a) : "cc"); ret; })
+value|({ u64 ret; asm ("rolq %1,%0"   \                                    : "=r"(ret) : "J"(n),"0"(a) : "cc"); ret; })
 end_define
 
 begin_elif
@@ -355,7 +355,7 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/* Most will argue that x86_64 is always little-endian. Well,         * yes, but then we have stratus.com who has modified gcc to 	* "emulate" big-endian on x86. Is there evidence that they 	* [or somebody else] won't do same for x86_64? Naturally no. 	* And this line is waiting ready for that brave soul:-) */
+comment|/*         * Most will argue that x86_64 is always little-endian. Well, yes, but         * then we have stratus.com who has modified gcc to "emulate"         * big-endian on x86. Is there evidence that they [or somebody else]         * won't do same for x86_64? Naturally no. And this line is waiting         * ready for that brave soul:-)         */
 end_comment
 
 begin_define
@@ -367,7 +367,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ u64 ret; asm ("rorq %1,%0"	\ 				   : "=r"(ret) : "J"(n),"0"(a) : "cc"); ret; })
+value|({ u64 ret; asm ("rorq %1,%0"   \                                    : "=r"(ret) : "J"(n),"0"(a) : "cc"); ret; })
 end_define
 
 begin_endif
@@ -407,7 +407,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ u64 ret; asm ("shrp %0=%1,%1,%2"	\ 				   : "=r"(ret) : "r"(a),"M"(64-(n))); ret; })
+value|({ u64 ret; asm ("shrp %0=%1,%1,%2"     \                                    : "=r"(ret) : "r"(a),"M"(64-(n))); ret; })
 end_define
 
 begin_elif
@@ -428,7 +428,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ u64 ret; asm ("shrp %0=%1,%1,%2"	\ 				   : "=r"(ret) : "r"(a),"M"(n)); ret; })
+value|({ u64 ret; asm ("shrp %0=%1,%1,%2"     \                                    : "=r"(ret) : "r"(a),"M"(n)); ret; })
 end_define
 
 begin_endif
@@ -743,7 +743,7 @@ name|c6
 parameter_list|,
 name|c7
 parameter_list|)
-value|c0,c1,c2,c3,c4,c5,c6,c7, \ 					c7,c0,c1,c2,c3,c4,c5,c6, \ 					c6,c7,c0,c1,c2,c3,c4,c5, \ 					c5,c6,c7,c0,c1,c2,c3,c4, \ 					c4,c5,c6,c7,c0,c1,c2,c3, \ 					c3,c4,c5,c6,c7,c0,c1,c2, \ 					c2,c3,c4,c5,c6,c7,c0,c1, \ 					c1,c2,c3,c4,c5,c6,c7,c0
+value|c0,c1,c2,c3,c4,c5,c6,c7, \                                         c7,c0,c1,c2,c3,c4,c5,c6, \                                         c6,c7,c0,c1,c2,c3,c4,c5, \                                         c5,c6,c7,c0,c1,c2,c3,c4, \                                         c4,c5,c6,c7,c0,c1,c2,c3, \                                         c3,c4,c5,c6,c7,c0,c1,c2, \                                         c2,c3,c4,c5,c6,c7,c0,c1, \                                         c1,c2,c3,c4,c5,c6,c7,c0
 end_define
 
 begin_define
@@ -880,7 +880,7 @@ name|c6
 parameter_list|,
 name|c7
 parameter_list|)
-value|c0,c1,c2,c3,c4,c5,c6,c7, \ 					c0,c1,c2,c3,c4,c5,c6,c7
+value|c0,c1,c2,c3,c4,c5,c6,c7, \                                         c0,c1,c2,c3,c4,c5,c6,c7
 end_define
 
 begin_define

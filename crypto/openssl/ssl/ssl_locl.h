@@ -4,15 +4,15 @@ comment|/* ssl/ssl_locl.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_comment
@@ -187,7 +187,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l = ((unsigned long)(*((c)++)))     , \ 			 l|=(((unsigned long)(*((c)++)))<< 8), \ 			 l|=(((unsigned long)(*((c)++)))<<16), \ 			 l|=(((unsigned long)(*((c)++)))<<24))
+value|(l = ((unsigned long)(*((c)++)))     , \                          l|=(((unsigned long)(*((c)++)))<< 8), \                          l|=(((unsigned long)(*((c)++)))<<16), \                          l|=(((unsigned long)(*((c)++)))<<24))
 end_define
 
 begin_comment
@@ -207,7 +207,7 @@ name|l2
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((unsigned long)(*(--(c))))<<24; \ 			case 7: l2|=((unsigned long)(*(--(c))))<<16; \ 			case 6: l2|=((unsigned long)(*(--(c))))<< 8; \ 			case 5: l2|=((unsigned long)(*(--(c))));     \ 			case 4: l1 =((unsigned long)(*(--(c))))<<24; \ 			case 3: l1|=((unsigned long)(*(--(c))))<<16; \ 			case 2: l1|=((unsigned long)(*(--(c))))<< 8; \ 			case 1: l1|=((unsigned long)(*(--(c))));     \ 				} \ 			}
+value|{ \                         c+=n; \                         l1=l2=0; \                         switch (n) { \                         case 8: l2 =((unsigned long)(*(--(c))))<<24; \                         case 7: l2|=((unsigned long)(*(--(c))))<<16; \                         case 6: l2|=((unsigned long)(*(--(c))))<< 8; \                         case 5: l2|=((unsigned long)(*(--(c))));     \                         case 4: l1 =((unsigned long)(*(--(c))))<<24; \                         case 3: l1|=((unsigned long)(*(--(c))))<<16; \                         case 2: l1|=((unsigned long)(*(--(c))))<< 8; \                         case 1: l1|=((unsigned long)(*(--(c))));     \                                 } \                         }
 end_define
 
 begin_define
@@ -219,7 +219,7 @@ name|l
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((c)++)=(unsigned char)(((l)    )&0xff), \ 			 *((c)++)=(unsigned char)(((l)>> 8)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>16)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>24)&0xff))
+value|(*((c)++)=(unsigned char)(((l)    )&0xff), \                          *((c)++)=(unsigned char)(((l)>> 8)&0xff), \                          *((c)++)=(unsigned char)(((l)>>16)&0xff), \                          *((c)++)=(unsigned char)(((l)>>24)&0xff))
 end_define
 
 begin_define
@@ -231,7 +231,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =((unsigned long)(*((c)++)))<<24, \ 			 l|=((unsigned long)(*((c)++)))<<16, \ 			 l|=((unsigned long)(*((c)++)))<< 8, \ 			 l|=((unsigned long)(*((c)++))))
+value|(l =((unsigned long)(*((c)++)))<<24, \                          l|=((unsigned long)(*((c)++)))<<16, \                          l|=((unsigned long)(*((c)++)))<< 8, \                          l|=((unsigned long)(*((c)++))))
 end_define
 
 begin_define
@@ -243,7 +243,7 @@ name|l
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((c)++)=(unsigned char)(((l)>>24)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>16)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>> 8)&0xff), \ 			 *((c)++)=(unsigned char)(((l)    )&0xff))
+value|(*((c)++)=(unsigned char)(((l)>>24)&0xff), \                          *((c)++)=(unsigned char)(((l)>>16)&0xff), \                          *((c)++)=(unsigned char)(((l)>> 8)&0xff), \                          *((c)++)=(unsigned char)(((l)    )&0xff))
 end_define
 
 begin_define
@@ -255,7 +255,7 @@ name|l
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((c)++)=(unsigned char)(((l)>>40)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>32)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>24)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>16)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>> 8)&0xff), \ 			 *((c)++)=(unsigned char)(((l)    )&0xff))
+value|(*((c)++)=(unsigned char)(((l)>>40)&0xff), \                          *((c)++)=(unsigned char)(((l)>>32)&0xff), \                          *((c)++)=(unsigned char)(((l)>>24)&0xff), \                          *((c)++)=(unsigned char)(((l)>>16)&0xff), \                          *((c)++)=(unsigned char)(((l)>> 8)&0xff), \                          *((c)++)=(unsigned char)(((l)    )&0xff))
 end_define
 
 begin_define
@@ -267,7 +267,7 @@ name|l
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((c)++)=(unsigned char)(((l)>>56)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>48)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>40)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>32)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>24)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>>16)&0xff), \ 			 *((c)++)=(unsigned char)(((l)>> 8)&0xff), \ 			 *((c)++)=(unsigned char)(((l)    )&0xff))
+value|(*((c)++)=(unsigned char)(((l)>>56)&0xff), \                          *((c)++)=(unsigned char)(((l)>>48)&0xff), \                          *((c)++)=(unsigned char)(((l)>>40)&0xff), \                          *((c)++)=(unsigned char)(((l)>>32)&0xff), \                          *((c)++)=(unsigned char)(((l)>>24)&0xff), \                          *((c)++)=(unsigned char)(((l)>>16)&0xff), \                          *((c)++)=(unsigned char)(((l)>> 8)&0xff), \                          *((c)++)=(unsigned char)(((l)    )&0xff))
 end_define
 
 begin_define
@@ -279,7 +279,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =((BN_ULLONG)(*((c)++)))<<40, \ 			 l|=((BN_ULLONG)(*((c)++)))<<32, \ 			 l|=((BN_ULLONG)(*((c)++)))<<24, \ 			 l|=((BN_ULLONG)(*((c)++)))<<16, \ 			 l|=((BN_ULLONG)(*((c)++)))<< 8, \ 			 l|=((BN_ULLONG)(*((c)++))))
+value|(l =((BN_ULLONG)(*((c)++)))<<40, \                          l|=((BN_ULLONG)(*((c)++)))<<32, \                          l|=((BN_ULLONG)(*((c)++)))<<24, \                          l|=((BN_ULLONG)(*((c)++)))<<16, \                          l|=((BN_ULLONG)(*((c)++)))<< 8, \                          l|=((BN_ULLONG)(*((c)++))))
 end_define
 
 begin_comment
@@ -299,7 +299,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 			c+=n; \ 			switch (n) { \ 			case 8: *(--(c))=(unsigned char)(((l2)>>24)&0xff); \ 			case 7: *(--(c))=(unsigned char)(((l2)>>16)&0xff); \ 			case 6: *(--(c))=(unsigned char)(((l2)>> 8)&0xff); \ 			case 5: *(--(c))=(unsigned char)(((l2)    )&0xff); \ 			case 4: *(--(c))=(unsigned char)(((l1)>>24)&0xff); \ 			case 3: *(--(c))=(unsigned char)(((l1)>>16)&0xff); \ 			case 2: *(--(c))=(unsigned char)(((l1)>> 8)&0xff); \ 			case 1: *(--(c))=(unsigned char)(((l1)    )&0xff); \ 				} \ 			}
+value|{ \                         c+=n; \                         switch (n) { \                         case 8: *(--(c))=(unsigned char)(((l2)>>24)&0xff); \                         case 7: *(--(c))=(unsigned char)(((l2)>>16)&0xff); \                         case 6: *(--(c))=(unsigned char)(((l2)>> 8)&0xff); \                         case 5: *(--(c))=(unsigned char)(((l2)    )&0xff); \                         case 4: *(--(c))=(unsigned char)(((l1)>>24)&0xff); \                         case 3: *(--(c))=(unsigned char)(((l1)>>16)&0xff); \                         case 2: *(--(c))=(unsigned char)(((l1)>> 8)&0xff); \                         case 1: *(--(c))=(unsigned char)(((l1)    )&0xff); \                                 } \                         }
 end_define
 
 begin_define
@@ -311,7 +311,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|((s=(((unsigned int)(c[0]))<< 8)| \ 			    (((unsigned int)(c[1]))    )),c+=2)
+value|((s=(((unsigned int)(c[0]))<< 8)| \                             (((unsigned int)(c[1]))    )),c+=2)
 end_define
 
 begin_define
@@ -323,7 +323,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|((c[0]=(unsigned char)(((s)>> 8)&0xff), \ 			  c[1]=(unsigned char)(((s)    )&0xff)),c+=2)
+value|((c[0]=(unsigned char)(((s)>> 8)&0xff), \                           c[1]=(unsigned char)(((s)    )&0xff)),c+=2)
 end_define
 
 begin_define
@@ -335,7 +335,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|((l =(((unsigned long)(c[0]))<<16)| \ 			     (((unsigned long)(c[1]))<< 8)| \ 			     (((unsigned long)(c[2]))    )),c+=3)
+value|((l =(((unsigned long)(c[0]))<<16)| \                              (((unsigned long)(c[1]))<< 8)| \                              (((unsigned long)(c[2]))    )),c+=3)
 end_define
 
 begin_define
@@ -347,7 +347,7 @@ name|l
 parameter_list|,
 name|c
 parameter_list|)
-value|((c[0]=(unsigned char)(((l)>>16)&0xff), \ 			  c[1]=(unsigned char)(((l)>> 8)&0xff), \ 			  c[2]=(unsigned char)(((l)    )&0xff)),c+=3)
+value|((c[0]=(unsigned char)(((l)>>16)&0xff), \                           c[1]=(unsigned char)(((l)>> 8)&0xff), \                           c[2]=(unsigned char)(((l)    )&0xff)),c+=3)
 end_define
 
 begin_comment
@@ -435,13 +435,6 @@ begin_comment
 comment|/* Bits for algorithm_mkey (key exchange algorithm) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SSL_kRSA
-value|0x00000001L
-end_define
-
 begin_comment
 comment|/* RSA key exchange */
 end_comment
@@ -449,8 +442,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSL_kDHr
-value|0x00000002L
+name|SSL_kRSA
+value|0x00000001L
 end_define
 
 begin_comment
@@ -464,8 +457,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSL_kDHd
-value|0x00000004L
+name|SSL_kDHr
+value|0x00000002L
 end_define
 
 begin_comment
@@ -479,12 +472,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SSL_kDHd
+value|0x00000004L
+end_define
+
+begin_comment
+comment|/* tmp DH key no DH cert */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SSL_kEDH
 value|0x00000008L
 end_define
 
 begin_comment
-comment|/* tmp DH key no DH cert */
+comment|/* Kerberos5 key exchange */
 end_comment
 
 begin_define
@@ -495,7 +499,7 @@ value|0x00000010L
 end_define
 
 begin_comment
-comment|/* Kerberos5 key exchange */
+comment|/* ECDH cert, RSA CA cert */
 end_comment
 
 begin_define
@@ -506,7 +510,7 @@ value|0x00000020L
 end_define
 
 begin_comment
-comment|/* ECDH cert, RSA CA cert */
+comment|/* ECDH cert, ECDSA CA cert */
 end_comment
 
 begin_define
@@ -517,7 +521,7 @@ value|0x00000040L
 end_define
 
 begin_comment
-comment|/* ECDH cert, ECDSA CA cert */
+comment|/* ephemeral ECDH */
 end_comment
 
 begin_define
@@ -528,7 +532,7 @@ value|0x00000080L
 end_define
 
 begin_comment
-comment|/* ephemeral ECDH */
+comment|/* PSK */
 end_comment
 
 begin_define
@@ -539,7 +543,7 @@ value|0x00000100L
 end_define
 
 begin_comment
-comment|/* PSK */
+comment|/* GOST key exchange */
 end_comment
 
 begin_define
@@ -550,7 +554,7 @@ value|0x00000200L
 end_define
 
 begin_comment
-comment|/* GOST key exchange */
+comment|/* SRP */
 end_comment
 
 begin_define
@@ -561,11 +565,11 @@ value|0x00000400L
 end_define
 
 begin_comment
-comment|/* SRP */
+comment|/* Bits for algorithm_auth (server authentication) */
 end_comment
 
 begin_comment
-comment|/* Bits for algorithm_auth (server authentication) */
+comment|/* RSA auth */
 end_comment
 
 begin_define
@@ -576,7 +580,7 @@ value|0x00000001L
 end_define
 
 begin_comment
-comment|/* RSA auth */
+comment|/* DSS auth */
 end_comment
 
 begin_define
@@ -587,7 +591,7 @@ value|0x00000002L
 end_define
 
 begin_comment
-comment|/* DSS auth */
+comment|/* no auth (i.e. use ADH or AECDH) */
 end_comment
 
 begin_define
@@ -595,17 +599,6 @@ define|#
 directive|define
 name|SSL_aNULL
 value|0x00000004L
-end_define
-
-begin_comment
-comment|/* no auth (i.e. use ADH or AECDH) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSL_aDH
-value|0x00000008L
 end_define
 
 begin_comment
@@ -619,12 +612,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SSL_aDH
+value|0x00000008L
+end_define
+
+begin_comment
+comment|/* Fixed ECDH auth (kECDHe or kECDHr) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SSL_aECDH
 value|0x00000010L
 end_define
 
 begin_comment
-comment|/* Fixed ECDH auth (kECDHe or kECDHr) */
+comment|/* KRB5 auth */
 end_comment
 
 begin_define
@@ -635,7 +639,7 @@ value|0x00000020L
 end_define
 
 begin_comment
-comment|/* KRB5 auth */
+comment|/* ECDSA auth*/
 end_comment
 
 begin_define
@@ -646,7 +650,7 @@ value|0x00000040L
 end_define
 
 begin_comment
-comment|/* ECDSA auth*/
+comment|/* PSK auth */
 end_comment
 
 begin_define
@@ -657,7 +661,7 @@ value|0x00000080L
 end_define
 
 begin_comment
-comment|/* PSK auth */
+comment|/* GOST R 34.10-94 signature auth */
 end_comment
 
 begin_define
@@ -668,7 +672,7 @@ value|0x00000100L
 end_define
 
 begin_comment
-comment|/* GOST R 34.10-94 signature auth */
+comment|/* GOST R 34.10-2001 signature auth */
 end_comment
 
 begin_define
@@ -679,7 +683,7 @@ value|0x00000200L
 end_define
 
 begin_comment
-comment|/* GOST R 34.10-2001 signature auth */
+comment|/* SRP auth */
 end_comment
 
 begin_define
@@ -688,10 +692,6 @@ directive|define
 name|SSL_aSRP
 value|0x00000400L
 end_define
-
-begin_comment
-comment|/* SRP auth */
-end_comment
 
 begin_comment
 comment|/* Bits for algorithm_enc (symmetric encryption) */
@@ -874,14 +874,14 @@ begin_define
 define|#
 directive|define
 name|SSL_SSLV2
-value|0x00000001L
+value|0x00000001UL
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_SSLV3
-value|0x00000002L
+value|0x00000002UL
 end_define
 
 begin_define
@@ -899,7 +899,7 @@ begin_define
 define|#
 directive|define
 name|SSL_TLSV1_2
-value|0x00000004L
+value|0x00000004UL
 end_define
 
 begin_comment
@@ -949,7 +949,7 @@ value|(SSL_HANDSHAKE_MAC_MD5 | SSL_HANDSHAKE_MAC_SHA)
 end_define
 
 begin_comment
-comment|/* When adding new digest in the ssl_ciph.c and increment SSM_MD_NUM_IDX  * make sure to update this constant too */
+comment|/*  * When adding new digest in the ssl_ciph.c and increment SSM_MD_NUM_IDX make  * sure to update this constant too  */
 end_comment
 
 begin_define
@@ -1016,7 +1016,7 @@ value|(TLS1_PRF_MD5 | TLS1_PRF_SHA1)
 end_define
 
 begin_comment
-comment|/* Stream MAC for GOST ciphersuites from cryptopro draft  * (currently this also goes into algorithm2) */
+comment|/*  * Stream MAC for GOST ciphersuites from cryptopro draft (currently this also  * goes into algorithm2)  */
 end_comment
 
 begin_define
@@ -1126,7 +1126,7 @@ comment|/* we have used 000001ff - 23 bits left to go */
 end_comment
 
 begin_comment
-comment|/*  * Macros to check the export status and cipher strength for export ciphers.  * Even though the macros for EXPORT and EXPORT40/56 have similar names,  * their meaning is different:  * *_EXPORT macros check the 'exportable' status.  * *_EXPORT40/56 macros are used to check whether a certain cipher strength  *          is given.  * Since the SSL_IS_EXPORT* and SSL_EXPORT* macros depend on the correct  * algorithm structure element to be passed (algorithms, algo_strength) and no  * typechecking can be done as they are all of type unsigned long, their  * direct usage is discouraged.  * Use the SSL_C_* macros instead.  */
+comment|/*-  * Macros to check the export status and cipher strength for export ciphers.  * Even though the macros for EXPORT and EXPORT40/56 have similar names,  * their meaning is different:  * *_EXPORT macros check the 'exportable' status.  * *_EXPORT40/56 macros are used to check whether a certain cipher strength  *          is given.  * Since the SSL_IS_EXPORT* and SSL_EXPORT* macros depend on the correct  * algorithm structure element to be passed (algorithms, algo_strength) and no  * typechecking can be done as they are all of type unsigned long, their  * direct usage is discouraged.  * Use the SSL_C_* macros instead.  */
 end_comment
 
 begin_define
@@ -1198,7 +1198,7 @@ name|a
 parameter_list|,
 name|s
 parameter_list|)
-value|(SSL_IS_EXPORT40(s) ? 5 : \ 				 (a) == SSL_DES ? 8 : 7)
+value|(SSL_IS_EXPORT40(s) ? 5 : \                                  (a) == SSL_DES ? 8 : 7)
 end_define
 
 begin_define
@@ -1218,7 +1218,7 @@ name|SSL_C_EXPORT_KEYLENGTH
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_EXPORT_KEYLENGTH((c)->algorithm_enc, \ 				(c)->algo_strength)
+value|SSL_EXPORT_KEYLENGTH((c)->algorithm_enc, \                                 (c)->algo_strength)
 end_define
 
 begin_define
@@ -1299,11 +1299,11 @@ value|8
 end_define
 
 begin_comment
-comment|/* SSL_kRSA<- RSA_ENC | (RSA_TMP& RSA_SIGN) |  *<- (EXPORT& (RSA_ENC | RSA_TMP)& RSA_SIGN)  * SSL_kDH<- DH_ENC& (RSA_ENC | RSA_SIGN | DSA_SIGN)  * SSL_kEDH<- RSA_ENC | RSA_SIGN | DSA_SIGN  * SSL_aRSA<- RSA_ENC | RSA_SIGN  * SSL_aDSS<- DSA_SIGN  */
+comment|/*-  * SSL_kRSA<- RSA_ENC | (RSA_TMP& RSA_SIGN) |  *<- (EXPORT& (RSA_ENC | RSA_TMP)& RSA_SIGN)  * SSL_kDH<- DH_ENC& (RSA_ENC | RSA_SIGN | DSA_SIGN)  * SSL_kEDH<- RSA_ENC | RSA_SIGN | DSA_SIGN  * SSL_aRSA<- RSA_ENC | RSA_SIGN  * SSL_aDSS<- DSA_SIGN  */
 end_comment
 
 begin_comment
-comment|/* #define CERT_INVALID		0 #define CERT_PUBLIC_KEY		1 #define CERT_PRIVATE_KEY	2 */
+comment|/*- #define CERT_INVALID            0 #define CERT_PUBLIC_KEY         1 #define CERT_PRIVATE_KEY        2 */
 end_comment
 
 begin_ifndef
@@ -1313,7 +1313,7 @@ name|OPENSSL_NO_EC
 end_ifndef
 
 begin_comment
-comment|/* From ECC-TLS draft, used in encoding the curve type in   * ECParameters  */
+comment|/*  * From ECC-TLS draft, used in encoding the curve type in ECParameters  */
 end_comment
 
 begin_define
@@ -1376,12 +1376,12 @@ struct|struct
 name|cert_st
 block|{
 comment|/* Current active set */
+comment|/*      * ALWAYS points to an element of the pkeys array      * Probably it would make more sense to store      * an index, not a pointer.      */
 name|CERT_PKEY
 modifier|*
 name|key
 decl_stmt|;
-comment|/* ALWAYS points to an element of the pkeys array 			 * Probably it would make more sense to store 			 * an index, not a pointer. */
-comment|/* The following masks are for the key and auth 	 * algorithms that are supported by the certs below */
+comment|/*      * The following masks are for the key and auth algorithms that are      * supported by the certs below      */
 name|int
 name|valid
 decl_stmt|;
@@ -1519,14 +1519,14 @@ name|CERT_PKEY
 modifier|*
 name|peer_key
 decl_stmt|;
-comment|/* points to an element of peer_pkeys (never NULL!) */
+comment|/* points to an element of peer_pkeys (never                                  * NULL!) */
 name|CERT_PKEY
 name|peer_pkeys
 index|[
 name|SSL_PKEY_NUM
 index|]
 decl_stmt|;
-comment|/* Obviously we don't have the private keys of these, 	 * so maybe we shouldn't even use the CERT_PKEY type here. */
+comment|/*      * Obviously we don't have the private keys of these, so maybe we      * shouldn't even use the CERT_PKEY type here.      */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
@@ -1566,39 +1566,39 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*#define MAC_DEBUG	*/
+comment|/*  * #define MAC_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define ERR_DEBUG	*/
+comment|/*  * #define ERR_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define ABORT_DEBUG	*/
+comment|/*  * #define ABORT_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define PKT_DEBUG 1   */
+comment|/*  * #define PKT_DEBUG 1  */
 end_comment
 
 begin_comment
-comment|/*#define DES_DEBUG	*/
+comment|/*  * #define DES_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define DES_OFB_DEBUG	*/
+comment|/*  * #define DES_OFB_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define SSL_DEBUG	*/
+comment|/*  * #define SSL_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define RSA_DEBUG	*/
+comment|/*  * #define RSA_DEBUG  */
 end_comment
 
 begin_comment
-comment|/*#define IDEA_DEBUG	*/
+comment|/*  * #define IDEA_DEBUG  */
 end_comment
 
 begin_define
@@ -1637,7 +1637,7 @@ value|((ssl)->method->get_cipher_by_char(ptr))
 end_define
 
 begin_comment
-comment|/* This is for the SSLv3/TLSv1.0 differences in crypto/hash stuff  * It is a bit of a mess of functions, but hell, think of it as  * an opaque structure :-) */
+comment|/*  * This is for the SSLv3/TLSv1.0 differences in crypto/hash stuff It is a bit  * of a mess of functions, but hell, think of it as an opaque structure :-)  */
 end_comment
 
 begin_typedef
@@ -1834,7 +1834,7 @@ block|{
 name|int
 name|comp_id
 decl_stmt|;
-comment|/* The identifier byte for this compression type */
+comment|/* The identifier byte for this compression                                  * type */
 name|char
 modifier|*
 name|name
@@ -1985,7 +1985,7 @@ parameter_list|, \
 name|s_get_meth
 parameter_list|)
 define|\
-value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		version, \ 		tls1_new, \ 		tls1_clear, \ 		tls1_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		ssl3_get_message, \ 		ssl3_read_bytes, \ 		ssl3_write_bytes, \ 		ssl3_dispatch_alert, \ 		ssl3_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		ssl3_get_cipher, \ 		s_get_meth, \ 		tls1_default_timeout, \&TLSv1_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \         { \         static const SSL_METHOD func_name##_data= { \                 version, \                 tls1_new, \                 tls1_clear, \                 tls1_free, \                 s_accept, \                 s_connect, \                 ssl3_read, \                 ssl3_peek, \                 ssl3_write, \                 ssl3_shutdown, \                 ssl3_renegotiate, \                 ssl3_renegotiate_check, \                 ssl3_get_message, \                 ssl3_read_bytes, \                 ssl3_write_bytes, \                 ssl3_dispatch_alert, \                 ssl3_ctrl, \                 ssl3_ctx_ctrl, \                 ssl3_get_cipher_by_char, \                 ssl3_put_cipher_by_char, \                 ssl3_pending, \                 ssl3_num_ciphers, \                 ssl3_get_cipher, \                 s_get_meth, \                 tls1_default_timeout, \&TLSv1_enc_data, \                 ssl_undefined_void_function, \                 ssl3_callback_ctrl, \                 ssl3_ctx_callback_ctrl, \         }; \         return&func_name##_data; \         }
 end_define
 
 begin_define
@@ -2002,7 +2002,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		SSL3_VERSION, \ 		ssl3_new, \ 		ssl3_clear, \ 		ssl3_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		ssl3_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		ssl3_get_message, \ 		ssl3_read_bytes, \ 		ssl3_write_bytes, \ 		ssl3_dispatch_alert, \ 		ssl3_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		ssl3_get_cipher, \ 		s_get_meth, \ 		ssl3_default_timeout, \&SSLv3_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \         { \         static const SSL_METHOD func_name##_data= { \                 SSL3_VERSION, \                 ssl3_new, \                 ssl3_clear, \                 ssl3_free, \                 s_accept, \                 s_connect, \                 ssl3_read, \                 ssl3_peek, \                 ssl3_write, \                 ssl3_shutdown, \                 ssl3_renegotiate, \                 ssl3_renegotiate_check, \                 ssl3_get_message, \                 ssl3_read_bytes, \                 ssl3_write_bytes, \                 ssl3_dispatch_alert, \                 ssl3_ctrl, \                 ssl3_ctx_ctrl, \                 ssl3_get_cipher_by_char, \                 ssl3_put_cipher_by_char, \                 ssl3_pending, \                 ssl3_num_ciphers, \                 ssl3_get_cipher, \                 s_get_meth, \                 ssl3_default_timeout, \&SSLv3_enc_data, \                 ssl_undefined_void_function, \                 ssl3_callback_ctrl, \                 ssl3_ctx_callback_ctrl, \         }; \         return&func_name##_data; \         }
 end_define
 
 begin_define
@@ -2019,7 +2019,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 	TLS1_2_VERSION, \ 	tls1_new, \ 	tls1_clear, \ 	tls1_free, \ 	s_accept, \ 	s_connect, \ 	ssl23_read, \ 	ssl23_peek, \ 	ssl23_write, \ 	ssl_undefined_function, \ 	ssl_undefined_function, \ 	ssl_ok, \ 	ssl3_get_message, \ 	ssl3_read_bytes, \ 	ssl3_write_bytes, \ 	ssl3_dispatch_alert, \ 	ssl3_ctrl, \ 	ssl3_ctx_ctrl, \ 	ssl23_get_cipher_by_char, \ 	ssl23_put_cipher_by_char, \ 	ssl_undefined_const_function, \ 	ssl23_num_ciphers, \ 	ssl23_get_cipher, \ 	s_get_meth, \ 	ssl23_default_timeout, \&ssl3_undef_enc_method, \ 	ssl_undefined_void_function, \ 	ssl3_callback_ctrl, \ 	ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \         { \         static const SSL_METHOD func_name##_data= { \         TLS1_2_VERSION, \         tls1_new, \         tls1_clear, \         tls1_free, \         s_accept, \         s_connect, \         ssl23_read, \         ssl23_peek, \         ssl23_write, \         ssl_undefined_function, \         ssl_undefined_function, \         ssl_ok, \         ssl3_get_message, \         ssl3_read_bytes, \         ssl3_write_bytes, \         ssl3_dispatch_alert, \         ssl3_ctrl, \         ssl3_ctx_ctrl, \         ssl23_get_cipher_by_char, \         ssl23_put_cipher_by_char, \         ssl_undefined_const_function, \         ssl23_num_ciphers, \         ssl23_get_cipher, \         s_get_meth, \         ssl23_default_timeout, \&ssl3_undef_enc_method, \         ssl_undefined_void_function, \         ssl3_callback_ctrl, \         ssl3_ctx_callback_ctrl, \         }; \         return&func_name##_data; \         }
 end_define
 
 begin_define
@@ -2036,33 +2036,33 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		SSL2_VERSION, \ 		ssl2_new,
+value|const SSL_METHOD *func_name(void)  \         { \         static const SSL_METHOD func_name##_data= { \                 SSL2_VERSION, \                 ssl2_new,
 comment|/* local */
-value|\ 		ssl2_clear,
+value|\                 ssl2_clear,
 comment|/* local */
-value|\ 		ssl2_free,
+value|\                 ssl2_free,
 comment|/* local */
-value|\ 		s_accept, \ 		s_connect, \ 		ssl2_read, \ 		ssl2_peek, \ 		ssl2_write, \ 		ssl2_shutdown, \ 		ssl_ok,
+value|\                 s_accept, \                 s_connect, \                 ssl2_read, \                 ssl2_peek, \                 ssl2_write, \                 ssl2_shutdown, \                 ssl_ok,
 comment|/* NULL - renegotiate */
-value|\ 		ssl_ok,
+value|\                 ssl_ok,
 comment|/* NULL - check renegotiate */
-value|\ 		NULL,
+value|\                 NULL,
 comment|/* NULL - ssl_get_message */
-value|\ 		NULL,
+value|\                 NULL,
 comment|/* NULL - ssl_get_record */
-value|\ 		NULL,
+value|\                 NULL,
 comment|/* NULL - ssl_write_bytes */
-value|\ 		NULL,
+value|\                 NULL,
 comment|/* NULL - dispatch_alert */
-value|\ 		ssl2_ctrl,
+value|\                 ssl2_ctrl,
 comment|/* local */
-value|\ 		ssl2_ctx_ctrl,
+value|\                 ssl2_ctx_ctrl,
 comment|/* local */
-value|\ 		ssl2_get_cipher_by_char, \ 		ssl2_put_cipher_by_char, \ 		ssl2_pending, \ 		ssl2_num_ciphers, \ 		ssl2_get_cipher, \ 		s_get_meth, \ 		ssl2_default_timeout, \&ssl3_undef_enc_method, \ 		ssl_undefined_void_function, \ 		ssl2_callback_ctrl,
+value|\                 ssl2_get_cipher_by_char, \                 ssl2_put_cipher_by_char, \                 ssl2_pending, \                 ssl2_num_ciphers, \                 ssl2_get_cipher, \                 s_get_meth, \                 ssl2_default_timeout, \&ssl3_undef_enc_method, \                 ssl_undefined_void_function, \                 ssl2_callback_ctrl,
 comment|/* local */
-value|\ 		ssl2_ctx_callback_ctrl,
+value|\                 ssl2_ctx_callback_ctrl,
 comment|/* local */
-value|\ 	}; \ 	return&func_name##_data; \ 	}
+value|\         }; \         return&func_name##_data; \         }
 end_define
 
 begin_define
@@ -2079,7 +2079,7 @@ parameter_list|,
 name|s_get_meth
 parameter_list|)
 define|\
-value|const SSL_METHOD *func_name(void)  \ 	{ \ 	static const SSL_METHOD func_name##_data= { \ 		DTLS1_VERSION, \ 		dtls1_new, \ 		dtls1_clear, \ 		dtls1_free, \ 		s_accept, \ 		s_connect, \ 		ssl3_read, \ 		ssl3_peek, \ 		ssl3_write, \ 		dtls1_shutdown, \ 		ssl3_renegotiate, \ 		ssl3_renegotiate_check, \ 		dtls1_get_message, \ 		dtls1_read_bytes, \ 		dtls1_write_app_data_bytes, \ 		dtls1_dispatch_alert, \ 		dtls1_ctrl, \ 		ssl3_ctx_ctrl, \ 		ssl3_get_cipher_by_char, \ 		ssl3_put_cipher_by_char, \ 		ssl3_pending, \ 		ssl3_num_ciphers, \ 		dtls1_get_cipher, \ 		s_get_meth, \ 		dtls1_default_timeout, \&DTLSv1_enc_data, \ 		ssl_undefined_void_function, \ 		ssl3_callback_ctrl, \ 		ssl3_ctx_callback_ctrl, \ 	}; \ 	return&func_name##_data; \ 	}
+value|const SSL_METHOD *func_name(void)  \         { \         static const SSL_METHOD func_name##_data= { \                 DTLS1_VERSION, \                 dtls1_new, \                 dtls1_clear, \                 dtls1_free, \                 s_accept, \                 s_connect, \                 ssl3_read, \                 ssl3_peek, \                 ssl3_write, \                 dtls1_shutdown, \                 ssl3_renegotiate, \                 ssl3_renegotiate_check, \                 dtls1_get_message, \                 dtls1_read_bytes, \                 dtls1_write_app_data_bytes, \                 dtls1_dispatch_alert, \                 dtls1_ctrl, \                 ssl3_ctx_ctrl, \                 ssl3_get_cipher_by_char, \                 ssl3_put_cipher_by_char, \                 ssl3_pending, \                 ssl3_num_ciphers, \                 dtls1_get_cipher, \                 s_get_meth, \                 dtls1_default_timeout, \&DTLSv1_enc_data, \                 ssl_undefined_void_function, \                 ssl3_callback_ctrl, \                 ssl3_ctx_callback_ctrl, \         }; \         return&func_name##_data; \         }
 end_define
 
 begin_struct

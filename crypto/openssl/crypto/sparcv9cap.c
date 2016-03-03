@@ -360,7 +360,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* This code path is disabled, because of incompatibility of  * libdevinfo.so.1 and libmalloc.so.1 (see below for details)  */
+comment|/*  * This code path is disabled, because of incompatibility of libdevinfo.so.1  * and libmalloc.so.1 (see below for details)  */
 end_comment
 
 begin_include
@@ -388,7 +388,7 @@ file|<sys/systeminfo.h>
 end_include
 
 begin_define
-unit|typedef di_node_t (*di_init_t)(const char *,uint_t); typedef void      (*di_fini_t)(di_node_t); typedef char *    (*di_node_name_t)(di_node_t); typedef int       (*di_walk_node_t)(di_node_t,uint_t,di_node_name_t,int (*)(di_node_t,di_node_name_t));
+unit|typedef di_node_t(*di_init_t) (const char *, uint_t); typedef void (*di_fini_t) (di_node_t); typedef char *(*di_node_name_t) (di_node_t); typedef int (*di_walk_node_t) (di_node_t, uint_t, di_node_name_t,                                int (*)(di_node_t, di_node_name_t));
 define|#
 directive|define
 name|DLLINK
@@ -401,49 +401,49 @@ value|(name=(name##_t)dlsym((h),#name))
 end_define
 
 begin_comment
-unit|static int walk_nodename(di_node_t node, di_node_name_t di_node_name) 	{ 	char *name = (*di_node_name)(node);
+unit|static int walk_nodename(di_node_t node, di_node_name_t di_node_name) {     char *name = (*di_node_name) (node);
 comment|/* This is expected to catch all UltraSPARC flavors prior T1 */
 end_comment
 
 begin_comment
-unit|if (!strcmp (name,"SUNW,UltraSPARC") || 	    !strncmp(name,"SUNW,UltraSPARC-I",17))
+unit|if (!strcmp(name, "SUNW,UltraSPARC") ||
 comment|/* covers II,III,IV */
 end_comment
 
 begin_comment
-unit|{ 		OPENSSL_sparcv9cap_P |= SPARCV9_PREFER_FPU|SPARCV9_VIS1;
+unit|!strncmp(name, "SUNW,UltraSPARC-I", 17)) {         OPENSSL_sparcv9cap_P |= SPARCV9_PREFER_FPU | SPARCV9_VIS1;
 comment|/* %tick is privileged only on UltraSPARC-I/II, but not IIe */
 end_comment
 
 begin_comment
-unit|if (name[14]!='\0'&& name[17]!='\0'&& name[18]!='\0') 			OPENSSL_sparcv9cap_P&= ~SPARCV9_TICK_PRIVILEGED;  		return DI_WALK_TERMINATE; 		}
+unit|if (name[14] != '\0'&& name[17] != '\0'&& name[18] != '\0')             OPENSSL_sparcv9cap_P&= ~SPARCV9_TICK_PRIVILEGED;          return DI_WALK_TERMINATE;     }
 comment|/* This is expected to catch remaining UltraSPARCs, such as T1 */
 end_comment
 
 begin_comment
-unit|else if (!strncmp(name,"SUNW,UltraSPARC",15)) 		{ 		OPENSSL_sparcv9cap_P&= ~SPARCV9_TICK_PRIVILEGED;  		return DI_WALK_TERMINATE; 		}  	return DI_WALK_CONTINUE; 	}  void OPENSSL_cpuid_setup(void) 	{ 	void *h; 	char *e,si[256]; 	static int trigger=0;  	if (trigger) return; 	trigger=1;  	if ((e=getenv("OPENSSL_sparcv9cap"))) 		{ 		OPENSSL_sparcv9cap_P=strtoul(e,NULL,0); 		return; 		}  	if (sysinfo(SI_MACHINE,si,sizeof(si))>0) 		{ 		if (strcmp(si,"sun4v"))
+unit|else if (!strncmp(name, "SUNW,UltraSPARC", 15)) {         OPENSSL_sparcv9cap_P&= ~SPARCV9_TICK_PRIVILEGED;          return DI_WALK_TERMINATE;     }      return DI_WALK_CONTINUE; }  void OPENSSL_cpuid_setup(void) {     void *h;     char *e, si[256];     static int trigger = 0;      if (trigger)         return;     trigger = 1;      if ((e = getenv("OPENSSL_sparcv9cap"))) {         OPENSSL_sparcv9cap_P = strtoul(e, NULL, 0);         return;     }      if (sysinfo(SI_MACHINE, si, sizeof(si))> 0) {         if (strcmp(si, "sun4v"))
 comment|/* FPU is preferred for all CPUs, but US-T1/2 */
 end_comment
 
 begin_ifdef
-unit|OPENSSL_sparcv9cap_P |= SPARCV9_PREFER_FPU; 		}  	if (sysinfo(SI_ISALIST,si,sizeof(si))>0) 		{ 		if (strstr(si,"+vis")) 			OPENSSL_sparcv9cap_P |= SPARCV9_VIS1; 		if (strstr(si,"+vis2")) 			{ 			OPENSSL_sparcv9cap_P |= SPARCV9_VIS2; 			OPENSSL_sparcv9cap_P&= ~SPARCV9_TICK_PRIVILEGED; 			return; 			} 		}
+unit|OPENSSL_sparcv9cap_P |= SPARCV9_PREFER_FPU;     }      if (sysinfo(SI_ISALIST, si, sizeof(si))> 0) {         if (strstr(si, "+vis"))             OPENSSL_sparcv9cap_P |= SPARCV9_VIS1;         if (strstr(si, "+vis2")) {             OPENSSL_sparcv9cap_P |= SPARCV9_VIS2;             OPENSSL_sparcv9cap_P&= ~SPARCV9_TICK_PRIVILEGED;             return;         }     }
 ifdef|#
 directive|ifdef
 name|M_KEEP
 end_ifdef
 
 begin_comment
-comment|/* 	 * Solaris libdevinfo.so.1 is effectively incomatible with 	 * libmalloc.so.1. Specifically, if application is linked with 	 * -lmalloc, it crashes upon startup with SIGSEGV in 	 * free(3LIBMALLOC) called by di_fini. Prior call to 	 * mallopt(M_KEEP,0) somehow helps... But not always... 	 */
+comment|/*      * Solaris libdevinfo.so.1 is effectively incomatible with      * libmalloc.so.1. Specifically, if application is linked with      * -lmalloc, it crashes upon startup with SIGSEGV in      * free(3LIBMALLOC) called by di_fini. Prior call to      * mallopt(M_KEEP,0) somehow helps... But not always...      */
 end_comment
 
 begin_endif
-unit|if ((h = dlopen(NULL,RTLD_LAZY))) 		{ 		union { void *p; int (*f)(int,int); } sym; 		if ((sym.p = dlsym(h,"mallopt"))) (*sym.f)(M_KEEP,0); 		dlclose(h); 		}
+unit|if ((h = dlopen(NULL, RTLD_LAZY))) {         union {             void *p;             int (*f) (int, int);         } sym;         if ((sym.p = dlsym(h, "mallopt")))             (*sym.f) (M_KEEP, 0);         dlclose(h);     }
 endif|#
 directive|endif
 end_endif
 
 begin_else
-unit|if ((h = dlopen("libdevinfo.so.1",RTLD_LAZY))) do 		{ 		di_init_t	di_init; 		di_fini_t	di_fini; 		di_walk_node_t	di_walk_node; 		di_node_name_t	di_node_name; 		di_node_t	root_node;  		if (!DLLINK(h,di_init))		break; 		if (!DLLINK(h,di_fini))		break; 		if (!DLLINK(h,di_walk_node))	break; 		if (!DLLINK(h,di_node_name))	break;  		if ((root_node = (*di_init)("/",DINFOSUBTREE))!=DI_NODE_NIL) 			{ 			(*di_walk_node)(root_node,DI_WALK_SIBFIRST, 					di_node_name,walk_nodename); 			(*di_fini)(root_node); 			} 		} while(0);  	if (h) dlclose(h); 	}
+unit|if ((h = dlopen("libdevinfo.so.1", RTLD_LAZY)))         do {             di_init_t di_init;             di_fini_t di_fini;             di_walk_node_t di_walk_node;             di_node_name_t di_node_name;             di_node_t root_node;              if (!DLLINK(h, di_init))                 break;             if (!DLLINK(h, di_fini))                 break;             if (!DLLINK(h, di_walk_node))                 break;             if (!DLLINK(h, di_node_name))                 break;              if ((root_node = (*di_init) ("/", DINFOSUBTREE)) != DI_NODE_NIL) {                 (*di_walk_node) (root_node, DI_WALK_SIBFIRST,                                  di_node_name, walk_nodename);                 (*di_fini) (root_node);             }         } while (0);      if (h)         dlclose(h); }
 else|#
 directive|else
 end_else
@@ -662,7 +662,7 @@ operator|&
 name|bus_oact
 argument_list|)
 expr_stmt|;
-comment|/* T1 fails 16-bit ldda [on Linux] */
+comment|/* T1 fails 16-bit ldda [on                                                 * Linux] */
 if|if
 condition|(
 name|sigsetjmp

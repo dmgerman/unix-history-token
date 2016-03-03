@@ -4,11 +4,11 @@ comment|/* crypto/srp/srp_vfy.c */
 end_comment
 
 begin_comment
-comment|/* Written by Christophe Renou (christophe.renou@edelweb.fr) with   * the precious help of Peter Sylvester (peter.sylvester@edelweb.fr)   * for the EdelKey project and contributed to the OpenSSL project 2004.  */
+comment|/*  * Written by Christophe Renou (christophe.renou@edelweb.fr) with the  * precious help of Peter Sylvester (peter.sylvester@edelweb.fr) for the  * EdelKey project and contributed to the OpenSSL project 2004.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the following two conversion routines have been inspired by code from Stanford */
+comment|/*  * the following two conversion routines have been inspired by code from  * Stanford  */
 end_comment
 
 begin_comment
@@ -716,7 +716,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|SRP_user_pwd_free
 parameter_list|(
@@ -1094,6 +1093,109 @@ name|v
 operator|!=
 name|NULL
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|SRP_user_pwd
+modifier|*
+name|srp_user_pwd_dup
+parameter_list|(
+name|SRP_user_pwd
+modifier|*
+name|src
+parameter_list|)
+block|{
+name|SRP_user_pwd
+modifier|*
+name|ret
+decl_stmt|;
+if|if
+condition|(
+name|src
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|SRP_user_pwd_new
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+name|SRP_user_pwd_set_gN
+argument_list|(
+name|ret
+argument_list|,
+name|src
+operator|->
+name|g
+argument_list|,
+name|src
+operator|->
+name|N
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SRP_user_pwd_set_ids
+argument_list|(
+name|ret
+argument_list|,
+name|src
+operator|->
+name|id
+argument_list|,
+name|src
+operator|->
+name|info
+argument_list|)
+operator|||
+operator|!
+name|SRP_user_pwd_set_sv_BN
+argument_list|(
+name|ret
+argument_list|,
+name|BN_dup
+argument_list|(
+name|src
+operator|->
+name|s
+argument_list|)
+argument_list|,
+name|BN_dup
+argument_list|(
+name|src
+operator|->
+name|v
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|SRP_user_pwd_free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -1648,7 +1750,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* this function parses verifier file. Format is:  * string(index):base64(N):base64(g):0  * string(username):base64(v):base64(salt):int(index)  */
+comment|/*  * this function parses verifier file. Format is:  * string(index):base64(N):base64(g):0  * string(username):base64(v):base64(salt):int(index)  */
 end_comment
 
 begin_function
@@ -1827,7 +1929,7 @@ operator|==
 name|DB_SRP_INDEX
 condition|)
 block|{
-comment|/*we add this couple in the internal Stack */
+comment|/*              * we add this couple in the internal Stack              */
 if|if
 condition|(
 operator|(
@@ -2144,7 +2246,7 @@ name|SRP_NO_ERROR
 expr_stmt|;
 name|err
 label|:
-comment|/* there may be still some leaks to fix, if this fails, the application terminates most likely */
+comment|/*      * there may be still some leaks to fix, if this fails, the application      * terminates most likely      */
 if|if
 condition|(
 name|gN
@@ -2200,9 +2302,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|SRP_user_pwd
 modifier|*
-name|SRP_VBASE_get_by_user
+name|find_user
 parameter_list|(
 name|SRP_VBASE
 modifier|*
@@ -2219,23 +2322,6 @@ decl_stmt|;
 name|SRP_user_pwd
 modifier|*
 name|user
-decl_stmt|;
-name|unsigned
-name|char
-name|digv
-index|[
-name|SHA_DIGEST_LENGTH
-index|]
-decl_stmt|;
-name|unsigned
-name|char
-name|digs
-index|[
-name|SHA_DIGEST_LENGTH
-index|]
-decl_stmt|;
-name|EVP_MD_CTX
-name|ctxt
 decl_stmt|;
 if|if
 condition|(
@@ -2293,6 +2379,110 @@ return|return
 name|user
 return|;
 block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This method ignores the configured seed and fails for an unknown user.  * Ownership of the returned pointer is not released to the caller.  * In other words, caller must not free the result.  */
+end_comment
+
+begin_function
+name|SRP_user_pwd
+modifier|*
+name|SRP_VBASE_get_by_user
+parameter_list|(
+name|SRP_VBASE
+modifier|*
+name|vb
+parameter_list|,
+name|char
+modifier|*
+name|username
+parameter_list|)
+block|{
+return|return
+name|find_user
+argument_list|(
+name|vb
+argument_list|,
+name|username
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Ownership of the returned pointer is released to the caller.  * In other words, caller must free the result once done.  */
+end_comment
+
+begin_function
+name|SRP_user_pwd
+modifier|*
+name|SRP_VBASE_get1_by_user
+parameter_list|(
+name|SRP_VBASE
+modifier|*
+name|vb
+parameter_list|,
+name|char
+modifier|*
+name|username
+parameter_list|)
+block|{
+name|SRP_user_pwd
+modifier|*
+name|user
+decl_stmt|;
+name|unsigned
+name|char
+name|digv
+index|[
+name|SHA_DIGEST_LENGTH
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|digs
+index|[
+name|SHA_DIGEST_LENGTH
+index|]
+decl_stmt|;
+name|EVP_MD_CTX
+name|ctxt
+decl_stmt|;
+if|if
+condition|(
+name|vb
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+operator|(
+name|user
+operator|=
+name|find_user
+argument_list|(
+name|vb
+argument_list|,
+name|username
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|srp_user_pwd_dup
+argument_list|(
+name|user
+argument_list|)
+return|;
 if|if
 condition|(
 operator|(
@@ -2365,13 +2555,20 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|digv
 argument_list|,
 name|SHA_DIGEST_LENGTH
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 name|EVP_MD_CTX_init
 argument_list|(
 operator|&
@@ -2477,7 +2674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    create a verifier (*salt,*verifier,g and N are in base64) */
+comment|/*  * create a verifier (*salt,*verifier,g and N are in base64)  */
 end_comment
 
 begin_function
@@ -2714,13 +2911,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|tmp2
 argument_list|,
 name|SRP_RANDOM_SALT_LEN
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 name|s
 operator|=
 name|BN_bin2bn
@@ -2916,7 +3120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    create a verifier (*salt,*verifier,g and N are BIGNUMs) */
+comment|/*  * create a verifier (*salt,*verifier,g and N are BIGNUMs)  */
 end_comment
 
 begin_function
@@ -3042,13 +3246,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|tmp2
 argument_list|,
 name|SRP_RANDOM_SALT_LEN
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 operator|*
 name|salt
 operator|=

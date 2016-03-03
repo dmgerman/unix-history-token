@@ -4,11 +4,11 @@ comment|/* ssl/t1_lib.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -142,7 +142,7 @@ block|,
 name|tls1_alert_code
 block|,
 name|tls1_export_keying_material
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 2 hours, the 24 hours mentioned in the TLSv1 spec 	 * is way too long for http, the cache would over fill */
+comment|/*      * 2 hours, the 24 hours mentioned in the TLSv1 spec is way too long for      * http, the cache would over fill      */
 return|return
 operator|(
 literal|60
@@ -742,7 +742,7 @@ name|OPENSSL_NO_TLSEXT
 end_ifndef
 
 begin_comment
-comment|/* List of supported signature algorithms and hashes. Should make this  * customisable at some point, for now include everything we support.  */
+comment|/*  * List of supported signature algorithms and hashes. Should make this  * customisable at some point, for now include everything we support.  */
 end_comment
 
 begin_ifdef
@@ -870,7 +870,7 @@ parameter_list|(
 name|md
 parameter_list|)
 define|\
-value|tlsext_sigalg_rsa(md) \ 		tlsext_sigalg_dsa(md) \ 		tlsext_sigalg_ecdsa(md)
+value|tlsext_sigalg_rsa(md) \                 tlsext_sigalg_dsa(md) \                 tlsext_sigalg_ecdsa(md)
 end_define
 
 begin_decl_stmt
@@ -1054,7 +1054,7 @@ decl_stmt|;
 name|long
 name|lenmax
 decl_stmt|;
-comment|/* check for enough space. 		   4 for the servername type and entension length 		   2 for servernamelist length 		   1 for the hostname type 		   2 for hostname length 		   + hostname length  		*/
+comment|/*-          * check for enough space.          * 4 for the servername type and entension length          * 2 for servernamelist length          * 1 for the hostname type          * 2 for hostname length          * + hostname length          */
 if|if
 condition|(
 operator|(
@@ -1268,7 +1268,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Add TLS extension SRP username to the Client Hello message */
+comment|/* Add TLS extension SRP username to the                                      * Client Hello message */
 name|int
 name|login_len
 init|=
@@ -1303,7 +1303,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* check for enough space. 		   4 for the srp type type and entension length 		   1 for the srp user identity 		   + srp user identity length  		*/
+comment|/*-          * check for enough space.          * 4 for the srp type type and entension length          * 1 for the srp user identity          * + srp user identity length          */
 if|if
 condition|(
 operator|(
@@ -1382,7 +1382,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Add TLS extension ECPointFormats to the ClientHello message */
+comment|/*          * Add TLS extension ECPointFormats to the ClientHello message          */
 name|long
 name|lenmax
 decl_stmt|;
@@ -1499,7 +1499,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Add TLS extension EllipticCurves to the ClientHello message */
+comment|/*          * Add TLS extension EllipticCurves to the ClientHello message          */
 name|long
 name|lenmax
 decl_stmt|;
@@ -1747,7 +1747,7 @@ condition|)
 goto|goto
 name|skip_ext
 goto|;
-comment|/* Check for enough room 2 for extension type, 2 for len  		 * rest for ticket   		 */
+comment|/*          * Check for enough room 2 for extension type, 2 for len rest for          * ticket          */
 if|if
 condition|(
 call|(
@@ -2298,7 +2298,7 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-comment|/* Set mode: 	 * 1: peer may send requests 	 * 2: peer not allowed to send requests 	 */
+comment|/*-      * Set mode:      * 1: peer may send requests      * 2: peer not allowed to send requests      */
 if|if
 condition|(
 name|s
@@ -2347,7 +2347,7 @@ operator|.
 name|finish_md_len
 condition|)
 block|{
-comment|/* The client advertises an emtpy extension to indicate its 		 * support for Next Protocol Negotiation */
+comment|/*          * The client advertises an emtpy extension to indicate its support          * for Next Protocol Negotiation          */
 if|if
 condition|(
 name|limit
@@ -2473,7 +2473,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Add padding to workaround bugs in F5 terminators. 	 * See https://tools.ietf.org/html/draft-agl-tls-padding-03 	 * 	 * NB: because this code works out the length of all existing 	 * extensions it MUST always appear last. 	 */
+comment|/*      * Add padding to workaround bugs in F5 terminators. See      * https://tools.ietf.org/html/draft-agl-tls-padding-03 NB: because this      * code works out the length of all existing extensions it MUST always      * appear last.      */
 if|if
 condition|(
 name|s
@@ -2499,7 +2499,7 @@ name|init_buf
 operator|->
 name|data
 decl_stmt|;
-comment|/* The code in s23_clnt.c to build ClientHello messages 		 * includes the 5-byte record header in the buffer, while 		 * the code in s3_clnt.c does not. 		 */
+comment|/*          * The code in s23_clnt.c to build ClientHello messages includes the          * 5-byte record header in the buffer, while the code in s3_clnt.c          * does not.          */
 if|if
 condition|(
 name|s
@@ -2651,7 +2651,7 @@ name|next_proto_neg_seen
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* don't add extensions for SSLv3, unless doing secure renegotiation */
+comment|/*      * don't add extensions for SSLv3, unless doing secure renegotiation      */
 if|if
 condition|(
 name|s
@@ -2853,7 +2853,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Add TLS extension ECPointFormats to the ServerHello message */
+comment|/*          * Add TLS extension ECPointFormats to the ServerHello message          */
 name|long
 name|lenmax
 decl_stmt|;
@@ -2961,7 +2961,7 @@ operator|->
 name|tlsext_ecpointformatlist_length
 expr_stmt|;
 block|}
-comment|/* Currently the server should not respond with a SupportedCurves extension */
+comment|/*      * Currently the server should not respond with a SupportedCurves      * extension      */
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_EC */
@@ -3310,12 +3310,12 @@ literal|0xfd
 block|,
 literal|0xe8
 block|,
-comment|/*65000*/
+comment|/* 65000 */
 literal|0x00
 block|,
 literal|0x20
 block|,
-comment|/*32 bytes length*/
+comment|/* 32 bytes length */
 literal|0x30
 block|,
 literal|0x1e
@@ -3450,7 +3450,7 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-comment|/* Set mode: 		 * 1: peer may send requests 		 * 2: peer not allowed to send requests 		 */
+comment|/*-          * Set mode:          * 1: peer may send requests          * 2: peer not allowed to send requests          */
 if|if
 condition|(
 name|s
@@ -3648,7 +3648,7 @@ name|OPENSSL_NO_EC
 end_ifndef
 
 begin_comment
-comment|/* ssl_check_for_safari attempts to fingerprint Safari using OS X  * SecureTransport using the TLS extension block in |d|, of length |n|.  * Safari, since 10.6, sends exactly these extensions, in this order:  *   SNI,  *   elliptic_curves  *   ec_point_formats  *  * We wish to fingerprint Safari because they broke ECDHE-ECDSA support in 10.8,  * but they advertise support. So enabling ECDHE-ECDSA ciphers breaks them.  * Sadly we cannot differentiate 10.6, 10.7 and 10.8.4 (which work), from  * 10.8..10.8.3 (which don't work).  */
+comment|/*-  * ssl_check_for_safari attempts to fingerprint Safari using OS X  * SecureTransport using the TLS extension block in |d|, of length |n|.  * Safari, since 10.6, sends exactly these extensions, in this order:  *   SNI,  *   elliptic_curves  *   ec_point_formats  *  * We wish to fingerprint Safari because they broke ECDHE-ECDSA support in 10.8,  * but they advertise support. So enabling ECDHE-ECDSA ciphers breaks them.  * Sadly we cannot differentiate 10.6, 10.7 and 10.8.4 (which work), from  * 10.8..10.8.3 (which don't work).  */
 end_comment
 
 begin_function
@@ -4151,7 +4151,18 @@ expr_stmt|;
 if|if
 condition|(
 name|data
-operator|>=
+operator|==
+name|d
+operator|+
+name|n
+condition|)
+goto|goto
+name|ri_check
+goto|;
+if|if
+condition|(
+name|data
+operator|>
 operator|(
 name|d
 operator|+
@@ -4160,23 +4171,9 @@ operator|-
 literal|2
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|data
-operator|!=
-name|d
-operator|+
-name|n
-condition|)
 goto|goto
 name|err
 goto|;
-else|else
-goto|goto
-name|ri_check
-goto|;
-block|}
 name|n2s
 argument_list|(
 name|data
@@ -4244,7 +4241,7 @@ goto|;
 if|#
 directive|if
 literal|0
-block|fprintf(stderr,"Received extension type %d size %d\n",type,size);
+block|fprintf(stderr, "Received extension type %d size %d\n", type, size);
 endif|#
 directive|endif
 if|if
@@ -4272,7 +4269,7 @@ operator|->
 name|tlsext_debug_arg
 argument_list|)
 expr_stmt|;
-comment|/* The servername extension is treated as follows:     - Only the hostname type is supported with a maximum length of 255.    - The servername is rejected if too long or if it contains zeros,      in which case an fatal alert is generated.    - The servername field is maintained together with the session cache.    - When a session is resumed, the servername call back invoked in order      to allow the application to position itself to the right context.     - The servername is acknowledged if it is new for a session or when       it is identical to a previously used for the same session.       Applications can control the behaviour.  They can at any time      set a 'desirable' servername for a new SSL object. This can be the      case for example with HTTPS when a Host: header field is received and      a renegotiation is requested. In this case, a possible servername      presented in the new client hello is only acknowledged if it matches      the value of the Host: field.     - Applications must  use SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION      if they provide for changing an explicit servername context for the session,      i.e. when the session has been established with a servername extension.     - On session reconnect, the servername extension may be absent.   */
+comment|/*-  * The servername extension is treated as follows:  *  * - Only the hostname type is supported with a maximum length of 255.  * - The servername is rejected if too long or if it contains zeros,  *   in which case an fatal alert is generated.  * - The servername field is maintained together with the session cache.  * - When a session is resumed, the servername call back invoked in order  *   to allow the application to position itself to the right context.  * - The servername is acknowledged if it is new for a session or when  *   it is identical to a previously used for the same session.  *   Applications can control the behaviour.  They can at any time  *   set a 'desirable' servername for a new SSL object. This can be the  *   case for example with HTTPS when a Host: header field is received and  *   a renegotiation is requested. In this case, a possible servername  *   presented in the new client hello is only acknowledged if it matches  *   the value of the Host: field.  * - Applications must  use SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION  *   if they provide for changing an explicit servername context for the  *   session, i.e. when the session has been established with a servername  *   extension.  * - On session reconnect, the servername extension may be absent.  *  */
 if|if
 condition|(
 name|type
@@ -4584,7 +4581,7 @@ block|{
 if|if
 condition|(
 name|size
-operator|<=
+operator|==
 literal|0
 operator|||
 operator|(
@@ -4823,7 +4820,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|fprintf(stderr,"ssl_parse_clienthello_tlsext s->session->tlsext_ecpointformatlist (length=%i) ", s->session->tlsext_ecpointformatlist_length); 			sdata = s->session->tlsext_ecpointformatlist; 			for (i = 0; i< s->session->tlsext_ecpointformatlist_length; i++) 				fprintf(stderr,"%i ",*(sdata++)); 			fprintf(stderr,"\n");
+block|fprintf(stderr,                     "ssl_parse_clienthello_tlsext s->session->tlsext_ecpointformatlist (length=%i) ",                     s->session->tlsext_ecpointformatlist_length);             sdata = s->session->tlsext_ecpointformatlist;             for (i = 0; i< s->session->tlsext_ecpointformatlist_length; i++)                 fprintf(stderr, "%i ", *(sdata++));             fprintf(stderr, "\n");
 endif|#
 directive|endif
 block|}
@@ -4964,7 +4961,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|fprintf(stderr,"ssl_parse_clienthello_tlsext s->session->tlsext_ellipticcurvelist (length=%i) ", s->session->tlsext_ellipticcurvelist_length); 			sdata = s->session->tlsext_ellipticcurvelist; 			for (i = 0; i< s->session->tlsext_ellipticcurvelist_length; i++) 				fprintf(stderr,"%i ",*(sdata++)); 			fprintf(stderr,"\n");
+block|fprintf(stderr,                     "ssl_parse_clienthello_tlsext s->session->tlsext_ellipticcurvelist (length=%i) ",                     s->session->tlsext_ellipticcurvelist_length);             sdata = s->session->tlsext_ellipticcurvelist;             for (i = 0; i< s->session->tlsext_ellipticcurvelist_length; i++)                 fprintf(stderr, "%i ", *(sdata++));             fprintf(stderr, "\n");
 endif|#
 directive|endif
 block|}
@@ -5054,6 +5051,7 @@ name|client_opaque_prf_input
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* shouldn't really happen */
 name|OPENSSL_free
 argument_list|(
@@ -5064,6 +5062,8 @@ operator|->
 name|client_opaque_prf_input
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* dummy byte just to get non-NULL */
 if|if
 condition|(
 name|s
@@ -5085,7 +5085,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* dummy byte just to get non-NULL */
 else|else
 name|s
 operator|->
@@ -5584,7 +5583,7 @@ name|err
 goto|;
 block|}
 block|}
-comment|/* We don't know what to do with any other type  			 	* so ignore it.  			 	*/
+comment|/*              * We don't know what to do with any other type * so ignore it.              */
 else|else
 name|s
 operator|->
@@ -5675,7 +5674,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* We shouldn't accept this extension on a 			 * renegotiation. 			 * 			 * s->new_session will be set on renegotiation, but we 			 * probably shouldn't rely that it couldn't be set on 			 * the initial renegotation too in certain cases (when 			 * there's some other reason to disallow resuming an 			 * earlier session -- the current code won't be doing 			 * anything like that, but this might change).  			 * A valid sign that there's been a previous handshake 			 * in this connection is if s->s3->tmp.finish_md_len> 			 * 0.  (We are talking about a check that will happen 			 * in the Hello protocol round, well before a new 			 * Finished message could have been computed.) */
+comment|/*-              * We shouldn't accept this extension on a              * renegotiation.              *              * s->new_session will be set on renegotiation, but we              * probably shouldn't rely that it couldn't be set on              * the initial renegotation too in certain cases (when              * there's some other reason to disallow resuming an              * earlier session -- the current code won't be doing              * anything like that, but this might change).              *              * A valid sign that there's been a previous handshake              * in this connection is if s->s3->tmp.finish_md_len>              * 0.  (We are talking about a check that will happen              * in the Hello protocol round, well before a new              * Finished message could have been computed.)              */
 name|s
 operator|->
 name|s3
@@ -5811,7 +5810,7 @@ name|OPENSSL_NO_NEXTPROTONEG
 end_ifndef
 
 begin_comment
-comment|/* ssl_next_proto_validate validates a Next Protocol Negotiation block. No  * elements of zero length are allowed and the set of elements must exactly fill  * the length of the block. */
+comment|/*  * ssl_next_proto_validate validates a Next Protocol Negotiation block. No  * elements of zero length are allowed and the set of elements must exactly  * fill the length of the block.  */
 end_comment
 
 begin_function
@@ -6248,7 +6247,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|fprintf(stderr,"ssl_parse_serverhello_tlsext s->session->tlsext_ecpointformatlist "); 			sdata = s->session->tlsext_ecpointformatlist; 			for (i = 0; i< s->session->tlsext_ecpointformatlist_length; i++) 				fprintf(stderr,"%i ",*(sdata++)); 			fprintf(stderr,"\n");
+block|fprintf(stderr,                     "ssl_parse_serverhello_tlsext s->session->tlsext_ecpointformatlist ");             sdata = s->session->tlsext_ecpointformatlist;             for (i = 0; i< s->session->tlsext_ecpointformatlist_length; i++)                 fprintf(stderr, "%i ", *(sdata++));             fprintf(stderr, "\n");
 endif|#
 directive|endif
 block|}
@@ -6412,6 +6411,7 @@ name|server_opaque_prf_input
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* shouldn't really happen */
 name|OPENSSL_free
 argument_list|(
@@ -6422,6 +6422,7 @@ operator|->
 name|server_opaque_prf_input
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
@@ -6432,6 +6433,8 @@ name|server_opaque_prf_input_len
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* dummy byte just to get non-NULL */
 name|s
 operator|->
 name|s3
@@ -6443,8 +6446,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* dummy byte just to get non-NULL */
+block|}
 else|else
+block|{
 name|s
 operator|->
 name|s3
@@ -6462,6 +6466,7 @@ operator|->
 name|server_opaque_prf_input_len
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
@@ -6499,7 +6504,7 @@ operator|!=
 name|DTLS1_VERSION
 condition|)
 block|{
-comment|/* MUST be empty and only sent if we've requested 			 * a status request message. 			 */
+comment|/*              * MUST be empty and only sent if we've requested a status              * request message.              */
 if|if
 condition|(
 operator|(
@@ -6931,7 +6936,7 @@ name|data
 expr_stmt|;
 name|ri_check
 label|:
-comment|/* Determine if we need to see RI. Strictly speaking if we want to 	 * avoid an attack we should *always* see RI even on initial server 	 * hello because the client doesn't see any renegotiation during an 	 * attack. However this would mean we could not connect to any server 	 * which doesn't support RI so for the immediate future tolerate RI 	 * absence on initial connect only. 	 */
+comment|/*      * Determine if we need to see RI. Strictly speaking if we want to avoid      * an attack we should *always* see RI even on initial server hello      * because the client doesn't see any renegotiation during an attack.      * However this would mean we could not connect to any server which      * doesn't support RI so for the immediate future tolerate RI absence on      * initial connect only.      */
 if|if
 condition|(
 operator|!
@@ -6990,7 +6995,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC
-comment|/* If we are client and using an elliptic curve cryptography cipher suite, send the point formats  	 * and elliptic curves we support. 	 */
+comment|/*      * If we are client and using an elliptic curve cryptography cipher      * suite, send the point formats and elliptic curves we support.      */
 name|int
 name|using_ecc
 init|=
@@ -7382,6 +7387,7 @@ name|client_opaque_prf_input
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* shouldn't really happen */
 name|OPENSSL_free
 argument_list|(
@@ -7392,6 +7398,7 @@ operator|->
 name|client_opaque_prf_input
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
@@ -7400,6 +7407,8 @@ name|tlsext_opaque_prf_input_len
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* dummy byte just to get non-NULL */
 name|s
 operator|->
 name|s3
@@ -7411,8 +7420,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* dummy byte just to get non-NULL */
+block|}
 else|else
+block|{
 name|s
 operator|->
 name|s3
@@ -7430,6 +7440,7 @@ operator|->
 name|tlsext_opaque_prf_input_len
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
@@ -7470,7 +7481,7 @@ name|r
 operator|==
 literal|2
 condition|)
-comment|/* at callback's request, insist on receiving an appropriate server opaque PRF input */
+comment|/*              * at callback's request, insist on receiving an appropriate              * server opaque PRF input              */
 name|s
 operator|->
 name|s3
@@ -7502,7 +7513,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC
-comment|/* If we are server and using an ECC cipher suite, send the point formats we support  	 * if the client sent us an ECPointsFormat extension.  Note that the server is not 	 * supposed to send an EllipticCurves extension. 	 */
+comment|/*      * If we are server and using an ECC cipher suite, send the point formats      * we support if the client sent us an ECPointsFormat extension.  Note      * that the server is not supposed to send an EllipticCurves extension.      */
 name|unsigned
 name|long
 name|alg_k
@@ -7679,8 +7690,8 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC
-comment|/* The handling of the ECPointFormats extension is done elsewhere, namely in  	 * ssl3_choose_cipher in s3_lib.c. 	 */
-comment|/* The handling of the EllipticCurves extension is done elsewhere, namely in  	 * ssl3_choose_cipher in s3_lib.c. 	 */
+comment|/*      * The handling of the ECPointFormats extension is done elsewhere, namely      * in ssl3_choose_cipher in s3_lib.c.      */
+comment|/*      * The handling of the EllipticCurves extension is done elsewhere, namely      * in ssl3_choose_cipher in s3_lib.c.      */
 endif|#
 directive|endif
 if|if
@@ -7760,7 +7771,7 @@ ifdef|#
 directive|ifdef
 name|TLSEXT_TYPE_opaque_prf_input
 block|{
-comment|/* This sort of belongs into ssl_prepare_serverhello_tlsext(), 		 * but we might be sending an alert in response to the client hello, 		 * so this has to happen here in 		 * ssl_check_clienthello_tlsext_early(). */
+comment|/*          * This sort of belongs into ssl_prepare_serverhello_tlsext(), but we          * might be sending an alert in response to the client hello, so this          * has to happen here in ssl_check_clienthello_tlsext_early().          */
 name|int
 name|r
 init|=
@@ -7827,6 +7838,7 @@ name|server_opaque_prf_input
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* shouldn't really happen */
 name|OPENSSL_free
 argument_list|(
@@ -7837,6 +7849,7 @@ operator|->
 name|server_opaque_prf_input
 argument_list|)
 expr_stmt|;
+block|}
 name|s
 operator|->
 name|s3
@@ -7875,7 +7888,7 @@ operator|->
 name|tlsext_opaque_prf_input_len
 condition|)
 block|{
-comment|/* can only use this extension if we have a server opaque PRF input 				 * of the same length as the client opaque PRF input! */
+comment|/*                  * can only use this extension if we have a server opaque PRF                  * input of the same length as the client opaque PRF input!                  */
 if|if
 condition|(
 name|s
@@ -7884,6 +7897,8 @@ name|tlsext_opaque_prf_input_len
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* dummy byte just to get non-NULL */
 name|s
 operator|->
 name|s3
@@ -7895,8 +7910,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* dummy byte just to get non-NULL */
+block|}
 else|else
+block|{
 name|s
 operator|->
 name|s3
@@ -7914,6 +7930,7 @@ operator|->
 name|tlsext_opaque_prf_input_len
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
@@ -7964,7 +7981,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* The callback wants to enforce use of the extension, 			 * but we can't do that with the client opaque PRF input; 			 * abort the handshake. 			 */
+comment|/*              * The callback wants to enforce use of the extension, but we              * can't do that with the client opaque PRF input; abort the              * handshake.              */
 name|ret
 operator|=
 name|SSL_TLSEXT_ERR_ALERT_FATAL
@@ -8049,7 +8066,7 @@ decl_stmt|;
 name|int
 name|al
 decl_stmt|;
-comment|/* If status request then ask callback what to do.  	 * Note: this must be called after servername callbacks in case   	 * the certificate has changed, and must be called after the cipher 	 * has been chosen because this may influence which certificate is sent  	 */
+comment|/*      * If status request then ask callback what to do. Note: this must be      * called after servername callbacks in case the certificate has      * changed, and must be called after the cipher has been chosen because      * this may influence which certificate is sent      */
 if|if
 condition|(
 operator|(
@@ -8104,7 +8121,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Set current certificate to one we will use so 		 * SSL_get_certificate et al can pick it up. 		 */
+comment|/*          * Set current certificate to one we will use so SSL_get_certificate          * et al can pick it up.          */
 name|s
 operator|->
 name|cert
@@ -8262,7 +8279,7 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC
-comment|/* If we are client and using an elliptic curve cryptography cipher 	 * suite, then if server returns an EC point formats lists extension 	 * it must contain uncompressed. 	 */
+comment|/*      * If we are client and using an elliptic curve cryptography cipher      * suite, then if server returns an EC point formats lists extension it      * must contain uncompressed.      */
 name|unsigned
 name|long
 name|alg_k
@@ -8521,7 +8538,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* This case may indicate that we, as a client, want to insist on using opaque PRF inputs. 		 * So first verify that we really have a value from the server too. */
+comment|/*          * This case may indicate that we, as a client, want to insist on          * using opaque PRF inputs. So first verify that we really have a          * value from the server too.          */
 if|if
 condition|(
 name|s
@@ -8542,7 +8559,7 @@ operator|=
 name|SSL_AD_HANDSHAKE_FAILURE
 expr_stmt|;
 block|}
-comment|/* Anytime the server *has* sent an opaque PRF input, we need to check 		 * that we have a client opaque PRF input of the same size. */
+comment|/*          * Anytime the server *has* sent an opaque PRF input, we need to          * check that we have a client opaque PRF input of the same size.          */
 if|if
 condition|(
 name|s
@@ -8578,7 +8595,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* If we've requested certificate status and we wont get one  	 * tell the callback  	 */
+comment|/*      * If we've requested certificate status and we wont get one tell the      * callback      */
 if|if
 condition|(
 operator|(
@@ -8611,7 +8628,7 @@ block|{
 name|int
 name|r
 decl_stmt|;
-comment|/* Set resp to NULL, resplen to -1 so callback knows  		 * there is no response.  		 */
+comment|/*          * Set resp to NULL, resplen to -1 so callback knows there is no          * response.          */
 if|if
 condition|(
 name|s
@@ -8744,7 +8761,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Since the server cache lookup is done early on in the processing of the  * ClientHello, and other operations depend on the result, we need to handle  * any TLS session ticket extension at the same time.  *  *   session_id: points at the session ID in the ClientHello. This code will  *       read past the end of this in order to parse out the session ticket  *       extension, if any.  *   len: the length of the session ID.  *   limit: a pointer to the first byte after the ClientHello.  *   ret: (output) on return, if a ticket was decrypted, then this is set to  *       point to the resulting session.  *  * If s->tls_session_secret_cb is set then we are expecting a pre-shared key  * ciphersuite, in which case we have no use for session tickets and one will  * never be decrypted, nor will s->tlsext_ticket_expected be set to 1.  *  * Returns:  *   -1: fatal error, either from parsing or decrypting the ticket.  *    0: no ticket was found (or was ignored, based on settings).  *    1: a zero length extension was found, indicating that the client supports  *       session tickets but doesn't currently have one to offer.  *    2: either s->tls_session_secret_cb was set, or a ticket was offered but  *       couldn't be decrypted because of a non-fatal error.  *    3: a ticket was successfully decrypted and *ret was set.  *  * Side effects:  *   Sets s->tlsext_ticket_expected to 1 if the server will have to issue  *   a new session ticket to the client because the client indicated support  *   (and s->tls_session_secret_cb is NULL) but the client either doesn't have  *   a session ticket or we couldn't use the one it gave us, or if  *   s->ctx->tlsext_ticket_key_cb asked to renew the client's ticket.  *   Otherwise, s->tlsext_ticket_expected is set to 0.  */
+comment|/*-  * Since the server cache lookup is done early on in the processing of the  * ClientHello, and other operations depend on the result, we need to handle  * any TLS session ticket extension at the same time.  *  *   session_id: points at the session ID in the ClientHello. This code will  *       read past the end of this in order to parse out the session ticket  *       extension, if any.  *   len: the length of the session ID.  *   limit: a pointer to the first byte after the ClientHello.  *   ret: (output) on return, if a ticket was decrypted, then this is set to  *       point to the resulting session.  *  * If s->tls_session_secret_cb is set then we are expecting a pre-shared key  * ciphersuite, in which case we have no use for session tickets and one will  * never be decrypted, nor will s->tlsext_ticket_expected be set to 1.  *  * Returns:  *   -1: fatal error, either from parsing or decrypting the ticket.  *    0: no ticket was found (or was ignored, based on settings).  *    1: a zero length extension was found, indicating that the client supports  *       session tickets but doesn't currently have one to offer.  *    2: either s->tls_session_secret_cb was set, or a ticket was offered but  *       couldn't be decrypted because of a non-fatal error.  *    3: a ticket was successfully decrypted and *ret was set.  *  * Side effects:  *   Sets s->tlsext_ticket_expected to 1 if the server will have to issue  *   a new session ticket to the client because the client indicated support  *   (and s->tls_session_secret_cb is NULL) but the client either doesn't have  *   a session ticket or we couldn't use the one it gave us, or if  *   s->ctx->tlsext_ticket_key_cb asked to renew the client's ticket.  *   Otherwise, s->tlsext_ticket_expected is set to 0.  */
 end_comment
 
 begin_function
@@ -8801,7 +8818,7 @@ name|tlsext_ticket_expected
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If tickets disabled behave as if no ticket present 	 * to permit stateful resumption. 	 */
+comment|/*      * If tickets disabled behave as if no ticket present to permit stateful      * resumption.      */
 if|if
 condition|(
 name|SSL_get_options
@@ -9004,7 +9021,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* The client will accept a ticket but doesn't 				 * currently have one. */
+comment|/*                  * The client will accept a ticket but doesn't currently have                  * one.                  */
 name|s
 operator|->
 name|tlsext_ticket_expected
@@ -9022,7 +9039,7 @@ operator|->
 name|tls_session_secret_cb
 condition|)
 block|{
-comment|/* Indicate that the ticket couldn't be 				 * decrypted rather than generating the session 				 * from ticket now, trigger abbreviated 				 * handshake based on external mechanism to 				 * calculate the master secret later. */
+comment|/*                  * Indicate that the ticket couldn't be decrypted rather than                  * generating the session from ticket now, trigger                  * abbreviated handshake based on external mechanism to                  * calculate the master secret later.                  */
 return|return
 literal|2
 return|;
@@ -9102,7 +9119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* tls_decrypt_ticket attempts to decrypt a session ticket.  *  *   etick: points to the body of the session ticket extension.  *   eticklen: the length of the session tickets extenion.  *   sess_id: points at the session ID.  *   sesslen: the length of the session ID.  *   psess: (output) on return, if a ticket was decrypted, then this is set to  *       point to the resulting session.  *  * Returns:  *   -1: fatal error, either from parsing or decrypting the ticket.  *    2: the ticket couldn't be decrypted.  *    3: a ticket was successfully decrypted and *psess was set.  *    4: same as 3, but the ticket needs to be renewed.  */
+comment|/*-  * tls_decrypt_ticket attempts to decrypt a session ticket.  *  *   etick: points to the body of the session ticket extension.  *   eticklen: the length of the session tickets extenion.  *   sess_id: points at the session ID.  *   sesslen: the length of the session ID.  *   psess: (output) on return, if a ticket was decrypted, then this is set to  *       point to the resulting session.  *  * Returns:  *   -1: fatal error, either from parsing or decrypting the ticket.  *    2: the ticket couldn't be decrypted.  *    3: a ticket was successfully decrypted and *psess was set.  *    4: same as 3, but the ticket needs to be renewed.  */
 end_comment
 
 begin_function
@@ -9335,7 +9352,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Attempt to process session ticket, first conduct sanity and 	 * integrity checks on ticket. 	 */
+comment|/*      * Attempt to process session ticket, first conduct sanity and integrity      * checks on ticket.      */
 name|mlen
 operator|=
 name|HMAC_size
@@ -9549,7 +9566,7 @@ condition|(
 name|sess
 condition|)
 block|{
-comment|/* The session ID, if non-empty, is used by some clients to 		 * detect that the ticket has been accepted. So we copy it to 		 * the session structure. If it is empty set length to zero 		 * as required by standard. 		 */
+comment|/*          * The session ID, if non-empty, is used by some clients to detect          * that the ticket has been accepted. So we copy it to the session          * structure. If it is empty set length to zero as required by          * standard.          */
 if|if
 condition|(
 name|sesslen
@@ -9591,7 +9608,7 @@ block|}
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
-comment|/* For session parse failure, indicate that we need to send a new 	 * ticket. */
+comment|/*      * For session parse failure, indicate that we need to send a new ticket.      */
 return|return
 literal|2
 return|;
@@ -9793,7 +9810,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int tls12_find_nid(int id, tls12_lookup *table, size_t tlen) 	{ 	size_t i; 	for (i = 0; i< tlen; i++) 		{ 		if (table[i].id == id) 			return table[i].nid; 		} 	return -1; 	}
+unit|static int tls12_find_nid(int id, tls12_lookup *table, size_t tlen) {     size_t i;     for (i = 0; i< tlen; i++) {         if (table[i].id == id)             return table[i].nid;     }     return -1; }
 endif|#
 directive|endif
 end_endif
@@ -10258,7 +10275,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Set any remaining keys to default values. NOTE: if alg is not 	 * supported it stays as NULL. 	 */
+comment|/*      * Set any remaining keys to default values. NOTE: if alg is not      * supported it stays as NULL.      */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
@@ -10544,7 +10561,7 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-comment|/* Allocate memory for the response, size is 1 bytes 		 * message type, plus 2 bytes payload length, plus 		 * payload, plus padding 		 */
+comment|/*          * Allocate memory for the response, size is 1 bytes message type,          * plus 2 bytes payload length, plus payload, plus padding          */
 name|buffer
 operator|=
 name|OPENSSL_malloc
@@ -10590,13 +10607,28 @@ operator|+=
 name|payload
 expr_stmt|;
 comment|/* Random padding */
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|bp
 argument_list|,
 name|padding
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|buffer
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|r
 operator|=
 name|ssl3_write_bytes
@@ -10678,7 +10710,7 @@ name|unsigned
 name|int
 name|seq
 decl_stmt|;
-comment|/* We only send sequence numbers (2 bytes unsigned int), 		 * and 16 random bytes, so we just try to read the 		 * sequence number */
+comment|/*          * We only send sequence numbers (2 bytes unsigned int), and 16          * random bytes, so we just try to read the sequence number          */
 name|n2s
 argument_list|(
 name|pl
@@ -10737,6 +10769,9 @@ name|p
 decl_stmt|;
 name|int
 name|ret
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|unsigned
 name|int
@@ -10828,7 +10863,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Check if padding is too long, payload and padding 	 * must not exceed 2^14 - 3 = 16381 bytes in total. 	 */
+comment|/*      * Check if padding is too long, payload and padding must not exceed 2^14      * - 3 = 16381 bytes in total.      */
 name|OPENSSL_assert
 argument_list|(
 name|payload
@@ -10838,7 +10873,7 @@ operator|<=
 literal|16381
 argument_list|)
 expr_stmt|;
-comment|/* Create HeartBeat message, we just use a sequence number 	 * as payload to distuingish different messages and add 	 * some random stuff. 	 *  - Message Type, 1 byte 	 *  - Payload Length, 2 bytes (unsigned int) 	 *  - Payload, the sequence number (2 bytes uint) 	 *  - Payload, random bytes (16 bytes uint) 	 *  - Padding 	 */
+comment|/*-      * Create HeartBeat message, we just use a sequence number      * as payload to distuingish different messages and add      * some random stuff.      *  - Message Type, 1 byte      *  - Payload Length, 2 bytes (unsigned int)      *  - Payload, the sequence number (2 bytes uint)      *  - Payload, random bytes (16 bytes uint)      *  - Padding      */
 name|buf
 operator|=
 name|OPENSSL_malloc
@@ -10882,25 +10917,57 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 16 random bytes */
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|p
 argument_list|,
 literal|16
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_TLS1_HEARTBEAT
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|p
 operator|+=
 literal|16
 expr_stmt|;
 comment|/* Random padding */
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|p
 argument_list|,
 name|padding
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_TLS1_HEARTBEAT
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|ret
 operator|=
 name|ssl3_write_bytes
@@ -10965,6 +11032,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|err
+label|:
 name|OPENSSL_free
 argument_list|(
 name|buf

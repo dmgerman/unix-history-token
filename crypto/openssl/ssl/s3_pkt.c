@@ -4,11 +4,11 @@ comment|/* ssl/s3_pkt.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -117,7 +117,7 @@ name|int
 name|extend
 parameter_list|)
 block|{
-comment|/* If extend == 0, obtain new n-byte packet; if extend == 1, increase 	 * packet by another n bytes. 	 * The packet will be in the sub-array of s->s3->rbuf.buf specified 	 * by s->packet and s->packet_length. 	 * (If s->read_ahead is set, 'max' bytes may be stored in rbuf 	 * [plus s->packet_length bytes if extend == 1].) 	 */
+comment|/*      * If extend == 0, obtain new n-byte packet; if extend == 1, increase      * packet by another n bytes. The packet will be in the sub-array of      * s->s3->rbuf.buf specified by s->packet and s->packet_length. (If      * s->read_ahead is set, 'max' bytes may be stored in rbuf [plus      * s->packet_length bytes if extend == 1].)      */
 name|int
 name|i
 decl_stmt|,
@@ -252,7 +252,7 @@ operator|>=
 name|SSL3_RT_HEADER_LENGTH
 condition|)
 block|{
-comment|/* check if next packet length is large 			 * enough to justify payload alignment... */
+comment|/*              * check if next packet length is large enough to justify payload              * alignment...              */
 name|pkt
 operator|=
 name|rb
@@ -289,7 +289,7 @@ operator|>=
 literal|128
 condition|)
 block|{
-comment|/* Note that even if packet is corrupted 				 * and its length field is insane, we can 				 * only be led to wrong decision about 				 * whether memmove will occur or not. 				 * Header values has no effect on memmove 				 * arguments and therefore no buffer 				 * overrun can be triggered. */
+comment|/*                  * Note that even if packet is corrupted and its length field                  * is insane, we can only be led to wrong decision about                  * whether memmove will occur or not. Header values has no                  * effect on memmove arguments and therefore no buffer                  * overrun can be triggered.                  */
 name|memmove
 argument_list|(
 name|rb
@@ -331,7 +331,7 @@ literal|0
 expr_stmt|;
 comment|/* ... now we can act as if 'extend' was set */
 block|}
-comment|/* For DTLS/UDP reads should not span multiple packets 	 * because the read operation returns the whole packet 	 * at once (as long as it fits into the buffer). */
+comment|/*      * For DTLS/UDP reads should not span multiple packets because the read      * operation returns the whole packet at once (as long as it fits into      * the buffer).      */
 if|if
 condition|(
 name|SSL_version
@@ -424,7 +424,7 @@ name|buf
 operator|+
 name|align
 expr_stmt|;
-comment|/* Move any available bytes to front of buffer: 	 * 'len' bytes already pointed to by 'packet', 	 * 'left' extra ones at the end */
+comment|/*      * Move any available bytes to front of buffer: 'len' bytes already      * pointed to by 'packet', 'left' extra ones at the end      */
 if|if
 condition|(
 name|s
@@ -433,8 +433,8 @@ name|packet
 operator|!=
 name|pkt
 condition|)
-comment|/* len> 0 */
 block|{
+comment|/* len> 0 */
 name|memmove
 argument_list|(
 name|pkt
@@ -480,8 +480,8 @@ operator|->
 name|offset
 argument_list|)
 condition|)
-comment|/* does not happen */
 block|{
+comment|/* does not happen */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_READ_N
@@ -494,12 +494,19 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* We always act like read_ahead is set for DTLS */
 if|if
 condition|(
 operator|!
 name|s
 operator|->
 name|read_ahead
+operator|&&
+operator|!
+name|SSL_IS_DTLS
+argument_list|(
+name|s
+argument_list|)
 condition|)
 comment|/* ignore max parameter */
 name|max
@@ -553,7 +560,7 @@ operator|<
 name|n
 condition|)
 block|{
-comment|/* Now we have len+left bytes at the front of s->s3->rbuf.buf 		 * and need to read in more until we have len+n (up to 		 * len+max if possible) */
+comment|/*          * Now we have len+left bytes at the front of s->s3->rbuf.buf and          * need to read in more until we have len+n (up to len+max if          * possible)          */
 name|clear_sys_error
 argument_list|()
 expr_stmt|;
@@ -665,7 +672,7 @@ name|left
 operator|+=
 name|i
 expr_stmt|;
-comment|/* reads should *never* span multiple packets for DTLS because 		 * the underlying transport protocol is message oriented as opposed 		 * to byte oriented as in the TLS case. */
+comment|/*          * reads should *never* span multiple packets for DTLS because the          * underlying transport protocol is message oriented as opposed to          * byte oriented as in the TLS case.          */
 if|if
 condition|(
 name|SSL_version
@@ -732,7 +739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MAX_EMPTY_RECORDS defines the number of consecutive, empty records that will  * be processed per call to ssl3_get_record. Without this limit an attacker  * could send empty records at a faster rate than we can process and cause  * ssl3_get_record to loop forever. */
+comment|/*  * MAX_EMPTY_RECORDS defines the number of consecutive, empty records that  * will be processed per call to ssl3_get_record. Without this limit an  * attacker could send empty records at a faster rate than we can process and  * cause ssl3_get_record to loop forever.  */
 end_comment
 
 begin_define
@@ -743,7 +750,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Call this to get a new input record.  * It will return<= 0 if more data is needed, normally due to an error  * or non-blocking IO.  * When it finishes, one packet has been decoded and can be found in  * ssl->s3->rrec.type    - is the type of record  * ssl->s3->rrec.data, 	 - data  * ssl->s3->rrec.length, - number of bytes  */
+comment|/*-  * Call this to get a new input record.  * It will return<= 0 if more data is needed, normally due to an error  * or non-blocking IO.  * When it finishes, one packet has been decoded and can be found in  * ssl->s3->rrec.type    - is the type of record  * ssl->s3->rrec.data,   - data  * ssl->s3->rrec.length, - number of bytes  */
 end_comment
 
 begin_comment
@@ -861,7 +868,7 @@ operator|->
 name|init_extra
 condition|)
 block|{
-comment|/* An application error: SLS_OP_MICROSOFT_BIG_SSLV3_BUFFER 		 * set after ssl3_setup_buffers() was done */
+comment|/*          * An application error: SLS_OP_MICROSOFT_BIG_SSLV3_BUFFER set after          * ssl3_setup_buffers() was done          */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_GET_RECORD
@@ -1042,7 +1049,22 @@ name|s
 operator|->
 name|write_hash
 condition|)
-comment|/* Send back error using their minor version number :-) */
+block|{
+if|if
+condition|(
+name|rr
+operator|->
+name|type
+operator|==
+name|SSL3_RT_ALERT
+condition|)
+block|{
+comment|/*                          * The record is using an incorrect version number, but                          * what we've got appears to be an alert. We haven't                          * read the body yet to check whether its a fatal or                          * not - but chances are it is. We probably shouldn't                          * send a fatal alert back. We'll just end.                          */
+goto|goto
+name|err
+goto|;
+block|}
+comment|/*                      * Send back error using their minor version number :-)                      */
 name|s
 operator|->
 name|version
@@ -1053,6 +1075,7 @@ name|short
 operator|)
 name|version
 expr_stmt|;
+block|}
 name|al
 operator|=
 name|SSL_AD_PROTOCOL_VERSION
@@ -1164,7 +1187,7 @@ name|n
 operator|)
 return|;
 comment|/* error or non-blocking io */
-comment|/* now n == rr->length, 		 * and s->packet_length == SSL3_RT_HEADER_LENGTH + rr->length */
+comment|/*          * now n == rr->length, and s->packet_length == SSL3_RT_HEADER_LENGTH          * + rr->length          */
 block|}
 name|s
 operator|->
@@ -1173,7 +1196,7 @@ operator|=
 name|SSL_ST_READ_HEADER
 expr_stmt|;
 comment|/* set state for later operations */
-comment|/* At this point, s->packet_length == SSL3_RT_HEADER_LNGTH + rr->length, 	 * and we have that many bytes in s->packet 	 */
+comment|/*      * At this point, s->packet_length == SSL3_RT_HEADER_LNGTH + rr->length,      * and we have that many bytes in s->packet      */
 name|rr
 operator|->
 name|input
@@ -1188,8 +1211,8 @@ name|SSL3_RT_HEADER_LENGTH
 index|]
 operator|)
 expr_stmt|;
-comment|/* ok, we can now read from 's->packet' data into 'rr' 	 * rr->input points at rr->length bytes, which 	 * need to be copied into rr->data by either 	 * the decryption or by the decompression 	 * When the data is 'copied' into the rr->data buffer, 	 * rr->input will be pointed at the new buffer */
-comment|/* We now have - encrypted [ MAC [ compressed [ plain ] ] ] 	 * rr->length bytes of encrypted compressed stuff. */
+comment|/*      * ok, we can now read from 's->packet' data into 'rr' rr->input points      * at rr->length bytes, which need to be copied into rr->data by either      * the decryption or by the decompression When the data is 'copied' into      * the rr->data buffer, rr->input will be pointed at the new buffer      */
+comment|/*      * We now have - encrypted [ MAC [ compressed [ plain ] ] ] rr->length      * bytes of encrypted compressed stuff.      */
 comment|/* check is not needed I believe */
 if|if
 condition|(
@@ -1241,7 +1264,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* enc_err is: 	 *    0: (in non-constant time) if the record is publically invalid. 	 *    1: if the padding is valid 	 *    -1: if the padding is invalid */
+comment|/*-      * enc_err is:      *    0: (in non-constant time) if the record is publically invalid.      *    1: if the padding is valid      *    -1: if the padding is invalid      */
 if|if
 condition|(
 name|enc_err
@@ -1390,7 +1413,7 @@ operator|<=
 name|EVP_MAX_MD_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* kludge: *_cbc_remove_padding passes padding length in rr->type */
+comment|/*          * kludge: *_cbc_remove_padding passes padding length in rr->type          */
 name|orig_len
 operator|=
 name|rr
@@ -1409,7 +1432,7 @@ operator|>>
 literal|8
 operator|)
 expr_stmt|;
-comment|/* orig_len is the length of the record before any padding was 		 * removed. This is public information, as is the MAC in use, 		 * therefore we can safely process the record in a different 		 * amount of time if it's too short to possibly contain a MAC. 		 */
+comment|/*          * orig_len is the length of the record before any padding was          * removed. This is public information, as is the MAC in use,          * therefore we can safely process the record in a different amount          * of time if it's too short to possibly contain a MAC.          */
 if|if
 condition|(
 name|orig_len
@@ -1462,7 +1485,7 @@ operator|==
 name|EVP_CIPH_CBC_MODE
 condition|)
 block|{
-comment|/* We update the length so that the TLS header bytes 			 * can be constructed correctly but we need to extract 			 * the MAC in constant time from within the record, 			 * without leaking the contents of the padding bytes. 			 * */
+comment|/*              * We update the length so that the TLS header bytes can be              * constructed correctly but we need to extract the MAC in              * constant time from within the record, without leaking the              * contents of the padding bytes.              */
 name|mac
 operator|=
 name|mac_tmp
@@ -1487,7 +1510,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* In this case there's no padding, so |orig_len| 			 * equals |rec->length| and we checked that there's 			 * enough bytes for |mac_size| above. */
+comment|/*              * In this case there's no padding, so |orig_len| equals              * |rec->length| and we checked that there's enough bytes for              * |mac_size| above.              */
 name|rr
 operator|->
 name|length
@@ -1579,7 +1602,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* A separate 'decryption_failed' alert was introduced with TLS 1.0, 		 * SSL 3.0 only has 'bad_record_mac'.  But unless a decryption 		 * failure is directly visible from the ciphertext anyway, 		 * we should not reveal which kind of error occured -- this 		 * might become visible to an attacker (e.g. via a logfile) */
+comment|/*          * A separate 'decryption_failed' alert was introduced with TLS 1.0,          * SSL 3.0 only has 'bad_record_mac'.  But unless a decryption          * failure is directly visible from the ciphertext anyway, we should          * not reveal which kind of error occured -- this might become          * visible to an attacker (e.g. via a logfile)          */
 name|al
 operator|=
 name|SSL_AD_BAD_RECORD_MAC
@@ -1688,7 +1711,7 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
-comment|/* So at this point the following is true 	 * ssl->s3->rrec.type 	is the type of record 	 * ssl->s3->rrec.length	== number of bytes in record 	 * ssl->s3->rrec.off	== offset to first valid byte 	 * ssl->s3->rrec.data	== where to take bytes from, increment 	 *			   after use :-). 	 */
+comment|/*-      * So at this point the following is true      * ssl->s3->rrec.type   is the type of record      * ssl->s3->rrec.length == number of bytes in record      * ssl->s3->rrec.off    == offset to first valid byte      * ssl->s3->rrec.data   == where to take bytes from, increment      *                         after use :-).      */
 comment|/* we have pulled in a full packet so zero things */
 name|s
 operator|->
@@ -1738,7 +1761,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|fprintf(stderr, "Ultimate Record type=%d, Length=%d\n", rr->type, rr->length);
+block|fprintf(stderr, "Ultimate Record type=%d, Length=%d\n", rr->type,             rr->length);
 endif|#
 directive|endif
 return|return
@@ -1952,7 +1975,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Call this to write data in records of type 'type'  * It will return<= 0 if not all data has been sent or non-blocking IO.  */
+comment|/*  * Call this to write data in records of type 'type' It will return<= 0 if  * not all data has been sent or non-blocking IO.  */
 end_comment
 
 begin_function
@@ -2080,7 +2103,7 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* ensure that if we end up with a smaller value of data to write  	 * out than the the original len from a write which didn't complete  	 * for non-blocking I/O and also somehow ended up avoiding  	 * the check for this in ssl3_write_pending/SSL_R_BAD_WRITE_RETRY as 	 * it must never be possible to end up with (len-tot) as a large 	 * number that will then promptly send beyond the end of the users 	 * buffer ... so we trap and report the error in a way the user 	 * will notice 	 */
+comment|/*      * ensure that if we end up with a smaller value of data to write out      * than the the original len from a write which didn't complete for      * non-blocking I/O and also somehow ended up avoiding the check for      * this in ssl3_write_pending/SSL_R_BAD_WRITE_RETRY as it must never be      * possible to end up with (len-tot) as a large number that will then      * promptly send beyond the end of the users buffer ... so we trap and      * report the error in a way the user will notice      */
 if|if
 condition|(
 name|len
@@ -2201,7 +2224,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* next chunk of data should get another prepended empty fragment 			 * in ciphersuites with known-IV weakness: */
+comment|/*              * next chunk of data should get another prepended empty fragment              * in ciphersuites with known-IV weakness:              */
 name|s
 operator|->
 name|s3
@@ -2305,7 +2328,7 @@ name|SSL_SESSION
 modifier|*
 name|sess
 decl_stmt|;
-comment|/* first check if there is a SSL3_BUFFER still being written 	 * out.  This will happen with non blocking IO */
+comment|/*      * first check if there is a SSL3_BUFFER still being written out.  This      * will happen with non blocking IO      */
 if|if
 condition|(
 name|wb
@@ -2487,7 +2510,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* 'create_empty_fragment' is true only when this function calls itself */
+comment|/*      * 'create_empty_fragment' is true only when this function calls itself      */
 if|if
 condition|(
 operator|!
@@ -2504,7 +2527,7 @@ operator|->
 name|empty_fragment_done
 condition|)
 block|{
-comment|/* countermeasure against known-IV weakness in CBC ciphersuites 		 * (see http://www.openssl.org/~bodo/tls-cbc.txt) */
+comment|/*          * countermeasure against known-IV weakness in CBC ciphersuites (see          * http://www.openssl.org/~bodo/tls-cbc.txt)          */
 if|if
 condition|(
 name|s
@@ -2518,7 +2541,7 @@ operator|==
 name|SSL3_RT_APPLICATION_DATA
 condition|)
 block|{
-comment|/* recursive function call with 'create_empty_fragment' set; 			 * this prepares and buffers the data for an empty fragment 			 * (these 'prefix_len' bytes are sent out later 			 * together with the actual payload) */
+comment|/*              * recursive function call with 'create_empty_fragment' set; this              * prepares and buffers the data for an empty fragment (these              * 'prefix_len' bytes are sent out later together with the actual              * payload)              */
 name|prefix_len
 operator|=
 name|do_ssl3_write
@@ -2591,7 +2614,7 @@ operator|&&
 name|SSL3_ALIGN_PAYLOAD
 operator|!=
 literal|0
-comment|/* extra fragment would be couple of cipher blocks, 		 * which would be multiple of SSL3_ALIGN_PAYLOAD, so 		 * if we want to align the real payload, then we can 		 * just pretent we simply have two headers. */
+comment|/*          * extra fragment would be couple of cipher blocks, which would be          * multiple of SSL3_ALIGN_PAYLOAD, so if we want to align the real          * payload, then we can just pretent we simply have two headers.          */
 name|align
 operator|=
 operator|(
@@ -2738,7 +2761,7 @@ operator|>>
 literal|8
 operator|)
 expr_stmt|;
-comment|/* Some servers hang if iniatial client hello is larger than 256 	 * bytes and record version number> TLS 1.0 	 */
+comment|/*      * Some servers hang if iniatial client hello is larger than 256 bytes      * and record version number> TLS 1.0      */
 if|if
 condition|(
 name|s
@@ -2892,7 +2915,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-comment|/* we now 'read' from wr->input, wr->length bytes into 	 * wr->data */
+comment|/*      * we now 'read' from wr->input, wr->length bytes into wr->data      */
 comment|/* first we compress */
 if|if
 condition|(
@@ -2950,7 +2973,7 @@ operator|->
 name|data
 expr_stmt|;
 block|}
-comment|/* we should still have the output to wr->data and the input 	 * from wr->input.  Length should be wr->length. 	 * wr->data still points in the wb->buf */
+comment|/*      * we should still have the output to wr->data and the input from      * wr->input.  Length should be wr->length. wr->data still points in the      * wb->buf      */
 if|if
 condition|(
 name|mac_size
@@ -3014,7 +3037,7 @@ condition|(
 name|eivlen
 condition|)
 block|{
-comment|/*	if (RAND_pseudo_bytes(p, eivlen)<= 0) 			goto err; */
+comment|/*          * if (RAND_pseudo_bytes(p, eivlen)<= 0) goto err;          */
 name|wr
 operator|->
 name|length
@@ -3052,7 +3075,7 @@ argument_list|,
 name|plen
 argument_list|)
 expr_stmt|;
-comment|/* we should now have 	 * wr->data pointing to the encrypted data, which is 	 * wr->length long */
+comment|/*      * we should now have wr->data pointing to the encrypted data, which is      * wr->length long      */
 name|wr
 operator|->
 name|type
@@ -3071,7 +3094,7 @@ condition|(
 name|create_empty_fragment
 condition|)
 block|{
-comment|/* we are in a recursive call; 		 * just return the length, don't write out anything here 		 */
+comment|/*          * we are in a recursive call; just return the length, don't write          * out anything here          */
 return|return
 name|wr
 operator|->
@@ -3089,7 +3112,7 @@ name|wr
 operator|->
 name|length
 expr_stmt|;
-comment|/* memorize arguments so that ssl3_write_pending can detect bad write retries later */
+comment|/*      * memorize arguments so that ssl3_write_pending can detect bad write      * retries later      */
 name|s
 operator|->
 name|s3
@@ -3408,7 +3431,7 @@ operator|==
 name|DTLS1_BAD_VER
 condition|)
 block|{
-comment|/* For DTLS, just drop it. That's kind of the whole 				   point in using a datagram service */
+comment|/*                  * For DTLS, just drop it. That's kind of the whole point in                  * using a datagram service                  */
 name|wb
 operator|->
 name|left
@@ -3439,7 +3462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return up to 'len' payload bytes received in 'type' records.  * 'type' is one of the following:  *  *   -  SSL3_RT_HANDSHAKE (when ssl3_get_message calls us)  *   -  SSL3_RT_APPLICATION_DATA (when ssl3_read calls us)  *   -  0 (during a shutdown, no data has to be returned)  *  * If we don't have stored data to work from, read a SSL/TLS record first  * (possibly multiple records if we still don't have anything to return).  *  * This function must handle any surprises the peer may have for us, such as  * Alert records (e.g. close_notify), ChangeCipherSpec records (not really  * a surprise, but handled as if it were), or renegotiation requests.  * Also if record payloads contain fragments too small to process, we store  * them until there is enough for the respective protocol (the record protocol  * may use arbitrary fragmentation and even interleaving):  *     Change cipher spec protocol  *             just 1 byte needed, no need for keeping anything stored  *     Alert protocol  *             2 bytes needed (AlertLevel, AlertDescription)  *     Handshake protocol  *             4 bytes needed (HandshakeType, uint24 length) -- we just have  *             to detect unexpected Client Hello and Hello Request messages  *             here, anything else is handled by higher layers  *     Application data protocol  *             none of our business  */
+comment|/*-  * Return up to 'len' payload bytes received in 'type' records.  * 'type' is one of the following:  *  *   -  SSL3_RT_HANDSHAKE (when ssl3_get_message calls us)  *   -  SSL3_RT_APPLICATION_DATA (when ssl3_read calls us)  *   -  0 (during a shutdown, no data has to be returned)  *  * If we don't have stored data to work from, read a SSL/TLS record first  * (possibly multiple records if we still don't have anything to return).  *  * This function must handle any surprises the peer may have for us, such as  * Alert records (e.g. close_notify), ChangeCipherSpec records (not really  * a surprise, but handled as if it were), or renegotiation requests.  * Also if record payloads contain fragments too small to process, we store  * them until there is enough for the respective protocol (the record protocol  * may use arbitrary fragmentation and even interleaving):  *     Change cipher spec protocol  *             just 1 byte needed, no need for keeping anything stored  *     Alert protocol  *             2 bytes needed (AlertLevel, AlertDescription)  *     Handshake protocol  *             4 bytes needed (HandshakeType, uint24 length) -- we just have  *             to detect unexpected Client Hello and Hello Request messages  *             here, anything else is handled by higher layers  *     Application data protocol  *             none of our business  */
 end_comment
 
 begin_function
@@ -3693,7 +3716,7 @@ return|return
 name|n
 return|;
 block|}
-comment|/* Now s->s3->handshake_fragment_len == 0 if type == SSL3_RT_HANDSHAKE. */
+comment|/*      * Now s->s3->handshake_fragment_len == 0 if type == SSL3_RT_HANDSHAKE.      */
 if|if
 condition|(
 operator|!
@@ -3758,7 +3781,7 @@ name|rwstate
 operator|=
 name|SSL_NOTHING
 expr_stmt|;
-comment|/* s->s3->rrec.type	    - is the type of record 	 * s->s3->rrec.data,    - data 	 * s->s3->rrec.off,     - offset into 'data' for next read 	 * s->s3->rrec.length,  - number of bytes. */
+comment|/*-      * s->s3->rrec.type         - is the type of record      * s->s3->rrec.data,    - data      * s->s3->rrec.off,     - offset into 'data' for next read      * s->s3->rrec.length,  - number of bytes.      */
 name|rr
 operator|=
 operator|&
@@ -3817,7 +3840,7 @@ operator|->
 name|s3
 operator|->
 name|change_cipher_spec
-comment|/* set when we receive ChangeCipherSpec, 	                               * reset by ssl3_get_finished */
+comment|/* set when we receive ChangeCipherSpec,                                    * reset by ssl3_get_finished */
 operator|&&
 operator|(
 name|rr
@@ -3843,7 +3866,7 @@ goto|goto
 name|f_err
 goto|;
 block|}
-comment|/* If the other end has shut down, throw anything we read away 	 * (even in 'peek' mode) */
+comment|/*      * If the other end has shut down, throw anything we read away (even in      * 'peek' mode)      */
 if|if
 condition|(
 name|s
@@ -3879,9 +3902,9 @@ name|rr
 operator|->
 name|type
 condition|)
-comment|/* SSL3_RT_APPLICATION_DATA or SSL3_RT_HANDSHAKE */
 block|{
-comment|/* make sure that we are not getting application data when we 		 * are doing a handshake for the first time */
+comment|/* SSL3_RT_APPLICATION_DATA or                                  * SSL3_RT_HANDSHAKE */
+comment|/*          * make sure that we are not getting application data when we are          * doing a handshake for the first time          */
 if|if
 condition|(
 name|SSL_in_init
@@ -4046,8 +4069,8 @@ name|n
 operator|)
 return|;
 block|}
-comment|/* If we get here, then type != rr->type; if we have a handshake 	 * message, then it was unexpected (Hello Request or Client Hello). */
-comment|/* In case of record types for which we have 'fragment' storage, 	 * fill that so that we can process the data at a fixed place. 	 */
+comment|/*      * If we get here, then type != rr->type; if we have a handshake message,      * then it was unexpected (Hello Request or Client Hello).      */
+comment|/*      * In case of record types for which we have 'fragment' storage, fill      * that so that we can process the data at a fixed place.      */
 block|{
 name|unsigned
 name|int
@@ -4275,7 +4298,7 @@ goto|;
 comment|/* fragment was too small */
 block|}
 block|}
-comment|/* s->s3->handshake_fragment_len == 4  iff  rr->type == SSL3_RT_HANDSHAKE; 	 * s->s3->alert_fragment_len == 2      iff  rr->type == SSL3_RT_ALERT. 	 * (Possibly rr is 'empty' now, i.e. rr->length may be 0.) */
+comment|/*-      * s->s3->handshake_fragment_len == 4  iff  rr->type == SSL3_RT_HANDSHAKE;      * s->s3->alert_fragment_len == 2      iff  rr->type == SSL3_RT_ALERT.      * (Possibly rr is 'empty' now, i.e. rr->length may be 0.)      */
 comment|/* If we are a client, check for an incoming 'Hello Request': */
 if|if
 condition|(
@@ -4530,13 +4553,13 @@ name|left
 operator|==
 literal|0
 condition|)
-comment|/* no read-ahead left? */
 block|{
+comment|/* no read-ahead left? */
 name|BIO
 modifier|*
 name|bio
 decl_stmt|;
-comment|/* In the case where we try to read application data, 						 * but we trigger an SSL handshake, we return -1 with 						 * the retry option set.  Otherwise renegotiation may 						 * cause nasty problems in the blocking world */
+comment|/*                          * In the case where we try to read application data,                          * but we trigger an SSL handshake, we return -1 with                          * the retry option set.  Otherwise renegotiation may                          * cause nasty problems in the blocking world                          */
 name|s
 operator|->
 name|rwstate
@@ -4570,12 +4593,12 @@ block|}
 block|}
 block|}
 block|}
-comment|/* we either finished a handshake or ignored the request, 		 * now try again to obtain the (application) data we were asked for */
+comment|/*          * we either finished a handshake or ignored the request, now try          * again to obtain the (application) data we were asked for          */
 goto|goto
 name|start
 goto|;
 block|}
-comment|/* If we are a server and get a client hello when renegotiation isn't 	 * allowed send back a no renegotiation alert and carry on. 	 * WARNING: experimental code, needs reviewing (steve) 	 */
+comment|/*      * If we are a server and get a client hello when renegotiation isn't      * allowed send back a no renegotiation alert and carry on. WARNING:      * experimental code, needs reviewing (steve)      */
 if|if
 condition|(
 name|s
@@ -4655,7 +4678,7 @@ name|SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION
 operator|)
 condition|)
 block|{
-comment|/*s->s3->handshake_fragment_len = 0;*/
+comment|/*          * s->s3->handshake_fragment_len = 0;          */
 name|rr
 operator|->
 name|length
@@ -4815,9 +4838,8 @@ if|if
 condition|(
 name|alert_level
 operator|==
-literal|1
+name|SSL3_AL_WARNING
 condition|)
-comment|/* warning */
 block|{
 name|s
 operator|->
@@ -4846,7 +4868,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* This is a warning but we receive it if we requested 			 * renegotiation and the peer denied it. Terminate with 			 * a fatal alert because if application tried to 			 * renegotiatie it presumably had a good reason and 			 * expects it to succeed. 			 * 			 * In future we might have a renegotiation where we 			 * don't care if the peer refused it where we carry on. 			 */
+comment|/*              * This is a warning but we receive it if we requested              * renegotiation and the peer denied it. Terminate with a fatal              * alert because if application tried to renegotiatie it              * presumably had a good reason and expects it to succeed. In              * future we might have a renegotiation where we don't care if              * the peer refused it where we carry on.              */
 elseif|else
 if|if
 condition|(
@@ -4893,9 +4915,8 @@ if|if
 condition|(
 name|alert_level
 operator|==
-literal|2
+name|SSL3_AL_FATAL
 condition|)
-comment|/* fatal */
 block|{
 name|char
 name|tmp
@@ -4999,8 +5020,8 @@ name|shutdown
 operator|&
 name|SSL_SENT_SHUTDOWN
 condition|)
-comment|/* but we have not received a shutdown */
 block|{
+comment|/* but we have not received a                                             * shutdown */
 name|s
 operator|->
 name|rwstate
@@ -5028,7 +5049,7 @@ operator|==
 name|SSL3_RT_CHANGE_CIPHER_SPEC
 condition|)
 block|{
-comment|/* 'Change Cipher Spec' is just a single byte, so we know 		 * exactly what the record payload has to look like */
+comment|/*          * 'Change Cipher Spec' is just a single byte, so we know exactly          * what the record payload has to look like          */
 if|if
 condition|(
 operator|(
@@ -5202,7 +5223,7 @@ goto|goto
 name|start
 goto|;
 block|}
-comment|/* Unexpected handshake message (Client Hello, or protocol violation) */
+comment|/*      * Unexpected handshake message (Client Hello, or protocol violation)      */
 if|if
 condition|(
 operator|(
@@ -5250,8 +5271,8 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* worked only because C operator preferences are not as expected (and        * because this is not really needed for clients except for detecting        * protocol violations): */
-block|s->state=SSL_ST_BEFORE|(s->server) 				?SSL_ST_ACCEPT 				:SSL_ST_CONNECT;
+comment|/* worked only because C operator preferences                                  * are not as expected (and because this is                                  * not really needed for clients except for                                  * detecting protocol violations): */
+block|s->state = SSL_ST_BEFORE | (s->server)                 ? SSL_ST_ACCEPT : SSL_ST_CONNECT;
 else|#
 directive|else
 name|s
@@ -5346,13 +5367,13 @@ name|left
 operator|==
 literal|0
 condition|)
-comment|/* no read-ahead left? */
 block|{
+comment|/* no read-ahead left? */
 name|BIO
 modifier|*
 name|bio
 decl_stmt|;
-comment|/* In the case where we try to read application data, 				 * but we trigger an SSL handshake, we return -1 with 				 * the retry option set.  Otherwise renegotiation may 				 * cause nasty problems in the blocking world */
+comment|/*                  * In the case where we try to read application data, but we                  * trigger an SSL handshake, we return -1 with the retry                  * option set.  Otherwise renegotiation may cause nasty                  * problems in the blocking world                  */
 name|s
 operator|->
 name|rwstate
@@ -5399,7 +5420,7 @@ default|default:
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLS
-comment|/* TLS up to v1.1 just ignores unknown message types: 		 * TLS v1.2 give an unexpected message alert. 		 */
+comment|/*          * TLS up to v1.1 just ignores unknown message types: TLS v1.2 give          * an unexpected message alert.          */
 if|if
 condition|(
 name|s
@@ -5450,7 +5471,7 @@ case|:
 case|case
 name|SSL3_RT_HANDSHAKE
 case|:
-comment|/* we already handled all of these, with the possible exception 		 * of SSL3_RT_HANDSHAKE when s->in_handshake is set, but that 		 * should not happen when type != rr->type */
+comment|/*          * we already handled all of these, with the possible exception of          * SSL3_RT_HANDSHAKE when s->in_handshake is set, but that should not          * happen when type != rr->type          */
 name|al
 operator|=
 name|SSL_AD_UNEXPECTED_MESSAGE
@@ -5468,7 +5489,7 @@ goto|;
 case|case
 name|SSL3_RT_APPLICATION_DATA
 case|:
-comment|/* At this point, we were expecting handshake data, 		 * but have application data.  If the library was 		 * running inside ssl3_read() (i.e. in_read_app_data 		 * is set) and it makes sense to read application data 		 * at this point (session renegotiation not yet started), 		 * we will indulge it. 		 */
+comment|/*          * At this point, we were expecting handshake data, but have          * application data.  If the library was running inside ssl3_read()          * (i.e. in_read_app_data is set) and it makes sense to read          * application data at this point (session renegotiation not yet          * started), we will indulge it.          */
 if|if
 condition|(
 name|s
@@ -5734,7 +5755,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* we have to record the message digest at 	 * this point so we can get it before we read 	 * the finished message */
+comment|/*      * we have to record the message digest at this point so we can get it      * before we read the finished message      */
 if|if
 condition|(
 name|s
@@ -5894,7 +5915,7 @@ name|desc
 operator|=
 name|SSL_AD_HANDSHAKE_FAILURE
 expr_stmt|;
-comment|/* SSL 3.0 does not have protocol_version alerts */
+comment|/* SSL 3.0 does not have                                           * protocol_version alerts */
 if|if
 condition|(
 name|desc
@@ -5986,7 +6007,7 @@ argument_list|(
 name|s
 argument_list|)
 return|;
-comment|/* else data is still being written out, we will get written 	 * some time in the future */
+comment|/*      * else data is still being written out, we will get written some time in      * the future      */
 return|return
 operator|-
 literal|1
@@ -6077,7 +6098,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Alert sent to BIO.  If it is important, flush it now. 		 * If the message does not get sent due to non-blocking IO, 		 * we will not worry too much. */
+comment|/*          * Alert sent to BIO.  If it is important, flush it now. If the          * message does not get sent due to non-blocking IO, we will not          * worry too much.          */
 if|if
 condition|(
 name|s

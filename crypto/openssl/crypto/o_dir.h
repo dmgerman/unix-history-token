@@ -4,7 +4,7 @@ comment|/* crypto/o_dir.h -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Copied from Richard Levitte's (richard@levitte.org) LP library.  All  * symbol names have been changed, with permission from the author.  */
+comment|/*  * Copied from Richard Levitte's (richard@levitte.org) LP library.  All  * symbol names have been changed, with permission from the author.  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ name|struct
 name|OPENSSL_dir_context_st
 name|OPENSSL_DIR_CTX
 typedef|;
-comment|/* returns NULL on error or end-of-directory.      If it is end-of-directory, errno will be zero */
+comment|/*    * returns NULL on error or end-of-directory. If it is end-of-directory,    * errno will be zero    */
 specifier|const
 name|char
 modifier|*

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*! \file ssl/ssl_lib.c  *  \brief Version independent SSL functions.  */
+comment|/*  * ! \file ssl/ssl_lib.c \brief Version independent SSL functions.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ name|SSL3_ENC_METHOD
 name|ssl3_undef_enc_method
 init|=
 block|{
-comment|/* evil casts, but these functions are only called if there's a library bug */
+comment|/*      * evil casts, but these functions are only called if there's a library      * bug      */
 operator|(
 name|int
 argument_list|(
@@ -303,7 +303,7 @@ name|use_context
 operator|)
 operator|)
 name|ssl_undefined_function
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -381,9 +381,9 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Disabled since version 1.10 of this file (early return not        * needed because SSL_clear is not called when doing renegotiation) */
-comment|/* This is set if we are doing dynamic renegotiation so keep 	 * the old cipher.  It is sort of a SSL_clear_lite :-) */
-block|if (s->renegotiate) return(1);
+comment|/*      * Disabled since version 1.10 of this file (early return not      * needed because SSL_clear is not called when doing renegotiation)      */
+comment|/*      * This is set if we are doing dynamic renegotiation so keep      * the old cipher.  It is sort of a SSL_clear_lite :-)      */
+block|if (s->renegotiate)         return (1);
 else|#
 directive|else
 if|if
@@ -463,7 +463,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|s->read_ahead=s->ctx->read_ahead;
+block|s->read_ahead = s->ctx->read_ahead;
 endif|#
 directive|endif
 if|if
@@ -519,7 +519,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/* Check to see if we were changed into a different method, if 	 * so, revert back if we are not doing session-id reuse. */
+comment|/*      * Check to see if we were changed into a different method, if so, revert      * back if we are not doing session-id reuse.      */
 if|if
 condition|(
 operator|!
@@ -845,7 +845,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Earlier library versions used to copy the pointer to 		 * the CERT, not its contents; only when setting new 		 * parameters for the per-SSL copy, ssl_cert_new would be 		 * called (and the direct reference to the per-SSL_CTX 		 * settings would be lost, but those still were indirectly 		 * accessed for various purposes, and for that reason they 		 * used to be known as s->ctx->default_cert). 		 * Now we don't look at the SSL_CTX's CERT after having 		 * duplicated it once. */
+comment|/*          * Earlier library versions used to copy the pointer to the CERT, not          * its contents; only when setting new parameters for the per-SSL          * copy, ssl_cert_new would be called (and the direct reference to          * the per-SSL_CTX settings would be lost, but those still were          * indirectly accessed for various purposes, and for that reason they          * used to be known as s->ctx->default_cert). Now we don't look at the          * SSL_CTX's CERT after having duplicated it once.          */
 name|s
 operator|->
 name|cert
@@ -912,7 +912,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|s->verify_depth=ctx->verify_depth;
+block|s->verify_depth = ctx->verify_depth;
 endif|#
 directive|endif
 name|s
@@ -1002,7 +1002,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|s->purpose = ctx->purpose; 	s->trust = ctx->trust;
+block|s->purpose = ctx->purpose;     s->trust = ctx->trust;
 endif|#
 directive|endif
 name|s
@@ -1464,7 +1464,7 @@ name|int
 name|id_len
 parameter_list|)
 block|{
-comment|/* A quick examination of SSL_SESSION_hash and SSL_SESSION_cmp shows how 	 * we can "construct" a session to give us the desired check - ie. to 	 * find if there's a session in the hash table that would conflict with 	 * any new session built out of this id/id_len and the ssl_version in 	 * use by this SSL. */
+comment|/*      * A quick examination of SSL_SESSION_hash and SSL_SESSION_cmp shows how      * we can "construct" a session to give us the desired check - ie. to      * find if there's a session in the hash table that would conflict with      * any new session built out of this id/id_len and the ssl_version in use      * by this SSL.      */
 name|SSL_SESSION
 name|r
 decl_stmt|,
@@ -1508,7 +1508,7 @@ argument_list|,
 name|id_len
 argument_list|)
 expr_stmt|;
-comment|/* NB: SSLv2 always uses a fixed 16-byte session ID, so even if a 	 * callback is calling us to check the uniqueness of a shorter ID, it 	 * must be compared as a padded-out ID because that is what it will be 	 * converted to when the callback has finished choosing it. */
+comment|/*      * NB: SSLv2 always uses a fixed 16-byte session ID, so even if a      * callback is calling us to check the uniqueness of a shorter ID, it      * must be compared as a padded-out ID because that is what it will be      * converted to when the callback has finished choosing it.      */
 if|if
 condition|(
 operator|(
@@ -2289,7 +2289,7 @@ modifier|*
 name|wbio
 parameter_list|)
 block|{
-comment|/* If the output buffering BIO is still in place, remove it 	 */
+comment|/*      * If the output buffering BIO is still in place, remove it      */
 if|if
 condition|(
 name|s
@@ -3368,7 +3368,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-comment|/* SSL_pending cannot work properly if read-ahead is enabled 	 * (SSL_[CTX_]ctrl(..., SSL_CTRL_SET_READ_AHEAD, 1, NULL)), 	 * and it is impossible to fix since SSL_pending cannot report 	 * errors that may be observed while scanning the new data. 	 * (Note that SSL_pending() is often used as a boolean value, 	 * so we'd better not return -1.) 	 */
+comment|/*      * SSL_pending cannot work properly if read-ahead is enabled      * (SSL_[CTX_]ctrl(..., SSL_CTRL_SET_READ_AHEAD, 1, NULL)), and it is      * impossible to fix since SSL_pending cannot report errors that may be      * observed while scanning the new data. (Note that SSL_pending() is      * often used as a boolean value, so we'd better not return -1.)      */
 return|return
 operator|(
 name|s
@@ -3521,7 +3521,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* If we are a client, cert_chain includes the peer's own 	 * certificate; if we are a server, it does not. */
+comment|/*      * If we are a client, cert_chain includes the peer's own certificate; if      * we are a server, it does not.      */
 end_comment
 
 begin_return
@@ -3534,7 +3534,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/* Now in theory, since the calling process own 't' it should be safe to  * modify.  We need to be able to read f without being hassled */
+comment|/*  * Now in theory, since the calling process own 't' it should be safe to  * modify.  We need to be able to read f without being hassled  */
 end_comment
 
 begin_macro
@@ -3564,7 +3564,7 @@ name|f
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* what if we are setup as SSLv2 but want to talk SSLv3 or 	 * vice-versa */
+comment|/*      * what if we are setup as SSLv2 but want to talk SSLv3 or vice-versa      */
 if|if
 condition|(
 name|t
@@ -4258,7 +4258,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-comment|/* Note that this function behaves differently from what one might 	 * expect.  Return values are 0 for no success (yet), 	 * 1 for success; but calling it once is usually not enough, 	 * even if blocking I/O is used (see ssl3_shutdown). 	 */
+comment|/*      * Note that this function behaves differently from what one might      * expect.  Return values are 0 for no success (yet), 1 for success; but      * calling it once is usually not enough, even if blocking I/O is used      * (see ssl3_shutdown).      */
 if|if
 condition|(
 name|s
@@ -4412,7 +4412,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-comment|/* becomes true when negotiation is requested; 	 * false again once a handshake has finished */
+comment|/*      * becomes true when negotiation is requested; false again once a      * handshake has finished      */
 return|return
 operator|(
 name|s
@@ -5450,7 +5450,7 @@ block|}
 end_elseif
 
 begin_expr_stmt
-unit|} 	return
+unit|}     return
 operator|(
 name|NULL
 operator|)
@@ -5535,7 +5535,7 @@ block|}
 end_elseif
 
 begin_expr_stmt
-unit|} 	return
+unit|}     return
 operator|(
 name|NULL
 operator|)
@@ -5689,7 +5689,7 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-comment|/* ssl_create_cipher_list may return an empty stack if it 	 * was unable to find a cipher matching the given rule string 	 * (for example if the rule string specifies a cipher which 	 * has been disabled). This is not an error as far as 	 * ssl_create_cipher_list is concerned, and hence 	 * ctx->cipher_list and ctx->cipher_list_by_id has been 	 * updated. */
+comment|/*      * ssl_create_cipher_list may return an empty stack if it was unable to      * find a cipher matching the given rule string (for example if the rule      * string specifies a cipher which has been disabled). This is not an      * error as far as ssl_create_cipher_list is concerned, and hence      * ctx->cipher_list and ctx->cipher_list_by_id has been updated.      */
 if|if
 condition|(
 name|sk
@@ -6276,7 +6276,7 @@ operator|+=
 name|j
 expr_stmt|;
 block|}
-comment|/* If p == q, no ciphers; caller indicates an error. 	 * Otherwise, add applicable SCSVs. */
+comment|/*      * If p == q, no ciphers; caller indicates an error. Otherwise, add      * applicable SCSVs.      */
 if|if
 condition|(
 name|p
@@ -6522,12 +6522,32 @@ operator|==
 name|NULL
 operator|)
 condition|)
+block|{
 name|sk
 operator|=
 name|sk_SSL_CIPHER_new_null
 argument_list|()
 expr_stmt|;
 comment|/* change perhaps later */
+if|if
+condition|(
+name|sk
+operator|==
+name|NULL
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL_BYTES_TO_CIPHER_LIST
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+block|}
 else|else
 block|{
 name|sk
@@ -6717,7 +6737,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* The SCSV indicates that the client previously tried a higher version. 			 * Fail if the current version is an unexpected downgrade. */
+comment|/*              * The SCSV indicates that the client previously tried a higher              * version. Fail if the current version is an unexpected              * downgrade.              */
 if|if
 condition|(
 operator|!
@@ -6978,7 +6998,7 @@ name|OPENSSL_NO_NEXTPROTONEG
 end_ifndef
 
 begin_comment
-comment|/* SSL_select_next_proto implements the standard protocol selection. It is  * expected that this function is called from the callback set by  * SSL_CTX_set_next_proto_select_cb.  *  * The protocol data is assumed to be a vector of 8-bit, length prefixed byte  * strings. The length byte itself is not included in the length. A byte  * string of length 0 is invalid. No byte string may be truncated.  *  * The current, but experimental algorithm for selecting the protocol is:  *  * 1) If the server doesn't support NPN then this is indicated to the  * callback. In this case, the client application has to abort the connection  * or have a default application level protocol.  *  * 2) If the server supports NPN, but advertises an empty list then the  * client selects the first protcol in its list, but indicates via the  * API that this fallback case was enacted.  *  * 3) Otherwise, the client finds the first protocol in the server's list  * that it supports and selects this protocol. This is because it's  * assumed that the server has better information about which protocol  * a client should use.  *  * 4) If the client doesn't support any of the server's advertised  * protocols, then this is treated the same as case 2.  *  * It returns either  * OPENSSL_NPN_NEGOTIATED if a common protocol was found, or  * OPENSSL_NPN_NO_OVERLAP if the fallback case was reached.  */
+comment|/*  * SSL_select_next_proto implements the standard protocol selection. It is  * expected that this function is called from the callback set by  * SSL_CTX_set_next_proto_select_cb. The protocol data is assumed to be a  * vector of 8-bit, length prefixed byte strings. The length byte itself is  * not included in the length. A byte string of length 0 is invalid. No byte  * string may be truncated. The current, but experimental algorithm for  * selecting the protocol is: 1) If the server doesn't support NPN then this  * is indicated to the callback. In this case, the client application has to  * abort the connection or have a default application level protocol. 2) If  * the server supports NPN, but advertises an empty list then the client  * selects the first protcol in its list, but indicates via the API that this  * fallback case was enacted. 3) Otherwise, the client finds the first  * protocol in the server's list that it supports and selects this protocol.  * This is because it's assumed that the server has better information about  * which protocol a client should use. 4) If the client doesn't support any  * of the server's advertised protocols, then this is treated the same as  * case 2. It returns either OPENSSL_NPN_NEGOTIATED if a common protocol was  * found, or OPENSSL_NPN_NO_OVERLAP if the fallback case was reached.  */
 end_comment
 
 begin_function
@@ -7034,7 +7054,7 @@ name|status
 init|=
 name|OPENSSL_NPN_UNSUPPORTED
 decl_stmt|;
-comment|/* For each protocol in server preference order, see if we support it. */
+comment|/*      * For each protocol in server preference order, see if we support it.      */
 for|for
 control|(
 name|i
@@ -7175,7 +7195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SSL_get0_next_proto_negotiated sets *data and *len to point to the client's  * requested protocol for this connection and returns 0. If the client didn't  * request any protocol, then *data is set to NULL.  *  * Note that the client can request any protocol it chooses. The value returned  * from this function need not be a member of the list of supported protocols  * provided by the callback.  */
+comment|/*  * SSL_get0_next_proto_negotiated sets *data and *len to point to the  * client's requested protocol for this connection and returns 0. If the  * client didn't request any protocol, then *data is set to NULL. Note that  * the client can request any protocol it chooses. The value returned from  * this function need not be a member of the list of supported protocols  * provided by the callback.  */
 end_comment
 
 begin_function
@@ -7233,7 +7253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SSL_CTX_set_next_protos_advertised_cb sets a callback that is called when a  * TLS server needs a list of supported protocols for Next Protocol  * Negotiation. The returned list must be in wire format.  The list is returned  * by setting |out| to point to it and |outlen| to its length. This memory will  * not be modified, but one should assume that the SSL* keeps a reference to  * it.  *  * The callback should return SSL_TLSEXT_ERR_OK if it wishes to advertise. Otherwise, no  * such extension will be included in the ServerHello. */
+comment|/*  * SSL_CTX_set_next_protos_advertised_cb sets a callback that is called when  * a TLS server needs a list of supported protocols for Next Protocol  * Negotiation. The returned list must be in wire format.  The list is  * returned by setting |out| to point to it and |outlen| to its length. This  * memory will not be modified, but one should assume that the SSL* keeps a  * reference to it. The callback should return SSL_TLSEXT_ERR_OK if it  * wishes to advertise. Otherwise, no such extension will be included in the  * ServerHello.  */
 end_comment
 
 begin_function
@@ -7292,7 +7312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SSL_CTX_set_next_proto_select_cb sets a callback that is called when a  * client needs to select a protocol from the server's provided list. |out|  * must be set to point to the selected protocol (which may be within |in|).  * The length of the protocol name must be written into |outlen|. The server's  * advertised protocols are provided in |in| and |inlen|. The callback can  * assume that |in| is syntactically valid.  *  * The client must select a protocol. It is fatal to the connection if this  * callback returns a value other than SSL_TLSEXT_ERR_OK.  */
+comment|/*  * SSL_CTX_set_next_proto_select_cb sets a callback that is called when a  * client needs to select a protocol from the server's provided list. |out|  * must be set to point to the selected protocol (which may be within |in|).  * The length of the protocol name must be written into |outlen|. The  * server's advertised protocols are provided in |in| and |inlen|. The  * callback can assume that |in| is syntactically valid. The client must  * select a protocol. It is fatal to the connection if this callback returns  * a value other than SSL_TLSEXT_ERR_OK.  */
 end_comment
 
 begin_function
@@ -7536,7 +7556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* NB: If this function (or indeed the hash function which uses a sort of  * coarser function than this one) is changed, ensure  * SSL_CTX_has_matching_session_id() is checked accordingly. It relies on being  * able to construct an SSL_SESSION that will collide with any existing session  * with a matching session ID. */
+comment|/*  * NB: If this function (or indeed the hash function which uses a sort of  * coarser function than this one) is changed, ensure  * SSL_CTX_has_matching_session_id() is checked accordingly. It relies on  * being able to construct an SSL_SESSION that will collide with any existing  * session with a matching session ID.  */
 end_comment
 
 begin_function
@@ -7607,7 +7627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* These wrapper functions should remain rather than redeclaring  * SSL_SESSION_hash and SSL_SESSION_cmp for void* types and casting each  * variable. The reason is that the functions aren't static, they're exposed via  * ssl.h. */
+comment|/*  * These wrapper functions should remain rather than redeclaring  * SSL_SESSION_hash and SSL_SESSION_cmp for void* types and casting each  * variable. The reason is that the functions aren't static, they're exposed  * via ssl.h.  */
 end_comment
 
 begin_expr_stmt
@@ -7914,11 +7934,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*	ret->cipher=NULL;*/
+comment|/*  ret->cipher=NULL;*/
 end_comment
 
 begin_comment
-comment|/*	ret->s2->challenge=NULL; 	ret->master_key=NULL; 	ret->key_arg=NULL; 	ret->s2->conn_id=NULL; */
+comment|/*-     ret->s2->challenge=NULL;     ret->master_key=NULL;     ret->key_arg=NULL;     ret->s2->conn_id=NULL; */
 end_comment
 
 begin_expr_stmt
@@ -8000,7 +8020,7 @@ literal|0
 end_if
 
 begin_comment
-unit|ret->verify_depth=-1;
+unit|ret->verify_depth = -1;
 comment|/* Don't impose a limit (but x509_lu.c does) */
 end_comment
 
@@ -8840,7 +8860,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Default is to connect to non-RI servers. When RI is more widely 	 * deployed might change this. 	 */
+comment|/*      * Default is to connect to non-RI servers. When RI is more widely      * deployed might change this.      */
 end_comment
 
 begin_expr_stmt
@@ -8849,6 +8869,19 @@ operator|->
 name|options
 operator||=
 name|SSL_OP_LEGACY_SERVER_CONNECT
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*      * Disable SSLv2 by default, callers that want to enable SSLv2 will have to      * explicitly clear this option via either of SSL_CTX_clear_options() or      * SSL_clear_options().      */
+end_comment
+
+begin_expr_stmt
+name|ret
+operator|->
+name|options
+operator||=
+name|SSL_OP_NO_SSLv2
 expr_stmt|;
 end_expr_stmt
 
@@ -8910,7 +8943,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void SSL_COMP_free(SSL_COMP *comp)     { OPENSSL_free(comp); }
+unit|static void SSL_COMP_free(SSL_COMP *comp) {     OPENSSL_free(comp); }
 endif|#
 directive|endif
 end_endif
@@ -9068,7 +9101,7 @@ operator|->
 name|param
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free internal session cache. However: the remove_cb() may reference 	 * the ex_data of SSL_CTX, thus the ex_data store can only be removed 	 * after the sessions were flushed. 	 * As the ex_data handling routines might also touch the session cache, 	 * the most secure solution seems to be: empty (flush) the cache, then 	 * free ex_data, then finally free the cache. 	 * (See ticket [openssl.org #212].) 	 */
+comment|/*      * Free internal session cache. However: the remove_cb() may reference      * the ex_data of SSL_CTX, thus the ex_data store can only be removed      * after the sessions were flushed.      * As the ex_data handling routines might also touch the session cache,      * the most secure solution seems to be: empty (flush) the cache, then      * free ex_data, then finally free the cache.      * (See ticket [openssl.org #212].)      */
 if|if
 condition|(
 name|a
@@ -9208,8 +9241,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* This should never be done, since it removes a global database */
-block|if (a->comp_methods != NULL) 		sk_SSL_COMP_pop_free(a->comp_methods,SSL_COMP_free);
+comment|/* This should never be done, since it                                  * removes a global database */
+block|if (a->comp_methods != NULL)         sk_SSL_COMP_pop_free(a->comp_methods, SSL_COMP_free);
 else|#
 directive|else
 name|a
@@ -9528,23 +9561,31 @@ name|emask_k
 decl_stmt|,
 name|emask_a
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDSA
 name|int
 name|have_ecc_cert
-decl_stmt|,
-name|ecdh_ok
 decl_stmt|,
 name|ecdsa_ok
 decl_stmt|,
 name|ecc_pkey_size
 decl_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ECDH
 name|int
 name|have_ecdh_tmp
+decl_stmt|,
+name|ecdh_ok
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
 name|X509
 modifier|*
 name|x
@@ -9570,6 +9611,8 @@ name|md_nid
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c
@@ -9917,6 +9960,9 @@ name|SSL_PKEY_ECC
 index|]
 operator|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
 name|have_ecc_cert
 operator|=
 operator|(
@@ -9933,6 +9979,8 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mask_k
 operator|=
 literal|0
@@ -10089,7 +10137,7 @@ if|#
 directive|if
 literal|0
 comment|/* The match needs to be both kEDH and aRSA or aDSA, so don't worry */
-block|if (	(dh_tmp || dh_rsa || dh_dsa)&& 		(rsa_enc || rsa_sign || dsa_sign)) 		mask_k|=SSL_kEDH; 	if ((dh_tmp_export || dh_rsa_export || dh_dsa_export)&& 		(rsa_enc || rsa_sign || dsa_sign)) 		emask_k|=SSL_kEDH;
+block|if ((dh_tmp || dh_rsa || dh_dsa)&& (rsa_enc || rsa_sign || dsa_sign))         mask_k |= SSL_kEDH;     if ((dh_tmp_export || dh_rsa_export || dh_dsa_export)&&         (rsa_enc || rsa_sign || dsa_sign))         emask_k |= SSL_kEDH;
 endif|#
 directive|endif
 if|if
@@ -10199,7 +10247,10 @@ name|SSL_aKRB5
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* An ECC certificate may be usable for ECDH and/or 	 * ECDSA cipher suites depending on the key usage extension. 	 */
+comment|/*      * An ECC certificate may be usable for ECDH and/or ECDSA cipher suites      * depending on the key usage extension.      */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
 if|if
 condition|(
 name|have_ecc_cert
@@ -10435,6 +10486,8 @@ block|}
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ECDH
@@ -10931,7 +10984,7 @@ name|SSL_kECDHe
 operator|)
 condition|)
 block|{
-comment|/* we don't need to look at SSL_kEECDH 		 * since no certificate is needed for 		 * anon ECDH and for authenticated 		 * EECDH, the check for the auth 		 * algorithm will set i correctly 		 * NOTE: For ECDH-RSA, we need an ECC 		 * not an RSA cert but for EECDH-RSA 		 * we need an RSA cert. Placing the 		 * checks for SSL_kECDH before RSA 		 * checks ensures the correct cert is chosen. 		 */
+comment|/*          * we don't need to look at SSL_kEECDH since no certificate is needed          * for anon ECDH and for authenticated EECDH, the check for the auth          * algorithm will set i correctly NOTE: For ECDH-RSA, we need an ECC          * not an RSA cert but for EECDH-RSA we need an RSA cert. Placing the          * checks for SSL_kECDH before RSA checks ensures the correct cert is          * chosen.          */
 name|i
 operator|=
 name|SSL_PKEY_ECC
@@ -11052,8 +11105,8 @@ operator|=
 name|SSL_PKEY_GOST01
 expr_stmt|;
 else|else
-comment|/* if (alg_a& SSL_aNULL) */
 block|{
+comment|/* if (alg_a& SSL_aNULL) */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL_GET_SERVER_SEND_PKEY
@@ -11322,7 +11375,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* If the session_id_length is 0, we are not supposed to cache it, 	 * and it would be rather hard to do anyway :-) */
+comment|/*      * If the session_id_length is 0, we are not supposed to cache it, and it      * would be rather hard to do anyway :-)      */
 if|if
 condition|(
 name|s
@@ -11699,7 +11752,7 @@ operator|(
 name|SSL_ERROR_NONE
 operator|)
 return|;
-comment|/* Make things return SSL_ERROR_SYSCALL when doing SSL_do_handshake 	 * etc, where we do encode the error */
+comment|/*      * Make things return SSL_ERROR_SYSCALL when doing SSL_do_handshake etc,      * where we do encode the error      */
 if|if
 condition|(
 operator|(
@@ -11774,7 +11827,7 @@ argument_list|(
 name|bio
 argument_list|)
 condition|)
-comment|/* This one doesn't make too much sense ... We never try 			 * to write to the rbio, and an application program where 			 * rbio and wbio are separate couldn't even know what it 			 * should wait for. 			 * However if we ever set s->rwstate incorrectly 			 * (so that we have SSL_want_read(s) instead of 			 * SSL_want_write(s)) and rbio and wbio *are* the same, 			 * this test works around that bug; so it might be safer 			 * to keep it. */
+comment|/*              * This one doesn't make too much sense ... We never try to write              * to the rbio, and an application program where rbio and wbio              * are separate couldn't even know what it should wait for.              * However if we ever set s->rwstate incorrectly (so that we have              * SSL_want_read(s) instead of SSL_want_write(s)) and rbio and              * wbio *are* the same, this test works around that bug; so it              * might be safer to keep it.              */
 return|return
 operator|(
 name|SSL_ERROR_WANT_WRITE
@@ -11869,7 +11922,7 @@ argument_list|(
 name|bio
 argument_list|)
 condition|)
-comment|/* See above (SSL_want_read(s) with BIO_should_write(bio)) */
+comment|/*              * See above (SSL_want_read(s) with BIO_should_write(bio))              */
 return|return
 operator|(
 name|SSL_ERROR_WANT_READ
@@ -12080,7 +12133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For the next 2 functions, SSL_clear() sets shutdown and so  * one of these calls will reset it */
+comment|/*  * For the next 2 functions, SSL_clear() sets shutdown and so one of these  * calls will reset it  */
 end_comment
 
 begin_function
@@ -12489,7 +12542,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* No session has been established yet, so we have to expect 		 * that s->cert or ret->cert will be changed later -- 		 * they should not both point to the same object, 		 * and thus we can't use SSL_copy_session_id. */
+comment|/*          * No session has been established yet, so we have to expect that          * s->cert or ret->cert will be changed later -- they should not both          * point to the same object, and thus we can't use          * SSL_copy_session_id.          */
 name|ret
 operator|->
 name|method
@@ -12862,7 +12915,7 @@ name|s
 operator|->
 name|state
 expr_stmt|;
-comment|/* SSL_dup does not really work at any state, though */
+comment|/* SSL_dup does not really work at any state,                                  * though */
 name|ret
 operator|->
 name|rstate
@@ -12877,7 +12930,7 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-comment|/* would have to copy ret->init_buf, ret->init_msg, ret->init_num, ret->init_off */
+comment|/* would have to copy ret->init_buf,                                  * ret->init_msg, ret->init_num,                                  * ret->init_off */
 name|ret
 operator|->
 name|hit
@@ -13543,7 +13596,7 @@ argument_list|(
 name|bbio
 argument_list|)
 expr_stmt|;
-comment|/*	if (!BIO_set_write_buffer_size(bbio,16*1024)) */
+comment|/*      if (!BIO_set_write_buffer_size(bbio,16*1024)) */
 if|if
 condition|(
 operator|!
@@ -13667,7 +13720,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REF_CHECK
-comment|/* not the usual REF_CHECK, but this avoids adding one more preprocessor symbol */
+comment|/* not the usual REF_CHECK, but this avoids                                  * adding one more preprocessor symbol */
 name|assert
 argument_list|(
 name|s
@@ -13985,7 +14038,7 @@ name|ocert
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Program invariant: |sid_ctx| has fixed size (SSL_MAX_SID_CTX_LENGTH), 	 * so setter APIs must prevent invalid lengths from entering the system. 	 */
+comment|/*      * Program invariant: |sid_ctx| has fixed size (SSL_MAX_SID_CTX_LENGTH),      * so setter APIs must prevent invalid lengths from entering the system.      */
 name|OPENSSL_assert
 argument_list|(
 name|ssl
@@ -14000,7 +14053,7 @@ name|sid_ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the session ID context matches that of the parent SSL_CTX, 	 * inherit it from the new SSL_CTX as well. If however the context does 	 * not match (i.e., it was set per-ssl with SSL_set_session_id_context), 	 * leave it unchanged. 	 */
+comment|/*      * If the session ID context matches that of the parent SSL_CTX,      * inherit it from the new SSL_CTX as well. If however the context does      * not match (i.e., it was set per-ssl with SSL_set_session_id_context),      * leave it unchanged.      */
 if|if
 condition|(
 operator|(
@@ -14224,7 +14277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* One compiler (Diab DCC) doesn't like argument names in returned    function pointer.  */
+comment|/*  * One compiler (Diab DCC) doesn't like argument names in returned function  * pointer.  */
 end_comment
 
 begin_macro
@@ -14239,13 +14292,13 @@ operator|(
 specifier|const
 name|SSL
 operator|*
-comment|/*ssl*/
+comment|/* ssl */
 operator|,
 name|int
-comment|/*type*/
+comment|/* type */
 operator|,
 name|int
-comment|/*val*/
+comment|/* val */
 operator|)
 block|{
 return|return
@@ -14648,7 +14701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*!  * \brief Set the callback for generating temporary RSA keys.  * \param ctx the SSL context.  * \param cb the callback  */
+comment|/**  * \brief Set the callback for generating temporary RSA keys.  * \param ctx the SSL context.  * \param cb the callback  */
 end_comment
 
 begin_ifndef
@@ -14765,7 +14818,7 @@ name|DOXYGEN
 end_ifdef
 
 begin_comment
-comment|/*!  * \brief The RSA temporary key callback function.  * \param ssl the SSL session.  * \param is_export \c TRUE if the temp RSA key is for an export ciphersuite.  * \param keylength if \c is_export is \c TRUE, then \c keylength is the size  * of the required key in bits.  * \return the temporary RSA key.  * \sa SSL_CTX_set_tmp_rsa_callback, SSL_set_tmp_rsa_callback  */
+comment|/**  * \brief The RSA temporary key callback function.  * \param ssl the SSL session.  * \param is_export \c TRUE if the temp RSA key is for an export ciphersuite.  * \param keylength if \c is_export is \c TRUE, then \c keylength is the size  * of the required key in bits.  * \return the temporary RSA key.  * \sa SSL_CTX_set_tmp_rsa_callback, SSL_set_tmp_rsa_callback  */
 end_comment
 
 begin_function
@@ -14783,7 +14836,7 @@ parameter_list|,
 name|int
 name|keylength
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_endif
@@ -14792,7 +14845,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!  * \brief Set the callback for generating temporary DH keys.  * \param ctx the SSL context.  * \param dh the callback  */
+comment|/**  * \brief Set the callback for generating temporary DH keys.  * \param ctx the SSL context.  * \param dh the callback  */
 end_comment
 
 begin_ifndef
@@ -15632,7 +15685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocates new EVP_MD_CTX and sets pointer to it into given pointer  * vairable, freeing  EVP_MD_CTX previously stored in that variable, if  * any. If EVP_MD pointer is passed, initializes ctx with this md  * Returns newly allocated ctx;  */
+comment|/*  * Allocates new EVP_MD_CTX and sets pointer to it into given pointer  * vairable, freeing EVP_MD_CTX previously stored in that variable, if any.  * If EVP_MD pointer is passed, initializes ctx with this md Returns newly  * allocated ctx;  */
 end_comment
 
 begin_function

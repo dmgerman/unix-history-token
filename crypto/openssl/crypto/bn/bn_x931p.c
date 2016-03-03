@@ -4,11 +4,11 @@ comment|/* bn_x931p.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2005.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2005.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ comment|/* X9.31 routines for prime derivation */
 end_comment
 
 begin_comment
-comment|/* X9.31 prime derivation. This is used to generate the primes pi  * (p1, p2, q1, q2) from a parameter Xpi by checking successive odd  * integers.  */
+comment|/*  * X9.31 prime derivation. This is used to generate the primes pi (p1, p2,  * q1, q2) from a parameter Xpi by checking successive odd integers.  */
 end_comment
 
 begin_function
@@ -156,7 +156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is the main X9.31 prime derivation function. From parameters  * Xp1, Xp2 and Xp derive the prime p. If the parameters p1 or p2 are  * not NULL they will be returned too: this is needed for testing.  */
+comment|/*  * This is the main X9.31 prime derivation function. From parameters Xp1, Xp2  * and Xp derive the prime p. If the parameters p1 or p2 are not NULL they  * will be returned too: this is needed for testing.  */
 end_comment
 
 begin_function
@@ -541,7 +541,7 @@ name|BN_is_one
 argument_list|(
 name|t
 argument_list|)
-comment|/* X9.31 specifies 8 MR and 1 Lucas test or any prime test 		 * offering similar or better guarantees 50 MR is considerably  		 * better. 		 */
+comment|/*              * X9.31 specifies 8 MR and 1 Lucas test or any prime test              * offering similar or better guarantees 50 MR is considerably              * better.              */
 operator|&&
 name|BN_is_prime_fasttest_ex
 argument_list|(
@@ -600,7 +600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate pair of paramters Xp, Xq for X9.31 prime generation.  * Note: nbits paramter is sum of number of bits in both.  */
+comment|/*  * Generate pair of paramters Xp, Xq for X9.31 prime generation. Note: nbits  * paramter is sum of number of bits in both.  */
 end_comment
 
 begin_function
@@ -630,7 +630,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Number of bits for each prime is of the form 	 * 512+128s for s = 0, 1, ... 	 */
+comment|/*      * Number of bits for each prime is of the form 512+128s for s = 0, 1,      * ...      */
 if|if
 condition|(
 operator|(
@@ -652,7 +652,7 @@ name|nbits
 operator|>>=
 literal|1
 expr_stmt|;
-comment|/* The random value Xp must be between sqrt(2) * 2^(nbits-1) and 	 * 2^nbits - 1. By setting the top two bits we ensure that the lower 	 * bound is exceeded. 	 */
+comment|/*      * The random value Xp must be between sqrt(2) * 2^(nbits-1) and 2^nbits      * - 1. By setting the top two bits we ensure that the lower bound is      * exceeded.      */
 if|if
 condition|(
 operator|!
@@ -759,7 +759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate primes using X9.31 algorithm. Of the values p, p1, p2, Xp1  * and Xp2 only 'p' needs to be non-NULL. If any of the others are not NULL  * the relevant parameter will be stored in it.  *  * Due to the fact that |Xp - Xq|> 2^(nbits - 100) must be satisfied Xp and Xq  * are generated using the previous function and supplied as input.  */
+comment|/*  * Generate primes using X9.31 algorithm. Of the values p, p1, p2, Xp1 and  * Xp2 only 'p' needs to be non-NULL. If any of the others are not NULL the  * relevant parameter will be stored in it. Due to the fact that |Xp - Xq|>  * 2^(nbits - 100) must be satisfied Xp and Xq are generated using the  * previous function and supplied as input.  */
 end_comment
 
 begin_function

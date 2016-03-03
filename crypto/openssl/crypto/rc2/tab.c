@@ -525,7 +525,7 @@ block|,
 literal|0x43
 block|,
 literal|0xab
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1049,7 +1049,7 @@ block|,
 literal|0x35
 block|,
 literal|0xfd
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -4,11 +4,11 @@ comment|/* crypto/lhash/lhash.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* Code for dynamic hash table routines  * Author - Eric Young v 2.0  *  * 2.2 eay - added #include "crypto.h" so the memory leak checking code is  *	     present. eay 18-Jun-98  *  * 2.1 eay - Added an 'error in last operation' flag. eay 6-May-98  *  * 2.0 eay - Fixed a bug that occurred when using lh_delete  *	     from inside lh_doall().  As entries were deleted,  *	     the 'table' was 'contract()ed', making some entries  *	     jump from the end of the table to the start, there by  *	     skipping the lh_doall() processing. eay - 4/12/95  *  * 1.9 eay - Fixed a memory leak in lh_free, the LHASH_NODEs  *	     were not being free()ed. 21/11/95  *  * 1.8 eay - Put the stats routines into a separate file, lh_stats.c  *	     19/09/95  *  * 1.7 eay - Removed the fputs() for realloc failures - the code  *           should silently tolerate them.  I have also fixed things  *           lint complained about 04/05/95  *  * 1.6 eay - Fixed an invalid pointers in contract/expand 27/07/92  *  * 1.5 eay - Fixed a misuse of realloc in expand 02/03/1992  *  * 1.4 eay - Fixed lh_doall so the function can call lh_delete 28/05/91  *  * 1.3 eay - Fixed a few lint problems 19/3/1991  *  * 1.2 eay - Fixed lh_doall problem 13/3/1991  *  * 1.1 eay - Added lh_doall  *  * 1.0 eay - First version  */
+comment|/*-  * Code for dynamic hash table routines  * Author - Eric Young v 2.0  *  * 2.2 eay - added #include "crypto.h" so the memory leak checking code is  *           present. eay 18-Jun-98  *  * 2.1 eay - Added an 'error in last operation' flag. eay 6-May-98  *  * 2.0 eay - Fixed a bug that occurred when using lh_delete  *           from inside lh_doall().  As entries were deleted,  *           the 'table' was 'contract()ed', making some entries  *           jump from the end of the table to the start, there by  *           skipping the lh_doall() processing. eay - 4/12/95  *  * 1.9 eay - Fixed a memory leak in lh_free, the LHASH_NODEs  *           were not being free()ed. 21/11/95  *  * 1.8 eay - Put the stats routines into a separate file, lh_stats.c  *           19/09/95  *  * 1.7 eay - Removed the fputs() for realloc failures - the code  *           should silently tolerate them.  I have also fixed things  *           lint complained about 04/05/95  *  * 1.6 eay - Fixed an invalid pointers in contract/expand 27/07/92  *  * 1.5 eay - Fixed a misuse of realloc in expand 02/03/1992  *  * 1.4 eay - Fixed lh_doall so the function can call lh_delete 28/05/91  *  * 1.3 eay - Fixed a few lint problems 19/3/1991  *  * 1.2 eay - Fixed lh_doall problem 13/3/1991  *  * 1.1 eay - Added lh_doall  *  * 1.0 eay - First version  */
 end_comment
 
 begin_include
@@ -73,7 +73,7 @@ value|(2*LH_LOAD_MULT)
 end_define
 
 begin_comment
-comment|/* load times 256  (default 2) */
+comment|/* load times 256 (default 2) */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ value|(LH_LOAD_MULT)
 end_define
 
 begin_comment
-comment|/* load times 256  (default 1) */
+comment|/* load times 256 (default 1) */
 end_comment
 
 begin_function_decl
@@ -655,8 +655,8 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-comment|/* replace same key */
 block|{
+comment|/* replace same key */
 name|ret
 operator|=
 operator|(
@@ -964,7 +964,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* reverse the order so we search from 'top to bottom' 	 * We were having memory leaks otherwise */
+comment|/*      * reverse the order so we search from 'top to bottom' We were having      * memory leaks otherwise      */
 for|for
 control|(
 name|i
@@ -999,8 +999,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 28/05/91 - eay - n added so items can be deleted 			 * via lh_doall */
-comment|/* 22/05/08 - ben - eh? since a is not passed, 			 * this should not be needed */
+comment|/*              * 28/05/91 - eay - n added so items can be deleted via lh_doall              */
+comment|/*              * 22/05/08 - ben - eh? since a is not passed, this should not be              * needed              */
 name|n
 operator|=
 name|a
@@ -1360,7 +1360,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*			fputs("realloc error in lhash",stderr); */
+comment|/*                      fputs("realloc error in lhash",stderr); */
 name|lh
 operator|->
 name|error
@@ -1539,7 +1539,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*			fputs("realloc error in lhash",stderr); */
+comment|/*                      fputs("realloc error in lhash",stderr); */
 name|lh
 operator|->
 name|error
@@ -1851,7 +1851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following hash seems to work very well on normal text strings  * no collisions on /usr/dict/words and it distributes on %2^n quite  * well, not as good as MD5, but still good.  */
+comment|/*  * The following hash seems to work very well on normal text strings no  * collisions on /usr/dict/words and it distributes on %2^n quite well, not  * as good as MD5, but still good.  */
 end_comment
 
 begin_function
@@ -1901,7 +1901,7 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 	unsigned char b[16]; 	MD5(c,strlen(c),b); 	return(b[0]|(b[1]<<8)|(b[2]<<16)|(b[3]<<24));  */
+comment|/*-     unsigned char b[16];     MD5(c,strlen(c),b);     return(b[0]|(b[1]<<8)|(b[2]<<16)|(b[3]<<24)); */
 name|n
 operator|=
 literal|0x100

@@ -594,20 +594,9 @@ name|defined
 argument_list|(
 name|DES_RISC2
 argument_list|)
-name|YOU
-name|SHOULD
-name|NOT
-name|HAVE
-name|BOTH
-name|DES_RISC1
-name|AND
-name|DES_RISC2
-name|DEFINED
-operator|!
-operator|!
-operator|!
-operator|!
-operator|!
+error|#
+directive|error
+error|YOU SHOULD NOT HAVE BOTH DES_RISC1 AND DES_RISC2 DEFINED!!!!!
 endif|#
 directive|endif
 comment|/* Unroll the inner loop, this sometimes helps, sometimes hinders.  * Very mucy CPU dependant */

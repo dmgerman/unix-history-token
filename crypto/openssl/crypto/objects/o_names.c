@@ -48,7 +48,7 @@ file|<openssl/e_os2.h>
 end_include
 
 begin_comment
-comment|/* Later versions of DEC C has started to add lnkage information to certain  * functions, which makes it tricky to use them as values to regular function  * pointers.  One way is to define a macro that takes care of casting them  * correctly.  */
+comment|/*  * Later versions of DEC C has started to add lnkage information to certain  * functions, which makes it tricky to use them as values to regular function  * pointers.  One way is to define a macro that takes care of casting them  * correctly.  */
 end_comment
 
 begin_ifdef
@@ -82,7 +82,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* I use the ex_data stuff to manage the identifiers for the obj_name_types  * that applications may define.  I only really use the free function field.  */
+comment|/*  * I use the ex_data stuff to manage the identifiers for the obj_name_types  * that applications may define.  I only really use the free function field.  */
 end_comment
 
 begin_expr_stmt
@@ -198,7 +198,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* The LHASH callbacks now use the raw "void *" prototypes and do per-variable  * casting in the functions. This prevents function pointer casting without the  * need for macro-generated wrapper functions. */
+comment|/*  * The LHASH callbacks now use the raw "void *" prototypes and do  * per-variable casting in the functions. This prevents function pointer  * casting without the need for macro-generated wrapper functions.  */
 end_comment
 
 begin_comment
@@ -306,11 +306,11 @@ begin_macro
 unit|}  int
 name|OBJ_NAME_new_index
 argument_list|(
-argument|unsigned long (*hash_func)(const char *)
+argument|unsigned long (*hash_func) (const char *)
 argument_list|,
-argument|int (*cmp_func)(const char *, const char *)
+argument|int (*cmp_func) (const char *, const char *)
 argument_list|,
-argument|void (*free_func)(const char *, int, const char *)
+argument|void (*free_func) (const char *, int, const char *)
 argument_list|)
 end_macro
 
@@ -436,7 +436,7 @@ name|free_func
 operator|=
 literal|0
 expr_stmt|;
-comment|/* NULL is often declared to 						* ((void *)0), which according 						* to Compaq C is not really 						* compatible with a function 						* pointer.	-- Richard Levitte*/
+comment|/* NULL is often declared to * ((void                                     * *)0), which according * to Compaq C is                                     * not really * compatible with a function                                     * * pointer.  -- Richard Levitte */
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
@@ -1029,7 +1029,7 @@ name|type
 operator|)
 condition|)
 block|{
-comment|/* XXX: I'm not sure I understand why the free 			 * function should get three arguments... 			 * -- Richard Levitte 			 */
+comment|/*              * XXX: I'm not sure I understand why the free function should              * get three arguments... -- Richard Levitte              */
 name|sk_NAME_FUNCS_value
 argument_list|(
 name|name_funcs_stack
@@ -1172,7 +1172,7 @@ name|type
 operator|)
 condition|)
 block|{
-comment|/* XXX: I'm not sure I understand why the free 			 * function should get three arguments... 			 * -- Richard Levitte 			 */
+comment|/*              * XXX: I'm not sure I understand why the free function should              * get three arguments... -- Richard Levitte              */
 name|sk_NAME_FUNCS_value
 argument_list|(
 name|name_funcs_stack
@@ -1303,11 +1303,11 @@ name|OBJ_NAME_do_all
 argument_list|(
 argument|int type
 argument_list|,
-argument|void (*fn)(const OBJ_NAME *,void *arg)
+argument|void (*fn) (const OBJ_NAME *, void *arg)
 argument_list|,
 argument|void *arg
 argument_list|)
-block|{ 	struct
+block|{     struct
 name|doall
 name|d
 block|;
@@ -1344,7 +1344,7 @@ argument_list|,
 operator|&
 name|d
 argument_list|)
-block|; 	}
+block|; }
 expr|struct
 name|doall_sorted
 block|{
@@ -1359,7 +1359,7 @@ name|OBJ_NAME
 operator|*
 operator|*
 name|names
-block|; 	}
+block|; }
 expr_stmt|;
 end_expr_stmt
 
@@ -1524,6 +1524,14 @@ operator|.
 name|names
 argument_list|)
 expr_stmt|;
+comment|/* Really should return an error if !d.names...but its a void function! */
+if|if
+condition|(
+name|d
+operator|.
+name|names
+condition|)
+block|{
 name|d
 operator|.
 name|n
@@ -1602,6 +1610,7 @@ name|names
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_decl_stmt
@@ -1673,7 +1682,7 @@ name|OPENSSL_free
 argument_list|(
 name|ptr
 argument_list|)
-block|; 	}
+block|; }
 name|void
 name|OBJ_NAME_cleanup
 argument_list|(

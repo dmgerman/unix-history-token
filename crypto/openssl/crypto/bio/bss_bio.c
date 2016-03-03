@@ -4,11 +4,11 @@ comment|/* crypto/bio/bss_bio.c  -*- Mode: C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* Special method for a BIO where the other endpoint is also a BIO  * of this kind, handled by the same thread (i.e. the "peer" is actually  * ourselves, wearing a different hat).  * Such "BIO pairs" are mainly for using the SSL library with I/O interfaces  * for which no specific BIO method is available.  * See ssl/ssltest.c for some hints on how this can be used. */
+comment|/*  * Special method for a BIO where the other endpoint is also a BIO of this  * kind, handled by the same thread (i.e. the "peer" is actually ourselves,  * wearing a different hat). Such "BIO pairs" are mainly for using the SSL  * library with I/O interfaces for which no specific BIO method is available.  * See ssl/ssltest.c for some hints on how this can be used.  */
 end_comment
 
 begin_comment
@@ -349,7 +349,7 @@ name|BIO
 modifier|*
 name|peer
 decl_stmt|;
-comment|/* NULL if buf == NULL. 	                * If peer != NULL, then peer->ptr is also a bio_bio_st, 	                * and its "peer" member points back to us. 	                * peer != NULL iff init != 0 in the BIO. */
+comment|/* NULL if buf == NULL. If peer != NULL, then                                  * peer->ptr is also a bio_bio_st, and its                                  * "peer" member points back to us. peer !=                                  * NULL iff init != 0 in the BIO. */
 comment|/* This is for what we write (i.e. reading uses peer's struct): */
 name|int
 name|closed
@@ -374,7 +374,7 @@ comment|/* "size" elements (if != NULL) */
 name|size_t
 name|request
 decl_stmt|;
-comment|/* valid iff peer != NULL; 0 if len != 0, 	                 * otherwise set by peer to number of bytes 	                 * it (unsuccessfully) tried to read, 	                 * never more than buffer space (size-len) warrants. */
+comment|/* valid iff peer != NULL; 0 if len != 0,                                  * otherwise set by peer to number of bytes                                  * it (unsuccessfully) tried to read, never                                  * more than buffer space (size-len)                                  * warrants. */
 block|}
 struct|;
 end_struct
@@ -418,6 +418,7 @@ name|peer
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* enough for one TLS record (just a default) */
 name|b
 operator|->
 name|size
@@ -426,7 +427,6 @@ literal|17
 operator|*
 literal|1024
 expr_stmt|;
-comment|/* enough for one TLS record (just a default) */
 name|b
 operator|->
 name|buf
@@ -677,7 +677,7 @@ operator|=
 name|size
 expr_stmt|;
 else|else
-comment|/* don't ask for more than the peer can 				 * deliver in one write */
+comment|/*                  * don't ask for more than the peer can deliver in one write                  */
 name|peer_b
 operator|->
 name|request
@@ -720,8 +720,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 do|do
-comment|/* one or two iterations */
 block|{
+comment|/* one or two iterations */
 name|size_t
 name|chunk
 decl_stmt|;
@@ -875,11 +875,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* non-copying interface: provide pointer to available data in buffer  *    bio_nread0:  return number of available bytes  *    bio_nread:   also advance index  * (example usage:  bio_nread0(), read from buffer, bio_nread()  *  or just         bio_nread(), read from buffer)  */
+comment|/*-  * non-copying interface: provide pointer to available data in buffer  *    bio_nread0:  return number of available bytes  *    bio_nread:   also advance index  * (example usage:  bio_nread0(), read from buffer, bio_nread()  *  or just         bio_nread(), read from buffer)  */
 end_comment
 
 begin_comment
-comment|/* WARNING: The non-copying interface is largely untested as of yet  * and may contain bugs. */
+comment|/*  * WARNING: The non-copying interface is largely untested as of yet and may  * contain bugs.  */
 end_comment
 
 begin_function
@@ -1391,8 +1391,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 do|do
-comment|/* one or two iterations */
 block|{
+comment|/* one or two iterations */
 name|size_t
 name|write_offset
 decl_stmt|;
@@ -1512,7 +1512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* non-copying interface: provide pointer to region to write to  *   bio_nwrite0:  check how much space is available  *   bio_nwrite:   also increase length  * (example usage:  bio_nwrite0(), write to buffer, bio_nwrite()  *  or just         bio_nwrite(), write to buffer)  */
+comment|/*-  * non-copying interface: provide pointer to region to write to  *   bio_nwrite0:  check how much space is available  *   bio_nwrite:   also increase length  * (example usage:  bio_nwrite0(), write to buffer, bio_nwrite()  *  or just         bio_nwrite(), write to buffer)  */
 end_comment
 
 begin_function
@@ -1688,7 +1688,7 @@ name|b
 operator|->
 name|size
 condition|)
-comment|/* no ring buffer wrap-around for non-copying interface 		 * (to fulfil the promise by BIO_ctrl_get_write_guarantee, 		 * BIO_nwrite may have to be called twice) */
+comment|/*          * no ring buffer wrap-around for non-copying interface (to fulfil          * the promise by BIO_ctrl_get_write_guarantee, BIO_nwrite may have          * to be called twice)          */
 name|num
 operator|=
 name|b
@@ -2022,7 +2022,7 @@ break|break;
 case|case
 name|BIO_C_DESTROY_BIO_PAIR
 case|:
-comment|/* Affects both BIOs in the pair -- call just once! 		 * Or let BIO_free(bio1); BIO_free(bio2); do the job. */
+comment|/*          * Affects both BIOs in the pair -- call just once! Or let          * BIO_free(bio1); BIO_free(bio2); do the job.          */
 name|bio_destroy_pair
 argument_list|(
 name|bio
@@ -2036,7 +2036,7 @@ break|break;
 case|case
 name|BIO_C_GET_WRITE_GUARANTEE
 case|:
-comment|/* How many bytes can the caller feed to the next write 		 * without having to keep any? */
+comment|/*          * How many bytes can the caller feed to the next write without          * having to keep any?          */
 if|if
 condition|(
 name|b
@@ -2071,7 +2071,7 @@ break|break;
 case|case
 name|BIO_C_GET_READ_REQUEST
 case|:
-comment|/* If the peer unsuccessfully tried to read, how many bytes 		 * were requested?  (As with BIO_CTRL_PENDING, that number 		 * can usually be treated as boolean.) */
+comment|/*          * If the peer unsuccessfully tried to read, how many bytes were          * requested? (As with BIO_CTRL_PENDING, that number can usually be          * treated as boolean.)          */
 name|ret
 operator|=
 operator|(
@@ -2085,7 +2085,7 @@ break|break;
 case|case
 name|BIO_C_RESET_READ_REQUEST
 case|:
-comment|/* Reset request.  (Can be useful after read attempts 		 * at the other side that are meant to be non-blocking, 		 * e.g. when probing SSL_read to see if any data is 		 * available.) */
+comment|/*          * Reset request.  (Can be useful after read attempts at the other          * side that are meant to be non-blocking, e.g. when probing SSL_read          * to see if any data is available.)          */
 name|b
 operator|->
 name|request
@@ -3124,7 +3124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* BIO_nread0/nread/nwrite0/nwrite are available only for BIO pairs for now  * (conceivably some other BIOs could allow non-copying reads and writes too.)  */
+comment|/*  * BIO_nread0/nread/nwrite0/nwrite are available only for BIO pairs for now  * (conceivably some other BIOs could allow non-copying reads and writes  * too.)  */
 end_comment
 
 begin_function

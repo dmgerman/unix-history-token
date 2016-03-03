@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2001-2011 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  */
+comment|/* ====================================================================  * Copyright (c) 2001-2011 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  */
 end_comment
 
 begin_include
@@ -1726,7 +1726,7 @@ name|ctr128_f
 operator|)
 name|aesni_ctr32_encrypt_blocks
 expr_stmt|;
-comment|/* If we have an iv can set it directly, otherwise use 		 * saved IV. 		 */
+comment|/*          * If we have an iv can set it directly, otherwise use saved IV.          */
 if|if
 condition|(
 name|iv
@@ -2304,7 +2304,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static const EVP_CIPHER aesni_##keylen##_##mode = { \ 	nid##_##keylen##_##nmode,blocksize,keylen/8,ivlen, \ 	flags|EVP_CIPH_##MODE##_MODE,	\ 	aesni_init_key,			\ 	aesni_##mode##_cipher,		\ 	NULL,				\ 	sizeof(EVP_AES_KEY),		\ 	NULL,NULL,NULL,NULL }; \ static const EVP_CIPHER aes_##keylen##_##mode = { \ 	nid##_##keylen##_##nmode,blocksize,	\ 	keylen/8,ivlen, \ 	flags|EVP_CIPH_##MODE##_MODE,	\ 	aes_init_key,			\ 	aes_##mode##_cipher,		\ 	NULL,				\ 	sizeof(EVP_AES_KEY),		\ 	NULL,NULL,NULL,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return AESNI_CAPABLE?&aesni_##keylen##_##mode:&aes_##keylen##_##mode; }
+value|static const EVP_CIPHER aesni_##keylen##_##mode = { \         nid##_##keylen##_##nmode,blocksize,keylen/8,ivlen, \         flags|EVP_CIPH_##MODE##_MODE,   \         aesni_init_key,                 \         aesni_##mode##_cipher,          \         NULL,                           \         sizeof(EVP_AES_KEY),            \         NULL,NULL,NULL,NULL }; \ static const EVP_CIPHER aes_##keylen##_##mode = { \         nid##_##keylen##_##nmode,blocksize,     \         keylen/8,ivlen, \         flags|EVP_CIPH_##MODE##_MODE,   \         aes_init_key,                   \         aes_##mode##_cipher,            \         NULL,                           \         sizeof(EVP_AES_KEY),            \         NULL,NULL,NULL,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return AESNI_CAPABLE?&aesni_##keylen##_##mode:&aes_##keylen##_##mode; }
 end_define
 
 begin_define
@@ -2327,7 +2327,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static const EVP_CIPHER aesni_##keylen##_##mode = { \ 	nid##_##keylen##_##mode,blocksize, \ 	(EVP_CIPH_##MODE##_MODE==EVP_CIPH_XTS_MODE?2:1)*keylen/8, ivlen, \ 	flags|EVP_CIPH_##MODE##_MODE,	\ 	aesni_##mode##_init_key,	\ 	aesni_##mode##_cipher,		\ 	aes_##mode##_cleanup,		\ 	sizeof(EVP_AES_##MODE##_CTX),	\ 	NULL,NULL,aes_##mode##_ctrl,NULL }; \ static const EVP_CIPHER aes_##keylen##_##mode = { \ 	nid##_##keylen##_##mode,blocksize, \ 	(EVP_CIPH_##MODE##_MODE==EVP_CIPH_XTS_MODE?2:1)*keylen/8, ivlen, \ 	flags|EVP_CIPH_##MODE##_MODE,	\ 	aes_##mode##_init_key,		\ 	aes_##mode##_cipher,		\ 	aes_##mode##_cleanup,		\ 	sizeof(EVP_AES_##MODE##_CTX),	\ 	NULL,NULL,aes_##mode##_ctrl,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return AESNI_CAPABLE?&aesni_##keylen##_##mode:&aes_##keylen##_##mode; }
+value|static const EVP_CIPHER aesni_##keylen##_##mode = { \         nid##_##keylen##_##mode,blocksize, \         (EVP_CIPH_##MODE##_MODE==EVP_CIPH_XTS_MODE?2:1)*keylen/8, ivlen, \         flags|EVP_CIPH_##MODE##_MODE,   \         aesni_##mode##_init_key,        \         aesni_##mode##_cipher,          \         aes_##mode##_cleanup,           \         sizeof(EVP_AES_##MODE##_CTX),   \         NULL,NULL,aes_##mode##_ctrl,NULL }; \ static const EVP_CIPHER aes_##keylen##_##mode = { \         nid##_##keylen##_##mode,blocksize, \         (EVP_CIPH_##MODE##_MODE==EVP_CIPH_XTS_MODE?2:1)*keylen/8, ivlen, \         flags|EVP_CIPH_##MODE##_MODE,   \         aes_##mode##_init_key,          \         aes_##mode##_cipher,            \         aes_##mode##_cleanup,           \         sizeof(EVP_AES_##MODE##_CTX),   \         NULL,NULL,aes_##mode##_ctrl,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return AESNI_CAPABLE?&aesni_##keylen##_##mode:&aes_##keylen##_##mode; }
 end_define
 
 begin_else
@@ -2357,7 +2357,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static const EVP_CIPHER aes_##keylen##_##mode = { \ 	nid##_##keylen##_##nmode,blocksize,keylen/8,ivlen, \ 	flags|EVP_CIPH_##MODE##_MODE,	\ 	aes_init_key,			\ 	aes_##mode##_cipher,		\ 	NULL,				\ 	sizeof(EVP_AES_KEY),		\ 	NULL,NULL,NULL,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return&aes_##keylen##_##mode; }
+value|static const EVP_CIPHER aes_##keylen##_##mode = { \         nid##_##keylen##_##nmode,blocksize,keylen/8,ivlen, \         flags|EVP_CIPH_##MODE##_MODE,   \         aes_init_key,                   \         aes_##mode##_cipher,            \         NULL,                           \         sizeof(EVP_AES_KEY),            \         NULL,NULL,NULL,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return&aes_##keylen##_##mode; }
 end_define
 
 begin_define
@@ -2380,7 +2380,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static const EVP_CIPHER aes_##keylen##_##mode = { \ 	nid##_##keylen##_##mode,blocksize, \ 	(EVP_CIPH_##MODE##_MODE==EVP_CIPH_XTS_MODE?2:1)*keylen/8, ivlen, \ 	flags|EVP_CIPH_##MODE##_MODE,	\ 	aes_##mode##_init_key,		\ 	aes_##mode##_cipher,		\ 	aes_##mode##_cleanup,		\ 	sizeof(EVP_AES_##MODE##_CTX),	\ 	NULL,NULL,aes_##mode##_ctrl,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return&aes_##keylen##_##mode; }
+value|static const EVP_CIPHER aes_##keylen##_##mode = { \         nid##_##keylen##_##mode,blocksize, \         (EVP_CIPH_##MODE##_MODE==EVP_CIPH_XTS_MODE?2:1)*keylen/8, ivlen, \         flags|EVP_CIPH_##MODE##_MODE,   \         aes_##mode##_init_key,          \         aes_##mode##_cipher,            \         aes_##mode##_cleanup,           \         sizeof(EVP_AES_##MODE##_CTX),   \         NULL,NULL,aes_##mode##_ctrl,NULL }; \ const EVP_CIPHER *EVP_aes_##keylen##_##mode(void) \ { return&aes_##keylen##_##mode; }
 end_define
 
 begin_endif
@@ -2400,7 +2400,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_generic(nid,keylen,16,16,cbc,cbc,CBC,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)	\ 	BLOCK_CIPHER_generic(nid,keylen,16,0,ecb,ecb,ECB,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)	\ 	BLOCK_CIPHER_generic(nid,keylen,1,16,ofb128,ofb,OFB,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)	\ 	BLOCK_CIPHER_generic(nid,keylen,1,16,cfb128,cfb,CFB,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)	\ 	BLOCK_CIPHER_generic(nid,keylen,1,16,cfb1,cfb1,CFB,flags)	\ 	BLOCK_CIPHER_generic(nid,keylen,1,16,cfb8,cfb8,CFB,flags)	\ 	BLOCK_CIPHER_generic(nid,keylen,1,16,ctr,ctr,CTR,flags)
+value|BLOCK_CIPHER_generic(nid,keylen,16,16,cbc,cbc,CBC,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)     \         BLOCK_CIPHER_generic(nid,keylen,16,0,ecb,ecb,ECB,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)      \         BLOCK_CIPHER_generic(nid,keylen,1,16,ofb128,ofb,OFB,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)   \         BLOCK_CIPHER_generic(nid,keylen,1,16,cfb128,cfb,CFB,flags|EVP_CIPH_FLAG_DEFAULT_ASN1)   \         BLOCK_CIPHER_generic(nid,keylen,1,16,cfb1,cfb1,CFB,flags)       \         BLOCK_CIPHER_generic(nid,keylen,1,16,cfb8,cfb8,CFB,flags)       \         BLOCK_CIPHER_generic(nid,keylen,1,16,ctr,ctr,CTR,flags)
 end_define
 
 begin_function
@@ -4029,7 +4029,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Fixed field must be at least 4 bytes and invocation field 		 * at least 8. 		 */
+comment|/*          * Fixed field must be at least 4 bytes and invocation field at least          * 8.          */
 if|if
 condition|(
 operator|(
@@ -4172,7 +4172,7 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* Invocation field will be at least 8 bytes in size and 		 * so no need to check wrap around or increment more than 		 * last 8 bytes. 		 */
+comment|/*          * Invocation field will be at least 8 bytes in size and so no need          * to check wrap around or increment more than last 8 bytes.          */
 name|ctr64_inc
 argument_list|(
 name|gctx
@@ -4269,7 +4269,7 @@ if|if
 condition|(
 name|arg
 operator|!=
-literal|13
+name|EVP_AEAD_TLS1_AAD_LEN
 condition|)
 return|return
 literal|0
@@ -4717,7 +4717,7 @@ condition|(
 literal|0
 condition|)
 do|;
-comment|/* If we have an iv can set it directly, otherwise use 		 * saved IV. 		 */
+comment|/*          * If we have an iv can set it directly, otherwise use saved IV.          */
 if|if
 condition|(
 name|iv
@@ -4824,7 +4824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle TLS GCM packet format. This consists of the last portion of the IV  * followed by the payload and finally the tag. On encrypt generate IV,  * encrypt payload and write the tag. On verify retrieve IV, decrypt payload  * and verify tag.  */
+comment|/*  * Handle TLS GCM packet format. This consists of the last portion of the IV  * followed by the payload and finally the tag. On encrypt generate IV,  * encrypt payload and write the tag. On verify retrieve IV, decrypt payload  * and verify tag.  */
 end_comment
 
 begin_function
@@ -4884,7 +4884,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Set IV from start of buffer or generate IV and write to start 	 * of buffer. 	 */
+comment|/*      * Set IV from start of buffer or generate IV and write to start of      * buffer.      */
 if|if
 condition|(
 name|EVP_CIPHER_CTX_ctrl
@@ -5484,7 +5484,7 @@ begin_define
 define|#
 directive|define
 name|CUSTOM_FLAGS
-value|(EVP_CIPH_FLAG_DEFAULT_ASN1 \ 		| EVP_CIPH_CUSTOM_IV | EVP_CIPH_FLAG_CUSTOM_CIPHER \ 		| EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_CTRL_INIT \ 		| EVP_CIPH_CUSTOM_COPY)
+value|(EVP_CIPH_FLAG_DEFAULT_ASN1 \                 | EVP_CIPH_CUSTOM_IV | EVP_CIPH_FLAG_CUSTOM_CIPHER \                 | EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_CTRL_INIT \                 | EVP_CIPH_CUSTOM_COPY)
 end_define
 
 begin_macro
@@ -5502,7 +5502,7 @@ argument|gcm
 argument_list|,
 argument|GCM
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|EVP_CIPH_FLAG_AEAD_CIPHER|CUSTOM_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | EVP_CIPH_FLAG_AEAD_CIPHER |                     CUSTOM_FLAGS
 argument_list|)
 end_macro
 
@@ -5521,7 +5521,7 @@ argument|gcm
 argument_list|,
 argument|GCM
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|EVP_CIPH_FLAG_AEAD_CIPHER|CUSTOM_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | EVP_CIPH_FLAG_AEAD_CIPHER |                     CUSTOM_FLAGS
 argument_list|)
 end_macro
 
@@ -5540,7 +5540,7 @@ argument|gcm
 argument_list|,
 argument|GCM
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|EVP_CIPH_FLAG_AEAD_CIPHER|CUSTOM_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | EVP_CIPH_FLAG_AEAD_CIPHER |                     CUSTOM_FLAGS
 argument_list|)
 end_macro
 
@@ -6263,7 +6263,7 @@ begin_define
 define|#
 directive|define
 name|XTS_FLAGS
-value|(EVP_CIPH_FLAG_DEFAULT_ASN1 | EVP_CIPH_CUSTOM_IV \ 			 | EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_CTRL_INIT \ 			 | EVP_CIPH_CUSTOM_COPY)
+value|(EVP_CIPH_FLAG_DEFAULT_ASN1 | EVP_CIPH_CUSTOM_IV \                          | EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_CTRL_INIT \                          | EVP_CIPH_CUSTOM_COPY)
 end_define
 
 begin_macro
@@ -6281,7 +6281,7 @@ argument|xts
 argument_list|,
 argument|XTS
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|XTS_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | XTS_FLAGS
 argument_list|)
 end_macro
 
@@ -6300,7 +6300,7 @@ argument|xts
 argument_list|,
 argument|XTS
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|XTS_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | XTS_FLAGS
 argument_list|)
 end_macro
 
@@ -6437,23 +6437,11 @@ literal|0
 return|;
 if|if
 condition|(
-operator|(
 name|c
 operator|->
 name|encrypt
 operator|&&
 name|ptr
-operator|)
-operator|||
-operator|(
-operator|!
-name|c
-operator|->
-name|encrypt
-operator|&&
-operator|!
-name|ptr
-operator|)
 condition|)
 return|return
 literal|0
@@ -7221,7 +7209,7 @@ argument|ccm
 argument_list|,
 argument|CCM
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|CUSTOM_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | CUSTOM_FLAGS
 argument_list|)
 end_macro
 
@@ -7240,7 +7228,7 @@ argument|ccm
 argument_list|,
 argument|CCM
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|CUSTOM_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | CUSTOM_FLAGS
 argument_list|)
 end_macro
 
@@ -7259,7 +7247,7 @@ argument|ccm
 argument_list|,
 argument|CCM
 argument_list|,
-argument|EVP_CIPH_FLAG_FIPS|CUSTOM_FLAGS
+argument|EVP_CIPH_FLAG_FIPS | CUSTOM_FLAGS
 argument_list|)
 end_macro
 

@@ -835,7 +835,7 @@ return|return
 literal|2
 return|;
 block|}
-comment|/*printf("Digest no %d requested\n",nid);*/
+comment|/*      * printf("Digest no %d requested\n",nid);      */
 if|if
 condition|(
 name|nid

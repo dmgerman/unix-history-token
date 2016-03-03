@@ -4,7 +4,7 @@ comment|/* crypto/bn/bn_lib.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -86,7 +86,7 @@ name|OPENSSL_NO_DEPRECATED
 end_ifndef
 
 begin_comment
-comment|/* For a 32 bit machine  * 2 -   4 ==  128  * 3 -   8 ==  256  * 4 -  16 ==  512  * 5 -  32 == 1024  * 6 -  64 == 2048  * 7 - 128 == 4096  * 8 - 256 == 8192  */
+comment|/*-  * For a 32 bit machine  * 2 -   4 ==  128  * 3 -   8 ==  256  * 4 -  16 ==  512  * 5 -  32 == 1024  * 6 -  64 == 2048  * 7 - 128 == 4096  * 8 - 256 == 8192  */
 end_comment
 
 begin_decl_stmt
@@ -1030,7 +1030,7 @@ block|,
 literal|8
 block|,
 literal|8
-block|, 		}
+block|,     }
 decl_stmt|;
 if|#
 directive|if
@@ -1887,7 +1887,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|PURIFY
-comment|/* Valgrind complains in BN_consttime_swap because we process the whole 	 * array even if it's not initialised yet. This doesn't matter in that 	 * function - what's important is constant time operation (we're not 	 * actually going to use the data) 	*/
+comment|/*      * Valgrind complains in BN_consttime_swap because we process the whole      * array even if it's not initialised yet. This doesn't matter in that      * function - what's important is constant time operation (we're not      * actually going to use the data)      */
 name|memset
 argument_list|(
 name|a
@@ -1947,7 +1947,7 @@ operator|+=
 literal|4
 control|)
 block|{
-comment|/* 			 * The fact that the loop is unrolled 			 * 4-wise is a tribute to Intel. It's 			 * the one that doesn't have enough 			 * registers to accomodate more data. 			 * I'd unroll it 8-wise otherwise:-) 			 * 			 *<appro@fy.chalmers.se> 			 */
+comment|/*              * The fact that the loop is unrolled              * 4-wise is a tribute to Intel. It's              * the one that doesn't have enough              * registers to accomodate more data.              * I'd unroll it 8-wise otherwise:-)              *              *<appro@fy.chalmers.se>              */
 name|BN_ULONG
 name|a0
 decl_stmt|,
@@ -2014,6 +2014,7 @@ operator|=
 name|a3
 expr_stmt|;
 block|}
+comment|/*          * workaround for ultrix cc: without 'case 0', the optimizer does          * the switch table by doing a=top&3; a--; goto jump_table[a];          * which fails for top== 0          */
 switch|switch
 condition|(
 name|b
@@ -2065,7 +2066,6 @@ expr_stmt|;
 case|case
 literal|0
 case|:
-comment|/* workaround for ultrix cc: without 'case 0', the optimizer does 		         * the switch table by doing a=top&3; a--; goto jump_table[a]; 		         * which fails for top== 0 */
 empty_stmt|;
 block|}
 block|}
@@ -2119,7 +2119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is an internal function that can be used instead of bn_expand2()  * when there is a need to copy BIGNUMs instead of only expanding the  * data part, while still expanding them.  * Especially useful when needing to expand BIGNUMs that are declared  * 'const' and should therefore not be changed.  * The reason to use this instead of a BN_dup() followed by a bn_expand2()  * is memory allocation overhead.  A BN_dup() followed by a bn_expand2()  * will allocate new memory for the BIGNUM data twice, and free it once,  * while bn_dup_expand() makes sure allocation is made only once.  */
+comment|/*  * This is an internal function that can be used instead of bn_expand2() when  * there is a need to copy BIGNUMs instead of only expanding the data part,  * while still expanding them. Especially useful when needing to expand  * BIGNUMs that are declared 'const' and should therefore not be changed. The  * reason to use this instead of a BN_dup() followed by a bn_expand2() is  * memory allocation overhead.  A BN_dup() followed by a bn_expand2() will  * allocate new memory for the BIGNUM data twice, and free it once, while  * bn_dup_expand() makes sure allocation is made only once.  */
 end_comment
 
 begin_ifndef
@@ -2153,7 +2153,7 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-comment|/* This function does not work if 	 *      words<= b->dmax&& top< words 	 * because BN_dup() does not preserve 'dmax'! 	 * (But bn_dup_expand() is not used anywhere yet.) 	 */
+comment|/*      * This function does not work if words<= b->dmax&& top< words because      * BN_dup() does not preserve 'dmax'! (But bn_dup_expand() is not used      * anywhere yet.)      */
 if|if
 condition|(
 name|words
@@ -2228,7 +2228,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* If a == NULL, there was an error in allocation in 		   bn_expand_internal(), and NULL should be returned */
+comment|/*          * If a == NULL, there was an error in allocation in          * bn_expand_internal(), and NULL should be returned          */
 block|}
 else|else
 block|{
@@ -2257,7 +2257,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is an internal function that should not be used in applications.  * It ensures that 'b' has enough room for a 'words' word number  * and initialises any unused part of b->d with leading zeros.  * It is mostly used by the various BIGNUM routines. If there is an error,  * NULL is returned. If not, 'b' is returned. */
+comment|/*  * This is an internal function that should not be used in applications. It  * ensures that 'b' has enough room for a 'words' word number and initialises  * any unused part of b->d with leading zeros. It is mostly used by the  * various BIGNUM routines. If there is an error, NULL is returned. If not,  * 'b' is returned.  */
 end_comment
 
 begin_function
@@ -2336,8 +2336,8 @@ comment|/* None of this should be necessary because of what b->top means! */
 if|#
 directive|if
 literal|0
-comment|/* NB: bn_wexpand() calls this only if the BIGNUM really has to grow */
-block|if (b->top< b->dmax) 		{ 		int i; 		BN_ULONG *A =&(b->d[b->top]); 		for (i=(b->dmax - b->top)>>3; i>0; i--,A+=8) 			{ 			A[0]=0; A[1]=0; A[2]=0; A[3]=0; 			A[4]=0; A[5]=0; A[6]=0; A[7]=0; 			} 		for (i=(b->dmax - b->top)&7; i>0; i--,A++) 			A[0]=0; 		assert(A ==&(b->d[b->dmax])); 		}
+comment|/*      * NB: bn_wexpand() calls this only if the BIGNUM really has to grow      */
+block|if (b->top< b->dmax) {         int i;         BN_ULONG *A =&(b->d[b->top]);         for (i = (b->dmax - b->top)>> 3; i> 0; i--, A += 8) {             A[0] = 0;             A[1] = 0;             A[2] = 0;             A[3] = 0;             A[4] = 0;             A[5] = 0;             A[6] = 0;             A[7] = 0;         }         for (i = (b->dmax - b->top)& 7; i> 0; i--, A++)             A[0] = 0;         assert(A ==&(b->d[b->dmax]));     }
 endif|#
 directive|endif
 name|bn_check_top
@@ -2593,6 +2593,7 @@ operator|=
 name|a3
 expr_stmt|;
 block|}
+comment|/* ultrix cc workaround, see comments in bn_expand_internal */
 switch|switch
 condition|(
 name|b
@@ -2645,7 +2646,6 @@ case|case
 literal|0
 case|:
 empty_stmt|;
-comment|/* ultrix cc workaround, see comments in bn_expand_internal */
 block|}
 else|#
 directive|else
@@ -3279,7 +3279,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* need to call this due to clear byte at top if avoiding 	 * having the top bit set (-ve number) */
+comment|/*      * need to call this due to clear byte at top if avoiding having the top      * bit set (-ve number)      */
 name|bn_correct_top
 argument_list|(
 name|ret
@@ -4334,7 +4334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Here follows a specialised variants of bn_cmp_words().  It has the    property of performing the operation on arrays of different sizes.    The sizes of those arrays is expressed through cl, which is the    common length ( basicall, min(len(a),len(b)) ), and dl, which is the    delta between the two lengths, calculated as len(a)-len(b).    All lengths are the number of BN_ULONGs...  */
+comment|/*  * Here follows a specialised variants of bn_cmp_words().  It has the  * property of performing the operation on arrays of different sizes. The  * sizes of those arrays is expressed through cl, which is the common length  * ( basicall, min(len(a),len(b)) ), and dl, which is the delta between the  * two lengths, calculated as len(a)-len(b). All lengths are the number of  * BN_ULONGs...  */
 end_comment
 
 begin_function
@@ -4460,7 +4460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Constant-time conditional swap of a and b.    * a and b are swapped if condition is not 0.  The code assumes that at most one bit of condition is set.  * nwords is the number of words to swap.  The code assumes that at least nwords are allocated in both a and b,  * and that no more than nwords are used by either a or b.  * a and b cannot be the same number  */
+comment|/*  * Constant-time conditional swap of a and b.  * a and b are swapped if condition is not 0.  The code assumes that at most one bit of condition is set.  * nwords is the number of words to swap.  The code assumes that at least nwords are allocated in both a and b,  * and that no more than nwords are used by either a or b.  * a and b cannot be the same number  */
 end_comment
 
 begin_function
@@ -4588,7 +4588,7 @@ parameter_list|(
 name|ind
 parameter_list|)
 define|\
-value|do { \ 		t = (a->d[ind] ^ b->d[ind])& condition; \ 		a->d[ind] ^= t; \ 		b->d[ind] ^= t; \ 	} while (0)
+value|do { \                 t = (a->d[ind] ^ b->d[ind])& condition; \                 a->d[ind] ^= t; \                 b->d[ind] ^= t; \         } while (0)
 switch|switch
 condition|(
 name|nwords

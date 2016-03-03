@@ -4,7 +4,7 @@ comment|/* crypto/conf/conf.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -1127,7 +1127,7 @@ name|i
 operator|--
 expr_stmt|;
 block|}
-comment|/* we removed some trailing stuff so there is a new 		 * line on the end. */
+comment|/*          * we removed some trailing stuff so there is a new line on the end.          */
 if|if
 condition|(
 name|ii
@@ -1173,7 +1173,7 @@ operator|>=
 literal|1
 condition|)
 block|{
-comment|/* If we have bytes and the last char '\\' and 			 * second last char is not '\\' */
+comment|/*              * If we have bytes and the last char '\\' and second last char              * is not '\\'              */
 name|p
 operator|=
 operator|&
@@ -2796,7 +2796,7 @@ name|e
 operator|++
 expr_stmt|;
 block|}
-comment|/* So at this point we have 			 * np which is the start of the name string which is 			 *   '\0' terminated.  			 * cp which is the start of the section string which is 			 *   '\0' terminated. 			 * e is the 'next point after'. 			 * r and rr are the chars replaced by the '\0' 			 * rp and rrp is where 'r' and 'rr' came from. 			 */
+comment|/*-              * So at this point we have              * np which is the start of the name string which is              *   '\0' terminated.              * cp which is the start of the section string which is              *   '\0' terminated.              * e is the 'next point after'.              * r and rr are the chars replaced by the '\0'              * rp and rrp is where 'r' and 'rr' came from.              */
 name|p
 operator|=
 name|_CONF_get_string
@@ -2842,6 +2842,9 @@ goto|goto
 name|err
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|BUF_MEM_grow_clean
 argument_list|(
 name|buf
@@ -2863,7 +2866,19 @@ name|from
 operator|)
 operator|)
 argument_list|)
+condition|)
+block|{
+name|CONFerr
+argument_list|(
+name|CONF_F_STR_COPY
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
 expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 while|while
 condition|(
 operator|*
@@ -2883,7 +2898,7 @@ name|p
 operator|++
 operator|)
 expr_stmt|;
-comment|/* Since we change the pointer 'from', we also have 			   to change the perceived length of the string it 			   points at.  /RL */
+comment|/*              * Since we change the pointer 'from', we also have to change the              * perceived length of the string it points at.  /RL              */
 name|len
 operator|-=
 name|e
@@ -2894,7 +2909,7 @@ name|from
 operator|=
 name|e
 expr_stmt|;
-comment|/* In case there were no braces or parenthesis around 			   the variable reference, we have to put back the 			   character that was replaced with a '\0'.  /RL */
+comment|/*              * In case there were no braces or parenthesis around the              * variable reference, we have to put back the character that was              * replaced with a '\0'.  /RL              */
 operator|*
 name|rp
 operator|=

@@ -549,7 +549,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|do {	\ 	unsigned long ll;		\ 	unsigned int  nn;		\ 	switch ((c)->md_len)		\ 	{   case SHA224_DIGEST_LENGTH:	\ 		for (nn=0;nn<SHA224_DIGEST_LENGTH/4;nn++)	\ 		{   ll=(c)->h[nn]; (void)HOST_l2c(ll,(s));   }	\ 		break;			\ 	    case SHA256_DIGEST_LENGTH:	\ 		for (nn=0;nn<SHA256_DIGEST_LENGTH/4;nn++)	\ 		{   ll=(c)->h[nn]; (void)HOST_l2c(ll,(s));   }	\ 		break;			\ 	    default:			\ 		if ((c)->md_len> SHA256_DIGEST_LENGTH)	\ 		    return 0;				\ 		for (nn=0;nn<(c)->md_len/4;nn++)		\ 		{   ll=(c)->h[nn]; (void)HOST_l2c(ll,(s));   }	\ 		break;			\ 	}				\ 	} while (0)
+value|do {    \         unsigned long ll;               \         unsigned int  nn;               \         switch ((c)->md_len)            \         {   case SHA224_DIGEST_LENGTH:  \                 for (nn=0;nn<SHA224_DIGEST_LENGTH/4;nn++)       \                 {   ll=(c)->h[nn]; (void)HOST_l2c(ll,(s));   }  \                 break;                  \             case SHA256_DIGEST_LENGTH:  \                 for (nn=0;nn<SHA256_DIGEST_LENGTH/4;nn++)       \                 {   ll=(c)->h[nn]; (void)HOST_l2c(ll,(s));   }  \                 break;                  \             default:                    \                 if ((c)->md_len> SHA256_DIGEST_LENGTH) \                     return 0;                           \                 for (nn=0;nn<(c)->md_len/4;nn++)                \                 {   ll=(c)->h[nn]; (void)HOST_l2c(ll,(s));   }  \                 break;                  \         }                               \         } while (0)
 end_define
 
 begin_define
@@ -1341,7 +1341,7 @@ name|g
 parameter_list|,
 name|h
 parameter_list|)
-value|do {	\ 	T1 += h + Sigma1(e) + Ch(e,f,g) + K256[i];	\ 	h = Sigma0(a) + Maj(a,b,c);			\ 	d += T1;	h += T1;		} while (0)
+value|do {    \         T1 += h + Sigma1(e) + Ch(e,f,g) + K256[i];      \         h = Sigma0(a) + Maj(a,b,c);                     \         d += T1;        h += T1;                } while (0)
 end_define
 
 begin_define
@@ -1369,7 +1369,7 @@ name|h
 parameter_list|,
 name|X
 parameter_list|)
-value|do {	\ 	s0 = X[(i+1)&0x0f];	s0 = sigma0(s0);	\ 	s1 = X[(i+14)&0x0f];	s1 = sigma1(s1);	\ 	T1 = X[(i)&0x0f] += s0 + s1 + X[(i+9)&0x0f];	\ 	ROUND_00_15(i,a,b,c,d,e,f,g,h);		} while (0)
+value|do {    \         s0 = X[(i+1)&0x0f];     s0 = sigma0(s0);        \         s1 = X[(i+14)&0x0f];    s1 = sigma1(s1);        \         T1 = X[(i)&0x0f] += s0 + s1 + X[(i+9)&0x0f];    \         ROUND_00_15(i,a,b,c,d,e,f,g,h);         } while (0)
 end_define
 
 begin_function

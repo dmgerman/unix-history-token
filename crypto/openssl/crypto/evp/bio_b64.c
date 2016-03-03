@@ -4,7 +4,7 @@ comment|/* crypto/evp/bio_b64.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*static int b64_gets(BIO *h, char *str, int size); */
+comment|/*  * static int b64_gets(BIO *h, char *str, int size);  */
 end_comment
 
 begin_function_decl
@@ -202,7 +202,7 @@ typedef|typedef
 struct|struct
 name|b64_struct
 block|{
-comment|/*BIO *bio; moved to the BIO structure */
+comment|/*      * BIO *bio; moved to the BIO structure      */
 name|int
 name|buf_len
 decl_stmt|;
@@ -279,7 +279,7 @@ block|,
 name|b64_free
 block|,
 name|b64_callback_ctrl
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -736,7 +736,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* At this point, we have room of outl bytes and an empty 	 * buffer, so we should read in some more. */
+comment|/*      * At this point, we have room of outl bytes and an empty buffer, so we      * should read in some more.      */
 name|ret_code
 operator|=
 literal|0
@@ -846,7 +846,7 @@ name|tmp_len
 operator|=
 name|i
 expr_stmt|;
-comment|/* We need to scan, a line at a time until we 		 * have a valid line if we are starting. */
+comment|/*          * We need to scan, a line at a time until we have a valid line if we          * are starting.          */
 if|if
 condition|(
 name|ctx
@@ -921,7 +921,7 @@ operator|!=
 literal|'\n'
 condition|)
 continue|continue;
-comment|/* due to a previous very long line, 				 * we need to keep on scanning for a '\n' 				 * before we even start looking for 				 * base64 encoded stuff. */
+comment|/*                  * due to a previous very long line, we need to keep on                  * scanning for a '\n' before we even start looking for                  * base64 encoded stuff.                  */
 if|if
 condition|(
 name|ctx
@@ -1105,7 +1105,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* Is this is one long chunk?, if so, keep on 				 * reading until a new line. */
+comment|/*                  * Is this is one long chunk?, if so, keep on reading until a                  * new line.                  */
 if|if
 condition|(
 name|p
@@ -1155,8 +1155,8 @@ name|p
 operator|!=
 name|q
 condition|)
-comment|/* finished on a '\n' */
 block|{
+comment|/* finished on a '\n' */
 name|n
 operator|=
 name|q
@@ -1226,7 +1226,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* If buffer isn't full and we can retry then 			 * restart to read in more data. 			 */
+comment|/*              * If buffer isn't full and we can retry then restart to read in              * more data.              */
 continue|continue;
 block|}
 if|if
@@ -1247,7 +1247,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|jj=(i>>2)<<2;
+block|jj = (i>> 2)<< 2;
 else|#
 directive|else
 name|jj
@@ -1327,7 +1327,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-comment|/* z is now number of output bytes and jj is the 			 * number consumed */
+comment|/*              * z is now number of output bytes and jj is the number consumed              */
 if|if
 condition|(
 name|jj
@@ -1882,7 +1882,7 @@ name|ctx
 operator|->
 name|tmp_len
 expr_stmt|;
-comment|/* There's a theoretical possibility for this */
+comment|/*                  * There's a theoretical possibility for this                  */
 if|if
 condition|(
 name|n
@@ -1988,7 +1988,7 @@ operator|->
 name|buf_off
 argument_list|)
 expr_stmt|;
-comment|/* Since we're now done using the temporary 				   buffer, the length should be 0'd */
+comment|/*                  * Since we're now done using the temporary buffer, the                  * length should be 0'd                  */
 name|ctx
 operator|->
 name|tmp_len

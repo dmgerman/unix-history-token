@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2006.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2006.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -378,12 +378,6 @@ name|DSA
 modifier|*
 name|dsa
 decl_stmt|;
-name|void
-modifier|*
-name|pval
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|ptype
 decl_stmt|;
@@ -396,6 +390,12 @@ name|NULL
 decl_stmt|;
 name|int
 name|penclen
+decl_stmt|;
+name|ASN1_STRING
+modifier|*
+name|str
+init|=
+name|NULL
 decl_stmt|;
 name|dsa
 operator|=
@@ -424,15 +424,28 @@ operator|->
 name|g
 condition|)
 block|{
-name|ASN1_STRING
-modifier|*
-name|str
-decl_stmt|;
 name|str
 operator|=
 name|ASN1_STRING_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|str
+condition|)
+block|{
+name|DSAerr
+argument_list|(
+name|DSA_F_DSA_PUB_ENCODE
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|str
 operator|->
 name|length
@@ -467,10 +480,6 @@ goto|goto
 name|err
 goto|;
 block|}
-name|pval
-operator|=
-name|str
-expr_stmt|;
 name|ptype
 operator|=
 name|V_ASN1_SEQUENCE
@@ -528,7 +537,7 @@ argument_list|)
 argument_list|,
 name|ptype
 argument_list|,
-name|pval
+name|str
 argument_list|,
 name|penc
 argument_list|,
@@ -551,11 +560,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pval
+name|str
 condition|)
 name|ASN1_STRING_free
 argument_list|(
-name|pval
+name|str
 argument_list|)
 expr_stmt|;
 return|return
@@ -565,7 +574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* In PKCS#8 DSA: you just get a private key integer and parameters in the  * AlgorithmIdentifier the pubkey must be recalculated.  */
+comment|/*  * In PKCS#8 DSA: you just get a private key integer and parameters in the  * AlgorithmIdentifier the pubkey must be recalculated.  */
 end_comment
 
 begin_function
@@ -637,6 +646,11 @@ modifier|*
 name|dsa
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -725,7 +739,7 @@ condition|)
 goto|goto
 name|decerr
 goto|;
-comment|/* Handle Two broken types: 	    	 * SEQUENCE {parameters, priv_key} 		 * SEQUENCE {pub_key, priv_key} 		 */
+comment|/*-          * Handle Two broken types:          * SEQUENCE {parameters, priv_key}          * SEQUENCE {pub_key, priv_key}          */
 name|t1
 operator|=
 name|sk_ASN1_TYPE_value
@@ -850,7 +864,7 @@ name|broken
 operator|=
 name|PKCS8_NEG_PRIVKEY
 expr_stmt|;
-name|ASN1_INTEGER_free
+name|ASN1_STRING_clear_free
 argument_list|(
 name|privkey
 argument_list|)
@@ -1041,6 +1055,31 @@ argument_list|,
 name|dsa
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+name|decerr
+label|:
+name|DSAerr
+argument_list|(
+name|DSA_F_DSA_PRIV_DECODE
+argument_list|,
+name|EVP_R_DECODE_ERROR
+argument_list|)
+expr_stmt|;
+name|dsaerr
+label|:
+name|DSA_free
+argument_list|(
+name|dsa
+argument_list|)
+expr_stmt|;
+name|done
+label|:
 name|BN_CTX_free
 argument_list|(
 name|ctx
@@ -1058,53 +1097,13 @@ name|ASN1_TYPE_free
 argument_list|)
 expr_stmt|;
 else|else
-name|ASN1_INTEGER_free
+name|ASN1_STRING_clear_free
 argument_list|(
 name|privkey
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
-return|;
-name|decerr
-label|:
-name|DSAerr
-argument_list|(
-name|DSA_F_DSA_PRIV_DECODE
-argument_list|,
-name|EVP_R_DECODE_ERROR
-argument_list|)
-expr_stmt|;
-name|dsaerr
-label|:
-name|BN_CTX_free
-argument_list|(
-name|ctx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|privkey
-condition|)
-name|ASN1_INTEGER_free
-argument_list|(
-name|privkey
-argument_list|)
-expr_stmt|;
-name|sk_ASN1_TYPE_pop_free
-argument_list|(
-name|ndsa
-argument_list|,
-name|ASN1_TYPE_free
-argument_list|)
-expr_stmt|;
-name|DSA_free
-argument_list|(
-name|dsa
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
@@ -1285,7 +1284,7 @@ operator|&
 name|dp
 argument_list|)
 expr_stmt|;
-name|ASN1_INTEGER_free
+name|ASN1_STRING_clear_free
 argument_list|(
 name|prkey
 argument_list|)
@@ -1349,7 +1348,7 @@ name|prkey
 operator|!=
 name|NULL
 condition|)
-name|ASN1_INTEGER_free
+name|ASN1_STRING_clear_free
 argument_list|(
 name|prkey
 argument_list|)

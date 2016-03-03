@@ -4,15 +4,15 @@ comment|/* ocsp_ext.c */
 end_comment
 
 begin_comment
-comment|/* Written by Tom Titchener<Tom_Titchener@groove.net> for the OpenSSL  * project. */
+comment|/*  * Written by Tom Titchener<Tom_Titchener@groove.net> for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* History:    This file was transfered to Richard Levitte from CertCo by Kathy    Weinhold in mid-spring 2000 to be included in OpenSSL or released    as a patch kit. */
+comment|/*  * History: This file was transfered to Richard Levitte from CertCo by Kathy  * Weinhold in mid-spring 2000 to be included in OpenSSL or released as a  * patch kit.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -1300,7 +1300,7 @@ literal|0
 end_if
 
 begin_endif
-unit|ASN1_STRING *ASN1_STRING_encode(ASN1_STRING *s, i2d_of_void *i2d, 				void *data, STACK_OF(ASN1_OBJECT) *sk)         { 	int i; 	unsigned char *p, *b = NULL;  	if (data) 	        { 		if ((i=i2d(data,NULL))<= 0) goto err; 		if (!(b=p=OPENSSL_malloc((unsigned int)i))) 			goto err; 	        if (i2d(data,&p)<= 0) goto err; 		} 	else if (sk) 	        { 		if ((i=i2d_ASN1_SET_OF_ASN1_OBJECT(sk,NULL, 						   (I2D_OF(ASN1_OBJECT))i2d, 						   V_ASN1_SEQUENCE, 						   V_ASN1_UNIVERSAL, 						   IS_SEQUENCE))<=0) goto err; 		if (!(b=p=OPENSSL_malloc((unsigned int)i))) 			goto err; 		if (i2d_ASN1_SET_OF_ASN1_OBJECT(sk,&p,(I2D_OF(ASN1_OBJECT))i2d, 						V_ASN1_SEQUENCE, 						V_ASN1_UNIVERSAL, 						IS_SEQUENCE)<=0) goto err; 		} 	else 		{ 		OCSPerr(OCSP_F_ASN1_STRING_ENCODE,OCSP_R_BAD_DATA); 		goto err; 		} 	if (!s&& !(s = ASN1_STRING_new())) goto err; 	if (!(ASN1_STRING_set(s, b, i))) goto err; 	OPENSSL_free(b); 	return s; err: 	if (b) OPENSSL_free(b); 	return NULL; 	}
+unit|ASN1_STRING *ASN1_STRING_encode(ASN1_STRING *s, i2d_of_void *i2d,                                 void *data, STACK_OF(ASN1_OBJECT) *sk) {     int i;     unsigned char *p, *b = NULL;      if (data) {         if ((i = i2d(data, NULL))<= 0)             goto err;         if (!(b = p = OPENSSL_malloc((unsigned int)i)))             goto err;         if (i2d(data,&p)<= 0)             goto err;     } else if (sk) {         if ((i = i2d_ASN1_SET_OF_ASN1_OBJECT(sk, NULL,                                              (I2D_OF(ASN1_OBJECT)) i2d,                                              V_ASN1_SEQUENCE,                                              V_ASN1_UNIVERSAL,                                              IS_SEQUENCE))<= 0)              goto err;         if (!(b = p = OPENSSL_malloc((unsigned int)i)))             goto err;         if (i2d_ASN1_SET_OF_ASN1_OBJECT(sk,&p, (I2D_OF(ASN1_OBJECT)) i2d,                                         V_ASN1_SEQUENCE,                                         V_ASN1_UNIVERSAL, IS_SEQUENCE)<= 0)              goto err;     } else {         OCSPerr(OCSP_F_ASN1_STRING_ENCODE, OCSP_R_BAD_DATA);         goto err;     }     if (!s&& !(s = ASN1_STRING_new()))         goto err;     if (!(ASN1_STRING_set(s, b, i)))         goto err;     OPENSSL_free(b);     return s;  err:     if (b)         OPENSSL_free(b);     return NULL; }
 endif|#
 directive|endif
 end_endif
@@ -1310,7 +1310,7 @@ comment|/* Nonce handling functions */
 end_comment
 
 begin_comment
-comment|/* Add a nonce to an extension stack. A nonce can be specificed or if NULL  * a random nonce will be generated.  * Note: OpenSSL 0.9.7d and later create an OCTET STRING containing the   * nonce, previous versions used the raw nonce.  */
+comment|/*  * Add a nonce to an extension stack. A nonce can be specificed or if NULL a  * random nonce will be generated. Note: OpenSSL 0.9.7d and later create an  * OCTET STRING containing the nonce, previous versions used the raw nonce.  */
 end_comment
 
 begin_decl_stmt
@@ -1358,7 +1358,7 @@ name|len
 operator|=
 name|OCSP_DEFAULT_NONCE_LENGTH
 expr_stmt|;
-comment|/* Create the OCTET STRING manually by writing out the header and 	 * appending the content octets. This avoids an extra memory allocation 	 * operation in some cases. Applications should *NOT* do this because          * it relies on library internals. 	 */
+comment|/*      * Create the OCTET STRING manually by writing out the header and      * appending the content octets. This avoids an extra memory allocation      * operation in some cases. Applications should *NOT* do this because it      * relies on library internals.      */
 name|os
 operator|.
 name|length
@@ -1427,14 +1427,21 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|tmpval
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!
@@ -1559,7 +1566,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check nonce validity in a request and response.  * Return value reflects result:  *  1: nonces present and equal.  *  2: nonces both absent.  *  3: nonce present in response only.  *  0: nonces both present and not equal.  * -1: nonce in request only.  *  *  For most responders clients can check return> 0.  *  If responder doesn't handle nonces return != 0 may be  *  necessary. return == 0 is always an error.  */
+comment|/*-  * Check nonce validity in a request and response.  * Return value reflects result:  *  1: nonces present and equal.  *  2: nonces both absent.  *  3: nonce present in response only.  *  0: nonces both present and not equal.  * -1: nonce in request only.  *  *  For most responders clients can check return> 0.  *  If responder doesn't handle nonces return != 0 may be  *  necessary. return == 0 is always an error.  */
 end_comment
 
 begin_function
@@ -1575,7 +1582,7 @@ modifier|*
 name|bs
 parameter_list|)
 block|{
-comment|/* 	 * Since we are only interested in the presence or absence of 	 * the nonce and comparing its value there is no need to use 	 * the X509V3 routines: this way we can avoid them allocating an 	 * ASN1_OCTET_STRING structure for the value which would be 	 * freed immediately anyway. 	 */
+comment|/*      * Since we are only interested in the presence or absence of      * the nonce and comparing its value there is no need to use      * the X509V3 routines: this way we can avoid them allocating an      * ASN1_OCTET_STRING structure for the value which would be      * freed immediately anyway.      */
 name|int
 name|req_idx
 decl_stmt|,
@@ -1667,7 +1674,7 @@ condition|)
 return|return
 literal|3
 return|;
-comment|/* Otherwise nonce in request and response so retrieve the extensions */
+comment|/*      * Otherwise nonce in request and response so retrieve the extensions      */
 name|req_ext
 operator|=
 name|OCSP_REQUEST_get_ext
@@ -1709,7 +1716,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy the nonce value (if any) from an OCSP request to   * a response.  */
+comment|/*  * Copy the nonce value (if any) from an OCSP request to a response.  */
 end_comment
 
 begin_function
@@ -2174,7 +2181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* per ACCESS_DESCRIPTION parameter are oids, of which there are currently  * two--NID_ad_ocsp, NID_id_ad_caIssuers--and GeneralName value.  This  * method forces NID_ad_ocsp and uniformResourceLocator [6] IA5String.  */
+comment|/*  * per ACCESS_DESCRIPTION parameter are oids, of which there are currently  * two--NID_ad_ocsp, NID_id_ad_caIssuers--and GeneralName value.  This method  * forces NID_ad_ocsp and uniformResourceLocator [6] IA5String.  */
 end_comment
 
 begin_function

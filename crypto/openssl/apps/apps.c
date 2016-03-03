@@ -4,11 +4,11 @@ comment|/* apps/apps.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_if
@@ -26,16 +26,16 @@ name|OPENSSL_SYS_VMS
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * On VMS, you need to define this to get the declaration of fileno().  The  * value 2 is to make sure no function defined in POSIX-2 is left undefined.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_POSIX_C_SOURCE
 value|2
 end_define
-
-begin_comment
-comment|/* On VMS, you need to define this to get 				   the declaration of fileno().  The value 				   2 is to make sure no function defined 				   in POSIX-2 is left undefined. */
-end_comment
 
 begin_endif
 endif|#
@@ -419,7 +419,7 @@ name|undef
 end_ifdef
 
 begin_comment
-comment|/* never finished - probably never will be :-) */
+comment|/* never finished - probably never will be                                  * :-) */
 end_comment
 
 begin_function
@@ -710,8 +710,8 @@ name|p
 operator|==
 literal|'#'
 condition|)
-comment|/* comment line */
 block|{
+comment|/* comment line */
 while|while
 condition|(
 operator|*
@@ -2112,8 +2112,8 @@ operator|==
 literal|'\"'
 operator|)
 condition|)
-comment|/* scan for closing quote */
 block|{
+comment|/* scan for closing quote */
 name|i
 operator|=
 operator|*
@@ -2837,6 +2837,28 @@ argument_list|,
 name|prompt_info
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|prompt
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Out of memory\n"
+argument_list|)
+expr_stmt|;
+name|UI_free
+argument_list|(
+name|ui
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|ui_flags
 operator||=
 name|UI_INPUT_FLAG_DEFAULT_PWD
@@ -2899,6 +2921,33 @@ argument_list|(
 name|bufsiz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buff
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Out of memory\n"
+argument_list|)
+expr_stmt|;
+name|UI_free
+argument_list|(
+name|ui
+argument_list|)
+expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|prompt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|ok
 operator|=
 name|UI_add_verify_string
@@ -3402,7 +3451,7 @@ name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
-comment|/* 		 * Under _WIN32, which covers even Win64 and CE, file 		 * descriptors referenced by BIO_s_fd are not inherited 		 * by child process and therefore below is not an option. 		 * It could have been an option if bss_fd.c was operating 		 * on real Windows descriptors, such as those obtained 		 * with CreateFile. 		 */
+comment|/*              * Under _WIN32, which covers even Win64 and CE, file              * descriptors referenced by BIO_s_fd are not inherited              * by child process and therefore below is not an option.              * It could have been an option if bss_fd.c was operating              * on real Windows descriptors, such as those obtained              * with CreateFile.              */
 block|}
 elseif|else
 if|if
@@ -3473,7 +3522,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* Can't do BIO_gets on an fd BIO so add a buffering BIO */
+comment|/*              * Can't do BIO_gets on an fd BIO so add a buffering BIO              */
 name|btmp
 operator|=
 name|BIO_new
@@ -6155,7 +6204,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}	  STACK_OF
+unit|}  STACK_OF
 operator|(
 name|X509_CRL
 operator|)
@@ -6272,7 +6321,7 @@ begin_define
 define|#
 directive|define
 name|X509_FLAG_CA
-value|(X509_FLAG_NO_ISSUER | X509_FLAG_NO_PUBKEY | \ 			 X509_FLAG_NO_HEADER | X509_FLAG_NO_VERSION)
+value|(X509_FLAG_NO_ISSUER | X509_FLAG_NO_PUBKEY | \                          X509_FLAG_NO_HEADER | X509_FLAG_NO_VERSION)
 end_define
 
 begin_macro
@@ -11043,7 +11092,7 @@ argument_list|)
 operator|+
 literal|1
 decl_stmt|;
-comment|/* to copy the types and values into. due to escaping, the copy can only become shorter */
+comment|/* to copy the types and values                                           * into. due to escaping, the copy                                           * can only become shorter */
 name|char
 modifier|*
 name|buf
@@ -11220,8 +11269,8 @@ name|sp
 operator|==
 literal|'\\'
 condition|)
-comment|/* is there anything to escape in the type...? */
 block|{
+comment|/* is there anything to escape in the                                  * type...? */
 if|if
 condition|(
 operator|*
@@ -11384,7 +11433,7 @@ operator|&&
 name|multirdn
 condition|)
 block|{
-comment|/* a not escaped + signals a mutlivalued RDN */
+comment|/*                  * a not escaped + signals a mutlivalued RDN                  */
 name|sp
 operator|++
 expr_stmt|;
@@ -11926,7 +11975,7 @@ block|{
 name|long
 name|timestamp
 decl_stmt|;
-comment|/* interpret the -attime argument as seconds since 			 * Epoch */
+comment|/*              * interpret the -attime argument as seconds since Epoch              */
 if|if
 condition|(
 name|sscanf
@@ -12170,6 +12219,21 @@ name|flags
 operator||=
 name|X509_V_FLAG_CHECK_SS_SIGNATURE
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"-no_alt_chains"
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|X509_V_FLAG_NO_ALT_CHAINS
+expr_stmt|;
 else|else
 return|return
 literal|0
@@ -12314,7 +12378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read whole contents of a BIO into an allocated memory buffer and  * return it.  */
+comment|/*  * Read whole contents of a BIO into an allocated memory buffer and return  * it.  */
 end_comment
 
 begin_function
@@ -13979,7 +14043,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* next_protos_parse parses a comma separated list of strings into a string  * in a format suitable for passing to SSL_CTX_set_next_protos_advertised.  *   outlen: (output) set to the length of the resulting buffer on success.  *   err: (maybe NULL) on failure, an error message line is written to this BIO.  *   in: a NUL termianted string like "abc,def,ghi"  *  *   returns: a malloced buffer or NULL on failure.  */
+comment|/*-  * next_protos_parse parses a comma separated list of strings into a string  * in a format suitable for passing to SSL_CTX_set_next_protos_advertised.  *   outlen: (output) set to the length of the resulting buffer on success.  *   err: (maybe NULL) on failure, an error message line is written to this BIO.  *   in: a NUL termianted string like "abc,def,ghi"  *  *   returns: a malloced buffer or NULL on failure.  */
 end_comment
 
 begin_function
@@ -14145,7 +14209,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !OPENSSL_NO_TLSEXT&& !OPENSSL_NO_NEXTPROTONEG */
+comment|/* !OPENSSL_NO_TLSEXT&&                                  * !OPENSSL_NO_NEXTPROTONEG */
 end_comment
 
 begin_comment
@@ -14261,8 +14325,8 @@ name|to
 expr_stmt|;
 block|}
 else|else
-comment|/* UNICODE path */
 block|{
+comment|/* UNICODE path */
 name|size_t
 name|i
 decl_stmt|,

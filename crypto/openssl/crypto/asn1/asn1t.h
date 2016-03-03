@@ -4,11 +4,11 @@ comment|/* asn1t.h */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -127,7 +127,7 @@ parameter_list|(
 name|itname
 parameter_list|)
 define|\
-value|const ASN1_ITEM * itname##_it(void) \ 	{ \ 		static const ASN1_ITEM local_it = {
+value|const ASN1_ITEM * itname##_it(void) \         { \                 static const ASN1_ITEM local_it = {
 define|#
 directive|define
 name|ASN1_ITEM_end
@@ -135,7 +135,7 @@ parameter_list|(
 name|itname
 parameter_list|)
 define|\
-value|}; \ 	return&local_it; \ 	}
+value|}; \         return&local_it; \         }
 endif|#
 directive|endif
 comment|/* Macros to aid ASN1 template writing */
@@ -154,9 +154,9 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_PRIMITIVE,\ 		-1,\&tname##_item_tt,\ 		0,\ 		NULL,\ 		0,\ 		#tname \ 	ASN1_ITEM_end(tname)
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_PRIMITIVE,\                 -1,\&tname##_item_tt,\                 0,\                 NULL,\                 0,\                 #tname \         ASN1_ITEM_end(tname)
 comment|/* This is a ASN1 type which just embeds a template */
-comment|/* This pair helps declare a SEQUENCE. We can do:  *  * 	ASN1_SEQUENCE(stname) = {  * 		... SEQUENCE components ...  * 	} ASN1_SEQUENCE_END(stname)  *  * 	This will produce an ASN1_ITEM called stname_it  *	for a structure called stname.  *  * 	If you want the same structure but a different  *	name then use:  *  * 	ASN1_SEQUENCE(itname) = {  * 		... SEQUENCE components ...  * 	} ASN1_SEQUENCE_END_name(stname, itname)  *  *	This will create an item called itname_it using  *	a structure called stname.  */
+comment|/*-  * This pair helps declare a SEQUENCE. We can do:  *  *      ASN1_SEQUENCE(stname) = {  *              ... SEQUENCE components ...  *      } ASN1_SEQUENCE_END(stname)  *  *      This will produce an ASN1_ITEM called stname_it  *      for a structure called stname.  *  *      If you want the same structure but a different  *      name then use:  *  *      ASN1_SEQUENCE(itname) = {  *              ... SEQUENCE components ...  *      } ASN1_SEQUENCE_END_name(stname, itname)  *  *      This will create an item called itname_it using  *      a structure called stname.  */
 define|#
 directive|define
 name|ASN1_SEQUENCE
@@ -181,7 +181,7 @@ parameter_list|,
 name|tname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\ 		NULL,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_SEQUENCE,\                 V_ASN1_SEQUENCE,\                 tname##_seq_tt,\                 sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\                 NULL,\                 sizeof(stname),\                 #stname \         ASN1_ITEM_end(tname)
 define|#
 directive|define
 name|ASN1_NDEF_SEQUENCE
@@ -209,7 +209,7 @@ parameter_list|,
 name|cb
 parameter_list|)
 define|\
-value|static const ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \         ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_BROKEN_SEQUENCE
@@ -217,7 +217,7 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_BROKEN, 0, 0, 0, 0}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_BROKEN, 0, 0, 0, 0}; \         ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_SEQUENCE_ref
@@ -229,7 +229,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_REFCOUNT, offsetof(tname, references), lck, cb, 0}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_REFCOUNT, offsetof(tname, references), lck, cb, 0}; \         ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_SEQUENCE_enc
@@ -241,7 +241,7 @@ parameter_list|,
 name|cb
 parameter_list|)
 define|\
-value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_ENCODING, 0, 0, cb, offsetof(tname, enc)}; \ 	ASN1_SEQUENCE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, ASN1_AFLG_ENCODING, 0, 0, cb, offsetof(tname, enc)}; \         ASN1_SEQUENCE(tname)
 define|#
 directive|define
 name|ASN1_NDEF_SEQUENCE_END
@@ -249,7 +249,7 @@ parameter_list|(
 name|tname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_NDEF_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\ 		NULL,\ 		sizeof(tname),\ 		#tname \ 	ASN1_ITEM_end(tname)
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_NDEF_SEQUENCE,\                 V_ASN1_SEQUENCE,\                 tname##_seq_tt,\                 sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\                 NULL,\                 sizeof(tname),\                 #tname \         ASN1_ITEM_end(tname)
 define|#
 directive|define
 name|ASN1_BROKEN_SEQUENCE_END
@@ -284,7 +284,7 @@ parameter_list|,
 name|tname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_SEQUENCE,\                 V_ASN1_SEQUENCE,\                 tname##_seq_tt,\                 sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\                 sizeof(stname),\                 #stname \         ASN1_ITEM_end(tname)
 define|#
 directive|define
 name|ASN1_NDEF_SEQUENCE_END_cb
@@ -294,8 +294,8 @@ parameter_list|,
 name|tname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_NDEF_SEQUENCE,\ 		V_ASN1_SEQUENCE,\ 		tname##_seq_tt,\ 		sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
-comment|/* This pair helps declare a CHOICE type. We can do:  *  * 	ASN1_CHOICE(chname) = {  * 		... CHOICE options ...  * 	ASN1_CHOICE_END(chname)  *  * 	This will produce an ASN1_ITEM called chname_it  *	for a structure called chname. The structure  *	definition must look like this:  *	typedef struct {  *		int type;  *		union {  *			ASN1_SOMETHING *opt1;  *			ASN1_SOMEOTHER *opt2;  *		} value;  *	} chname;  *	  *	the name of the selector must be 'type'.  * 	to use an alternative selector name use the  *      ASN1_CHOICE_END_selector() version.  */
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_NDEF_SEQUENCE,\                 V_ASN1_SEQUENCE,\                 tname##_seq_tt,\                 sizeof(tname##_seq_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\                 sizeof(stname),\                 #stname \         ASN1_ITEM_end(tname)
+comment|/*-  * This pair helps declare a CHOICE type. We can do:  *  *      ASN1_CHOICE(chname) = {  *              ... CHOICE options ...  *      ASN1_CHOICE_END(chname)  *  *      This will produce an ASN1_ITEM called chname_it  *      for a structure called chname. The structure  *      definition must look like this:  *      typedef struct {  *              int type;  *              union {  *                      ASN1_SOMETHING *opt1;  *                      ASN1_SOMEOTHER *opt2;  *              } value;  *      } chname;  *  *      the name of the selector must be 'type'.  *      to use an alternative selector name use the  *      ASN1_CHOICE_END_selector() version.  */
 define|#
 directive|define
 name|ASN1_CHOICE
@@ -313,7 +313,7 @@ parameter_list|,
 name|cb
 parameter_list|)
 define|\
-value|static const ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \ 	ASN1_CHOICE(tname)
+value|static const ASN1_AUX tname##_aux = {NULL, 0, 0, 0, cb, 0}; \         ASN1_CHOICE(tname)
 define|#
 directive|define
 name|ASN1_CHOICE_END
@@ -341,7 +341,7 @@ parameter_list|,
 name|selname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_CHOICE,\ 		offsetof(stname,selname) ,\ 		tname##_ch_tt,\ 		sizeof(tname##_ch_tt) / sizeof(ASN1_TEMPLATE),\ 		NULL,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_CHOICE,\                 offsetof(stname,selname) ,\                 tname##_ch_tt,\                 sizeof(tname##_ch_tt) / sizeof(ASN1_TEMPLATE),\                 NULL,\                 sizeof(stname),\                 #stname \         ASN1_ITEM_end(tname)
 define|#
 directive|define
 name|ASN1_CHOICE_END_cb
@@ -353,7 +353,7 @@ parameter_list|,
 name|selname
 parameter_list|)
 define|\
-value|;\ 	ASN1_ITEM_start(tname) \ 		ASN1_ITYPE_CHOICE,\ 		offsetof(stname,selname) ,\ 		tname##_ch_tt,\ 		sizeof(tname##_ch_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\ 		sizeof(stname),\ 		#stname \ 	ASN1_ITEM_end(tname)
+value|;\         ASN1_ITEM_start(tname) \                 ASN1_ITYPE_CHOICE,\                 offsetof(stname,selname) ,\                 tname##_ch_tt,\                 sizeof(tname##_ch_tt) / sizeof(ASN1_TEMPLATE),\&tname##_aux,\                 sizeof(stname),\                 #stname \         ASN1_ITEM_end(tname)
 comment|/* This helps with the template wrapper form of ASN1_ITEM */
 define|#
 directive|define
@@ -367,7 +367,7 @@ name|name
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	(flags), (tag), 0,\ 	#name, ASN1_ITEM_ref(type) }
+value|{ \         (flags), (tag), 0,\         #name, ASN1_ITEM_ref(type) }
 comment|/* These help with SEQUENCE or CHOICE components */
 comment|/* used to declare other types */
 define|#
@@ -384,7 +384,7 @@ name|field
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	(flags), (tag), offsetof(stname, field),\ 	#field, ASN1_ITEM_ref(type) }
+value|{ \         (flags), (tag), offsetof(stname, field),\         #field, ASN1_ITEM_ref(type) }
 comment|/* used when the structure is combined with the parent */
 define|#
 directive|define
@@ -396,7 +396,7 @@ name|tag
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	(flags)|ASN1_TFLG_COMBINE, (tag), 0, NULL, ASN1_ITEM_ref(type) }
+value|{ \         (flags)|ASN1_TFLG_COMBINE, (tag), 0, NULL, ASN1_ITEM_ref(type) }
 comment|/* implicit and explicit helper macros */
 define|#
 directive|define
@@ -768,7 +768,7 @@ parameter_list|,
 name|none
 parameter_list|)
 define|\
-value|;\ 	static const ASN1_ADB name##_adb = {\ 		flags,\ 		offsetof(name, field),\ 		app_table,\ 		name##_adbtbl,\ 		sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\ 		def,\ 		none\ 	}
+value|;\         static const ASN1_ADB name##_adb = {\                 flags,\                 offsetof(name, field),\                 app_table,\                 name##_adbtbl,\                 sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\                 def,\                 none\         }
 else|#
 directive|else
 define|#
@@ -788,7 +788,7 @@ parameter_list|,
 name|none
 parameter_list|)
 define|\
-value|;\ 	static const ASN1_ITEM *name##_adb(void) \ 	{ \ 	static const ASN1_ADB internal_adb = \ 		{\ 		flags,\ 		offsetof(name, field),\ 		app_table,\ 		name##_adbtbl,\ 		sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\ 		def,\ 		none\ 		}; \ 		return (const ASN1_ITEM *)&internal_adb; \ 	} \ 	void dummy_function(void)
+value|;\         static const ASN1_ITEM *name##_adb(void) \         { \         static const ASN1_ADB internal_adb = \                 {\                 flags,\                 offsetof(name, field),\                 app_table,\                 name##_adbtbl,\                 sizeof(name##_adbtbl) / sizeof(ASN1_ADB_TABLE),\                 def,\                 none\                 }; \                 return (const ASN1_ITEM *)&internal_adb; \         } \         void dummy_function(void)
 endif|#
 directive|endif
 define|#
@@ -808,7 +808,7 @@ name|name
 parameter_list|)
 define|\
 value|static const ASN1_TEMPLATE name##_tt
-comment|/* This is the ASN1 template structure that defines  * a wrapper round the actual type. It determines the  * actual position of the field in the value structure,  * various flags such as OPTIONAL and the field name.  */
+comment|/*  * This is the ASN1 template structure that defines a wrapper round the  * actual type. It determines the actual position of the field in the value  * structure, various flags such as OPTIONAL and the field name.  */
 struct|struct
 name|ASN1_TEMPLATE_st
 block|{
@@ -945,7 +945,7 @@ define|#
 directive|define
 name|ASN1_TFLG_SEQUENCE_OF
 value|(0x2<< 1)
-comment|/* Special case: this refers to a SET OF that  * will be sorted into DER order when encoded *and*  * the corresponding STACK will be modified to match  * the new order.  */
+comment|/*  * Special case: this refers to a SET OF that will be sorted into DER order  * when encoded *and* the corresponding STACK will be modified to match the  * new order.  */
 define|#
 directive|define
 name|ASN1_TFLG_SET_ORDER
@@ -955,7 +955,7 @@ define|#
 directive|define
 name|ASN1_TFLG_SK_MASK
 value|(0x3<< 1)
-comment|/* These flags mean the tag should be taken from the  * tag field. If EXPLICIT then the underlying type  * is used for the inner tag.  */
+comment|/*  * These flags mean the tag should be taken from the tag field. If EXPLICIT  * then the underlying type is used for the inner tag.  */
 comment|/* IMPLICIT tagging */
 define|#
 directive|define
@@ -980,7 +980,7 @@ define|#
 directive|define
 name|ASN1_TFLG_EXPLICIT
 value|ASN1_TFLG_EXPTAG|ASN1_TFLG_CONTEXT
-comment|/* If tagging is in force these determine the  * type of tag to use. Otherwise the tag is  * determined by the underlying type. These   * values reflect the actual octet format.  */
+comment|/*  * If tagging is in force these determine the type of tag to use. Otherwise  * the tag is determined by the underlying type. These values reflect the  * actual octet format.  */
 comment|/* Universal tag */
 define|#
 directive|define
@@ -1005,7 +1005,7 @@ define|#
 directive|define
 name|ASN1_TFLG_TAG_CLASS
 value|(0x3<<6)
-comment|/* These are for ANY DEFINED BY type. In this case  * the 'item' field points to an ASN1_ADB structure  * which contains a table of values to decode the  * relevant type  */
+comment|/*  * These are for ANY DEFINED BY type. In this case the 'item' field points to  * an ASN1_ADB structure which contains a table of values to decode the  * relevant type  */
 define|#
 directive|define
 name|ASN1_TFLG_ADB_MASK
@@ -1018,12 +1018,12 @@ define|#
 directive|define
 name|ASN1_TFLG_ADB_INT
 value|(0x1<<9)
-comment|/* This flag means a parent structure is passed  * instead of the field: this is useful is a  * SEQUENCE is being combined with a CHOICE for  * example. Since this means the structure and  * item name will differ we need to use the  * ASN1_CHOICE_END_name() macro for example.  */
+comment|/*  * This flag means a parent structure is passed instead of the field: this is  * useful is a SEQUENCE is being combined with a CHOICE for example. Since  * this means the structure and item name will differ we need to use the  * ASN1_CHOICE_END_name() macro for example.  */
 define|#
 directive|define
 name|ASN1_TFLG_COMBINE
 value|(0x1<<10)
-comment|/* This flag when present in a SEQUENCE OF, SET OF  * or EXPLICIT causes indefinite length constructed  * encoding to be used if required.  */
+comment|/*  * This flag when present in a SEQUENCE OF, SET OF or EXPLICIT causes  * indefinite length constructed encoding to be used if required.  */
 define|#
 directive|define
 name|ASN1_TFLG_NDEF
@@ -1035,7 +1035,7 @@ block|{
 name|char
 name|itype
 decl_stmt|;
-comment|/* The item type, primitive, SEQUENCE, CHOICE or extern */
+comment|/* The item type, primitive, SEQUENCE, CHOICE                                  * or extern */
 name|long
 name|utype
 decl_stmt|;
@@ -1045,7 +1045,7 @@ name|ASN1_TEMPLATE
 modifier|*
 name|templates
 decl_stmt|;
-comment|/* If SEQUENCE or CHOICE this contains the contents */
+comment|/* If SEQUENCE or CHOICE this contains                                      * the contents */
 name|long
 name|tcount
 decl_stmt|;
@@ -1059,7 +1059,7 @@ comment|/* functions that handle this type */
 name|long
 name|size
 decl_stmt|;
-comment|/* Structure size (usually)*/
+comment|/* Structure size (usually) */
 ifndef|#
 directive|ifndef
 name|NO_ASN1_FIELD_NAMES
@@ -1073,7 +1073,7 @@ endif|#
 directive|endif
 block|}
 struct|;
-comment|/* These are values for the itype field and  * determine how the type is interpreted.  *  * For PRIMITIVE types the underlying type  * determines the behaviour if items is NULL.  *  * Otherwise templates must contain a single   * template and the type is treated in the  * same way as the type specified in the template.  *  * For SEQUENCE types the templates field points  * to the members, the size field is the  * structure size.  *  * For CHOICE types the templates field points  * to each possible member (typically a union)  * and the 'size' field is the offset of the  * selector.  *  * The 'funcs' field is used for application  * specific functions.   *  * For COMPAT types the funcs field gives a  * set of functions that handle this type, this  * supports the old d2i, i2d convention.  *  * The EXTERN type uses a new style d2i/i2d.  * The new style should be used where possible  * because it avoids things like the d2i IMPLICIT  * hack.  *  * MSTRING is a multiple string type, it is used  * for a CHOICE of character strings where the  * actual strings all occupy an ASN1_STRING  * structure. In this case the 'utype' field  * has a special meaning, it is used as a mask  * of acceptable types using the B_ASN1 constants.  *  * NDEF_SEQUENCE is the same as SEQUENCE except  * that it will use indefinite length constructed  * encoding if requested.  *  */
+comment|/*-  * These are values for the itype field and  * determine how the type is interpreted.  *  * For PRIMITIVE types the underlying type  * determines the behaviour if items is NULL.  *  * Otherwise templates must contain a single  * template and the type is treated in the  * same way as the type specified in the template.  *  * For SEQUENCE types the templates field points  * to the members, the size field is the  * structure size.  *  * For CHOICE types the templates field points  * to each possible member (typically a union)  * and the 'size' field is the offset of the  * selector.  *  * The 'funcs' field is used for application  * specific functions.  *  * For COMPAT types the funcs field gives a  * set of functions that handle this type, this  * supports the old d2i, i2d convention.  *  * The EXTERN type uses a new style d2i/i2d.  * The new style should be used where possible  * because it avoids things like the d2i IMPLICIT  * hack.  *  * MSTRING is a multiple string type, it is used  * for a CHOICE of character strings where the  * actual strings all occupy an ASN1_STRING  * structure. In this case the 'utype' field  * has a special meaning, it is used as a mask  * of acceptable types using the B_ASN1 constants.  *  * NDEF_SEQUENCE is the same as SEQUENCE except  * that it will use indefinite length constructed  * encoding if requested.  *  */
 define|#
 directive|define
 name|ASN1_ITYPE_PRIMITIVE
@@ -1102,7 +1102,7 @@ define|#
 directive|define
 name|ASN1_ITYPE_NDEF_SEQUENCE
 value|0x6
-comment|/* Cache for ASN1 tag and length, so we  * don't keep re-reading it for things  * like CHOICE  */
+comment|/*  * Cache for ASN1 tag and length, so we don't keep re-reading it for things  * like CHOICE  */
 struct|struct
 name|ASN1_TLC_st
 block|{
@@ -1487,7 +1487,7 @@ decl_stmt|;
 block|}
 name|ASN1_PRIMITIVE_FUNCS
 typedef|;
-comment|/* This is the ASN1_AUX structure: it handles various  * miscellaneous requirements. For example the use of  * reference counts and an informational callback.  *  * The "informational callback" is called at various  * points during the ASN1 encoding and decoding. It can  * be used to provide minor customisation of the structures  * used. This is most useful where the supplied routines  * *almost* do the right thing but need some extra help  * at a few points. If the callback returns zero then  * it is assumed a fatal error has occurred and the   * main operation should be abandoned.  *  * If major changes in the default behaviour are required  * then an external type is more appropriate.  */
+comment|/*  * This is the ASN1_AUX structure: it handles various miscellaneous  * requirements. For example the use of reference counts and an informational  * callback. The "informational callback" is called at various points during  * the ASN1 encoding and decoding. It can be used to provide minor  * customisation of the structures used. This is most useful where the  * supplied routines *almost* do the right thing but need some extra help at  * a few points. If the callback returns zero then it is assumed a fatal  * error has occurred and the main operation should be abandoned. If major  * changes in the default behaviour are required then an external type is  * more appropriate.  */
 typedef|typedef
 name|int
 name|ASN1_aux_cb
@@ -1677,7 +1677,7 @@ parameter_list|,
 name|ex
 parameter_list|)
 define|\
-value|ASN1_ITEM_start(itname) \ 					ASN1_ITYPE_PRIMITIVE, V_##vname, NULL, 0, NULL, ex, #itname \ 				ASN1_ITEM_end(itname)
+value|ASN1_ITEM_start(itname) \                                         ASN1_ITYPE_PRIMITIVE, V_##vname, NULL, 0, NULL, ex, #itname \                                 ASN1_ITEM_end(itname)
 comment|/* Macro to implement a multi string type */
 define|#
 directive|define
@@ -1688,7 +1688,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|ASN1_ITEM_start(itname) \ 					ASN1_ITYPE_MSTRING, mask, NULL, 0, NULL, sizeof(ASN1_STRING), #itname \ 				ASN1_ITEM_end(itname)
+value|ASN1_ITEM_start(itname) \                                         ASN1_ITYPE_MSTRING, mask, NULL, 0, NULL, sizeof(ASN1_STRING), #itname \                                 ASN1_ITEM_end(itname)
 comment|/* Macro to implement an ASN1_ITEM in terms of old style funcs */
 define|#
 directive|define
@@ -1706,7 +1706,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|static const ASN1_COMPAT_FUNCS sname##_ff = { \ 		(ASN1_new_func *)sname##_new, \ 		(ASN1_free_func *)sname##_free, \ 		(ASN1_d2i_func *)d2i_##sname, \ 		(ASN1_i2d_func *)i2d_##sname, \ 	}; \ 	ASN1_ITEM_start(sname) \ 		ASN1_ITYPE_COMPAT, \ 		tag, \ 		NULL, \ 		0, \&sname##_ff, \ 		0, \ 		#sname \ 	ASN1_ITEM_end(sname)
+value|static const ASN1_COMPAT_FUNCS sname##_ff = { \                 (ASN1_new_func *)sname##_new, \                 (ASN1_free_func *)sname##_free, \                 (ASN1_d2i_func *)d2i_##sname, \                 (ASN1_i2d_func *)i2d_##sname, \         }; \         ASN1_ITEM_start(sname) \                 ASN1_ITYPE_COMPAT, \                 tag, \                 NULL, \                 0, \&sname##_ff, \                 0, \                 #sname \         ASN1_ITEM_end(sname)
 define|#
 directive|define
 name|IMPLEMENT_EXTERN_ASN1
@@ -1718,7 +1718,7 @@ parameter_list|,
 name|fptrs
 parameter_list|)
 define|\
-value|ASN1_ITEM_start(sname) \ 		ASN1_ITYPE_EXTERN, \ 		tag, \ 		NULL, \ 		0, \&fptrs, \ 		0, \ 		#sname \ 	ASN1_ITEM_end(sname)
+value|ASN1_ITEM_start(sname) \                 ASN1_ITYPE_EXTERN, \                 tag, \                 NULL, \                 0, \&fptrs, \                 0, \                 #sname \         ASN1_ITEM_end(sname)
 comment|/* Macro to implement standard functions in terms of ASN1_ITEM structures */
 define|#
 directive|define
@@ -1775,7 +1775,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|pre stname *fname##_new(void) \ 	{ \ 		return (stname *)ASN1_item_new(ASN1_ITEM_rptr(itname)); \ 	} \ 	pre void fname##_free(stname *a) \ 	{ \ 		ASN1_item_free((ASN1_VALUE *)a, ASN1_ITEM_rptr(itname)); \ 	}
+value|pre stname *fname##_new(void) \         { \                 return (stname *)ASN1_item_new(ASN1_ITEM_rptr(itname)); \         } \         pre void fname##_free(stname *a) \         { \                 ASN1_item_free((ASN1_VALUE *)a, ASN1_ITEM_rptr(itname)); \         }
 define|#
 directive|define
 name|IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname
@@ -1787,7 +1787,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|stname *fname##_new(void) \ 	{ \ 		return (stname *)ASN1_item_new(ASN1_ITEM_rptr(itname)); \ 	} \ 	void fname##_free(stname *a) \ 	{ \ 		ASN1_item_free((ASN1_VALUE *)a, ASN1_ITEM_rptr(itname)); \ 	}
+value|stname *fname##_new(void) \         { \                 return (stname *)ASN1_item_new(ASN1_ITEM_rptr(itname)); \         } \         void fname##_free(stname *a) \         { \                 ASN1_item_free((ASN1_VALUE *)a, ASN1_ITEM_rptr(itname)); \         }
 define|#
 directive|define
 name|IMPLEMENT_ASN1_FUNCTIONS_fname
@@ -1799,7 +1799,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_fname(stname, itname, fname) \ 	IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname(stname, itname, fname)
+value|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_fname(stname, itname, fname) \         IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname(stname, itname, fname)
 define|#
 directive|define
 name|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_fname
@@ -1811,7 +1811,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \ 	{ \ 		return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\ 	} \ 	int i2d_##fname(stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\ 	}
+value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \         { \                 return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\         } \         int i2d_##fname(stname *a, unsigned char **out) \         { \                 return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\         }
 define|#
 directive|define
 name|IMPLEMENT_ASN1_NDEF_FUNCTION
@@ -1819,8 +1819,8 @@ parameter_list|(
 name|stname
 parameter_list|)
 define|\
-value|int i2d_##stname##_NDEF(stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_ndef_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(stname));\ 	}
-comment|/* This includes evil casts to remove const: they will go away when full  * ASN1 constification is done.  */
+value|int i2d_##stname##_NDEF(stname *a, unsigned char **out) \         { \                 return ASN1_item_ndef_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(stname));\         }
+comment|/*  * This includes evil casts to remove const: they will go away when full ASN1  * constification is done.  */
 define|#
 directive|define
 name|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_const_fname
@@ -1832,7 +1832,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \ 	{ \ 		return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\ 	} \ 	int i2d_##fname(const stname *a, unsigned char **out) \ 	{ \ 		return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\ 	}
+value|stname *d2i_##fname(stname **a, const unsigned char **in, long len) \         { \                 return (stname *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, ASN1_ITEM_rptr(itname));\         } \         int i2d_##fname(const stname *a, unsigned char **out) \         { \                 return ASN1_item_i2d((ASN1_VALUE *)a, out, ASN1_ITEM_rptr(itname));\         }
 define|#
 directive|define
 name|IMPLEMENT_ASN1_DUP_FUNCTION
@@ -1860,7 +1860,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|int fname##_print_ctx(BIO *out, stname *x, int indent, \ 						const ASN1_PCTX *pctx) \ 	{ \ 		return ASN1_item_print(out, (ASN1_VALUE *)x, indent, \ 			ASN1_ITEM_rptr(itname), pctx); \ 	}
+value|int fname##_print_ctx(BIO *out, stname *x, int indent, \                                                 const ASN1_PCTX *pctx) \         { \                 return ASN1_item_print(out, (ASN1_VALUE *)x, indent, \                         ASN1_ITEM_rptr(itname), pctx); \         }
 define|#
 directive|define
 name|IMPLEMENT_ASN1_FUNCTIONS_const
@@ -1880,7 +1880,7 @@ parameter_list|,
 name|fname
 parameter_list|)
 define|\
-value|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_const_fname(stname, itname, fname) \ 	IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname(stname, itname, fname)
+value|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_const_fname(stname, itname, fname) \         IMPLEMENT_ASN1_ALLOC_FUNCTIONS_fname(stname, itname, fname)
 comment|/* external definitions for primitive types */
 name|DECLARE_ASN1_ITEM
 argument_list|(

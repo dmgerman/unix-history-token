@@ -4,19 +4,23 @@ comment|/* ssl/ssltest.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_comment
 comment|/* ====================================================================  * Copyright 2005 Nokia. All rights reserved.  *  * The portions of the attached software ("Contribution") is developed by  * Nokia Corporation and is licensed pursuant to the OpenSSL open source  * license.  *  * The Contribution, originally written by Mika Kousa and Pasi Eronen of  * Nokia Corporation, consists of the "PSK" (Pre-Shared Key) ciphersuites  * support (see RFC 4279) to OpenSSL.  *  * No patent licenses or other rights except those expressly stated in  * the OpenSSL open source license shall be deemed granted or received  * expressly, by implication, estoppel, or otherwise.  *  * No assurances are provided by Nokia that the Contribution does not  * infringe the patent or other intellectual property rights of any third  * party or that the license provides you with all the necessary rights  * to make use of the Contribution.  *  * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. IN  * ADDITION TO THE DISCLAIMERS INCLUDED IN THE LICENSE, NOKIA  * SPECIFICALLY DISCLAIMS ANY LIABILITY FOR CLAIMS BROUGHT BY YOU OR ANY  * OTHER ENTITY BASED ON INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS OR  * OTHERWISE.  */
+end_comment
+
+begin_comment
+comment|/* Or gethostname won't be declared properly on Linux and GNU platforms. */
 end_comment
 
 begin_define
@@ -25,10 +29,6 @@ directive|define
 name|_BSD_SOURCE
 value|1
 end_define
-
-begin_comment
-comment|/* Or gethostname won't be declared properly 				   on Linux and GNU platforms. */
-end_comment
 
 begin_include
 include|#
@@ -90,16 +90,16 @@ directive|ifdef
 name|OPENSSL_SYS_VMS
 end_ifdef
 
+begin_comment
+comment|/*  * Or isascii won't be declared properly on VMS (at least with DECompHP C).  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_XOPEN_SOURCE
 value|500
 end_define
-
-begin_comment
-comment|/* Or isascii won't be declared properly on 				   VMS (at least with DECompHP C).  */
-end_comment
 
 begin_endif
 endif|#
@@ -251,16 +251,16 @@ directive|include
 file|<openssl/bn.h>
 end_include
 
+begin_comment
+comment|/*  * Or gethostname won't be declared properly  * on Compaq platforms (at least with DEC C).  * Do not try to put it earlier, or IPv6 includes  * get screwed...  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_XOPEN_SOURCE_EXTENDED
 value|1
 end_define
-
-begin_comment
-comment|/* Or gethostname won't be declared properly 				     on Compaq platforms (at least with DEC C). 				     Do not try to put it earlier, or IPv6 includes 				     get screwed... 				  */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -381,7 +381,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* There is really no standard for this, so let's assign some tentative    numbers.  In any case, these numbers are only for this test */
+comment|/*  * There is really no standard for this, so let's assign some tentative  * numbers.  In any case, these numbers are only for this test  */
 end_comment
 
 begin_define
@@ -909,7 +909,7 @@ name|FIONBIO
 end_ifdef
 
 begin_endif
-unit|static int s_nbio=0;
+unit|static int s_nbio = 0;
 endif|#
 directive|endif
 end_endif
@@ -1095,7 +1095,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -dhe1024      - use 1024 bit key (safe prime) for DHE\n"
+literal|" -dhe512       - use 512 bit key for DHE (to test failure)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" -dhe1024      - use 1024 bit key (safe prime) for DHE (default, no-op)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1285,9 +1292,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|" -named_curve arg  - Elliptic curve name to use for ephemeral ECDH keys.\n"
-expr|\
 literal|"                 Use \"openssl ecparam -list_curves\" for all names\n"
-expr|\
 literal|"                 (default is sect163r2).\n"
 argument_list|)
 expr_stmt|;
@@ -1511,7 +1516,7 @@ name|cert
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The SSL API does not allow us to look at temporary RSA/DH keys, 	 * otherwise we should print their lengths too */
+comment|/*      * The SSL API does not allow us to look at temporary RSA/DH keys,      * otherwise we should print their lengths too      */
 name|BIO_printf
 argument_list|(
 name|bio_stdout
@@ -1634,7 +1639,7 @@ name|errstr
 operator|=
 literal|"already locked"
 expr_stmt|;
-comment|/* must not happen in a single-threaded program 			 * (would deadlock) */
+comment|/*              * must not happen in a single-threaded program (would deadlock)              */
 goto|goto
 name|err
 goto|;
@@ -2077,7 +2082,7 @@ modifier|*
 name|dh
 decl_stmt|;
 name|int
-name|dhe1024
+name|dhe512
 init|=
 literal|0
 decl_stmt|,
@@ -2517,7 +2522,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-literal|"-dhe1024"
+literal|"-dhe512"
 argument_list|)
 operator|==
 literal|0
@@ -2526,7 +2531,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH
-name|dhe1024
+name|dhe512
 operator|=
 literal|1
 expr_stmt|;
@@ -2536,7 +2541,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ignoring -dhe1024, since I'm compiled without DH\n"
+literal|"ignoring -dhe512, since I'm compiled without DH\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2569,7 +2574,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ignoring -dhe1024, since I'm compiled without DH\n"
+literal|"ignoring -dhe1024dsa, since I'm compiled without DH\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3541,7 +3546,7 @@ goto|goto
 name|end
 goto|;
 block|}
-comment|/* 	 * test_cipherlist prevails over protocol switch: we test the cipherlist 	 * for all enabled protocols. 	 */
+comment|/*      * test_cipherlist prevails over protocol switch: we test the cipherlist      * for all enabled protocols.      */
 if|if
 condition|(
 name|test_cipherlist
@@ -3549,7 +3554,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* ensure that the cipher list are correctly sorted and exit */
+comment|/*          * ensure that the cipher list are correctly sorted and exit          */
 name|fprintf
 argument_list|(
 name|stdout
@@ -3603,7 +3608,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Testing was requested for a compiled-out protocol (e.g. SSLv2).          * Ideally, we would error out, but the generic test wrapper can't know 	 * when to expect failure. So we do nothing and return success. 	 */
+comment|/*      * Testing was requested for a compiled-out protocol (e.g. SSLv2).      * Ideally, we would error out, but the generic test wrapper can't know      * when to expect failure. So we do nothing and return success.      */
 if|if
 condition|(
 name|no_protocol
@@ -3750,7 +3755,7 @@ literal|"Warning: For accurate timings, use more connections (e.g. -num 1000)\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	if (cipher == NULL) cipher=getenv("SSL_CIPHER"); */
+comment|/*      if (cipher == NULL) cipher=getenv("SSL_CIPHER"); */
 name|SSL_library_init
 argument_list|()
 expr_stmt|;
@@ -3939,7 +3944,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* At this point, ssl2/ssl3/tls1 is only set if the protocol is available.  * (Otherwise we exit early.)  * However the compiler doesn't know this, so we ifdef. */
+comment|/*      * At this point, ssl2/ssl3/tls1 is only set if the protocol is      * available. (Otherwise we exit early.) However the compiler doesn't      * know this, so we ifdef.      */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SSL2
@@ -4064,7 +4069,7 @@ condition|(
 name|dhe1024dsa
 condition|)
 block|{
-comment|/* use SSL_OP_SINGLE_DH_USE to avoid small subgroup attacks */
+comment|/*              * use SSL_OP_SINGLE_DH_USE to avoid small subgroup attacks              */
 name|SSL_CTX_set_options
 argument_list|(
 name|s_ctx
@@ -4081,17 +4086,17 @@ block|}
 elseif|else
 if|if
 condition|(
-name|dhe1024
+name|dhe512
 condition|)
 name|dh
 operator|=
-name|get_dh1024
+name|get_dh512
 argument_list|()
 expr_stmt|;
 else|else
 name|dh
 operator|=
-name|get_dh512
+name|get_dh1024
 argument_list|()
 expr_stmt|;
 name|SSL_CTX_set_tmp_dh
@@ -4262,6 +4267,7 @@ argument_list|,
 name|opaque_prf_input_cb
 argument_list|)
 expr_stmt|;
+comment|/* or&co2 or NULL */
 name|SSL_CTX_set_tlsext_opaque_prf_input_callback_arg
 argument_list|(
 name|c_ctx
@@ -4270,7 +4276,7 @@ operator|&
 name|co1
 argument_list|)
 expr_stmt|;
-comment|/* or&co2 or NULL */
+comment|/* or&so2 or NULL */
 name|SSL_CTX_set_tlsext_opaque_prf_input_callback_arg
 argument_list|(
 name|s_ctx
@@ -4279,7 +4285,6 @@ operator|&
 name|so1
 argument_list|)
 expr_stmt|;
-comment|/* or&so2 or NULL */
 endif|#
 directive|endif
 if|if
@@ -4507,13 +4512,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* no_psk is used to avoid putting psk command to openssl tool */
+comment|/*          * no_psk is used to avoid putting psk command to openssl tool          */
 if|if
 condition|(
 name|no_psk
 condition|)
 block|{
-comment|/* if PSK is not compiled in and psk key is 			 * given, do nothing and exit successfully */
+comment|/*              * if PSK is not compiled in and psk key is given, do nothing and              * exit successfully              */
 name|ret
 operator|=
 literal|0
@@ -4629,7 +4634,7 @@ argument_list|,
 name|ssl_give_srp_client_pwd_cb
 argument_list|)
 expr_stmt|;
-comment|/*SSL_CTX_set_srp_strength(c_ctx, srp_client_arg.strength);*/
+comment|/*          * SSL_CTX_set_srp_strength(c_ctx, srp_client_arg.strength);          */
 block|}
 if|if
 condition|(
@@ -4765,7 +4770,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* OPENSSL_NO_KRB5  */
+comment|/* OPENSSL_NO_KRB5 */
 for|for
 control|(
 name|i
@@ -4873,7 +4878,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|CLOCKS_PER_SEC
-comment|/* "To determine the time in seconds, the value returned 		 * by the clock function should be divided by the value 		 * of the macro CLOCKS_PER_SEC." 		 *                                       -- ISO/IEC 9899 */
+comment|/*          * "To determine the time in seconds, the value returned by the clock          * function should be divided by the value of the macro          * CLOCKS_PER_SEC." -- ISO/IEC 9899          */
 name|BIO_printf
 argument_list|(
 name|bio_stdout
@@ -4898,7 +4903,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* "`CLOCKS_PER_SEC' undeclared (first use this function)" 		 *                            -- cc on NeXTstep/OpenStep */
+comment|/*          * "`CLOCKS_PER_SEC' undeclared (first use this function)" -- cc on          * NeXTstep/OpenStep          */
 name|BIO_printf
 argument_list|(
 name|bio_stdout
@@ -5230,8 +5235,8 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-comment|/* c_ssl_bio:          SSL filter BIO 		 * 		 * client:             pseudo-I/O for SSL library 		 * 		 * client_io:          client's SSL communication; usually to be 		 *                     relayed over some I/O facility, but in this 		 *                     test program, we're the server, too: 		 * 		 * server_io:          server's SSL communication 		 * 		 * server:             pseudo-I/O for SSL library 		 * 		 * s_ssl_bio:          SSL filter BIO 		 * 		 * The client and the server each employ a "BIO pair": 		 * client + client_io, server + server_io. 		 * BIO pairs are symmetric.  A BIO pair behaves similar 		 * to a non-blocking socketpair (but both endpoints must 		 * be handled by the same thread). 		 * [Here we could connect client and server to the ends 		 * of a single BIO pair, but then this code would be less 		 * suitable as an example for BIO pairs in general.] 		 * 		 * Useful functions for querying the state of BIO pair endpoints: 		 * 		 * BIO_ctrl_pending(bio)              number of bytes we can read now 		 * BIO_ctrl_get_read_request(bio)     number of bytes needed to fulfil 		 *                                      other side's read attempt 		 * BIO_ctrl_get_write_guarantee(bio)   number of bytes we can write now 		 * 		 * ..._read_request is never more than ..._write_guarantee; 		 * it depends on the application which one you should use. 		 */
-comment|/* We have non-blocking behaviour throughout this test program, but 		 * can be sure that there is *some* progress in each iteration; so 		 * we don't have to worry about ..._SHOULD_READ or ..._SHOULD_WRITE 		 * -- we just try everything in each iteration 		 */
+comment|/*-          * c_ssl_bio:          SSL filter BIO          *          * client:             pseudo-I/O for SSL library          *          * client_io:          client's SSL communication; usually to be          *                     relayed over some I/O facility, but in this          *                     test program, we're the server, too:          *          * server_io:          server's SSL communication          *          * server:             pseudo-I/O for SSL library          *          * s_ssl_bio:          SSL filter BIO          *          * The client and the server each employ a "BIO pair":          * client + client_io, server + server_io.          * BIO pairs are symmetric.  A BIO pair behaves similar          * to a non-blocking socketpair (but both endpoints must          * be handled by the same thread).          * [Here we could connect client and server to the ends          * of a single BIO pair, but then this code would be less          * suitable as an example for BIO pairs in general.]          *          * Useful functions for querying the state of BIO pair endpoints:          *          * BIO_ctrl_pending(bio)              number of bytes we can read now          * BIO_ctrl_get_read_request(bio)     number of bytes needed to fulfil          *                                      other side's read attempt          * BIO_ctrl_get_write_guarantee(bio)   number of bytes we can write now          *          * ..._read_request is never more than ..._write_guarantee;          * it depends on the application which one you should use.          */
+comment|/*          * We have non-blocking behaviour throughout this test program, but          * can be sure that there is *some* progress in each iteration; so we          * don't have to worry about ..._SHOULD_READ or ..._SHOULD_WRITE --          * we just try everything in each iteration          */
 block|{
 comment|/* CLIENT */
 name|MS_STATIC
@@ -5356,7 +5361,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* BIO_should_retry(...) can just be ignored here. 					 * The library expects us to call BIO_write with 					 * the same arguments again, and that's what we will 					 * do in the next iteration. */
+comment|/*                      * BIO_should_retry(...) can just be ignored here. The                      * library expects us to call BIO_write with the same                      * arguments again, and that's what we will do in the                      * next iteration.                      */
 block|}
 elseif|else
 if|if
@@ -5445,7 +5450,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Again, "BIO_should_retry" can be ignored. */
+comment|/*                      * Again, "BIO_should_retry" can be ignored.                      */
 block|}
 elseif|else
 if|if
@@ -5485,7 +5490,7 @@ name|r
 expr_stmt|;
 block|}
 block|}
-comment|/* c_time and s_time increments will typically be very small 			 * (depending on machine speed and clock tick intervals), 			 * but sampling over a large number of connections should 			 * result in fairly accurate figures.  We cannot guarantee 			 * a lot, however -- if each connection lasts for exactly 			 * one clock tick, it will be counted only for the client 			 * or only for the server or even not at all. 			 */
+comment|/*              * c_time and s_time increments will typically be very small              * (depending on machine speed and clock tick intervals), but              * sampling over a large number of connections should result in              * fairly accurate figures.  We cannot guarantee a lot, however              * -- if each connection lasts for exactly one clock tick, it              * will be counted only for the client or only for the server or              * even not at all.              */
 operator|*
 name|c_time
 operator|+=
@@ -5779,7 +5784,7 @@ name|io2
 init|=
 name|client_io
 decl_stmt|;
-comment|/* we use the non-copying interface for io1 			 * and the standard BIO_write/BIO_read interface for io2 			 */
+comment|/*              * we use the non-copying interface for io1 and the standard              * BIO_write/BIO_read interface for io2              */
 specifier|static
 name|int
 name|prev_progress
@@ -5880,7 +5885,7 @@ operator|)
 name|num
 argument_list|)
 expr_stmt|;
-comment|/* possibly r< num (non-contiguous data) */
+comment|/*                      * possibly r< num (non-contiguous data)                      */
 name|num
 operator|=
 name|r
@@ -5908,8 +5913,8 @@ name|int
 operator|)
 name|num
 condition|)
-comment|/* can't happen */
 block|{
+comment|/* can't happen */
 name|fprintf
 argument_list|(
 name|stderr
@@ -5979,7 +5984,7 @@ argument_list|(
 name|io1
 argument_list|)
 expr_stmt|;
-comment|/* here we could use ..._get_write_guarantee instead of 				 * ..._get_read_request, but by using the latter 				 * we test restartability of the SSL implementation 				 * more thoroughly */
+comment|/*                  * here we could use ..._get_write_guarantee instead of                  * ..._get_read_request, but by using the latter we test                  * restartability of the SSL implementation more thoroughly                  */
 name|num
 operator|=
 name|r1
@@ -6076,8 +6081,8 @@ name|int
 operator|)
 name|num
 condition|)
-comment|/* can't happen */
 block|{
+comment|/* can't happen */
 name|fprintf
 argument_list|(
 name|stderr
@@ -6118,8 +6123,8 @@ name|int
 operator|)
 name|num
 condition|)
-comment|/* can't happen */
 block|{
+comment|/* can't happen */
 name|fprintf
 argument_list|(
 name|stderr
@@ -6156,7 +6161,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* no loop, BIO_ctrl_get_read_request now returns 0 anyway */
+comment|/* no loop, BIO_ctrl_get_read_request now                                  * returns 0 anyway */
 if|if
 condition|(
 operator|!
@@ -6779,7 +6784,7 @@ name|s_ssl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*			else if (s_write) 				printf("server:SSL_write()\n"); 			else 				printf("server:SSL_read()\n"); */
+comment|/*-             else if (s_write)                 printf("server:SSL_write()\n");             else                 printf("server:SSL_read()\n"); */
 block|}
 if|if
 condition|(
@@ -6805,7 +6810,7 @@ name|c_ssl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*			else if (c_write) 				printf("client:SSL_write()\n"); 			else 				printf("client:SSL_read()\n"); */
+comment|/*-             else if (c_write)                 printf("client:SSL_write()\n");             else                 printf("client:SSL_read()\n"); */
 block|}
 if|if
 condition|(
@@ -6828,7 +6833,9 @@ argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|err
+goto|;
 block|}
 if|if
 condition|(
@@ -7531,7 +7538,7 @@ literal|0
 expr_stmt|;
 name|err
 label|:
-comment|/* We have to set the BIO's to NULL otherwise they will be 	 * OPENSSL_free()ed twice.  Once when th s_ssl is SSL_free()ed and 	 * again when c_ssl is SSL_free()ed. 	 * This is a hack required because s_ssl and c_ssl are sharing the same 	 * BIO structure and SSL_set_bio() and SSL_free() automatically 	 * BIO_free non NULL entries. 	 * You should not normally do this or be required to do this */
+comment|/*      * We have to set the BIO's to NULL otherwise they will be      * OPENSSL_free()ed twice.  Once when th s_ssl is SSL_free()ed and again      * when c_ssl is SSL_free()ed. This is a hack required because s_ssl and      * c_ssl are sharing the same BIO structure and SSL_set_bio() and      * SSL_free() automatically BIO_free non NULL entries. You should not      * normally do this or be required to do this      */
 if|if
 condition|(
 name|s_ssl
@@ -7908,7 +7915,7 @@ block|{
 case|case
 name|NID_Independent
 case|:
-comment|/* Completely meaningless in this 					   program, as there's no way to 					   grant explicit rights to a 					   specific PrC.  Basically, using 					   id-ppl-Independent is the perfect 					   way to grant no rights at all. */
+comment|/*                      * Completely meaningless in this program, as there's no                      * way to grant explicit rights to a specific PrC.                      * Basically, using id-ppl-Independent is the perfect way                      * to grant no rights at all.                      */
 name|fprintf
 argument_list|(
 name|stderr
@@ -7940,7 +7947,7 @@ break|break;
 case|case
 name|NID_id_ppl_inheritAll
 case|:
-comment|/* This is basically a NOP, we 					   simply let the current rights 					   stand as they are. */
+comment|/*                      * This is basically a NOP, we simply let the current                      * rights stand as they are.                      */
 name|fprintf
 argument_list|(
 name|stderr
@@ -7974,7 +7981,7 @@ name|policy
 operator|->
 name|length
 expr_stmt|;
-comment|/* The algorithm works as follows: 					   it is assumed that previous 					   iterations or the initial granted 					   rights has already set some elements 					   of `letters'.  What we need to do is 					   to clear those that weren't granted 					   by the current PrC as well.  The 					   easiest way to do this is to add 1 					   to all the elements whose letters 					   are given with the current policy. 					   That way, all elements that are set 					   by the current policy and were 					   already set by earlier policies and 					   through the original grant of rights 					   will get the value 2 or higher. 					   The last thing to do is to sweep 					   through `letters' and keep the 					   elements having the value 2 as set, 					   and clear all the others. */
+comment|/*                      * The algorithm works as follows: it is assumed that                      * previous iterations or the initial granted rights has                      * already set some elements of `letters'.  What we need                      * to do is to clear those that weren't granted by the                      * current PrC as well.  The easiest way to do this is to                      * add 1 to all the elements whose letters are given with                      * the current policy. That way, all elements that are                      * set by the current policy and were already set by                      * earlier policies and through the original grant of                      * rights will get the value 2 or higher. The last thing                      * to do is to sweep through `letters' and keep the                      * elements having the value 2 as set, and clear all the                      * others.                      */
 name|fprintf
 argument_list|(
 name|stderr
@@ -8177,6 +8184,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+comment|/* That's 80> */
 specifier|static
 specifier|const
 name|char
@@ -8186,7 +8194,6 @@ init|=
 literal|">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 literal|">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 decl_stmt|;
-comment|/* That's 80> */
 name|char
 name|my_format
 index|[
@@ -8241,7 +8248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Priority levels:    0	[!]var, ()    1& ^    2	| */
+comment|/*-  * Priority levels:  *  0   [!]var, ()  *  1& ^  *  2   |  */
 end_comment
 
 begin_function_decl
@@ -9823,7 +9830,7 @@ name|OPENSSL_NO_DH
 end_ifndef
 
 begin_comment
-comment|/* These DH parameters have been generated as follows:  *    $ openssl dhparam -C -noout 512  *    $ openssl dhparam -C -noout 1024  *    $ openssl dhparam -C -noout -dsaparam 1024  * (The third function has been renamed to avoid name conflicts.)  */
+comment|/*-  * These DH parameters have been generated as follows:  *    $ openssl dhparam -C -noout 512  *    $ openssl dhparam -C -noout 1024  *    $ openssl dhparam -C -noout -dsaparam 1024  * (The third function has been renamed to avoid name conflicts.)  */
 end_comment
 
 begin_function
@@ -9967,7 +9974,7 @@ block|,
 literal|0xAE
 block|,
 literal|0x23
-block|, 		}
+block|,     }
 decl_stmt|;
 specifier|static
 name|unsigned
@@ -9977,7 +9984,7 @@ index|[]
 init|=
 block|{
 literal|0x02
-block|, 		}
+block|,     }
 decl_stmt|;
 name|DH
 modifier|*
@@ -10338,7 +10345,7 @@ block|,
 literal|0xDC
 block|,
 literal|0x53
-block|, 		}
+block|,     }
 decl_stmt|;
 specifier|static
 name|unsigned
@@ -10348,7 +10355,7 @@ index|[]
 init|=
 block|{
 literal|0x02
-block|, 		}
+block|,     }
 decl_stmt|;
 name|DH
 modifier|*
@@ -10709,7 +10716,7 @@ block|,
 literal|0x54
 block|,
 literal|0x39
-block|, 		}
+block|,     }
 decl_stmt|;
 specifier|static
 name|unsigned
@@ -10973,7 +10980,7 @@ block|,
 literal|0x32
 block|,
 literal|0xA2
-block|, 		}
+block|,     }
 decl_stmt|;
 name|DH
 modifier|*

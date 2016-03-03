@@ -784,7 +784,7 @@ name|iv
 init|=
 literal|0
 decl_stmt|,
-comment|/* explicit IV in TLS 1.1 and later */
+comment|/* explicit IV in TLS 1.1 and                                                 * later */
 name|sha_off
 init|=
 literal|0
@@ -3319,7 +3319,19 @@ decl_stmt|;
 name|unsigned
 name|int
 name|len
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|arg
+operator|!=
+name|EVP_AEAD_TLS1_AAD_LEN
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|len
+operator|=
 name|p
 index|[
 name|arg
@@ -3335,7 +3347,7 @@ name|arg
 operator|-
 literal|1
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -3447,16 +3459,6 @@ return|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|arg
-operator|>
-literal|13
-condition|)
-name|arg
-operator|=
-literal|13
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|key

@@ -4,15 +4,15 @@ comment|/* crypto/cryptlib.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_include
@@ -179,7 +179,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is for applications to allocate new type names in the non-dynamic    array of lock names.  These are numbered with positive numbers.  */
+comment|/*  * This is for applications to allocate new type names in the non-dynamic  * array of lock names.  These are numbered with positive numbers.  */
 end_comment
 
 begin_expr_stmt
@@ -196,7 +196,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* For applications that want a more dynamic way of handling threads, the    following stack is used.  These are externally numbered with negative    numbers.  */
+comment|/*  * For applications that want a more dynamic way of handling threads, the  * following stack is used.  These are externally numbered with negative  * numbers.  */
 end_comment
 
 begin_expr_stmt
@@ -425,7 +425,7 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_WIN16
 argument_list|)
-comment|/* A hack to make Visual C++ 5.0 work correctly when linking as 	 * a DLL using /MT. Without this, the application cannot use 	 * any floating point printf's. 	 * It also seems to be needed for Visual C 1.5 (win16) */
+comment|/*      * A hack to make Visual C++ 5.0 work correctly when linking as a DLL      * using /MT. Without this, the application cannot use any floating point      * printf's. It also seems to be needed for Visual C 1.5 (win16)      */
 name|SSLeay_MSVC5_hack
 operator|=
 operator|(
@@ -739,7 +739,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-comment|/* Since sk_push() returns the number of items on the 		   stack, not the location of the pushed item, we need 		   to transform the returned number into a position, 		   by decreasing it.  */
+comment|/*          * Since sk_push() returns the number of items on the stack, not the          * location of the pushed item, we need to transform the returned          * number into a position, by decreasing it.          */
 name|i
 operator|=
 name|sk_CRYPTO_dynlock_push
@@ -752,7 +752,7 @@ operator|-
 literal|1
 expr_stmt|;
 else|else
-comment|/* If we found a place with a NULL pointer, put our pointer 		   in it.  */
+comment|/*          * If we found a place with a NULL pointer, put our pointer in it.          */
 operator|(
 name|void
 operator|)
@@ -1338,7 +1338,7 @@ name|line
 parameter_list|)
 parameter_list|)
 block|{
-comment|/* Calling this here ensures initialisation before any threads 	 * are started. 	 */
+comment|/*      * Calling this here ensures initialisation before any threads are      * started.      */
 name|OPENSSL_init
 argument_list|()
 expr_stmt|;
@@ -1387,7 +1387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* the memset() here and in set_pointer() seem overkill, but for the sake of  * CRYPTO_THREADID_cmp() this avoids any platform silliness that might cause two  * "equal" THREADID structs to not be memcmp()-identical. */
+comment|/*  * the memset() here and in set_pointer() seem overkill, but for the sake of  * CRYPTO_THREADID_cmp() this avoids any platform silliness that might cause  * two "equal" THREADID structs to not be memcmp()-identical.  */
 end_comment
 
 begin_function
@@ -1533,7 +1533,7 @@ name|ptr
 argument_list|)
 condition|)
 block|{
-comment|/* 'ptr' can be embedded in 'val' without loss of uniqueness */
+comment|/*          * 'ptr' can be embedded in 'val' without loss of uniqueness          */
 name|id
 operator|->
 name|val
@@ -1548,7 +1548,7 @@ name|ptr
 expr_stmt|;
 return|return;
 block|}
-comment|/* hash ptr ==> val. Each byte of 'val' gets the mod-256 total of a 	 * linear function over the bytes in 'ptr', the co-efficients of which 	 * are a sequence of low-primes (hash_coeffs is an 8-element cycle) - 	 * the starting prime for the sequence varies for each byte of 'val' 	 * (unique polynomials unless pointers are>64-bit). For added spice, 	 * the totals accumulate rather than restarting from zero, and the index 	 * of the 'val' byte is added each time (position dependence). If I was 	 * a black-belt, I'd scan big-endian pointers in reverse to give 	 * low-order bits more play, but this isn't crypto and I'd prefer nobody 	 * mistake it as such. Plus I'm lazy. */
+comment|/*      * hash ptr ==> val. Each byte of 'val' gets the mod-256 total of a      * linear function over the bytes in 'ptr', the co-efficients of which      * are a sequence of low-primes (hash_coeffs is an 8-element cycle) - the      * starting prime for the sequence varies for each byte of 'val' (unique      * polynomials unless pointers are>64-bit). For added spice, the totals      * accumulate rather than restarting from zero, and the index of the      * 'val' byte is added each time (position dependence). If I was a      * black-belt, I'd scan big-endian pointers in reverse to give low-order      * bits more play, but this isn't crypto and I'd prefer nobody mistake it      * as such. Plus I'm lazy.      */
 while|while
 condition|(
 name|dnum
@@ -2523,6 +2523,7 @@ argument_list|(
 name|__x86_64__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|_M_AMD64
@@ -2562,7 +2563,7 @@ argument_list|)
 operator|==
 literal|4
 condition|)
-comment|/* 	 * If 32-bit application pulls address of OPENSSL_ia32cap_P[0] 	 * clear second element to maintain the illusion that vector 	 * is 32-bit. 	 */
+comment|/*          * If 32-bit application pulls address of OPENSSL_ia32cap_P[0]          * clear second element to maintain the illusion that vector          * is 32-bit.          */
 name|OPENSSL_ia32cap_P
 index|[
 literal|1
@@ -2893,7 +2894,7 @@ name|OPENSSL_cpuid_setup
 parameter_list|(
 name|void
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_endif
@@ -2939,7 +2940,7 @@ file|<windows.h>
 end_include
 
 begin_comment
-comment|/* this has side-effect of _WIN32 getting defined, which otherwise  * is mutually exclusive with __CYGWIN__... */
+comment|/*  * this has side-effect of _WIN32 getting defined, which otherwise is  * mutually exclusive with __CYGWIN__...  */
 end_comment
 
 begin_endif
@@ -2948,7 +2949,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* All we really need to do is remove the 'error' state when a thread  * detaches */
+comment|/*  * All we really need to do is remove the 'error' state when a thread  * detaches  */
 end_comment
 
 begin_function
@@ -3304,13 +3305,6 @@ name|f
 call|)
 argument_list|()
 return|;
-operator|(
-name|void
-operator|)
-name|GetDesktopWindow
-argument_list|()
-expr_stmt|;
-comment|/* return value is ignored */
 name|h
 operator|=
 name|GetProcessWindowStation
@@ -3434,7 +3428,7 @@ comment|/* paranoia */
 if|#
 directive|if
 literal|1
-comment|/* This doesn't cover "interactive" services [working with real      * WinSta0's] nor programs started non-interactively by Task      * Scheduler [those are working with SAWinSta]. */
+comment|/*      * This doesn't cover "interactive" services [working with real      * WinSta0's] nor programs started non-interactively by Task Scheduler      * [those are working with SAWinSta].      */
 if|if
 condition|(
 name|wcsstr
@@ -4137,7 +4131,7 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-comment|/* Win32 abort() customarily shows a dialog, but we just did that... */
+comment|/*      * Win32 abort() customarily shows a dialog, but we just did that...      */
 name|raise
 argument_list|(
 name|SIGABRT

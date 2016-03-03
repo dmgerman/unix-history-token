@@ -4,7 +4,7 @@ comment|/* crypto/objects/obj_dat.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -555,9 +555,15 @@ literal|0x3fffffffL
 expr_stmt|;
 name|ret
 operator||=
+operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ca
 operator|->
 name|type
+operator|)
 operator|<<
 literal|30L
 expr_stmt|;
@@ -800,7 +806,7 @@ block|}
 end_switch
 
 begin_macro
-unit|} static
+unit|}  static
 name|IMPLEMENT_LHASH_COMP_FN
 argument_list|(
 argument|added_obj
@@ -954,7 +960,7 @@ argument|cleanup3
 argument_list|,
 argument|ADDED_OBJ
 argument_list|)
-comment|/* The purpose of obj_cleanup_defer is to avoid EVP_cleanup() attempting  * to use freed up OIDs. If neccessary the actual freeing up of OIDs is  * delayed.  */
+comment|/*  * The purpose of obj_cleanup_defer is to avoid EVP_cleanup() attempting to  * use freed up OIDs. If neccessary the actual freeing up of OIDs is delayed.  */
 name|int
 name|obj_cleanup_defer
 operator|=
@@ -1002,7 +1008,7 @@ name|obj_cleanup_defer
 operator|=
 literal|2
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 if|if
 condition|(
@@ -1972,6 +1978,17 @@ operator|(
 name|j
 operator|)
 return|;
+if|if
+condition|(
+name|a
+operator|->
+name|length
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|(
 name|memcmp
@@ -2155,7 +2172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert an object name into an ASN1_OBJECT  * if "noname" is not set then search for short and long names first.  * This will convert the "dotted" form into an object: unlike OBJ_txt2nid  * it can be used with any objects, not just registered ones.  */
+comment|/*  * Convert an object name into an ASN1_OBJECT if "noname" is not set then  * search for short and long names first. This will convert the "dotted" form  * into an object: unlike OBJ_txt2nid it can be used with any objects, not  * just registered ones.  */
 end_comment
 
 begin_function
@@ -2268,7 +2285,7 @@ literal|0
 condition|)
 block|{
 comment|/* Don't clear the error */
-comment|/*ERR_clear_error();*/
+comment|/*          * ERR_clear_error();          */
 return|return
 name|NULL
 return|;
@@ -3544,7 +3561,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|CHARSET_EBCDIC
-comment|/* THIS IS A KLUDGE - Because the *_obj is sorted in ASCII order, and  * I don't have perl (yet), we revert to a *LINEAR* search  * when the object wasn't found in the binary search.  */
+comment|/*      * THIS IS A KLUDGE - Because the *_obj is sorted in ASCII order, and I      * don't have perl (yet), we revert to a *LINEAR* search when the object      * wasn't found in the binary search.      */
 if|if
 condition|(
 name|c

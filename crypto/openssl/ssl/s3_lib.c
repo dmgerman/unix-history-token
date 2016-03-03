@@ -4,15 +4,15 @@ comment|/* ssl/s3_lib.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 02 */
 block|{
@@ -194,9 +194,12 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 03 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -225,8 +228,10 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 04 */
 block|{
 literal|1
@@ -256,7 +261,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 05 */
 block|{
@@ -287,9 +292,12 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 06 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -318,8 +326,10 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 07 */
 ifndef|#
 directive|ifndef
@@ -352,11 +362,14 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
 comment|/* Cipher 08 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -385,9 +398,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 09 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -416,8 +434,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0A */
 block|{
 literal|1
@@ -449,10 +469,13 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* The DH ciphers */
 comment|/* Cipher 0B */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -481,9 +504,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0C */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -513,8 +541,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0D */
 block|{
 literal|0
@@ -547,9 +577,12 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 0E */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -579,9 +612,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 0F */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|0
 block|,
@@ -611,8 +649,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 10 */
 block|{
 literal|0
@@ -645,10 +685,13 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* The Ephemeral DH ciphers */
 comment|/* Cipher 11 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -677,9 +720,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 12 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -708,8 +756,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 13 */
 block|{
 literal|1
@@ -741,9 +791,12 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 14 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -772,9 +825,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 15 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -803,8 +861,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 16 */
 block|{
 literal|1
@@ -836,9 +896,12 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 17 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -867,8 +930,10 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 18 */
 block|{
 literal|1
@@ -898,9 +963,12 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 19 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -929,9 +997,14 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 1A */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -960,8 +1033,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 1B */
 block|{
 literal|1
@@ -993,18 +1068,18 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Fortezza ciphersuite from SSL 3.0 spec */
 if|#
 directive|if
 literal|0
 comment|/* Cipher 1C */
-block|{ 	0, 	SSL3_TXT_FZA_DMS_NULL_SHA, 	SSL3_CK_FZA_DMS_NULL_SHA, 	SSL_kFZA, 	SSL_aFZA, 	SSL_eNULL, 	SSL_SHA1, 	SSL_SSLV3, 	SSL_NOT_EXP|SSL_STRONG_NONE, 	SSL_HANDSHAKE_MAC_DEFAULT|TLS1_PRF, 	0, 	0, 	},
+block|{      0,      SSL3_TXT_FZA_DMS_NULL_SHA,      SSL3_CK_FZA_DMS_NULL_SHA,      SSL_kFZA,      SSL_aFZA,      SSL_eNULL,      SSL_SHA1,      SSL_SSLV3,      SSL_NOT_EXP | SSL_STRONG_NONE,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      0,      0,      },
 comment|/* Cipher 1D */
-block|{ 	0, 	SSL3_TXT_FZA_DMS_FZA_SHA, 	SSL3_CK_FZA_DMS_FZA_SHA, 	SSL_kFZA, 	SSL_aFZA, 	SSL_eFZA, 	SSL_SHA1, 	SSL_SSLV3, 	SSL_NOT_EXP|SSL_STRONG_NONE, 	SSL_HANDSHAKE_MAC_DEFAULT|TLS1_PRF, 	0, 	0, 	},
+block|{      0,      SSL3_TXT_FZA_DMS_FZA_SHA,      SSL3_CK_FZA_DMS_FZA_SHA,      SSL_kFZA,      SSL_aFZA,      SSL_eFZA,      SSL_SHA1,      SSL_SSLV3,      SSL_NOT_EXP | SSL_STRONG_NONE,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      0,      0,      },
 comment|/* Cipher 1E */
-block|{ 	0, 	SSL3_TXT_FZA_DMS_RC4_SHA, 	SSL3_CK_FZA_DMS_RC4_SHA, 	SSL_kFZA, 	SSL_aFZA, 	SSL_RC4, 	SSL_SHA1, 	SSL_SSLV3, 	SSL_NOT_EXP|SSL_MEDIUM, 	SSL_HANDSHAKE_MAC_DEFAULT|TLS1_PRF, 	128, 	128, 	},
+block|{      0,      SSL3_TXT_FZA_DMS_RC4_SHA,      SSL3_CK_FZA_DMS_RC4_SHA,      SSL_kFZA,      SSL_aFZA,      SSL_RC4,      SSL_SHA1,      SSL_SSLV3,      SSL_NOT_EXP | SSL_MEDIUM,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      128,      128,      },
 endif|#
 directive|endif
 ifndef|#
@@ -1012,6 +1087,9 @@ directive|ifndef
 name|OPENSSL_NO_KRB5
 comment|/* The Kerberos ciphers*/
 comment|/* Cipher 1E */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1040,8 +1118,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 1F */
 block|{
 literal|1
@@ -1073,7 +1153,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 20 */
 block|{
@@ -1104,7 +1184,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 21 */
 block|{
@@ -1135,9 +1215,12 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 22 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1166,8 +1249,10 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 23 */
 block|{
 literal|1
@@ -1197,7 +1282,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 24 */
 block|{
@@ -1228,7 +1313,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 25 */
 block|{
@@ -1259,9 +1344,12 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 26 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1290,9 +1378,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 27 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1321,9 +1414,14 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 28 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1352,9 +1450,14 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 29 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1383,9 +1486,14 @@ block|,
 literal|40
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 2A */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1414,9 +1522,14 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 2B */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -1445,8 +1558,10 @@ block|,
 literal|40
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_KRB5 */
@@ -1482,7 +1597,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 30 */
 block|{
@@ -1515,7 +1630,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 31 */
 block|{
@@ -1548,7 +1663,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 32 */
 block|{
@@ -1581,7 +1696,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 33 */
 block|{
@@ -1614,7 +1729,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 34 */
 block|{
@@ -1647,7 +1762,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 35 */
 block|{
@@ -1680,7 +1795,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 36 */
 block|{
@@ -1713,7 +1828,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 37 */
 block|{
@@ -1747,7 +1862,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 38 */
 block|{
@@ -1780,7 +1895,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 39 */
 block|{
@@ -1813,7 +1928,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 3A */
 block|{
@@ -1846,7 +1961,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* TLS v1.2 ciphersuites */
 comment|/* Cipher 3B */
@@ -1880,7 +1995,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 3C */
 block|{
@@ -1913,7 +2028,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 3D */
 block|{
@@ -1946,7 +2061,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 3E */
 block|{
@@ -1980,7 +2095,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 3F */
 block|{
@@ -2014,7 +2129,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 40 */
 block|{
@@ -2047,7 +2162,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 ifndef|#
 directive|ifndef
@@ -2082,7 +2197,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 42 */
 block|{
@@ -2114,7 +2229,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 43 */
 block|{
@@ -2146,7 +2261,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 44 */
 block|{
@@ -2177,7 +2292,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 45 */
 block|{
@@ -2208,7 +2323,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 46 */
 block|{
@@ -2239,7 +2354,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -2252,12 +2367,15 @@ if|#
 directive|if
 literal|0
 comment|/* Cipher 60 */
-block|{ 	1, 	TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5, 	TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5, 	SSL_kRSA, 	SSL_aRSA, 	SSL_RC4, 	SSL_MD5, 	SSL_TLSV1, 	SSL_EXPORT|SSL_EXP56, 	SSL_HANDSHAKE_MAC_DEFAULT|TLS1_PRF, 	56, 	128, 	},
+block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5,      SSL_kRSA,      SSL_aRSA,      SSL_RC4,      SSL_MD5,      SSL_TLSV1,      SSL_EXPORT | SSL_EXP56,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      56,      128,      },
 comment|/* Cipher 61 */
-block|{ 	1, 	TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5, 	TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5, 	SSL_kRSA, 	SSL_aRSA, 	SSL_RC2, 	SSL_MD5, 	SSL_TLSV1, 	SSL_EXPORT|SSL_EXP56, 	SSL_HANDSHAKE_MAC_DEFAULT|TLS1_PRF, 	56, 	128, 	},
+block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      SSL_kRSA,      SSL_aRSA,      SSL_RC2,      SSL_MD5,      SSL_TLSV1,      SSL_EXPORT | SSL_EXP56,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      56,      128,      },
 endif|#
 directive|endif
 comment|/* Cipher 62 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2286,9 +2404,14 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 63 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2317,9 +2440,14 @@ block|,
 literal|56
 block|,
 literal|56
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 64 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2348,9 +2476,14 @@ block|,
 literal|56
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 65 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
 block|{
 literal|1
 block|,
@@ -2379,8 +2512,10 @@ block|,
 literal|56
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
+endif|#
+directive|endif
 comment|/* Cipher 66 */
 block|{
 literal|1
@@ -2410,7 +2545,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -2446,7 +2581,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 68 */
 block|{
@@ -2480,7 +2615,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 69 */
 block|{
@@ -2514,7 +2649,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 6A */
 block|{
@@ -2547,7 +2682,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 6B */
 block|{
@@ -2580,7 +2715,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 6C */
 block|{
@@ -2613,7 +2748,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 6D */
 block|{
@@ -2646,7 +2781,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* GOST Ciphersuites */
 block|{
@@ -2806,7 +2941,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 85 */
 block|{
@@ -2838,7 +2973,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 86 */
 block|{
@@ -2870,7 +3005,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 87 */
 block|{
@@ -2901,7 +3036,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 88 */
 block|{
@@ -2932,7 +3067,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 89 */
 block|{
@@ -2963,7 +3098,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -3000,7 +3135,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 8B */
 block|{
@@ -3033,7 +3168,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 8C */
 block|{
@@ -3066,7 +3201,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 8D */
 block|{
@@ -3099,7 +3234,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -3137,7 +3272,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 97 */
 block|{
@@ -3169,7 +3304,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 98 */
 block|{
@@ -3201,7 +3336,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 99 */
 block|{
@@ -3232,7 +3367,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9A */
 block|{
@@ -3263,7 +3398,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9B */
 block|{
@@ -3294,7 +3429,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -3331,7 +3466,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9D */
 block|{
@@ -3364,7 +3499,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9E */
 block|{
@@ -3397,7 +3532,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9F */
 block|{
@@ -3430,7 +3565,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A0 */
 block|{
@@ -3463,7 +3598,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A1 */
 block|{
@@ -3496,7 +3631,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A2 */
 block|{
@@ -3529,7 +3664,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A3 */
 block|{
@@ -3562,7 +3697,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A4 */
 block|{
@@ -3595,7 +3730,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A5 */
 block|{
@@ -3628,7 +3763,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A6 */
 block|{
@@ -3661,7 +3796,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher A7 */
 block|{
@@ -3694,7 +3829,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 ifndef|#
 directive|ifndef
@@ -3730,7 +3865,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C002 */
 block|{
@@ -3761,7 +3896,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C003 */
 block|{
@@ -3794,7 +3929,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C004 */
 block|{
@@ -3827,7 +3962,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C005 */
 block|{
@@ -3860,7 +3995,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C006 */
 block|{
@@ -3893,7 +4028,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C007 */
 block|{
@@ -3924,7 +4059,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C008 */
 block|{
@@ -3957,7 +4092,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C009 */
 block|{
@@ -3990,7 +4125,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C00A */
 block|{
@@ -4023,7 +4158,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C00B */
 block|{
@@ -4056,7 +4191,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C00C */
 block|{
@@ -4087,7 +4222,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C00D */
 block|{
@@ -4120,7 +4255,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C00E */
 block|{
@@ -4153,7 +4288,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C00F */
 block|{
@@ -4186,7 +4321,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C010 */
 block|{
@@ -4219,7 +4354,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C011 */
 block|{
@@ -4250,7 +4385,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C012 */
 block|{
@@ -4283,7 +4418,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C013 */
 block|{
@@ -4316,7 +4451,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C014 */
 block|{
@@ -4349,7 +4484,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C015 */
 block|{
@@ -4382,7 +4517,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C016 */
 block|{
@@ -4413,7 +4548,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C017 */
 block|{
@@ -4446,7 +4581,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C018 */
 block|{
@@ -4479,7 +4614,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C019 */
 block|{
@@ -4512,7 +4647,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -4549,7 +4684,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C01B */
 block|{
@@ -4580,7 +4715,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C01C */
 block|{
@@ -4611,7 +4746,7 @@ block|,
 literal|112
 block|,
 literal|168
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C01D */
 block|{
@@ -4642,7 +4777,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C01E */
 block|{
@@ -4673,7 +4808,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C01F */
 block|{
@@ -4704,7 +4839,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C020 */
 block|{
@@ -4735,7 +4870,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C021 */
 block|{
@@ -4766,7 +4901,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C022 */
 block|{
@@ -4797,7 +4932,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -4837,7 +4972,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C024 */
 block|{
@@ -4870,7 +5005,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C025 */
 block|{
@@ -4903,7 +5038,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C026 */
 block|{
@@ -4936,7 +5071,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C027 */
 block|{
@@ -4969,7 +5104,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C028 */
 block|{
@@ -5002,7 +5137,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C029 */
 block|{
@@ -5035,7 +5170,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C02A */
 block|{
@@ -5068,7 +5203,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* GCM based TLS v1.2 ciphersuites from RFC5289 */
 comment|/* Cipher C02B */
@@ -5102,7 +5237,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C02C */
 block|{
@@ -5135,7 +5270,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C02D */
 block|{
@@ -5168,7 +5303,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C02E */
 block|{
@@ -5201,7 +5336,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C02F */
 block|{
@@ -5234,7 +5369,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C030 */
 block|{
@@ -5267,7 +5402,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C031 */
 block|{
@@ -5300,7 +5435,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher C032 */
 block|{
@@ -5333,7 +5468,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -5370,7 +5505,7 @@ block|,
 literal|256
 block|,
 literal|256
-block|, 	}
+block|,      }
 block|,
 block|{
 literal|1
@@ -5537,7 +5672,7 @@ name|use_context
 operator|)
 operator|)
 name|ssl_undefined_function
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -5548,7 +5683,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 2 hours, the 24 hours mentioned in the SSLv3 spec 	 * is way too long for http, the cache would over fill */
+comment|/*      * 2 hours, the 24 hours mentioned in the SSLv3 spec is way too long for      * http, the cache would over fill      */
 return|return
 operator|(
 literal|60
@@ -7415,8 +7550,8 @@ name|larg
 operator|>
 literal|12288
 condition|)
-comment|/* actual internal limit is 2^16 for the complete hello message 		                   * (including the cert chain and everything) */
 block|{
+comment|/* actual internal limit is 2^16 for the                                  * complete hello message * (including the                                  * cert chain and everything) */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_CTRL
@@ -7459,7 +7594,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* dummy byte just to get non-NULL */
+comment|/* dummy byte                                                              * just to get                                                              * non-NULL */
 else|else
 name|s
 operator|->
@@ -7732,7 +7867,7 @@ comment|/* !OPENSSL_NO_TLSEXT */
 case|case
 name|SSL_CTRL_CHECK_PROTO_VERSION
 case|:
-comment|/* For library-internal use; checks that the current protocol 		 * is the highest enabled version (according to s->ctx->method, 		 * as version negotiation may have changed s->method). */
+comment|/*          * For library-internal use; checks that the current protocol is the          * highest enabled version (according to s->ctx->method, as version          * negotiation may have changed s->method).          */
 if|if
 condition|(
 name|s
@@ -7750,7 +7885,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Apparently we're using a version-flexible SSL_METHOD 		 * (not at its highest protocol version). */
+comment|/*          * Apparently we're using a version-flexible SSL_METHOD (not at its          * highest protocol version).          */
 if|if
 condition|(
 name|s
@@ -8461,7 +8596,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/*break; */
+comment|/*          * break;          */
 case|case
 name|SSL_CTRL_SET_TMP_DH_CB
 case|:
@@ -9464,7 +9599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function needs to check if the ciphers required are actually  * available */
+comment|/*  * This function needs to check if the ciphers required are actually  * available  */
 end_comment
 
 begin_function
@@ -9793,8 +9928,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Do not set the compare functions, because this may lead to a 	 * reordering by "id". We want to keep the original ordering. 	 * We may pay a price in performance during sk_SSL_CIPHER_find(), 	 * but would have to pay with the price of sk_SSL_CIPHER_dup(). 	 */
-block|sk_SSL_CIPHER_set_cmp_func(srvr, ssl_cipher_ptr_id_cmp); 	sk_SSL_CIPHER_set_cmp_func(clnt, ssl_cipher_ptr_id_cmp);
+comment|/*      * Do not set the compare functions, because this may lead to a      * reordering by "id". We want to keep the original ordering. We may pay      * a price in performance during sk_SSL_CIPHER_find(), but would have to      * pay with the price of sk_SSL_CIPHER_dup().      */
+block|sk_SSL_CIPHER_set_cmp_func(srvr, ssl_cipher_ptr_id_cmp);     sk_SSL_CIPHER_set_cmp_func(clnt, ssl_cipher_ptr_id_cmp);
 endif|#
 directive|endif
 ifdef|#
@@ -10069,7 +10204,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-comment|/*		fprintf(stderr,"ssl3_choose_cipher %d alg= %lx\n", i,c->algorithms);*/
+comment|/*          * fprintf(stderr,"ssl3_choose_cipher %d alg= %lx\n",          * i,c->algorithms);          */
 endif|#
 directive|endif
 comment|/* KSSL_DEBUG */
@@ -10244,7 +10379,7 @@ directive|ifndef
 name|OPENSSL_NO_EC
 if|if
 condition|(
-comment|/* if we are considering an ECC cipher suite that uses our certificate */
+comment|/*                 * if we are considering an ECC cipher suite that uses our                 * certificate                 */
 operator|(
 name|alg_a
 operator|&
@@ -10270,7 +10405,7 @@ name|x509
 operator|!=
 name|NULL
 operator|)
-comment|/* and the client specified a Supported Point Formats extension */
+comment|/*                 * and the client specified a Supported Point Formats                 * extension                 */
 operator|&&
 operator|(
 operator|(
@@ -10438,7 +10573,7 @@ name|ec_ok
 operator|=
 literal|0
 expr_stmt|;
-comment|/* if our certificate's curve is over a field type that the client does not support 			 * then do not allow this cipher suite to be negotiated */
+comment|/*              * if our certificate's curve is over a field type that the              * client does not support then do not allow this cipher suite to              * be negotiated              */
 if|if
 condition|(
 operator|(
@@ -10648,7 +10783,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-comment|/* if we are considering an ECC cipher suite that uses our certificate */
+comment|/*                 * if we are considering an ECC cipher suite that uses our                 * certificate                 */
 operator|(
 name|alg_a
 operator|&
@@ -10674,7 +10809,7 @@ name|x509
 operator|!=
 name|NULL
 operator|)
-comment|/* and the client specified an EllipticCurves extension */
+comment|/*                 * and the client specified an EllipticCurves extension                 */
 operator|&&
 operator|(
 operator|(
@@ -10979,7 +11114,7 @@ directive|ifndef
 name|OPENSSL_NO_ECDH
 if|if
 condition|(
-comment|/* if we are considering an ECC cipher suite that uses an ephemeral EC key */
+comment|/*                 * if we are considering an ECC cipher suite that uses an                 * ephemeral EC key                 */
 operator|(
 name|alg_k
 operator|&
@@ -10996,7 +11131,7 @@ name|ecdh_tmp
 operator|!=
 name|NULL
 operator|)
-comment|/* and the client specified an EllipticCurves extension */
+comment|/*                 * and the client specified an EllipticCurves extension                 */
 operator|&&
 operator|(
 operator|(
@@ -11578,7 +11713,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ECDSA
-comment|/* ECDSA certs can be used with RSA cipher suites as well  	 * so we don't need to check for SSL_kECDH or SSL_kEECDH 	 */
+comment|/*      * ECDSA certs can be used with RSA cipher suites as well so we don't      * need to check for SSL_kECDH or SSL_kEECDH      */
 if|if
 condition|(
 name|s
@@ -11619,7 +11754,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-comment|/* Don't do anything much if we have not done the handshake or 	 * we don't want to send messages :-) */
+comment|/*      * Don't do anything much if we have not done the handshake or we don't      * want to send messages :-)      */
 if|if
 condition|(
 operator|(
@@ -11685,7 +11820,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* our shutdown alert has been sent now, and if it still needs 	 	 * to be written, s->s3->alert_dispatch will be true */
+comment|/*          * our shutdown alert has been sent now, and if it still needs to be          * written, s->s3->alert_dispatch will be true          */
 if|if
 condition|(
 name|s
@@ -11735,7 +11870,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* we only get to return -1 here the 2nd/Nth 			 * invocation, we must  have already signalled 			 * return 0 upon a previous invoation, 			 * return WANT_WRITE */
+comment|/*              * we only get to return -1 here the 2nd/Nth invocation, we must              * have already signalled return 0 upon a previous invoation,              * return WANT_WRITE              */
 return|return
 operator|(
 name|ret
@@ -11758,7 +11893,7 @@ name|SSL_RECEIVED_SHUTDOWN
 operator|)
 condition|)
 block|{
-comment|/* If we are waiting for a close from our peer, we are closed */
+comment|/*          * If we are waiting for a close from our peer, we are closed          */
 name|s
 operator|->
 name|method
@@ -11857,7 +11992,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (s->shutdown& SSL_SEND_SHUTDOWN) 		{ 		s->rwstate=SSL_NOTHING; 		return(0); 		}
+block|if (s->shutdown& SSL_SEND_SHUTDOWN) {         s->rwstate = SSL_NOTHING;         return (0);     }
 endif|#
 directive|endif
 name|clear_sys_error
@@ -11876,7 +12011,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* This is an experimental flag that sends the 	 * last handshake message in the same packet as the first 	 * use data - used to see if it helps the TCP protocol during 	 * session-id reuse */
+comment|/*      * This is an experimental flag that sends the last handshake message in      * the same packet as the first use data - used to see if it helps the      * TCP protocol during session-id reuse      */
 comment|/* The second test is because the buffer may have been removed */
 if|if
 condition|(
@@ -12135,7 +12270,7 @@ literal|2
 operator|)
 condition|)
 block|{
-comment|/* ssl3_read_bytes decided to call s->handshake_func, which 		 * called ssl3_read_bytes to read handshake data. 		 * However, ssl3_read_bytes actually found application data 		 * and thinks that application data makes sense here; so disable 		 * handshake processing and try to read application data again. */
+comment|/*          * ssl3_read_bytes decided to call s->handshake_func, which called          * ssl3_read_bytes to read handshake data. However, ssl3_read_bytes          * actually found application data and thinks that application data          * makes sense here; so disable handshake processing and try to read          * application data again.          */
 name|s
 operator|->
 name|in_handshake
@@ -12354,7 +12489,7 @@ name|s
 argument_list|)
 condition|)
 block|{
-comment|/* if we are the server, and we have sent a 'RENEGOTIATE' message, we need to go to SSL_ST_ACCEPT. */
+comment|/*              * if we are the server, and we have sent a 'RENEGOTIATE'              * message, we need to go to SSL_ST_ACCEPT.              */
 comment|/* SSL_ST_ACCEPT */
 name|s
 operator|->
@@ -12399,7 +12534,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If we are using TLS v1.2 or later and default SHA1+MD5 algorithms switch  * to new SHA256 PRF and handshake macs  */
+comment|/*  * If we are using TLS v1.2 or later and default SHA1+MD5 algorithms switch  * to new SHA256 PRF and handshake macs  */
 end_comment
 
 begin_function

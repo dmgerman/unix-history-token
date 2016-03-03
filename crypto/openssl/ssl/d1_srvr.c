@@ -4,15 +4,15 @@ comment|/* ssl/d1_srvr.c */
 end_comment
 
 begin_comment
-comment|/*   * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.    */
+comment|/*  * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -340,7 +340,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Notify SCTP BIO socket to enter handshake 	 * mode and prevent stream identifier other 	 * than 0. Will be ignored if no SCTP is used. 	 */
+comment|/*      * Notify SCTP BIO socket to enter handshake mode and prevent stream      * identifier other than 0. Will be ignored if no SCTP is used.      */
 name|BIO_ctrl
 argument_list|(
 name|SSL_get_wbio
@@ -385,7 +385,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_HEARTBEATS
-comment|/* If we're awaiting a HeartbeatResponse, pretend we 	 * already got and don't await it anymore, because 	 * Heartbeats don't make sense during handshakes anyway. 	 */
+comment|/*      * If we're awaiting a HeartbeatResponse, pretend we already got and      * don't await it anymore, because Heartbeats don't make sense during      * handshakes anyway.      */
 if|if
 condition|(
 name|s
@@ -539,6 +539,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -563,6 +569,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -589,6 +601,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -607,7 +625,7 @@ name|change_cipher_spec_ok
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Should have been reset by ssl3_get_finished, too. */
+comment|/*              * Should have been reset by ssl3_get_finished, too.              */
 name|s
 operator|->
 name|s3
@@ -625,7 +643,7 @@ operator|!=
 name|SSL_ST_RENEGOTIATE
 condition|)
 block|{
-comment|/* Ok, we now need to push on a buffering BIO so that 				 * the output is sent in a way that TCP likes :-) 				 * ...but not with SCTP :-) 				 */
+comment|/*                  * Ok, we now need to push on a buffering BIO so that the                  * output is sent in a way that TCP likes :-) ...but not with                  * SCTP :-)                  */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
@@ -658,6 +676,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -685,7 +709,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* s->state == SSL_ST_RENEGOTIATE, 				 * we will just send a HelloRequest */
+comment|/*                  * s->state == SSL_ST_RENEGOTIATE, we will just send a                  * HelloRequest                  */
 name|s
 operator|->
 name|ctx
@@ -849,7 +873,7 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Reflect ClientHello sequence to remain stateless while listening */
+comment|/*              * Reflect ClientHello sequence to remain stateless while              * listening              */
 if|if
 condition|(
 name|listen
@@ -904,7 +928,7 @@ name|listen
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Set expected sequence numbers 				 * to continue the handshake. 				 */
+comment|/*                  * Set expected sequence numbers to continue the handshake.                  */
 name|s
 operator|->
 name|d1
@@ -1186,7 +1210,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Add new shared key for SCTP-Auth, 				 * will be ignored if no SCTP used. 				 */
+comment|/*                  * Add new shared key for SCTP-Auth, will be ignored if no                  * SCTP used.                  */
 name|snprintf
 argument_list|(
 operator|(
@@ -1432,7 +1456,7 @@ name|new_cipher
 operator|->
 name|algorithm_mkey
 expr_stmt|;
-comment|/* 			 * clear this, it may get reset by 			 * send_server_key_exchange 			 */
+comment|/*              * clear this, it may get reset by              * send_server_key_exchange              */
 name|s
 operator|->
 name|s3
@@ -1443,11 +1467,11 @@ name|use_rsa_tmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* only send if a DH key exchange or 			 * RSA but we have a sign only certificate */
+comment|/*              * only send if a DH key exchange or RSA but we have a sign only              * certificate              */
 if|if
 condition|(
 literal|0
-comment|/* PSK: send ServerKeyExchange if PSK identity 			 * hint if provided */
+comment|/*                  * PSK: send ServerKeyExchange if PSK identity hint if                  * provided                  */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_PSK
@@ -1471,13 +1495,7 @@ operator|||
 operator|(
 name|alg_k
 operator|&
-operator|(
 name|SSL_kEDH
-operator||
-name|SSL_kDHr
-operator||
-name|SSL_kDHd
-operator|)
 operator|)
 operator|||
 operator|(
@@ -1608,7 +1626,7 @@ operator|&
 name|SSL_VERIFY_PEER
 operator|)
 operator|||
-comment|/* if SSL_VERIFY_CLIENT_ONCE is set, 				 * don't request cert during re-negotiation: */
+comment|/*                     * if SSL_VERIFY_CLIENT_ONCE is set, don't request cert                     * during re-negotiation:                     */
 operator|(
 operator|(
 name|s
@@ -1629,7 +1647,7 @@ name|SSL_VERIFY_CLIENT_ONCE
 operator|)
 operator|)
 operator|||
-comment|/* never request cert in anonymous ciphersuites 				 * (see section "Certificate request" in SSL 3 drafts 				 * and in RFC 2246): */
+comment|/*                     * never request cert in anonymous ciphersuites (see                     * section "Certificate request" in SSL 3 drafts and in                     * RFC 2246):                     */
 operator|(
 operator|(
 name|s
@@ -1645,7 +1663,7 @@ operator|&
 name|SSL_aNULL
 operator|)
 operator|&&
-comment|/* ... except when the application insists on verification 				  * (against the specs, but s3_clnt.c accepts this for SSL 3) */
+comment|/*                      * ... except when the application insists on                      * verification (against the specs, but s3_clnt.c accepts                      * this for SSL 3)                      */
 operator|!
 operator|(
 name|s
@@ -1656,7 +1674,7 @@ name|SSL_VERIFY_FAIL_IF_NO_PEER_CERT
 operator|)
 operator|)
 operator|||
-comment|/* never request cert in Kerberos ciphersuites */
+comment|/*                     * never request cert in Kerberos ciphersuites                     */
 operator|(
 name|s
 operator|->
@@ -1670,7 +1688,7 @@ name|algorithm_auth
 operator|&
 name|SSL_aKRB5
 operator|)
-comment|/* With normal PSK Certificates and 				 * Certificate Requests are omitted */
+comment|/*                     * With normal PSK Certificates and Certificate Requests                     * are omitted                     */
 operator|||
 operator|(
 name|s
@@ -1953,7 +1971,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|/* If the write error was fatal, stop trying */
+comment|/*                  * If the write error was fatal, stop trying                  */
 if|if
 condition|(
 operator|!
@@ -2123,7 +2141,7 @@ goto|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Add new shared key for SCTP-Auth, 			 * will be ignored if no SCTP used. 			 */
+comment|/*              * Add new shared key for SCTP-Auth, will be ignored if no SCTP              * used.              */
 name|snprintf
 argument_list|(
 operator|(
@@ -2203,7 +2221,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* For the ECDH ciphersuites when 				 * the client sends its ECDH pub key in 				 * a certificate, the CertificateVerify 				 * message is not sent. 				 */
+comment|/*                  * For the ECDH ciphersuites when the client sends its ECDH                  * pub key in a certificate, the CertificateVerify message is                  * not sent.                  */
 name|s
 operator|->
 name|state
@@ -2231,7 +2249,7 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We need to get hashes here so if there is 				 * a client cert, it can be verified */
+comment|/*                  * We need to get hashes here so if there is a client cert,                  * it can be verified                  */
 name|s
 operator|->
 name|method
@@ -2294,25 +2312,6 @@ case|:
 case|case
 name|SSL3_ST_SR_CERT_VRFY_B
 case|:
-comment|/* 			 * This *should* be the first time we enable CCS, but be 			 * extra careful about surrounding code changes. We need 			 * to set this here because we don't know if we're 			 * expecting a CertificateVerify or not. 			 */
-if|if
-condition|(
-operator|!
-name|s
-operator|->
-name|s3
-operator|->
-name|change_cipher_spec
-condition|)
-name|s
-operator|->
-name|d1
-operator|->
-name|change_cipher_spec_ok
-operator|=
-literal|1
-expr_stmt|;
-comment|/* we should decide if we expected this one */
 name|ret
 operator|=
 name|ssl3_get_cert_verify
@@ -2374,7 +2373,7 @@ case|:
 case|case
 name|SSL3_ST_SR_FINISHED_B
 case|:
-comment|/* 			 * Enable CCS for resumed handshakes. 			 * In a full handshake, we end up here through 			 * SSL3_ST_SR_CERT_VRFY_B, so change_cipher_spec_ok was 			 * already set. Receiving a CCS clears the flag, so make 			 * sure not to re-enable it to ban duplicates. 			 * s->s3->change_cipher_spec is set when a CCS is 			 * processed in d1_pkt.c, and remains set until 			 * the client's Finished message is read. 			 */
+comment|/*              * Enable CCS. Receiving a CCS clears the flag, so make              * sure not to re-enable it to ban duplicates. This *should* be the              * first time we have received one - but we check anyway to be              * cautious.              * s->s3->change_cipher_spec is set when a CCS is              * processed in d1_pkt.c, and remains set until              * the client's Finished message is read.              */
 if|if
 condition|(
 operator|!
@@ -2576,6 +2575,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -2611,7 +2616,7 @@ operator|->
 name|hit
 condition|)
 block|{
-comment|/* Change to new shared key of SCTP-Auth, 				 * will be ignored if no SCTP used. 				 */
+comment|/*                  * Change to new shared key of SCTP-Auth, will be ignored if                  * no SCTP used.                  */
 name|BIO_ctrl
 argument_list|(
 name|SSL_get_wbio
@@ -2662,6 +2667,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -2743,7 +2754,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Change to new shared key of SCTP-Auth, 				 * will be ignored if no SCTP used. 				 */
+comment|/*                  * Change to new shared key of SCTP-Auth, will be ignored if                  * no SCTP used.                  */
 name|BIO_ctrl
 argument_list|(
 name|SSL_get_wbio
@@ -2834,7 +2845,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|BUF_MEM_free(s->init_buf); 			s->init_buf=NULL;
+block|BUF_MEM_free(s->init_buf);             s->init_buf = NULL;
 endif|#
 directive|endif
 comment|/* remove buffering on output */
@@ -2857,8 +2868,8 @@ name|renegotiate
 operator|==
 literal|2
 condition|)
-comment|/* skipped if we just sent a HelloRequest */
 block|{
+comment|/* skipped if we just sent a                                         * HelloRequest */
 name|s
 operator|->
 name|renegotiate
@@ -2944,6 +2955,9 @@ goto|goto
 name|end
 goto|;
 comment|/* break; */
+case|case
+name|SSL_ST_ERR
+case|:
 default|default:
 name|SSLerr
 argument_list|(
@@ -3080,7 +3094,7 @@ name|OPENSSL_NO_SCTP
 end_ifndef
 
 begin_comment
-comment|/* Notify SCTP BIO socket to leave handshake 		 * mode and prevent stream identifier other 		 * than 0. Will be ignored if no SCTP is used. 		 */
+comment|/*      * Notify SCTP BIO socket to leave handshake mode and prevent stream      * identifier other than 0. Will be ignored if no SCTP is used.      */
 end_comment
 
 begin_expr_stmt
@@ -3206,7 +3220,7 @@ name|init_off
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no need to buffer this message, since there are no retransmit  		 * requests for it */
+comment|/*          * no need to buffer this message, since there are no retransmit          * requests for it          */
 block|}
 comment|/* SSL3_ST_SW_HELLO_REQ_B */
 return|return
@@ -3347,6 +3361,12 @@ name|SSL_F_DTLS1_SEND_HELLO_VERIFY_REQUEST
 argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 literal|0
@@ -3579,7 +3599,7 @@ name|p
 operator|+=
 name|SSL3_RANDOM_SIZE
 expr_stmt|;
-comment|/* now in theory we have 3 options to sending back the 		 * session id.  If it is a re-use, we send back the 		 * old session-id, if it is a new session, we send 		 * back the new session-id or we send back a 0 length 		 * session-id if we want it to be single use. 		 * Currently I will not implement the '0' length session-id 		 * 12-Jan-98 - I'll now support the '0' length stuff. 		 */
+comment|/*          * now in theory we have 3 options to sending back the session id.          * If it is a re-use, we send back the old session-id, if it is a new          * session, we send back the new session-id or we send back a 0          * length session-id if we want it to be single use. Currently I will          * not implement the '0' length session-id 12-Jan-98 - I'll now          * support the '0' length stuff.          */
 if|if
 condition|(
 operator|!
@@ -4938,7 +4958,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* XXX: For now, we only support ephemeral ECDH 			 * keys over named (not generic) curves. For  			 * supported named curves, curve_id is non-zero. 			 */
+comment|/*              * XXX: For now, we only support ephemeral ECDH keys over named              * (not generic) curves. For supported named curves, curve_id is              * non-zero.              */
 if|if
 condition|(
 operator|(
@@ -4967,7 +4987,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Encode the public key. 			 * First check the size of encoding and 			 * allocate memory accordingly. 			 */
+comment|/*              * Encode the public key. First check the size of encoding and              * allocate memory accordingly.              */
 name|encodedlen
 operator|=
 name|EC_POINT_point2oct
@@ -5084,14 +5104,14 @@ name|bn_ctx
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX: For now, we only support named (not  			 * generic) curves in ECDH ephemeral key exchanges. 			 * In this situation, we need four additional bytes 			 * to encode the entire ServerECDHParams 			 * structure.  			 */
+comment|/*              * XXX: For now, we only support named (not generic) curves in              * ECDH ephemeral key exchanges. In this situation, we need four              * additional bytes to encode the entire ServerECDHParams              * structure.              */
 name|n
 operator|=
 literal|4
 operator|+
 name|encodedlen
 expr_stmt|;
-comment|/* We'll generate the serverKeyExchange message 			 * explicitly so we can set these to NULLs 			 */
+comment|/*              * We'll generate the serverKeyExchange message explicitly so we              * can set these to NULLs              */
 name|r
 index|[
 literal|0
@@ -5135,7 +5155,7 @@ operator|&
 name|SSL_kPSK
 condition|)
 block|{
-comment|/* reserve size for record length and PSK identity hint*/
+comment|/*              * reserve size for record length and PSK identity hint              */
 name|n
 operator|+=
 literal|2
@@ -5398,7 +5418,7 @@ operator|&
 name|SSL_kEECDH
 condition|)
 block|{
-comment|/* XXX: For now, we only support named (not generic) curves. 			 * In this situation, the serverKeyExchange message has: 			 * [1 byte CurveType], [2 byte CurveName] 			 * [1 byte length of encoded point], followed by 			 * the actual encoded point itself 			 */
+comment|/*              * XXX: For now, we only support named (not generic) curves. In              * this situation, the serverKeyExchange message has: [1 byte              * CurveType], [2 byte CurveName] [1 byte length of encoded              * point], followed by the actual encoded point itself              */
 operator|*
 name|p
 operator|=
@@ -5541,7 +5561,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* n is the length of the params, they start at 			 *&(d[DTLS1_HM_HEADER_LENGTH]) and p points to the space 			 * at the end. */
+comment|/*              * n is the length of the params, they start at              *&(d[DTLS1_HM_HEADER_LENGTH]) and p points to the space at the              * end.              */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
@@ -6057,7 +6077,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* we should now have things packed up, so lets send 		 * it off */
+comment|/*          * we should now have things packed up, so lets send it off          */
 name|s
 operator|->
 name|init_num
@@ -6525,7 +6545,7 @@ operator|->
 name|handshake_write_seq
 operator|++
 expr_stmt|;
-comment|/* we should now have things packed up, so lets send 		 * it off */
+comment|/*          * we should now have things packed up, so lets send it off          */
 name|s
 operator|->
 name|init_num
@@ -6915,7 +6935,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Some length values are 16 bits, so forget it if session is  		 * too long  		 */
+comment|/*          * Some length values are 16 bits, so forget it if session is too          * long          */
 if|if
 condition|(
 name|slen
@@ -6926,7 +6946,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Grow buffer if need be: the length calculation is as  		 * follows 12 (DTLS handshake message header) +  		 * 4 (ticket lifetime hint) + 2 (ticket length) +  		 * 16 (key name) + max_iv_len (iv length) +  		 * session_length + max_enc_block_size (max encrypted session  		 * length) + max_md_size (HMAC).  		 */
+comment|/*          * Grow buffer if need be: the length calculation is as follows 12          * (DTLS handshake message header) + 4 (ticket lifetime hint) + 2          * (ticket length) + 16 (key name) + max_iv_len (iv length) +          * session_length + max_enc_block_size (max encrypted session length)          * + max_md_size (HMAC).          */
 if|if
 condition|(
 operator|!
@@ -7014,7 +7034,7 @@ operator|&
 name|hctx
 argument_list|)
 expr_stmt|;
-comment|/* Initialize HMAC and cipher contexts. If callback present 		 * it does all the work otherwise use generated values 		 * from parent ctx. 		 */
+comment|/*          * Initialize HMAC and cipher contexts. If callback present it does          * all the work otherwise use generated values from parent ctx.          */
 if|if
 condition|(
 name|tctx

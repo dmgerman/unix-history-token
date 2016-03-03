@@ -4,7 +4,7 @@ comment|/* crypto/o_dir.h -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Copied from Richard Levitte's (richard@levitte.org) LP library.  All  * symbol names have been changed, with permission from the author.  */
+comment|/*  * Copied from Richard Levitte's (richard@levitte.org) LP library.  All  * symbol names have been changed, with permission from the author.  */
 end_comment
 
 begin_comment

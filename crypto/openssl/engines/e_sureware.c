@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Written by Corinne Dive-Reclus(cdive@baltimore.com) *  * * Redistribution and use in source and binary forms, with or without * modification, are permitted provided that the following conditions * are met: * * 1. Redistributions of source code must retain the above copyright *    notice, this list of conditions and the following disclaimer.  * * 2. Redistributions in binary form must reproduce the above copyright *    notice, this list of conditions and the following disclaimer in *    the documentation and/or other materials provided with the *    distribution. * * 3. All advertising materials mentioning features or use of this *    software must display the following acknowledgment: *    "This product includes software developed by the OpenSSL Project *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)" * * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to *    endorse or promote products derived from this software without *    prior written permission. For written permission, please contact *    licensing@OpenSSL.org. * * 5. Products derived from this software may not be called "OpenSSL" *    nor may "OpenSSL" appear in their names without prior written *    permission of the OpenSSL Project. * * 6. Redistributions of any form whatsoever must retain the following *    acknowledgment: *    "This product includes software developed by the OpenSSL Project *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)" * * Written by Corinne Dive-Reclus(cdive@baltimore.com) * * Copyright@2001 Baltimore Technologies Ltd. * All right Reserved. *																								*	 *		THIS FILE IS PROVIDED BY BALTIMORE TECHNOLOGIES ``AS IS'' AND																			* *		ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE					*  *		IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE				* *		ARE DISCLAIMED.  IN NO EVENT SHALL BALTIMORE TECHNOLOGIES BE LIABLE						* *		FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL				* *		DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS					* *		OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)					* *		HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT				* *		LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY				* *		OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF					* *		SUCH DAMAGE.																			* ====================================================================*/
+comment|/*- *  Written by Corinne Dive-Reclus(cdive@baltimore.com) * * * Redistribution and use in source and binary forms, with or without * modification, are permitted provided that the following conditions * are met: * * 1. Redistributions of source code must retain the above copyright *    notice, this list of conditions and the following disclaimer. * * 2. Redistributions in binary form must reproduce the above copyright *    notice, this list of conditions and the following disclaimer in *    the documentation and/or other materials provided with the *    distribution. * * 3. All advertising materials mentioning features or use of this *    software must display the following acknowledgment: *    "This product includes software developed by the OpenSSL Project *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)" * * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to *    endorse or promote products derived from this software without *    prior written permission. For written permission, please contact *    licensing@OpenSSL.org. * * 5. Products derived from this software may not be called "OpenSSL" *    nor may "OpenSSL" appear in their names without prior written *    permission of the OpenSSL Project. * * 6. Redistributions of any form whatsoever must retain the following *    acknowledgment: *    "This product includes software developed by the OpenSSL Project *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)" * * Written by Corinne Dive-Reclus(cdive@baltimore.com) * * Copyright@2001 Baltimore Technologies Ltd. * All right Reserved. *                                                                                      * *        THIS FILE IS PROVIDED BY BALTIMORE TECHNOLOGIES ``AS IS'' AND                 * *        ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE         * *        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    * *        ARE DISCLAIMED.  IN NO EVENT SHALL BALTIMORE TECHNOLOGIES BE LIABLE           * *        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    * *        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS       * *        OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)         * *        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    * *        LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY     * *        OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF        * *        SUCH DAMAGE.                                                                  * ====================================================================*/
 end_comment
 
 begin_include
@@ -474,7 +474,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void surewarehk_dh_ex_free(void *obj, void *item, CRYPTO_EX_DATA *ad, 	int idx,long argl, void *argp);
+unit|static void surewarehk_dh_ex_free(void *obj, void *item, CRYPTO_EX_DATA *ad,                                   int idx, long argl, void *argp);
 endif|#
 directive|endif
 end_endif
@@ -553,39 +553,39 @@ literal|"SureWare RSA method"
 block|,
 name|NULL
 block|,
-comment|/* pub_enc*/
+comment|/* pub_enc */
 name|NULL
 block|,
-comment|/* pub_dec*/
+comment|/* pub_dec */
 name|surewarehk_rsa_sign
 block|,
-comment|/* our rsa_sign is OpenSSL priv_enc*/
+comment|/* our rsa_sign is OpenSSL priv_enc */
 name|surewarehk_rsa_priv_dec
 block|,
-comment|/* priv_dec*/
+comment|/* priv_dec */
 name|NULL
 block|,
-comment|/*mod_exp*/
+comment|/* mod_exp */
 name|surewarehk_mod_exp_mont
 block|,
-comment|/*mod_exp_mongomery*/
+comment|/* mod_exp_mongomery */
 name|NULL
 block|,
-comment|/* init*/
+comment|/* init */
 name|NULL
 block|,
-comment|/* finish*/
+comment|/* finish */
 literal|0
 block|,
-comment|/* RSA flag*/
+comment|/* RSA flag */
 name|NULL
 block|,
 name|NULL
 block|,
-comment|/* OpenSSL sign*/
+comment|/* OpenSSL sign */
 name|NULL
 block|,
-comment|/* OpenSSL verify*/
+comment|/* OpenSSL verify */
 name|NULL
 comment|/* keygen */
 block|}
@@ -676,22 +676,22 @@ literal|"SureWare DH method"
 block|,
 name|NULL
 block|,
-comment|/*gen_key*/
+comment|/* gen_key */
 name|NULL
 block|,
-comment|/*agree,*/
+comment|/* agree, */
 name|surewarehk_modexp_dh
 block|,
-comment|/*dh mod exp*/
+comment|/* dh mod exp */
 name|NULL
 block|,
-comment|/* init*/
+comment|/* init */
 name|NULL
 block|,
-comment|/* finish*/
+comment|/* finish */
 literal|0
 block|,
-comment|/* flags*/
+comment|/* flags */
 name|NULL
 block|,
 name|NULL
@@ -717,14 +717,14 @@ name|surewarehk_rand_bytes
 block|,
 name|NULL
 block|,
-comment|/*cleanup*/
+comment|/* cleanup */
 name|surewarehk_rand_add
 block|,
 name|surewarehk_rand_bytes
 block|,
 name|NULL
 block|,
-comment|/*rand_status*/
+comment|/* rand_status */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -909,22 +909,22 @@ name|surewarehk_dsa_do_sign
 block|,
 name|NULL
 block|,
-comment|/*sign setup*/
+comment|/* sign setup */
 name|NULL
 block|,
-comment|/*verify,*/
+comment|/* verify, */
 name|surewarehk_dsa_mod_exp
 block|,
-comment|/*mod exp*/
+comment|/* mod exp */
 name|NULL
 block|,
-comment|/*bn mod exp*/
+comment|/* bn mod exp */
 name|NULL
 block|,
-comment|/*init*/
+comment|/* init */
 name|NULL
 block|,
-comment|/*finish*/
+comment|/* finish */
 literal|0
 block|,
 name|NULL
@@ -968,7 +968,7 @@ comment|/* Now, to our own code */
 end_comment
 
 begin_comment
-comment|/* As this is only ever called once, there's no need for locking  * (indeed - the lock will already be held by our caller!!!) */
+comment|/*  * As this is only ever called once, there's no need for locking (indeed -  * the lock will already be held by our caller!!!)  */
 end_comment
 
 begin_function
@@ -1134,7 +1134,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the cswift-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * cswift-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1167,7 +1167,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
-comment|/* Use the DSA_OpenSSL() method and just hook the mod_exp-ish 	 * bits. */
+comment|/*      * Use the DSA_OpenSSL() method and just hook the mod_exp-ish bits.      */
 name|meth2
 operator|=
 name|DSA_OpenSSL
@@ -1396,7 +1396,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the SureWareHook library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * SureWareHook library. NB: This is only set (or unset) during an init() or  * finish() call (reference counts permitting) and they're operating with  * global locks, so this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1415,6 +1415,10 @@ directive|ifndef
 name|OPENSSL_NO_RSA
 end_ifndef
 
+begin_comment
+comment|/* Index for KM handle.  Not really used yet. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1424,10 +1428,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Index for KM handle.  Not really used yet. */
-end_comment
 
 begin_endif
 endif|#
@@ -1440,6 +1440,10 @@ directive|ifndef
 name|OPENSSL_NO_DSA
 end_ifndef
 
+begin_comment
+comment|/* Index for KM handle.  Not really used yet. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1450,17 +1454,13 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Index for KM handle.  Not really used yet. */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -1762,7 +1762,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* SureWareHook library functions and mechanics - these are used by the  * higher-level functions further down. NB: As and where there's no  * error checking, take a look lower down where these functions are  * called, the checking and error handling is probably down there.  */
+comment|/*  * SureWareHook library functions and mechanics - these are used by the  * higher-level functions further down. NB: As and where there's no error  * checking, take a look lower down where these functions are called, the  * checking and error handling is probably down there.  */
 end_comment
 
 begin_decl_stmt
@@ -1882,7 +1882,7 @@ name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* This will prevent the initialisation function from "installing" 	 * the mutex-handling callbacks, even if they are available from 	 * within the library (or were provided to the library from the 	 * calling application). This is to remove any baggage for 	 * applications not using multithreading. */
+comment|/*          * This will prevent the initialisation function from "installing"          * the mutex-handling callbacks, even if they are available from          * within the library (or were provided to the library from the          * calling application). This is to remove any baggage for          * applications not using multithreading.          */
 case|case
 name|ENGINE_CTRL_CHIL_NO_LOCKING
 case|:
@@ -2417,7 +2417,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* try to load the default private key, if failed does not return a failure but            wait for an explicit ENGINE_load_privakey */
+comment|/*      * try to load the default private key, if failed does not return a      * failure but wait for an explicit ENGINE_load_privakey      */
 name|surewarehk_load_privkey
 argument_list|(
 name|e
@@ -2775,7 +2775,7 @@ break|break;
 case|case
 literal|1
 case|:
-comment|/*nothing*/
+comment|/* nothing */
 name|msg
 index|[
 literal|0
@@ -3122,7 +3122,7 @@ name|flags
 operator||=
 name|RSA_FLAG_EXT_PKEY
 expr_stmt|;
-comment|/* set public big nums*/
+comment|/* set public big nums */
 name|rsatmp
 operator|->
 name|e
@@ -3137,6 +3137,21 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rsatmp
+operator|->
+name|e
+operator|||
+operator|!
+name|rsatmp
+operator|->
+name|n
+condition|)
+goto|goto
+name|err
+goto|;
 name|bn_expand2
 argument_list|(
 name|rsatmp
@@ -3167,11 +3182,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|rsatmp
-operator|->
-name|e
-operator|||
 name|rsatmp
 operator|->
 name|e
@@ -3189,11 +3199,6 @@ argument_list|(
 name|BN_ULONG
 argument_list|)
 argument_list|)
-operator|||
-operator|!
-name|rsatmp
-operator|->
-name|n
 operator|||
 name|rsatmp
 operator|->
@@ -3357,8 +3362,8 @@ argument_list|,
 name|hptr
 argument_list|)
 expr_stmt|;
-comment|/*dsatmp->flags |= DSA_FLAG_EXT_PKEY;*/
-comment|/* set public key*/
+comment|/*          * dsatmp->flags |= DSA_FLAG_EXT_PKEY;          */
+comment|/* set public key */
 name|dsatmp
 operator|->
 name|pub_key
@@ -3387,6 +3392,31 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dsatmp
+operator|->
+name|pub_key
+operator|||
+operator|!
+name|dsatmp
+operator|->
+name|p
+operator|||
+operator|!
+name|dsatmp
+operator|->
+name|q
+operator|||
+operator|!
+name|dsatmp
+operator|->
+name|g
+condition|)
+goto|goto
+name|err
+goto|;
 name|bn_expand2
 argument_list|(
 name|dsatmp
@@ -3445,11 +3475,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|dsatmp
-operator|->
-name|pub_key
-operator|||
 name|dsatmp
 operator|->
 name|pub_key
@@ -3468,11 +3493,6 @@ name|BN_ULONG
 argument_list|)
 argument_list|)
 operator|||
-operator|!
-name|dsatmp
-operator|->
-name|p
-operator|||
 name|dsatmp
 operator|->
 name|p
@@ -3490,11 +3510,6 @@ argument_list|(
 name|BN_ULONG
 argument_list|)
 argument_list|)
-operator|||
-operator|!
-name|dsatmp
-operator|->
-name|q
 operator|||
 name|dsatmp
 operator|->
@@ -3508,11 +3523,6 @@ sizeof|sizeof
 argument_list|(
 name|BN_ULONG
 argument_list|)
-operator|||
-operator|!
-name|dsatmp
-operator|->
-name|g
 operator|||
 name|dsatmp
 operator|->
@@ -4043,7 +4053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This cleans up an RSA/DSA KM key(do not destroy the key into the hardware) , called when ex_data is freed */
+comment|/*  * This cleans up an RSA/DSA KM key(do not destroy the key into the hardware)  * , called when ex_data is freed  */
 end_comment
 
 begin_function
@@ -4114,17 +4124,17 @@ comment|/* not currently used (bug?) */
 end_comment
 
 begin_comment
-comment|/* This cleans up an DH KM key (destroys the key into hardware),  called when ex_data is freed */
+comment|/*  * This cleans up an DH KM key (destroys the key into hardware), called when  * ex_data is freed  */
 end_comment
 
 begin_endif
-unit|static void surewarehk_dh_ex_free(void *obj, void *item, CRYPTO_EX_DATA *ad, 	int idx,long argl, void *argp) { 	if(!p_surewarehk_Free) 	{ 		SUREWAREerr(SUREWARE_F_SUREWAREHK_DH_EX_FREE,ENGINE_R_NOT_INITIALISED); 	} 	else 		p_surewarehk_Free((char *)item,1); }
+unit|static void surewarehk_dh_ex_free(void *obj, void *item, CRYPTO_EX_DATA *ad,                                   int idx, long argl, void *argp) {     if (!p_surewarehk_Free) {         SUREWAREerr(SUREWARE_F_SUREWAREHK_DH_EX_FREE,                     ENGINE_R_NOT_INITIALISED);     } else         p_surewarehk_Free((char *)item, 1); }
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* * return number of decrypted bytes */
+comment|/*  * return number of decrypted bytes  */
 end_comment
 
 begin_ifndef
@@ -4286,8 +4296,8 @@ name|tlen
 expr_stmt|;
 block|}
 else|else
-comment|/* do with no padding into hardware */
 block|{
+comment|/* do with no padding into hardware */
 name|ret
 operator|=
 name|p_surewarehk_Rsa_Priv_Dec
@@ -4371,8 +4381,8 @@ switch|switch
 condition|(
 name|padding
 condition|)
-comment|/* check padding in software */
 block|{
+comment|/* check padding in software */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SHA
@@ -4507,7 +4517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* * Does what OpenSSL rsa_priv_enc does. */
+comment|/*  * Does what OpenSSL rsa_priv_enc does.  */
 end_comment
 
 begin_function
@@ -4812,6 +4822,21 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|psign
+operator|->
+name|r
+operator|||
+operator|!
+name|psign
+operator|->
+name|s
+condition|)
+goto|goto
+name|err
+goto|;
 name|bn_expand2
 argument_list|(
 name|psign
@@ -4842,11 +4867,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|psign
-operator|->
-name|r
-operator|||
 name|psign
 operator|->
 name|r
@@ -4859,11 +4879,6 @@ sizeof|sizeof
 argument_list|(
 name|BN_ULONG
 argument_list|)
-operator|||
-operator|!
-name|psign
-operator|->
-name|s
 operator|||
 name|psign
 operator|->
@@ -5050,7 +5065,11 @@ name|ENGINE_R_NOT_INITIALISED
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|r
+condition|)
 block|{
 name|bn_expand2
 argument_list|(
@@ -5064,8 +5083,6 @@ expr_stmt|;
 if|if
 condition|(
 name|r
-operator|&&
-name|r
 operator|->
 name|dmax
 operator|==
@@ -5074,7 +5091,7 @@ operator|->
 name|top
 condition|)
 block|{
-comment|/* do it*/
+comment|/* do it */
 name|ret
 operator|=
 name|p_surewarehk_Mod_Exp

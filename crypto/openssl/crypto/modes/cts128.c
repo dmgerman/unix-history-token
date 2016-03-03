@@ -1547,7 +1547,7 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* this places in[16] at&tmp.c[16] and decrypted block at&tmp.c[0] */
+comment|/*      * this places in[16] at&tmp.c[16] and decrypted block at&tmp.c[0]      */
 call|(
 modifier|*
 name|cbc
@@ -1821,7 +1821,7 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* this places in[16] at&tmp.c[16] and decrypted block at&tmp.c[0] */
+comment|/*      * this places in[16] at&tmp.c[16] and decrypted block at&tmp.c[0]      */
 call|(
 modifier|*
 name|cbc

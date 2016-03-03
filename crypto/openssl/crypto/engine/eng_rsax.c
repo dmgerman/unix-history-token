@@ -832,7 +832,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Table t is interleaved in the following manner:  * The order in memory is t[0][0], t[0][1], ..., t[0][7], t[1][0], ...  * A particular 512-bit value is stored in t[][index] rather than the more  * normal t[index][]; i.e. the qwords of a particular entry in t are not  * adjacent in memory  */
+comment|/*  * Table t is interleaved in the following manner: The order in memory is  * t[0][0], t[0][1], ..., t[0][7], t[1][0], ... A particular 512-bit value is  * stored in t[][index] rather than the more normal t[index][]; i.e. the  * qwords of a particular entry in t are not adjacent in memory  */
 end_comment
 
 begin_comment
@@ -856,7 +856,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Extract array elements from BIGNUM b  * To set the whole array from b, call with n=8  */
+comment|/*  * Extract array elements from BIGNUM b To set the whole array from b, call  * with n=8  */
 end_comment
 
 begin_function_decl
@@ -1430,7 +1430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Declares for the Intel CIAP 512-bit / CRT / 1024 bit RSA modular  * exponentiation routine precalculations and a structure to hold the  * necessary values.  These files are meant to live in crypto/rsa/ in  * the target openssl.  */
+comment|/*  * Declares for the Intel CIAP 512-bit / CRT / 1024 bit RSA modular  * exponentiation routine precalculations and a structure to hold the  * necessary values.  These files are meant to live in crypto/rsa/ in the  * target openssl.  */
 end_comment
 
 begin_comment
@@ -1902,11 +1902,9 @@ literal|0x8000000000000000
 operator|)
 condition|)
 block|{
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|err
+goto|;
 block|}
 if|if
 condition|(
@@ -1923,11 +1921,9 @@ operator|)
 condition|)
 block|{
 comment|/* Odd modulus required for Mont */
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|err
+goto|;
 block|}
 comment|/* Precompute m1 */
 name|BN_mod
@@ -2420,7 +2416,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* Make sure BN_mod_inverse in Montgomery 		 * intialization uses the BN_FLG_CONSTTIME flag 		 * (unless RSA_FLAG_NO_CONSTTIME is set) 		 */
+comment|/*          * Make sure BN_mod_inverse in Montgomery intialization uses the          * BN_FLG_CONSTTIME flag (unless RSA_FLAG_NO_CONSTTIME is set)          */
 if|if
 condition|(
 operator|!
@@ -2908,7 +2904,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* This will help stop the size of r0 increasing, which does 	 * affect the multiply if it optimised for a power of 2 size */
+comment|/*      * This will help stop the size of r0 increasing, which does affect the      * multiply if it optimised for a power of 2 size      */
 if|if
 condition|(
 name|BN_is_negative
@@ -3004,7 +3000,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* If p< q it is occasionally possible for the correction of          * adding 'p' if r0 is negative above to leave the result still 	 * negative. This can break the private key operations: the following 	 * second correction should *always* correct this rare occurrence. 	 * This will *never* happen with OpenSSL generated keys because          * they ensure p> q [steve]          */
+comment|/*      * If p< q it is occasionally possible for the correction of adding 'p'      * if r0 is negative above to leave the result still negative. This can      * break the private key operations: the following second correction      * should *always* correct this rare occurrence. This will *never* happen      * with OpenSSL generated keys because they ensure p> q [steve]      */
 if|if
 condition|(
 name|BN_is_negative
@@ -3112,7 +3108,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* If 'I' was greater than (or equal to) rsa->n, the operation 		 * will be equivalent to using 'I mod n'. However, the result of 		 * the verify will *always* be less than 'n' so we don't check 		 * for absolute equality, just congruency. */
+comment|/*          * If 'I' was greater than (or equal to) rsa->n, the operation will          * be equivalent to using 'I mod n'. However, the result of the          * verify will *always* be less than 'n' so we don't check for          * absolute equality, just congruency.          */
 if|if
 condition|(
 operator|!
@@ -3180,7 +3176,7 @@ name|vrfy
 argument_list|)
 condition|)
 block|{
-comment|/* 'I' and 'vrfy' aren't congruent mod n. Don't leak 			 * miscalculated CRT output, just do a raw (slower) 			 * mod_exp and return that instead. */
+comment|/*              * 'I' and 'vrfy' aren't congruent mod n. Don't leak              * miscalculated CRT output, just do a raw (slower) mod_exp and              * return that instead.              */
 name|BIGNUM
 name|local_d
 decl_stmt|;

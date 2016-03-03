@@ -4,15 +4,15 @@ comment|/* ssl/tls1.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_comment
@@ -268,7 +268,7 @@ define|#
 directive|define
 name|TLSEXT_TYPE_heartbeat
 value|15
-comment|/* ExtensionType value for TLS padding extension.  * http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml  * http://tools.ietf.org/html/draft-agl-tls-padding-03  */
+comment|/*  * ExtensionType value for TLS padding extension.  * http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml  * http://tools.ietf.org/html/draft-agl-tls-padding-03  */
 define|#
 directive|define
 name|TLSEXT_TYPE_padding
@@ -282,7 +282,7 @@ comment|/* ExtensionType value from draft-rescorla-tls-opaque-prf-input-00.txt *
 if|#
 directive|if
 literal|0
-comment|/* will have to be provided externally for now ,        * i.e. build with -DTLSEXT_TYPE_opaque_prf_input=38183        * using whatever extension number you'd like to try */
+comment|/*  * will have to be provided externally for now ,  * i.e. build with -DTLSEXT_TYPE_opaque_prf_input=38183  * using whatever extension number you'd like to try  */
 define|#
 directive|define
 name|TLSEXT_TYPE_opaque_prf_input
@@ -411,7 +411,7 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-comment|/* SSL_export_keying_material exports a value derived from the master secret,  * as specified in RFC 5705. It writes |olen| bytes to |out| given a label and  * optional context. (Since a zero length context is allowed, the |use_context|  * flag controls whether a context is included.)  *  * It returns 1 on success and zero otherwise.  */
+comment|/*  * SSL_export_keying_material exports a value derived from the master secret,  * as specified in RFC 5705. It writes |olen| bytes to |out| given a label and  * optional context. (Since a zero length context is allowed, the |use_context|  * flag controls whether a context is included.) It returns 1 on success and  * zero otherwise.  */
 name|int
 name|SSL_export_keying_material
 parameter_list|(
@@ -726,17 +726,17 @@ define|#
 directive|define
 name|TLS1_CK_PSK_WITH_AES_256_CBC_SHA
 value|0x0300008D
-comment|/* Additional TLS ciphersuites from expired Internet Draft  * draft-ietf-tls-56-bit-ciphersuites-01.txt  * (available if TLS1_ALLOW_EXPERIMENTAL_CIPHERSUITES is defined, see  * s3_lib.c).  We actually treat them like SSL 3.0 ciphers, which we probably  * shouldn't.  Note that the first two are actually not in the IDs. */
+comment|/*  * Additional TLS ciphersuites from expired Internet Draft  * draft-ietf-tls-56-bit-ciphersuites-01.txt (available if  * TLS1_ALLOW_EXPERIMENTAL_CIPHERSUITES is defined, see s3_lib.c).  We  * actually treat them like SSL 3.0 ciphers, which we probably shouldn't.  * Note that the first two are actually not in the IDs.  */
 define|#
 directive|define
 name|TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5
 value|0x03000060
-comment|/* not in ID */
+comment|/* not in                                                                     * ID */
 define|#
 directive|define
 name|TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5
 value|0x03000061
-comment|/* not in ID */
+comment|/* not in                                                                     * ID */
 define|#
 directive|define
 name|TLS1_CK_RSA_EXPORT1024_WITH_DES_CBC_SHA
@@ -984,7 +984,7 @@ define|#
 directive|define
 name|TLS1_CK_ADH_WITH_AES_256_GCM_SHA384
 value|0x030000A7
-comment|/* ECC ciphersuites from draft-ietf-tls-ecc-12.txt with changes soon to be in draft 13 */
+comment|/*  * ECC ciphersuites from draft-ietf-tls-ecc-12.txt with changes soon to be in  * draft 13  */
 define|#
 directive|define
 name|TLS1_CK_ECDH_ECDSA_WITH_NULL_SHA
@@ -1188,7 +1188,7 @@ define|#
 directive|define
 name|TLS1_CK_ECDH_RSA_WITH_AES_256_GCM_SHA384
 value|0x0300C032
-comment|/* XXX  * Inconsistency alert:  * The OpenSSL names of ciphers with ephemeral DH here include the string  * "DHE", while elsewhere it has always been "EDH".  * (The alias for the list of all such ciphers also is "EDH".)  * The specifications speak of "EDH"; maybe we should allow both forms  * for everything. */
+comment|/*  * XXX Inconsistency alert: The OpenSSL names of ciphers with ephemeral DH  * here include the string "DHE", while elsewhere it has always been "EDH".  * (The alias for the list of all such ciphers also is "EDH".) The  * specifications speak of "EDH"; maybe we should allow both forms for  * everything.  */
 define|#
 directive|define
 name|TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5
@@ -1699,7 +1699,7 @@ define|#
 directive|define
 name|TLS_CT_GOST01_SIGN
 value|22
-comment|/* when correcting this number, correct also SSL3_CT_NUMBER in ssl3.h (see  * comment there) */
+comment|/*  * when correcting this number, correct also SSL3_CT_NUMBER in ssl3.h (see  * comment there)  */
 define|#
 directive|define
 name|TLS_CT_NUMBER
@@ -1782,67 +1782,67 @@ name|CHARSET_EBCDIC
 undef|#
 directive|undef
 name|TLS_MD_CLIENT_FINISH_CONST
+comment|/*  * client finished  */
 define|#
 directive|define
 name|TLS_MD_CLIENT_FINISH_CONST
 value|"\x63\x6c\x69\x65\x6e\x74\x20\x66\x69\x6e\x69\x73\x68\x65\x64"
-comment|/*client finished*/
 undef|#
 directive|undef
 name|TLS_MD_SERVER_FINISH_CONST
+comment|/*  * server finished  */
 define|#
 directive|define
 name|TLS_MD_SERVER_FINISH_CONST
 value|"\x73\x65\x72\x76\x65\x72\x20\x66\x69\x6e\x69\x73\x68\x65\x64"
-comment|/*server finished*/
 undef|#
 directive|undef
 name|TLS_MD_SERVER_WRITE_KEY_CONST
+comment|/*  * server write key  */
 define|#
 directive|define
 name|TLS_MD_SERVER_WRITE_KEY_CONST
 value|"\x73\x65\x72\x76\x65\x72\x20\x77\x72\x69\x74\x65\x20\x6b\x65\x79"
-comment|/*server write key*/
 undef|#
 directive|undef
 name|TLS_MD_KEY_EXPANSION_CONST
+comment|/*  * key expansion  */
 define|#
 directive|define
 name|TLS_MD_KEY_EXPANSION_CONST
 value|"\x6b\x65\x79\x20\x65\x78\x70\x61\x6e\x73\x69\x6f\x6e"
-comment|/*key expansion*/
 undef|#
 directive|undef
 name|TLS_MD_CLIENT_WRITE_KEY_CONST
+comment|/*  * client write key  */
 define|#
 directive|define
 name|TLS_MD_CLIENT_WRITE_KEY_CONST
 value|"\x63\x6c\x69\x65\x6e\x74\x20\x77\x72\x69\x74\x65\x20\x6b\x65\x79"
-comment|/*client write key*/
 undef|#
 directive|undef
 name|TLS_MD_SERVER_WRITE_KEY_CONST
+comment|/*  * server write key  */
 define|#
 directive|define
 name|TLS_MD_SERVER_WRITE_KEY_CONST
 value|"\x73\x65\x72\x76\x65\x72\x20\x77\x72\x69\x74\x65\x20\x6b\x65\x79"
-comment|/*server write key*/
 undef|#
 directive|undef
 name|TLS_MD_IV_BLOCK_CONST
+comment|/*  * IV block  */
 define|#
 directive|define
 name|TLS_MD_IV_BLOCK_CONST
 value|"\x49\x56\x20\x62\x6c\x6f\x63\x6b"
-comment|/*IV block*/
 undef|#
 directive|undef
 name|TLS_MD_MASTER_SECRET_CONST
+comment|/*  * master secret  */
 define|#
 directive|define
 name|TLS_MD_MASTER_SECRET_CONST
 value|"\x6d\x61\x73\x74\x65\x72\x20\x73\x65\x63\x72\x65\x74"
-comment|/*master secret*/
 endif|#
 directive|endif
 comment|/* TLS Session Ticket extension struct */

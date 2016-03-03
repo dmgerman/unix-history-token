@@ -4,11 +4,11 @@ comment|/* pcy_tree.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2004.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2004.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -36,11 +36,11 @@ file|"pcy_int.h"
 end_include
 
 begin_comment
-comment|/* Enable this to print out the complete policy tree at various point during  * evaluation.  */
+comment|/*  * Enable this to print out the complete policy tree at various point during  * evaluation.  */
 end_comment
 
 begin_comment
-comment|/*#define OPENSSL_POLICY_DEBUG*/
+comment|/*  * #define OPENSSL_POLICY_DEBUG  */
 end_comment
 
 begin_ifdef
@@ -417,7 +417,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Initialize policy tree. Return values:  *  0 Some internal error occured.  * -1 Inconsistent or invalid extensions in certificates.  *  1 Tree initialized OK.  *  2 Policy tree is empty.  *  5 Tree OK and requireExplicitPolicy true.  *  6 Tree empty and requireExplicitPolicy true.  */
+comment|/*-  * Initialize policy tree. Return values:  *  0 Some internal error occurred.  * -1 Inconsistent or invalid extensions in certificates.  *  1 Tree initialized OK.  *  2 Policy tree is empty.  *  5 Tree OK and requireExplicitPolicy true.  *  6 Tree empty and requireExplicitPolicy true.  */
 end_comment
 
 begin_decl_stmt
@@ -564,7 +564,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* First setup policy cache in all certificates apart from the 	 * trust anchor. Note any bad cache results on the way. Also can 	 * calculate explicit_policy value at this point. 	 */
+comment|/*      * First setup policy cache in all certificates apart from the trust      * anchor. Note any bad cache results on the way. Also can calculate      * explicit_policy value at this point.      */
 for|for
 control|(
 name|i
@@ -618,7 +618,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* If inconsistent extensions keep a note of it but continue */
+comment|/*          * If inconsistent extensions keep a note of it but continue          */
 if|if
 condition|(
 name|x
@@ -632,7 +632,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Otherwise if we have no data (hence no CertificatePolicies) 		 * and haven't already set an inconsistent code note it. 		 */
+comment|/*          * Otherwise if we have no data (hence no CertificatePolicies) and          * haven't already set an inconsistent code note it.          */
 elseif|else
 if|if
 condition|(
@@ -939,7 +939,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Any matching allowed if certificate is self 			 * issued and not the last in the chain. 			 */
+comment|/*              * Any matching allowed if certificate is self issued and not the              * last in the chain.              */
 if|if
 condition|(
 operator|!
@@ -1227,7 +1227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This corresponds to RFC3280 6.1.3(d)(1):  * link any data from CertificatePolicies onto matching parent  * or anyPolicy if no match.  */
+comment|/*  * This corresponds to RFC3280 6.1.3(d)(1): link any data from  * CertificatePolicies onto matching parent or anyPolicy if no match.  */
 end_comment
 
 begin_function
@@ -1282,11 +1282,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* If a node is mapped any it doesn't have a corresponding 		 * CertificatePolicies entry.  		 * However such an identical node would be created 		 * if anyPolicy matching is enabled because there would be 		 * no match with the parent valid_policy_set. So we create 		 * link because then it will have the mapping flags 		 * right and we can prune it later. 		 */
+comment|/*          * If a node is mapped any it doesn't have a corresponding          * CertificatePolicies entry. However such an identical node would          * be created if anyPolicy matching is enabled because there would be          * no match with the parent valid_policy_set. So we create link          * because then it will have the mapping flags right and we can prune          * it later.          */
 if|#
 directive|if
 literal|0
-block|if ((data->flags& POLICY_DATA_FLAG_MAPPED_ANY)&& !(curr->flags& X509_V_FLAG_INHIBIT_ANY)) 			continue;
+block|if ((data->flags& POLICY_DATA_FLAG_MAPPED_ANY)&& !(curr->flags& X509_V_FLAG_INHIBIT_ANY))             continue;
 endif|#
 directive|endif
 comment|/* Look for matching nodes in previous level */
@@ -1311,7 +1311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This corresponds to RFC3280 6.1.3(d)(2):  * Create new data for any unmatched policies in the parent and link  * to anyPolicy.  */
+comment|/*  * This corresponds to RFC3280 6.1.3(d)(2): Create new data for any unmatched  * policies in the parent and link to anyPolicy.  */
 end_comment
 
 begin_function
@@ -1360,7 +1360,7 @@ name|data
 operator|->
 name|valid_policy
 expr_stmt|;
-comment|/* Create a new node with qualifiers from anyPolicy and 	 * id from unmatched node. 	 */
+comment|/*      * Create a new node with qualifiers from anyPolicy and id from unmatched      * node.      */
 name|data
 operator|=
 name|policy_data_new
@@ -1639,7 +1639,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/*X509_POLICY_DATA *data;*/
+comment|/*      * X509_POLICY_DATA *data;      */
 name|X509_POLICY_NODE
 modifier|*
 name|node
@@ -1702,12 +1702,12 @@ return|;
 if|#
 directive|if
 literal|0
-comment|/* Skip any node with any children: we only want unmathced 		 * nodes. 		 * 		 * Note: need something better for policy mapping 		 * because each node may have multiple children  		 */
-block|if (node->nchild) 			continue;
-comment|/* Create a new node with qualifiers from anyPolicy and 		 * id from unmatched node. 		 */
-block|data = policy_data_new(NULL, node->data->valid_policy,  						node_critical(node));  		if (data == NULL) 			return 0;
+comment|/*          * Skip any node with any children: we only want unmathced nodes.          * Note: need something better for policy mapping because each node          * may have multiple children          */
+block|if (node->nchild)             continue;
+comment|/*          * Create a new node with qualifiers from anyPolicy and id from          * unmatched node.          */
+block|data = policy_data_new(NULL, node->data->valid_policy,                                node_critical(node));          if (data == NULL)             return 0;
 comment|/* Curr may not have anyPolicy */
-block|data->qualifier_set = cache->anyPolicy->qualifier_set; 		data->flags |= POLICY_DATA_FLAG_SHARED_QUALIFIERS; 		if (!level_add_node(curr, data, node, tree)) 			{ 			policy_data_free(data); 			return 0; 			}
+block|data->qualifier_set = cache->anyPolicy->qualifier_set;         data->flags |= POLICY_DATA_FLAG_SHARED_QUALIFIERS;         if (!level_add_node(curr, data, node, tree)) {             policy_data_free(data);             return 0;         }
 endif|#
 directive|endif
 block|}
@@ -1748,7 +1748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Prune the tree: delete any child mapped child data on the current level  * then proceed up the tree deleting any data with no children. If we ever  * have no data on a level we can halt because the tree will be empty.  */
+comment|/*  * Prune the tree: delete any child mapped child data on the current level  * then proceed up the tree deleting any data with no children. If we ever  * have no data on a level we can halt because the tree will be empty.  */
 end_comment
 
 begin_function
@@ -2090,7 +2090,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Calculate the authority set based on policy tree.  * The 'pnodes' parameter is used as a store for the set of policy nodes  * used to calculate the user set. If the authority set is not anyPolicy  * then pnodes will just point to the authority set. If however the authority  * set is anyPolicy then the set of valid policies (other than anyPolicy)  * is store in pnodes. The return value of '2' is used in this case to indicate  * that pnodes should be freed.  */
+comment|/*  * Calculate the authority set based on policy tree. The 'pnodes' parameter  * is used as a store for the set of policy nodes used to calculate the user  * set. If the authority set is not anyPolicy then pnodes will just point to  * the authority set. If however the authority set is anyPolicy then the set  * of valid policies (other than anyPolicy) is store in pnodes. The return  * value of '2' is used in this case to indicate that pnodes should be freed.  */
 end_comment
 
 begin_decl_stmt
@@ -2209,7 +2209,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* If no anyPolicy node on this this level it can't 		 * appear on lower levels so end search. 		 */
+comment|/*          * If no anyPolicy node on this this level it can't appear on lower          * levels so end search.          */
 if|if
 condition|(
 operator|!
@@ -2343,7 +2343,7 @@ name|X509_POLICY_DATA
 modifier|*
 name|extra
 decl_stmt|;
-comment|/* Check if anyPolicy present in authority constrained policy set: 	 * this will happen if it is a leaf node. 	 */
+comment|/*      * Check if anyPolicy present in authority constrained policy set: this      * will happen if it is a leaf node.      */
 if|if
 condition|(
 name|sk_ASN1_OBJECT_num
@@ -2465,7 +2465,7 @@ operator|!
 name|anyPolicy
 condition|)
 continue|continue;
-comment|/* Create a new node with policy ID from user set 			 * and qualifiers from anyPolicy. 			 */
+comment|/*              * Create a new node with policy ID from user set and qualifiers              * from anyPolicy.              */
 name|extra
 operator|=
 name|policy_data_new
@@ -2869,7 +2869,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Application policy checking function.  * Return codes:  *  0 	Internal Error.  *  1   Successful.  * -1   One or more certificates contain invalid or inconsistent extensions  * -2	User constrained policy set empty and requireExplicit true.  */
+comment|/*-  * Application policy checking function.  * Return codes:  *  0   Internal Error.  *  1   Successful.  * -1   One or more certificates contain invalid or inconsistent extensions  * -2   User constrained policy set empty and requireExplicit true.  */
 end_comment
 
 begin_decl_stmt
@@ -3007,7 +3007,7 @@ condition|(
 operator|!
 name|tree
 condition|)
-comment|/* 			 * tree_init() returns success and a null tree 			 * if it's just looking at a trust anchor. 			 * I'm not sure that returning success here is 			 * correct, but I'm sure that reporting this 			 * as an internal error which our caller 			 * interprets as a malloc failure is wrong. 			 */
+comment|/*              * tree_init() returns success and a null tree              * if it's just looking at a trust anchor.              * I'm not sure that returning success here is              * correct, but I'm sure that reporting this              * as an internal error which our caller              * interprets as a malloc failure is wrong.              */
 return|return
 literal|1
 return|;

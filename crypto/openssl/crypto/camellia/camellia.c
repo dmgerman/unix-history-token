@@ -4,15 +4,15 @@ comment|/* crypto/camellia/camellia.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2006 NTT (Nippon Telegraph and Telephone Corporation) .   * ALL RIGHTS RESERVED.  *  * Intellectual Property information for Camellia:  *     http://info.isl.ntt.co.jp/crypt/eng/info/chiteki.html  *  * News Release for Announcement of Camellia open source:  *     http://www.ntt.co.jp/news/news06e/0604/060413a.html  *  * The Camellia Code included herein is developed by  * NTT (Nippon Telegraph and Telephone Corporation), and is contributed  * to the OpenSSL project.  *  * The Camellia Code is licensed pursuant to the OpenSSL open source  * license provided below.  */
+comment|/* ====================================================================  * Copyright 2006 NTT (Nippon Telegraph and Telephone Corporation) .  * ALL RIGHTS RESERVED.  *  * Intellectual Property information for Camellia:  *     http://info.isl.ntt.co.jp/crypt/eng/info/chiteki.html  *  * News Release for Announcement of Camellia open source:  *     http://www.ntt.co.jp/news/news06e/0604/060413a.html  *  * The Camellia Code included herein is developed by  * NTT (Nippon Telegraph and Telephone Corporation), and is contributed  * to the OpenSSL project.  *  * The Camellia Code is licensed pursuant to the OpenSSL open source  * license provided below.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
+comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
 end_comment
 
 begin_comment
-comment|/* Algorithm Specification     http://info.isl.ntt.co.jp/crypt/eng/camellia/specifications.html */
+comment|/*  * Algorithm Specification  * http://info.isl.llia/specicrypt/eng/camellia/specifications.html  */
 end_comment
 
 begin_comment
@@ -2673,7 +2673,7 @@ name|_s3
 parameter_list|,
 name|_key
 parameter_list|)
-value|do {\ 	register u32 _t0,_t1,_t2,_t3;\ \ 	_t0  = _s0 ^ (_key)[0];\ 	_t3  = SBOX4_4404[_t0&0xff];\ 	_t1  = _s1 ^ (_key)[1];\ 	_t3 ^= SBOX3_3033[(_t0>> 8)&0xff];\ 	_t2  = SBOX1_1110[_t1&0xff];\ 	_t3 ^= SBOX2_0222[(_t0>> 16)&0xff];\ 	_t2 ^= SBOX4_4404[(_t1>> 8)&0xff];\ 	_t3 ^= SBOX1_1110[(_t0>> 24)];\ 	_t2 ^= _t3;\ 	_t3  = RightRotate(_t3,8);\ 	_t2 ^= SBOX3_3033[(_t1>> 16)&0xff];\ 	_s3 ^= _t3;\ 	_t2 ^= SBOX2_0222[(_t1>> 24)];\ 	_s2 ^= _t2; \ 	_s3 ^= _t2;\ } while(0)
+value|do {\         register u32 _t0,_t1,_t2,_t3;\ \         _t0  = _s0 ^ (_key)[0];\         _t3  = SBOX4_4404[_t0&0xff];\         _t1  = _s1 ^ (_key)[1];\         _t3 ^= SBOX3_3033[(_t0>> 8)&0xff];\         _t2  = SBOX1_1110[_t1&0xff];\         _t3 ^= SBOX2_0222[(_t0>> 16)&0xff];\         _t2 ^= SBOX4_4404[(_t1>> 8)&0xff];\         _t3 ^= SBOX1_1110[(_t0>> 24)];\         _t2 ^= _t3;\         _t3  = RightRotate(_t3,8);\         _t2 ^= SBOX3_3033[(_t1>> 16)&0xff];\         _s3 ^= _t3;\         _t2 ^= SBOX2_0222[(_t1>> 24)];\         _s2 ^= _t2; \         _s3 ^= _t2;\ } while(0)
 end_define
 
 begin_comment
@@ -2695,7 +2695,7 @@ name|_s3
 parameter_list|,
 name|_n
 parameter_list|)
-value|do {\ 	u32 _t0=_s0>>(32-_n);\ 	_s0 = (_s0<<_n) | (_s1>>(32-_n));\ 	_s1 = (_s1<<_n) | (_s2>>(32-_n));\ 	_s2 = (_s2<<_n) | (_s3>>(32-_n));\ 	_s3 = (_s3<<_n) | _t0;\ } while (0)
+value|do {\         u32 _t0=_s0>>(32-_n);\         _s0 = (_s0<<_n) | (_s1>>(32-_n));\         _s1 = (_s1<<_n) | (_s2>>(32-_n));\         _s2 = (_s2<<_n) | (_s3>>(32-_n));\         _s3 = (_s3<<_n) | _t0;\ } while (0)
 end_define
 
 begin_function
@@ -4361,7 +4361,7 @@ literal|4
 return|;
 comment|/* grand rounds */
 block|}
-comment|/* 	 * It is possible to perform certain precalculations, which 	 * would spare few cycles in block procedure. It's not done, 	 * because it upsets the performance balance between key 	 * setup and block procedures, negatively affecting overall 	 * throughput in applications operating on short messages 	 * and volatile keys. 	 */
+comment|/*      * It is possible to perform certain precalculations, which      * would spare few cycles in block procedure. It's not done,      * because it upsets the performance balance between key      * setup and block procedures, negatively affecting overall      * throughput in applications operating on short messages      * and volatile keys.      */
 block|}
 end_function
 
@@ -4577,7 +4577,7 @@ operator|==
 name|kend
 condition|)
 break|break;
-comment|/* This is the same function as the diffusion function D 		 * of the accompanying documentation. See section 3.2 		 * for properties of the FLlayer function. */
+comment|/*          * This is the same function as the diffusion function D of the          * accompanying documentation. See section 3.2 for properties of the          * FLlayer function.          */
 name|s1
 operator|^=
 name|LeftRotate
@@ -4944,7 +4944,7 @@ operator|==
 name|kend
 condition|)
 break|break;
-comment|/* This is the same function as the diffusion function D 		 * of the accompanying documentation. See section 3.2 		 * for properties of the FLlayer function. */
+comment|/*          * This is the same function as the diffusion function D of the          * accompanying documentation. See section 3.2 for properties of the          * FLlayer function.          */
 name|k
 operator|-=
 literal|4

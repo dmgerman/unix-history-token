@@ -28,7 +28,7 @@ file|<openssl/x509v3.h>
 end_include
 
 begin_comment
-comment|/*For string_to_hex */
+comment|/* For string_to_hex */
 end_comment
 
 begin_include
@@ -68,7 +68,7 @@ file|"e_gost_err.h"
 end_include
 
 begin_comment
-comment|/*-------init, cleanup, copy - uniform for all algs  ---------------*/
+comment|/* -----init, cleanup, copy - uniform for all algs  ---------------*/
 end_comment
 
 begin_comment
@@ -1582,7 +1582,7 @@ name|siglen
 operator|=
 literal|64
 expr_stmt|;
-comment|/* better to check size of curve order*/
+comment|/* better to check size of curve order */
 return|return
 literal|1
 return|;
@@ -2404,6 +2404,9 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|keybuf
+operator|||
 name|keylen
 operator|!=
 literal|32
@@ -2585,7 +2588,7 @@ init|=
 operator|*
 name|siglen
 decl_stmt|;
-comment|/* for platforms where sizeof(int)!=sizeof(size_t)*/
+comment|/* for platforms where                                        * sizeof(int)!=sizeof(size_t) */
 name|int
 name|ret
 decl_stmt|;
@@ -2900,7 +2903,7 @@ return|return
 literal|1
 return|;
 default|default:
-comment|/*Unsupported method*/
+comment|/* Unsupported method */
 return|return
 literal|0
 return|;
@@ -2929,7 +2932,7 @@ argument_list|,
 name|pkey_gost_copy
 argument_list|)
 expr_stmt|;
-comment|/*FIXME derive etc...*/
+comment|/*      * FIXME derive etc...      */
 return|return
 literal|1
 return|;

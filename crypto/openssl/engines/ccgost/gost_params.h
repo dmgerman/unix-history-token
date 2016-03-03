@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**********************************************************************  *                        gost_params.h                               *  *             Copyright (c) 2005-2006 Cryptocom LTD                  *  *       This file is distributed under the same license as OpenSSL   *  *                                                                    *  *       Declaration of structures used to represent  GOST R 34.10    *  * 	               parameter sets, defined in RFC 4357                *  *         OpenSSL 0.9.9 libraries required to compile and use        *  *                              this code                             *  **********************************************************************/
+comment|/**********************************************************************  *                        gost_params.h                               *  *             Copyright (c) 2005-2006 Cryptocom LTD                  *  *       This file is distributed under the same license as OpenSSL   *  *                                                                    *  *       Declaration of structures used to represent  GOST R 34.10    *  *                     parameter sets, defined in RFC 4357                *  *         OpenSSL 0.9.9 libraries required to compile and use        *  *                              this code                             *  **********************************************************************/
 end_comment
 
 begin_ifndef

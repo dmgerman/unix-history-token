@@ -4,15 +4,15 @@ comment|/* ssl/s3_both.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ file|<openssl/x509.h>
 end_include
 
 begin_comment
-comment|/* send s->init_buf in records of type 'type' (SSL3_RT_HANDSHAKE or SSL3_RT_CHANGE_CIPHER_SPEC) */
+comment|/*  * send s->init_buf in records of type 'type' (SSL3_RT_HANDSHAKE or  * SSL3_RT_CHANGE_CIPHER_SPEC)  */
 end_comment
 
 begin_function
@@ -131,7 +131,7 @@ name|type
 operator|==
 name|SSL3_RT_HANDSHAKE
 condition|)
-comment|/* should not be done for 'Hello Request's, but in that case 		 * we'll ignore the result anyway */
+comment|/*          * should not be done for 'Hello Request's, but in that case we'll          * ignore the result anyway          */
 name|ssl3_finish_mac
 argument_list|(
 name|s
@@ -333,7 +333,7 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|==
+operator|<=
 literal|0
 condition|)
 return|return
@@ -372,7 +372,7 @@ name|l
 operator|=
 name|i
 expr_stmt|;
-comment|/* Copy the finished so we can use it for                    renegotiation checks */
+comment|/*          * Copy the finished so we can use it for renegotiation checks          */
 if|if
 condition|(
 name|s
@@ -457,7 +457,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_WIN16
-comment|/* MSVC 1.5 does not clear the top bytes of the word unless 		 * I do this. 		 */
+comment|/*          * MSVC 1.5 does not clear the top bytes of the word unless I do          * this.          */
 name|l
 operator|&=
 literal|0xffff
@@ -524,7 +524,7 @@ name|OPENSSL_NO_NEXTPROTONEG
 end_ifndef
 
 begin_comment
-comment|/* ssl3_take_mac calculates the Finished MAC for the handshakes messages seen to far. */
+comment|/*  * ssl3_take_mac calculates the Finished MAC for the handshakes messages seen  * to far.  */
 end_comment
 
 begin_function
@@ -545,7 +545,7 @@ decl_stmt|;
 name|int
 name|slen
 decl_stmt|;
-comment|/* If no new cipher setup return immediately: other functions will 	 * set the appropriate error. 	 */
+comment|/*      * If no new cipher setup return immediately: other functions will set      * the appropriate error.      */
 if|if
 condition|(
 name|s
@@ -684,9 +684,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_NEXTPROTONEG
-comment|/* the mac has already been generated when we received the 	 * change cipher spec message and is in s->s3->tmp.peer_finish_md. 	 */
+comment|/*      * the mac has already been generated when we received the change cipher      * spec message and is in s->s3->tmp.peer_finish_md.      */
 endif|#
 directive|endif
+comment|/* 64 argument should actually be 36+4 :-) */
 name|n
 operator|=
 name|s
@@ -705,7 +706,6 @@ name|SSL3_MT_FINISHED
 argument_list|,
 literal|64
 argument_list|,
-comment|/* should actually be 36+4 :-) */
 operator|&
 name|ok
 argument_list|)
@@ -835,7 +835,7 @@ goto|goto
 name|f_err
 goto|;
 block|}
-comment|/* Copy the finished so we can use it for            renegotiation checks */
+comment|/*      * Copy the finished so we can use it for renegotiation checks      */
 if|if
 condition|(
 name|s
@@ -942,7 +942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* for these 2 messages, we need to  * ssl->enc_read_ctx			re-init  * ssl->s3->read_sequence		zero  * ssl->s3->read_mac_secret		re-init  * ssl->session->read_sym_enc		assign  * ssl->session->read_compression	assign  * ssl->session->read_hash		assign  */
+comment|/*-  * for these 2 messages, we need to  * ssl->enc_read_ctx                    re-init  * ssl->s3->read_sequence               zero  * ssl->s3->read_mac_secret             re-init  * ssl->session->read_sym_enc           assign  * ssl->session->read_compression       assign  * ssl->session->read_hash              assign  */
 end_comment
 
 begin_function
@@ -1507,7 +1507,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Obtain handshake message of message type 'mt' (any if mt == -1),  * maximum acceptable body length 'max'.  * The first four bytes (msg_type and length) are read in state 'st1',  * the body is read in state 'stn'.  */
+comment|/*  * Obtain handshake message of message type 'mt' (any if mt == -1), maximum  * acceptable body length 'max'. The first four bytes (msg_type and length)  * are read in state 'st1', the body is read in state 'stn'.  */
 end_comment
 
 begin_function
@@ -1674,8 +1674,8 @@ name|state
 operator|==
 name|st1
 condition|)
-comment|/* s->init_num< 4 */
 block|{
+comment|/* s->init_num< 4 */
 name|int
 name|skip_message
 decl_stmt|;
@@ -1768,7 +1768,7 @@ index|]
 operator|==
 name|SSL3_MT_HELLO_REQUEST
 condition|)
-comment|/* The server may always send 'Hello Request' messages -- 					 * we are doing a handshake anyway now, so ignore them 					 * if their format is correct. Does not count for 					 * 'Finished' MAC. */
+comment|/*                      * The server may always send 'Hello Request' messages --                      * we are doing a handshake anyway now, so ignore them if                      * their format is correct. Does not count for 'Finished'                      * MAC.                      */
 if|if
 condition|(
 name|p
@@ -1899,7 +1899,7 @@ name|SSL3_ST_SR_CERT_B
 operator|)
 condition|)
 block|{
-comment|/* At this point we have got an MS SGC second client 			 * hello (maybe we should always allow the client to 			 * start a new handshake?). We need to restart the mac. 			 * Don't increment {num,total}_renegotiations because 			 * we have not completed the handshake. */
+comment|/*              * At this point we have got an MS SGC second client hello (maybe              * we should always allow the client to start a new handshake?).              * We need to restart the mac. Don't increment              * {num,total}_renegotiations because we have not completed the              * handshake.              */
 name|ssl3_init_finished_mac
 argument_list|(
 name|s
@@ -1963,8 +1963,8 @@ operator|-
 literal|4
 operator|)
 condition|)
-comment|/* BUF_MEM_grow takes an 'int' parameter */
 block|{
+comment|/* BUF_MEM_grow takes an 'int' parameter */
 name|al
 operator|=
 name|SSL_AD_ILLEGAL_PARAMETER
@@ -2135,7 +2135,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_NEXTPROTONEG
-comment|/* If receiving Finished, record MAC of prior handshake messages for 	 * Finished verification. */
+comment|/*      * If receiving Finished, record MAC of prior handshake messages for      * Finished verification.      */
 if|if
 condition|(
 operator|*
@@ -2579,7 +2579,7 @@ name|OPENSSL_NO_BUF_FREELISTS
 end_ifndef
 
 begin_comment
-comment|/* On some platforms, malloc() performance is bad enough that you can't just  * free() and malloc() buffers all the time, so we need to use freelists from  * unused buffers.  Currently, each freelist holds memory chunks of only a  * given size (list->chunklen); other sized chunks are freed and malloced.  * This doesn't help much if you're using many different SSL option settings  * with a given context.  (The options affecting buffer size are  * max_send_fragment, read buffer vs write buffer,  * SSL_OP_MICROSOFT_BIG_WRITE_BUFFER, SSL_OP_NO_COMPRESSION, and  * SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS.)  Using a separate freelist for every  * possible size is not an option, since max_send_fragment can take on many  * different values.  *  * If you are on a platform with a slow malloc(), and you're using SSL  * connections with many different settings for these options, and you need to  * use the SSL_MOD_RELEASE_BUFFERS feature, you have a few options:  *    - Link against a faster malloc implementation.  *    - Use a separate SSL_CTX for each option set.  *    - Improve this code.  */
+comment|/*-  * On some platforms, malloc() performance is bad enough that you can't just  * free() and malloc() buffers all the time, so we need to use freelists from  * unused buffers.  Currently, each freelist holds memory chunks of only a  * given size (list->chunklen); other sized chunks are freed and malloced.  * This doesn't help much if you're using many different SSL option settings  * with a given context.  (The options affecting buffer size are  * max_send_fragment, read buffer vs write buffer,  * SSL_OP_MICROSOFT_BIG_WRITE_BUFFER, SSL_OP_NO_COMPRESSION, and  * SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS.)  Using a separate freelist for every  * possible size is not an option, since max_send_fragment can take on many  * different values.  *  * If you are on a platform with a slow malloc(), and you're using SSL  * connections with many different settings for these options, and you need to  * use the SSL_MOD_RELEASE_BUFFERS feature, you have a few options:  *    - Link against a faster malloc implementation.  *    - Use a separate SSL_CTX for each option set.  *    - Improve this code.  */
 end_comment
 
 begin_function

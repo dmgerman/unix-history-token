@@ -4,11 +4,11 @@ comment|/* tasn_dec.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -326,6 +326,7 @@ literal|32
 index|]
 init|=
 block|{
+comment|/* tags  0 -  3 */
 literal|0
 block|,
 literal|0
@@ -334,7 +335,7 @@ literal|0
 block|,
 name|B_ASN1_BIT_STRING
 block|,
-comment|/* tags  0 -  3 */
+comment|/* tags  4- 7 */
 name|B_ASN1_OCTET_STRING
 block|,
 literal|0
@@ -343,17 +344,8 @@ literal|0
 block|,
 name|B_ASN1_UNKNOWN
 block|,
-comment|/* tags  4- 7 */
-name|B_ASN1_UNKNOWN
-block|,
-name|B_ASN1_UNKNOWN
-block|,
-name|B_ASN1_UNKNOWN
-block|,
-name|B_ASN1_UNKNOWN
-block|,
 comment|/* tags  8-11 */
-name|B_ASN1_UTF8STRING
+name|B_ASN1_UNKNOWN
 block|,
 name|B_ASN1_UNKNOWN
 block|,
@@ -362,6 +354,15 @@ block|,
 name|B_ASN1_UNKNOWN
 block|,
 comment|/* tags 12-15 */
+name|B_ASN1_UTF8STRING
+block|,
+name|B_ASN1_UNKNOWN
+block|,
+name|B_ASN1_UNKNOWN
+block|,
+name|B_ASN1_UNKNOWN
+block|,
+comment|/* tags 16-19 */
 name|B_ASN1_SEQUENCE
 block|,
 literal|0
@@ -370,26 +371,26 @@ name|B_ASN1_NUMERICSTRING
 block|,
 name|B_ASN1_PRINTABLESTRING
 block|,
-comment|/* tags 16-19 */
+comment|/* tags 20-22 */
 name|B_ASN1_T61STRING
 block|,
 name|B_ASN1_VIDEOTEXSTRING
 block|,
 name|B_ASN1_IA5STRING
 block|,
-comment|/* tags 20-22 */
+comment|/* tags 23-24 */
 name|B_ASN1_UTCTIME
 block|,
 name|B_ASN1_GENERALIZEDTIME
 block|,
-comment|/* tags 23-24 */
+comment|/* tags 25-27 */
 name|B_ASN1_GRAPHICSTRING
 block|,
 name|B_ASN1_ISO64STRING
 block|,
 name|B_ASN1_GENERALSTRING
 block|,
-comment|/* tags 25-27 */
+comment|/* tags 28-31 */
 name|B_ASN1_UNIVERSALSTRING
 block|,
 name|B_ASN1_UNKNOWN
@@ -397,9 +398,7 @@ block|,
 name|B_ASN1_BMPSTRING
 block|,
 name|B_ASN1_UNKNOWN
-block|,
-comment|/* tags 28-31 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -467,7 +466,7 @@ value|(c)->valid = 0
 end_define
 
 begin_comment
-comment|/* Decode an ASN1 item, this currently behaves just   * like a standard 'd2i' function. 'in' points to   * a buffer to read the data from, in future we will  * have more advanced versions that can input data  * a piece at a time and this will simply be a special  * case.  */
+comment|/*  * Decode an ASN1 item, this currently behaves just like a standard 'd2i'  * function. 'in' points to a buffer to read the data from, in future we  * will have more advanced versions that can input data a piece at a time and  * this will simply be a special case.  */
 end_comment
 
 begin_function
@@ -611,7 +610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Decode an item, taking care of IMPLICIT tagging, if any.  * If 'opt' set and tag mismatch return -1 to handle OPTIONAL  */
+comment|/*  * Decode an item, taking care of IMPLICIT tagging, if any. If 'opt' set and  * tag mismatch return -1 to handle OPTIONAL  */
 end_comment
 
 begin_function
@@ -703,7 +702,7 @@ name|wp
 init|=
 name|NULL
 decl_stmt|;
-comment|/* BIG FAT WARNING!  BREAKS CONST WHERE USED */
+comment|/* BIG FAT WARNING! BREAKS CONST WHERE USED */
 name|unsigned
 name|char
 name|imphack
@@ -799,7 +798,7 @@ operator|->
 name|templates
 condition|)
 block|{
-comment|/* tagging or OPTIONAL is currently illegal on an item 			 * template because the flags can't get passed down. 			 * In practice this isn't a problem: we include the 			 * relevant flags from the item template in the 			 * template itself. 			 */
+comment|/*              * tagging or OPTIONAL is currently illegal on an item template              * because the flags can't get passed down. In practice this              * isn't a problem: we include the relevant flags from the item              * template in the template itself.              */
 if|if
 condition|(
 operator|(
@@ -1078,7 +1077,7 @@ name|exptag
 operator|=
 name|tag
 expr_stmt|;
-comment|/* Don't care about anything other than presence 			 * of expected tag */
+comment|/*              * Don't care about anything other than presence of expected tag              */
 name|ret
 operator|=
 name|asn1_check_tlen
@@ -1136,7 +1135,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* This is the old style evil hack IMPLICIT handling: 		 * since the underlying code is expecting a tag and 		 * class other than the one present we change the 		 * buffer temporarily then change it back afterwards. 		 * This doesn't and never did work for tags> 30. 		 * 		 * Yes this is *horrible* but it is only needed for 		 * old style d2i which will hopefully not be around 		 * for much longer. 		 * FIXME: should copy the buffer then modify it so 		 * the input buffer can be const: we should *always* 		 * copy because the old style d2i might modify the 		 * buffer. 		 */
+comment|/*          * This is the old style evil hack IMPLICIT handling: since the          * underlying code is expecting a tag and class other than the one          * present we change the buffer temporarily then change it back          * afterwards. This doesn't and never did work for tags> 30. Yes          * this is *horrible* but it is only needed for old style d2i which          * will hopefully not be around for much longer. FIXME: should copy          * the buffer then modify it so the input buffer can be const: we          * should *always* copy because the old style d2i might modify the          * buffer.          */
 if|if
 condition|(
 name|tag
@@ -1396,7 +1395,7 @@ argument_list|,
 name|tt
 argument_list|)
 expr_stmt|;
-comment|/* We mark field as OPTIONAL so its absence 			 * can be recognised. 			 */
+comment|/*              * We mark field as OPTIONAL so its absence can be recognised.              */
 name|ret
 operator|=
 name|asn1_template_ex_d2i
@@ -1908,7 +1907,7 @@ name|p
 expr_stmt|;
 break|break;
 block|}
-comment|/* This determines the OPTIONAL flag value. The field 			 * cannot be omitted if it is the last of a SEQUENCE 			 * and there is still data to be read. This isn't 			 * strictly necessary but it increases efficiency in 			 * some cases. 			 */
+comment|/*              * This determines the OPTIONAL flag value. The field cannot be              * omitted if it is the last of a SEQUENCE and there is still              * data to be read. This isn't strictly necessary but it              * increases efficiency in some cases.              */
 if|if
 condition|(
 name|i
@@ -1939,7 +1938,7 @@ operator|&
 name|ASN1_TFLG_OPTIONAL
 argument_list|)
 expr_stmt|;
-comment|/* attempt to read in field, allowing each to be 			 * OPTIONAL */
+comment|/*              * attempt to read in field, allowing each to be OPTIONAL              */
 name|ret
 operator|=
 name|asn1_template_ex_d2i
@@ -1981,7 +1980,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* OPTIONAL component absent. 				 * Free and zero the field. 				 */
+comment|/*                  * OPTIONAL component absent. Free and zero the field.                  */
 name|ASN1_template_free
 argument_list|(
 name|pseqval
@@ -2045,7 +2044,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* If we get here we've got no more data in the SEQUENCE, 		 * however we may not have read all fields so check all 		 * remaining are OPTIONAL and clear any that are. 		 */
+comment|/*          * If we get here we've got no more data in the SEQUENCE, however we          * may not have read all fields so check all remaining are OPTIONAL          * and clear any that are.          */
 for|for
 control|(
 init|;
@@ -2253,7 +2252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Templates are handled with two separate functions.  * One handles any EXPLICIT tag and the other handles the rest.  */
+comment|/*  * Templates are handled with two separate functions. One handles any  * EXPLICIT tag and the other handles the rest.  */
 end_comment
 
 begin_function
@@ -2348,7 +2347,7 @@ block|{
 name|char
 name|cst
 decl_stmt|;
-comment|/* Need to work out amount of data available to the inner 		 * content and where it starts: so read in EXPLICIT header to 		 * get the info. 		 */
+comment|/*          * Need to work out amount of data available to the inner content and          * where it starts: so read in EXPLICIT header to get the info.          */
 name|ret
 operator|=
 name|asn1_check_tlen
@@ -2507,7 +2506,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Otherwise we must hit the EXPLICIT tag end or its 			 * an error */
+comment|/*              * Otherwise we must hit the EXPLICIT tag end or its an error              */
 if|if
 condition|(
 name|len
@@ -2780,7 +2779,7 @@ argument_list|()
 expr_stmt|;
 else|else
 block|{
-comment|/* We've got a valid STACK: free up any items present */
+comment|/*              * We've got a valid STACK: free up any items present              */
 name|STACK_OF
 argument_list|(
 name|ASN1_VALUE
@@ -3506,7 +3505,7 @@ name|V_ASN1_OTHER
 operator|)
 condition|)
 block|{
-comment|/* Clear context cache for type OTHER because the auto clear 		 * when we have a exact match wont work 		 */
+comment|/*          * Clear context cache for type OTHER because the auto clear when we          * have a exact match wont work          */
 if|if
 condition|(
 name|utype
@@ -3653,7 +3652,7 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Should really check the internal tags are correct but 		 * some things may get this wrong. The relevant specs 		 * say that constructed string types should be OCTET STRINGs 		 * internally irrespective of the type. So instead just check 		 * for UNIVERSAL class and ignore the tag. 		 */
+comment|/*          * Should really check the internal tags are correct but some things          * may get this wrong. The relevant specs say that constructed string          * types should be OCTET STRINGs internally irrespective of the type.          * So instead just check for UNIVERSAL class and ignore the tag.          */
 if|if
 condition|(
 operator|!
@@ -4477,7 +4476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function finds the end of an ASN1 structure when passed its maximum  * length, whether it is indefinite length and a pointer to the content.  * This is more efficient than calling asn1_collect because it does not  * recurse on each indefinite length header.  */
+comment|/*  * This function finds the end of an ASN1 structure when passed its maximum  * length, whether it is indefinite length and a pointer to the content. This  * is more efficient than calling asn1_collect because it does not recurse on  * each indefinite length header.  */
 end_comment
 
 begin_function
@@ -4538,7 +4537,7 @@ name|expected_eoc
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Indefinite length constructed form. Find the end when enough EOCs 	 * are found. If more indefinite length constructed headers 	 * are encountered increment the expected eoc count otherwise just 	 * skip to the end of the data. 	 */
+comment|/*      * Indefinite length constructed form. Find the end when enough EOCs are      * found. If more indefinite length constructed headers are encountered      * increment the expected eoc count otherwise just skip to the end of the      * data.      */
 while|while
 condition|(
 name|len
@@ -4669,7 +4668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function collects the asn1 data from a constructred string  * type into a buffer. The values of 'in' and 'len' should refer  * to the contents of the constructed type and 'inf' should be set  * if it is indefinite length.  */
+comment|/*  * This function collects the asn1 data from a constructred string type into  * a buffer. The values of 'in' and 'len' should refer to the contents of the  * constructed type and 'inf' should be set if it is indefinite length.  */
 end_comment
 
 begin_ifndef
@@ -4679,7 +4678,7 @@ name|ASN1_MAX_STRING_NEST
 end_ifndef
 
 begin_comment
-comment|/* This determines how many levels of recursion are permitted in ASN1  * string types. If it is not limited stack overflows can occur. If set  * to zero no recursion is allowed at all. Although zero should be adequate  * examples exist that require a value of 1. So 5 should be more than enough.  */
+comment|/*  * This determines how many levels of recursion are permitted in ASN1 string  * types. If it is not limited stack overflows can occur. If set to zero no  * recursion is allowed at all. Although zero should be adequate examples  * exist that require a value of 1. So 5 should be more than enough.  */
 end_comment
 
 begin_define
@@ -4752,7 +4751,7 @@ name|inf
 operator|&=
 literal|1
 expr_stmt|;
-comment|/* If no buffer and not indefinite length constructed just pass over 	 * the encoded data */
+comment|/*      * If no buffer and not indefinite length constructed just pass over the      * encoded data      */
 if|if
 condition|(
 operator|!
@@ -4794,7 +4793,7 @@ name|len
 argument_list|)
 condition|)
 block|{
-comment|/* EOC is illegal outside indefinite length 			 * constructed form */
+comment|/*              * EOC is illegal outside indefinite length constructed form              */
 if|if
 condition|(
 operator|!
@@ -5121,7 +5120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check an ASN1 tag and length: a bit like ASN1_get_object  * but it sets the length for indefinite length constructed  * form, we don't know the exact length but we can set an  * upper bound to the amount of data available minus the  * header length just read.  */
+comment|/*  * Check an ASN1 tag and length: a bit like ASN1_get_object but it sets the  * length for indefinite length constructed form, we don't know the exact  * length but we can set an upper bound to the amount of data available minus  * the header length just read.  */
 end_comment
 
 begin_function
@@ -5307,7 +5306,7 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If definite length, and no error, length + 			 * header can't exceed total amount of data available.  			 */
+comment|/*              * If definite length, and no error, length + header can't exceed              * total amount of data available.              */
 if|if
 condition|(
 operator|!
@@ -5393,7 +5392,7 @@ name|pclass
 operator|)
 condition|)
 block|{
-comment|/* If type is OPTIONAL, not an error: 			 * indicate missing type. 			 */
+comment|/*              * If type is OPTIONAL, not an error: indicate missing type.              */
 if|if
 condition|(
 name|opt
@@ -5418,7 +5417,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* We have a tag and class match: 		 * assume we are going to do something with it */
+comment|/*          * We have a tag and class match: assume we are going to do something          * with it          */
 name|asn1_tlc_clear
 argument_list|(
 name|ctx

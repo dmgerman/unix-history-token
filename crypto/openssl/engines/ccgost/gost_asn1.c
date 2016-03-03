@@ -216,7 +216,7 @@ name|GOST_CLIENT_KEY_EXCHANGE_PARAMS
 argument_list|)
 operator|=
 block|{
-comment|/*FIXME incomplete*/
+comment|/* FIXME incomplete */
 name|ASN1_SIMPLE
 argument_list|(
 argument|GOST_CLIENT_KEY_EXCHANGE_PARAMS

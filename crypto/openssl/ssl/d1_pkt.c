@@ -4,15 +4,15 @@ comment|/* ssl/d1_pkt.c */
 end_comment
 
 begin_comment
-comment|/*   * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.    */
+comment|/*  * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ name|little
 condition|)
 break|break;
 comment|/* not reached on little-endians */
-comment|/* following test is redundant, because input is 		 * always aligned, but I take no chances... */
+comment|/*              * following test is redundant, because input is always aligned,              * but I take no chances...              */
 if|if
 condition|(
 operator|(
@@ -445,7 +445,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int dtls1_record_needs_buffering(SSL *s, SSL3_RECORD *rr, 	unsigned short *priority, unsigned long *offset);
+unit|static int dtls1_record_needs_buffering(SSL *s, SSL3_RECORD *rr,                                         unsigned short *priority,                                         unsigned long *offset);
 endif|#
 directive|endif
 end_endif
@@ -740,9 +740,8 @@ name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+operator|-
+literal|1
 return|;
 block|}
 name|rdata
@@ -1103,7 +1102,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* retrieve a buffered record that belongs to the new epoch, i.e., not processed   * yet */
+comment|/*  * retrieve a buffered record that belongs to the new epoch, i.e., not  * processed yet  */
 end_comment
 
 begin_define
@@ -1118,7 +1117,7 @@ value|dtls1_retrieve_buffered_record((s), \&((s)->d1->unprocessed_rcds))
 end_define
 
 begin_comment
-comment|/* retrieve a buffered record that belongs to the current epoch, ie, processed */
+comment|/*  * retrieve a buffered record that belongs to the current epoch, ie,  * processed  */
 end_comment
 
 begin_define
@@ -1252,7 +1251,7 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* sync epoch numbers once all the unprocessed records       * have been processed */
+comment|/*      * sync epoch numbers once all the unprocessed records have been      * processed      */
 name|s
 operator|->
 name|d1
@@ -1298,22 +1297,22 @@ literal|0
 end_if
 
 begin_comment
-unit|static int dtls1_get_buffered_record(SSL *s) 	{ 	pitem *item; 	PQ_64BIT priority =  		(((PQ_64BIT)s->d1->handshake_read_seq)<< 32) |  		((PQ_64BIT)s->d1->r_msg_hdr.frag_off); 	 	if ( ! SSL_in_init(s))
-comment|/* if we're not (re)negotiating,  							   nothing buffered */
+unit|static int dtls1_get_buffered_record(SSL *s) {     pitem *item;     PQ_64BIT priority =         (((PQ_64BIT) s->d1->handshake_read_seq)<< 32) |         ((PQ_64BIT) s->d1->r_msg_hdr.frag_off);
+comment|/* if we're not (re)negotiating, nothing buffered */
 end_comment
 
 begin_comment
-unit|return 0;   	item = pqueue_peek(s->d1->rcvd_records); 	if (item&& item->priority == priority) 		{
-comment|/* Check if we've received the record of interest.  It must be 		 * a handshake record, since data records as passed up without 		 * buffering */
+unit|if (!SSL_in_init(s))         return 0;      item = pqueue_peek(s->d1->rcvd_records);     if (item&& item->priority == priority) {
+comment|/*          * Check if we've received the record of interest.  It must be a          * handshake record, since data records as passed up without          * buffering          */
 end_comment
 
 begin_comment
-unit|DTLS1_RECORD_DATA *rdata; 		item = pqueue_pop(s->d1->rcvd_records); 		rdata = (DTLS1_RECORD_DATA *)item->data; 		 		if (s->s3->rbuf.buf != NULL) 			OPENSSL_free(s->s3->rbuf.buf); 		 		s->packet = rdata->packet; 		s->packet_length = rdata->packet_length; 		memcpy(&(s->s3->rbuf),&(rdata->rbuf), sizeof(SSL3_BUFFER)); 		memcpy(&(s->s3->rrec),&(rdata->rrec), sizeof(SSL3_RECORD)); 		 		OPENSSL_free(item->data); 		pitem_free(item);
+unit|DTLS1_RECORD_DATA *rdata;         item = pqueue_pop(s->d1->rcvd_records);         rdata = (DTLS1_RECORD_DATA *)item->data;          if (s->s3->rbuf.buf != NULL)             OPENSSL_free(s->s3->rbuf.buf);          s->packet = rdata->packet;         s->packet_length = rdata->packet_length;         memcpy(&(s->s3->rbuf),&(rdata->rbuf), sizeof(SSL3_BUFFER));         memcpy(&(s->s3->rrec),&(rdata->rrec), sizeof(SSL3_RECORD));          OPENSSL_free(item->data);         pitem_free(item);
 comment|/* s->d1->next_expected_seq_num++; */
 end_comment
 
 begin_endif
-unit|return(1); 		} 	 	return 0; 	}
+unit|return (1);     }      return 0; }
 endif|#
 directive|endif
 end_endif
@@ -1374,7 +1373,7 @@ name|s
 operator|->
 name|session
 expr_stmt|;
-comment|/* At this point, s->packet_length == SSL3_RT_HEADER_LNGTH + rr->length, 	 * and we have that many bytes in s->packet 	 */
+comment|/*      * At this point, s->packet_length == SSL3_RT_HEADER_LNGTH + rr->length,      * and we have that many bytes in s->packet      */
 name|rr
 operator|->
 name|input
@@ -1389,8 +1388,8 @@ name|DTLS1_RT_HEADER_LENGTH
 index|]
 operator|)
 expr_stmt|;
-comment|/* ok, we can now read from 's->packet' data into 'rr' 	 * rr->input points at rr->length bytes, which 	 * need to be copied into rr->data by either 	 * the decryption or by the decompression 	 * When the data is 'copied' into the rr->data buffer, 	 * rr->input will be pointed at the new buffer */
-comment|/* We now have - encrypted [ MAC [ compressed [ plain ] ] ] 	 * rr->length bytes of encrypted compressed stuff. */
+comment|/*      * ok, we can now read from 's->packet' data into 'rr' rr->input points      * at rr->length bytes, which need to be copied into rr->data by either      * the decryption or by the decompression When the data is 'copied' into      * the rr->data buffer, rr->input will be pointed at the new buffer      */
+comment|/*      * We now have - encrypted [ MAC [ compressed [ plain ] ] ] rr->length      * bytes of encrypted compressed stuff.      */
 comment|/* check is not needed I believe */
 if|if
 condition|(
@@ -1440,7 +1439,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* enc_err is: 	 *    0: (in non-constant time) if the record is publically invalid. 	 *    1: if the padding is valid 	 *    -1: if the padding is invalid */
+comment|/*-      * enc_err is:      *    0: (in non-constant time) if the record is publically invalid.      *    1: if the padding is valid      *   -1: if the padding is invalid      */
 if|if
 condition|(
 name|enc_err
@@ -1591,7 +1590,7 @@ operator|<=
 name|EVP_MAX_MD_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* kludge: *_cbc_remove_padding passes padding length in rr->type */
+comment|/*          * kludge: *_cbc_remove_padding passes padding length in rr->type          */
 name|orig_len
 operator|=
 name|rr
@@ -1610,7 +1609,7 @@ operator|>>
 literal|8
 operator|)
 expr_stmt|;
-comment|/* orig_len is the length of the record before any padding was 		 * removed. This is public information, as is the MAC in use, 		 * therefore we can safely process the record in a different 		 * amount of time if it's too short to possibly contain a MAC. 		 */
+comment|/*          * orig_len is the length of the record before any padding was          * removed. This is public information, as is the MAC in use,          * therefore we can safely process the record in a different amount          * of time if it's too short to possibly contain a MAC.          */
 if|if
 condition|(
 name|orig_len
@@ -1663,7 +1662,7 @@ operator|==
 name|EVP_CIPH_CBC_MODE
 condition|)
 block|{
-comment|/* We update the length so that the TLS header bytes 			 * can be constructed correctly but we need to extract 			 * the MAC in constant time from within the record, 			 * without leaking the contents of the padding bytes. 			 * */
+comment|/*              * We update the length so that the TLS header bytes can be              * constructed correctly but we need to extract the MAC in              * constant time from within the record, without leaking the              * contents of the padding bytes.              */
 name|mac
 operator|=
 name|mac_tmp
@@ -1688,7 +1687,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* In this case there's no padding, so |orig_len| 			 * equals |rec->length| and we checked that there's 			 * enough bytes for |mac_size| above. */
+comment|/*              * In this case there's no padding, so |orig_len| equals              * |rec->length| and we checked that there's enough bytes for              * |mac_size| above.              */
 name|rr
 operator|->
 name|length
@@ -1884,7 +1883,7 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
-comment|/* So at this point the following is true 	 * ssl->s3->rrec.type 	is the type of record 	 * ssl->s3->rrec.length	== number of bytes in record 	 * ssl->s3->rrec.off	== offset to first valid byte 	 * ssl->s3->rrec.data	== where to take bytes from, increment 	 *			   after use :-). 	 */
+comment|/*-      * So at this point the following is true      * ssl->s3->rrec.type   is the type of record      * ssl->s3->rrec.length == number of bytes in record      * ssl->s3->rrec.off    == offset to first valid byte      * ssl->s3->rrec.data   == where to take bytes from, increment      *                         after use :-).      */
 comment|/* we have pulled in a full packet so zero things */
 name|s
 operator|->
@@ -1919,7 +1918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Call this to get a new input record.  * It will return<= 0 if more data is needed, normally due to an error  * or non-blocking IO.  * When it finishes, one packet has been decoded and can be found in  * ssl->s3->rrec.type    - is the type of record  * ssl->s3->rrec.data, 	 - data  * ssl->s3->rrec.length, - number of bytes  */
+comment|/*-  * Call this to get a new input record.  * It will return<= 0 if more data is needed, normally due to an error  * or non-blocking IO.  * When it finishes, one packet has been decoded and can be found in  * ssl->s3->rrec.type    - is the type of record  * ssl->s3->rrec.data,   - data  * ssl->s3->rrec.length, - number of bytes  */
 end_comment
 
 begin_comment
@@ -1979,7 +1978,7 @@ operator|->
 name|rrec
 operator|)
 expr_stmt|;
-comment|/* The epoch may have changed.  If so, process all the 	 * pending records.  This is a non-blocking operation. */
+comment|/*      * The epoch may have changed.  If so, process all the pending records.      * This is a non-blocking operation.      */
 if|if
 condition|(
 name|dtls1_process_buffered_records
@@ -2326,7 +2325,7 @@ goto|goto
 name|again
 goto|;
 block|}
-comment|/* now n == rr->length, 		 * and s->packet_length == DTLS1_RT_HEADER_LENGTH + rr->length */
+comment|/*          * now n == rr->length, and s->packet_length ==          * DTLS1_RT_HEADER_LENGTH + rr->length          */
 block|}
 name|s
 operator|->
@@ -2391,7 +2390,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-comment|/* Check whether this is a repeat, or aged record. 		 * Don't check if we're listening and this message is 		 * a ClientHello. They can look as if they're replayed, 		 * since they arrive from different connections and 		 * would be dropped unnecessarily. 		 */
+comment|/*          * Check whether this is a repeat, or aged record. Don't check if          * we're listening and this message is a ClientHello. They can look          * as if they're replayed, since they arrive from different          * connections and would be dropped unnecessarily.          */
 if|if
 condition|(
 operator|!
@@ -2469,7 +2468,7 @@ condition|)
 goto|goto
 name|again
 goto|;
-comment|/* If this record is from the next epoch (either HM or ALERT), 	 * and a handshake is currently in progress, buffer it since it 	 * cannot be processed at this time. However, do not buffer 	 * anything while listening. 	 */
+comment|/*      * If this record is from the next epoch (either HM or ALERT), and a      * handshake is currently in progress, buffer it since it cannot be      * processed at this time. However, do not buffer anything while      * listening.      */
 if|if
 condition|(
 name|is_next_epoch
@@ -2522,6 +2521,7 @@ return|return
 operator|-
 literal|1
 return|;
+comment|/* Mark receipt of record. */
 name|dtls1_record_bitmap_update
 argument_list|(
 name|s
@@ -2529,7 +2529,6 @@ argument_list|,
 name|bitmap
 argument_list|)
 expr_stmt|;
-comment|/* Mark receipt of record. */
 block|}
 name|rr
 operator|->
@@ -2591,7 +2590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return up to 'len' payload bytes received in 'type' records.  * 'type' is one of the following:  *  *   -  SSL3_RT_HANDSHAKE (when ssl3_get_message calls us)  *   -  SSL3_RT_APPLICATION_DATA (when ssl3_read calls us)  *   -  0 (during a shutdown, no data has to be returned)  *  * If we don't have stored data to work from, read a SSL/TLS record first  * (possibly multiple records if we still don't have anything to return).  *  * This function must handle any surprises the peer may have for us, such as  * Alert records (e.g. close_notify), ChangeCipherSpec records (not really  * a surprise, but handled as if it were), or renegotiation requests.  * Also if record payloads contain fragments too small to process, we store  * them until there is enough for the respective protocol (the record protocol  * may use arbitrary fragmentation and even interleaving):  *     Change cipher spec protocol  *             just 1 byte needed, no need for keeping anything stored  *     Alert protocol  *             2 bytes needed (AlertLevel, AlertDescription)  *     Handshake protocol  *             4 bytes needed (HandshakeType, uint24 length) -- we just have  *             to detect unexpected Client Hello and Hello Request messages  *             here, anything else is handled by higher layers  *     Application data protocol  *             none of our business  */
+comment|/*-  * Return up to 'len' payload bytes received in 'type' records.  * 'type' is one of the following:  *  *   -  SSL3_RT_HANDSHAKE (when ssl3_get_message calls us)  *   -  SSL3_RT_APPLICATION_DATA (when ssl3_read calls us)  *   -  0 (during a shutdown, no data has to be returned)  *  * If we don't have stored data to work from, read a SSL/TLS record first  * (possibly multiple records if we still don't have anything to return).  *  * This function must handle any surprises the peer may have for us, such as  * Alert records (e.g. close_notify), ChangeCipherSpec records (not really  * a surprise, but handled as if it were), or renegotiation requests.  * Also if record payloads contain fragments too small to process, we store  * them until there is enough for the respective protocol (the record protocol  * may use arbitrary fragmentation and even interleaving):  *     Change cipher spec protocol  *             just 1 byte needed, no need for keeping anything stored  *     Alert protocol  *             2 bytes needed (AlertLevel, AlertDescription)  *     Handshake protocol  *             4 bytes needed (HandshakeType, uint24 length) -- we just have  *             to detect unexpected Client Hello and Hello Request messages  *             here, anything else is handled by higher layers  *     Application data protocol  *             none of our business  */
 end_comment
 
 begin_function
@@ -2725,7 +2724,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* check whether there's a handshake message (client hello?) waiting */
+comment|/*      * check whether there's a handshake message (client hello?) waiting      */
 if|if
 condition|(
 operator|(
@@ -2748,11 +2747,11 @@ condition|)
 return|return
 name|ret
 return|;
-comment|/* Now s->d1->handshake_fragment_len == 0 if type == SSL3_RT_HANDSHAKE. */
+comment|/*      * Now s->d1->handshake_fragment_len == 0 if type == SSL3_RT_HANDSHAKE.      */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Continue handshake if it had to be interrupted to read 	 * app data with SCTP. 	 */
+comment|/*      * Continue handshake if it had to be interrupted to read app data with      * SCTP.      */
 if|if
 condition|(
 operator|(
@@ -2867,7 +2866,7 @@ name|rwstate
 operator|=
 name|SSL_NOTHING
 expr_stmt|;
-comment|/* s->s3->rrec.type	    - is the type of record 	 * s->s3->rrec.data,    - data 	 * s->s3->rrec.off,     - offset into 'data' for next read 	 * s->s3->rrec.length,  - number of bytes. */
+comment|/*-      * s->s3->rrec.type         - is the type of record      * s->s3->rrec.data,    - data      * s->s3->rrec.off,     - offset into 'data' for next read      * s->s3->rrec.length,  - number of bytes.      */
 name|rr
 operator|=
 operator|&
@@ -2879,7 +2878,7 @@ operator|->
 name|rrec
 operator|)
 expr_stmt|;
-comment|/* We are not handshaking and have no data yet, 	 * so process data buffered during the last handshake 	 * in advance, if any. 	 */
+comment|/*      * We are not handshaking and have no data yet, so process data buffered      * during the last handshake in advance, if any.      */
 if|if
 condition|(
 name|s
@@ -3097,7 +3096,7 @@ operator|->
 name|s3
 operator|->
 name|change_cipher_spec
-comment|/* set when we receive ChangeCipherSpec, 	                               * reset by ssl3_get_finished */
+comment|/* set when we receive ChangeCipherSpec,                                    * reset by ssl3_get_finished */
 operator|&&
 operator|(
 name|rr
@@ -3108,7 +3107,7 @@ name|SSL3_RT_HANDSHAKE
 operator|)
 condition|)
 block|{
-comment|/* We now have application data between CCS and Finished. 		 * Most likely the packets were reordered on their way, so 		 * buffer the application data for later processing rather 		 * than dropping the connection. 		 */
+comment|/*          * We now have application data between CCS and Finished. Most likely          * the packets were reordered on their way, so buffer the application          * data for later processing rather than dropping the connection.          */
 if|if
 condition|(
 name|dtls1_buffer_record
@@ -3154,7 +3153,7 @@ goto|goto
 name|start
 goto|;
 block|}
-comment|/* If the other end has shut down, throw anything we read away 	 * (even in 'peek' mode) */
+comment|/*      * If the other end has shut down, throw anything we read away (even in      * 'peek' mode)      */
 if|if
 condition|(
 name|s
@@ -3190,9 +3189,9 @@ name|rr
 operator|->
 name|type
 condition|)
-comment|/* SSL3_RT_APPLICATION_DATA or SSL3_RT_HANDSHAKE */
 block|{
-comment|/* make sure that we are not getting application data when we 		 * are doing a handshake for the first time */
+comment|/* SSL3_RT_APPLICATION_DATA or                                  * SSL3_RT_HANDSHAKE */
+comment|/*          * make sure that we are not getting application data when we are          * doing a handshake for the first time          */
 if|if
 condition|(
 name|SSL_in_init
@@ -3331,7 +3330,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* We were about to renegotiate but had to read 			 * belated application data first, so retry. 			 */
+comment|/*          * We were about to renegotiate but had to read belated application          * data first, so retry.          */
 if|if
 condition|(
 name|BIO_dgram_is_sctp
@@ -3386,7 +3385,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We might had to delay a close_notify alert because 			 * of reordered app data. If there was an alert and there 			 * is no message to read anymore, finally set shutdown. 			 */
+comment|/*          * We might had to delay a close_notify alert because of reordered          * app data. If there was an alert and there is no message to read          * anymore, finally set shutdown.          */
 if|if
 condition|(
 name|BIO_dgram_is_sctp
@@ -3433,8 +3432,8 @@ name|n
 operator|)
 return|;
 block|}
-comment|/* If we get here, then type != rr->type; if we have a handshake 	 * message, then it was unexpected (Hello Request or Client Hello). */
-comment|/* In case of record types for which we have 'fragment' storage, 	 * fill that so that we can process the data at a fixed place. 	 */
+comment|/*      * If we get here, then type != rr->type; if we have a handshake message,      * then it was unexpected (Hello Request or Client Hello).      */
+comment|/*      * In case of record types for which we have 'fragment' storage, fill      * that so that we can process the data at a fixed place.      */
 block|{
 name|unsigned
 name|int
@@ -3600,7 +3599,7 @@ operator|!=
 name|SSL3_RT_CHANGE_CIPHER_SPEC
 condition|)
 block|{
-comment|/* Application data while renegotiating 			 * is allowed. Try again reading. 			 */
+comment|/*              * Application data while renegotiating is allowed. Try again              * reading.              */
 if|if
 condition|(
 name|rr
@@ -3675,7 +3674,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* XDTLS:  In a pathalogical case, the Client Hello              *  may be fragmented--don't always expect dest_maxlen bytes */
+comment|/*              * XDTLS: In a pathalogical case, the Client Hello may be              * fragmented--don't always expect dest_maxlen bytes              */
 if|if
 condition|(
 name|rr
@@ -3688,7 +3687,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
-comment|/* 				 * for normal alerts rr->length is 2, while 				 * dest_maxlen is 7 if we were to handle this 				 * non-existing alert... 				 */
+comment|/*                  * for normal alerts rr->length is 2, while                  * dest_maxlen is 7 if we were to handle this                  * non-existing alert...                  */
 name|FIX
 name|ME
 endif|#
@@ -3752,7 +3751,7 @@ name|dest_maxlen
 expr_stmt|;
 block|}
 block|}
-comment|/* s->d1->handshake_fragment_len == 12  iff  rr->type == SSL3_RT_HANDSHAKE; 	 * s->d1->alert_fragment_len == 7      iff  rr->type == SSL3_RT_ALERT. 	 * (Possibly rr is 'empty' now, i.e. rr->length may be 0.) */
+comment|/*-      * s->d1->handshake_fragment_len == 12  iff  rr->type == SSL3_RT_HANDSHAKE;      * s->d1->alert_fragment_len == 7      iff  rr->type == SSL3_RT_ALERT.      * (Possibly rr is 'empty' now, i.e. rr->length may be 0.)      */
 comment|/* If we are a client, check for an incoming 'Hello Request': */
 if|if
 condition|(
@@ -3870,7 +3869,7 @@ goto|goto
 name|f_err
 goto|;
 block|}
-comment|/* no need to check sequence number on HELLO REQUEST messages */
+comment|/*          * no need to check sequence number on HELLO REQUEST messages          */
 if|if
 condition|(
 name|s
@@ -4021,13 +4020,13 @@ name|left
 operator|==
 literal|0
 condition|)
-comment|/* no read-ahead left? */
 block|{
+comment|/* no read-ahead left? */
 name|BIO
 modifier|*
 name|bio
 decl_stmt|;
-comment|/* In the case where we try to read application data, 						 * but we trigger an SSL handshake, we return -1 with 						 * the retry option set.  Otherwise renegotiation may 						 * cause nasty problems in the blocking world */
+comment|/*                          * In the case where we try to read application data,                          * but we trigger an SSL handshake, we return -1 with                          * the retry option set.  Otherwise renegotiation may                          * cause nasty problems in the blocking world                          */
 name|s
 operator|->
 name|rwstate
@@ -4061,7 +4060,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* we either finished a handshake or ignored the request, 		 * now try again to obtain the (application) data we were asked for */
+comment|/*          * we either finished a handshake or ignored the request, now try          * again to obtain the (application) data we were asked for          */
 goto|goto
 name|start
 goto|;
@@ -4206,9 +4205,8 @@ if|if
 condition|(
 name|alert_level
 operator|==
-literal|1
+name|SSL3_AL_WARNING
 condition|)
-comment|/* warning */
 block|{
 name|s
 operator|->
@@ -4228,7 +4226,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* With SCTP and streams the socket may deliver app data 				 * after a close_notify alert. We have to check this 				 * first so that nothing gets discarded. 				 */
+comment|/*                  * With SCTP and streams the socket may deliver app data                  * after a close_notify alert. We have to check this first so                  * that nothing gets discarded.                  */
 if|if
 condition|(
 name|BIO_dgram_is_sctp
@@ -4302,10 +4300,10 @@ directive|if
 literal|0
 comment|/* XXX: this is a possible improvement in the future */
 comment|/* now check if it's a missing record */
-block|if (alert_descr == DTLS1_AD_MISSING_HANDSHAKE_MESSAGE) 				{ 				unsigned short seq; 				unsigned int frag_off; 				unsigned char *p =&(s->d1->alert_fragment[2]);  				n2s(p, seq); 				n2l3(p, frag_off);  				dtls1_retransmit_message(s, 										 dtls1_get_queue_priority(frag->msg_header.seq, 0), 										 frag_off,&found); 				if ( ! found&& SSL_in_init(s)) 					{
-comment|/* fprintf( stderr,"in init = %d\n", SSL_in_init(s)); */
-comment|/* requested a message not yet sent,  					   send an alert ourselves */
-block|ssl3_send_alert(s,SSL3_AL_WARNING, 						DTLS1_AD_MISSING_HANDSHAKE_MESSAGE); 					} 				}
+block|if (alert_descr == DTLS1_AD_MISSING_HANDSHAKE_MESSAGE) {                 unsigned short seq;                 unsigned int frag_off;                 unsigned char *p =&(s->d1->alert_fragment[2]);                  n2s(p, seq);                 n2l3(p, frag_off);                  dtls1_retransmit_message(s,                                          dtls1_get_queue_priority                                          (frag->msg_header.seq, 0), frag_off,&found);                 if (!found&& SSL_in_init(s)) {
+comment|/*                      * fprintf( stderr,"in init = %d\n", SSL_in_init(s));                      */
+comment|/*                      * requested a message not yet sent, send an alert                      * ourselves                      */
+block|ssl3_send_alert(s, SSL3_AL_WARNING,                                     DTLS1_AD_MISSING_HANDSHAKE_MESSAGE);                 }             }
 endif|#
 directive|endif
 block|}
@@ -4314,9 +4312,8 @@ if|if
 condition|(
 name|alert_level
 operator|==
-literal|2
+name|SSL3_AL_FATAL
 condition|)
-comment|/* fatal */
 block|{
 name|char
 name|tmp
@@ -4420,8 +4417,8 @@ name|shutdown
 operator|&
 name|SSL_SENT_SHUTDOWN
 condition|)
-comment|/* but we have not received a shutdown */
 block|{
+comment|/* but we have not received a                                             * shutdown */
 name|s
 operator|->
 name|rwstate
@@ -4481,7 +4478,7 @@ name|ccs_hdr_len
 operator|=
 literal|3
 expr_stmt|;
-comment|/* 'Change Cipher Spec' is just a single byte, so we know 		 * exactly what the record payload has to look like */
+comment|/*          * 'Change Cipher Spec' is just a single byte, so we know exactly          * what the record payload has to look like          */
 comment|/* XDTLS: check that epoch is consistent */
 if|if
 condition|(
@@ -4565,7 +4562,7 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* We can't process a CCS now, because previous handshake 		 * messages are still missing, so just drop it. 		 */
+comment|/*          * We can't process a CCS now, because previous handshake messages          * are still missing, so just drop it.          */
 if|if
 condition|(
 operator|!
@@ -4633,7 +4630,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Remember that a CCS has been received, 		 * so that an old key of SCTP-Auth can be 		 * deleted when a CCS is sent. Will be ignored 		 * if no SCTP is used 		 */
+comment|/*          * Remember that a CCS has been received, so that an old key of          * SCTP-Auth can be deleted when a CCS is sent. Will be ignored if no          * SCTP is used          */
 name|BIO_ctrl
 argument_list|(
 name|SSL_get_wbio
@@ -4654,7 +4651,7 @@ goto|goto
 name|start
 goto|;
 block|}
-comment|/* Unexpected handshake message (Client Hello, or protocol violation) */
+comment|/*      * Unexpected handshake message (Client Hello, or protocol violation)      */
 if|if
 condition|(
 operator|(
@@ -4711,7 +4708,7 @@ goto|goto
 name|start
 goto|;
 block|}
-comment|/* If we are server, we may have a repeated FINISHED of the 		 * client here, then retransmit our CCS and FINISHED. 		 */
+comment|/*          * If we are server, we may have a repeated FINISHED of the client          * here, then retransmit our CCS and FINISHED.          */
 if|if
 condition|(
 name|msg_hdr
@@ -4778,8 +4775,8 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* worked only because C operator preferences are not as expected (and        * because this is not really needed for clients except for detecting        * protocol violations): */
-block|s->state=SSL_ST_BEFORE|(s->server) 				?SSL_ST_ACCEPT 				:SSL_ST_CONNECT;
+comment|/* worked only because C operator preferences                                  * are not as expected (and because this is                                  * not really needed for clients except for                                  * detecting protocol violations): */
+block|s->state = SSL_ST_BEFORE | (s->server)                 ? SSL_ST_ACCEPT : SSL_ST_CONNECT;
 else|#
 directive|else
 name|s
@@ -4874,13 +4871,13 @@ name|left
 operator|==
 literal|0
 condition|)
-comment|/* no read-ahead left? */
 block|{
+comment|/* no read-ahead left? */
 name|BIO
 modifier|*
 name|bio
 decl_stmt|;
-comment|/* In the case where we try to read application data, 				 * but we trigger an SSL handshake, we return -1 with 				 * the retry option set.  Otherwise renegotiation may 				 * cause nasty problems in the blocking world */
+comment|/*                  * In the case where we try to read application data, but we                  * trigger an SSL handshake, we return -1 with the retry                  * option set.  Otherwise renegotiation may cause nasty                  * problems in the blocking world                  */
 name|s
 operator|->
 name|rwstate
@@ -4972,7 +4969,7 @@ case|:
 case|case
 name|SSL3_RT_HANDSHAKE
 case|:
-comment|/* we already handled all of these, with the possible exception 		 * of SSL3_RT_HANDSHAKE when s->in_handshake is set, but that 		 * should not happen when type != rr->type */
+comment|/*          * we already handled all of these, with the possible exception of          * SSL3_RT_HANDSHAKE when s->in_handshake is set, but that should not          * happen when type != rr->type          */
 name|al
 operator|=
 name|SSL_AD_UNEXPECTED_MESSAGE
@@ -4990,7 +4987,7 @@ goto|;
 case|case
 name|SSL3_RT_APPLICATION_DATA
 case|:
-comment|/* At this point, we were expecting handshake data, 		 * but have application data.  If the library was 		 * running inside ssl3_read() (i.e. in_read_app_data 		 * is set) and it makes sense to read application data 		 * at this point (session renegotiation not yet started), 		 * we will indulge it. 		 */
+comment|/*          * At this point, we were expecting handshake data, but have          * application data.  If the library was running inside ssl3_read()          * (i.e. in_read_app_data is set) and it makes sense to read          * application data at this point (session renegotiation not yet          * started), we will indulge it.          */
 if|if
 condition|(
 name|s
@@ -5146,7 +5143,7 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
-comment|/* Check if we have to continue an interrupted handshake 		 * for reading belated app data with SCTP. 		 */
+comment|/*      * Check if we have to continue an interrupted handshake for reading      * belated app data with SCTP.      */
 if|if
 condition|(
 operator|(
@@ -5281,7 +5278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* this only happens when a client hello is received and a handshake  	 * is started. */
+comment|/*          * this only happens when a client hello is received and a handshake          * is started.          */
 end_comment
 
 begin_function
@@ -5440,7 +5437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Call this to write data in records of type 'type'  * It will return<= 0 if not all data has been sent or non-blocking IO.  */
+comment|/*  * Call this to write data in records of type 'type' It will return<= 0 if  * not all data has been sent or non-blocking IO.  */
 end_comment
 
 begin_function
@@ -5562,7 +5559,7 @@ decl_stmt|;
 name|int
 name|bs
 decl_stmt|;
-comment|/* first check if there is a SSL3_BUFFER still being written 	 * out.  This will happen with non blocking IO */
+comment|/*      * first check if there is a SSL3_BUFFER still being written out.  This      * will happen with non blocking IO      */
 if|if
 condition|(
 name|s
@@ -5581,7 +5578,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XDTLS:  want to see if we ever get here */
+comment|/* XDTLS: want to see if we ever get here */
 return|return
 operator|(
 name|ssl3_write_pending
@@ -5735,14 +5732,14 @@ comment|/* DTLS implements explicit IV, so no need for empty fragments */
 if|#
 directive|if
 literal|0
-comment|/* 'create_empty_fragment' is true only when this function calls itself */
-block|if (!clear&& !create_empty_fragment&& !s->s3->empty_fragment_done&& SSL_version(s) != DTLS1_VERSION&& SSL_version(s) != DTLS1_BAD_VER) 		{
-comment|/* countermeasure against known-IV weakness in CBC ciphersuites 		 * (see http://www.openssl.org/~bodo/tls-cbc.txt)  		 */
-block|if (s->s3->need_empty_fragments&& type == SSL3_RT_APPLICATION_DATA) 			{
-comment|/* recursive function call with 'create_empty_fragment' set; 			 * this prepares and buffers the data for an empty fragment 			 * (these 'prefix_len' bytes are sent out later 			 * together with the actual payload) */
-block|prefix_len = s->method->do_ssl_write(s, type, buf, 0, 1); 			if (prefix_len<= 0) 				goto err;  			if (s->s3->wbuf.len< (size_t)prefix_len + SSL3_RT_MAX_PACKET_SIZE) 				{
+comment|/*      * 'create_empty_fragment' is true only when this function calls itself      */
+block|if (!clear&& !create_empty_fragment&& !s->s3->empty_fragment_done&& SSL_version(s) != DTLS1_VERSION&& SSL_version(s) != DTLS1_BAD_VER)     {
+comment|/*          * countermeasure against known-IV weakness in CBC ciphersuites (see          * http://www.openssl.org/~bodo/tls-cbc.txt)          */
+block|if (s->s3->need_empty_fragments&& type == SSL3_RT_APPLICATION_DATA) {
+comment|/*              * recursive function call with 'create_empty_fragment' set; this              * prepares and buffers the data for an empty fragment (these              * 'prefix_len' bytes are sent out later together with the actual              * payload)              */
+block|prefix_len = s->method->do_ssl_write(s, type, buf, 0, 1);             if (prefix_len<= 0)                 goto err;              if (s->s3->wbuf.len<                 (size_t)prefix_len + SSL3_RT_MAX_PACKET_SIZE) {
 comment|/* insufficient space */
-block|SSLerr(SSL_F_DO_DTLS1_WRITE, ERR_R_INTERNAL_ERROR); 				goto err; 				} 			} 		 		s->s3->empty_fragment_done = 1; 		}
+block|SSLerr(SSL_F_DO_DTLS1_WRITE, ERR_R_INTERNAL_ERROR);                 goto err;             }         }          s->s3->empty_fragment_done = 1;     }
 endif|#
 directive|endif
 name|p
@@ -5806,7 +5803,7 @@ operator|+=
 literal|10
 expr_stmt|;
 comment|/* lets setup the record stuff. */
-comment|/* Make space for the explicit IV in case of CBC. 	 * (this is a bit of a boundary violation, but what the heck). 	 */
+comment|/*      * Make space for the explicit IV in case of CBC. (this is a bit of a      * boundary violation, but what the heck).      */
 if|if
 condition|(
 name|s
@@ -5871,7 +5868,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-comment|/* we now 'read' from wr->input, wr->length bytes into 	 * wr->data */
+comment|/*      * we now 'read' from wr->input, wr->length bytes into wr->data      */
 comment|/* first we compress */
 if|if
 condition|(
@@ -5929,7 +5926,7 @@ operator|->
 name|data
 expr_stmt|;
 block|}
-comment|/* we should still have the output to wr->data and the input 	 * from wr->input.  Length should be wr->length. 	 * wr->data still points in the wb->buf */
+comment|/*      * we should still have the output to wr->data and the input from      * wr->input.  Length should be wr->length. wr->data still points in the      * wb->buf      */
 if|if
 condition|(
 name|mac_size
@@ -5994,8 +5991,8 @@ if|if
 condition|(
 name|bs
 condition|)
-comment|/* bs != 0 in case of CBC */
 block|{
+comment|/* bs != 0 in case of CBC */
 name|RAND_pseudo_bytes
 argument_list|(
 name|p
@@ -6003,7 +6000,7 @@ argument_list|,
 name|bs
 argument_list|)
 expr_stmt|;
-comment|/* master IV and last CBC residue stand for 		 * the rest of randomness */
+comment|/*          * master IV and last CBC residue stand for the rest of randomness          */
 name|wr
 operator|->
 name|length
@@ -6032,7 +6029,7 @@ goto|goto
 name|err
 goto|;
 comment|/* record length after mac and block padding */
-comment|/*	if (type == SSL3_RT_APPLICATION_DATA || 	(type == SSL3_RT_ALERT&& ! SSL_in_init(s))) */
+comment|/*      * if (type == SSL3_RT_APPLICATION_DATA || (type == SSL3_RT_ALERT&& !      * SSL_in_init(s)))      */
 comment|/* there's only one epoch between handshake and app data */
 name|s2n
 argument_list|(
@@ -6046,7 +6043,7 @@ name|pseq
 argument_list|)
 expr_stmt|;
 comment|/* XDTLS: ?? */
-comment|/*	else 	s2n(s->d1->handshake_epoch, pseq); */
+comment|/*      * else s2n(s->d1->handshake_epoch, pseq);      */
 name|memcpy
 argument_list|(
 name|pseq
@@ -6079,7 +6076,7 @@ argument_list|,
 name|pseq
 argument_list|)
 expr_stmt|;
-comment|/* we should now have 	 * wr->data pointing to the encrypted data, which is 	 * wr->length long */
+comment|/*      * we should now have wr->data pointing to the encrypted data, which is      * wr->length long      */
 name|wr
 operator|->
 name|type
@@ -6098,7 +6095,7 @@ directive|if
 literal|0
 comment|/* this is now done at the message layer */
 comment|/* buffer the record, making it easy to handle retransmits */
-block|if ( type == SSL3_RT_HANDSHAKE || type == SSL3_RT_CHANGE_CIPHER_SPEC) 		dtls1_buffer_record(s, wr->data, wr->length,  			*((PQ_64BIT *)&(s->s3->write_sequence[0])));
+block|if (type == SSL3_RT_HANDSHAKE || type == SSL3_RT_CHANGE_CIPHER_SPEC)         dtls1_buffer_record(s, wr->data, wr->length,                             *((PQ_64BIT *)& (s->s3->write_sequence[0])));
 endif|#
 directive|endif
 name|ssl3_record_sequence_update
@@ -6121,7 +6118,7 @@ condition|(
 name|create_empty_fragment
 condition|)
 block|{
-comment|/* we are in a recursive call; 		 * just return the length, don't write out anything here 		 */
+comment|/*          * we are in a recursive call; just return the length, don't write          * out anything here          */
 return|return
 name|wr
 operator|->
@@ -6145,7 +6142,7 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* memorize arguments so that ssl3_write_pending can detect bad write retries later */
+comment|/*      * memorize arguments so that ssl3_write_pending can detect bad write      * retries later      */
 name|s
 operator|->
 name|s3
@@ -6591,16 +6588,16 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ( s->d1->r_msg_hdr.frag_off == 0)
-comment|/* waiting for a new msg */
-block|else 			s2n(s->d1->r_msg_hdr.seq, ptr);
+block|if (s->d1->r_msg_hdr.frag_off == 0)
+comment|/*              * waiting for a new msg              */
+block|else             s2n(s->d1->r_msg_hdr.seq, ptr);
 comment|/* partial msg read */
 endif|#
 directive|endif
 if|#
 directive|if
 literal|0
-block|fprintf(stderr, "s->d1->handshake_read_seq = %d, s->d1->r_msg_hdr.seq = %d\n",s->d1->handshake_read_seq,s->d1->r_msg_hdr.seq);
+block|fprintf(stderr,                 "s->d1->handshake_read_seq = %d, s->d1->r_msg_hdr.seq = %d\n",                 s->d1->handshake_read_seq, s->d1->r_msg_hdr.seq);
 endif|#
 directive|endif
 name|l2n3
@@ -6925,32 +6922,32 @@ literal|0
 end_if
 
 begin_comment
-unit|static int dtls1_record_needs_buffering(SSL *s, SSL3_RECORD *rr, unsigned short *priority, 	unsigned long *offset) 	{
+unit|static int dtls1_record_needs_buffering(SSL *s, SSL3_RECORD *rr,                              unsigned short *priority, unsigned long *offset) {
 comment|/* alerts are passed up immediately */
 end_comment
 
 begin_comment
-unit|if ( rr->type == SSL3_RT_APPLICATION_DATA || 		rr->type == SSL3_RT_ALERT) 		return 0;
-comment|/* Only need to buffer if a handshake is underway. 	 * (this implies that Hello Request and Client Hello are passed up 	 * immediately) */
+unit|if (rr->type == SSL3_RT_APPLICATION_DATA || rr->type == SSL3_RT_ALERT)         return 0;
+comment|/*      * Only need to buffer if a handshake is underway. (this implies that      * Hello Request and Client Hello are passed up immediately)      */
 end_comment
 
 begin_comment
-unit|if ( SSL_in_init(s)) 		{ 		unsigned char *data = rr->data;
+unit|if (SSL_in_init(s)) {         unsigned char *data = rr->data;
 comment|/* need to extract the HM/CCS sequence number here */
 end_comment
 
 begin_comment
-unit|if ( rr->type == SSL3_RT_HANDSHAKE || 			rr->type == SSL3_RT_CHANGE_CIPHER_SPEC) 			{ 			unsigned short seq_num; 			struct hm_header_st msg_hdr; 			struct ccs_header_st ccs_hdr;  			if ( rr->type == SSL3_RT_HANDSHAKE) 				{ 				dtls1_get_message_header(data,&msg_hdr); 				seq_num = msg_hdr.seq; 				*offset = msg_hdr.frag_off; 				} 			else 				{ 				dtls1_get_ccs_header(data,&ccs_hdr); 				seq_num = ccs_hdr.seq; 				*offset = 0; 				}
-comment|/* this is either a record we're waiting for, or a 			 * retransmit of something we happened to previously  			 * receive (higher layers will drop the repeat silently */
+unit|if (rr->type == SSL3_RT_HANDSHAKE ||             rr->type == SSL3_RT_CHANGE_CIPHER_SPEC) {             unsigned short seq_num;             struct hm_header_st msg_hdr;             struct ccs_header_st ccs_hdr;              if (rr->type == SSL3_RT_HANDSHAKE) {                 dtls1_get_message_header(data,&msg_hdr);                 seq_num = msg_hdr.seq;                 *offset = msg_hdr.frag_off;             } else {                 dtls1_get_ccs_header(data,&ccs_hdr);                 seq_num = ccs_hdr.seq;                 *offset = 0;             }
+comment|/*              * this is either a record we're waiting for, or a retransmit of              * something we happened to previously receive (higher layers              * will drop the repeat silently              */
 end_comment
 
 begin_comment
-unit|if ( seq_num< s->d1->handshake_read_seq) 				return 0; 			if (rr->type == SSL3_RT_HANDSHAKE&&  				seq_num == s->d1->handshake_read_seq&& 				msg_hdr.frag_off< s->d1->r_msg_hdr.frag_off) 				return 0; 			else if ( seq_num == s->d1->handshake_read_seq&& 				(rr->type == SSL3_RT_CHANGE_CIPHER_SPEC || 					msg_hdr.frag_off == s->d1->r_msg_hdr.frag_off)) 				return 0; 			else 				{ 				*priority = seq_num; 				return 1; 				} 			} 		else
+unit|if (seq_num< s->d1->handshake_read_seq)                 return 0;             if (rr->type == SSL3_RT_HANDSHAKE&&                 seq_num == s->d1->handshake_read_seq&&                 msg_hdr.frag_off< s->d1->r_msg_hdr.frag_off)                 return 0;             else if (seq_num == s->d1->handshake_read_seq&&                      (rr->type == SSL3_RT_CHANGE_CIPHER_SPEC ||                       msg_hdr.frag_off == s->d1->r_msg_hdr.frag_off))                 return 0;             else {                 *priority = seq_num;                 return 1;             }         } else
 comment|/* unknown record type */
 end_comment
 
 begin_endif
-unit|return 0; 		}  	return 0; 	}
+unit|return 0;     }      return 0; }
 endif|#
 directive|endif
 end_endif

@@ -4,7 +4,7 @@ comment|/* crypto/engine/eng_ctrl.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ file|"eng_int.h"
 end_include
 
 begin_comment
-comment|/* When querying a ENGINE-specific control command's 'description', this string  * is used if the ENGINE_CMD_DEFN has cmd_desc set to NULL. */
+comment|/*  * When querying a ENGINE-specific control command's 'description', this  * string is used if the ENGINE_CMD_DEFN has cmd_desc set to NULL.  */
 end_comment
 
 begin_decl_stmt
@@ -29,7 +29,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These internal functions handle 'CMD'-related control commands when the  * ENGINE in question has asked us to take care of it (ie. the ENGINE did not  * set the ENGINE_FLAGS_MANUAL_CMD_CTRL flag. */
+comment|/*  * These internal functions handle 'CMD'-related control commands when the  * ENGINE in question has asked us to take care of it (ie. the ENGINE did not  * set the ENGINE_FLAGS_MANUAL_CMD_CTRL flag.  */
 end_comment
 
 begin_function
@@ -158,7 +158,7 @@ name|idx
 init|=
 literal|0
 decl_stmt|;
-comment|/* NB: It is stipulated that 'cmd_defn' lists are ordered by cmd_num. So 	 * our searches don't need to take any longer than necessary. */
+comment|/*      * NB: It is stipulated that 'cmd_defn' lists are ordered by cmd_num. So      * our searches don't need to take any longer than necessary.      */
 while|while
 condition|(
 operator|!
@@ -381,7 +381,7 @@ operator|.
 name|cmd_num
 return|;
 block|}
-comment|/* For the rest of the commands, the 'long' argument must specify a 	 * valie command number - so we need to conduct a search. */
+comment|/*      * For the rest of the commands, the 'long' argument must specify a valie      * command number - so we need to conduct a search.      */
 if|if
 condition|(
 operator|(
@@ -748,7 +748,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Intercept any "root-level" commands before trying to hand them on to 	 * ctrl() handlers. */
+comment|/*      * Intercept any "root-level" commands before trying to hand them on to      * ctrl() handlers.      */
 switch|switch
 condition|(
 name|cmd
@@ -824,7 +824,7 @@ argument_list|,
 name|ENGINE_R_NO_CONTROL_FUNCTION
 argument_list|)
 expr_stmt|;
-comment|/* For these cmd-related functions, failure is indicated 			 * by a -1 return value (because 0 is used as a valid 			 * return in some places). */
+comment|/*              * For these cmd-related functions, failure is indicated by a -1              * return value (because 0 is used as a valid return in some              * places).              */
 return|return
 operator|-
 literal|1
@@ -1048,7 +1048,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* If the command didn't *have* to be supported, we fake 		 * success. This allows certain settings to be specified for 		 * multiple ENGINEs and only require a change of ENGINE id 		 * (without having to selectively apply settings). Eg. changing 		 * from a hardware device back to the regular software ENGINE 		 * without editing the config file, etc. */
+comment|/*          * If the command didn't *have* to be supported, we fake success.          * This allows certain settings to be specified for multiple ENGINEs          * and only require a change of ENGINE id (without having to          * selectively apply settings). Eg. changing from a hardware device          * back to the regular software ENGINE without editing the config          * file, etc.          */
 if|if
 condition|(
 name|cmd_optional
@@ -1072,7 +1072,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Force the result of the control command to 0 or 1, for the reasons 	 * mentioned before. */
+comment|/*      * Force the result of the control command to 0 or 1, for the reasons      * mentioned before.      */
 if|if
 condition|(
 name|ENGINE_ctrl
@@ -1195,7 +1195,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* If the command didn't *have* to be supported, we fake 		 * success. This allows certain settings to be specified for 		 * multiple ENGINEs and only require a change of ENGINE id 		 * (without having to selectively apply settings). Eg. changing 		 * from a hardware device back to the regular software ENGINE 		 * without editing the config file, etc. */
+comment|/*          * If the command didn't *have* to be supported, we fake success.          * This allows certain settings to be specified for multiple ENGINEs          * and only require a change of ENGINE id (without having to          * selectively apply settings). Eg. changing from a hardware device          * back to the regular software ENGINE without editing the config          * file, etc.          */
 if|if
 condition|(
 name|cmd_optional
@@ -1263,7 +1263,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Shouldn't happen, given that ENGINE_cmd_is_executable() 		 * returned success. */
+comment|/*          * Shouldn't happen, given that ENGINE_cmd_is_executable() returned          * success.          */
 name|ENGINEerr
 argument_list|(
 name|ENGINE_F_ENGINE_CTRL_CMD_STRING
@@ -1275,7 +1275,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* If the command takes no input, there must be no input. And vice 	 * versa. */
+comment|/*      * If the command takes no input, there must be no input. And vice versa.      */
 if|if
 condition|(
 name|flags
@@ -1301,7 +1301,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* We deliberately force the result of ENGINE_ctrl() to 0 or 1 		 * rather than returning it as "return data". This is to ensure 		 * usage of these commands is consistent across applications and 		 * that certain applications don't understand it one way, and 		 * others another. */
+comment|/*          * We deliberately force the result of ENGINE_ctrl() to 0 or 1 rather          * than returning it as "return data". This is to ensure usage of          * these commands is consistent across applications and that certain          * applications don't understand it one way, and others another.          */
 if|if
 condition|(
 name|ENGINE_ctrl
@@ -1386,7 +1386,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* If it doesn't take numeric either, then it is unsupported for use in 	 * a config-setting situation, which is what this function is for. This 	 * should never happen though, because ENGINE_cmd_is_executable() was 	 * used. */
+comment|/*      * If it doesn't take numeric either, then it is unsupported for use in a      * config-setting situation, which is what this function is for. This      * should never happen though, because ENGINE_cmd_is_executable() was      * used.      */
 if|if
 condition|(
 operator|!
@@ -1447,7 +1447,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Force the result of the control command to 0 or 1, for the reasons 	 * mentioned before. */
+comment|/*      * Force the result of the control command to 0 or 1, for the reasons      * mentioned before.      */
 if|if
 condition|(
 name|ENGINE_ctrl

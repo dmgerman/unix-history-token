@@ -4,11 +4,11 @@ comment|/* v3_utl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -1308,7 +1308,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*#define DEBUG*/
+comment|/*  * #define DEBUG  */
 end_comment
 
 begin_expr_stmt
@@ -1362,15 +1362,42 @@ argument_list|(
 name|line
 argument_list|)
 block|;
+if|if
+condition|(
+name|linebuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|X509V3err
+argument_list|(
+name|X509V3_F_X509V3_PARSE_LIST
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|state
 operator|=
 name|HDR_NAME
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ntmp
 operator|=
 name|NULL
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Go through all characters */
+end_comment
+
+begin_for
 for|for
 control|(
 name|p
@@ -1458,10 +1485,8 @@ name|p
 operator|+
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_if
-unit|} else
+block|}
+elseif|else
 if|if
 condition|(
 name|c
@@ -1521,19 +1546,10 @@ name|values
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_break
-break|break ;
-end_break
-
-begin_case
+break|break;
 case|case
 name|HDR_VALUE
 case|:
-end_case
-
-begin_if
 if|if
 condition|(
 name|c
@@ -1601,10 +1617,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-end_if
+block|}
+block|}
+end_for
 
 begin_if
-unit|} 	}
 if|if
 condition|(
 name|state
@@ -1861,7 +1878,7 @@ comment|/* hex string utilities */
 end_comment
 
 begin_comment
-comment|/* Given a buffer of length 'len' return a OPENSSL_malloc'ed string with its  * hex representation  * @@@ (Contents of buffer are always kept in ASCII, also on EBCDIC machines)  */
+comment|/*  * Given a buffer of length 'len' return a OPENSSL_malloc'ed string with its  * hex representation @@@ (Contents of buffer are always kept in ASCII, also  * on EBCDIC machines)  */
 end_comment
 
 begin_function
@@ -2035,7 +2052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Give a string of hex digits convert to  * a buffer  */
+comment|/*  * Give a string of hex digits convert to a buffer  */
 end_comment
 
 begin_function
@@ -2376,7 +2393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* V2I name comparison function: returns zero if 'name' matches  * cmp or cmp.*  */
+comment|/*  * V2I name comparison function: returns zero if 'name' matches cmp or cmp.*  */
 end_comment
 
 begin_function
@@ -3110,7 +3127,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Convert IP addresses both IPv4 and IPv6 into an   * OCTET STRING compatible with RFC3280.  */
+comment|/*  * Convert IP addresses both IPv4 and IPv6 into an OCTET STRING compatible  * with RFC3280.  */
 end_comment
 
 begin_function
@@ -3663,7 +3680,7 @@ name|zero_cnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Treat the IPv6 representation as a list of values 	 * separated by ':'. The presence of a '::' will parse  	 * as one, two or three zero length elements. 	 */
+comment|/*      * Treat the IPv6 representation as a list of values separated by ':'.      * The presence of a '::' will parse as one, two or three zero length      * elements.      */
 if|if
 condition|(
 operator|!
@@ -4102,7 +4119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert a string of up to 4 hex digits into the corresponding  * IPv6 form.  */
+comment|/*  * Convert a string of up to 4 hex digits into the corresponding IPv6 form.  */
 end_comment
 
 begin_function
@@ -4330,7 +4347,7 @@ name|v
 operator|->
 name|name
 expr_stmt|;
-comment|/* Skip past any leading X. X: X, etc to allow for 		 * multiple instances  		 */
+comment|/*          * Skip past any leading X. X: X, etc to allow for multiple instances          */
 for|for
 control|(
 name|p

@@ -859,7 +859,7 @@ decl_stmt|;
 name|SHA_CTX
 name|sha
 decl_stmt|;
-comment|/*     * XXX: hash should not allow moving of the boundaries - Java code     * is flawed in this respect. Length encoding seems simplest.     */
+comment|/*      * XXX: hash should not allow moving of the boundaries - Java code      * is flawed in this respect. Length encoding seems simplest.      */
 name|SHA1_Init
 argument_list|(
 operator|&
@@ -986,7 +986,7 @@ init|=
 name|BN_new
 argument_list|()
 decl_stmt|;
-comment|/*     * r in [0,q)     * XXX: Java chooses r in [0, 2^160) - i.e. distribution not uniform     */
+comment|/*-     * r in [0,q)     * XXX: Java chooses r in [0, 2^160) - i.e. distribution not uniform     */
 name|BN_rand_range
 argument_list|(
 name|r
@@ -1816,7 +1816,7 @@ init|=
 name|BN_new
 argument_list|()
 decl_stmt|;
-comment|/*     * X = g^{(xa + xc + xd) * xb * s}     * t1 = g^xa     */
+comment|/*-     * X = g^{(xa + xc + xd) * xb * s}     * t1 = g^xa     */
 name|BN_mod_exp
 argument_list|(
 name|t1
@@ -1914,7 +1914,7 @@ operator|->
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/*     * ZKP(xb * s)     * XXX: this is kinda funky, because we're using     *     * g' = g^{xa + xc + xd}     *     * as the generator, which means X is g'^{xb * s}     * X = t1^{t2} = t1^{xb * s} = g^{(xa + xc + xd) * xb * s}     */
+comment|/*-     * ZKP(xb * s)     * XXX: this is kinda funky, because we're using     *     * g' = g^{xa + xc + xd}     *     * as the generator, which means X is g'^{xb * s}     * X = t1^{t2} = t1^{xb * s} = g^{(xa + xc + xd) * xb * s}     */
 name|generate_step_part
 argument_list|(
 name|send
@@ -1983,7 +1983,7 @@ init|=
 name|BN_new
 argument_list|()
 decl_stmt|;
-comment|/*     * K = (gx/g^{xb * xd * s})^{xb}     *   = (g^{(xc + xa + xb) * xd * s - xb * xd *s})^{xb}     *   = (g^{(xa + xc) * xd * s})^{xb}     *   = g^{(xa + xc) * xb * xd * s}     * [which is the same regardless of who calculates it]     */
+comment|/*-     * K = (gx/g^{xb * xd * s})^{xb}     *   = (g^{(xc + xa + xb) * xd * s - xb * xd *s})^{xb}     *   = (g^{(xa + xc) * xd * s})^{xb}     *   = g^{(xa + xc) * xb * xd * s}     * [which is the same regardless of who calculates it]     */
 comment|/* t1 = (g^{xd})^{xb} = g^{xb * xd} */
 name|BN_mod_exp
 argument_list|(
@@ -2145,7 +2145,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-comment|/*     * g' = g^{xc + xa + xb} [from our POV]     * t1 = xa + xb     */
+comment|/*-     * g' = g^{xc + xa + xb} [from our POV]     * t1 = xa + xb     */
 name|BN_mod_add
 argument_list|(
 name|t1
@@ -2318,7 +2318,7 @@ name|JPAKE_STEP3A
 modifier|*
 name|s3a
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
@@ -2447,7 +2447,7 @@ name|JPAKE_STEP3A
 modifier|*
 name|s3a
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
@@ -2458,7 +2458,7 @@ name|JPAKE_STEP3B
 modifier|*
 name|s3b
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
@@ -2561,7 +2561,7 @@ name|JPAKE_STEP3B
 modifier|*
 name|s3b
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
