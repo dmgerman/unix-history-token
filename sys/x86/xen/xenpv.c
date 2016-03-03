@@ -353,7 +353,7 @@ argument_list|,
 name|LOW_MEM_LIMIT
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 name|size
 argument_list|,

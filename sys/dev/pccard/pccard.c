@@ -2729,7 +2729,7 @@ else|else
 name|end
 operator|=
 operator|~
-literal|0UL
+literal|0
 expr_stmt|;
 name|DEVPRINTF
 argument_list|(
@@ -2899,7 +2899,7 @@ else|else
 name|end
 operator|=
 operator|~
-literal|0UL
+literal|0
 expr_stmt|;
 name|DEVPRINTF
 argument_list|(

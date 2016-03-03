@@ -392,7 +392,7 @@ operator|->
 name|rm_end
 operator|=
 operator|~
-literal|0ul
+literal|0
 expr_stmt|;
 if|if
 condition|(

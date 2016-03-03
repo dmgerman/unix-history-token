@@ -2005,7 +2005,7 @@ condition|)
 name|max_address
 operator|=
 operator|~
-literal|0ul
+literal|0
 expr_stmt|;
 name|w
 operator|->

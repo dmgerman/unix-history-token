@@ -15572,7 +15572,7 @@ comment|/* Let the parent decide. */
 name|end
 operator|=
 operator|~
-literal|0ul
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -15646,7 +15646,7 @@ operator|||
 name|end
 operator|!=
 operator|~
-literal|0ul
+literal|0
 operator|)
 condition|)
 block|{
@@ -15671,7 +15671,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 name|count
 argument_list|)
@@ -15694,7 +15694,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 name|count
 argument_list|,
@@ -17576,10 +17576,10 @@ name|PCI_RES_BUS
 argument_list|,
 literal|0
 argument_list|,
-literal|0ul
+literal|0
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 name|count
 argument_list|)
