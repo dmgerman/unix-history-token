@@ -1527,6 +1527,15 @@ end_if
 
 begin_function
 name|void
+name|intr_pic_init_secondary
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
 name|pic_ipi_send
 parameter_list|(
 name|cpuset_t

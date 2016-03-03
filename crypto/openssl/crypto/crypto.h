@@ -2297,11 +2297,13 @@ name|int
 name|CRYPTO_memcmp
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|a
 parameter_list|,
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|b

@@ -115,6 +115,14 @@ directive|define
 name|OPENSSL_NO_UNIT_TEST
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
+define|#
+directive|define
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* OPENSSL_DOING_MAKEDEPEND */
@@ -331,6 +339,23 @@ argument_list|)
 define|#
 directive|define
 name|NO_UNIT_TEST
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_NO_WEAK_SSL_CIPHERS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_WEAK_SSL_CIPHERS
+argument_list|)
+define|#
+directive|define
+name|NO_WEAK_SSL_CIPHERS
 endif|#
 directive|endif
 endif|#
@@ -719,6 +744,11 @@ argument_list|)
 comment|/* Special defines which change the way the code is built depending on the    CPU and OS.  For SGI machines you can use _MIPS_SZLONG (32 or 64) to find    even newer MIPS CPU's, but at the moment one size fits all for    optimization options.  Older Sparc's work better with only UNROLL, but    there's no way to tell at compile time what it is you're running on */
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__sun
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|sun

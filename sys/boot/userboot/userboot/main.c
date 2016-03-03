@@ -90,6 +90,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Minimum version required */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -260,7 +264,7 @@ decl_stmt|;
 if|if
 condition|(
 name|version
-operator|!=
+operator|<
 name|USERBOOT_VERSION
 condition|)
 name|abort
@@ -301,7 +305,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Hook up the console          */
+comment|/* 	 * Hook up the console 	 */
 name|cons_probe
 argument_list|()
 expr_stmt|;

@@ -2367,6 +2367,13 @@ name|ndis_per_pkt_infotype
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|nbl_hash_value
+value|pkt_cancel_id
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2411,6 +2418,18 @@ block|}
 name|ndis_8021q_info
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|ndis_hash_info
+block|{
+name|uint32_t
+name|hash
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -2738,6 +2757,13 @@ block|}
 name|rndis_tcp_tso_info
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|RNDIS_HASH_PPI_SIZE
+value|(sizeof(rndis_per_packet_info) + \ 				sizeof(struct ndis_hash_info))
+end_define
 
 begin_define
 define|#
@@ -3575,14 +3601,20 @@ begin_comment
 comment|/*  * Externs  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|netvsc_recv
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device_ctx
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*
@@ -3597,24 +3629,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netvsc_recv_rollup
-parameter_list|(
-name|struct
-name|hv_device
-modifier|*
-name|device_ctx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|netvsc_channel_rollup
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device_ctx
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl

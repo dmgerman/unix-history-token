@@ -1976,10 +1976,6 @@ name|hv_vmbus_ring_buffer_info
 name|inbound
 decl_stmt|;
 name|struct
-name|mtx
-name|inbound_lock
-decl_stmt|;
-name|struct
 name|taskqueue
 modifier|*
 name|rxq
@@ -2048,15 +2044,33 @@ name|hv_vmbus_channel
 modifier|*
 name|primary_channel
 decl_stmt|;
-comment|/* 	 * Support per channel state for use by vmbus drivers. 	 */
+comment|/* 	 * Driver private data 	 */
 name|void
 modifier|*
-name|per_channel_state
+name|hv_chan_priv1
+decl_stmt|;
+name|void
+modifier|*
+name|hv_chan_priv2
+decl_stmt|;
+name|void
+modifier|*
+name|hv_chan_priv3
 decl_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_CHAN_ISPRIMARY
+parameter_list|(
+name|chan
+parameter_list|)
+value|((chan)->primary_channel == NULL)
+end_define
 
 begin_function
 specifier|static

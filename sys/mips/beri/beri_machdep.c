@@ -296,10 +296,11 @@ index|[
 name|FDT_MEM_REGIONS
 index|]
 decl_stmt|;
+name|uint64_t
+name|val
+decl_stmt|;
 name|int
 name|mr_cnt
-decl_stmt|,
-name|val
 decl_stmt|;
 name|int
 name|j

@@ -432,6 +432,18 @@ value|do { 							\ 		(dst)->tv_sec = (src)->tv_sec - (val)->tv_sec;	\ 		(dst)->
 end_define
 
 begin_comment
+comment|/* Magic cookie set for shared pthread locks and cv's pointers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THR_PSHARED_PTR
+define|\
+value|((void *)(uintptr_t)((1ULL<< (NBBY * sizeof(long) - 1)) | 1))
+end_define
+
+begin_comment
 comment|/* XXX These values should be same as those defined in pthread.h */
 end_comment
 
@@ -534,9 +546,7 @@ decl_stmt|;
 name|int
 name|m_flags
 decl_stmt|;
-name|struct
-name|pthread
-modifier|*
+name|uint32_t
 name|m_owner
 decl_stmt|;
 name|int
@@ -548,12 +558,19 @@ decl_stmt|;
 name|int
 name|m_yieldloops
 decl_stmt|;
-comment|/* 	 * Link for all mutexes a thread currently owns. 	 */
+comment|/* 	 * Link for all mutexes a thread currently owns, of the same 	 * prio type. 	 */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread_mutex
 argument_list|)
 name|m_qe
+expr_stmt|;
+comment|/* Link for all private mutexes a thread currently owns. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pthread_mutex
+argument_list|)
+name|m_pqe
 expr_stmt|;
 block|}
 struct|;
@@ -572,6 +589,9 @@ name|m_protocol
 decl_stmt|;
 name|int
 name|m_ceiling
+decl_stmt|;
+name|int
+name|m_pshared
 decl_stmt|;
 block|}
 struct|;
@@ -1064,9 +1084,7 @@ name|struct
 name|urwlock
 name|lock
 decl_stmt|;
-name|struct
-name|pthread
-modifier|*
+name|uint32_t
 name|owner
 decl_stmt|;
 block|}
@@ -1359,15 +1377,37 @@ directive|define
 name|TLFLAGS_IN_GCLIST
 value|0x0004
 comment|/* thread in gc list */
-comment|/* Queue of currently owned NORMAL or PRIO_INHERIT type mutexes. */
+comment|/* 	 * Queues of the owned mutexes.  Private queue must have index 	 * + 1 of the corresponding full queue. 	 */
+define|#
+directive|define
+name|TMQ_NORM
+value|0
+comment|/* NORMAL or PRIO_INHERIT normal */
+define|#
+directive|define
+name|TMQ_NORM_PRIV
+value|1
+comment|/* NORMAL or PRIO_INHERIT normal priv */
+define|#
+directive|define
+name|TMQ_NORM_PP
+value|2
+comment|/* PRIO_PROTECT normal mutexes */
+define|#
+directive|define
+name|TMQ_NORM_PP_PRIV
+value|3
+comment|/* PRIO_PROTECT normal priv */
+define|#
+directive|define
+name|TMQ_NITEMS
+value|4
 name|struct
 name|mutex_queue
-name|mutexq
-decl_stmt|;
-comment|/* Queue of all owned PRIO_PROTECT mutexes. */
-name|struct
-name|mutex_queue
-name|pp_mutexq
+name|mq
+index|[
+name|TMQ_NITEMS
+index|]
 decl_stmt|;
 name|void
 modifier|*
@@ -4006,6 +4046,44 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|__thr_pshared_init
+argument_list|(
+name|void
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|__thr_pshared_offpage
+argument_list|(
+name|void
+operator|*
+name|key
+argument_list|,
+name|int
+name|doalloc
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__thr_pshared_destroy
+argument_list|(
+name|void
+operator|*
+name|key
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|__END_DECLS

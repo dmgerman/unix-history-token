@@ -547,6 +547,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NIC_PF_MPI_0_2047_CFG
+value|(0x210000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NIC_PF_RSSI_0_4097_RQ
 value|(0x220000)
 end_define

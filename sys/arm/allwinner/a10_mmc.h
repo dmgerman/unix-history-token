@@ -312,7 +312,18 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* FIFO Access Address */
+comment|/* FIFO Access Address (A10/A20) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A31_MMC_FIFO
+value|0x200
+end_define
+
+begin_comment
+comment|/* FIFO Access Address (A31) */
 end_comment
 
 begin_comment

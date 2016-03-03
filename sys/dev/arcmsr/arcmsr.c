@@ -20330,13 +20330,7 @@ argument|); 	switch(acb->adapter_type) { 	case ACB_ADAPTER_TYPE_A: { 			u_int32_
 literal|0
 argument|); 			vm_offset_t	mem_base0;  			acb->sys_res_arcmsr[
 literal|0
-argument|] = bus_alloc_resource(dev,SYS_RES_MEMORY,&rid0,
-literal|0ul
-argument|, ~
-literal|0ul
-argument|,
-literal|0x1000
-argument|, RF_ACTIVE); 			if(acb->sys_res_arcmsr[
+argument|] = bus_alloc_resource_any(dev,SYS_RES_MEMORY,&rid0, RF_ACTIVE); 			if(acb->sys_res_arcmsr[
 literal|0
 argument|] == NULL) { 				arcmsr_free_resource(acb); 				printf(
 literal|"arcmsr%d: bus_alloc_resource failure!\n"
@@ -20376,15 +20370,7 @@ argument|; i<
 literal|2
 argument|; i++) { 				if(i ==
 literal|0
-argument|) { 					acb->sys_res_arcmsr[i] = bus_alloc_resource(dev,SYS_RES_MEMORY,&rid[i],
-literal|0ul
-argument|, ~
-literal|0ul
-argument|, size, RF_ACTIVE); 				} else { 					acb->sys_res_arcmsr[i] = bus_alloc_resource(dev, SYS_RES_MEMORY,&rid[i],
-literal|0ul
-argument|, ~
-literal|0ul
-argument|, sizeof(struct HBB_RWBUFFER), RF_ACTIVE); 				} 				if(acb->sys_res_arcmsr[i] == NULL) { 					arcmsr_free_resource(acb); 					printf(
+argument|) { 					acb->sys_res_arcmsr[i] = bus_alloc_resource_any(dev,SYS_RES_MEMORY,&rid[i], 											RF_ACTIVE); 				} else { 					acb->sys_res_arcmsr[i] = bus_alloc_resource_any(dev, SYS_RES_MEMORY,&rid[i], 											RF_ACTIVE); 				} 				if(acb->sys_res_arcmsr[i] == NULL) { 					arcmsr_free_resource(acb); 					printf(
 literal|"arcmsr%d: bus_alloc_resource %d failure!\n"
 argument|, device_get_unit(dev), i); 					return ENOMEM; 				} 				if(rman_get_start(acb->sys_res_arcmsr[i])<=
 literal|0
@@ -20402,11 +20388,7 @@ argument|]; 			if (vendor_dev_id == PCIDevVenIDARC1203) { 				phbbmu->drv2iop_do
 literal|1
 argument|); 			vm_offset_t	mem_base0;  			acb->sys_res_arcmsr[
 literal|0
-argument|] = bus_alloc_resource(dev,SYS_RES_MEMORY,&rid0,
-literal|0ul
-argument|, ~
-literal|0ul
-argument|, sizeof(struct HBC_MessageUnit), RF_ACTIVE); 			if(acb->sys_res_arcmsr[
+argument|] = bus_alloc_resource_any(dev,SYS_RES_MEMORY,&rid0, RF_ACTIVE); 			if(acb->sys_res_arcmsr[
 literal|0
 argument|] == NULL) { 				arcmsr_free_resource(acb); 				printf(
 literal|"arcmsr%d: bus_alloc_resource failure!\n"
@@ -20434,11 +20416,7 @@ argument|]); 			acb->pmu = (struct MessageUnit_UNION *)mem_base0; 		} 		break; 	
 literal|0
 argument|); 			vm_offset_t	mem_base0;  			acb->sys_res_arcmsr[
 literal|0
-argument|] = bus_alloc_resource(dev,SYS_RES_MEMORY,&rid0,
-literal|0ul
-argument|, ~
-literal|0ul
-argument|, sizeof(struct HBD_MessageUnit), RF_ACTIVE); 			if(acb->sys_res_arcmsr[
+argument|] = bus_alloc_resource_any(dev,SYS_RES_MEMORY,&rid0, RF_ACTIVE); 			if(acb->sys_res_arcmsr[
 literal|0
 argument|] == NULL) { 				arcmsr_free_resource(acb); 				printf(
 literal|"arcmsr%d: bus_alloc_resource failure!\n"

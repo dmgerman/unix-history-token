@@ -16336,6 +16336,10 @@ argument_list|,
 name|tres
 argument_list|)
 expr_stmt|;
+name|tres
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|result

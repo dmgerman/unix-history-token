@@ -154,6 +154,12 @@ begin_comment
 comment|/*  * Externs  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|hv_rf_on_receive
@@ -166,6 +172,11 @@ name|struct
 name|hv_device
 modifier|*
 name|device
+parameter_list|,
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*
@@ -189,9 +200,10 @@ begin_function_decl
 name|void
 name|hv_rf_channel_rollup
 parameter_list|(
-name|netvsc_dev
+name|struct
+name|hv_vmbus_channel
 modifier|*
-name|net_dev
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -208,6 +220,9 @@ parameter_list|,
 name|void
 modifier|*
 name|additl_info
+parameter_list|,
+name|int
+name|nchan
 parameter_list|)
 function_decl|;
 end_function_decl

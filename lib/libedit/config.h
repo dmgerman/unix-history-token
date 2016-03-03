@@ -75,13 +75,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `fgetln' function. */
+comment|/* Define to 1 if you have the `getline' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_FGETLN
+name|HAVE_GETLINE
 value|1
 end_define
 
@@ -636,17 +636,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `wcsdup' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WCSDUP
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if `fork' works. */
 end_comment
 
@@ -908,6 +897,17 @@ define|#
 directive|define
 name|VERSION
 value|"3.0"
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system provides the SIZE_MAX constant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIZE_MAX
+value|1
 end_define
 
 begin_comment

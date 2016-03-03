@@ -236,15 +236,14 @@ operator|)
 operator|(
 name|uboot_address
 operator|&
-operator|~
-literal|0x000fffff
+name|API_SIG_SEARCH_MASK
 operator|)
 expr_stmt|;
 name|spend
 operator|=
 name|sp
 operator|+
-literal|0x00300000
+name|API_SIG_SEARCH_LEN
 operator|-
 name|API_SIG_MAGLEN
 expr_stmt|;
@@ -333,9 +332,6 @@ name|API_GETC
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 operator|&
 name|c
 argument_list|)
@@ -373,9 +369,6 @@ name|API_TSTC
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 operator|&
 name|t
 argument_list|)
@@ -398,6 +391,7 @@ begin_function
 name|void
 name|ub_putc
 parameter_list|(
+specifier|const
 name|char
 name|c
 parameter_list|)
@@ -408,9 +402,6 @@ name|API_PUTC
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 operator|&
 name|c
 argument_list|)
@@ -434,9 +425,6 @@ name|API_PUTS
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -546,9 +534,6 @@ argument_list|,
 operator|&
 name|err
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 operator|&
 name|si
 argument_list|)
@@ -1525,11 +1510,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  cookie\t= 0x%08x\n"
+literal|"  cookie\t= 0x%p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|di
 operator|->
 name|cookie
@@ -1809,14 +1791,8 @@ name|API_ENV_GET
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|name
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 operator|&
 name|value
 argument_list|)
@@ -1854,14 +1830,8 @@ name|API_ENV_SET
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|name
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -1915,14 +1885,8 @@ name|API_ENV_ENUM
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|last
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 operator|&
 name|env
 argument_list|)

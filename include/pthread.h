@@ -161,7 +161,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Flags for read/write lock attributes  */
+comment|/*  * Values for process shared/private attributes.  */
 end_comment
 
 begin_define

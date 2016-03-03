@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_LIBRARY_PATH
-value|"/lib:/usr/lib"
+value|"/lib/casper:/lib:/usr/lib"
 end_define
 
 begin_endif

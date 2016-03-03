@@ -2005,7 +2005,7 @@ condition|)
 name|max_address
 operator|=
 operator|~
-literal|0ul
+literal|0
 expr_stmt|;
 name|w
 operator|->
@@ -3116,7 +3116,7 @@ name|bus
 operator|->
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -3124,11 +3124,6 @@ name|PCI_RES_BUS
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|min_count
 argument_list|,
@@ -3149,7 +3144,7 @@ name|bus
 operator|->
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -3157,11 +3152,6 @@ name|PCI_RES_BUS
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 literal|1
 argument_list|,

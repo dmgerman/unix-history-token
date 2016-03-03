@@ -3339,7 +3339,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"VCHQI audio"
+literal|"VCHIQ audio"
 argument_list|)
 expr_stmt|;
 return|return

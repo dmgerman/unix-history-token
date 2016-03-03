@@ -42,6 +42,12 @@ parameter_list|)
 value|((uint64_t)(p)& ~STACKALIGNBYTES)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__PCI_REROUTE_INTERRUPT
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

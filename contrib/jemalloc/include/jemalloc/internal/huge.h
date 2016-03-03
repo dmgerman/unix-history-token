@@ -61,7 +61,7 @@ modifier|*
 name|arena
 parameter_list|,
 name|size_t
-name|size
+name|usize
 parameter_list|,
 name|bool
 name|zero
@@ -87,7 +87,7 @@ modifier|*
 name|arena
 parameter_list|,
 name|size_t
-name|size
+name|usize
 parameter_list|,
 name|size_t
 name|alignment
@@ -106,6 +106,10 @@ begin_function_decl
 name|bool
 name|huge_ralloc_no_move
 parameter_list|(
+name|tsd_t
+modifier|*
+name|tsd
+parameter_list|,
 name|void
 modifier|*
 name|ptr

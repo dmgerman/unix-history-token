@@ -3230,6 +3230,14 @@ name|p
 decl_stmt|;
 name|BUF_MEM
 name|buf
+init|=
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
 decl_stmt|;
 specifier|const
 name|unsigned
@@ -3586,12 +3594,6 @@ name|p
 operator|+=
 name|plen
 expr_stmt|;
-name|buf
-operator|.
-name|data
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 block|}
 elseif|else
@@ -3634,23 +3636,10 @@ return|return
 literal|0
 return|;
 block|}
-name|buf
-operator|.
-name|length
+comment|/* Free any returned 'buf' content */
+name|free_cont
 operator|=
-literal|0
-expr_stmt|;
-name|buf
-operator|.
-name|max
-operator|=
-literal|0
-expr_stmt|;
-name|buf
-operator|.
-name|data
-operator|=
-name|NULL
+literal|1
 expr_stmt|;
 comment|/*          * Should really check the internal tags are correct but some things          * may get this wrong. The relevant specs say that constructed string          * types should be OCTET STRINGs internally irrespective of the type.          * So instead just check for UNIVERSAL class and ignore the tag.          */
 if|if
@@ -3677,10 +3666,6 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|free_cont
-operator|=
-literal|1
-expr_stmt|;
 goto|goto
 name|err
 goto|;
@@ -3713,9 +3698,9 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 name|buf
 operator|.
@@ -3738,10 +3723,6 @@ name|buf
 operator|.
 name|data
 expr_stmt|;
-name|free_cont
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3759,6 +3740,7 @@ name|plen
 expr_stmt|;
 block|}
 comment|/* We now have content length and type: translate into a structure */
+comment|/* asn1_ex_c2i may reuse allocated buffer, and so sets free_cont to 0 */
 if|if
 condition|(
 operator|!

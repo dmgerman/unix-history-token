@@ -333,6 +333,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|mp_ncpus
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"cpu_mp_probe: mp_ncpus is unset"
+operator|)
+argument_list|)
+expr_stmt|;
 name|CPU_SETOF
 argument_list|(
 literal|0
@@ -343,8 +354,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|platform_mp_probe
-argument_list|()
+name|mp_ncpus
+operator|>
+literal|1
 operator|)
 return|;
 block|}
@@ -881,7 +893,7 @@ argument_list|,
 literal|"go into scheduler"
 argument_list|)
 expr_stmt|;
-name|platform_mp_init_secondary
+name|intr_pic_init_secondary
 argument_list|()
 expr_stmt|;
 comment|/* Enter the scheduler */
@@ -1767,7 +1779,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|platform_ipi_send
+name|pic_ipi_send
 argument_list|(
 name|other_cpus
 argument_list|,
@@ -1818,7 +1830,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|platform_ipi_send
+name|pic_ipi_send
 argument_list|(
 name|cpus
 argument_list|,
@@ -1850,7 +1862,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|platform_ipi_send
+name|pic_ipi_send
 argument_list|(
 name|cpus
 argument_list|,

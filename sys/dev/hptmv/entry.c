@@ -6409,7 +6409,7 @@ name|pAdapter
 operator|->
 name|mem_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|pAdapter
 operator|->
@@ -6419,15 +6419,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-name|MV_SATA_PCI_BAR0_SPACE_SIZE
-operator|+
-literal|0x40000
 argument_list|,
 name|RF_ACTIVE
 argument_list|)

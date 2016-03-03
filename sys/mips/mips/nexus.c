@@ -952,8 +952,7 @@ name|mem_rman
 operator|.
 name|rm_end
 operator|=
-operator|~
-literal|0ul
+name|BUS_SPACE_MAXADDR
 expr_stmt|;
 name|mem_rman
 operator|.
@@ -984,8 +983,7 @@ name|mem_rman
 argument_list|,
 literal|0
 argument_list|,
-operator|~
-literal|0
+name|BUS_SPACE_MAXADDR
 argument_list|)
 operator|!=
 literal|0

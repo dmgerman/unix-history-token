@@ -8068,8 +8068,6 @@ name|int
 name|availmem_regions_sz
 decl_stmt|;
 name|uint32_t
-name|memsize
-decl_stmt|,
 name|br
 decl_stmt|,
 name|cr
@@ -8086,8 +8084,7 @@ argument_list|,
 operator|&
 name|availmem_regions_sz
 argument_list|,
-operator|&
-name|memsize
+name|NULL
 argument_list|)
 operator|!=
 literal|0

@@ -243,14 +243,14 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_KEY_LENGTH
-value|512
+value|2048
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIN_KEY_LENGTH
-value|384
+value|512
 end_define
 
 begin_undef

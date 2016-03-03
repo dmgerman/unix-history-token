@@ -1133,5 +1133,25 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_function
+name|void
+name|intr_pic_init_secondary
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

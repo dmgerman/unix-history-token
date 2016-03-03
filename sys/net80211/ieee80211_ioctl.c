@@ -16804,6 +16804,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|wait
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ifreq
@@ -16905,11 +16909,25 @@ name|iv_state
 operator|==
 name|IEEE80211_S_INIT
 condition|)
+block|{
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_nrunning
+operator|==
+literal|0
+condition|)
+name|wait
+operator|=
+literal|1
+expr_stmt|;
 name|ieee80211_start_locked
 argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -16922,6 +16940,18 @@ name|IFF_DRV_RUNNING
 condition|)
 block|{
 comment|/* 			 * Stop ourself.  If we are the last vap to be 			 * marked down the parent will also be taken down. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_nrunning
+operator|==
+literal|1
+condition|)
+name|wait
+operator|=
+literal|1
+expr_stmt|;
 name|ieee80211_stop_locked
 argument_list|(
 name|vap
@@ -16934,6 +16964,10 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent ioctl handler if it was queued */
+if|if
+condition|(
+name|wait
+condition|)
 name|ieee80211_waitfor_parent
 argument_list|(
 name|ic

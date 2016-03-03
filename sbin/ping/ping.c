@@ -143,25 +143,19 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<libcapsicum.h>
+file|<libcasper.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<libcapsicum_dns.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libcapsicum_service.h>
+file|<casper/cap_dns.h>
 end_include
 
 begin_endif
@@ -1076,7 +1070,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_decl_stmt
@@ -1122,7 +1116,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_function_decl
@@ -2829,7 +2823,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 name|capdns
 operator|=
 name|capdns_setup
@@ -2887,7 +2881,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 if|if
 condition|(
 name|capdns
@@ -3113,7 +3107,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 if|if
 condition|(
 name|capdns
@@ -3243,7 +3237,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 comment|/* From now on we will use only reverse DNS lookups. */
 if|if
 condition|(
@@ -3931,7 +3925,7 @@ name|true
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 elseif|else
 if|if
 condition|(
@@ -8877,7 +8871,7 @@ argument_list|)
 return|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 if|if
 condition|(
 name|capdns
@@ -9486,7 +9480,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCAPSICUM
+name|HAVE_LIBCASPER
 end_ifdef
 
 begin_function
@@ -9530,18 +9524,13 @@ name|capcas
 operator|==
 name|NULL
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
-literal|"unable to contact casperd"
+literal|1
+argument_list|,
+literal|"unable to create casper process"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|capdnsloc
 operator|=
 name|cap_service_open
@@ -9645,7 +9634,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_LIBCAPSICUM */
+comment|/* HAVE_LIBCASPER */
 end_comment
 
 begin_if

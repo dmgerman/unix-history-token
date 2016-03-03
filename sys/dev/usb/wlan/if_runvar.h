@@ -799,6 +799,12 @@ decl_stmt|;
 name|uint8_t
 name|sc_detached
 decl_stmt|;
+name|uint8_t
+name|sc_bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 union|union
 block|{
 name|struct

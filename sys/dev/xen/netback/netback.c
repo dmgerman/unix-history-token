@@ -712,7 +712,6 @@ name|xnb_pkt
 modifier|*
 name|pkt
 parameter_list|,
-specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -6185,7 +6184,6 @@ name|xnb_pkt
 modifier|*
 name|pkt
 parameter_list|,
-specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -6203,7 +6201,6 @@ name|domid_t
 name|otherend_id
 parameter_list|)
 block|{
-specifier|const
 name|struct
 name|mbuf
 modifier|*

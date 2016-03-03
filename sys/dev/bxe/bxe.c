@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.78.79"
+value|"1.78.81"
 end_define
 
 begin_include
@@ -6819,7 +6819,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 parameter_list|,
@@ -6842,7 +6842,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 operator|*
 name|idx
@@ -6862,7 +6862,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 operator|/
 literal|4
@@ -6936,10 +6936,10 @@ operator|(
 operator|(
 name|comp_type
 operator|<<
-name|DMAE_COMMAND_C_DST_SHIFT
+name|DMAE_CMD_C_DST_SHIFT
 operator|)
 operator||
-name|DMAE_COMMAND_C_TYPE_ENABLE
+name|DMAE_CMD_C_TYPE_ENABLE
 operator|)
 operator|)
 return|;
@@ -6959,7 +6959,7 @@ operator|(
 name|opcode
 operator|&
 operator|~
-name|DMAE_COMMAND_SRC_RESET
+name|DMAE_CMD_SRC_RESET
 operator|)
 return|;
 block|}
@@ -6998,22 +6998,22 @@ operator|(
 operator|(
 name|src_type
 operator|<<
-name|DMAE_COMMAND_SRC_SHIFT
+name|DMAE_CMD_SRC_SHIFT
 operator|)
 operator||
 operator|(
 name|dst_type
 operator|<<
-name|DMAE_COMMAND_DST_SHIFT
+name|DMAE_CMD_DST_SHIFT
 operator|)
 operator|)
 expr_stmt|;
 name|opcode
 operator||=
 operator|(
-name|DMAE_COMMAND_SRC_RESET
+name|DMAE_CMD_SRC_RESET
 operator||
-name|DMAE_COMMAND_DST_RESET
+name|DMAE_CMD_DST_RESET
 operator|)
 expr_stmt|;
 name|opcode
@@ -7038,7 +7038,7 @@ argument_list|(
 name|sc
 argument_list|)
 operator|<<
-name|DMAE_COMMAND_E1HVN_SHIFT
+name|DMAE_CMD_E1HVN_SHIFT
 operator|)
 operator||
 operator|(
@@ -7047,7 +7047,7 @@ argument_list|(
 name|sc
 argument_list|)
 operator|<<
-name|DMAE_COMMAND_DST_VN_SHIFT
+name|DMAE_CMD_DST_VN_SHIFT
 operator|)
 operator|)
 expr_stmt|;
@@ -7056,7 +7056,7 @@ operator||=
 operator|(
 name|DMAE_COM_SET_ERR
 operator|<<
-name|DMAE_COMMAND_ERR_POLICY_SHIFT
+name|DMAE_CMD_ERR_POLICY_SHIFT
 operator|)
 expr_stmt|;
 ifdef|#
@@ -7108,7 +7108,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 parameter_list|,
@@ -7128,7 +7128,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7203,7 +7203,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 parameter_list|)
@@ -7391,7 +7391,7 @@ name|len32
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 name|dmae
 decl_stmt|;
 name|uint32_t
@@ -7618,7 +7618,7 @@ name|len32
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 name|dmae
 decl_stmt|;
 name|int
@@ -10562,7 +10562,7 @@ argument_list|(
 operator|(
 name|command
 operator|<<
-name|SPE_HDR_CMD_ID_SHIFT
+name|SPE_HDR_T_CMD_ID_SHIFT
 operator|)
 operator||
 name|HW_CID
@@ -10578,10 +10578,10 @@ operator|=
 operator|(
 name|cmd_type
 operator|<<
-name|SPE_HDR_CONN_TYPE_SHIFT
+name|SPE_HDR_T_CONN_TYPE_SHIFT
 operator|)
 operator|&
-name|SPE_HDR_CONN_TYPE
+name|SPE_HDR_T_CONN_TYPE
 expr_stmt|;
 comment|/* TBD: Check if it works for VFs */
 name|type
@@ -10593,10 +10593,10 @@ argument_list|(
 name|sc
 argument_list|)
 operator|<<
-name|SPE_HDR_FUNCTION_ID_SHIFT
+name|SPE_HDR_T_FUNCTION_ID_SHIFT
 operator|)
 operator|&
-name|SPE_HDR_FUNCTION_ID
+name|SPE_HDR_T_FUNCTION_ID
 operator|)
 expr_stmt|;
 name|spe
@@ -13694,7 +13694,7 @@ name|tpa_info
 operator|->
 name|parsing_flags
 operator|&
-name|PARSING_FLAGS_VLAN
+name|PARSING_FLAGS_INNER_VLAN_EXIST
 condition|)
 block|{
 name|m
@@ -14959,7 +14959,7 @@ name|pars_flags
 operator|.
 name|flags
 operator|&
-name|PARSING_FLAGS_VLAN
+name|PARSING_FLAGS_INNER_VLAN_EXIST
 condition|)
 block|{
 name|m
@@ -38838,7 +38838,7 @@ comment|/*|| more_tx*/
 condition|)
 block|{
 comment|/* still more work to do */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|fp
 operator|->
@@ -38981,7 +38981,7 @@ comment|/*|| more_tx*/
 condition|)
 block|{
 comment|/* still more work to do, bail out if this ISR and process later */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|fp
 operator|->
@@ -39210,7 +39210,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* schedule slowpath handler */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -39307,7 +39307,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* schedule slowpath handler */
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|sc
 operator|->
@@ -43924,9 +43924,9 @@ name|data
 operator|.
 name|header
 operator|.
-name|header
+name|data
 argument_list|,
-name|DOORBELL_HDR_DB_TYPE
+name|DOORBELL_HDR_T_DB_TYPE
 argument_list|,
 literal|1
 argument_list|)
@@ -47685,18 +47685,8 @@ operator|=
 name|FW_WRR
 expr_stmt|;
 block|}
-name|start_params
-operator|->
-name|gre_tunnel_mode
-operator|=
-literal|0
-expr_stmt|;
-name|start_params
-operator|->
-name|gre_tunnel_rss
-operator|=
-literal|0
-expr_stmt|;
+comment|//start_params->gre_tunnel_mode = 0;
+comment|//start_params->gre_tunnel_rss  = 0;
 return|return
 operator|(
 name|ecore_func_state_change

@@ -1581,9 +1581,6 @@ name|hv_device
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|num_outstanding_sends
-decl_stmt|;
 comment|/* Send buffer allocated by us but manages by NetVSP */
 name|void
 modifier|*
@@ -1651,12 +1648,6 @@ decl_stmt|;
 comment|/* Negotiated NVSP version */
 name|uint32_t
 name|nvsp_version
-decl_stmt|;
-name|uint8_t
-name|callback_buf
-index|[
-name|NETVSC_PACKET_SIZE
-index|]
 decl_stmt|;
 block|}
 name|netvsc_dev
@@ -1956,14 +1947,22 @@ struct|struct
 name|hn_rx_ring
 block|{
 name|struct
-name|lro_ctrl
-name|hn_lro
+name|ifnet
+modifier|*
+name|hn_ifp
+decl_stmt|;
+name|int
+name|hn_rx_idx
 decl_stmt|;
 comment|/* Trust csum verification on host side */
 name|int
 name|hn_trust_hcsum
 decl_stmt|;
 comment|/* HN_TRUST_HCSUM_ */
+name|struct
+name|lro_ctrl
+name|hn_lro
+decl_stmt|;
 name|u_long
 name|hn_csum_ip
 decl_stmt|;
@@ -2010,6 +2009,12 @@ directive|define
 name|HN_TRUST_HCSUM_UDP
 value|0x0004
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -2072,6 +2077,17 @@ name|task
 name|hn_txeof_task
 decl_stmt|;
 name|struct
+name|buf_ring
+modifier|*
+name|hn_mbuf_br
+decl_stmt|;
+name|int
+name|hn_oactive
+decl_stmt|;
+name|int
+name|hn_tx_idx
+decl_stmt|;
+name|struct
 name|mtx
 name|hn_tx_lock
 decl_stmt|;
@@ -2079,6 +2095,11 @@ name|struct
 name|hn_softc
 modifier|*
 name|hn_sc
+decl_stmt|;
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|hn_chan
 decl_stmt|;
 name|int
 name|hn_direct_tx_size
@@ -2182,6 +2203,9 @@ decl_stmt|;
 name|int
 name|hn_rx_ring_cnt
 decl_stmt|;
+name|int
+name|hn_rx_ring_inuse
+decl_stmt|;
 name|struct
 name|hn_rx_ring
 modifier|*
@@ -2189,6 +2213,9 @@ name|hn_rx_ring
 decl_stmt|;
 name|int
 name|hn_tx_ring_cnt
+decl_stmt|;
+name|int
+name|hn_tx_ring_inuse
 decl_stmt|;
 name|struct
 name|hn_tx_ring
@@ -2240,24 +2267,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|hv_nv_on_receive_completion
-parameter_list|(
-name|struct
-name|hv_device
-modifier|*
-name|device
-parameter_list|,
-name|uint64_t
-name|tid
-parameter_list|,
-name|uint32_t
-name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|netvsc_dev
 modifier|*
 name|hv_nv_on_device_add
@@ -2294,9 +2303,9 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*

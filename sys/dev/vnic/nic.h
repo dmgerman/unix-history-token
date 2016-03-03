@@ -77,6 +77,17 @@ value|4
 end_define
 
 begin_comment
+comment|/* PCI revision IDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_REVID_PASS2
+value|8
+end_define
+
+begin_comment
 comment|/* NIC SRIOV VF count */
 end_comment
 
@@ -1037,6 +1048,9 @@ decl_stmt|;
 name|boolean_t
 name|link_up
 decl_stmt|;
+name|boolean_t
+name|hw_tso
+decl_stmt|;
 name|uint8_t
 name|duplex
 decl_stmt|;
@@ -1838,6 +1852,30 @@ name|NIC_NODE_ID_SHIFT
 operator|)
 operator|&
 name|NIC_NODE_ID_MASK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|boolean_t
+name|pass1_silicon
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+comment|/* Check if the chip revision is< Pass2 */
+return|return
+operator|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+name|PCI_REVID_PASS2
 operator|)
 return|;
 block|}

@@ -2353,6 +2353,15 @@ argument_list|(
 name|PRU_CONNECT
 argument_list|)
 expr_stmt|;
+name|TCP_PROBE2
+argument_list|(
+name|debug__user
+argument_list|,
+name|tp
+argument_list|,
+name|PRU_CONNECT
+argument_list|)
+expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
 name|inp

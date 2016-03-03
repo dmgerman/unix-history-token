@@ -4265,8 +4265,6 @@ decl_stmt|;
 name|int
 name|mr_cnt
 decl_stmt|,
-name|memsize
-decl_stmt|,
 name|err
 decl_stmt|,
 name|i
@@ -4288,8 +4286,7 @@ argument_list|,
 operator|&
 name|mr_cnt
 argument_list|,
-operator|&
-name|memsize
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

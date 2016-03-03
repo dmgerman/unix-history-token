@@ -182,6 +182,9 @@ modifier|*
 name|ppidfile
 decl_stmt|,
 modifier|*
+name|title
+decl_stmt|,
+modifier|*
 name|user
 decl_stmt|;
 name|pid_t
@@ -203,6 +206,8 @@ name|ppidfile
 operator|=
 name|pidfile
 operator|=
+name|title
+operator|=
 name|user
 operator|=
 name|NULL
@@ -218,7 +223,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cfp:P:ru:"
+literal|"cfp:P:rt:u:"
 argument_list|)
 operator|)
 operator|!=
@@ -269,6 +274,14 @@ case|:
 name|restart
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|title
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -689,6 +702,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|title
+operator|!=
+name|NULL
+condition|)
+name|setproctitle
+argument_list|(
+literal|"%s[%d]"
+argument_list|,
+name|title
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
+else|else
 name|setproctitle
 argument_list|(
 literal|"%s[%d]"
@@ -988,8 +1017,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: daemon [-cfr] [-p child_pidfile] [-P supervisor_pidfile] "
-literal|"[-u user]\n              command arguments ...\n"
+literal|"%s\n\t%s\n"
+argument_list|,
+literal|"usage: daemon [-cfr] [-p child_pidfile] [-P supervisor_pidfile]"
+argument_list|,
+literal|"[-t title] [-u user] command arguments ..."
 argument_list|)
 expr_stmt|;
 name|exit

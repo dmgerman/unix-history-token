@@ -193,6 +193,10 @@ name|long
 name|ui_kqcnt
 decl_stmt|;
 comment|/* (b) number of kqueues */
+name|long
+name|ui_umtxcnt
+decl_stmt|;
+comment|/* (b) number of shared umtxs */
 name|uid_t
 name|ui_uid
 decl_stmt|;
@@ -395,6 +399,24 @@ end_function_decl
 begin_function_decl
 name|int
 name|chgptscnt
+parameter_list|(
+name|struct
+name|uidinfo
+modifier|*
+name|uip
+parameter_list|,
+name|int
+name|diff
+parameter_list|,
+name|rlim_t
+name|maxval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|chgumtxcnt
 parameter_list|(
 name|struct
 name|uidinfo

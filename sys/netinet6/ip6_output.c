@@ -11905,7 +11905,6 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-specifier|const
 name|struct
 name|mbuf
 modifier|*

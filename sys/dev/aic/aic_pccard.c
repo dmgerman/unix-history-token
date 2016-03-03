@@ -265,7 +265,7 @@ name|sc
 operator|->
 name|sc_port
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -273,11 +273,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 name|AIC_PCCARD_PORTSIZE
 argument_list|,

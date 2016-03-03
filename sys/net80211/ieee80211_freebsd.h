@@ -181,7 +181,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* e.g. "ath0_com_lock" */
+comment|/* e.g. "ath0_tx_lock" */
 name|struct
 name|mtx
 name|mtx

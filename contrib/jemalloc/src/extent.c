@@ -48,10 +48,12 @@ name|JEMALLOC_INLINE_C
 name|int
 name|extent_szad_comp
 parameter_list|(
+specifier|const
 name|extent_node_t
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|extent_node_t
 modifier|*
 name|b
@@ -174,10 +176,12 @@ name|JEMALLOC_INLINE_C
 name|int
 name|extent_ad_comp
 parameter_list|(
+specifier|const
 name|extent_node_t
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|extent_node_t
 modifier|*
 name|b

@@ -375,8 +375,15 @@ name|JEMALLOC_TLS
 end_define
 
 begin_comment
-comment|/*  * ffs()/ffsl() functions to use for bitmapping.  Don't use these directly;  * instead, use jemalloc_ffs() or jemalloc_ffsl() from util.h.  */
+comment|/*  * ffs*() functions to use for bitmapping.  Don't use these directly; instead,  * use ffs_*() from util.h.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_FFSLL
+value|__builtin_ffsll
+end_define
 
 begin_define
 define|#
@@ -486,6 +493,17 @@ value|3
 end_define
 
 begin_comment
+comment|/* sizeof(long long) == 2^LG_SIZEOF_LONG_LONG. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LG_SIZEOF_LONG_LONG
+value|3
+end_define
+
+begin_comment
 comment|/* sizeof(intmax_t) == 2^LG_SIZEOF_INTMAX_T. */
 end_comment
 
@@ -529,6 +547,17 @@ end_comment
 begin_comment
 comment|/* #undef JEMALLOC_EXPORT */
 end_comment
+
+begin_comment
+comment|/* config.malloc_conf options string. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_CONFIG_MALLOC_CONF
+value|""
+end_define
 
 begin_endif
 endif|#

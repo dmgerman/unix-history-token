@@ -6294,10 +6294,6 @@ parameter_list|,
 name|int
 modifier|*
 name|mrcnt
-parameter_list|,
-name|uint32_t
-modifier|*
-name|memsize
 parameter_list|)
 block|{
 name|struct
@@ -6364,11 +6360,6 @@ block|}
 decl_stmt|;
 operator|*
 name|mrcnt
-operator|=
-literal|0
-expr_stmt|;
-operator|*
-name|memsize
 operator|=
 literal|0
 expr_stmt|;
@@ -6727,11 +6718,6 @@ name|mrcnt
 operator|=
 name|j
 expr_stmt|;
-operator|*
-name|memsize
-operator|=
-name|memory_size
-expr_stmt|;
 block|}
 end_function
 
@@ -6917,9 +6903,10 @@ name|l2_start
 decl_stmt|,
 name|lastaddr
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|memsize
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|l2size
 decl_stmt|;
 name|char
@@ -7924,9 +7911,6 @@ name|kernelstack
 decl_stmt|,
 name|dpcpu
 decl_stmt|;
-name|uint32_t
-name|memsize
-decl_stmt|;
 name|char
 modifier|*
 name|env
@@ -7967,10 +7951,6 @@ operator|-
 name|KERNVIRTADDR
 operator|+
 name|arm_physmem_kernaddr
-expr_stmt|;
-name|memsize
-operator|=
-literal|0
 expr_stmt|;
 name|set_cpufuncs
 argument_list|()
@@ -8091,9 +8071,6 @@ name|mem_regions
 argument_list|,
 operator|&
 name|mem_regions_sz
-argument_list|,
-operator|&
-name|memsize
 argument_list|)
 expr_stmt|;
 block|}
@@ -8111,8 +8088,7 @@ argument_list|,
 operator|&
 name|mem_regions_sz
 argument_list|,
-operator|&
-name|memsize
+name|NULL
 argument_list|)
 operator|!=
 literal|0

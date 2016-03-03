@@ -406,7 +406,7 @@ name|CY_PCI_BASE_ADDR1
 expr_stmt|;
 name|ioport_res
 operator|=
-name|bus_alloc_resource_
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,

@@ -188,9 +188,6 @@ operator|)
 return|;
 name|prwlockattr
 operator|=
-operator|(
-name|pthread_rwlockattr_t
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -242,12 +239,15 @@ name|int
 name|pshared
 parameter_list|)
 block|{
-comment|/* Only PTHREAD_PROCESS_PRIVATE is supported. */
 if|if
 condition|(
 name|pshared
 operator|!=
 name|PTHREAD_PROCESS_PRIVATE
+operator|&&
+name|pshared
+operator|!=
+name|PTHREAD_PROCESS_SHARED
 condition|)
 return|return
 operator|(

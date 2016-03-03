@@ -986,7 +986,7 @@ name|sc
 operator|->
 name|devcfg_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|sc
 operator|->
@@ -996,11 +996,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rr
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
 argument_list|,
 literal|32768
 argument_list|,

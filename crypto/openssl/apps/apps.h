@@ -1593,6 +1593,7 @@ name|EVP_PKEY_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|value

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -339,7 +345,9 @@ name|msg_info
 operator|->
 name|wait_sema
 argument_list|,
-literal|500
+literal|5
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 comment|/* KYS 5 seconds */
@@ -1132,7 +1140,7 @@ operator|->
 name|inbound
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|channel
 operator|->

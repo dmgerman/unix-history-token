@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sig.h,v 1.8 2009/02/19 15:20:22 christos Exp $	*/
+comment|/*	$NetBSD: sig.h,v 1.10 2016/02/16 15:53:48 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -27,12 +27,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"histedit.h"
 end_include
 
 begin_comment

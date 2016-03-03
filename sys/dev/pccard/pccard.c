@@ -2729,7 +2729,7 @@ else|else
 name|end
 operator|=
 operator|~
-literal|0UL
+literal|0
 expr_stmt|;
 name|DEVPRINTF
 argument_list|(
@@ -2899,7 +2899,7 @@ else|else
 name|end
 operator|=
 operator|~
-literal|0UL
+literal|0
 expr_stmt|;
 name|DEVPRINTF
 argument_list|(
@@ -3739,7 +3739,7 @@ name|pf
 operator|->
 name|ccr_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_anywhere
 argument_list|(
 name|dev
 argument_list|,
@@ -3749,11 +3749,6 @@ operator|&
 name|pf
 operator|->
 name|ccr_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
 argument_list|,
 name|PCCARD_MEM_PAGE_SIZE
 argument_list|,

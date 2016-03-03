@@ -11022,16 +11022,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|s
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-if|if
-condition|(
 operator|*
 name|s
 operator|==

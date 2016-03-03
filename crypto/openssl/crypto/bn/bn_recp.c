@@ -62,6 +62,12 @@ literal|0
 expr_stmt|;
 name|recp
 operator|->
+name|shift
+operator|=
+literal|0
+expr_stmt|;
+name|recp
+operator|->
 name|flags
 operator|=
 literal|0

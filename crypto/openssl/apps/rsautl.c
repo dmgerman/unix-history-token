@@ -1098,7 +1098,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Error Reading Output File\n"
+literal|"Error Writing Output File\n"
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -1214,7 +1214,7 @@ expr_stmt|;
 if|if
 condition|(
 name|rsa_inlen
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -1378,7 +1378,7 @@ block|}
 if|if
 condition|(
 name|rsa_outlen
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{

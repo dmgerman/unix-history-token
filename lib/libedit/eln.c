@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: eln.c,v 1.19 2015/05/18 15:07:04 christos Exp $	*/
+comment|/*	$NetBSD: eln.c,v 1.28 2016/02/28 23:02:24 christos Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: eln.c,v 1.19 2015/05/18 15:07:04 christos Exp $"
+literal|"$NetBSD: eln.c,v 1.28 2016/02/28 23:02:24 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,19 +63,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"histedit.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"el.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"read.h"
+file|<errno.h>
 end_include
 
 begin_include
@@ -94,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"el.h"
 end_include
 
 begin_function
@@ -118,23 +112,6 @@ name|wc
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|el
-operator|->
-name|el_flags
-operator|&
-name|CHARSET_IS_UTF8
-operator|)
-condition|)
-name|el
-operator|->
-name|el_flags
-operator||=
-name|IGNORE_EXTCHARS
-expr_stmt|;
 name|num_read
 operator|=
 name|el_wgetc
@@ -145,43 +122,65 @@ operator|&
 name|wc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|el
-operator|->
-name|el_flags
-operator|&
-name|CHARSET_IS_UTF8
-operator|)
-condition|)
-name|el
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|IGNORE_EXTCHARS
+operator|*
+name|cp
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
 name|num_read
-operator|>
+operator|<=
 literal|0
 condition|)
+return|return
+name|num_read
+return|;
+name|num_read
+operator|=
+name|ct_wctob
+argument_list|(
+name|wc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num_read
+operator|==
+name|EOF
+condition|)
+block|{
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
 operator|*
 name|cp
 operator|=
 operator|(
 name|char
 operator|)
-name|wc
+name|num_read
 expr_stmt|;
 return|return
-name|num_read
+literal|1
 return|;
 block|}
+block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDECHAR
+end_ifdef
 
 begin_function
 name|public
@@ -238,23 +237,6 @@ name|wchar_t
 modifier|*
 name|tmp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|el
-operator|->
-name|el_flags
-operator|&
-name|CHARSET_IS_UTF8
-operator|)
-condition|)
-name|el
-operator|->
-name|el_flags
-operator||=
-name|IGNORE_EXTCHARS
-expr_stmt|;
 name|tmp
 operator|=
 name|el_wgets
@@ -271,6 +253,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|size_t
 name|nwread
 init|=
@@ -278,9 +263,8 @@ literal|0
 decl_stmt|;
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|0
 init|;
 name|i
@@ -310,24 +294,6 @@ operator|)
 name|nwread
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|el
-operator|->
-name|el_flags
-operator|&
-name|CHARSET_IS_UTF8
-operator|)
-condition|)
-name|el
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|IGNORE_EXTCHARS
-expr_stmt|;
 return|return
 name|ct_encode_string
 argument_list|(
@@ -1060,7 +1026,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|// XXX: The two strdup's leak
+comment|/* XXX: The two strdup's leak */
 name|ret
 operator|=
 name|map_addfunc
@@ -1139,7 +1105,6 @@ name|NARROW_HISTORY
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX: do we need to change el_rfunc_t? */
 case|case
 name|EL_GETCFN
 case|:
@@ -1159,12 +1124,6 @@ argument_list|,
 name|el_rfunc_t
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|el
-operator|->
-name|el_flags
-operator||=
-name|NARROW_READ
 expr_stmt|;
 break|break;
 case|case
@@ -1614,7 +1573,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX: do we need to change el_rfunc_t? */
 case|case
 name|EL_GETCFN
 case|:
@@ -1893,6 +1851,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIDECHAR */
+end_comment
 
 end_unit
 

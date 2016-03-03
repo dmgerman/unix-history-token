@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/qemu/virt_mp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"platform_if.h"
 end_include
 
@@ -192,6 +198,25 @@ argument_list|,
 name|virt_lastaddr
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|SMP
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_mp_start_ap
+argument_list|,
+name|virt_mp_start_ap
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_mp_setmaxid
+argument_list|,
+name|virt_mp_setmaxid
+argument_list|)
+block|,
+endif|#
+directive|endif
 name|PLATFORMMETHOD_END
 block|, }
 decl_stmt|;

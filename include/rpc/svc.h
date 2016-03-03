@@ -112,6 +112,10 @@ block|{
 name|int
 name|xp_fd
 decl_stmt|;
+define|#
+directive|define
+name|xp_sock
+value|xp_fd
 name|u_short
 name|xp_port
 decl_stmt|;

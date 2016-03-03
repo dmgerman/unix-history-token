@@ -347,6 +347,13 @@ name|UMTX_OP_SEM2_WAKE
 value|24
 end_define
 
+begin_define
+define|#
+directive|define
+name|UMTX_OP_SHM
+value|25
+end_define
+
 begin_comment
 comment|/* Flags for UMTX_OP_CV_WAIT */
 end_comment
@@ -384,6 +391,38 @@ define|#
 directive|define
 name|UMTX_CHECK_UNPARKING
 value|CVWAIT_CHECK_UNPARKING
+end_define
+
+begin_comment
+comment|/* Flags for UMTX_OP_SHM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMTX_SHM_CREAT
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_SHM_LOOKUP
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_SHM_DESTROY
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_SHM_ALIVE
+value|0x0008
 end_define
 
 begin_ifndef
@@ -446,7 +485,9 @@ block|,
 name|TYPE_RWLOCK
 block|,
 name|TYPE_FUTEX
-block|}
+block|,
+name|TYPE_SHM
+block|, }
 enum|;
 end_enum
 

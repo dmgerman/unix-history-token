@@ -29,6 +29,17 @@ value|3
 end_define
 
 begin_comment
+comment|/*  * Version 4 added more generic callbacks for setting up  * registers and descriptors. The callback structure is  * backward compatible (new callbacks have been added at  * the tail end).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USERBOOT_VERSION_4
+value|4
+end_define
+
+begin_comment
 comment|/*  * Exit codes from the loader  */
 end_comment
 
@@ -501,6 +512,53 @@ name|arg
 parameter_list|,
 name|int
 name|num
+parameter_list|)
+function_decl|;
+comment|/* 	 * Version 4 additions. 	 */
+name|int
+function_decl|(
+modifier|*
+name|vm_set_register
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|int
+name|reg
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|vm_set_desc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|int
+name|reg
+parameter_list|,
+name|uint64_t
+name|base
+parameter_list|,
+name|u_int
+name|limit
+parameter_list|,
+name|u_int
+name|access
 parameter_list|)
 function_decl|;
 block|}
