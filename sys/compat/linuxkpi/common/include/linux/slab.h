@@ -120,6 +120,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|kfree_const
+parameter_list|(
+name|ptr
+parameter_list|)
+value|kfree(ptr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|krealloc
 parameter_list|(
 name|ptr
