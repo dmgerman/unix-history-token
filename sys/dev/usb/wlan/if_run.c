@@ -13164,9 +13164,9 @@ argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|,
 name|ni
 operator|->
@@ -13177,9 +13177,9 @@ name|run_set_bssid
 argument_list|(
 name|sc
 argument_list|,
-name|ni
+name|sc
 operator|->
-name|ni_bssid
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 name|ieee80211_free_node
@@ -28237,14 +28237,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX keep local copy */
 name|run_set_bssid
 argument_list|(
 name|sc
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 name|RUN_UNLOCK

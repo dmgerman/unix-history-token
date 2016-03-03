@@ -326,6 +326,12 @@ name|sc_running
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|sc_bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 struct|struct
 block|{
 name|uint8_t
