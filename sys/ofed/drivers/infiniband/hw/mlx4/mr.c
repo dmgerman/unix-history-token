@@ -1095,7 +1095,7 @@ argument_list|,
 name|block_shift
 argument_list|)
 expr_stmt|;
-comment|/* If we reached the minimum shift for 4k 				     page we stop the loop. 				*/
+comment|/* If we reached the minimum shift for 4k 			     page we stop the loop. 			*/
 if|if
 condition|(
 name|block_shift
@@ -1105,7 +1105,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* If not saved yet we are in first block - 				     we save the length of first block to 				     calculate the non_aligned_pages number at 				*    the end. 				*/
+comment|/* If not saved yet we are in first block - 			     we save the length of first block to 			     calculate the non_aligned_pages number at 			*    the end. 			*/
 name|total_len
 operator|+=
 name|current_block_len
@@ -1124,7 +1124,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* The scatter entry is another part of 			     the current block, increase the block size 			* An entry in the scatter can be larger than 			4k (page) as of dma mapping 			which merge some blocks together. 			*/
+comment|/* The scatter entry is another part of 		     the current block, increase the block size 		* An entry in the scatter can be larger than 		4k (page) as of dma mapping 		which merge some blocks together. 		*/
 name|current_block_len
 operator|+=
 name|sg_dma_len
