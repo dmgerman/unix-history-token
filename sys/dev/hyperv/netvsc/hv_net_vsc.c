@@ -201,6 +201,10 @@ name|hv_device
 modifier|*
 name|device
 parameter_list|,
+name|struct
+name|hv_vmbus_channel
+modifier|*
+parameter_list|,
 name|hv_vm_packet_descriptor
 modifier|*
 name|pkt
@@ -2856,6 +2860,11 @@ name|hv_device
 modifier|*
 name|device
 parameter_list|,
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
 name|hv_vm_packet_descriptor
 modifier|*
 name|pkt
@@ -3092,6 +3101,8 @@ name|send
 operator|.
 name|on_send_completion
 argument_list|(
+name|chan
+argument_list|,
 name|net_vsc_pkt
 operator|->
 name|compl
@@ -4009,6 +4020,8 @@ argument_list|(
 name|net_dev
 argument_list|,
 name|device
+argument_list|,
+name|chan
 argument_list|,
 name|desc
 argument_list|)

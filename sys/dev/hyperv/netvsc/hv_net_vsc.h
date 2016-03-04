@@ -2115,6 +2115,12 @@ name|netvsc_dev
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
@@ -2123,6 +2129,10 @@ modifier|*
 name|pfn_on_send_rx_completion
 function_decl|)
 parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|)
@@ -2479,12 +2489,6 @@ directive|define
 name|HN_TRUST_HCSUM_UDP
 value|0x0004
 end_define
-
-begin_struct_decl
-struct_decl|struct
-name|hv_vmbus_channel
-struct_decl|;
-end_struct_decl
 
 begin_struct
 struct|struct
