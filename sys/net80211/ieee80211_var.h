@@ -377,7 +377,7 @@ name|IEEE80211_TU_TO_TICKS
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) * 1024 * hz) / (1000 * 1000))
+value|(((uint64_t)(x) * 1024 * hz) / (1000 * 1000))
 end_define
 
 begin_comment
