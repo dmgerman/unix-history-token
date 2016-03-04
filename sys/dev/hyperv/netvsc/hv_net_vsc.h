@@ -2602,6 +2602,9 @@ decl_stmt|;
 name|u_long
 name|hn_tx_chimney
 decl_stmt|;
+name|u_long
+name|hn_pkts
+decl_stmt|;
 comment|/* Rarely used stuffs */
 name|struct
 name|hn_txdesc
