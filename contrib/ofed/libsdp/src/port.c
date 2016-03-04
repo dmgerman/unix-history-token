@@ -1702,7 +1702,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error replace_fd_with_its_shadow: no shadow for fd:%d\n"
 argument_list|,
@@ -1820,7 +1820,7 @@ name|AF_INET6_SDP
 return|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error %s: unknown TCP domain: %d\n"
 argument_list|,
@@ -1882,7 +1882,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error %s: getsockname return<%d> for socket\n"
 argument_list|,
@@ -2453,7 +2453,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error ioctl: "
 literal|"<%d> calling ioctl for SDP socket, closing it.\n"
@@ -2663,7 +2663,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error fcntl:"
 literal|"<%d> calling fcntl(%d, %d, %p) for SDP socket. Closing it.\n"
@@ -2948,7 +2948,7 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/*  			 * HACK: we should allow some errors as some sock opts are unsupported   			 * __sdp_log(9, "Error %d calling setsockopt for SDP socket, closing\n", errno);  			 * cleanup_shadow(fd);  			 */
+comment|/*  			 * HACK: we should allow some errors as some sock opts are unsupported   			 * __sdp_log(8, "Error %d calling setsockopt for SDP socket, closing\n", errno);  			 * cleanup_shadow(fd);  			 */
 block|}
 block|}
 comment|/* Due to SDP limited implmentation of sockopts we ignore some errors */
@@ -3169,6 +3169,52 @@ argument_list|,
 name|protocol
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|AF_INET
+operator|==
+name|domain
+operator|||
+name|AF_INET6
+operator|==
+name|domain
+operator|||
+name|AF_INET_SDP
+operator|==
+name|domain
+operator|||
+name|AF_INET6_SDP
+operator|==
+name|domain
+operator|)
+condition|)
+block|{
+name|__sdp_log
+argument_list|(
+literal|1
+argument_list|,
+literal|"SOCKET: making other socket\n"
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|__create_socket_semantic
+argument_list|(
+name|domain
+argument_list|,
+name|type
+argument_list|,
+name|protocol
+argument_list|,
+name|semantics
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 name|sdp_domain
 operator|=
 name|get_sdp_domain
@@ -3511,7 +3557,7 @@ else|else
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error socket:<%d> calling socket for SDP socket\n"
 argument_list|,
@@ -3547,7 +3593,7 @@ else|else
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error socket: "
 literal|"ignoring SDP socket since TCP fd:%d out of range\n"
@@ -3715,7 +3761,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error: in get_fd_addr_port_num - Failed to get getsockname\n"
 argument_list|)
@@ -4460,7 +4506,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error %s:getsockopt: %s\n"
 argument_list|,
@@ -4792,7 +4838,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error check_legal_bind: "
 literal|"creating SDP socket failed\n"
@@ -4843,7 +4889,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: Could not setsockopt sdp_sd\n"
 argument_list|)
@@ -4873,7 +4919,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error check_legal_bind: "
 literal|"creating second socket failed:%s\n"
@@ -4937,7 +4983,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: Could not setsockopt tcp_sd\n"
 argument_list|)
@@ -5019,7 +5065,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error check_legal_bind:getsockopt: %s\n"
 argument_list|,
@@ -5053,7 +5099,7 @@ block|{
 comment|/* bind() failed due to real error. Can't continue */
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error check_legal_bind: "
 literal|"binding SDP socket failed:%s\n"
@@ -5142,7 +5188,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error check_legal_bind: "
 literal|"binding TCP socket failed:%s\n"
@@ -5266,7 +5312,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: Could not close old_sd\n"
 argument_list|)
@@ -5296,7 +5342,7 @@ literal|0
 condition|)
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: Could not bind new_sd\n"
 argument_list|)
@@ -5437,7 +5483,7 @@ name|EFAULT
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: illegal address provided\n"
 argument_list|)
@@ -5461,7 +5507,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: provided illegal address: %s\n"
 argument_list|,
@@ -5683,7 +5729,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: "
 literal|"Provided address can not bind on the two sockets\n"
@@ -5741,7 +5787,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: "
 literal|"Could not close_and_bind TCP side\n"
@@ -5803,7 +5849,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error bind: "
 literal|"Could not close_and_bind sdp side\n"
@@ -6129,7 +6175,7 @@ name|EFAULT
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error connect: illegal address provided\n"
 argument_list|)
@@ -6153,7 +6199,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error connect: provided illegal address: %s\n"
 argument_list|,
@@ -6387,7 +6433,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|7
 argument_list|,
 literal|"Error connect: "
 literal|"failed for SDP fd:%d with error:%m\n"
@@ -6546,7 +6592,7 @@ operator|)
 condition|)
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error connect: for TCP fd:%d failed with error:%m\n"
 argument_list|,
@@ -6604,7 +6650,7 @@ literal|0
 condition|)
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error connect: failed to cleanup shadow for fd:%d\n"
 argument_list|,
@@ -6952,7 +6998,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: getsockname return<%d> for TCP socket\n"
 argument_list|,
@@ -6992,7 +7038,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: provided illegal address: %s\n"
 argument_list|,
@@ -7189,7 +7235,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: "
 literal|"Could not close_and_bind TCP side\n"
@@ -7225,7 +7271,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: "
 literal|"Could not close_and_bind SDP side\n"
@@ -7278,7 +7324,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: failed with code<%d> on TCP fd:<%d>\n"
 argument_list|,
@@ -7349,7 +7395,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: failed with code<%d> SDP fd:<%d>\n"
 argument_list|,
@@ -7410,7 +7456,7 @@ literal|0
 condition|)
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error listen: failed to cleanup shadow for fd:%d\n"
 argument_list|,
@@ -7674,7 +7720,7 @@ literal|0
 condition|)
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error close: failed to cleanup shadow for fd:%d\n"
 argument_list|,
@@ -7842,7 +7888,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error dup: new fd<%d> out of range.\n"
 argument_list|,
@@ -7916,7 +7962,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error dup: new shadow fd<%d> out of range.\n"
 argument_list|,
@@ -8133,7 +8179,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"DUP2: fail to close newfd:<%d> shadow:<%d> with: %d %s\n"
 argument_list|,
@@ -8190,7 +8236,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error dup2: new fd<%d> out of range.\n"
 argument_list|,
@@ -8265,7 +8311,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error dup2: new shadow fd<%d> out of range.\n"
 argument_list|,
@@ -8415,7 +8461,7 @@ name|EFAULT
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error getsockname: illegal address provided\n"
 argument_list|)
@@ -8445,7 +8491,7 @@ name|EFAULT
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error getsockname: illegal address length pointer provided\n"
 argument_list|)
@@ -8640,7 +8686,7 @@ name|EFAULT
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error getsockname: illegal address provided\n"
 argument_list|)
@@ -8670,7 +8716,7 @@ name|EFAULT
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error getsockname: illegal address length pointer provided\n"
 argument_list|)
@@ -8871,7 +8917,7 @@ name|EINVAL
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error accept: illegal address provided\n"
 argument_list|)
@@ -8901,7 +8947,7 @@ name|EINVAL
 expr_stmt|;
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error accept: illegal address length pointer provided\n"
 argument_list|)
@@ -9007,7 +9053,7 @@ operator|)
 condition|)
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error accept: accept returned :<%d> %s\n"
 argument_list|,
@@ -9453,7 +9499,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error accept: select returned :<%d> (%d) %s\n"
 argument_list|,
@@ -11160,7 +11206,7 @@ condition|)
 block|{
 name|__sdp_log
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Error epoll_ctl<%s:%d:%d>"
 argument_list|,

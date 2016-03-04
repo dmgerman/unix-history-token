@@ -94,6 +94,10 @@ block|,
 name|LINE
 init|=
 literal|272
+block|,
+name|SUBNET
+init|=
+literal|273
 block|}
 enum|;
 end_enum
@@ -212,6 +216,13 @@ name|LINE
 value|272
 end_define
 
+begin_define
+define|#
+directive|define
+name|SUBNET
+value|273
+end_define
+
 begin_if
 if|#
 directive|if
@@ -230,7 +241,7 @@ union|union
 name|YYSTYPE
 line|#
 directive|line
-number|167
+number|197
 file|"./config_parser.y"
 block|{
 name|int
@@ -244,7 +255,7 @@ block|}
 comment|/* Line 1529 of yacc.c.  */
 line|#
 directive|line
-number|88
+number|90
 file|"y.tab.h"
 name|YYSTYPE
 typedef|;
