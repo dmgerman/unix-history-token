@@ -29,6 +29,14 @@ init|=
 literal|4
 block|,
 comment|/* # of HW channels */
+name|T6_NCHAN
+init|=
+literal|2
+block|,
+name|MAX_NCHAN
+init|=
+literal|4
+block|,
 name|MAX_MTU
 init|=
 literal|9600
@@ -79,6 +87,14 @@ init|=
 literal|5
 block|,
 comment|/* # of PM stats */
+name|T6_PM_NSTATS
+init|=
+literal|7
+block|,
+name|MAX_PM_NSTATS
+init|=
+literal|7
+block|,
 name|MBOX_LEN
 init|=
 literal|64
