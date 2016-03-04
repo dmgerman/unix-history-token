@@ -940,7 +940,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vmbus_channel_cpu_set
 parameter_list|(
