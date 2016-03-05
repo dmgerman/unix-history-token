@@ -348,12 +348,12 @@ argument_list|)
 operator|.
 name|clk_activate
 operator|=
-name|a10_clk_usb_activate
+name|a10_clk_ehci_activate
 block|,
 operator|.
 name|clk_deactivate
 operator|=
-name|a10_clk_usb_deactivate
+name|a10_clk_ehci_deactivate
 block|,
 endif|#
 directive|endif
