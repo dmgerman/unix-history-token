@@ -772,6 +772,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<netinet/tcp.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NETINET_TCP_H
+value|1
+end_define
+
+begin_comment
 comment|/* Use libnettle for crypto */
 end_comment
 
@@ -950,7 +961,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `sbrk' function. */
+comment|/* define if you have the sbrk() call */
 end_comment
 
 begin_comment
@@ -1524,7 +1535,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -1583,6 +1594,14 @@ end_comment
 
 begin_comment
 comment|/* #undef OMITTED__D_BSD_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Put -D_DEFAULT_SOURCE define in config.h */
+end_comment
+
+begin_comment
+comment|/* #undef OMITTED__D_DEFAULT_SOURCE */
 end_comment
 
 begin_comment
@@ -1663,7 +1682,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.7"
+value|"unbound 1.5.8"
 end_define
 
 begin_comment
@@ -1696,7 +1715,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.7"
+value|"1.5.8"
 end_define
 
 begin_comment
@@ -1759,7 +1778,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,7,0
+value|1,5,8,0
 end_define
 
 begin_comment
@@ -2424,6 +2443,33 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|OMITTED__D_DEFAULT_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_DEFAULT_SOURCE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_DEFAULT_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|OMITTED__D__EXTENSIONS__
 argument_list|)
 operator|&&
@@ -2775,6 +2821,23 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_TCP_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
 end_include
 
 begin_endif

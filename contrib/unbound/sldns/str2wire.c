@@ -1042,12 +1042,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strlen
-argument_list|(
+operator|*
 name|token
-argument_list|)
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 comment|/* no ownername was given, try prev, if that fails 		 * origin, else default to root */
@@ -6107,12 +6105,10 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|strlen
-argument_list|(
+operator|*
 name|my_str
-argument_list|)
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 comment|/* empty APL element, no data, no string */

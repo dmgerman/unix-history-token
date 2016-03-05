@@ -3441,8 +3441,8 @@ modifier|*
 modifier|*
 name|zstr
 decl_stmt|;
-comment|/* this list of zones is from RFC 6303 */
-comment|/* block localhost level zones, first, later the LAN zones */
+comment|/* this list of zones is from RFC 6303 and RFC 7686 */
+comment|/* block localhost level zones first, then onion and later the LAN zones */
 comment|/* localhost. zone */
 if|if
 condition|(
@@ -3704,6 +3704,94 @@ argument_list|(
 name|z
 argument_list|,
 literal|"1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa. 10800 IN PTR localhost."
+argument_list|)
+condition|)
+block|{
+name|log_err
+argument_list|(
+literal|"out of memory adding default zone"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|z
+condition|)
+block|{
+name|lock_rw_unlock
+argument_list|(
+operator|&
+name|z
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+name|lock_rw_unlock
+argument_list|(
+operator|&
+name|z
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* onion. zone (RFC 7686) */
+if|if
+condition|(
+operator|!
+name|lz_exists
+argument_list|(
+name|zones
+argument_list|,
+literal|"onion."
+argument_list|)
+operator|&&
+operator|!
+name|lz_nodefault
+argument_list|(
+name|cfg
+argument_list|,
+literal|"onion."
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|z
+operator|=
+name|lz_enter_zone
+argument_list|(
+name|zones
+argument_list|,
+literal|"onion."
+argument_list|,
+literal|"static"
+argument_list|,
+name|LDNS_RR_CLASS_IN
+argument_list|)
+operator|)
+operator|||
+operator|!
+name|lz_enter_rr_into_zone
+argument_list|(
+name|z
+argument_list|,
+literal|"onion. 10800 IN NS localhost."
+argument_list|)
+operator|||
+operator|!
+name|lz_enter_rr_into_zone
+argument_list|(
+name|z
+argument_list|,
+literal|"onion. 10800 IN SOA localhost. nobody.invalid. "
+literal|"1 3600 1200 604800 10800"
 argument_list|)
 condition|)
 block|{

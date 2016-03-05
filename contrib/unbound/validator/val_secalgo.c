@@ -302,6 +302,13 @@ name|USE_GOST
 case|case
 name|LDNS_HASH_GOST
 case|:
+comment|/* we support GOST if it can be loaded */
+operator|(
+name|void
+operator|)
+name|sldns_key_EVP_load_gost_id
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|EVP_get_digestbyname

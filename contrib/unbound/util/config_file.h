@@ -107,6 +107,14 @@ comment|/** tcp upstream queries (no UDP upstream queries) */
 name|int
 name|tcp_upstream
 decl_stmt|;
+comment|/** maximum segment size of tcp socket which queries are answered */
+name|int
+name|tcp_mss
+decl_stmt|;
+comment|/** maximum segment size of tcp socket for outgoing queries */
+name|int
+name|outgoing_tcp_mss
+decl_stmt|;
 comment|/** private key file for dnstcp-ssl service (enabled if not NULL) */
 name|char
 modifier|*
@@ -1195,6 +1203,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Find stub in config list, also returns prevptr (for deletion).  * @param pp: call routine with pointer to a pointer to the start of the list,  * 	if the stub is found, on exit, the value contains a pointer to the  * 	next pointer that points to the found element (or to the list start  * 	pointer if it is the first element).  * @param nm: name of stub to find.  * @return: pointer to config_stub if found, or NULL if not found.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|config_stub
+modifier|*
+name|cfg_stub_find
+parameter_list|(
+name|struct
+name|config_stub
+modifier|*
+modifier|*
+modifier|*
+name|pp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|nm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Delete items in config string list.  * @param list: list.  */
 end_comment
 
@@ -1222,6 +1255,22 @@ name|struct
 name|config_str2list
 modifier|*
 name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Delete a stub item  * @param p: stub item  */
+end_comment
+
+begin_function_decl
+name|void
+name|config_delstub
+parameter_list|(
+name|struct
+name|config_stub
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl

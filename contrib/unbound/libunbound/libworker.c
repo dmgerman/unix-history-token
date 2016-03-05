@@ -1272,6 +1272,10 @@ name|cfg
 operator|->
 name|unwanted_threshold
 argument_list|,
+name|cfg
+operator|->
+name|outgoing_tcp_mss
+argument_list|,
 operator|&
 name|libworker_alloc_cleanup
 argument_list|,

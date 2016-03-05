@@ -269,6 +269,10 @@ name|dtenv
 decl_stmt|;
 endif|#
 directive|endif
+comment|/** maximum segment size of tcp socket */
+name|int
+name|tcp_mss
+decl_stmt|;
 comment|/** 	 * Array of tcp pending used for outgoing TCP connections. 	 * Each can be used to establish a TCP connection with a server. 	 * The file descriptors are -1 if they are free, and need to be  	 * opened for the tcp connection. Can be used for ip4 and ip6. 	 */
 name|struct
 name|pending_tcp
@@ -761,7 +765,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Create outside_network structure with N udp ports.  * @param base: the communication base to use for event handling.  * @param bufsize: size for network buffers.  * @param num_ports: number of udp ports to open per interface.  * @param ifs: interface names (or NULL for default interface).  *    These interfaces must be able to access all authoritative servers.  * @param num_ifs: number of names in array ifs.  * @param do_ip4: service IP4.  * @param do_ip6: service IP6.  * @param num_tcp: number of outgoing tcp buffers to preallocate.  * @param infra: pointer to infra cached used for serviced queries.  * @param rnd: stored to create random numbers for serviced queries.  * @param use_caps_for_id: enable to use 0x20 bits to encode id randomness.  * @param availports: array of available ports.   * @param numavailports: number of available ports in array.  * @param unwanted_threshold: when to take defensive action.  * @param unwanted_action: the action to take.  * @param unwanted_param: user parameter to action.  * @param do_udp: if udp is done.  * @param sslctx: context to create outgoing connections with (if enabled).  * @param delayclose: if not 0, udp sockets are delayed before timeout closure.  * 	msec to wait on timeouted udp sockets.  * @param dtenv: environment to send dnstap events with (if enabled).  * @return: the new structure (with no pending answers) or NULL on error.  */
+comment|/**  * Create outside_network structure with N udp ports.  * @param base: the communication base to use for event handling.  * @param bufsize: size for network buffers.  * @param num_ports: number of udp ports to open per interface.  * @param ifs: interface names (or NULL for default interface).  *    These interfaces must be able to access all authoritative servers.  * @param num_ifs: number of names in array ifs.  * @param do_ip4: service IP4.  * @param do_ip6: service IP6.  * @param num_tcp: number of outgoing tcp buffers to preallocate.  * @param infra: pointer to infra cached used for serviced queries.  * @param rnd: stored to create random numbers for serviced queries.  * @param use_caps_for_id: enable to use 0x20 bits to encode id randomness.  * @param availports: array of available ports.   * @param numavailports: number of available ports in array.  * @param unwanted_threshold: when to take defensive action.  * @param unwanted_action: the action to take.  * @param unwanted_param: user parameter to action.  * @param tcp_mss: maximum segment size of tcp socket.  * @param do_udp: if udp is done.  * @param sslctx: context to create outgoing connections with (if enabled).  * @param delayclose: if not 0, udp sockets are delayed before timeout closure.  * 	msec to wait on timeouted udp sockets.  * @param dtenv: environment to send dnstap events with (if enabled).  * @return: the new structure (with no pending answers) or NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -820,6 +824,9 @@ name|numavailports
 parameter_list|,
 name|size_t
 name|unwanted_threshold
+parameter_list|,
+name|int
+name|tcp_mss
 parameter_list|,
 name|void
 function_decl|(

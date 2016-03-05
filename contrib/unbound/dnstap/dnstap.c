@@ -542,7 +542,7 @@ name|verbose
 argument_list|(
 name|VERB_OPS
 argument_list|,
-literal|"opening dnstap socket %s"
+literal|"attempting to connect to dnstap socket %s"
 argument_list|,
 name|socket_path
 argument_list|)
