@@ -2795,12 +2795,6 @@ operator|!
 name|scen
 condition|)
 return|return;
-if|if
-condition|(
-name|scen
-operator|->
-name|title
-condition|)
 name|free
 argument_list|(
 name|scen

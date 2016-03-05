@@ -4922,6 +4922,12 @@ argument_list|(
 name|unwanted_threshold
 argument_list|)
 argument_list|,
+name|int
+name|ATTR_UNUSED
+argument_list|(
+name|outgoing_tcp_mss
+argument_list|)
+argument_list|,
 name|void
 argument_list|(
 operator|*

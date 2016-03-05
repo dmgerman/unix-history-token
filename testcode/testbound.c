@@ -542,12 +542,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|strlen
-argument_list|(
+operator|*
 name|id
-argument_list|)
 operator|==
-literal|0
+literal|'\0'
 condition|)
 name|fatal_exit
 argument_list|(

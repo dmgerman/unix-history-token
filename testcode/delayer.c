@@ -5853,7 +5853,7 @@ name|bindport
 operator|=
 literal|1024
 operator|+
-name|random
+name|arc4random
 argument_list|()
 operator|%
 literal|64000
@@ -5963,7 +5963,7 @@ name|bindport
 operator|=
 literal|1024
 operator|+
-name|random
+name|arc4random
 argument_list|()
 operator|%
 literal|64000
@@ -6359,17 +6359,6 @@ expr_stmt|;
 name|log_ident_set
 argument_list|(
 literal|"delayer"
-argument_list|)
-expr_stmt|;
-name|srandom
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-name|getpid
-argument_list|()
 argument_list|)
 expr_stmt|;
 if|if

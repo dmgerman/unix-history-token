@@ -1268,10 +1268,7 @@ name|r
 return|;
 block|}
 return|return
-operator|(
-name|int
-operator|)
-name|random
+name|arc4random
 argument_list|()
 return|;
 block|}

@@ -228,6 +228,29 @@ modifier|*
 name|addr
 parameter_list|)
 function_decl|;
+comment|/**  * Add a stub zone, with given address to send to.  This is for custom  * root hints or pointing to a local authoritative dns server.  * For dns resolvers and the 'DHCP DNS' ip address, use ub_ctx_set_fwd.  * This is similar to a stub-zone entry in unbound.conf.  *  * @param ctx: context.  *	It is only possible to set configuration before the  *	first resolve is done.  * @param zone: name of the zone, string.  * @param addr: address, IP4 or IP6 in string format.  * 	The addr is added to the list of stub-addresses if the entry exists.  * 	If the addr is NULL the stub entry is removed.  * @param isprime: set to true to set stub-prime to yes for the stub.  * 	For local authoritative servers, people usually set it to false,  * 	For root hints it should be set to true.  * @return 0 if OK, else error.  */
+name|int
+name|ub_ctx_set_stub
+parameter_list|(
+name|struct
+name|ub_ctx
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|zone
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|addr
+parameter_list|,
+name|int
+name|isprime
+parameter_list|)
+function_decl|;
 comment|/**  * Read list of nameservers to use from the filename given.  * Usually "/etc/resolv.conf". Uses those nameservers as caching proxies.  * If they do not support DNSSEC, validation may fail.  *  * Only nameservers are picked up, the searchdomain, ndots and other  * settings from resolv.conf(5) are ignored.  *  * @param ctx: context.  *	At this time it is only possible to set configuration before the  *	first resolve is done.  * @param fname: file name string. If NULL "/etc/resolv.conf" is used.  * @return 0 if OK, else error.  */
 name|int
 name|ub_ctx_resolvconf
